@@ -1,26 +1,12 @@
-# Dependencies
-node_modules/
+# dependencies
+/node_modules
 
-# Environment files - NEVER commit these
-.env
-.env.local
-.env.development
-.env.production
+# next build
+/.next/
+/out/
 
-# Next.js build output
-frontend/.next/
-frontend/out/
+# production
+/build
 
-# NestJS build output
-backend/dist/
-
-# Logs
-*.log
-npm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE
-.idea/
+# env
+.env*
