@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment files - NEVER commit these
+.env
+.env.local
+.env.development
+.env.production
+
+# Next.js build output
+frontend/.next/
+frontend/out/
+
+# NestJS build output
+backend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
