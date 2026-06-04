@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ── KSRM Design Tokens ── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* ── Brand Colors (from KSRM palette) ── */
+  --color-primary:        #FFE619;   /* Brand Yellow */
+  --color-primary-dark:   #E6CE00;   /* Yellow hover */
+  --color-primary-light:  #FDFBE6;   /* Pale Yellow */
+
+  --color-navy:           #2B3490;   /* Deep Navy Blue — main */
+  --color-navy-dark:      #1e2570;   /* Darker navy for hover/footer */
+  --color-navy-light:     #3a45b0;   /* Lighter navy */
+
+  --color-red:            #E8112D;   /* Accent Red — CTAs */
+  --color-orange:         #E87E2D;   /* Accent Orange */
+  --color-cream:          #F5EFE4;   /* Page background */
+
+  /* ── Neutral Scale ── */
+  --color-neutral-50:     #F8F8F6;
+  --color-neutral-100:    #F1F5F9;
+  --color-neutral-200:    #E5E7EB;
+  --color-neutral-300:    #D1D5DB;
+  --color-neutral-400:    #9CA3AF;
+  --color-neutral-500:    #6B7280;
+  --color-neutral-600:    #4B5563;
+  --color-neutral-700:    #374151;
+  --color-neutral-800:    #1F2937;
+  --color-neutral-900:    #111827;
+
+  /* ── Fonts ── */
+  --font-heading: var(--font-rajdhani), sans-serif;
+  --font-body:    var(--font-dm-sans),  sans-serif;
+
+  /* ── Shadows ── */
+  --shadow-navbar: 0 2px 20px rgba(43, 52, 144, 0.15);
+  --shadow-card:   0 4px 20px rgba(43, 52, 144, 0.10);
+
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base Styles ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;   /* prevent horizontal scroll on all devices */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  color: #1F2937;
+  background: #F5EFE4;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+img, video, iframe {
+  max-width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
 }
