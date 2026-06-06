@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "text": "Admissions Open 2025–26 — Apply Now",
+    "active": true,
+    "createdAt": "2025-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "text": "NAAC A+ Accredited | NBA Tier-1 Accredited Programs",
+    "active": true,
+    "createdAt": "2025-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "text": "Placements 2025: 450+ Offers | Top Recruiters: TCS, Infosys, Wipro, Amazon",
+    "active": true,
+    "createdAt": "2025-06-01T00:00:00.000Z"
+  }
+]
