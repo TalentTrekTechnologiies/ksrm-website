@@ -95,29 +95,29 @@ export default function Navbar() {
     <nav className="bg-[#2B3490] sticky top-0 z-50 shadow-lg">
       <div className="max-w-[1400px] mx-auto px-4">
         {/* Desktop */}
-        <div className="hidden lg:flex items-center overflow-x-auto scrollbar-hide gap-0">
+        <div className="hidden lg:flex items-center overflow-x-auto">
           {navItems.map((item) => (
             <div
               key={item.label}
-              className="relative group flex-shrink-0"
-              onMouseEnter={() => setOpenDropdown(item.label)}
+              className="relative"
+              onMouseEnter={() => item.children && setOpenDropdown(item.label)}
               onMouseLeave={() => setOpenDropdown(null)}
             >
               <Link
                 href={item.href}
-                className={`flex items-center gap-1 px-4 py-4 text-sm font-medium whitespace-nowrap transition-colors border-b-2
-                  ${pathname === item.href || pathname.startsWith(item.href + '/')
+                className={`inline-flex items-center gap-1 px-3 py-4 text-xs font-semibold whitespace-nowrap transition-colors border-b-2
+                  ${pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
                     ? 'text-[#FFE619] border-[#FFE619]'
                     : 'text-white border-transparent hover:text-[#FFE619] hover:border-[#FFE619]'
                   }`}
               >
                 {item.label}
-                {item.children && <ChevronDown size={12} />}
+                {item.children && <ChevronDown size={10} />}
               </Link>
 
               {/* Dropdown */}
               {item.children && openDropdown === item.label && (
-                <div className="absolute top-full left-0 bg-white shadow-lg rounded-b-lg min-w-[240px] z-50 border-t-2 border-[#FFE619]">
+                <div className="absolute top-full left-0 bg-white shadow-lg rounded-b-lg min-w-[220px] z-50 border-t-2 border-[#FFE619]">
                   {item.children.map((child) => (
                     <Link
                       key={child.label}
