@@ -27,19 +27,6 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    label: "Academics",
-    href: "/academics",
-    children: [
-      { label: "Courses & Intake", href: "/academics/courses-intake" },
-      { label: "Admissions", href: "/academics/admissions" },
-      { label: "Fee Structure", href: "/academics/fee-structure" },
-      { label: "Academic Calendar", href: "/academics/academic-calendar" },
-      { label: "Syllabus", href: "/academics/syllabus" },
-      { label: "Regulations", href: "/academics/regulations" },
-      { label: "Faculty List", href: "/academics/faculty" },
-    ],
-  },
-  {
     label: "Departments",
     href: "/departments",
     children: [
@@ -52,8 +39,28 @@ const navItems: NavItem[] = [
       { label: "Management Studies (MBA)", href: "/departments/mba" },
     ],
   },
-  { label: "Placements", href: "/placements" },
-  { label: "Research", href: "/research" },
+  {
+    label: "Academics",
+    href: "/academics",
+    children: [
+      { label: "Courses & Intake", href: "/academics/courses-intake" },
+      { label: "Admissions", href: "/academics/admissions" },
+      { label: "Fee Structure", href: "/academics/fee-structure" },
+      { label: "Academic Calendar", href: "/academics/academic-calendar" },
+      { label: "Syllabus", href: "/academics/syllabus" },
+      { label: "Regulations", href: "/academics/regulations" },
+      { label: "Faculty", href: "/academics/faculty" },
+    ],
+  },
+  {
+    label: "NAAC",
+    href: "/naac",
+    children: [
+      { label: "NAAC", href: "/naac" },
+      { label: "IQAC", href: "/iqac" },
+    ],
+  },
+  { label: "T&P Cell", href: "/placements" },
   {
     label: "Campus Life",
     href: "/campus-life",
@@ -71,12 +78,17 @@ const navItems: NavItem[] = [
       { label: "Cultural Club", href: "/campus-life/cultural" },
     ],
   },
+  { label: "Examinations", href: "/examinations" },
+  { label: "Degree Verification", href: "/degree-verification" },
   { label: "News & Events", href: "/news" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "IQAC", href: "/iqac" },
-  { label: "Accreditation", href: "/accreditation" },
-  { label: "Alumni", href: "/alumni" },
-  { label: "Contact", href: "/contact" },
+  {
+    label: "Contact",
+    href: "/contact",
+    children: [
+      { label: "Contact Us", href: "/contact" },
+      { label: "RTI Rules", href: "https://ksrmce.ac.in/NAAC/rtidoc.pdf" },
+    ],
+  },
 ]
 
 export default function Navbar() {
