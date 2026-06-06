@@ -32,7 +32,7 @@ export default function IntroSplash() {
   let stageTransition = "transform 0.35s ease"
   if (phase === 2) { stageTransform = "scale(0.92)" }
   if (phase === 3) {
-    stageTransform = "scale(3.2)"
+    stageTransform = "scale(4.2)"
     stageOpacity = 0
     stageTransition = "transform 1.1s cubic-bezier(0.6,0,0.8,0.2), opacity 1.1s ease"
   }
@@ -48,8 +48,8 @@ export default function IntroSplash() {
     }}>
       <div style={{
         position: "absolute",
-        width: "clamp(600px, 88vw, 1100px)",
-        height: "clamp(600px, 88vw, 1100px)",
+        width: "clamp(540px, 79vw, 990px)",
+        height: "clamp(540px, 79vw, 990px)",
         borderRadius: "50%",
         background: "radial-gradient(circle, rgba(43,52,144,0.12) 0%, rgba(43,52,144,0) 70%)",
         opacity: phase >= 1 && phase < 3 ? 1 : 0,
@@ -58,8 +58,8 @@ export default function IntroSplash() {
 
       <div style={{
         position: "relative",
-        width: "clamp(440px, 80vw, 900px)",
-        height: "clamp(440px, 80vw, 900px)",
+        width: "clamp(396px, 72vw, 810px)",
+        height: "clamp(396px, 72vw, 810px)",
         transform: stageTransform,
         opacity: stageOpacity,
         transition: stageTransition,
