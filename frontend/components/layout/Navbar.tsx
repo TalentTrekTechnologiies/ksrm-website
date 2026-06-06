@@ -1,413 +1,189 @@
-"use client"
+'use client'
+import Link from 'next/link'
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { ChevronDown } from 'lucide-react'
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-
-interface NavItem {
-  label: string
-  href: string
-  children?: Array<{ label: string; href: string }>
-}
-
-const navItems: NavItem[] = [
-  { label: "Home", href: "/" },
+const navItems = [
+  { label: 'Home', href: '/' },
   {
-    label: "About",
-    href: "/about",
+    label: 'About',
+    href: '/about',
     children: [
-      { label: "About KSRMCE", href: "/about" },
-      { label: "Correspondent", href: "/about/correspondent" },
-      { label: "Managing Director", href: "/about/managing-director" },
-      { label: "Chairman", href: "/about/chairman" },
-      { label: "Principal", href: "/about/principal" },
-      { label: "Joint Board of Studies", href: "/about/joint-board-of-studies" },
-      { label: "Strategic Plan", href: "/about/strategic-plan" },
-      { label: "Magazines", href: "/about/magazines" },
-    ],
+      { label: 'About KSRMCE', href: '/about' },
+      { label: 'Correspondent', href: '/about/correspondent' },
+      { label: 'Managing Director', href: '/about/managing-director' },
+      { label: 'Chairman', href: '/about/chairman' },
+      { label: 'Principal', href: '/about/principal' },
+      { label: 'Joint Board of Studies', href: '/about/joint-board-of-studies' },
+      { label: 'Strategic Plan', href: '/about/strategic-plan' },
+      { label: 'Magazines', href: '/about/magazines' },
+    ]
   },
   {
-    label: "Departments",
-    href: "/departments",
+    label: 'Academics',
+    href: '/academics',
     children: [
-      { label: "Civil Engineering", href: "/departments/civil" },
-      { label: "Computer Science & Engineering", href: "/departments/cse" },
-      { label: "Electrical & Electronics", href: "/departments/eee" },
-      { label: "Electronics & Communication", href: "/departments/ece" },
-      { label: "Mechanical Engineering", href: "/departments/mechanical" },
-      { label: "Humanities & Sciences", href: "/departments/humanities-sciences" },
-      { label: "Management Studies (MBA)", href: "/departments/mba" },
-    ],
+      { label: 'Courses & Intake', href: '/academics/courses-intake' },
+      { label: 'Fee Structure', href: '/academics/fee-structure' },
+      { label: 'Academic Calendar', href: '/academics/academic-calendar' },
+      { label: 'Syllabus', href: '/academics/syllabus' },
+      { label: 'Regulations', href: '/academics/regulations' },
+      { label: 'Faculty', href: '/academics/faculty' },
+    ]
   },
   {
-    label: "Academics",
-    href: "/academics",
+    label: 'Departments',
+    href: '/departments',
     children: [
-      { label: "Courses & Intake", href: "/academics/courses-intake" },
-      { label: "Admissions", href: "/academics/admissions" },
-      { label: "Fee Structure", href: "/academics/fee-structure" },
-      { label: "Academic Calendar", href: "/academics/academic-calendar" },
-      { label: "Syllabus", href: "/academics/syllabus" },
-      { label: "Regulations", href: "/academics/regulations" },
-      { label: "Faculty", href: "/academics/faculty" },
-    ],
+      { label: 'Civil Engineering', href: '/departments/civil' },
+      { label: 'Computer Science & Engineering', href: '/departments/cse' },
+      { label: 'Electrical & Electronics Engineering', href: '/departments/eee' },
+      { label: 'Electronics & Communication Engineering', href: '/departments/ece' },
+      { label: 'Mechanical Engineering', href: '/departments/mechanical' },
+      { label: 'Humanities & Sciences', href: '/departments/hs' },
+      { label: 'Management Studies', href: '/departments/mba' },
+    ]
   },
+  { label: 'Admissions', href: '/academics/admissions' },
   {
-    label: "NAAC",
-    href: "/naac",
+    label: 'Placements',
+    href: '/placements',
     children: [
-      { label: "NAAC", href: "/naac" },
-      { label: "IQAC", href: "/iqac" },
-    ],
+      { label: 'About T&P Cell', href: '/placements' },
+      { label: 'Placement Record', href: '/placements#record' },
+      { label: 'Placement Training', href: '/placements#training' },
+      { label: 'Placement Partners', href: '/placements#partners' },
+    ]
   },
-  { label: "T&P Cell", href: "/placements" },
+  { label: 'Research', href: '/research' },
   {
-    label: "Campus Life",
-    href: "/campus-life",
+    label: 'Campus Life',
+    href: '/campus-life',
     children: [
-      { label: "Campus Facilities", href: "/campus-life/campus-facilities" },
-      { label: "Central Library", href: "/campus-life/library" },
-      { label: "Hostels", href: "/campus-life/hostels" },
-      { label: "Transport", href: "/campus-life/transport" },
-      { label: "Sports", href: "/campus-life/sports" },
-      { label: "NSS", href: "/campus-life/nss" },
-      { label: "EDC", href: "/campus-life/edc" },
-      { label: "Startup Cell", href: "/campus-life/startup-cell" },
-      { label: "Anti-Ragging", href: "/campus-life/anti-ragging" },
-      { label: "Grievance Redressal", href: "/campus-life/grievance" },
-      { label: "Cultural Club", href: "/campus-life/cultural" },
-    ],
+      { label: 'Campus Facilities', href: '/campus-life/campus-facilities' },
+      { label: 'Library', href: '/campus-life/library' },
+      { label: 'Hostels', href: '/campus-life/hostels' },
+      { label: 'Transport', href: '/campus-life/transport' },
+      { label: 'Sports', href: '/campus-life/sports' },
+      { label: 'NSS', href: '/campus-life/nss' },
+      { label: 'EDC', href: '/campus-life/edc' },
+      { label: 'Startup Cell', href: '/campus-life/startup-cell' },
+      { label: 'Anti-Ragging', href: '/campus-life/anti-ragging' },
+      { label: 'Grievance Redressal', href: '/campus-life/grievance' },
+      { label: 'Cultural Club', href: '/campus-life/cultural' },
+    ]
   },
-  { label: "Examinations", href: "/examinations" },
-  { label: "Degree Verification", href: "/degree-verification" },
-  { label: "News & Events", href: "/news" },
-  {
-    label: "Contact",
-    href: "/contact",
-    children: [
-      { label: "Contact Us", href: "/contact" },
-      { label: "RTI Rules", href: "https://ksrmce.ac.in/NAAC/rtidoc.pdf" },
-    ],
-  },
+  { label: 'Library', href: '/campus-life/library' },
+  { label: 'News & Events', href: '/news' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Accreditation', href: '/accreditation' },
+  { label: 'IQAC', href: '/iqac' },
+  { label: 'Alumni', href: '/alumni' },
+  { label: 'Careers', href: '/careers' },
+  { label: 'Results', href: '/examinations' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const [expandedMobile, setExpandedMobile] = useState<string | null>(null)
   const pathname = usePathname()
-
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/")
-
-  const toggleMobileExpand = (label: string) => {
-    setExpandedMobile(expandedMobile === label ? null : label)
-  }
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [openMobile, setOpenMobile] = useState<string | null>(null)
 
   return (
-    <div style={{
-      background: "#2B3490",
-      position: "sticky",
-      top: 0,
-      zIndex: 1000,
-      boxShadow: "0 5px 20px rgba(0,0,0,0.15)",
-    }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
-
-        .navbar-desktop {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 100%;
-          width: 100%;
-          flex-wrap: nowrap;
-        }
-
-        .navbar-hamburger {
-          display: none;
-          background: none;
-          border: none;
-          color: #fff;
-          font-size: 26px;
-          cursor: pointer;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: center;
-          padding: 4px 8px;
-          line-height: 1;
-        }
-
-        .navbar-mobile-menu {
-          border-top: 1px solid rgba(255,255,255,0.1);
-          background: #2B3490;
-          max-height: 75vh;
-          overflow-y: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .navbar-mobile-item {
-          display: block;
-          padding: 13px 8px;
-          font-size: 14px;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          font-family: 'Rajdhani', sans-serif;
-          text-decoration: none;
-          color: #fff;
-        }
-
-        .navbar-mobile-parent {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 13px 8px;
-          font-size: 14px;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          font-family: 'Rajdhani', sans-serif;
-          color: #fff;
-          cursor: pointer;
-        }
-
-        .navbar-mobile-parent.expanded {
-          background: rgba(255,230,25,0.1);
-        }
-
-        .navbar-mobile-arrow {
-          transition: transform 0.2s;
-          font-size: 12px;
-        }
-
-        .navbar-mobile-arrow.open {
-          transform: rotate(-180deg);
-        }
-
-        .navbar-mobile-children {
-          display: none;
-          flex-direction: column;
-          background: rgba(255,255,255,0.05);
-        }
-
-        .navbar-mobile-children.visible {
-          display: flex;
-        }
-
-        .navbar-mobile-child {
-          padding: 10px 8px 10px 32px;
-          font-size: 13px;
-          font-weight: 500;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
-          font-family: 'Rajdhani', sans-serif;
-          text-decoration: none;
-          color: rgba(255,255,255,0.8);
-        }
-
-        .navbar-mobile-child:hover {
-          color: #FFE619;
-        }
-
-        .nav-dropdown {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          margin-top: 0;
-          background: #fff;
-          min-width: 240px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-          border-radius: 0 0 8px 8px;
-          z-index: 1100;
-          padding: 6px 0;
-          overflow: visible;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .nav-dropdown a {
-          display: block;
-          padding: 10px 18px;
-          color: #2B3490;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          text-decoration: none;
-          white-space: nowrap;
-          transition: background 0.2s;
-        }
-
-        .nav-dropdown a:hover {
-          background: #f2f4ff;
-        }
-
-        .nav-item-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-
-        .nav-arrow {
-          margin-left: 5px;
-          font-size: 10px;
-          transition: transform 0.2s;
-          display: inline-block;
-        }
-
-        .nav-arrow.open {
-          transform: rotate(180deg);
-        }
-
-        @media (max-width: 768px) {
-          .navbar-desktop { display: none !important; }
-          .navbar-hamburger { display: flex !important; }
-        }
-        @media (max-width: 480px) {
-          .navbar-mobile-item { padding: 14px 8px; font-size: 15px; }
-          .navbar-mobile-parent { padding: 14px 8px; }
-        }
-      `}</style>
-
-      <div style={{
-        width: "100%",
-        margin: "0 auto",
-        padding: "0 5%",
-        height: "48px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}>
-
-        {/* Desktop links */}
-        <div className="navbar-desktop">
-          {navItems.map((item) => {
-            const active = isActive(item.href)
-            const hasChildren = item.children && item.children.length > 0
-            const isOpen = openDropdown === item.label
-
-            if (hasChildren) {
-              return (
-                <div
-                  key={item.label}
-                  className="nav-item-wrapper"
-                  onMouseEnter={() => setOpenDropdown(item.label)}
-                  onMouseLeave={() => setOpenDropdown(null)}
-                >
-                  <Link
-                    href={item.href}
-                    style={{
-                      color: active || isOpen ? "#FFE619" : "rgba(255,255,255,0.82)",
-                      textDecoration: "none",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      fontFamily: "'Rajdhani', sans-serif",
-                      padding: "14px 12px",
-                      height: "48px",
-                      display: "flex",
-                      alignItems: "center",
-                      borderBottom: active ? "3px solid #FFE619" : "3px solid transparent",
-                      transition: "all 0.2s",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {item.label}
-                    <span className={`nav-arrow ${isOpen ? "open" : ""}`}>▾</span>
-                  </Link>
-
-                  {isOpen && (
-                    <div className="nav-dropdown" onMouseEnter={() => setOpenDropdown(item.label)} onMouseLeave={() => setOpenDropdown(null)}>
-                      {item.children?.map((child) => (
-                        <Link key={child.href} href={child.href}>
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )
-            }
-
-            return (
+    <nav className="bg-[#2B3490] sticky top-0 z-50 shadow-lg">
+      <div className="max-w-[1400px] mx-auto px-4">
+        {/* Desktop */}
+        <div className="hidden lg:flex items-center overflow-x-auto scrollbar-hide">
+          {navItems.map((item) => (
+            <div
+              key={item.label}
+              className="relative group flex-shrink-0"
+              onMouseEnter={() => setOpenDropdown(item.label)}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
               <Link
-                key={item.label}
                 href={item.href}
-                style={{
-                  color: active ? "#FFE619" : "rgba(255,255,255,0.82)",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  fontFamily: "'Rajdhani', sans-serif",
-                  padding: "14px 12px",
-                  height: "48px",
-                  display: "flex",
-                  alignItems: "center",
-                  borderBottom: active ? "3px solid #FFE619" : "3px solid transparent",
-                  transition: "all 0.2s",
-                  whiteSpace: "nowrap",
-                }}
+                className={`flex items-center gap-1 px-3 py-4 text-sm font-medium whitespace-nowrap transition-colors
+                  ${pathname === item.href
+                    ? 'text-[#FFE619] border-b-2 border-[#FFE619]'
+                    : 'text-white hover:text-[#FFE619]'
+                  }`}
               >
                 {item.label}
+                {item.children && <ChevronDown size={12} />}
               </Link>
-            )
-          })}
-        </div>
 
-        {/* Mobile hamburger */}
-        <button className="navbar-hamburger" onClick={() => setOpen(!open)}>
-          {open ? "✕" : "☰"}
-        </button>
-      </div>
-
-      {/* Mobile dropdown menu */}
-      {open && (
-        <div className="navbar-mobile-menu">
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {navItems.map((item) => {
-              const hasChildren = item.children && item.children.length > 0
-              const isExpanded = expandedMobile === item.label
-              const active = isActive(item.href)
-
-              if (hasChildren) {
-                return (
-                  <div key={item.label}>
-                    <div
-                      className={`navbar-mobile-parent ${isExpanded ? "expanded" : ""}`}
-                      onClick={() => toggleMobileExpand(item.label)}
-                      style={{ color: active ? "#FFE619" : "#fff" }}
+              {/* Dropdown */}
+              {item.children && openDropdown === item.label && (
+                <div className="absolute top-full left-0 bg-white shadow-lg rounded-b-lg min-w-[240px] z-50 border-t-2 border-[#FFE619]">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.label}
+                      href={child.href}
+                      className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-[#2B3490] hover:text-white transition-colors border-b border-gray-100 last:border-0"
                     >
-                      <span>{item.label}</span>
-                      <span className={`navbar-mobile-arrow ${isExpanded ? "open" : ""}`}>▾</span>
-                    </div>
-                    {isExpanded && (
-                      <div className="navbar-mobile-children visible">
-                        {item.children?.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="navbar-mobile-child"
-                            onClick={() => setOpen(false)}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )
-              }
-
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="navbar-mobile-item"
-                  onClick={() => setOpen(false)}
-                  style={{ color: active ? "#FFE619" : "#fff" }}
-                >
-                  {item.label}
-                </Link>
-              )
-            })}
-          </div>
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-      )}
-    </div>
+
+        {/* Mobile */}
+        <div className="lg:hidden flex items-center justify-between py-3">
+          <span className="text-white font-semibold">Menu</span>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="text-white p-2"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
+        </div>
+
+        {mobileOpen && (
+          <div className="lg:hidden pb-4 max-h-[70vh] overflow-y-auto">
+            {navItems.map((item) => (
+              <div key={item.label}>
+                <div className="flex items-center justify-between">
+                  <Link
+                    href={item.href}
+                    className="flex-1 py-2.5 px-2 text-white text-sm hover:text-[#FFE619]"
+                    onClick={() => !item.children && setMobileOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                  {item.children && (
+                    <button
+                      onClick={() => setOpenMobile(openMobile === item.label ? null : item.label)}
+                      className="px-3 py-2 text-white"
+                    >
+                      {openMobile === item.label ? '▲' : '▼'}
+                    </button>
+                  )}
+                </div>
+                {item.children && openMobile === item.label && (
+                  <div className="bg-[#1a2470] ml-4">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.label}
+                        href={child.href}
+                        className="block py-2 px-4 text-sm text-white/80 hover:text-[#FFE619]"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        → {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </nav>
   )
 }
