@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Container from "@/components/ui/Container"
 import { news } from "@/data/news"
 import { ChevronRight } from "lucide-react"
@@ -10,12 +10,12 @@ const EASE = [0.22, 1, 0.36, 1] as const
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE } },
 }
 
 const stagger = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 }
 
 const getCategoryColor = (category: string) => {
