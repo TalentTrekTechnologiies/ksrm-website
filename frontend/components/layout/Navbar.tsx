@@ -93,9 +93,9 @@ export default function Navbar() {
 
   return (
     <nav className="bg-[#2B3490] sticky top-0 z-50 shadow-lg">
-      <div className="max-w-[1400px] mx-auto px-4">
+      <div className="max-w-[1600px] mx-auto px-2">
         {/* Desktop */}
-        <div className="hidden lg:flex items-center overflow-x-auto">
+        <div className="hidden lg:flex items-center justify-between w-full">
           {navItems.map((item) => (
             <div
               key={item.label}
@@ -105,7 +105,7 @@ export default function Navbar() {
             >
               <Link
                 href={item.href}
-                className={`inline-flex items-center gap-1 px-3 py-4 text-xs font-semibold whitespace-nowrap transition-colors border-b-2
+                className={`inline-flex items-center gap-1 px-2.5 py-4 text-[13px] font-semibold whitespace-nowrap transition-colors border-b-2
                   ${pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
                     ? 'text-[#FFE619] border-[#FFE619]'
                     : 'text-white border-transparent hover:text-[#FFE619] hover:border-[#FFE619]'
