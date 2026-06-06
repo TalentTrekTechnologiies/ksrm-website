@@ -95,7 +95,7 @@ export default function Navbar() {
     <nav className="bg-[#2B3490] sticky top-0 z-50 shadow-lg">
       <div className="max-w-[1400px] mx-auto px-4">
         {/* Desktop */}
-        <div className="hidden lg:flex items-center overflow-x-auto scrollbar-hide">
+        <div className="hidden lg:flex items-center overflow-x-auto scrollbar-hide gap-0">
           {navItems.map((item) => (
             <div
               key={item.label}
@@ -105,10 +105,10 @@ export default function Navbar() {
             >
               <Link
                 href={item.href}
-                className={`flex items-center gap-1 px-3 py-4 text-sm font-medium whitespace-nowrap transition-colors
-                  ${pathname === item.href
-                    ? 'text-[#FFE619] border-b-2 border-[#FFE619]'
-                    : 'text-white hover:text-[#FFE619]'
+                className={`flex items-center gap-1 px-4 py-4 text-sm font-medium whitespace-nowrap transition-colors border-b-2
+                  ${pathname === item.href || pathname.startsWith(item.href + '/')
+                    ? 'text-[#FFE619] border-[#FFE619]'
+                    : 'text-white border-transparent hover:text-[#FFE619] hover:border-[#FFE619]'
                   }`}
               >
                 {item.label}
