@@ -646,7 +646,6 @@ export const departments: Record<string, Department> = {
         name: "Dr. V. Giridhar",
         designation: "Associate Professor",
         qualification: "M.Tech., Ph.D.",
-        photo: "/images/departments/civil/faculty/giridhar.jpg",
         specialization: "Transportation Engineering",
       },
       {
@@ -660,7 +659,6 @@ export const departments: Record<string, Department> = {
         name: "Dr. I. Srinivasula Reddy",
         designation: "Professor",
         qualification: "M.Tech., Ph.D.",
-        photo: "/images/departments/civil/faculty/srinivasula.jpg",
         specialization: "Environmental Engineering",
       },
       {
