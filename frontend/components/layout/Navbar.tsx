@@ -126,7 +126,14 @@ export default function Navbar() {
           height: 100%;
           width: 100%;
           flex-wrap: nowrap;
+          overflow-x: auto;
+          overflow-y: hidden;
+          white-space: nowrap;
+          scrollbar-width: none;
         }
+          .navbar-desktop::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+          }
 
         .navbar-hamburger {
           display: none;
@@ -140,6 +147,26 @@ export default function Navbar() {
           justify-content: center;
           padding: 4px 8px;
           line-height: 1;
+        }
+
+        .navbar-wrapper {
+          position: relative;
+          width: 100%;
+        }
+
+        .navbar-wrapper::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 40px;
+          height: 100%;
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        .navbar-wrapper::after {
+          right: 0;
+          background: linear-gradient(to left, #2B3490, transparent);
         }
 
         .navbar-mobile-menu {
@@ -281,6 +308,7 @@ export default function Navbar() {
       }}>
 
         {/* Desktop links */}
+        <div className="navbar-wrapper" >
         <div className="navbar-desktop">
           {navItems.map((item) => {
             const active = isActive(item.href)
@@ -352,6 +380,7 @@ export default function Navbar() {
               </Link>
             )
           })}
+        </div>  
         </div>
 
         {/* Mobile hamburger */}
