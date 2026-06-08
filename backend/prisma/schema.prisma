@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  text      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  category    String
+  imageUrl    String?
+  date        DateTime
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faculty {
+  id             Int      @id @default(autoincrement())
+  name           String
+  designation    String
+  qualification  String
+  department     String
+  specialization String?
+  experience     String?
+  email          String?
+  photoUrl       String?
+  isHod          Boolean  @default(false)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Placement {
+  id          Int      @id @default(autoincrement())
+  studentName String
+  company     String
+  package     String
+  department  String
+  year        Int
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  title     String
+  imageUrl  String
+  category  String
+  date      DateTime?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model DegreeVerification {
+  id            Int      @id @default(autoincrement())
+  studentName   String
+  hallTicketNo  String   @unique
+  department    String
+  yearOfPassing Int
+  degree        String
+  isVerified    Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  password     String
+  name         String
+  isSuperAdmin Boolean  @default(false)
+  permissions  String[] // "faculty", "news", "gallery", "placements", "exam", "notifications", "research", "degree_verification", "admins"
+  department   String?  // optional, for faculty management
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Research {
+  id         Int      @id @default(autoincrement())
+  title      String
+  authors    String
+  journal    String?
+  year       Int
+  department String
+  type       String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model ExamNotification {
+  id       Int      @id @default(autoincrement())
+  title    String
+  fileUrl  String?
+  category String
+  date     DateTime
+  isActive Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// Audit Log for tracking admin actions
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  adminId   Int
+  adminName String
+  adminEmail String
+  action    String   // "CREATE" | "UPDATE" | "DELETE"
+  module    String   // "faculty" | "news" | "gallery" | "placements" | "exam" | "notifications" | "degree_verification"
+  targetId  Int?     // ID of the affected record
+  details   String?  // JSON string with changes
+  ipAddress String?  // IP address of the admin
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+  @@index([module])
+  @@index([createdAt])
+}

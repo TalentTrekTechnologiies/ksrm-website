@@ -1,66 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
-
-export interface Notification {
-  id: string;
-  text: string;
-  active: boolean;
-  createdAt: string;
-}
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateNotificationDto } from './dto/create-notification.dto';
 
 @Injectable()
 export class NotificationsService {
-  private readonly filePath = join(process.cwd(), 'data', 'notifications.json');
+  constructor(private prisma: PrismaService) {}
 
-  private read(): Notification[] {
-    if (!existsSync(this.filePath)) return [];
-    return JSON.parse(readFileSync(this.filePath, 'utf8'));
+  async findAll() {
+    return this.prisma.notification.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  private write(data: Notification[]): void {
-    const dir = join(process.cwd(), 'data');
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-    writeFileSync(this.filePath, JSON.stringify(data, null, 2));
+  async create(createNotificationDto: CreateNotificationDto) {
+    return this.prisma.notification.create({
+      data: createNotificationDto,
+    });
   }
 
-  // Public: only active notifications for the ticker
-  findActive(): Notification[] {
-    return this.read().filter((n) => n.active);
+  async update(id: number, updateNotificationDto: CreateNotificationDto) {
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
+    if (!notification) {
+      throw new NotFoundException(`Notification with ID ${id} not found`);
+    }
+    return this.prisma.notification.update({
+      where: { id },
+      data: updateNotificationDto,
+    });
   }
 
-  // Admin: all notifications
-  findAll(): Notification[] {
-    return this.read();
-  }
-
-  create(text: string): Notification {
-    const data = this.read();
-    const item: Notification = {
-      id: Date.now().toString(),
-      text: text.trim(),
-      active: true,
-      createdAt: new Date().toISOString(),
-    };
-    data.push(item);
-    this.write(data);
-    return item;
-  }
-
-  toggle(id: string): Notification | null {
-    const data = this.read();
-    const item = data.find((n) => n.id === id);
-    if (!item) return null;
-    item.active = !item.active;
-    this.write(data);
-    return item;
-  }
-
-  remove(id: string): boolean {
-    const data = this.read();
-    const filtered = data.filter((n) => n.id !== id);
-    if (filtered.length === data.length) return false;
-    this.write(filtered);
-    return true;
+  async delete(id: number) {
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
+    if (!notification) {
+      throw new NotFoundException(`Notification with ID ${id} not found`);
+    }
+    return this.prisma.notification.delete({
+      where: { id },
+    });
   }
 }

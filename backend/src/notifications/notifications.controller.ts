@@ -1,43 +1,50 @@
-import {
-  Body,
+﻿import {
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
+import { CreateNotificationDto } from './dto/create-notification.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PermissionsGuard } from '../auth/permissions.guard';
+import { RequirePermission } from '../auth/permission.decorator';
 
 @Controller('notifications')
 export class NotificationsController {
-  constructor(private readonly service: NotificationsService) {}
+  constructor(private readonly notificationsService: NotificationsService) {}
 
-  // Public — used by the header ticker
   @Get()
-  findActive() {
-    return this.service.findActive();
-  }
-
-  // Admin — all notifications regardless of active state
-  @Get('admin')
   findAll() {
-    return this.service.findAll();
+    return this.notificationsService.findAll();
   }
 
   @Post()
-  create(@Body('text') text: string) {
-    return this.service.create(text);
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('notifications')
+  create(@Body() createNotificationDto: CreateNotificationDto) {
+    return this.notificationsService.create(createNotificationDto);
   }
 
-  @Patch(':id/toggle')
-  toggle(@Param('id') id: string) {
-    return this.service.toggle(id);
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('notifications')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateNotificationDto: CreateNotificationDto,
+  ) {
+    return this.notificationsService.update(id, updateNotificationDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    const ok = this.service.remove(id);
-    return { success: ok };
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('notifications')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.notificationsService.delete(id);
   }
 }
