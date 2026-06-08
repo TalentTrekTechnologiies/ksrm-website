@@ -53,7 +53,7 @@ export default function LeadershipProfile({ leader }: LeadershipProfileProps) {
         .leadership-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
           font-size: 12px; font-weight: 700; letter-spacing: 2px;
-          text-transform: uppercase; color: #FFE619;
+          text-transform: uppercase; color: #2B3490;
         }
         .leadership-tabs {
           display: flex; gap: 12px; margin: 32px 0;

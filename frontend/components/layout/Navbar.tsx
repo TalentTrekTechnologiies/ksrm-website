@@ -52,15 +52,8 @@ const navItems: NavItem[] = [
       { label: "Faculty", href: "/academics/faculty" },
     ],
   },
-  {
-    label: "NAAC",
-    href: "/naac",
-    children: [
-      { label: "NAAC", href: "/naac" },
-      { label: "IQAC", href: "/iqac" },
-    ],
-  },
-  { label: "T&P Cell", href: "/placements" },
+  { label: "Placements", href: "/placements" },
+  { label: "Research", href: "/research" },
   {
     label: "Campus Life",
     href: "/campus-life",
@@ -78,7 +71,19 @@ const navItems: NavItem[] = [
       { label: "Cultural Club", href: "/campus-life/cultural" },
     ],
   },
+  {
+    label: "IQAC",
+    href: "/iqac",
+    children: [
+      { label: "NAAC", href: "/naac" },
+      { label: "IQAC", href: "/iqac" },
+      { label: "Accreditation", href: "/accreditation" },
+    ],
+  },
   { label: "Examinations", href: "/examinations" },
+  { label: "Alumni", href: "/alumni" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Careers", href: "/careers" },
   { label: "Degree Verification", href: "/degree-verification" },
   { label: "News & Events", href: "/news" },
   {
