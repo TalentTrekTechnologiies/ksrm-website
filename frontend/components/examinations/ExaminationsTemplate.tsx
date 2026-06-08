@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import Container from "@/components/ui/Container"
 import { examinations } from "@/data/examinations"
-import { FileText, Clock } from "lucide-react"
+import { FileText, Clock, Link2 } from "lucide-react"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -20,6 +20,7 @@ const stagger = {
 
 export default function ExaminationsTemplate() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [selectedYear, setSelectedYear] = useState("2025")
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -56,6 +57,98 @@ export default function ExaminationsTemplate() {
           grid-template-columns: repeat(3, 1fr);
           gap: 24px;
           margin: 56px 0;
+        }
+        .portal-links-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+          margin: 56px 0;
+        }
+        .portal-link-card {
+          background: #f7f8fa;
+          border: 2px solid #eef0f3;
+          border-radius: 12px;
+          padding: 24px 20px;
+          text-decoration: none;
+          text-align: center;
+          transition: all 0.2s;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #2B3490;
+          font-family: 'Rajdhani', sans-serif;
+        }
+        .portal-link-card:hover {
+          background: #2B3490;
+          color: #FFE619;
+          border-color: #2B3490;
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(43,52,144,0.2);
+        }
+        .academic-calendars-section {
+          margin: 56px 0;
+        }
+        .year-tabs {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 32px;
+          flex-wrap: wrap;
+        }
+        .year-tab {
+          padding: 10px 16px;
+          border: 2px solid #eef0f3;
+          background: #f7f8fa;
+          color: #2B3490;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 14px;
+          font-family: 'Rajdhani', sans-serif;
+          transition: all 0.2s;
+        }
+        .year-tab.active {
+          background: #2B3490;
+          color: #FFE619;
+          border-color: #2B3490;
+        }
+        .year-tab:hover {
+          background: #2B3490;
+          color: #FFE619;
+          border-color: #2B3490;
+        }
+        .calendar-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .calendar-item {
+          background: #f7f8fa;
+          border-left: 4px solid #FFE619;
+          border-radius: 0 8px 8px 0;
+          padding: 20px;
+          margin-bottom: 16px;
+          transition: all 0.2s;
+        }
+        .calendar-item:hover {
+          box-shadow: 0 8px 24px rgba(43,52,144,0.1);
+          transform: translateX(4px);
+        }
+        .calendar-item-date {
+          font-size: 12px;
+          color: #999;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+        .calendar-item-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 15px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0;
         }
         .exam-link-button {
           padding: 28px;
@@ -172,6 +265,11 @@ export default function ExaminationsTemplate() {
         .exam-contact-card a:hover {
           color: #FFE619;
         }
+        @media (max-width: 1200px) {
+          .portal-links-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
         @media (max-width: 1024px) {
           .exam-quick-links {
             grid-template-columns: 1fr;
@@ -179,9 +277,15 @@ export default function ExaminationsTemplate() {
           .exam-content-grid {
             grid-template-columns: 1fr;
           }
+          .portal-links-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
         @media (max-width: 768px) {
           .exam-quick-links {
+            grid-template-columns: 1fr;
+          }
+          .portal-links-grid {
             grid-template-columns: 1fr;
           }
         }
@@ -264,6 +368,81 @@ export default function ExaminationsTemplate() {
                 {link.label}
               </motion.a>
             ))}
+          </motion.div>
+        </Container>
+      </section>
+
+      {/* PORTAL LINKS */}
+      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
+        <Container>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={stagger}>
+            <motion.h2
+              variants={fadeUp}
+              className="exam-list-title"
+              style={{ marginBottom: 32 }}
+            >
+              <Link2 size={24} color="#2B3490" />
+              Examination Portal Links
+            </motion.h2>
+            <motion.div variants={stagger} className="portal-links-grid">
+              {examinations.portalLinks.map((link, idx) => (
+                <motion.a
+                  key={idx}
+                  variants={fadeUp}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="portal-link-card"
+                >
+                  {link.label}
+                </motion.a>
+              ))}
+            </motion.div>
+          </motion.div>
+        </Container>
+      </section>
+
+      {/* ACADEMIC CALENDARS */}
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+        <Container>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={stagger} className="academic-calendars-section">
+            <motion.h2
+              variants={fadeUp}
+              className="exam-list-title"
+              style={{ marginBottom: 24 }}
+            >
+              <FileText size={24} color="#2B3490" />
+              Academic Calendars
+            </motion.h2>
+
+            <motion.div variants={fadeUp} className="year-tabs">
+              {examinations.availableYears.map((year) => (
+                <button
+                  key={year}
+                  className={`year-tab ${selectedYear === year ? "active" : ""}`}
+                  onClick={() => setSelectedYear(year)}
+                >
+                  {year}
+                </button>
+              ))}
+            </motion.div>
+
+            <motion.div variants={fadeUp}>
+              {examinations.academicCalendars[selectedYear]?.length > 0 ? (
+                <ul className="calendar-list">
+                  {examinations.academicCalendars[selectedYear].map((calendar, idx) => (
+                    <li key={idx} className="calendar-item">
+                      <div className="calendar-item-date">[{calendar.date}]</div>
+                      <p className="calendar-item-title">{calendar.title}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "40px 20px" }}>
+                  No academic calendars available for this year.
+                </p>
+              )}
+            </motion.div>
           </motion.div>
         </Container>
       </section>

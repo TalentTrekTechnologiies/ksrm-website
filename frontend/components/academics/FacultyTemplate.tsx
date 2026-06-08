@@ -380,9 +380,17 @@ export default function FacultyTemplate() {
               {currentDept.faculty.map((member, idx) => (
                 <motion.div key={idx} variants={fadeUp} className="fac-card">
                   <div className="fac-photo">
-                    <img src={member.photoUrl} alt={member.name} onError={(e) => {
-                      e.currentTarget.style.display = "none"
-                    }} />
+                    {member.photoUrl ? (
+                      <img src={member.photoUrl} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => {
+                        e.currentTarget.style.display = "none"
+                      }} />
+                    ) : (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", background: "linear-gradient(135deg, #2B3490, #1e2570)" }}>
+                        <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 32, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif" }}>
+                          {member.name.split(" ").map((n: string) => n[0]).slice(0, 2).join("").toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="fac-info">
                     <h3 className="fac-name">{member.name}</h3>

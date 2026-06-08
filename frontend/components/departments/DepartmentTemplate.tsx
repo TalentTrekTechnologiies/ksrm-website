@@ -232,7 +232,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             variants={stagger}
             style={{ maxWidth: 820 }}
           >
@@ -263,7 +263,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             variants={stagger}
           >
             {/* VISION */}
@@ -352,7 +352,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             variants={stagger}
           >
             <motion.h2
@@ -374,9 +374,31 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
                       width: "100%", aspectRatio: "3/4", borderRadius: 16, overflow: "hidden",
                       background: "linear-gradient(135deg, #2B3490, #1e2570)",
                       display: "flex", alignItems: "center", justifyContent: "center",
+                      position: "relative",
                     }}
                   >
-                    <img src={department.hod?.photo || "/images/departments/placeholder-faculty.jpg"} alt={department.hod?.name || "HOD"} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} onError={(e) => { e.currentTarget.src = "/images/departments/placeholder-faculty.jpg"; e.currentTarget.onerror = null }} />
+                    {department.hod?.photo ? (
+                      <img
+                        src={department.hod.photo}
+                        alt={department.hod?.name || "HOD"}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none"
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                          if (fallback) fallback.style.display = "flex"
+                        }}
+                      />
+                    ) : null}
+                    {!department.hod?.photo && (
+                      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ textAlign: "center" }}>
+                          <User size={64} color="rgba(255,255,255,0.4)" strokeWidth={1.5} />
+                          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 24, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif", margin: "16px 0 0", letterSpacing: "1px" }}>
+                            {department.hod?.name.split(" ").map((n: string) => n[0]).slice(0, 2).join("")}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="dept-card" style={{ marginTop: 24 }}>
@@ -422,21 +444,15 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
       {/* FACULTY */}
       <section id="faculty" style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <Container>
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={stagger}
-          >
-            <motion.h2
-              variants={fadeUp}
+          <div>
+            <h2
               style={{
                 fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
                 fontWeight: 700, color: "#1a1a2e", margin: "0 0 32px",
               }}
             >
               Our Faculty
-            </motion.h2>
+            </h2>
 
             <div className="dept-faculty-grid">
               {(department.faculty || []).map((member, idx) => {
@@ -447,9 +463,8 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
                   .toUpperCase()
 
                 return (
-                  <motion.div
+                  <div
                     key={idx}
-                    variants={fadeUp}
                     style={{
                       background: "#fff",
                       border: "1px solid #eef0f3",
@@ -476,29 +491,32 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
                         position: "relative",
                       }}
                     >
-                      <img
-                        src={member.photo || "/images/departments/placeholder-faculty.jpg"}
-                        alt={member.name}
-                        style={{
-                          width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top",
-                          display: "block",
-                        }}
-                        onError={(e) => {
-                          e.currentTarget.src = "/images/departments/placeholder-faculty.jpg"
-                          e.currentTarget.onerror = null
-                        }}
-                      />
+                      {member.photo ? (
+                        <img
+                          src={member.photo}
+                          alt={member.name}
+                          loading="eager"
+                          fetchPriority="high"
+                          style={{
+                            width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top",
+                            display: "block",
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none"
+                            const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                            if (fallback) fallback.style.display = "flex"
+                          }}
+                        />
+                      ) : null}
                       <div
                         style={{
-                          position: "absolute",
-                          inset: 0,
-                          display: "flex",
+                          display: member.photo ? "none" : "flex",
+                          position: "relative",
+                          width: "100%",
+                          height: "100%",
                           alignItems: "center",
                           justifyContent: "center",
                           background: "linear-gradient(135deg, #2B3490, #1e2570)",
-                        }}
-                        onLoad={() => {
-                          // This won't fire, but keeping structure
                         }}
                       >
                         <div
@@ -506,14 +524,15 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
                             textAlign: "center",
                           }}
                         >
-                          <User size={36} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
+                          <User size={48} color="rgba(255,255,255,0.4)" strokeWidth={1.5} />
                           <p
                             style={{
-                              color: "rgba(255,255,255,0.5)",
-                              fontSize: 14,
+                              color: "rgba(255,255,255,0.7)",
+                              fontSize: 18,
                               fontWeight: 700,
                               fontFamily: "'Rajdhani', sans-serif",
-                              margin: "8px 0 0",
+                              margin: "12px 0 0",
+                              letterSpacing: "1px",
                             }}
                           >
                             {initials}
@@ -560,11 +579,11 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
                         </div>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 )
               })}
             </div>
-          </motion.div>
+          </div>
         </Container>
       </section>
 
@@ -574,7 +593,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             variants={stagger}
           >
             <motion.h2
@@ -628,7 +647,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             variants={stagger}
           >
             <motion.h2
@@ -708,7 +727,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             variants={stagger}
           >
             {/* PEOs */}

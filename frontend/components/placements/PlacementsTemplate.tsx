@@ -74,7 +74,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
           font-family: 'Rajdhani', sans-serif;
           font-size: 36px;
           font-weight: 700;
-          color: #FFE619;
+          color: #2B3490;
           margin-bottom: 8px;
         }
         .place-stat-label {
@@ -315,7 +315,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
                       <td style={{ fontWeight: 600, color: "#2B3490" }}>{record.year}</td>
                       <td>{record.studentsPlaced}</td>
                       <td>{record.companiesVisited}</td>
-                      <td style={{ color: "#FFE619", fontWeight: 600 }}>{record.highestPackage}</td>
+                      <td style={{ color: "#2B3490", fontWeight: 600 }}>{record.highestPackage}</td>
                       <td>{record.averagePackage}</td>
                     </tr>
                   ))}
