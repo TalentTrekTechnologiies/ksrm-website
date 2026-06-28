@@ -55,37 +55,33 @@ export default function Header() {
           100% { transform: translateY(120px) translateX(-20px) rotate(-200deg); opacity: 0; }
         }
 
-        /* ── SINGLE HEADER ROW ── */
+        /* ── HEADER GRID ARCHITECTURE ── */
         .header-tier-1 {
           width: 100%;
           background: #ffffff;
-          padding: clamp(6px, 1vw, 10px) clamp(12px, 2.5vw, 40px);
-          display: flex;
+          padding: clamp(8px, 1vw, 16px) clamp(16px, 2vw, 40px);
+          display: grid;
+          grid-template-columns: minmax(110px, 9%) minmax(420px, 1fr) minmax(420px, 32%);
+          gap: clamp(12px, 2vw, 28px);
           align-items: center;
-          justify-content: space-between;
-          gap: clamp(8px, 1.5vw, 28px);
-          flex-wrap: nowrap;
-          overflow: hidden;
-          min-height: auto;
-          max-height: 165px;
+          box-sizing: border-box;
         }
 
         .header-identity-group {
           display: flex;
           align-items: center;
-          gap: clamp(10px, 1.2vw, 18px);
+          gap: clamp(12px, 1.5vw, 20px);
           text-decoration: none;
           color: inherit;
           border: none;
           outline: none;
           min-width: 0;
-          flex: 1;
-          flex-shrink: 1;
+          grid-column: 1 / 3;
         }
 
         .header-logo {
-          width: clamp(48px, 6vw, 115px);
-          height: clamp(48px, 6vw, 115px);
+          width: clamp(90px, 7vw, 130px);
+          height: clamp(90px, 7vw, 130px);
           flex-shrink: 0;
           flex-grow: 0;
           display: flex;
@@ -105,17 +101,18 @@ export default function Header() {
         .header-text-block {
           display: flex;
           flex-direction: column;
-          gap: 2px;
-          flex: 1;
+          gap: clamp(2px, 0.5vw, 6px);
           min-width: 0;
+          grid-column: 2 / 3;
+          align-self: center;
         }
 
         .header-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: clamp(1.75rem, 3.2vw, 3.8rem);
+          font-size: clamp(2.4rem, 3.2vw, 4rem);
           font-weight: 700;
           color: #E8112D;
-          line-height: 1.2;
+          line-height: 1.15;
           letter-spacing: 1px;
           margin: 0;
           word-wrap: break-word;
@@ -125,7 +122,7 @@ export default function Header() {
         }
 
         .header-subtitle {
-          font-size: clamp(0.8rem, 1.4vw, 1.125rem);
+          font-size: clamp(1rem, 1.2vw, 1.3rem);
           color: #555;
           letter-spacing: 0;
           line-height: 1.3;
@@ -187,34 +184,38 @@ export default function Header() {
         .header-badges-row {
           display: flex;
           align-items: center;
-          gap: clamp(6px, 0.8vw, 12px);
-          width: auto;
-          flex-shrink: 0;
-          flex-grow: 0;
+          gap: clamp(10px, 1.5vw, 16px);
+          width: 100%;
+          height: 100%;
           flex-wrap: nowrap;
           justify-content: flex-end;
-          margin-left: 40px;
+          grid-column: 3 / 4;
+          align-self: center;
         }
 
         .header-badges-left {
           display: flex;
-          gap: clamp(10px, 1.2vw, 16px);
+          gap: clamp(10px, 1.5vw, 16px);
           align-items: center;
           flex-shrink: 0;
         }
 
         .header-badges-right {
           display: flex;
-          gap: clamp(10px, 1.2vw, 16px);
+          gap: clamp(10px, 1.5vw, 16px);
           align-items: center;
           flex-shrink: 0;
         }
 
         .header-badge-wrapper {
           position: relative;
-          width: clamp(45px, 5vw, 92px);
-          height: clamp(45px, 5vw, 92px);
+          width: auto;
+          height: clamp(72px, 5vw, 96px);
           flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          aspect-ratio: 1;
         }
 
         .header-badge-circle {
