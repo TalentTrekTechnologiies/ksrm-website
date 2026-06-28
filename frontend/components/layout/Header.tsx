@@ -55,35 +55,33 @@ export default function Header() {
           100% { transform: translateY(120px) translateX(-20px) rotate(-200deg); opacity: 0; }
         }
 
-        /* ── SINGLE HEADER ROW ── */
+        /* ── HEADER GRID LAYOUT ── */
         .header-tier-1 {
           width: 100%;
           background: #ffffff;
-          padding: clamp(8px, 1.2vw, 12px) clamp(12px, 2.5vw, 40px);
-          display: flex;
+          padding: 8px 20px;
+          display: grid;
+          grid-template-columns: 160px 1fr auto;
+          gap: 20px;
           align-items: center;
-          justify-content: space-between;
-          gap: clamp(8px, 1.5vw, 28px);
-          flex-wrap: nowrap;
-          overflow: hidden;
+          box-sizing: border-box;
         }
 
         .header-identity-group {
           display: flex;
           align-items: center;
-          gap: clamp(10px, 1.2vw, 18px);
+          gap: 16px;
           text-decoration: none;
           color: inherit;
           border: none;
           outline: none;
           min-width: 0;
-          flex-grow: 1;
-          flex-shrink: 1;
+          grid-column: 1 / 2;
         }
 
         .header-logo {
-          width: clamp(48px, 6vw, 120px);
-          height: clamp(48px, 6vw, 120px);
+          width: 160px;
+          height: 160px;
           flex-shrink: 0;
           display: flex;
           align-items: center;
@@ -102,27 +100,29 @@ export default function Header() {
         .header-text-block {
           display: flex;
           flex-direction: column;
-          gap: 4px;
-          width: auto;
+          gap: 2px;
+          width: 100%;
           min-width: 0;
+          grid-column: 2 / 3;
+          padding-right: 40px;
         }
 
         .header-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: clamp(1.75rem, 2.0vw, 2.8rem);
+          font-size: 2.6rem;
           font-weight: 700;
           color: #E8112D;
           line-height: 1.1;
           letter-spacing: 1px;
           margin: 0;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          white-space: normal;
+          word-wrap: break-word;
+          overflow: visible;
           text-transform: uppercase;
         }
 
         .header-subtitle {
-          font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+          font-size: 0.95rem;
           color: #555;
           letter-spacing: 0;
           line-height: 1.3;
@@ -184,30 +184,32 @@ export default function Header() {
         .header-badges-row {
           display: flex;
           align-items: center;
-          gap: clamp(6px, 0.8vw, 12px);
+          gap: 20px;
+          width: auto;
           flex-shrink: 0;
           flex-wrap: nowrap;
-          justify-content: flex-end;
+          grid-column: 3 / 4;
+          justify-content: flex-start;
         }
 
         .header-badges-left {
           display: flex;
-          gap: clamp(10px, 1.2vw, 16px);
+          gap: 20px;
           align-items: center;
           flex-shrink: 0;
         }
 
         .header-badges-right {
           display: flex;
-          gap: clamp(10px, 1.2vw, 16px);
+          gap: 20px;
           align-items: center;
           flex-shrink: 0;
         }
 
         .header-badge-wrapper {
           position: relative;
-          width: clamp(45px, 4.2vw, 85px);
-          height: clamp(45px, 4.2vw, 85px);
+          width: 72px;
+          height: 72px;
           flex-shrink: 0;
         }
 
@@ -228,12 +230,10 @@ export default function Header() {
           object-fit: contain;
         }
 
-        .header-badge-wrapper[data-badge="GNAN"] .header-badge-img {
-          transform: scale(2);
-        }
-
+        /* All badges same size - no individual scaling */
+        .header-badge-wrapper[data-badge="GNAN"] .header-badge-img,
         .header-badge-wrapper[data-badge="KSNR"] .header-badge-img {
-          transform: scale(1.2);
+          transform: scale(1);
         }
 
         /* ── BOTTOM BORDER ── */
@@ -243,86 +243,33 @@ export default function Header() {
           background: #2B3490;
         }
 
-        /* ── RESPONSIVE: ULTRA-WIDE / THEATRE SCREEN (>1920px) ── */
-        @media (min-width: 1921px) {
-          .header-tier-1 {
-            padding: 12px 4%;
-          }
-          .header-identity-group {
-            gap: 18px;
-          }
-          .header-badges-row {
-            gap: 12px;
-          }
-        }
-
-        /* ── RESPONSIVE: LARGE DESKTOP (1600px - 1920px) ── */
-        @media (min-width: 1600px) and (max-width: 1920px) {
+        /* ── DESKTOP: 72px BADGES (1920px and above) ── */
+        @media (min-width: 1920px) {
           .header-logo {
-            width: clamp(80px, 5.5vw, 110px);
-            height: clamp(80px, 5.5vw, 110px);
+            width: 160px;
+            height: 160px;
           }
           .header-badge-wrapper {
-            width: clamp(70px, 4.5vw, 85px);
-            height: clamp(70px, 4.5vw, 85px);
-          }
-        }
-
-        /* ── RESPONSIVE: STANDARD DESKTOP (1440px - 1600px) ── */
-        @media (min-width: 1440px) and (max-width: 1599px) {
-          .header-logo {
-            width: clamp(75px, 5.2vw, 105px);
-            height: clamp(75px, 5.2vw, 105px);
-          }
-          .header-badge-wrapper {
-            width: clamp(65px, 4.4vw, 80px);
-            height: clamp(65px, 4.4vw, 80px);
-          }
-        }
-
-        /* ── RESPONSIVE: LAPTOP/DESKTOP (1280px - 1440px) ── */
-        @media (min-width: 1280px) and (max-width: 1439px) {
-          .header-logo {
-            width: clamp(70px, 4.8vw, 100px);
-            height: clamp(70px, 4.8vw, 100px);
-          }
-          .header-badge-wrapper {
-            width: clamp(60px, 4.2vw, 75px);
-            height: clamp(60px, 4.2vw, 75px);
-          }
-        }
-
-        /* ── RESPONSIVE: 1024px - 1280px ── */
-        @media (min-width: 1024px) and (max-width: 1279px) {
-          .header-tier-1 {
-            padding: clamp(8px, 1vw, 10px) clamp(12px, 2vw, 30px);
-          }
-          .header-logo {
-            width: clamp(60px, 4.5vw, 90px);
-            height: clamp(60px, 4.5vw, 90px);
+            width: 72px;
+            height: 72px;
           }
           .header-title {
-            font-size: clamp(1.6rem, 1.9vw, 2.4rem);
-          }
-          .header-subtitle {
-            font-size: clamp(0.75rem, 1rem, 0.9rem);
-          }
-          .header-badge-wrapper {
-            width: clamp(50px, 3.8vw, 70px);
-            height: clamp(50px, 3.8vw, 70px);
+            font-size: 2.6rem;
           }
         }
 
-        /* ── RESPONSIVE: TABLET LANDSCAPE (768px - 1024px) ── */
-        @media (max-width: 1024px) and (min-width: 769px) {
-          .header-tier-1 {
-            padding: 10px 4%;
+        /* ── LAPTOP: 60px BADGES (1024px - 1919px) ── */
+        @media (min-width: 1024px) and (max-width: 1919px) {
+          .header-badge-wrapper {
+            width: 60px;
+            height: 60px;
           }
-          .header-identity-group {
-            gap: 14px;
+          .header-logo {
+            width: 140px;
+            height: 140px;
           }
-          .header-badges-row {
-            gap: 9px;
+          .header-title {
+            font-size: 2.3rem;
           }
         }
 
