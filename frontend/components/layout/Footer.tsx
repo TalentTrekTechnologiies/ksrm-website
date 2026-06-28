@@ -55,6 +55,28 @@ const deptLinks = [
   { label: "MBA",        href: "/departments/mba"   },
 ]
 
+const ugPrograms = [
+  { label: "B.Tech CSE",         href: "/departments/cse"   },
+  { label: "B.Tech ECE",         href: "/departments/ece"   },
+  { label: "B.Tech EEE",         href: "/departments/eee"   },
+  { label: "B.Tech Mechanical",  href: "/departments/mech"  },
+  { label: "B.Tech Civil",       href: "/departments/civil" },
+]
+
+const pgPrograms = [
+  { label: "M.Tech VLSI",        href: "/academics"         },
+  { label: "M.Tech Power Systems", href: "/academics"       },
+  { label: "M.Tech Structural",  href: "/academics"         },
+  { label: "M.Tech Thermal",     href: "/academics"         },
+]
+
+const diplomaPrograms = [
+  { label: "Diploma Civil",      href: "/academics/admissions" },
+  { label: "Diploma Mechanical", href: "/academics/admissions" },
+  { label: "Diploma ECE",        href: "/academics/admissions" },
+  { label: "Diploma CSE",        href: "/academics/admissions" },
+]
+
 const socials = [
   { Icon: IconFacebook,  href: "https://facebook.com/ksrmceofficial"     },
   { Icon: IconTwitterX,  href: "https://twitter.com/ksrmceofficial"      },
@@ -134,9 +156,9 @@ export default function Footer() {
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .footer-grid {
           display: grid;
-          grid-template-columns: 1.5fr 1fr 1fr 1.4fr;
+          grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1.2fr;
           gap: 32px;
-          max-width: 1280px;
+          max-width: 1400px;
           margin: 0 auto;
           padding: 0 32px;
         }
@@ -149,7 +171,10 @@ export default function Footer() {
           padding: 0 32px;
         }
         @media (max-width: 1024px) {
-          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; padding: 0 24px; }
+          .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 0 24px; }
+        }
+        @media (max-width: 768px) {
+          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; padding: 0 20px; }
         }
         @media (max-width: 640px) {
           .footer-grid         { grid-template-columns: 1fr; padding: 0 16px; }
@@ -225,19 +250,37 @@ export default function Footer() {
           </div>
         </motion.div>
 
-        {/* COL 2 — Quick Links */}
+        {/* COL 2 — UG Programs */}
+        <motion.div variants={colVariants}>
+          <ColHeading><strong>UG Programs</strong></ColHeading>
+          {ugPrograms.map((l) => (
+            <Link key={l.href} href={l.href} style={{ display: "block", padding: "6px 0", color: "rgba(255,255,255,0.7)", fontSize: "13.5px", textDecoration: "none", fontWeight: 600, transition: "color 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.color = "#FFE619"} onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{l.label}</Link>
+          ))}
+        </motion.div>
+
+        {/* COL 3 — PG Programs */}
+        <motion.div variants={colVariants}>
+          <ColHeading><strong>PG Programs</strong></ColHeading>
+          {pgPrograms.map((l) => (
+            <Link key={l.href} href={l.href} style={{ display: "block", padding: "6px 0", color: "rgba(255,255,255,0.7)", fontSize: "13.5px", textDecoration: "none", fontWeight: 600, transition: "color 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.color = "#FFE619"} onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{l.label}</Link>
+          ))}
+        </motion.div>
+
+        {/* COL 4 — Diploma Programs */}
+        <motion.div variants={colVariants}>
+          <ColHeading><strong>Diploma Programs</strong></ColHeading>
+          {diplomaPrograms.map((l) => (
+            <Link key={l.href} href={l.href} style={{ display: "block", padding: "6px 0", color: "rgba(255,255,255,0.7)", fontSize: "13.5px", textDecoration: "none", fontWeight: 600, transition: "color 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.color = "#FFE619"} onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{l.label}</Link>
+          ))}
+        </motion.div>
+
+        {/* COL 5 — Quick Links */}
         <motion.div variants={colVariants}>
           <ColHeading>Quick Links</ColHeading>
           {quickLinks.map((l) => <NavLink key={l.href} href={l.href} label={l.label} />)}
         </motion.div>
 
-        {/* COL 3 — Departments */}
-        <motion.div variants={colVariants}>
-          <ColHeading>Departments</ColHeading>
-          {deptLinks.map((l) => <NavLink key={l.href} href={l.href} label={l.label} />)}
-        </motion.div>
-
-        {/* COL 4 — Contact + Map */}
+        {/* COL 6 — Contact + Map */}
         <motion.div variants={colVariants}>
           <ColHeading>Reach Us</ColHeading>
 
