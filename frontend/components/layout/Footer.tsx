@@ -186,10 +186,26 @@ export default function Footer() {
         @media (max-width: 720px) {
           .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 24px; padding: 0 20px; }
         }
+        @media (max-width: 768px) {
+          .footer-grid { grid-template-columns: 1fr; padding: 0 16px; gap: 32px; }
+        }
+
         @media (max-width: 460px) {
-          .footer-grid         { grid-template-columns: 1fr; padding: 0 16px; gap: 26px; }
-          .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 0 16px; }
-          .footer-bottom-inner > div:last-child { text-align: left; margin-left: 0; }
+          .footer-grid         { grid-template-columns: 1fr; padding: 0 14px; gap: 28px; }
+          .footer-bottom-inner {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            padding: 0 14px;
+            margin-bottom: 80px;
+          }
+          .footer-bottom-inner > div { text-align: center; margin-left: 0; }
+          .footer-bottom-inner > div:first-child span,
+          .footer-bottom-inner > div:last-child span {
+            display: block;
+            word-break: break-word;
+          }
         }
       `}</style>
 
