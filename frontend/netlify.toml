@@ -1,0 +1,24 @@
+[build]
+command = "npm run build"
+publish = ".next"
+
+[build.environment]
+NODE_VERSION = "20"
+
+[[plugins]]
+package = "@netlify/plugin-nextjs"
+
+# Redirect handling for Next.js (custom routes, etc.)
+[[redirects]]
+from = "/*"
+to = "/.netlify/functions/___next"
+status = 200
+
+[context.production.environment]
+NEXT_PUBLIC_API_URL = "https://api.yourdomain.com"
+
+[context.deploy-preview.environment]
+NEXT_PUBLIC_API_URL = "http://localhost:4000"
+
+[context.branch-deploy.environment]
+NEXT_PUBLIC_API_URL = "http://localhost:4000"
