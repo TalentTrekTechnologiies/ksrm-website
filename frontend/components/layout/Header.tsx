@@ -59,22 +59,25 @@ export default function Header() {
         .header-tier-1 {
           width: 100%;
           background: #ffffff;
-          padding: 10px 4%;
+          padding: clamp(8px, 1.2vw, 12px) clamp(12px, 2.5vw, 40px);
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: clamp(12px, 2vw, 40px);
+          gap: clamp(8px, 1.5vw, 28px);
+          flex-wrap: nowrap;
+          overflow: hidden;
         }
 
         .header-identity-group {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: clamp(10px, 1.2vw, 18px);
           text-decoration: none;
           color: inherit;
           border: none;
           outline: none;
           min-width: 0;
+          flex-grow: 1;
           flex-shrink: 1;
         }
 
@@ -106,22 +109,23 @@ export default function Header() {
 
         .header-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: clamp(1.4rem, 2.2vw, 2.8rem);
+          font-size: clamp(1.75rem, 2.0vw, 2.8rem);
           font-weight: 700;
           color: #E8112D;
-          line-height: 1;
+          line-height: 1.1;
           letter-spacing: 1px;
           margin: 0;
           white-space: nowrap;
-          overflow: visible;
+          overflow: hidden;
+          text-overflow: ellipsis;
           text-transform: uppercase;
         }
 
         .header-subtitle {
-          font-size: 14px;
+          font-size: clamp(0.8rem, 1.2vw, 0.95rem);
           color: #555;
           letter-spacing: 0;
-          line-height: 1.4;
+          line-height: 1.3;
           margin: 0;
           white-space: normal;
           overflow: visible;
@@ -180,29 +184,30 @@ export default function Header() {
         .header-badges-row {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: clamp(6px, 0.8vw, 12px);
           flex-shrink: 0;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
+          justify-content: flex-end;
         }
 
         .header-badges-left {
           display: flex;
-          gap: 16px;
+          gap: clamp(10px, 1.2vw, 16px);
           align-items: center;
           flex-shrink: 0;
         }
 
         .header-badges-right {
           display: flex;
-          gap: 16px;
+          gap: clamp(10px, 1.2vw, 16px);
           align-items: center;
           flex-shrink: 0;
         }
 
         .header-badge-wrapper {
           position: relative;
-          width: clamp(34px, 4.5vw, 90px);
-          height: clamp(34px, 4.5vw, 90px);
+          width: clamp(45px, 4.2vw, 85px);
+          height: clamp(45px, 4.2vw, 85px);
           flex-shrink: 0;
         }
 
@@ -251,29 +256,60 @@ export default function Header() {
           }
         }
 
-        /* ── RESPONSIVE: LARGE DESKTOP (1440px - 1920px) ── */
-        @media (max-width: 1920px) and (min-width: 1441px) {
-          .header-tier-1 {
-            padding: 11px 4%;
+        /* ── RESPONSIVE: LARGE DESKTOP (1600px - 1920px) ── */
+        @media (min-width: 1600px) and (max-width: 1920px) {
+          .header-logo {
+            width: clamp(80px, 5.5vw, 110px);
+            height: clamp(80px, 5.5vw, 110px);
           }
-          .header-identity-group {
-            gap: 16px;
-          }
-          .header-badges-row {
-            gap: 11px;
+          .header-badge-wrapper {
+            width: clamp(70px, 4.5vw, 85px);
+            height: clamp(70px, 4.5vw, 85px);
           }
         }
 
-        /* ── RESPONSIVE: STANDARD DESKTOP (1024px - 1440px) ── */
-        @media (max-width: 1440px) and (min-width: 1025px) {
+        /* ── RESPONSIVE: STANDARD DESKTOP (1440px - 1600px) ── */
+        @media (min-width: 1440px) and (max-width: 1599px) {
+          .header-logo {
+            width: clamp(75px, 5.2vw, 105px);
+            height: clamp(75px, 5.2vw, 105px);
+          }
+          .header-badge-wrapper {
+            width: clamp(65px, 4.4vw, 80px);
+            height: clamp(65px, 4.4vw, 80px);
+          }
+        }
+
+        /* ── RESPONSIVE: LAPTOP/DESKTOP (1280px - 1440px) ── */
+        @media (min-width: 1280px) and (max-width: 1439px) {
+          .header-logo {
+            width: clamp(70px, 4.8vw, 100px);
+            height: clamp(70px, 4.8vw, 100px);
+          }
+          .header-badge-wrapper {
+            width: clamp(60px, 4.2vw, 75px);
+            height: clamp(60px, 4.2vw, 75px);
+          }
+        }
+
+        /* ── RESPONSIVE: 1024px - 1280px ── */
+        @media (min-width: 1024px) and (max-width: 1279px) {
           .header-tier-1 {
-            padding: 10px 4%;
+            padding: clamp(8px, 1vw, 10px) clamp(12px, 2vw, 30px);
           }
-          .header-identity-group {
-            gap: 16px;
+          .header-logo {
+            width: clamp(60px, 4.5vw, 90px);
+            height: clamp(60px, 4.5vw, 90px);
           }
-          .header-badges-row {
-            gap: 10px;
+          .header-title {
+            font-size: clamp(1.6rem, 1.9vw, 2.4rem);
+          }
+          .header-subtitle {
+            font-size: clamp(0.75rem, 1rem, 0.9rem);
+          }
+          .header-badge-wrapper {
+            width: clamp(50px, 3.8vw, 70px);
+            height: clamp(50px, 3.8vw, 70px);
           }
         }
 
