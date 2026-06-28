@@ -400,7 +400,7 @@ export default function AboutPage() {
                       gap: 8
                     }}
                   >
-                    𝕏 Twitter
+                    𝕏 X
                   </a>
 
                   <a
