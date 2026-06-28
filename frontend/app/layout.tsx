@@ -22,8 +22,8 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "KSRM College of Engineering",
-  description: "KSRM College of Engineering, Kadapa — 40 years of engineering excellence. NAAC A++ | NBA Accredited | AICTE Approved",
+  title: "K.S.R.M College of Engineering",
+  description: "K.S.R.M College of Engineering, Kadapa — 40 years of engineering excellence. NAAC A++ | NBA Accredited | AICTE Approved",
 }
 
 export default function RootLayout({
