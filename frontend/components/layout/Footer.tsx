@@ -247,7 +247,7 @@ export default function Footer() {
         animate="visible"
       >
 
-        {/* LEFT ZONE: College Info + Contact + Map */}
+        {/* LEFT ZONE: College Info Only */}
         <motion.div className="footer-left" variants={itemVariants}>
 
           {/* College Info */}
@@ -279,34 +279,6 @@ export default function Footer() {
               {socials.map(({ Icon, href }) => (
                 <SocialBtn key={href} Icon={Icon} href={href} />
               ))}
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <div style={{ marginBottom: "12px" }}>
-              <div style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "2px" }}>
-                Admissions Helpline
-              </div>
-              <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>
-                +91 8143731960
-              </div>
-            </div>
-            <div style={{ marginBottom: "12px" }}>
-              <div style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "2px" }}>
-                Email
-              </div>
-              <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>
-                admissions@ksrmce.ac.in
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "2px" }}>
-                Address
-              </div>
-              <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
-                Kadapa, Andhra Pradesh – 516003
-              </div>
             </div>
           </div>
 
@@ -394,11 +366,14 @@ export default function Footer() {
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: "16px",
+          gap: "32px",
           maxWidth: "1400px",
           margin: "0 auto",
           padding: "0 32px",
+          flexWrap: "wrap",
         }}>
+
+          {/* LEFT: Copyright */}
           <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
             <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
               © {currentYear} KSRM College of Engineering. All Rights Reserved.
@@ -407,7 +382,31 @@ export default function Footer() {
               SRI KANDULA OBUL REDDY CHARITIES
             </span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "3px", textAlign: "right", marginLeft: "auto" }}>
+
+          {/* CENTER: Contact Info (BOLD) */}
+          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <Phone size={14} color="rgba(255,255,255,0.8)" />
+              <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>
+                +91 8143731960
+              </span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <Mail size={14} color="rgba(255,255,255,0.8)" />
+              <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>
+                admissions@ksrmce.ac.in
+              </span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <MapPin size={14} color="rgba(255,255,255,0.8)" />
+              <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>
+                Kadapa, AP – 516003
+              </span>
+            </div>
+          </div>
+
+          {/* RIGHT: Powered by */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "3px", marginLeft: "auto" }}>
             <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
               Powered by Talent Trek Technologies
             </span>
