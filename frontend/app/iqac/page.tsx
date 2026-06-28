@@ -1,12 +1,29 @@
 import { Metadata } from "next"
-import IQACTemplate from "@/components/iqac/IQACTemplate"
+import Container from "@/components/ui/Container"
 
 export const metadata: Metadata = {
-  title: "IQAC | KSRM College of Engineering",
-  description:
-    "Internal Quality Assurance Cell (IQAC) at KSRM College - Committed to continuous quality improvement and institutional excellence.",
+  title: "Iqac | K.S.R.M College of Engineering",
+  description: "Page description",
 }
 
-export default function IQACPage() {
-  return <IQACTemplate />
+export default function PageComponent() {
+  return (
+    <main style={{ background: "#fff" }}>
+      <section style={{
+        background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)",
+        padding: "80px 0",
+        color: "#fff"
+      }}>
+        <Container>
+          <h1 style={{ fontSize: "2.5rem", margin: "0 0 20px", fontWeight: 700 }}>Iqac</h1>
+          <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>Page Subtitle</p>
+        </Container>
+      </section>
+      <section style={{ padding: "60px 20px", background: "#fff" }}>
+        <Container>
+          <p>Page content</p>
+        </Container>
+      </section>
+    </main>
+  )
 }

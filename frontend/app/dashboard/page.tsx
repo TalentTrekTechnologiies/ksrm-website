@@ -1,17 +1,29 @@
 import { Metadata } from "next"
+import Container from "@/components/ui/Container"
 
 export const metadata: Metadata = {
-  title: "Dashboard | KSRM College of Engineering",
-  description: "Project dashboard for KSRM College of Engineering",
+  title: "Dashboard | K.S.R.M College of Engineering",
+  description: "Page description",
 }
 
-export default function DashboardPage() {
+export default function PageComponent() {
   return (
-    <div style={{ padding: "40px 20px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1 style={{ marginBottom: "30px", color: "#2B3490" }}>Dashboard</h1>
-      <p style={{ color: "#666", lineHeight: "1.6" }}>
-        Welcome to the KSRM College of Engineering Dashboard. This page displays project tracking and institutional updates.
-      </p>
-    </div>
+    <main style={{ background: "#fff" }}>
+      <section style={{
+        background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)",
+        padding: "80px 0",
+        color: "#fff"
+      }}>
+        <Container>
+          <h1 style={{ fontSize: "2.5rem", margin: "0 0 20px", fontWeight: 700 }}>Dashboard</h1>
+          <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>Page Subtitle</p>
+        </Container>
+      </section>
+      <section style={{ padding: "60px 20px", background: "#fff" }}>
+        <Container>
+          <p>Page content</p>
+        </Container>
+      </section>
+    </main>
   )
 }

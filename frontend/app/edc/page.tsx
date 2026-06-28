@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import Container from "@/components/ui/Container"
 
 export const metadata: Metadata = {
-  title: "Placements | K.S.R.M College of Engineering",
+  title: "Edc | K.S.R.M College of Engineering",
   description: "Page description",
 }
 
@@ -15,7 +15,7 @@ export default function PageComponent() {
         color: "#fff"
       }}>
         <Container>
-          <h1 style={{ fontSize: "2.5rem", margin: "0 0 20px", fontWeight: 700 }}>Placements</h1>
+          <h1 style={{ fontSize: "2.5rem", margin: "0 0 20px", fontWeight: 700 }}>Edc</h1>
           <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>Page Subtitle</p>
         </Container>
       </section>
