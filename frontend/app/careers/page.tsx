@@ -2,9 +2,8 @@ import { Metadata } from "next"
 import CareersTemplate from "@/components/careers/CareersTemplate"
 
 export const metadata: Metadata = {
-  title: "Careers | KSRM College of Engineering",
-  description:
-    "Join KSRM College - career opportunities in academia, research, and administration.",
+  title: "Careers | K.S.R.M College of Engineering",
+  description: "Career opportunities and recruitment information",
 }
 
 export default function CareersPage() {
