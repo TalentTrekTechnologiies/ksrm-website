@@ -1,29 +1,45 @@
-import { Metadata } from "next"
-import Container from "@/components/ui/Container"
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
-export const metadata: Metadata = {
-  title: "Iic | K.S.R.M College of Engineering",
-  description: "Page description",
+// Check if API is available
+export const isApiAvailable = () => {
+  return API_URL && API_URL.length > 0;
+};
+
+export async function apiCall(
+  endpoint: string,
+  options?: RequestInit
+) {
+  // If no API URL configured, throw immediately (graceful fallback to static data)
+  if (!API_URL) {
+    throw new Error('API not configured - using static data');
+  }
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null;
+
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options?.headers,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || `API error: ${response.status}`);
+  }
+
+  return response.json();
 }
 
-export default function PageComponent() {
-  return (
-    <main style={{ background: "#fff" }}>
-      <section style={{
-        background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)",
-        padding: "80px 0",
-        color: "#fff"
-      }}>
-        <Container>
-          <h1 style={{ fontSize: "2.5rem", margin: "0 0 20px", fontWeight: 700 }}>Iic</h1>
-          <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>Page Subtitle</p>
-        </Container>
-      </section>
-      <section style={{ padding: "60px 20px", background: "#fff" }}>
-        <Container>
-          <p>Page content</p>
-        </Container>
-      </section>
-    </main>
-  )
+export async function apiLogin(email: string, password: string) {
+  return apiCall('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+}
+
+export async function apiGetProfile() {
+  return apiCall('/auth/profile');
 }
