@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -30,9 +30,19 @@ const newsItems = [
   { isNew: false, date: "May 10", text: "KGCET-2K26 Results Announced"            },
 ]
 
+const heroSlides = [
+  { type: "video", src: "/videos/main-block.mp4" },
+  { type: "video", src: "/videos/ksnr-gat.mp4" },
+  { type: "video", src: "/videos/gate-entrace.mp4" },
+]
+
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
+  // Caption rotation (every 3 seconds)
   useEffect(() => {
     const id = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % captions.length)
@@ -40,8 +50,54 @@ export default function Hero() {
     return () => clearInterval(id)
   }, [])
 
+  // Carousel auto-advance (every 2 seconds)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+        setIsTransitioning(false)
+      }, 500)
+    }, 2000)
+    return () => clearInterval(timer)
+  }, [])
+
+
+  const handlePrev = () => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))
+      setIsTransitioning(false)
+    }, 500)
+  }
+
+  const handleNext = () => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+      setIsTransitioning(false)
+    }, 500)
+  }
+
+  const goToSlide = (index: number) => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentSlide(index)
+      setIsTransitioning(false)
+    }, 500)
+  }
+
   return (
-    <section className="hero-section" style={{ position: "relative", width: "100%", height: "88vh", overflow: "hidden" }}>
+    <section
+      className="hero-section"
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "70vh",
+        minHeight: "500px",
+        overflow: "hidden",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400&display=swap');
 
@@ -53,10 +109,6 @@ export default function Hero() {
         @keyframes news-scroll {
           from { transform: translateY(0); }
           to   { transform: translateY(-50%); }
-        }
-        @keyframes ksrm-ticker {
-          0%   { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
         }
 
         .pulse-dot {
@@ -99,31 +151,78 @@ export default function Hero() {
           .hero-subtitle { font-size: 14px !important; }
           .hero-buttons  { flex-direction: column !important; gap: 10px !important; }
           .hero-btn      { width: 100% !important; text-align: center !important; display: block !important; padding: 12px 20px !important; }
-          .hero-gradient { background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%) !important; }
-        }
-        /* SMALL PHONE */
-        @media (max-width: 480px) {
-          .hero-section  { min-height: 400px !important; }
-          .hero-heading  { font-size: 22px !important; }
-          .hero-subtitle { font-size: 13px !important; }
-          .hero-layout   { padding: 0 16px 28px !important; }
+          .carousel-dots { display: none !important; }
+          .carousel-arrow { display: none !important; }
         }
       `}</style>
 
-      {/* VIDEO BACKGROUND */}
-      <video
-        autoPlay loop muted playsInline
-        poster="/campus.webp"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
-      >
-        <source src="/campus-video.mp4" type="video/mp4" />
-      </video>
+      {/* BACKGROUND LAYER — VIDEOS */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: isTransitioning ? 0 : 1,
+            transition: "opacity 0.5s ease",
+          }}
+        >
+          <source src={heroSlides[currentSlide].src} type="video/mp4" />
+        </video>
+      </div>
 
-      {/* GRADIENT — lighter so video shows through */}
-      <div className="hero-gradient" style={{
-        position: "absolute", inset: 0, zIndex: 1,
-        background: "linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.4) 100%)",
-      }} />
+      {/* DARK OVERLAY */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.7) 100%)",
+        }}
+      />
+
+
+      {/* NAVIGATION DOTS */}
+      <div
+        className="carousel-dots"
+        style={{
+          position: "absolute",
+          bottom: 24,
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 3,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+        }}
+      >
+        {heroSlides.slice(0, 8).map((_, idx) => {
+          const isActive = idx === currentSlide || (currentSlide >= 8 && idx === 7)
+          return (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: isActive ? "white" : "rgba(255,255,255,0.4)",
+                border: "none",
+                cursor: "pointer",
+                flexShrink: 0,
+                padding: 0,
+                lineHeight: 1,
+              }}
+            />
+          )
+        })}
+      </div>
 
       {/* MAIN LAYOUT OVERLAY */}
       <div
@@ -168,7 +267,7 @@ export default function Hero() {
           <motion.p
             className="hero-subtitle"
             variants={fadeUp} initial="hidden" animate="visible" custom={0.3}
-            style={{ margin: "0 0 20px", fontFamily: "'DM Sans', sans-serif", fontSize: "16px", fontWeight: 300, color: "rgba(255,255,255,0.8)", maxWidth: "480px", lineHeight: 1.65 }}
+            style={{ margin: "0 0 20px", fontFamily: "'DM Sans', sans-serif", fontSize: "18px", fontWeight: 300, color: "rgba(255,255,255,0.8)", maxWidth: "480px", lineHeight: 1.65 }}
           >
             KSRM College of Engineering, Kadapa — 45 years of engineering excellence.
           </motion.p>
@@ -186,36 +285,16 @@ export default function Hero() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: EASE }}
               >
-                <div style={{ fontSize: "13px", fontWeight: 600, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase", marginBottom: "7px", fontFamily: "sans-serif" }}>
+                <div style={{ fontSize: "14px", fontWeight: 600, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase", marginBottom: "7px", fontFamily: "sans-serif" }}>
                   {captions[activeIndex].label}
                 </div>
-                <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "24px", fontWeight: 600, color: "#ffffff" }}>
+                <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "26px", fontWeight: 600, color: "#ffffff" }}>
                   {captions[activeIndex].text}
                 </div>
               </motion.div>
             </AnimatePresence>
           </motion.div>
 
-          {/* PROGRESS BARS */}
-          <motion.div
-            variants={fadeUp} initial="hidden" animate="visible" custom={0.38}
-            style={{ display: "flex", gap: "6px", margin: "16px 0 24px" }}
-          >
-            {captions.map((_, i) => (
-              <div key={i} style={{ width: "40px", height: "2px", background: "rgba(255,255,255,0.25)", borderRadius: "2px", overflow: "hidden" }}>
-                {i < activeIndex && <div style={{ width: "100%", height: "100%", background: "#FFE619" }} />}
-                {i === activeIndex && (
-                  <motion.div
-                    key={activeIndex}
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 3, ease: "linear" }}
-                    style={{ height: "100%", background: "#FFE619" }}
-                  />
-                )}
-              </div>
-            ))}
-          </motion.div>
 
           {/* BUTTONS */}
           <motion.div
@@ -223,18 +302,10 @@ export default function Hero() {
             variants={fadeUp} initial="hidden" animate="visible" custom={0.4}
             style={{ display: "flex", gap: "14px", alignItems: "center" }}
           >
-            <Link href="/admissions" className="hero-btn" style={{
-              display: "inline-block", padding: "13px 30px", background: "#ffffff", color: "#1a1a1a",
-              fontFamily: "'Rajdhani', sans-serif", fontSize: "15px", fontWeight: 700, letterSpacing: "0.5px",
-              borderRadius: "4px", textDecoration: "none", border: "1px solid transparent", transition: "opacity 0.2s ease",
-            }}>
+            <Link href="/admissions" className="hero-btn touch-target btn btn-primary">
               Apply Now
             </Link>
-            <Link href="/about" className="hero-btn" style={{
-              display: "inline-block", padding: "13px 30px", background: "transparent", color: "#ffffff",
-              fontFamily: "'Rajdhani', sans-serif", fontSize: "15px", fontWeight: 700, letterSpacing: "0.5px",
-              borderRadius: "4px", textDecoration: "none", border: "1px solid rgba(255,255,255,0.55)", transition: "border-color 0.2s ease",
-            }}>
+            <Link href="/about" className="hero-btn touch-target btn btn-secondary">
               Explore Campus
             </Link>
           </motion.div>
@@ -293,7 +364,7 @@ export default function Hero() {
                     <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)" }}>{item.date}</span>
                   </div>
                   {/* TEXT */}
-                  <div style={{ fontSize: "13px", color: "#ffffff", lineHeight: 1.4 }}>
+                  <div style={{ fontSize: "15px", color: "#ffffff", lineHeight: 1.4 }}>
                     {item.text}
                   </div>
                 </Link>
