@@ -59,13 +59,15 @@ export default function Header() {
         .header-tier-1 {
           width: 100%;
           background: #ffffff;
-          padding: clamp(8px, 1.2vw, 12px) clamp(12px, 2.5vw, 40px);
+          padding: clamp(6px, 1vw, 10px) clamp(12px, 2.5vw, 40px);
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: clamp(8px, 1.5vw, 28px);
           flex-wrap: nowrap;
           overflow: hidden;
+          min-height: auto;
+          max-height: 165px;
         }
 
         .header-identity-group {
@@ -82,8 +84,8 @@ export default function Header() {
         }
 
         .header-logo {
-          width: clamp(48px, 6vw, 120px);
-          height: clamp(48px, 6vw, 120px);
+          width: clamp(48px, 6vw, 115px);
+          height: clamp(48px, 6vw, 115px);
           flex-shrink: 0;
           flex-grow: 0;
           display: flex;
@@ -103,14 +105,14 @@ export default function Header() {
         .header-text-block {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 2px;
           flex: 1;
           min-width: 0;
         }
 
         .header-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: clamp(1.75rem, 2.0vw, 2.8rem);
+          font-size: clamp(1.75rem, 3.2vw, 3.8rem);
           font-weight: 700;
           color: #E8112D;
           line-height: 1.2;
@@ -123,7 +125,7 @@ export default function Header() {
         }
 
         .header-subtitle {
-          font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+          font-size: clamp(0.8rem, 1.4vw, 1.125rem);
           color: #555;
           letter-spacing: 0;
           line-height: 1.3;
@@ -210,8 +212,8 @@ export default function Header() {
 
         .header-badge-wrapper {
           position: relative;
-          width: clamp(45px, 4.2vw, 85px);
-          height: clamp(45px, 4.2vw, 85px);
+          width: clamp(45px, 5vw, 92px);
+          height: clamp(45px, 5vw, 92px);
           flex-shrink: 0;
         }
 
