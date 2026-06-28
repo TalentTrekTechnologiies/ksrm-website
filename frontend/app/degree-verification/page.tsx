@@ -380,7 +380,7 @@ export default function AboutPage() {
                       gap: 8
                     }}
                   >
-                    f Facebook
+                    f 
                   </a>
 
                   <a
@@ -422,7 +422,7 @@ export default function AboutPage() {
                       gap: 8
                     }}
                   >
-                    📷 Instagram
+                    📷 
                   </a>
 
                   <a
