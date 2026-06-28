@@ -34,6 +34,7 @@ const IconYoutube = ({ size = 18, color = "currentColor" }: SvgIconProps) => (
 )
 
 const EASE = [0.22, 1, 0.36, 1] as const
+
 const currentYear = new Date().getFullYear()
 
 const quickLinks = [
@@ -54,28 +55,6 @@ const deptLinks = [
   { label: "MBA",        href: "/departments/mba"   },
 ]
 
-const ugPrograms = [
-  { label: "B.Tech CSE",         href: "/departments/cse"   },
-  { label: "B.Tech ECE",         href: "/departments/ece"   },
-  { label: "B.Tech EEE",         href: "/departments/eee"   },
-  { label: "B.Tech Mechanical",  href: "/departments/mech"  },
-  { label: "B.Tech Civil",       href: "/departments/civil" },
-]
-
-const pgPrograms = [
-  { label: "M.Tech VLSI",        href: "/academics"         },
-  { label: "M.Tech Power Systems", href: "/academics"       },
-  { label: "M.Tech Structural",  href: "/academics"         },
-  { label: "M.Tech Thermal",     href: "/academics"         },
-]
-
-const diplomaPrograms = [
-  { label: "Diploma Civil",      href: "/academics/admissions" },
-  { label: "Diploma Mechanical", href: "/academics/admissions" },
-  { label: "Diploma ECE",        href: "/academics/admissions" },
-  { label: "Diploma CSE",        href: "/academics/admissions" },
-]
-
 const socials = [
   { Icon: IconFacebook,  href: "https://facebook.com/ksrmceofficial"     },
   { Icon: IconTwitterX,  href: "https://twitter.com/ksrmceofficial"      },
@@ -88,15 +67,15 @@ const containerVariants = {
   visible: { transition: { staggerChildren: 0.1 } },
 }
 
-const itemVariants = {
+const colVariants = {
   hidden: { opacity: 0, y: 28 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
 }
 
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: "20px" }}>
-      <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "16px", fontWeight: 700, color: "#ffffff", marginBottom: "8px" }}>
+    <div style={{ marginBottom: "20px", lineHeight: 1.2 }}>
+      <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "16px", fontWeight: 700, color: "#ffffff", marginBottom: "10px", letterSpacing: "0.5px" }}>
         {children}
       </div>
       <div style={{ width: "24px", height: "2px", background: "#FFE619" }} />
@@ -113,7 +92,8 @@ function NavLink({ href, label }: { href: string; label: string }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         display: "flex", alignItems: "center", gap: "4px",
-        padding: "6px 0",
+        padding: "8px 0",
+        lineHeight: 1.4,
         color: hovered ? "#FFE619" : "rgba(255,255,255,0.7)",
         fontSize: "13.5px",
         textDecoration: "none",
@@ -153,227 +133,161 @@ export default function Footer() {
     <footer style={{ width: "100%", background: "#1e2570", color: "#ffffff", paddingTop: "56px" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
-        .footer-wrapper {
+        .footer-grid {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+          gap: 40px;
           max-width: 1400px;
           margin: 0 auto;
-          padding: 0 32px;
-          display: grid;
-          grid-template-columns: 280px 1fr;
-          gap: 48px;
+          padding: 0 40px;
         }
-
-        .footer-left {
+        .footer-bottom-inner {
           display: flex;
-          flex-direction: column;
-          gap: 32px;
+          align-items: center;
+          gap: 16px;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 40px;
         }
-
-        .footer-links-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-          gap: 32px;
-          align-items: start;
-        }
-
-        .footer-col {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .footer-col ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .footer-col li {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-
         @media (max-width: 1024px) {
-          .footer-wrapper {
-            grid-template-columns: 1fr;
-            gap: 40px;
-          }
+          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; padding: 0 24px; }
         }
-
-        @media (max-width: 768px) {
-          .footer-wrapper {
-            padding: 0 24px;
-            gap: 32px;
-          }
-          .footer-links-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-          }
-        }
-
         @media (max-width: 640px) {
-          .footer-wrapper {
-            grid-template-columns: 1fr;
-            padding: 0 16px;
-          }
-          .footer-links-grid {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
-          .footer-left {
-            gap: 24px;
-          }
-          .footer-map iframe {
-            max-width: 100%;
-          }
+          .footer-grid         { grid-template-columns: 1fr; padding: 0 16px; }
+          .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 0 16px; }
+          .footer-bottom-inner > div:last-child { text-align: left; }
         }
-
         @media (max-width: 380px) {
-          .footer-wrapper {
-            padding: 0 12px;
-          }
+          .footer-grid { padding: 0 12px; gap: 20px; }
         }
       `}</style>
 
-      {/* MAIN LAYOUT: 2-ZONE (LEFT IDENTITY + RIGHT LINKS) */}
+      {/* MAIN GRID */}
       <motion.div
-        className="footer-wrapper"
+        className="footer-grid"
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
       >
 
-        {/* LEFT ZONE: College Info Only */}
-        <motion.div className="footer-left" variants={itemVariants}>
-
-          {/* College Info */}
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-              <div style={{
-                width: "60px", height: "60px", borderRadius: "50%",
-                background: "#ffffff",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0,
-              }}>
-                <img src="/logo.png" alt="KSRM Logo" style={{ width: "50px", height: "50px", objectFit: "contain" }} />
-              </div>
-              <div>
-                <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "24px", fontWeight: 700, color: "#ffffff", lineHeight: 1 }}>
-                  KSRM
-                </div>
-                <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", marginTop: "2px" }}>
-                  College of Engineering
-                </div>
-              </div>
+        {/* COL 1 — College Info */}
+        <motion.div variants={colVariants}>
+          {/* LOGO + NAME */}
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+            <div style={{
+              width: "60px", height: "60px", borderRadius: "50%",
+              background: "#ffffff",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0,
+            }}>
+              <img src="/logo.png" alt="KSRM Logo" style={{ width: "50px", height: "50px", objectFit: "contain" }} />
             </div>
-
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: "0 0 10px" }}>
-              45 years of engineering excellence in Kadapa, Andhra Pradesh.
-            </p>
-
-            <div style={{ display: "flex", gap: "10px" }}>
-              {socials.map(({ Icon, href }) => (
-                <SocialBtn key={href} Icon={Icon} href={href} />
-              ))}
+            <div>
+              <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "24px", fontWeight: 700, color: "#ffffff", lineHeight: 1 }}>
+                KSRM
+              </div>
+              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", marginTop: "2px" }}>
+                College of Engineering
+              </div>
             </div>
           </div>
 
-          {/* Map */}
-          <div className="footer-map">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208"
-              width="100%"
-              height="140"
-              style={{ border: "none", borderRadius: "8px", display: "block", opacity: 0.85 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          {/* TAGLINE */}
+          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: "0 0 10px" }}>
+            45 years of engineering excellence in Kadapa, Andhra Pradesh.
+          </p>
+
+          {/* SOCIAL ICONS */}
+          <div style={{ display: "flex", gap: "10px" }}>
+            {socials.map(({ Icon, href }) => (
+              <SocialBtn key={href} Icon={Icon} href={href} />
+            ))}
+          </div>
+
+          {/* QUICK CONTACT */}
+          <div style={{ marginTop: "24px" }}>
+            <div style={{ marginBottom: "12px" }}>
+              <div style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "2px" }}>
+                Admissions Helpline
+              </div>
+              <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
+                +91 8143731960
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "2px" }}>
+                Email
+              </div>
+              <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
+                admissions@ksrmce.ac.in
+              </div>
+            </div>
           </div>
         </motion.div>
 
-        {/* RIGHT ZONE: Link Columns (Responsive Grid) */}
-        <motion.div className="footer-links-grid" variants={itemVariants}>
+        {/* COL 2 — Quick Links */}
+        <motion.div variants={colVariants} style={{ display: "flex", flexDirection: "column" }}>
+          <ColHeading>Quick Links</ColHeading>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {quickLinks.map((l) => <NavLink key={l.href} href={l.href} label={l.label} />)}
+          </div>
+        </motion.div>
 
-          {/* UG Programs */}
-          <motion.div className="footer-col" variants={itemVariants}>
-            <ColHeading><strong>UG Programs</strong></ColHeading>
-            <ul>
-              {ugPrograms.map((l) => (
-                <li key={l.href}>
-                  <NavLink href={l.href} label={l.label} />
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+        {/* COL 3 — Departments */}
+        <motion.div variants={colVariants} style={{ display: "flex", flexDirection: "column" }}>
+          <ColHeading>Departments</ColHeading>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {deptLinks.map((l) => <NavLink key={l.href} href={l.href} label={l.label} />)}
+          </div>
+        </motion.div>
 
-          {/* PG Programs */}
-          <motion.div className="footer-col" variants={itemVariants}>
-            <ColHeading><strong>PG Programs</strong></ColHeading>
-            <ul>
-              {pgPrograms.map((l) => (
-                <li key={l.href}>
-                  <NavLink href={l.href} label={l.label} />
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+        {/* COL 4 — Contact + Map */}
+        <motion.div variants={colVariants}>
+          <ColHeading>Reach Us</ColHeading>
 
-          {/* Diploma Programs */}
-          <motion.div className="footer-col" variants={itemVariants}>
-            <ColHeading><strong>Diploma Programs</strong></ColHeading>
-            <ul>
-              {diplomaPrograms.map((l) => (
-                <li key={l.href}>
-                  <NavLink href={l.href} label={l.label} />
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          {/* ADDRESS */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
+            <MapPin size={15} color="rgba(255,255,255,0.5)" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
+              KSRM College of Engineering,<br />Kadapa, Andhra Pradesh – 516003
+            </span>
+          </div>
 
-          {/* Departments */}
-          <motion.div className="footer-col" variants={itemVariants}>
-            <ColHeading>Departments</ColHeading>
-            <ul>
-              {deptLinks.map((l) => (
-                <li key={l.href}>
-                  <NavLink href={l.href} label={l.label} />
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          {/* PHONE */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
+            <Phone size={15} color="rgba(255,255,255,0.5)" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
+              +91 8143731960<br />08562 295972
+            </span>
+          </div>
 
-          {/* Quick Links */}
-          <motion.div className="footer-col" variants={itemVariants}>
-            <ColHeading>Quick Links</ColHeading>
-            <ul>
-              {quickLinks.map((l) => (
-                <li key={l.href}>
-                  <NavLink href={l.href} label={l.label} />
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          {/* EMAIL */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+            <Mail size={15} color="rgba(255,255,255,0.5)" strokeWidth={1.8} style={{ flexShrink: 0 }} />
+            <a href="mailto:principal@ksrmce.ac.in" style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
+              principal@ksrmce.ac.in
+            </a>
+          </div>
+
+          {/* GOOGLE MAP */}
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208"
+            width="100%"
+            height="140"
+            style={{ border: "none", borderRadius: "8px", marginTop: "14px", display: "block", opacity: 0.85 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </motion.div>
       </motion.div>
 
       {/* BOTTOM BAR */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: "40px", padding: "18px 0" }}>
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "32px",
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "0 32px",
-          flexWrap: "wrap",
-        }}>
+        <div className="footer-bottom-inner">
 
-          {/* LEFT: Copyright */}
+          {/* LEFT: College identity */}
           <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
             <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
               © {currentYear} KSRM College of Engineering. All Rights Reserved.
@@ -383,34 +297,13 @@ export default function Footer() {
             </span>
           </div>
 
-          {/* CENTER: Contact Info (BOLD) */}
-          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <Phone size={14} color="rgba(255,255,255,0.8)" />
-              <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>
-                +91 8143731960
-              </span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <Mail size={14} color="rgba(255,255,255,0.8)" />
-              <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>
-                admissions@ksrmce.ac.in
-              </span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <MapPin size={14} color="rgba(255,255,255,0.8)" />
-              <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>
-                Kadapa, AP – 516003
-              </span>
-            </div>
-          </div>
-
           {/* RIGHT: Powered by */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "3px", marginLeft: "auto" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "3px", textAlign: "right", marginLeft: "auto" }}>
             <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
               Powered by Talent Trek Technologies
             </span>
           </div>
+
         </div>
       </div>
     </footer>
