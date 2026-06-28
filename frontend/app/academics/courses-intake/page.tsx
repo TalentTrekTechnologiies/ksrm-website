@@ -1,11 +1,9 @@
-import CoursesIntakeTemplate from "@/components/academics/CoursesIntakeTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Courses Offered & Intake | KSRM College of Engineering",
-  description: "KSRM College of Engineering AICTE approved courses with intake details for B.Tech, M.Tech and MBA programmes. EAPCET Code: KSRM",
+  title: "Courses Intake | K.S.R.M College of Engineering",
 }
 
-export default function CoursesIntakePage() {
-  return <CoursesIntakeTemplate />
+export default function SubPage() {
+  return <main><h1>Courses Intake</h1><p>Content</p></main>
 }

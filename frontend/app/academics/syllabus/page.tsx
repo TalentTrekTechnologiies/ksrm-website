@@ -1,12 +1,9 @@
-import SyllabusTemplate from "@/components/academics/SyllabusTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Syllabus | KSRM College of Engineering",
-  description:
-    "Download the detailed syllabus for B.Tech, M.Tech, and MBA programmes as per JNTUA regulations.",
+  title: "Syllabus | K.S.R.M College of Engineering",
 }
 
-export default function SyllabusPage() {
-  return <SyllabusTemplate />
+export default function SubPage() {
+  return <main><h1>Syllabus</h1><p>Content</p></main>
 }

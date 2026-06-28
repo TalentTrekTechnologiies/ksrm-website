@@ -1,12 +1,9 @@
-import EDCTemplate from "@/components/campusLife/EDCTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "EDC | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering Entrepreneurship Development Cell supporting student startups, innovation, and entrepreneurial ventures.",
+  title: "Edc | K.S.R.M College of Engineering",
 }
 
-export default function EDCPage() {
-  return <EDCTemplate />
+export default function SubPage() {
+  return <main><h1>Edc</h1><p>Content</p></main>
 }

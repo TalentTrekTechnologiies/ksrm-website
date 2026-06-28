@@ -1,11 +1,9 @@
-import CampusFacilitiesTemplate from "@/components/campusLife/CampusFacilitiesTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Campus Facilities | KSRM College of Engineering",
-  description: "KSRM College of Engineering campus facilities with state-of-the-art infrastructure, labs, hostels, library, sports complex and modern amenities.",
+  title: "Campus Facilities | K.S.R.M College of Engineering",
 }
 
-export default function CampusFacilitiesPage() {
-  return <CampusFacilitiesTemplate />
+export default function SubPage() {
+  return <main><h1>Campus Facilities</h1><p>Content</p></main>
 }
