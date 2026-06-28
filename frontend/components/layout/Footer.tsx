@@ -156,9 +156,9 @@ export default function Footer() {
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .footer-grid {
           display: grid;
-          grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1.2fr;
+          grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr 1.2fr;
           gap: 32px;
-          max-width: 1400px;
+          max-width: 1500px;
           margin: 0 auto;
           padding: 0 32px;
         }
@@ -169,6 +169,9 @@ export default function Footer() {
           max-width: 1280px;
           margin: 0 auto;
           padding: 0 32px;
+        }
+        @media (max-width: 1200px) {
+          .footer-grid { grid-template-columns: repeat(4, 1fr); gap: 28px; padding: 0 24px; }
         }
         @media (max-width: 1024px) {
           .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 0 24px; }
@@ -274,13 +277,19 @@ export default function Footer() {
           ))}
         </motion.div>
 
-        {/* COL 5 — Quick Links */}
+        {/* COL 5 — Departments */}
+        <motion.div variants={colVariants}>
+          <ColHeading>Departments</ColHeading>
+          {deptLinks.map((l) => <NavLink key={l.href} href={l.href} label={l.label} />)}
+        </motion.div>
+
+        {/* COL 6 — Quick Links */}
         <motion.div variants={colVariants}>
           <ColHeading>Quick Links</ColHeading>
           {quickLinks.map((l) => <NavLink key={l.href} href={l.href} label={l.label} />)}
         </motion.div>
 
-        {/* COL 6 — Contact + Map */}
+        {/* COL 7 — Contact + Map */}
         <motion.div variants={colVariants}>
           <ColHeading>Reach Us</ColHeading>
 
