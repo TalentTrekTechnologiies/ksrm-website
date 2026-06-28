@@ -1,12 +1,9 @@
-import FeeStructureTemplate from "@/components/academics/FeeStructureTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Fee Structure | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering fee structure for B.Tech, M.Tech, and MBA programmes with scholarship information.",
+  title: "Fee Structure | K.S.R.M College of Engineering",
 }
 
-export default function FeeStructurePage() {
-  return <FeeStructureTemplate />
+export default function SubPage() {
+  return <main><h1>Fee Structure</h1><p>Content</p></main>
 }

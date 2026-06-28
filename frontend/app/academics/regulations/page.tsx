@@ -1,12 +1,9 @@
-import RegulationsTemplate from "@/components/academics/RegulationsTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Regulations | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering academic regulations (R20, R19, R16) and examination rules as per JNTUA guidelines.",
+  title: "Regulations | K.S.R.M College of Engineering",
 }
 
-export default function RegulationsPage() {
-  return <RegulationsTemplate />
+export default function SubPage() {
+  return <main><h1>Regulations</h1><p>Content</p></main>
 }

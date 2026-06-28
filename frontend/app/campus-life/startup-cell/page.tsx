@@ -1,12 +1,9 @@
-import StartupCellTemplate from "@/components/campusLife/StartupCellTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Startup Cell | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
+  title: "Startup Cell | K.S.R.M College of Engineering",
 }
 
-export default function StartupCellPage() {
-  return <StartupCellTemplate />
+export default function SubPage() {
+  return <main><h1>Startup Cell</h1><p>Content</p></main>
 }

@@ -1,12 +1,9 @@
-import SportsTemplate from "@/components/campusLife/SportsTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Sports | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering sports facilities, achievements, and upcoming events with modern infrastructure for all disciplines.",
+  title: "Sports | K.S.R.M College of Engineering",
 }
 
-export default function SportsPage() {
-  return <SportsTemplate />
+export default function SubPage() {
+  return <main><h1>Sports</h1><p>Content</p></main>
 }
