@@ -77,7 +77,7 @@ export default function Header() {
           border: none;
           outline: none;
           min-width: 0;
-          flex-grow: 1;
+          flex: 1;
           flex-shrink: 1;
         }
 
@@ -85,6 +85,7 @@ export default function Header() {
           width: clamp(48px, 6vw, 120px);
           height: clamp(48px, 6vw, 120px);
           flex-shrink: 0;
+          flex-grow: 0;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -103,7 +104,7 @@ export default function Header() {
           display: flex;
           flex-direction: column;
           gap: 4px;
-          width: auto;
+          flex: 1;
           min-width: 0;
         }
 
@@ -112,12 +113,12 @@ export default function Header() {
           font-size: clamp(1.75rem, 2.0vw, 2.8rem);
           font-weight: 700;
           color: #E8112D;
-          line-height: 1.1;
+          line-height: 1.2;
           letter-spacing: 1px;
           margin: 0;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          white-space: normal;
           text-transform: uppercase;
         }
 
@@ -185,9 +186,12 @@ export default function Header() {
           display: flex;
           align-items: center;
           gap: clamp(6px, 0.8vw, 12px);
+          width: auto;
           flex-shrink: 0;
+          flex-grow: 0;
           flex-wrap: nowrap;
           justify-content: flex-end;
+          margin-left: 40px;
         }
 
         .header-badges-left {
