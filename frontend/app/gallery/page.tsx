@@ -356,7 +356,7 @@ export default function TransportTemplate() {
             </motion.div>
             <motion.div variants={fadeUp} className="trn-stat-item">
               <div className="trn-stat-icon">
-                <MapPin size={24} color="#FFE619" />
+                <span>
               </div>
               <div className="trn-stat-number">{transport.stats.routesCovered}</div>
               <div className="trn-stat-label">Routes</div>
@@ -560,7 +560,7 @@ export default function TransportTemplate() {
                     e.currentTarget.style.boxShadow = "none"
                   }}
                 >
-                  <MapPin size={32} style={{ color: "#2B3490", marginBottom: 12 }} />
+                  <span>
                   <h3
                     style={{
                       fontFamily: "'Rajdhani', sans-serif",
