@@ -244,7 +244,7 @@ export default function ContactTemplate() {
               {/* Address */}
               <div className="contact-info-card">
                 <div className="contact-info-icon">
-                  <MapPin size={24} />
+                  <span>
                 </div>
                 <div className="contact-info-content">
                   <h3>Address</h3>
@@ -256,7 +256,7 @@ export default function ContactTemplate() {
               {contact.phones.map((phone, idx) => (
                 <div key={idx} className="contact-info-card">
                   <div className="contact-info-icon">
-                    <Phone size={24} />
+                    <span>
                   </div>
                   <div className="contact-info-content">
                     <h3>{idx === 0 ? "Phone" : "Alternate"}</h3>
@@ -269,7 +269,7 @@ export default function ContactTemplate() {
               {contact.emails.map((email, idx) => (
                 <div key={idx} className="contact-info-card">
                   <div className="contact-info-icon">
-                    <Mail size={24} />
+                    <span>
                   </div>
                   <div className="contact-info-content">
                     <h3>{idx === 0 ? "Email" : "Alternate"}</h3>
@@ -340,7 +340,7 @@ export default function ContactTemplate() {
                 < size={20} />
               </a>
               <a href={contact.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="X">
-                <X size={20} />
+                <span>
               </a>
               <a href={contact.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="">
                 < size={20} />
