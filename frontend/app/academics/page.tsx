@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
 import { contact } from "@/data/contact"
-import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Play } from "lucide-react"
+import { MessageSquare } from "lucide-react"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -339,8 +339,8 @@ export default function ContactTemplate() {
               <a href={contact.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Facebook">
                 <Facebook size={20} />
               </a>
-              <a href={contact.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Twitter">
-                <Twitter size={20} />
+              <a href={contact.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="X">
+                <X size={20} />
               </a>
               <a href={contact.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Instagram">
                 <Instagram size={20} />
