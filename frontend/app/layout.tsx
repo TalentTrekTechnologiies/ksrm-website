@@ -32,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${rajdhani.variable} ${dmSans.variable} antialiased`}>
+    <html lang="en" style={{ scrollBehavior: "smooth", overflowX: "hidden" }}>
+      <body className={`${rajdhani.variable} ${dmSans.variable} antialiased`} style={{ fontFamily: "var(--font-dm-sans)", WebkitFontSmoothing: "antialiased", color: "#1F2937", background: "#F5EFE4", overflowX: "hidden", minWidth: 0 }}>
         <IntroSplash />
         <TopBar />
          <Header /> 
