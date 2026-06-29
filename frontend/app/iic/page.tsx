@@ -1,9 +1,16 @@
-import { Metadata } from "next"
+const fs = require('fs')
+const path = require('path')
 
-export const metadata: Metadata = {
-  title: "Page | K.S.R.M College of Engineering",
+async function getHTML() {
+  try {
+    const htmlPath = path.join(process.cwd(), 'public', 'pages', `${page}.html`)
+    return fs.readFileSync(htmlPath, 'utf-8')
+  } catch {
+    return ''
+  }
 }
 
-export default function Page() {
-  return <main><h1>Page</h1></main>
+export default async function Page() {
+  const html = await getHTML()
+  return <div dangerouslySetInnerHTML={{ __html: html }} />
 }
