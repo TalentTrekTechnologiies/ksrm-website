@@ -55,4 +55,11 @@ export const aboutData = {
     email: "info@ksrmce.ac.in",
     address: "K.S.R.M College of Engineering, Kadapa, Andhra Pradesh",
   },
+  social: {
+    facebook: "https://facebook.com/ksrmceofficial",
+    twitter: "https://twitter.com/ksrmceofficial",
+    instagram: "https://instagram.com/ksrmceofficial",
+    linkedin: "https://linkedin.com/school/ksrmceofficial",
+    youtube: "https://youtube.com/ksrmceofficial",
+  },
 }
