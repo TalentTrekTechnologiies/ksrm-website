@@ -1,19 +1,51 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import Container from '@/components/ui/Container'
 
+function CountUpNumber({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    let start = 0
+    const increment = target / 60
+    const timer = setInterval(() => {
+      start += increment
+      if (start >= target) {
+        setCount(target)
+        clearInterval(timer)
+      } else {
+        setCount(Math.floor(start))
+      }
+    }, 16)
+    return () => clearInterval(timer)
+  }, [target])
+
+  return (
+    <div style={{ fontSize: '42px', fontWeight: 800, color: '#D4A500', margin: '0' }}>
+      {count}{suffix}
+    </div>
+  )
+}
+
 const Achievements = () => {
+  const [mounted, setMounted] = useState(false)
+
   const achievements = [
-    { number: '40+', label: 'Years of Excellence' },
-    { number: '50', label: 'Acres Campus Area' },
-    { number: '2500+', label: 'Students Intake' },
-    { number: '150+', label: 'Faculty Members' },
-    { number: '7', label: 'Departments' },
-    { number: '95%', label: 'Placement Rate' },
-    { number: '500+', label: 'Alumni Network' },
-    { number: '500+', label: 'Companies Recruiting' },
+    { target: 46, label: 'Years of Excellence' },
+    { target: 50, label: 'Acres Campus Area' },
+    { target: 2500, label: 'Students Intake', suffix: '+' },
+    { target: 150, label: 'Faculty Members', suffix: '+' },
+    { target: 7, label: 'Departments' },
+    { target: 95, label: 'Placement Rate', suffix: '%' },
+    { target: 500, label: 'Alumni Network', suffix: '+' },
+    { target: 200, label: 'Companies Recruiting', suffix: '+' },
   ]
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -32,8 +64,7 @@ const Achievements = () => {
       <Container>
         <motion.div
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate={mounted ? "visible" : "hidden"}
           variants={stagger}
           className="achievements-grid"
           style={{
@@ -55,16 +86,7 @@ const Achievements = () => {
                 border: '1px solid rgba(255, 255, 255, 0.1)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '42px',
-                  fontWeight: 800,
-                  color: '#D4A500',
-                  margin: '0',
-                }}
-              >
-                {item.number}
-              </div>
+              <CountUpNumber target={item.target} suffix={item.suffix} />
               <div
                 style={{
                   fontSize: '14px',

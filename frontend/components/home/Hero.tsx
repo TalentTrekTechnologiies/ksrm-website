@@ -32,14 +32,10 @@ const newsItems = [
 
 const heroSlides = [
   { type: "video", src: "/videos/main-block.mp4" },
-  { type: "video", src: "/videos/ksnr-gat.mp4" },
-  { type: "video", src: "/videos/gate-entrace.mp4" },
 ]
 
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   // Caption rotation (every 3 seconds)
@@ -50,42 +46,7 @@ export default function Hero() {
     return () => clearInterval(id)
   }, [])
 
-  // Carousel auto-advance (every 2 seconds)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-        setIsTransitioning(false)
-      }, 500)
-    }, 2000)
-    return () => clearInterval(timer)
-  }, [])
 
-
-  const handlePrev = () => {
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))
-      setIsTransitioning(false)
-    }, 500)
-  }
-
-  const handleNext = () => {
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-      setIsTransitioning(false)
-    }, 500)
-  }
-
-  const goToSlide = (index: number) => {
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentSlide(index)
-      setIsTransitioning(false)
-    }, 500)
-  }
 
   return (
     <section
@@ -168,11 +129,9 @@ export default function Hero() {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            opacity: isTransitioning ? 0 : 1,
-            transition: "opacity 0.5s ease",
           }}
         >
-          <source src={heroSlides[currentSlide].src} type="video/mp4" />
+          <source src={heroSlides[0].src} type="video/mp4" />
         </video>
       </div>
 
@@ -187,42 +146,6 @@ export default function Hero() {
       />
 
 
-      {/* NAVIGATION DOTS */}
-      <div
-        className="carousel-dots"
-        style={{
-          position: "absolute",
-          bottom: 24,
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 3,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 8,
-        }}
-      >
-        {heroSlides.slice(0, 8).map((_, idx) => {
-          const isActive = idx === currentSlide || (currentSlide >= 8 && idx === 7)
-          return (
-            <button
-              key={idx}
-              onClick={() => goToSlide(idx)}
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: isActive ? "white" : "rgba(255,255,255,0.4)",
-                border: "none",
-                cursor: "pointer",
-                flexShrink: 0,
-                padding: 0,
-                lineHeight: 1,
-              }}
-            />
-          )
-        })}
-      </div>
 
       {/* MAIN LAYOUT OVERLAY */}
       <div

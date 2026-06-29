@@ -1,9 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import Container from '@/components/ui/Container'
 
 const VisionMissionTabs = () => {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -66,8 +69,7 @@ const VisionMissionTabs = () => {
         {/* Vision */}
         <motion.div
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate={mounted ? "visible" : "hidden"}
           variants={fadeUp}
           style={{
             background: 'linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)',
@@ -110,8 +112,7 @@ const VisionMissionTabs = () => {
         {/* Mission */}
         <motion.div
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate={mounted ? "visible" : "hidden"}
           variants={fadeUp}
           style={{
             background: '#D4A500',
