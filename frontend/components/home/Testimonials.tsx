@@ -70,7 +70,7 @@ export default function Testimonials() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {testimonialsData.map((testimonial, i) => (
+          {(Array.isArray(testimonialsData) ? testimonialsData : []).map((testimonial, i) => (
             <motion.div key={i} variants={cardVariants}>
               <div style={{
                 background: "#ffffff",
@@ -81,7 +81,7 @@ export default function Testimonials() {
               }}>
                 {/* STARS */}
                 <div style={{ display: "flex", gap: "4px", marginBottom: "16px" }}>
-                  {Array(testimonial.rating).fill(0).map((_, i) => (
+                  {Array(testimonial?.rating ?? 5).fill(0).map((_, i) => (
                     <Star key={i} size={16} fill="#FFE619" color="#FFE619" />
                   ))}
                 </div>

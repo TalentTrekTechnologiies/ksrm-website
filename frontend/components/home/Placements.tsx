@@ -184,7 +184,7 @@ export default function Placements() {
 
         {/* STATS */}
         <div className="placements-stats">
-          {homeData.placements.stats.map((stat) => (
+          {(Array.isArray(homeData?.placements?.stats) ? homeData.placements.stats : []).map((stat) => (
             <div key={stat.label} className="stat-box">
               <div className="stat-number">
                 {stat.number}{stat.suffix}
@@ -199,7 +199,7 @@ export default function Placements() {
           <div className="carousel-title">2025 Placements</div>
           <div style={{ overflow: "hidden" }}>
             <div className="photo-track">
-              {[...homeData.placements.posters, ...homeData.placements.posters].map((poster, i) => (
+              {(Array.isArray(homeData?.placements?.posters) ? [...homeData.placements.posters, ...homeData.placements.posters] : []).map((poster, i) => (
                 <div key={i} className="photo-item">
                   <img src={poster} alt={`Placement ${i}`} />
                 </div>
@@ -220,9 +220,9 @@ export default function Placements() {
 
           <div className="recruiter-carousel" style={{ overflow: "hidden" }}>
             <div className="recruiter-track">
-              {[...homeData.recruiters, ...homeData.recruiters].map((recruiter, i) => (
+              {(Array.isArray(homeData?.recruiters) ? [...homeData.recruiters, ...homeData.recruiters] : []).map((recruiter, i) => (
                 <div key={i} className="recruiter-logo">
-                  <img src={`/recruiters/${recruiter.logo}`} alt={recruiter.name} title={recruiter.name} />
+                  <img src={`/recruiters/${recruiter?.logo ?? recruiter}`} alt={recruiter?.name ?? ''} title={recruiter?.name ?? ''} />
                 </div>
               ))}
             </div>

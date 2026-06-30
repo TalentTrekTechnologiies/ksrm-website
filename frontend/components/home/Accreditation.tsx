@@ -96,7 +96,7 @@ export default function Accreditation() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
       >
-        {accreditations.map((item, i) => {
+        {(Array.isArray(accreditations) ? accreditations : []).map((item, i) => {
           const hovered = hoveredIndex === i
           return (
             <motion.div key={item.shortName} variants={cardVariants}>

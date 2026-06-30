@@ -74,7 +74,7 @@ const Achievements = () => {
             marginBottom: '60px',
           }}
         >
-          {achievements.map((item, idx) => (
+          {(Array.isArray(achievements) ? achievements : []).map((item, idx) => (
             <motion.div
               key={idx}
               variants={fadeUp}

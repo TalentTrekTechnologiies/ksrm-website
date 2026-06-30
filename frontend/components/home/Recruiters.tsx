@@ -146,7 +146,7 @@ export default function Recruiters() {
         {/* RECRUITER LOGOS MARQUEE */}
         <div className="recruiter-marquee" style={{ overflow: "hidden", width: "100%" }}>
           <div className="recruiter-track">
-            {[...recruitersData.recruiters, ...recruitersData.recruiters].map((recruiter, i) => (
+            {(Array.isArray(recruitersData?.recruiters) ? [...recruitersData.recruiters, ...recruitersData.recruiters] : Array.isArray(recruitersData) ? [...recruitersData, ...recruitersData] : []).map((recruiter, i) => (
               <div key={i} className="recruiter-item">
                 <img
                   src={recruiter.logo}

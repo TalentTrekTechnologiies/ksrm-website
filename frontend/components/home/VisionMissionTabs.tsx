@@ -135,7 +135,7 @@ const VisionMissionTabs = () => {
             Our Mission
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {missions.map((mission, idx) => (
+            {(Array.isArray(missions) ? missions : []).map((mission, idx) => (
               <div key={idx} style={{ display: 'flex', gap: '16px' }}>
                 <div
                   style={{

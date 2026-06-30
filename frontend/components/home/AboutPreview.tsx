@@ -88,7 +88,7 @@ export default function AboutPreview() {
 
           {/* LEGACY STATS */}
           <div style={{ display: "flex", gap: "28px", marginBottom: "32px" }}>
-            {legacyStats.map((s) => (
+            {(Array.isArray(legacyStats) ? legacyStats : []).map((s) => (
               <div key={s.label}>
                 <div style={{
                   fontFamily: "'Rajdhani', sans-serif",
