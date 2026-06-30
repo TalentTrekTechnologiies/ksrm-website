@@ -60,11 +60,11 @@ export default function Departments() {
         }
 
         .dept-content {
-          padding: 0 18px 20px 18px;
+          padding: 16px 18px;
           flex: 1;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: center;
         }
 
         .dept-name {
@@ -134,9 +134,7 @@ export default function Departments() {
                     <img src={dept?.svg} alt={dept?.code} />
                   </div>
                   <div className="dept-content">
-                    <div className="dept-code">{dept?.code}</div>
                     <div className="dept-name">{dept?.name}</div>
-                    <div className="dept-hod">{dept?.hod}</div>
                     <div className="dept-link">Explore →</div>
                   </div>
                 </div>
