@@ -168,19 +168,25 @@ export default function About() {
       </section>
 
       {/* NAVIGATION MENU */}
-      <section style={{ background: "#F5EFE4", borderBottom: "1px solid #E0D5C7", position: "sticky", top: 0, zIndex: 10 }}>
+      <style>{`
+        .nav-menu { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); position: sticky; top: 0; z-index: 100; }
+        .nav-menu .k-container { display: flex; gap: 12px; padding: 12px 0; overflow-x: auto; }
+        .nav-link { color: #999; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
+        .nav-link:hover { color: #FFF; }
+        .nav-link.active { background: #2B3490; color: white; }
+      `}</style>
+
+      <nav className="nav-menu">
         <div className="k-container">
-          <div style={{ display: "flex", gap: "32px", padding: "20px 0", flexWrap: "wrap" }}>
-            <a href="#stats" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Stats</a>
-            <a href="#vision-mission" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Vision & Mission</a>
-            <a href="#leadership" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Leadership</a>
-            <a href="#jbos" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Joint Board of Studies</a>
-            <a href="#strategic" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Strategic Plan</a>
-            <a href="#policies" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Policies</a>
-            <a href="#contact" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Contact</a>
-          </div>
+          <a href="#stats" className="nav-link active" style={{ background: "#2B3490", color: "white" }}>About</a>
+          <a href="#vision-mission" className="nav-link">Vision & Mission</a>
+          <a href="#leadership" className="nav-link">Leadership</a>
+          <a href="#jbos" className="nav-link">Joint Board of Studies</a>
+          <a href="#strategic" className="nav-link">Strategic Plan</a>
+          <a href="#policies" className="nav-link">Policies</a>
+          <a href="#contact" className="nav-link">Contact</a>
         </div>
-      </section>
+      </nav>
 
       {/* STATS STRIP */}
       <section className="k-stats" id="stats">
