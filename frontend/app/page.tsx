@@ -1,5 +1,5 @@
 import Hero from "@/components/home/Hero"
-import StatsBar from "@/components/home/StatsBar"
+import CampusStats from "@/components/home/CampusStats"
 import VisionMissionTabs from "@/components/home/VisionMissionTabs"
 import AboutPreview from "@/components/home/AboutPreview"
 import CampusServices from "@/components/home/CampusServices"
@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <StatsBar />
+      <CampusStats />
       <VisionMissionTabs />
       <AboutPreview />
       <CampusServices />
