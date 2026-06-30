@@ -33,11 +33,14 @@ export default function CampusVideos() {
           overflow: hidden;
           box-shadow: 0 4px 12px rgba(0,0,0,0.08);
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          padding: 2px;
+          display: flex;
         }
         .video-frame iframe {
           width: 100%;
           height: 100%;
           border: none;
+          border-radius: 10px;
         }
         @media (max-width: 1024px) {
           .videos-grid { grid-template-columns: repeat(2, 1fr); }
