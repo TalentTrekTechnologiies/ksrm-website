@@ -169,10 +169,10 @@ export default function About() {
 
       {/* NAVIGATION MENU */}
       <style>{`
-        .nav-menu { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); position: sticky; top: 0; z-index: 100; }
-        .nav-menu .k-container { display: flex; gap: 12px; padding: 12px 0; overflow-x: auto; }
-        .nav-link { color: #999; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
-        .nav-link:hover { color: #FFF; }
+        .nav-menu { background: white; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #E5E7EB; }
+        .nav-menu .k-container { display: flex; gap: 12px; padding: 16px 0; overflow-x: auto; align-items: center; }
+        .nav-link { color: #666; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
+        .nav-link:hover { color: #333; }
         .nav-link.active { background: #2B3490; color: white; }
       `}</style>
 
