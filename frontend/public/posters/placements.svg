@@ -1,0 +1,19 @@
+<svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PLACEMENTS">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#243089"/><stop offset="1" stop-color="#0e1656"/></linearGradient></defs>
+  <rect width="400" height="240" fill="url(#bg)"/>
+  <circle cx="358" cy="34" r="78" fill="#ffffff" opacity="0.045"/>
+  <circle cx="34" cy="212" r="60" fill="#ffd54a" opacity="0.07"/>
+  <g fill="#ffffff" opacity="0.08"><circle cx="300" cy="180" r="2.4"/><circle cx="316" cy="180" r="2.4"/><circle cx="332" cy="180" r="2.4"/><circle cx="348" cy="180" r="2.4"/><circle cx="300" cy="196" r="2.4"/><circle cx="316" cy="196" r="2.4"/><circle cx="332" cy="196" r="2.4"/><circle cx="348" cy="196" r="2.4"/><circle cx="300" cy="212" r="2.4"/><circle cx="316" cy="212" r="2.4"/><circle cx="332" cy="212" r="2.4"/><circle cx="348" cy="212" r="2.4"/></g>
+  <g transform="translate(200,104)" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    
+  <rect x="-46" y="-12" width="92" height="58" rx="7"/>
+  <path d="M-18,-12 L-18,-26 L18,-26 L18,-12"/>
+  <line x1="-46" y1="12" x2="46" y2="12"/>
+  <polyline points="6,-34 30,-34 30,-58" stroke="#ffd54a"/>
+  <polyline points="-30,-30 0,-44 30,-58" stroke="#ffd54a"/>
+
+  </g>
+  <rect x="24" y="200" width="34" height="4" rx="2" fill="#ffd54a"/>
+  <text x="24" y="190" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#ffd54a" letter-spacing="2">PLACEMENTS</text>
+</svg>

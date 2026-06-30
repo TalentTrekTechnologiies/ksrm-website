@@ -1,0 +1,347 @@
+"use client"
+
+import Link from "next/link"
+import { motion } from "framer-motion"
+import Container from "@/components/ui/Container"
+
+const EASE = [0.22, 1, 0.36, 1] as const
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+}
+
+export default function Admissions() {
+  return (
+    <section
+      style={{
+        width: "100%",
+        background: "#ffffff",
+        padding: "60px 0",
+        borderTop: "1px solid #f1f5f9",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+
+        .admissions-header {
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .admissions-badge {
+          display: inline-block;
+          background: #2B3490;
+          color: #FFE619;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        .admissions-heading {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 40px;
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0 0 8px;
+          line-height: 1.2;
+        }
+
+        .admissions-subtitle {
+          font-size: 14px;
+          color: #999;
+          margin: 0;
+        }
+
+        .admissions-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 28px;
+          max-width: 1140px;
+          margin: 0 auto;
+          align-items: stretch;
+          padding: 0 16px;
+        }
+
+        .admissions-card {
+          background: #ffffff;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+          display: flex;
+          flex-direction: column;
+          max-width: 540px;
+        }
+
+        .admissions-card-image {
+          width: 100%;
+          height: 220px;
+          object-fit: cover;
+          object-position: center top;
+          display: block;
+          background: #f0f0f0;
+          flex-shrink: 0;
+        }
+
+        .admissions-card-panel {
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          padding: 20px 24px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .admissions-card-label {
+          display: inline-block;
+          background: rgba(255, 255, 255, 0.12);
+          color: #FFE619;
+          padding: 3px 10px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+          width: fit-content;
+        }
+
+        .admissions-card-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: #ffffff;
+          margin: 0 0 10px;
+        }
+
+        .admissions-branches {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 10px;
+        }
+
+        .admissions-branch-pill {
+          background: rgba(255, 255, 255, 0.15);
+          color: #ffffff;
+          padding: 4px 10px;
+          border-radius: 12px;
+          font-size: 12px;
+          display: inline-flex;
+          align-items: center;
+          white-space: nowrap;
+        }
+
+        .admissions-info {
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.85);
+          margin-bottom: 12px;
+          line-height: 1.4;
+        }
+
+        .admissions-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #FFE619;
+          color: #2B3490;
+          padding: 10px 20px;
+          border-radius: 8px;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          text-decoration: none;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: fit-content;
+        }
+
+        .admissions-button:hover {
+          background: #ffe300;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(255, 230, 25, 0.3);
+        }
+
+        .admissions-helpline {
+          text-align: center;
+          padding: 20px 24px;
+          background: #f7f8fa;
+          border-radius: 12px;
+          border: 1px solid #e5e7eb;
+          margin-top: 36px;
+          max-width: 1140px;
+          margin-left: auto;
+          margin-right: auto;
+          font-size: 14px;
+          color: #666;
+        }
+
+        .admissions-helpline a {
+          color: #2B3490;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+
+        .admissions-helpline a:hover {
+          color: #1e1e47;
+          text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+          .admissions-heading { font-size: 32px; }
+          .admissions-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+          .admissions-card { max-width: none; }
+          .admissions-card-image { height: 200px; }
+          .admissions-card-panel { padding: 18px 20px; }
+        }
+      `}</style>
+
+      <Container>
+        {/* HEADER */}
+        <motion.div
+          className="admissions-header"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeUp}
+        >
+          <div className="admissions-badge">ADMISSIONS 2025-26</div>
+          <h2 className="admissions-heading">Begin Your Engineering Journey</h2>
+          <p className="admissions-subtitle">EAPCET Code: KSRM | Kadapa, Andhra Pradesh</p>
+        </motion.div>
+
+        {/* CARDS GRID */}
+        <motion.div
+          className="admissions-grid"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+        >
+          {/* B.TECH CARD */}
+          <motion.div variants={cardVariants}>
+            <div className="admissions-card">
+              {/* IMAGE */}
+              <img
+                src="/b-tech-banner.png"
+                alt="B.Tech Programmes"
+                className="admissions-card-image"
+                onError={(e) => {
+                  const img = e.currentTarget as HTMLImageElement
+                  img.style.background = "#e5e5e5"
+                  img.style.opacity = "0.3"
+                }}
+              />
+
+              {/* INFO PANEL */}
+              <div className="admissions-card-panel">
+                <div>
+                  <div className="admissions-card-label">B.Tech Programmes</div>
+                  <h3 className="admissions-card-title">B.Tech Engineering</h3>
+
+                  {/* BRANCHES */}
+                  <div className="admissions-branches">
+                    {["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"].map((branch) => (
+                      <span key={branch} className="admissions-branch-pill">
+                        {branch}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* INFO */}
+                  <div className="admissions-info">750+ Seats | 8 Branches | 4 Years</div>
+                </div>
+
+                {/* BUTTON */}
+                <a href="/b-tech-banner.png" target="_blank" rel="noopener noreferrer" className="admissions-button">
+                  <span>View Brochure</span>
+                  <span>↗</span>
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* DIPLOMA CARD */}
+          <motion.div variants={cardVariants}>
+            <div className="admissions-card">
+              {/* IMAGE */}
+              <img
+                src="/diploma-banner.png"
+                alt="Diploma Programmes"
+                className="admissions-card-image"
+                onError={(e) => {
+                  const img = e.currentTarget as HTMLImageElement
+                  img.style.background = "#e5e5e5"
+                  img.style.opacity = "0.3"
+                }}
+              />
+
+              {/* INFO PANEL */}
+              <div className="admissions-card-panel">
+                <div>
+                  <div className="admissions-card-label">Diploma / Polytechnic</div>
+                  <h3 className="admissions-card-title">Diploma Programmes</h3>
+
+                  {/* BRANCHES */}
+                  <div className="admissions-branches">
+                    {["Civil", "Mechanical", "ECE", "EEE", "CSE"].map((branch) => (
+                      <span key={branch} className="admissions-branch-pill">
+                        {branch}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* INFO */}
+                  <div className="admissions-info">Lateral Entry Available | 3 Years | EAPCET Eligible</div>
+                </div>
+
+                {/* BUTTON */}
+                <a
+                  href="/Diploma-Brochure-KSRMCE (1).pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="admissions-button"
+                  download
+                >
+                  <span>📥 Download Brochure</span>
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* HELPLINE */}
+        <motion.div
+          className="admissions-helpline"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeUp}
+        >
+          📞 Admissions Helpline:{" "}
+          <a href="tel:+919000073434">+91-9000073434</a>
+          {" | "}
+          <a href="tel:+918143731980">+91-8143731980</a>
+          {" | "}
+          ✉️
+          {" "}
+          <a href="mailto:ksrmcengg@yahoo.co.in">ksrmcengg@yahoo.co.in</a>
+        </motion.div>
+      </Container>
+    </section>
+  )
+}
