@@ -220,16 +220,21 @@ export default function Placements() {
 
           <div className="recruiter-carousel" style={{ overflow: "hidden" }}>
             <div className="recruiter-track">
-              {(Array.isArray(homeData?.recruiters) ? [...homeData.recruiters, ...homeData.recruiters] : []).map((recruiter, i) => (
-                <div key={i} className="recruiter-logo">
-                  <img
-                    src={`/recruiters/${encodeURIComponent(recruiter?.logo ?? recruiter ?? '')}`}
-                    alt={recruiter?.name ?? ''}
-                    title={recruiter?.name ?? ''}
-                    onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }}
-                  />
-                </div>
-              ))}
+              {(Array.isArray(homeData?.recruiters) ? [...homeData.recruiters, ...homeData.recruiters] : []).map((recruiter, i) => {
+                const logo = recruiter?.logo ?? recruiter ?? '';
+                const filename = logo.split('/').pop() || '';
+                const encodedPath = `/recruiters/${encodeURIComponent(filename)}`;
+                return (
+                  <div key={i} className="recruiter-logo">
+                    <img
+                      src={encodedPath}
+                      alt={recruiter?.name ?? ''}
+                      title={recruiter?.name ?? ''}
+                      onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
