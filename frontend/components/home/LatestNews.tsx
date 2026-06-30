@@ -123,7 +123,7 @@ export default function LatestNews() {
           const hovered = hoveredIndex === i
           return (
             <motion.div key={i} variants={cardVariants}>
-              <Link href={item.link} style={{ textDecoration: "none", display: "block" }}>
+              <Link href={item?.link ?? "/news"} style={{ textDecoration: "none", display: "block" }}>
                 <div
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
@@ -181,7 +181,7 @@ export default function LatestNews() {
                       color: "#1a1a2e", lineHeight: 1.3,
                       marginBottom: "14px",
                     }}>
-                      {item.title}
+                      {item?.title ?? ""}
                     </div>
 
                     {/* READ MORE */}
@@ -216,7 +216,7 @@ export default function LatestNews() {
         </div>
 
         {(Array.isArray(news) ? news : []).map((item, i) => (
-          <Link key={i} href={item.link} style={{
+          <Link key={i} href={item?.link ?? "/news"} style={{
             display: "flex",
             alignItems: "flex-start",
             gap: "10px",

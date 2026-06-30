@@ -100,7 +100,7 @@ export default function Accreditation() {
           const hovered = hoveredIndex === i
           return (
             <motion.div key={item.shortName} variants={cardVariants}>
-              <Link href={item.link} style={{ textDecoration: "none", display: "block" }}>
+              <Link href={item?.link ?? "/"} style={{ textDecoration: "none", display: "block" }}>
                 <div
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
@@ -130,7 +130,7 @@ export default function Accreditation() {
                   }}>
                     {item.image ? (
                       <img
-                        src={item.image}
+                        src={item?.image ?? ""}
                         alt={item.shortName}
                         style={{ width: "88%", height: "88%", objectFit: "contain" }}
                       />
@@ -156,7 +156,7 @@ export default function Accreditation() {
 
                   {/* NAME */}
                   <div style={{ fontSize: "13px", color: "#555", fontWeight: 600, margin: "6px 0 4px" }}>
-                    {item.name}
+                    {item?.name ?? ""}
                   </div>
 
                   {/* SUB */}
@@ -170,7 +170,7 @@ export default function Accreditation() {
                     marginTop: "14px",
                     fontSize: "12px", fontWeight: 600, color: "#2B3490",
                   }}>
-                    {item.linkText} <ArrowRight size={13} strokeWidth={2} />
+                    {item?.linkText ?? "Learn More"} <ArrowRight size={13} strokeWidth={2} />
                   </div>
                 </div>
               </Link>
