@@ -65,10 +65,9 @@ export default function LeadershipDetail() {
         .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }
         .k-back-btn:hover { color: #FFD700; }
         .k-section { padding: 60px 0; }
-        .k-profile-container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-        .k-profile-header { display: grid; grid-template-columns: 380px 1fr; gap: 48px; padding: 48px; align-items: flex-start; }
-        .k-profile-photo { width: 100%; height: 380px; border: 8px solid #2B3490; border-radius: 12px; object-fit: cover; }
-        .k-profile-info { padding: 12px 0; }
+        .k-profile-header { display: grid; grid-template-columns: 400px 1fr; gap: 48px; padding: 0; align-items: stretch; }
+        .k-profile-photo { width: 100%; object-fit: cover; }
+        .k-profile-info { padding: 0; display: flex; flex-direction: column; justify-content: flex-start; }
         .k-profile-name { color: #2B3490; font-size: 42px; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
         .k-profile-role { color: #D4A500; font-size: 16px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #D4A500; width: fit-content; }
         .k-quote-icon { font-size: 48px; color: #FFE619; opacity: 0.6; margin-bottom: 16px; }
@@ -95,23 +94,21 @@ export default function LeadershipDetail() {
 
       <section className="k-section">
         <div className="k-container">
-          <div className="k-profile-container">
-            <div className="k-profile-header">
-              <img src={leader.photo} alt={leader.name} className="k-profile-photo" />
-              <div className="k-profile-info">
-                <div className="k-profile-name">{leader.name}</div>
-                <div className="k-profile-role">{leader.role}</div>
-                <div className="k-quote-icon">"</div>
-                <div className="k-profile-bio">{leader.bio}</div>
+          <div className="k-profile-header">
+            <img src={leader.photo} alt={leader.name} className="k-profile-photo" />
+            <div className="k-profile-info">
+              <div className="k-profile-name">{leader.name}</div>
+              <div className="k-profile-role">{leader.role}</div>
+              <div className="k-quote-icon">"</div>
+              <div className="k-profile-bio">{leader.bio}</div>
               <div className="k-profile-bio" style={{ marginBottom: "32px" }}>{leader.about}</div>
-                {leader.email && (
-                  <div style={{ color: "#888", fontSize: "14px", marginTop: "0" }}>
-                    📧 <a href={`mailto:${leader.email}`} style={{ color: "#2B3490", textDecoration: "none" }}>
-                      {leader.email}
-                    </a>
-                  </div>
-                )}
-              </div>
+              {leader.email && (
+                <div style={{ color: "#888", fontSize: "14px", marginTop: "0" }}>
+                  📧 <a href={`mailto:${leader.email}`} style={{ color: "#2B3490", textDecoration: "none" }}>
+                    {leader.email}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>
