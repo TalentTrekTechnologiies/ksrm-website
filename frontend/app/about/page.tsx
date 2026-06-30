@@ -1,24 +1,25 @@
 "use client"
 
+import Link from "next/link"
 
 export default function About() {
   const leadershipData = [
     {
-      photo: "/images/leaderships/correspondent.webp",
+      photo: "/images/leadership/correspondent.webp",
       name: "Smt. K. Rajeswari",
       role: "Secretary cum Correspondent",
       href: "/about/correspondent",
       bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
     },
     {
-      photo: "/images/leaderships/vicechairman.webp",
+      photo: "/images/leadership/vicechairman.webp",
       name: "Sri K. Madan Mohan Reddy",
       role: "Chairman",
       href: "/about/chairman",
       bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership that guides the college towards educational excellence and social responsibility.",
     },
     {
-      photo: "/images/leaderships/managing-director.webp",
+      photo: "/images/leadership/managing-director.webp",
       name: "Dr. K. Chandra Obula Reddy",
       role: "Vice Chairman & Managing Director",
       email: "md@ksrmce.ac.in",
@@ -26,7 +27,7 @@ export default function About() {
       bio: "The Kandula Group of Institutions' youngest and most energetic Managing Director. An entrepreneur who founded KOR Ginning & Oil Mills Private Limited and serves as Director of three organizations. He took over as Managing Director to continue the legacy of his father and grandfather.",
     },
     {
-      photo: "/images/leaderships/principalphoto.webp",
+      photo: "/images/leadership/principalphoto.webp",
       name: "Dr. T. Nageswara Prasad",
       role: "Principal",
       email: "principal@ksrmce.ac.in",
@@ -109,8 +110,8 @@ export default function About() {
         .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
         .k-leader-email { font-size: 12px; color: #999; margin-bottom: 12px; }
         .k-leader-bio { color: #555; font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
-        .k-leader-btn { display: inline-block; background: #2B3490; color: #D4A500; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-        .k-leader-btn:hover { background: #D4A500; color: #2B3490; }
+        .k-leader-btn { display: inline-block; background: #2B3490; color: #D4A500; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .k-leadership-card:hover .k-leader-btn { background: #D4A500; color: #2B3490; }
 
         .k-docs { background: white; }
         .k-docs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -220,14 +221,16 @@ export default function About() {
           <h2>Leadership</h2>
           <div className="k-leadership-grid">
             {leadershipData.map((leader, i) => (
-              <div key={i} className="k-leadership-card">
-                <img src={leader.photo} alt={leader.name} className="k-leader-photo" />
-                <div className="k-leader-name">{leader.name}</div>
-                <div className="k-leader-role">{leader.role}</div>
-                {leader.email && <div className="k-leader-email">📧 {leader.email}</div>}
-                <div className="k-leader-bio">{leader.bio}</div>
-                <a href={leader.href} className="k-leader-btn">View Profile →</a>
-              </div>
+              <Link key={i} href={leader.href} style={{ textDecoration: "none" }}>
+                <div className="k-leadership-card" style={{ cursor: "pointer" }}>
+                  <img src={leader.photo} alt={leader.name} className="k-leader-photo" />
+                  <div className="k-leader-name">{leader.name}</div>
+                  <div className="k-leader-role">{leader.role}</div>
+                  {leader.email && <div className="k-leader-email">📧 {leader.email}</div>}
+                  <div className="k-leader-bio">{leader.bio}</div>
+                  <div className="k-leader-btn">View Profile →</div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
