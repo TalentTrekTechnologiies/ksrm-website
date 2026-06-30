@@ -32,7 +32,7 @@ export default function CampusVideos() {
     <section style={{
       width: "100%",
       background: "linear-gradient(135deg, #1a2558 0%, #2B3490 100%)",
-      padding: "80px 0",
+      padding: "48px 0",
       borderTop: "none"
     }}>
       <style>{`
@@ -40,8 +40,8 @@ export default function CampusVideos() {
         .videos-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-          margin: 56px 0;
+          gap: 20px;
+          margin: 32px 0;
         }
         .video-card {
           cursor: pointer;
@@ -78,9 +78,9 @@ export default function CampusVideos() {
         .video-title {
           color: #ffffff;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 700;
-          line-height: 1.4;
+          line-height: 1.3;
         }
         @media (max-width: 1024px) {
           .videos-grid { grid-template-columns: repeat(2, 1fr); }
@@ -97,22 +97,22 @@ export default function CampusVideos() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: EASE }}
-          style={{ textAlign: "center", marginBottom: "32px" }}
+          style={{ textAlign: "center", marginBottom: "24px" }}
         >
           <div style={{
-            fontSize: "12px", fontWeight: 700, letterSpacing: "2px",
-            color: "#FFE619", textTransform: "uppercase", marginBottom: "12px",
+            fontSize: "11px", fontWeight: 700, letterSpacing: "1.5px",
+            color: "#FFE619", textTransform: "uppercase", marginBottom: "8px",
           }}>
             ▶ KSRMCE OFFICIAL
           </div>
           <h2 style={{
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "48px", fontWeight: 700, color: "#ffffff", margin: "0 0 12px",
+            fontSize: "36px", fontWeight: 700, color: "#ffffff", margin: "0 0 8px",
           }}>
             Campus Life in Action
           </h2>
           <p style={{
-            fontSize: "16px", color: "rgba(255,255,255,0.8)", margin: "0 0 24px",
+            fontSize: "14px", color: "rgba(255,255,255,0.8)", margin: 0,
           }}>
             Watch our official videos and campus tours
           </p>
@@ -157,7 +157,7 @@ export default function CampusVideos() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-          style={{ textAlign: "center", marginTop: "56px" }}
+          style={{ textAlign: "center", marginTop: "32px" }}
         >
           <a
             href="https://www.youtube.com/@ksrmceofficialmedia"
@@ -165,11 +165,11 @@ export default function CampusVideos() {
             rel="noopener noreferrer"
             style={{
               display: "inline-block",
-              padding: "14px 40px",
+              padding: "12px 32px",
               background: "#d6001c",
               color: "#ffffff",
               fontFamily: "'Rajdhani', sans-serif",
-              fontSize: "16px", fontWeight: 600,
+              fontSize: "14px", fontWeight: 600,
               borderRadius: "8px",
               textDecoration: "none",
               transition: "background 0.2s, transform 0.2s",
