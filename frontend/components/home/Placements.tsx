@@ -17,24 +17,24 @@ export default function Placements() {
         }
 
         .stat-box {
-          background: white;
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           padding: 40px 24px;
           border-radius: 12px;
           text-align: center;
-          border: 1px solid #e5e5e5;
+          border: none;
         }
 
         .stat-number {
           font-family: 'Rajdhani', sans-serif;
           font-size: 48px;
           font-weight: 700;
-          color: #2B3490;
+          color: #FFE619;
           margin-bottom: 8px;
         }
 
         .stat-label {
           font-size: 14px;
-          color: #666;
+          color: #ffffff;
           font-weight: 500;
         }
 
