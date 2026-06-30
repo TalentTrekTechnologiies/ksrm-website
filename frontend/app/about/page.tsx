@@ -1,27 +1,24 @@
 "use client"
 
-import { Rajdhani } from "next/font/google"
-
-const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["700"] })
 
 export default function About() {
   const leadershipData = [
     {
-      photo: "/leadership/correspondent.webp",
+      photo: "/images/leaderships/correspondent.webp",
       name: "Smt. K. Rajeswari",
       role: "Secretary cum Correspondent",
       href: "/about/correspondent",
       bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
     },
     {
-      photo: "/leadership/vicechairman.webp",
+      photo: "/images/leaderships/vicechairman.webp",
       name: "Sri K. Madan Mohan Reddy",
       role: "Chairman",
       href: "/about/chairman",
       bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership that guides the college towards educational excellence and social responsibility.",
     },
     {
-      photo: "/leadership/managing-director.webp",
+      photo: "/images/leaderships/managing-director.webp",
       name: "Dr. K. Chandra Obula Reddy",
       role: "Vice Chairman & Managing Director",
       email: "md@ksrmce.ac.in",
@@ -29,7 +26,7 @@ export default function About() {
       bio: "The Kandula Group of Institutions' youngest and most energetic Managing Director. An entrepreneur who founded KOR Ginning & Oil Mills Private Limited and serves as Director of three organizations. He took over as Managing Director to continue the legacy of his father and grandfather.",
     },
     {
-      photo: "/leadership/principalphoto.webp",
+      photo: "/images/leaderships/principalphoto.webp",
       name: "Dr. T. Nageswara Prasad",
       role: "Principal",
       email: "principal@ksrmce.ac.in",
@@ -159,7 +156,7 @@ export default function About() {
       `}</style>
 
       {/* HERO BANNER */}
-      <section className="k-hero">
+      <section className="k-hero" style={{ background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)" }}>
         <div className="k-container">
           <div className="k-hero-content">
             <div className="k-hero-eyebrow">🏛️ ABOUT US</div>
