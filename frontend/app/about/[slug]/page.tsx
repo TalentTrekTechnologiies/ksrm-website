@@ -63,9 +63,10 @@ export default function LeadershipDetail() {
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-        .k-hero { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/banners/alumni-banner.jpg); background-size: cover; background-position: center; min-height: 400px; padding: 80px 0; display: flex; align-items: center; color: white; position: relative; }
-        .k-hero-title { font-size: 72px; font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
-        .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+        .k-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); min-height: 500px; padding: 0; display: flex; align-items: center; color: white; position: relative; }
+        .k-hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 80px 0; }
+        .k-hero-title { font-size: 72px; font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+        .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }
         .k-back-btn:hover { color: #FFD700; }
         .k-section { padding: 60px 0; }
         .k-profile-container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
@@ -80,8 +81,8 @@ export default function LeadershipDetail() {
         .k-about-title { color: #2B3490; font-size: 28px; font-weight: 700; margin-bottom: 20px; }
         .k-about-text { color: #555; font-size: 15px; line-height: 1.8; }
         @media (max-width: 768px) {
-          .k-hero { min-height: 280px; padding: 40px 0; }
-          .k-hero-title { font-size: 42px; }
+          .k-hero { min-height: 400px; }
+          .k-hero-title { font-size: 48px; }
           .k-profile-header { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
           .k-profile-photo { height: 320px; }
           .k-profile-name { font-size: 28px; }
@@ -90,10 +91,12 @@ export default function LeadershipDetail() {
 
       <section className="k-hero">
         <div className="k-container">
-          <Link href="/about" className="k-back-btn">
-            ← Back to About
-          </Link>
-          <h1 className="k-hero-title">{leader.role}</h1>
+          <div className="k-hero-content">
+            <Link href="/about" className="k-back-btn">
+              ← Back to About
+            </Link>
+            <h1 className="k-hero-title">{leader.role}</h1>
+          </div>
         </div>
       </section>
 
