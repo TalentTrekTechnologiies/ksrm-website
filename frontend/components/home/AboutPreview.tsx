@@ -170,7 +170,7 @@ export default function AboutPreview() {
             color: "#2B3490",
             letterSpacing: "0.4px",
           }}>
-            Smt. K. Rajeswari Garu
+            Aerial View of KSRM College Campus
           </p>
         </motion.div>
 
