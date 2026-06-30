@@ -149,7 +149,6 @@ export default function Placements() {
           width: 90%;
           height: 90%;
           object-fit: contain;
-          filter: brightness(1.15) contrast(1.05);
         }
 
         .recruiter-carousel:hover .recruiter-track {
@@ -231,7 +230,11 @@ export default function Placements() {
                       src={encodedPath}
                       alt={recruiter?.name ?? ''}
                       title={recruiter?.name ?? ''}
-                      onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }}
+                      style={{ filter: 'brightness(1.2) contrast(1.1)' }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = '0.3'
+                        (e.target as HTMLImageElement).style.filter = 'none'
+                      }}
                     />
                   </div>
                 );
