@@ -19,11 +19,9 @@ const containerVariants = {
 export default function CampusVideos() {
   // Extract video ID from YouTube embed URL
   const getVideoId = (url: string) => {
-    try {
-      return url.split('/embed/')[1]?.split('?')[0] || ''
-    } catch {
-      return ''
-    }
+    if (!url) return ''
+    const match = url.match(/embed\/([a-zA-Z0-9_-]+)/)
+    return match ? match[1] : ''
   }
 
   const videoBadges = ["Campus Tour", "Official", "College Tour"]
@@ -128,7 +126,7 @@ export default function CampusVideos() {
         >
           {(Array.isArray(campusVideosData) ? campusVideosData : []).map((video, i) => {
             const videoId = getVideoId(video?.url ?? '')
-            const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : ''
+            const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : ''
 
             return (
               <motion.div key={i} variants={cardVariants}>
@@ -140,7 +138,13 @@ export default function CampusVideos() {
                     style={{ textDecoration: 'none' }}
                   >
                     <div className="video-thumbnail">
-                      <img src={thumbnailUrl} alt={video?.title} />
+                      <img
+                        src={thumbnailUrl}
+                        alt={video?.title}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${videoId}/default.jpg`
+                        }}
+                      />
                       <div className="video-badge">{videoBadges[i] || 'Video'}</div>
                     </div>
                     <div className="video-title">{video?.title}</div>
