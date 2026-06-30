@@ -32,6 +32,7 @@ export default function CampusVideos() {
           border-radius: 12px;
           overflow: hidden;
           box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
         }
         .video-frame iframe {
           width: 100%;
