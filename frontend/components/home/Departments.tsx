@@ -37,18 +37,16 @@ export default function Departments() {
         .dept-icon {
           width: 100%;
           height: 200px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-          box-sizing: border-box;
-          background: #ffffff;
+          padding: 0;
+          margin: 0;
+          overflow: hidden;
         }
 
         .dept-icon img {
-          width: 140px;
-          height: 140px;
-          object-fit: contain;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
 
         .dept-code {
