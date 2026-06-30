@@ -149,6 +149,7 @@ export default function Placements() {
           width: 90%;
           height: 90%;
           object-fit: contain;
+          filter: brightness(1.15) contrast(1.05);
         }
 
         .recruiter-carousel:hover .recruiter-track {
