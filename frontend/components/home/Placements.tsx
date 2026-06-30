@@ -195,18 +195,20 @@ export default function Placements() {
         </div>
 
         {/* PHOTO CAROUSEL */}
-        <div className="photo-carousel">
-          <div className="carousel-title">2025 Placements</div>
-          <div style={{ overflow: "hidden" }}>
-            <div className="photo-track">
-              {(Array.isArray(homeData?.placements?.posters) ? [...homeData.placements.posters, ...homeData.placements.posters] : []).map((poster, i) => (
-                <div key={i} className="photo-item">
-                  <img src={poster} alt={`Placement ${i}`} />
-                </div>
-              ))}
+        {Array.isArray(homeData?.placements?.posters) && homeData.placements.posters.length > 0 && (
+          <div className="photo-carousel">
+            <div className="carousel-title">2025 Placements</div>
+            <div style={{ overflow: "hidden" }}>
+              <div className="photo-track">
+                {[...homeData.placements.posters, ...homeData.placements.posters].map((poster, i) => (
+                  <div key={i} className="photo-item">
+                    <img src={poster} alt={`Placement ${i}`} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* RECRUITER SECTION */}
         <div className="recruiter-section">
