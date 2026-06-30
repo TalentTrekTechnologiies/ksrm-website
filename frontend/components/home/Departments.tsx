@@ -24,41 +24,51 @@ export default function Departments() {
           overflow: hidden;
           text-align: center;
           transition: all 0.3s ease;
+          display: flex;
+          flex-direction: column;
         }
 
         .dept-card:hover {
           border-color: #2B3490;
           box-shadow: 0 8px 24px rgba(43, 52, 144, 0.1);
+          transform: translateY(-4px);
         }
 
         .dept-icon {
           width: 100%;
-          height: 160px;
+          height: 140px;
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          overflow: hidden;
+          padding: 16px;
+          box-sizing: border-box;
+          border-bottom: 3px solid #FFE619;
         }
 
         .dept-icon img {
-          width: 120px;
-          height: 120px;
+          width: 80px;
+          height: 80px;
           object-fit: contain;
-        }
-
-        .dept-content {
-          padding: 24px;
+          margin-bottom: 8px;
         }
 
         .dept-code {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 700;
           color: #FFE619;
           text-transform: uppercase;
           letter-spacing: 2px;
-          margin-bottom: 8px;
+        }
+
+        .dept-content {
+          padding: 20px 18px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
         }
 
         .dept-name {
@@ -66,13 +76,15 @@ export default function Departments() {
           font-size: 16px;
           font-weight: 700;
           color: #1a1a2e;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
+          line-height: 1.3;
         }
 
         .dept-hod {
           font-size: 13px;
           color: #666;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
+          line-height: 1.3;
         }
 
         .dept-link {
@@ -124,9 +136,9 @@ export default function Departments() {
                 <div className="dept-card">
                   <div className="dept-icon">
                     <img src={dept?.svg} alt={dept?.code} />
+                    <div className="dept-code">{dept?.code}</div>
                   </div>
                   <div className="dept-content">
-                    <div className="dept-code">{dept?.code}</div>
                     <div className="dept-name">{dept?.name}</div>
                     <div className="dept-hod">{dept?.hod}</div>
                     <div className="dept-link">Explore →</div>
