@@ -36,18 +36,18 @@ export default function Departments() {
 
         .dept-icon {
           width: 100%;
-          height: 180px;
-          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          height: 200px;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 24px 16px;
+          padding: 20px;
           box-sizing: border-box;
+          background: #ffffff;
         }
 
         .dept-icon img {
-          width: 100px;
-          height: 100px;
+          width: 140px;
+          height: 140px;
           object-fit: contain;
         }
 
@@ -58,10 +58,7 @@ export default function Departments() {
           color: #FFE619;
           text-transform: uppercase;
           letter-spacing: 2px;
-          padding-top: 12px;
-          padding-bottom: 16px;
-          border-top: 2px solid #FFE619;
-          margin-top: 12px;
+          margin-bottom: 8px;
         }
 
         .dept-content {
