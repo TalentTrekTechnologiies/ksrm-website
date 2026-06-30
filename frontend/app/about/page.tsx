@@ -5,14 +5,14 @@ import Link from "next/link"
 export default function About() {
   const leadershipData = [
     {
-      photo: "/images/leadership/correspondent.webp",
+      photo: "/images/leadership/correspondent.jpg",
       name: "Smt. K. Rajeswari",
       role: "Secretary cum Correspondent",
       href: "/about/correspondent",
       bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
     },
     {
-      photo: "/images/leadership/vicechairman.webp",
+      photo: "/images/leadership/chairman.webp",
       name: "Sri K. Madan Mohan Reddy",
       role: "Chairman",
       href: "/about/chairman",

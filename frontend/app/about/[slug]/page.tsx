@@ -11,7 +11,7 @@ export default function LeadershipDetail() {
     correspondent: {
       name: "Smt. K. Rajeswari",
       role: "Secretary cum Correspondent",
-      photo: "/images/leadership/correspondent.webp",
+      photo: "/images/leadership/correspondent.jpg",
       email: "rajeswari@ksrmce.ac.in",
       bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
       about: "With decades of experience in educational administration, she has been instrumental in shaping KSRM's growth trajectory. Her vision encompasses not just academic excellence but also the holistic development of students.",
@@ -19,7 +19,7 @@ export default function LeadershipDetail() {
     chairman: {
       name: "Sri K. Madan Mohan Reddy",
       role: "Chairman",
-      photo: "/images/leadership/vicechairman.webp",
+      photo: "/images/leadership/chairman.webp",
       email: "chairman@ksrmce.ac.in",
       bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership.",
       about: "His tenure as Chairman has been marked by strategic initiatives that blend tradition with modern educational practices. He envisions KSRM as an institution that produces technically skilled engineers with strong intellectual and ethical capabilities.",
