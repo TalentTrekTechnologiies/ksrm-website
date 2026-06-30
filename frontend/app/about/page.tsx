@@ -167,8 +167,23 @@ export default function About() {
         </div>
       </section>
 
+      {/* NAVIGATION MENU */}
+      <section style={{ background: "#F5EFE4", borderBottom: "1px solid #E0D5C7", position: "sticky", top: 0, zIndex: 10 }}>
+        <div className="k-container">
+          <div style={{ display: "flex", gap: "32px", padding: "20px 0", flexWrap: "wrap" }}>
+            <a href="#stats" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Stats</a>
+            <a href="#vision-mission" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Vision & Mission</a>
+            <a href="#leadership" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Leadership</a>
+            <a href="#jbos" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Joint Board of Studies</a>
+            <a href="#strategic" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Strategic Plan</a>
+            <a href="#policies" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Policies</a>
+            <a href="#contact" style={{ color: "#2B3490", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#D4A500"} onMouseLeave={(e) => e.target.style.color = "#2B3490"}>Contact</a>
+          </div>
+        </div>
+      </section>
+
       {/* STATS STRIP */}
-      <section className="k-stats">
+      <section className="k-stats" id="stats">
         <div className="k-container">
           <div className="k-stats-grid">
             {statsData.map((stat, i) => (
@@ -182,7 +197,7 @@ export default function About() {
       </section>
 
       {/* VISION & MISSION */}
-      <section className="k-section k-vision-mission">
+      <section className="k-section k-vision-mission" id="vision-mission">
         <div className="k-container">
           <h2>Vision & Mission</h2>
           <div className="k-vision-grid">
@@ -216,7 +231,7 @@ export default function About() {
       </section>
 
       {/* LEADERSHIP */}
-      <section className="k-section k-leadership">
+      <section className="k-section k-leadership" id="leadership">
         <div className="k-container">
           <h2>Leadership</h2>
           <div className="k-leadership-grid">
@@ -237,7 +252,7 @@ export default function About() {
       </section>
 
       {/* JOINT BOARD OF STUDIES */}
-      <section className="k-section k-docs">
+      <section className="k-section k-docs" id="jbos">
         <div className="k-container">
           <h2>Joint Board of Studies</h2>
           <div className="k-docs-grid">
@@ -258,7 +273,7 @@ export default function About() {
       </section>
 
       {/* STRATEGIC PLAN & DEPLOYMENT DOCUMENTS */}
-      <section className="k-section k-docs" style={{ background: "#F5EFE4" }}>
+      <section className="k-section k-docs" id="strategic" style={{ background: "#F5EFE4" }}>
         <div className="k-container">
           <h2>Strategic Plan & Deployment Documents</h2>
           <div className="k-docs-grid">
@@ -279,7 +294,7 @@ export default function About() {
       </section>
 
       {/* INSTITUTIONAL POLICY DOCUMENTS */}
-      <section className="k-section k-docs">
+      <section className="k-section k-docs" id="policies">
         <div className="k-container">
           <h2>Institutional Policy Documents</h2>
           <div className="k-docs-grid">
@@ -300,7 +315,7 @@ export default function About() {
       </section>
 
       {/* GET IN TOUCH */}
-      <section className="k-section k-contact">
+      <section className="k-section k-contact" id="contact">
         <div className="k-container">
           <h2 style={{ textAlign: "center" }}>Get In Touch</h2>
           <div style={{ textAlign: "center", marginBottom: "32px" }} className="k-contact-subtitle">
