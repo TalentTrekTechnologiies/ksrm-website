@@ -36,35 +36,36 @@ export default function Departments() {
 
         .dept-icon {
           width: 100%;
-          height: 140px;
+          height: 180px;
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 16px;
+          padding: 24px 16px;
           box-sizing: border-box;
-          border-bottom: 3px solid #FFE619;
         }
 
         .dept-icon img {
-          width: 80px;
-          height: 80px;
+          width: 100px;
+          height: 100px;
           object-fit: contain;
-          margin-bottom: 8px;
         }
 
         .dept-code {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 11px;
+          font-size: 12px;
           font-weight: 700;
           color: #FFE619;
           text-transform: uppercase;
           letter-spacing: 2px;
+          padding-top: 12px;
+          padding-bottom: 16px;
+          border-top: 2px solid #FFE619;
+          margin-top: 12px;
         }
 
         .dept-content {
-          padding: 20px 18px;
+          padding: 0 18px 20px 18px;
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -136,9 +137,9 @@ export default function Departments() {
                 <div className="dept-card">
                   <div className="dept-icon">
                     <img src={dept?.svg} alt={dept?.code} />
-                    <div className="dept-code">{dept?.code}</div>
                   </div>
                   <div className="dept-content">
+                    <div className="dept-code">{dept?.code}</div>
                     <div className="dept-name">{dept?.name}</div>
                     <div className="dept-hod">{dept?.hod}</div>
                     <div className="dept-link">Explore →</div>
