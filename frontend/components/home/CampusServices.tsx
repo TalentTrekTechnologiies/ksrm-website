@@ -91,15 +91,11 @@ export default function CampusServices() {
                 height: "100%",
                 boxSizing: "border-box",
               }}>
-                {/* NAVY TOP WITH SVG POSTER */}
+                {/* SVG POSTER */}
                 <div style={{
-                  background: "#2B3490",
-                  padding: "20px",
+                  padding: 0,
                   height: "150px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
+                  overflow: "hidden",
                 }}>
                   <img
                     src={service?.poster}
@@ -108,9 +104,10 @@ export default function CampusServices() {
                       (e.target as HTMLImageElement).style.display = 'none'
                     }}
                     style={{
-                      maxWidth: "100%",
-                      maxHeight: "100px",
-                      objectFit: "contain",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
                     }}
                   />
                 </div>
