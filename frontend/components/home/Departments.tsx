@@ -21,7 +21,7 @@ export default function Departments() {
           background: #ffffff;
           border: 1px solid #e5e5e5;
           border-radius: 12px;
-          padding: 24px;
+          overflow: hidden;
           text-align: center;
           transition: all 0.3s ease;
         }
@@ -32,21 +32,23 @@ export default function Departments() {
         }
 
         .dept-icon {
-          width: 80px;
-          height: 80px;
-          margin: 0 auto 20px;
-          background: #f5f7fb;
-          border-radius: 10px;
+          width: 100%;
+          height: 160px;
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           display: flex;
           align-items: center;
           justify-content: center;
+          overflow: hidden;
         }
 
         .dept-icon img {
-          width: 100%;
-          height: 100%;
+          width: 120px;
+          height: 120px;
           object-fit: contain;
-          padding: 12px;
+        }
+
+        .dept-content {
+          padding: 24px;
         }
 
         .dept-code {
@@ -121,12 +123,14 @@ export default function Departments() {
               <Link href={dept.link} style={{ textDecoration: "none" }}>
                 <div className="dept-card">
                   <div className="dept-icon">
-                    <img src={dept.svg} alt={dept.code} />
+                    <img src={dept?.svg} alt={dept?.code} />
                   </div>
-                  <div className="dept-code">{dept.code}</div>
-                  <div className="dept-name">{dept.name}</div>
-                  <div className="dept-hod">{dept.hod}</div>
-                  <div className="dept-link">Explore →</div>
+                  <div className="dept-content">
+                    <div className="dept-code">{dept?.code}</div>
+                    <div className="dept-name">{dept?.name}</div>
+                    <div className="dept-hod">{dept?.hod}</div>
+                    <div className="dept-link">Explore →</div>
+                  </div>
                 </div>
               </Link>
             </div>
