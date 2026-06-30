@@ -36,7 +36,7 @@ export default function Departments() {
 
         .dept-icon {
           width: 100%;
-          height: 200px;
+          height: 150px;
           padding: 0;
           margin: 0;
           overflow: hidden;
