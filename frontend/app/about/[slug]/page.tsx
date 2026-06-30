@@ -77,9 +77,6 @@ export default function LeadershipDetail() {
         .k-profile-role { color: #D4A500; font-size: 16px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #D4A500; width: fit-content; }
         .k-quote-icon { font-size: 48px; color: #FFE619; opacity: 0.6; margin-bottom: 16px; }
         .k-profile-bio { color: #555; font-size: 15px; line-height: 1.8; margin-bottom: 24px; }
-        .k-about-section { background: #F9F9F9; padding: 40px; border-top: 1px solid #EEE; }
-        .k-about-title { color: #2B3490; font-size: 28px; font-weight: 700; margin-bottom: 20px; }
-        .k-about-text { color: #555; font-size: 15px; line-height: 1.8; }
         @media (max-width: 768px) {
           .k-hero { min-height: 280px; }
           .k-hero-title { font-size: 48px; }
@@ -110,18 +107,15 @@ export default function LeadershipDetail() {
                 <div className="k-profile-role">{leader.role}</div>
                 <div className="k-quote-icon">"</div>
                 <div className="k-profile-bio">{leader.bio}</div>
+              <div className="k-profile-bio" style={{ marginBottom: "32px" }}>{leader.about}</div>
                 {leader.email && (
-                  <div style={{ color: "#888", fontSize: "14px", marginTop: "24px" }}>
+                  <div style={{ color: "#888", fontSize: "14px", marginTop: "0" }}>
                     📧 <a href={`mailto:${leader.email}`} style={{ color: "#2B3490", textDecoration: "none" }}>
                       {leader.email}
                     </a>
                   </div>
                 )}
               </div>
-            </div>
-            <div className="k-about-section">
-              <h2 className="k-about-title">About</h2>
-              <div className="k-about-text">{leader.about}</div>
             </div>
           </div>
         </div>
