@@ -1,9 +1,49 @@
-import { Metadata } from "next"
+﻿"use client"
 
-export const metadata: Metadata = {
-  title: "Cse | K.S.R.M College of Engineering",
-}
+export default function CSEDepartment() {
+  const facultyData = [
+    { name: "Dr. V. Lokeswara Reddy", title: "Professor & Head", photo: "/faculty/cse/cse-hod.jpg" },
+    { name: "Dr. N. Amaranatha Reddy", title: "Professor", photo: null },
+    { name: "Dr. G. Sreenivasa Reddy", title: "Professor", photo: null },
+    { name: "Dr. V. Giridhar", title: "Associate Professor", photo: null },
+    { name: "Dr. T. Kiran Kumar", title: "Associate Professor", photo: null },
+    { name: "Dr. V. Ramesh Babu", title: "Associate Professor", photo: null },
+    { name: "Dr. P. Kishore Kumar Reddy", title: "Associate Professor", photo: null },
+    { name: "Dr. I. Srinivasula Reddy", title: "Professor", photo: null },
+    { name: "Sri. V.V. Prasad", title: "Assistant Professor", photo: "/faculty/cse/ramprakash-reddy-arava.jpg" },
+    { name: "Sri. N. Prathap Kumar", title: "Assistant Professor", photo: null },
+    { name: "Smt. K. Niveditha", title: "Assistant Professor", photo: "/faculty/cse/nagalakshmi.jpeg" },
+    { name: "Sri. P. Pavan Kumar", title: "Assistant Professor", photo: null },
+    { name: "Miss. V. SaiNeereja", title: "Assistant Professor", photo: "/faculty/cse/shabana.jpeg" },
+    { name: "Sri. CH. Santosh Kumar", title: "Assistant Professor", photo: "/faculty/cse/s.-khaja-khizar.jpg" },
+    { name: "Sri. M.C. Venkata Subbaiah", title: "Assistant Professor", photo: null },
+    { name: "Sri. K. Hemanth Kumar", title: "Assistant Professor", photo: "/faculty/cse/v.-sudha.jpg" },
+  ]
 
-export default function SubPage() {
-  return <main><h1>Cse</h1><p>Content</p></main>
+  const highlightsData = [
+    { icon: "✨", title: "Full-Stack AI Integration", desc: "Industry-aligned curriculum covering ML pipelines, neural networks, and production-ready AI systems." },
+    { icon: "✨", title: "Cybersecurity & Ethical AI", desc: "Deep focus on secure coding, threat detection, and responsible AI practices." },
+    { icon: "✨", title: "Agentic & Multimodal Systems", desc: "Hands-on training in autonomous agents, LLMs, computer vision, and multimodal applications." },
+    { icon: "✨", title: "Scalable Computing & DevOps", desc: "Cloud-native development, containerization, microservices, and deployment strategies." },
+  ]
+
+  const specializationsData = [
+    { title: "CSE (AI & ML)", topics: ["Machine Learning", "Deep Learning", "NLP", "Computer Vision"], careers: ["ML Engineer", "AI Researcher", "Data Scientist", "AI Architect"] },
+    { title: "CSE (Data Science)", topics: ["Statistical Analysis", "Big Data", "Data Visualization", "Predictive Analytics"], careers: ["Data Scientist", "Data Engineer", "Analytics Engineer", "Business Analyst"] },
+    { title: "CSE (Cloud & DevOps)", topics: ["Cloud Architecture", "Kubernetes", "CI/CD", "Infrastructure as Code"], careers: ["Cloud Engineer", "DevOps Engineer", "Solutions Architect", "Site Reliability Engineer"] },
+  ]
+
+  return (
+    <main style={{ backgroundColor: "#F5EFE4", fontFamily: "Arimo, Arial, sans-serif" }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');*{margin:0;padding:0;box-sizing:border-box}.k-container{max-width:1400px;margin:0 auto;padding:0 24px}.k-section{padding:72px 0}h1{font-size:61.2px;font-weight:700;color:white}h2{font-size:40.8px;font-weight:700;color:#2B3490;margin-bottom:48px}h3{font-size:24px;font-weight:700;color:#2B3490}h4{font-size:16px;font-weight:700;color:#2B3490;margin-top:16px}p{font-size:15px;line-height:1.8;color:#555;margin-bottom:16px}.k-hero{background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url(/banners/cse%20banner.jpg);background-size:cover;background-position:center;min-height:280px;padding:0 0 40px;display:flex;align-items:center}.k-highlights-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}.k-highlight-card{background:white;border:0.8px solid #EEF0F3;border-radius:12px;padding:24px}.k-highlight-icon{font-size:32px;margin-bottom:12px}.k-highlight-title{font-size:16px;font-weight:700;color:#2B3490;margin-bottom:12px}.k-highlight-desc{font-size:14px;line-height:1.6;color:#666}.k-vision-mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}.k-vision-box{background:#F9F9F9;border:1.6px solid #D4A500;border-radius:8px;padding:28px}.k-mission-items{display:flex;flex-direction:column;gap:16px}.k-mission-item{background:#F4F3EF;border-radius:8px;padding:20px;position:relative}.k-mission-badge{position:absolute;top:12px;right:12px;background:#2B3490;color:#D4A500;font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px}.k-mission-text{padding-top:16px;color:#555;font-size:14px;line-height:1.7}.k-hod-section{display:grid;grid-template-columns:300px 1fr;gap:48px}.k-hod-photo{width:100%;border:8px solid #2B3490;border-radius:8px;object-fit:cover}.k-specs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.k-spec-card{background:white;border-radius:12px;padding:28px;border:0.8px solid #EEF0F3}.k-spec-title{font-size:16px;font-weight:700;color:#2B3490;margin-bottom:20px}.k-spec-list{list-style:none}.k-spec-list li{padding:8px 0;padding-left:20px;position:relative;color:#555;font-size:14px}.k-spec-list li:before{content:"•";position:absolute;left:0;color:#D4A500;font-weight:bold}.k-faculty-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.k-faculty-card{background:#F7F8FA;border:0.8px solid #EEF0F3;border-radius:16px;padding:32px}.k-faculty-photo{width:120px;height:120px;border:4px solid #2B3490;border-radius:8px;object-fit:cover;margin-bottom:16px}.k-faculty-initials{width:120px;height:120px;background:#2B3490;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:36px;font-weight:700;margin-bottom:16px}.k-faculty-name{font-size:16px;font-weight:700;color:#2B3490}.k-faculty-title{font-size:13px;color:#888}.k-labs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}.k-lab-image{width:100%;height:280px;object-fit:cover;border-radius:12px}@media(max-width:1024px){.k-highlights-grid{grid-template-columns:repeat(2,1fr)}.k-vision-mission-grid{grid-template-columns:1fr}.k-specs-grid{grid-template-columns:1fr}.k-hod-section{grid-template-columns:1fr}}@media(max-width:640px){h1{font-size:36px}h2{font-size:28px}.k-highlights-grid{grid-template-columns:1fr}}`}</style>
+      <section className="k-hero"><div className="k-container"><h1>Computer Science & Engineering</h1></div></section>
+      <section className="k-section"><div className="k-container"><h2>About the Department</h2><p>The Department of Computer Science & Engineering at KSRM College is dedicated to fostering innovation, research, and excellence in technical education. With state-of-the-art laboratories and a curriculum aligned with global standards, we prepare students to become leaders in software development, AI, data science, and emerging technologies.</p><p>We emphasize collaborative learning, industry partnerships, and continuous skill development through internships, hackathons, seminars, and research projects.</p></div></section>
+      <section className="k-section" style={{background:"white"}}><div className="k-container"><h2>🤖 AI-Enabled Highlights</h2><div className="k-highlights-grid">{highlightsData.map((item,i)=>(<div key={i} className="k-highlight-card"><div className="k-highlight-icon">{item.icon}</div><div className="k-highlight-title">{item.title}</div><div className="k-highlight-desc">{item.desc}</div></div>))}</div></div></section>
+      <section className="k-section"><div className="k-container"><h2>Vision & Mission</h2><div className="k-vision-mission-grid"><div className="k-vision-box"><h3 style={{marginBottom:"16px"}}>Our Vision</h3><p style={{marginBottom:"0"}}>To be a leading department in computer science education, fostering innovation and producing globally competitive engineers.</p></div><div className="k-mission-items"><div className="k-mission-item"><div className="k-mission-badge">M1</div><div className="k-mission-text">To provide rigorous, industry-relevant curriculum integrated with cutting-edge technologies.</div></div><div className="k-mission-item"><div className="k-mission-badge">M2</div><div className="k-mission-text">To foster research and innovation through faculty mentorship and industry collaborations.</div></div><div className="k-mission-item"><div className="k-mission-badge">M3</div><div className="k-mission-text">To develop ethical, responsible engineers equipped with problem-solving skills.</div></div></div></div></div></section>
+      <section className="k-section" style={{background:"white"}}><div className="k-container"><h2>Head of Department</h2><div className="k-hod-section"><img src="/faculty/cse/cse-hod.jpg" alt="Dr. V. Lokeswara Reddy" className="k-hod-photo" /><div><h3>Dr. V. Lokeswara Reddy</h3><p style={{color:"#D4A500",fontWeight:600,marginBottom:"24px"}}>Professor & Head of Department</p><h4>Message from HOD</h4><div>Welcome to CSE Department. Our commitment is to provide world-class education bridging academic excellence with industry relevance. We prepare students to lead in the rapidly evolving tech landscape through innovative teaching, state-of-the-art laboratories, and strong industry partnerships.</div></div></div></div></section>
+      <section className="k-section"><div className="k-container"><h2>CSE Specializations</h2><div className="k-specs-grid">{specializationsData.map((spec,i)=>(<div key={i} className="k-spec-card"><div className="k-spec-title">{spec.title}</div><h4>Key Topics</h4><ul className="k-spec-list">{spec.topics.map((topic,j)=>(<li key={j}>{topic}</li>))}</ul><h4>Career Paths</h4><ul className="k-spec-list">{spec.careers.map((career,j)=>(<li key={j}>{career}</li>))}</ul></div>))}</div></div></section>
+      <section className="k-section" style={{background:"white"}}><div className="k-container"><h2>Our Faculty</h2><div className="k-faculty-grid">{facultyData.map((faculty,i)=>{const initials=faculty.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);return(<div key={i} className="k-faculty-card">{faculty.photo?<img src={faculty.photo} alt={faculty.name} className="k-faculty-photo" onError={(e)=>e.target.style.display="none"} />:<div className="k-faculty-initials">{initials}</div>}<div className="k-faculty-name">{faculty.name}</div><div className="k-faculty-title">{faculty.title}</div></div>)})}</div></div></section>
+      <section className="k-section"><div className="k-container"><h2>Our Laboratories</h2><div className="k-labs-grid">{[1,2,3,4].map((lab)=>(<img key={lab} src={`/Labs/CSE/${lab}.webp`} alt={`Lab ${lab}`} className="k-lab-image" onError={(e)=>e.target.style.display="none"} />))}</div></div></section>
+    </main>
+  )
 }
