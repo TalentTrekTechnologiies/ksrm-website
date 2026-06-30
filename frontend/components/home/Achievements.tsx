@@ -95,7 +95,7 @@ const Achievements = () => {
                   letterSpacing: '1px',
                 }}
               >
-                {item.label}
+                {item?.label ?? ""}
               </div>
             </motion.div>
           ))}
