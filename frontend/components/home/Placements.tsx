@@ -222,7 +222,12 @@ export default function Placements() {
             <div className="recruiter-track">
               {(Array.isArray(homeData?.recruiters) ? [...homeData.recruiters, ...homeData.recruiters] : []).map((recruiter, i) => (
                 <div key={i} className="recruiter-logo">
-                  <img src={`/recruiters/${recruiter?.logo ?? recruiter}`} alt={recruiter?.name ?? ''} title={recruiter?.name ?? ''} />
+                  <img
+                    src={`/recruiters/${encodeURIComponent(recruiter?.logo ?? recruiter ?? '')}`}
+                    alt={recruiter?.name ?? ''}
+                    title={recruiter?.name ?? ''}
+                    onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }}
+                  />
                 </div>
               ))}
             </div>

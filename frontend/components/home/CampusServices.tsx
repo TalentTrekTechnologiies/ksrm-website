@@ -102,8 +102,11 @@ export default function CampusServices() {
                   position: "relative",
                 }}>
                   <img
-                    src={service.poster}
-                    alt={service.label}
+                    src={service?.poster}
+                    alt={service?.label ?? "Service"}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none'
+                    }}
                     style={{
                       maxWidth: "100%",
                       maxHeight: "100px",
