@@ -129,7 +129,7 @@ export default function AboutPreview() {
         >
           <div style={{ position: "relative" }}>
             <img
-              src="/campus.webp"
+              src="/topview (1).jpg"
               alt="KSRM Campus"
               style={{
                 width: "100%", height: "340px",
