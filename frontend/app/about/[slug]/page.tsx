@@ -11,7 +11,7 @@ export default function LeadershipDetail() {
     correspondent: {
       name: "Smt. K. Rajeswari",
       role: "Secretary cum Correspondent",
-      photo: "/images/leaderships/correspondent.webp",
+      photo: "/images/leadership/correspondent.webp",
       email: "rajeswari@ksrmce.ac.in",
       bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
       about: "With decades of experience in educational administration, she has been instrumental in shaping KSRM's growth trajectory. Her vision encompasses not just academic excellence but also the holistic development of students.",
@@ -19,7 +19,7 @@ export default function LeadershipDetail() {
     chairman: {
       name: "Sri K. Madan Mohan Reddy",
       role: "Chairman",
-      photo: "/images/leaderships/vicechairman.webp",
+      photo: "/images/leadership/vicechairman.webp",
       email: "chairman@ksrmce.ac.in",
       bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership.",
       about: "His tenure as Chairman has been marked by strategic initiatives that blend tradition with modern educational practices. He envisions KSRM as an institution that produces technically skilled engineers with strong intellectual and ethical capabilities.",
@@ -27,7 +27,7 @@ export default function LeadershipDetail() {
     "managing-director": {
       name: "Dr. K. Chandra Obula Reddy",
       role: "Vice Chairman & Managing Director",
-      photo: "/images/leaderships/managing-director.webp",
+      photo: "/images/leadership/managing-director.webp",
       email: "md@ksrmce.ac.in",
       bio: "The Kandula Group of Institutions' youngest and most energetic Managing Director. An entrepreneur who founded KOR Ginning & Oil Mills Private Limited and serves as Director of three organizations.",
       about: "Dr. K. Chandra Obula Reddy brings a unique blend of entrepreneurial spirit and educational commitment. His dynamic approach has modernized KSRM's administrative processes and infrastructure.",
@@ -35,7 +35,7 @@ export default function LeadershipDetail() {
     principal: {
       name: "Dr. T. Nageswara Prasad",
       role: "Principal",
-      photo: "/images/leaderships/principalphoto.webp",
+      photo: "/images/leadership/principalphoto.webp",
       email: "principal@ksrmce.ac.in",
       bio: "Since its inception in 1980, KSRMCE has shown its impact on producing quality technical graduates. Over the past four decades, KSRMCE has transformed into a premier hub of learning.",
       about: "His leadership as Principal focuses on creating an educational ecosystem that balances academic rigor with practical application. He champions research initiatives and fosters a culture of continuous improvement.",
