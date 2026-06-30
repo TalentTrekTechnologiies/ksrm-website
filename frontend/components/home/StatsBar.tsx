@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react"
 import { statsData } from "@/data/home"
 
-const stats = statsData.map(stat => ({
-  value: parseInt(stat.value.toString()),
-  suffix: stat.suffix || "",
-  label: stat.label
+const stats = (Array.isArray(statsData) ? statsData : []).map(stat => ({
+  value: parseInt((stat?.number ?? 0).toString()),
+  suffix: stat?.suffix || "",
+  label: stat?.label || ""
 }))
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)

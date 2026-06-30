@@ -79,7 +79,7 @@ export default function CampusServices() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
       >
-        {homeData.services.map((service) => (
+        {(Array.isArray(homeData?.services) ? homeData.services : []).map((service) => (
           <motion.div key={service.title} variants={cardVariants}>
             <Link href={service.link} style={{ textDecoration: "none", display: "block", height: "100%" }}>
               <div style={{

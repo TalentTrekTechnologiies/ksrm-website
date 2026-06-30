@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { Calendar, ArrowRight } from "lucide-react"
 import Container from "@/components/ui/Container"
+import { homeData } from "@/data/home"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -118,7 +119,7 @@ export default function LatestNews() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
       >
-        {news.map((item, i) => {
+        {(Array.isArray(homeData?.news) ? homeData.news : news).map((item, i) => {
           const hovered = hoveredIndex === i
           return (
             <motion.div key={i} variants={cardVariants}>
@@ -214,7 +215,7 @@ export default function LatestNews() {
           News &amp; Announcements
         </div>
 
-        {news.map((item, i) => (
+        {(Array.isArray(news) ? news : []).map((item, i) => (
           <Link key={i} href={item.link} style={{
             display: "flex",
             alignItems: "flex-start",

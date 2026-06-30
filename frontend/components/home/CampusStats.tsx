@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef } from "react"
 import Container from "@/components/ui/Container"
 
-const stats = [
+import { homeData } from "@/data/home"
+
+const stats = Array.isArray(homeData?.stats) ? homeData.stats : [
   { number: 46, suffix: "+", label: "Years of Excellence" },
   { number: 25, suffix: "", label: "Acres Campus Area" },
   { number: 1200, suffix: "+", label: "Students Intake" },

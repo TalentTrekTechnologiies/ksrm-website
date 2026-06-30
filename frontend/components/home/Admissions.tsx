@@ -255,7 +255,7 @@ export default function Admissions() {
 
                   {/* BRANCHES */}
                   <div className="admissions-branches">
-                    {["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"].map((branch) => (
+                    {(["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"] || []).map((branch) => (
                       <span key={branch} className="admissions-branch-pill">
                         {branch}
                       </span>

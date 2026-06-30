@@ -116,7 +116,7 @@ export default function Departments() {
 
         {/* DEPARTMENTS GRID */}
         <div className="depts-grid">
-          {homeData.departments.map((dept) => (
+          {(Array.isArray(homeData?.departments) ? homeData.departments : []).map((dept) => (
             <div key={dept.code}>
               <Link href={dept.link} style={{ textDecoration: "none" }}>
                 <div className="dept-card">

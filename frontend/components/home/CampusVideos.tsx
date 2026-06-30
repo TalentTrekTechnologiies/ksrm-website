@@ -99,12 +99,12 @@ export default function CampusVideos() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {campusVideosData.map((video, i) => (
+          {(Array.isArray(campusVideosData) ? campusVideosData : []).map((video, i) => (
             <motion.div key={i} variants={cardVariants}>
               <div>
                 <div className="video-frame">
                   <iframe
-                    src={video.url}
+                    src={video?.url ?? ''}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />

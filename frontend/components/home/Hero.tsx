@@ -269,7 +269,7 @@ export default function Hero() {
           <div style={{ height: "375px", overflow: "hidden" }}>
             <div className="news-track">
               {/* Doubled for seamless loop */}
-              {[...newsItems, ...newsItems].map((item, i) => (
+              {(Array.isArray(newsItems) ? [...newsItems, ...newsItems] : []).map((item, i) => (
                 <Link key={i} href="/news" className="news-item">
                   {/* META ROW */}
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
