@@ -60,7 +60,7 @@ export const eee: Department = {
   labs: [
     { name: "Laboratory 1", description: "Core Electrical & Electronics Engineering laboratory", imageUrl: "/Labs/EEE/1.webp" }
   ],
-  heroImage: "/banners/eee%20banner.jpg"
+  heroImage: "/banner.png"
 };
 
 export default eee;

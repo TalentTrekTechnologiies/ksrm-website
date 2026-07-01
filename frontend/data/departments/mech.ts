@@ -58,9 +58,9 @@ export const mech: Department = {
     { name: "B.Tech - Mechanical Engineering", level: "Undergraduate", intake: "60" }
   ],
   labs: [
-    { name: "Laboratory 1", description: "Core Mechanical Engineering laboratory", imageUrl: "/Labs/MECH/1.webp" }
+    { name: "Laboratory 1", description: "Core Mechanical Engineering laboratory", imageUrl: "/Labs/Mech/1.webp" }
   ],
-  heroImage: "/banners/mech%20banner.jpg"
+  heroImage: "/banner.png"
 };
 
 export default mech;

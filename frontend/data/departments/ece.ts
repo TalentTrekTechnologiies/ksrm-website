@@ -58,9 +58,9 @@ export const ece: Department = {
     { name: "B.Tech - Electronics & Communication Engineering", level: "Undergraduate", intake: "60" }
   ],
   labs: [
-    { name: "Laboratory 1", description: "Core Electronics & Communication Engineering laboratory", imageUrl: "/Labs/ECE/1.webp" }
+    { name: "Laboratory 1", description: "Core Electronics & Communication Engineering laboratory", imageUrl: "/Labs/ECE/ece1.webp" }
   ],
-  heroImage: "/banners/ece%20banner.jpg"
+  heroImage: "/banner.png"
 };
 
 export default ece;

@@ -60,7 +60,7 @@ export const cse: Department = {
   labs: [
     { name: "Laboratory 1", description: "Core Computer Science & Engineering laboratory", imageUrl: "/Labs/CSE/1.webp" }
   ],
-  heroImage: "/banners/cse%20banner.jpg"
+  heroImage: "/banner.png"
 };
 
 export default cse;

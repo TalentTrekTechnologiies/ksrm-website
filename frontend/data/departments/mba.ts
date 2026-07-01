@@ -57,10 +57,8 @@ export const mba: Department = {
   programmes: [
     { name: "B.Tech - Management Studies", level: "Undergraduate", intake: "60" }
   ],
-  labs: [
-    { name: "Laboratory 1", description: "Core Management Studies laboratory", imageUrl: "/Labs/MBA/1.webp" }
-  ],
-  heroImage: "/banners/mba%20banner.jpg"
+  labs: [],
+  heroImage: "/banner.png"
 };
 
 export default mba;
