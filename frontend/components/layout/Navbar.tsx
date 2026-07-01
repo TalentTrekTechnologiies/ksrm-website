@@ -35,7 +35,7 @@ const navItems: NavItem[] = [
       { label: "Electrical & Electronics", href: "/departments/eee" },
       { label: "Electronics & Communication", href: "/departments/ece" },
       { label: "Mechanical Engineering", href: "/departments/mechanical" },
-      { label: "Humanities & Sciences", href: "/departments/humanities-sciences" },
+      { label: "Humanities & Sciences", href: "/departments/hs" },
       { label: "Management Studies (MBA)", href: "/departments/mba" },
     ],
   },
