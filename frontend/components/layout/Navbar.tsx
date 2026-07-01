@@ -155,6 +155,7 @@ export default function Navbar() {
           position: relative;
           padding: 0 20px;
           gap: 8px;
+          overflow: visible;
         }
 
         .navbar-desktop {
@@ -163,7 +164,7 @@ export default function Navbar() {
           flex: 1;
           position: relative;
           overflow-x: auto;
-          overflow-y: hidden;
+          overflow-y: visible;
           gap: 0;
           -ms-overflow-style: none;
           scrollbar-width: none;
@@ -177,6 +178,7 @@ export default function Navbar() {
           position: relative;
           display: flex;
           align-items: center;
+          overflow: visible;
         }
 
         .nav-item {
