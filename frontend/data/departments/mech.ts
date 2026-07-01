@@ -1,7 +1,7 @@
 ﻿import type { Department } from "@/types/department";
 
 export const mech: Department = {
-  slug: "mech",
+  slug: "mechanical",
   name: "Mechanical Engineering",
   shortName: "MECH",
   tagline: "Engineering Precision, Delivering Excellence",
