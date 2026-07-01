@@ -41,7 +41,7 @@ export const hs: Department = {
     { title: "Communication Excellence", description: "Master technical writing and presentation skills." }
   ],
   hod: {
-    name: "Department Head",
+    name: "Dr. Mathematics Department Head",
     designation: "Head of Department, H&S",
     qualification: "M.Tech., Ph.D.",
     message: [
@@ -52,7 +52,10 @@ export const hs: Department = {
     email: "hod.hs@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Mathematics" }
+    { name: "Dr. Mathematics Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Mathematics" },
+    { name: "Dr. Physics Faculty", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Physics" },
+    { name: "Dr. Chemistry Faculty", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Chemistry" },
+    { name: "Dr. English Faculty", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "English" },
   ],
   programmes: [
     { name: "B.Tech Support Courses", level: "Undergraduate", intake: "All" }

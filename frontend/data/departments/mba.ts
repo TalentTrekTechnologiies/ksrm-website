@@ -41,7 +41,7 @@ export const mba: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Department Head",
+    name: "Dr. MBA Department Head",
     designation: "Head of Department, MBA",
     qualification: "M.Tech., Ph.D.",
     message: [
@@ -52,7 +52,10 @@ export const mba: Department = {
     email: "hod.mba@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Management Studies" }
+    { name: "Dr. MBA Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Management Studies" },
+    { name: "Dr. Finance & Accounting", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Finance" },
+    { name: "Dr. Operations Management", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Operations" },
+    { name: "Dr. Human Resources", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "HR Management" },
   ],
   programmes: [
     { name: "B.Tech - Management Studies", level: "Undergraduate", intake: "60" }

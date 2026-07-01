@@ -41,18 +41,27 @@ export const ece: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Department Head",
+    name: "Dr. P. Lokeswar Reddy",
     designation: "Head of Department, ECE",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Electronics & Communication Engineering. We are committed to fostering innovation, practical skills and research excellence.",
       "Our faculty and facilities are designed to provide students with world-class education and prepare them for impactful careers."
     ],
-    photo: "",
+    photo: "/faculty/ece/dr.-p.-lokeswar-reddy.jpg",
     email: "hod.ece@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Electronics & Communication Engineering" }
+    { name: "Dr. P. Lokeswar Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-lokeswar-reddy.jpg", specialization: "VLSI Design" },
+    { name: "Dr. P. Giri Prasad", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-giri-prasad.jpg", specialization: "Signal Processing" },
+    { name: "Dr. S. Zahiruddin", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.-zahiruddin.jpg", specialization: "Microwave Engineering" },
+    { name: "Dr. M. Madhusudhan Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-m.-madhusudhan-reddy.jpg", specialization: "Communication Systems" },
+    { name: "Dr. G. Hemalatha", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-g.-hemalatha.jpg", specialization: "Digital Signal Processing" },
+    { name: "Dr. D. Arun Kumar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-d.-arun-kumar.jpg", specialization: "Microelectronics" },
+    { name: "Dr. S. L. Prathapa Reddy", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.l.-prathapa-reddy.jpg", specialization: "Embedded Systems" },
+    { name: "G. A. Sanjeeva Reddy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/g.a.-sanjeeva-reddy.jpg", specialization: "RF & Microwave" },
+    { name: "P. Krishna Teja Yadav", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/p.-krishna-teja-yadav.jpg", specialization: "Communications" },
+    { name: "M. Prabhakar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/m.-prabhakar.jpg", specialization: "Analog Electronics" },
   ],
   programmes: [
     { name: "B.Tech - Electronics & Communication Engineering", level: "Undergraduate", intake: "60" }

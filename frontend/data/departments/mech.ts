@@ -41,18 +41,22 @@ export const mech: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Department Head",
+    name: "Dr. Mahaboob Basha",
     designation: "Head of Department, MECH",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Mechanical Engineering. We are committed to fostering innovation, practical skills and research excellence.",
       "Our faculty and facilities are designed to provide students with world-class education and prepare them for impactful careers."
     ],
-    photo: "",
+    photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg",
     email: "hod.mech@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Mechanical Engineering" }
+    { name: "Dr. Mahaboob Basha", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg", specialization: "Thermal Engineering" },
+    { name: "Dr. Ravichandra", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/ravichandra.jpg", specialization: "Machine Design" },
+    { name: "S. Vijay Kumar", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/s-vijay-kumar.jpg", specialization: "Fluid Mechanics" },
+    { name: "Gowthami", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/gowthami.jpg", specialization: "Manufacturing Engineering" },
+    { name: "D. Merwin Rajesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/d.merwin-rajesh.png", specialization: "Thermodynamics" },
   ],
   programmes: [
     { name: "B.Tech - Mechanical Engineering", level: "Undergraduate", intake: "60" }
