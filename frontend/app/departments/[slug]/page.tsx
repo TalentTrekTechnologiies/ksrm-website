@@ -1,43 +1,21 @@
-import { Metadata } from "next"
-import DepartmentTemplate from "@/components/departments/DepartmentTemplate"
-import { departments } from "@/data/departments"
+﻿import { notFound } from "next/navigation";
+import DepartmentPage from "@/components/DepartmentPage";
+import { civil } from "@/data/departments/civil";
+import { cse } from "@/data/departments/cse";
+import { ece } from "@/data/departments/ece";
+import { eee } from "@/data/departments/eee";
+import { mech } from "@/data/departments/mech";
+import { mba } from "@/data/departments/mba";
 
-export const dynamicParams = true
+const departments = { civil, cse, ece, eee, mech, mba };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const department = departments[params.slug as keyof typeof departments]
-
-  if (!department) {
-    return {
-      title: "Department Not Found | KSRM College of Engineering",
-    }
-  }
-
-  return {
-    title: `${department.name} | KSRM College of Engineering`,
-    description: department.about,
-  }
+export function generateStaticParams() {
+  return Object.keys(departments).map((slug) => ({ slug }));
 }
 
-export default function DepartmentPage({
-  params,
-}: {
-  params: { slug: string }
-}) {
-  const department = departments[params.slug as keyof typeof departments]
-
-  if (!department) {
-    return (
-      <div style={{ padding: "40px 20px", textAlign: "center" }}>
-        <h1>Department Not Found</h1>
-        <p>The requested department does not exist.</p>
-      </div>
-    )
-  }
-
-  return <DepartmentTemplate department={department} />
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const department = (departments as Record<string, typeof civil>)[slug];
+  if (!department) return notFound();
+  return <DepartmentPage department={department} />;
 }
