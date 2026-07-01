@@ -80,20 +80,6 @@ export default function PlacementsOverviewPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
-        <section style={{ background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)", padding: "60px 0 40px", color: "white", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 100%)", pointerEvents: "none" }} />
-          <div className="responsive-container" style={{ position: "relative", zIndex: 2 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, marginBottom: 12, color: "rgba(255,255,255,0.7)" }}>
-              <a style={{ color: "#D4A500", textDecoration: "none" }} href="/">Home</a>
-              <span>/</span>
-              <span>Placements</span>
-              <span>/</span>
-              <span>Overview</span>
-            </div>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.1, textAlign: "left" }}>Overview</h1>
-            <p style={{ color: "rgba(255,255,255,0.9)", fontSize: 16, marginTop: 12, maxWidth: 600 }}>Placements & Career Development</p>
-          </div>
-        </section>
         <PlacementsSubnav active="/placements/overview" />
 
         <section className="overview-intro-section">
@@ -147,10 +133,7 @@ export default function PlacementsOverviewPage() {
                   <h3 className="overview-dean-name">Mr. Nagaraju Rayapati</h3>
                   <p className="overview-dean-designation">Dean – Training & Placements</p>
                   <p className="overview-dean-bio">
-                    Nagaraju Rayapati leads the Training & Placement initiatives at K.S.R.M. College of Engineering with a vision to transform students into industry-ready professionals. He is responsible for designing and implementing strategic employability programs, industry collaborations, career development initiatives, certification pathways, internships, and placement activities.
-                  </p>
-                  <p className="overview-dean-bio" style={{ marginTop: 12 }}>
-                    With extensive experience in academia, skill development, industry relations, and career services, he has been instrumental in establishing structured training ecosystems that focus on technical excellence, professional competencies, and holistic student development. His commitment to innovation and outcome-driven training has significantly contributed to enhancing student employability and career success.
+                    Nagaraju Rayapati leads the Training & Placement initiatives with a vision to transform students into industry-ready professionals.
                   </p>
                 </div>
               </div>
@@ -160,10 +143,7 @@ export default function PlacementsOverviewPage() {
                   <h3 className="overview-dean-name">Mr. Venugopal Marella</h3>
                   <p className="overview-dean-designation">Dean – Industry Relations</p>
                   <p className="overview-dean-bio">
-                    Mr. Venugopal Marella plays a pivotal role in coordinating campus recruitment activities and strengthening relationships with industry partners. He works closely with recruiters, students, faculty, and placement coordinators to facilitate internship and placement opportunities across various sectors.
-                  </p>
-                  <p className="overview-dean-bio" style={{ marginTop: 12 }}>
-                    His responsibilities include organizing recruitment drives, coordinating employer engagement activities, managing placement operations, guiding students through the recruitment process, and ensuring seamless interaction between the institution and prospective employers. His dedicated efforts contribute significantly to creating meaningful career opportunities for KSRM students.
+                    Mr. Venugopal Marella plays a pivotal role in coordinating campus recruitment activities and strengthening relationships with industry partners.
                   </p>
                 </div>
               </div>
