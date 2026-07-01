@@ -4,7 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-// Social media links for mobile menu
 const socialLinks = [
   { Icon: "f", href: "https://facebook.com/ksrmceofficial", label: "Facebook" },
   { Icon: "𝕏", href: "https://twitter.com/ksrmceofficial", label: "Twitter" },
@@ -127,16 +126,12 @@ const navItems: NavItem[] = [
 ]
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [hoveredDropdown, setHoveredDropdown] = useState<string | null>(null)
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null)
   const pathname = usePathname()
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/")
-
-  const toggleMobileExpand = (label: string) => {
-    setExpandedMobile(expandedMobile === label ? null : label)
-  }
 
   return (
     <div style={{
@@ -147,211 +142,102 @@ export default function Navbar() {
       boxShadow: "0 5px 20px rgba(0,0,0,0.15)",
     }}>
       <style>{`
-        .navbar-wrapper {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          height: 48px;
-          position: relative;
-          padding: 0 20px;
-          gap: 8px;
-          overflow: visible;
-        }
-
-        .navbar-desktop {
-          display: flex;
-          align-items: stretch;
-          flex: 1;
-          position: relative;
-          overflow-x: auto;
-          overflow-y: visible;
-          gap: 0;
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        .navbar-desktop::-webkit-scrollbar {
-          display: none;
-        }
-
-        .nav-item-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-          overflow: visible;
-        }
-
-        .nav-item {
-          display: flex;
-          align-items: center;
-          padding: 0 12px;
-          height: 48px;
-          color: rgba(255, 255, 255, 0.82);
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: 600;
-          font-family: 'Rajdhani', sans-serif;
-          white-space: nowrap;
-          border-bottom: 3px solid transparent;
-          transition: all 0.2s;
-          cursor: pointer;
-        }
-
-        .nav-item:hover {
-          color: #FFE619;
-        }
-
-        .nav-item.active {
-          color: #FFE619;
-          border-bottom-color: #FFE619;
-        }
-
-        .nav-dropdown {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          background: #fff;
-          min-width: 240px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-          border-radius: 0 0 8px 8px;
-          z-index: 1100;
-          padding: 6px 0;
-          display: none;
-          flex-direction: column;
-        }
-
-        .nav-item-wrapper:hover .nav-dropdown {
-          display: flex;
-        }
-
-        .nav-dropdown a {
-          display: block;
-          padding: 10px 18px;
-          color: #2B3490;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          text-decoration: none;
-          white-space: nowrap;
-          transition: background 0.2s;
-        }
-
-        .nav-dropdown a:hover {
-          background: #f2f4ff;
-        }
-
-        .nav-arrow {
-          margin-left: 5px;
-          font-size: 10px;
-          display: inline-block;
-        }
-
-        .navbar-hamburger {
-          display: none;
-          background: none;
-          border: none;
-          color: #fff;
-          font-size: 24px;
-          cursor: pointer;
-          padding: 4px 8px;
-        }
-
-        .navbar-mobile-menu {
-          border-top: 1px solid rgba(255,255,255,0.1);
-          background: #2B3490;
-          max-height: 75vh;
-          overflow-y: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .navbar-mobile-item {
-          display: block;
-          padding: 13px 8px;
-          font-size: 14px;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          font-family: 'Rajdhani', sans-serif;
-          text-decoration: none;
-          color: #fff;
-        }
-
-        .navbar-mobile-parent {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 13px 8px;
-          font-size: 14px;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          font-family: 'Rajdhani', sans-serif;
-          color: #fff;
-          cursor: pointer;
-        }
-
-        .navbar-mobile-parent.expanded {
-          background: rgba(255,230,25,0.1);
-        }
-
-        .navbar-mobile-arrow {
-          transition: transform 0.2s;
-          font-size: 12px;
-        }
-
-        .navbar-mobile-arrow.open {
-          transform: rotate(-180deg);
-        }
-
-        .navbar-mobile-children {
-          display: none;
-          flex-direction: column;
-          background: rgba(255,255,255,0.05);
-        }
-
-        .navbar-mobile-children.visible {
-          display: flex;
-        }
-
-        .navbar-mobile-child {
-          padding: 10px 8px 10px 32px;
-          font-size: 13px;
-          font-weight: 500;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
-          font-family: 'Rajdhani', sans-serif;
-          text-decoration: none;
-          color: rgba(255,255,255,0.8);
-        }
-
-        .navbar-mobile-child:hover {
-          color: #FFE619;
-        }
-
         @media (max-width: 768px) {
           .navbar-desktop { display: none !important; }
           .navbar-hamburger { display: flex !important; }
         }
       `}</style>
 
-      <div className="navbar-wrapper">
-        {/* Desktop navigation */}
-        <div className="navbar-desktop">
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        padding: "0 20px",
+        height: "48px",
+      }}>
+        {/* Desktop Navigation */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0,
+          flex: 1,
+          overflow: "visible",
+        }} className="navbar-desktop">
           {navItems.map((item) => {
             const active = isActive(item.href)
             const hasChildren = item.children && item.children.length > 0
+            const isOpen = hoveredDropdown === item.label
 
             return (
-              <div key={item.label} className="nav-item-wrapper">
+              <div
+                key={item.label}
+                style={{ position: "relative", display: "flex", alignItems: "center" }}
+                onMouseEnter={() => setHoveredDropdown(item.label)}
+                onMouseLeave={() => setHoveredDropdown(null)}
+              >
                 <Link
                   href={item.href}
-                  className={`nav-item ${active ? "active" : ""}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    padding: "0 12px",
+                    height: "48px",
+                    color: active || isOpen ? "#FFE619" : "rgba(255, 255, 255, 0.82)",
+                    textDecoration: "none",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    fontFamily: "'Rajdhani', sans-serif",
+                    whiteSpace: "nowrap",
+                    borderBottom: active ? "3px solid #FFE619" : "3px solid transparent",
+                    transition: "all 0.2s",
+                  }}
                 >
                   {item.label}
-                  {hasChildren && <span className="nav-arrow">▾</span>}
+                  {hasChildren && <span style={{ fontSize: "10px" }}>▾</span>}
                 </Link>
 
-                {hasChildren && (
-                  <div className="nav-dropdown">
+                {hasChildren && isOpen && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      background: "#fff",
+                      minWidth: "240px",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                      borderRadius: "0 0 8px 8px",
+                      zIndex: 1100,
+                      padding: "6px 0",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                    onMouseEnter={() => setHoveredDropdown(item.label)}
+                    onMouseLeave={() => setHoveredDropdown(null)}
+                  >
                     {item.children?.map((child) => (
-                      <Link key={child.href} href={child.href}>
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        style={{
+                          display: "block",
+                          padding: "10px 18px",
+                          color: "#2B3490",
+                          fontFamily: "'Rajdhani', sans-serif",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          textDecoration: "none",
+                          whiteSpace: "nowrap",
+                          transition: "background 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLAnchorElement).style.background = "#f2f4ff"
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLAnchorElement).style.background = "transparent"
+                        }}
+                      >
                         {child.label}
                       </Link>
                     ))}
@@ -362,19 +248,33 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile Hamburger */}
         <button
           className="navbar-hamburger"
-          onClick={() => setOpen(!open)}
+          style={{
+            display: "none",
+            background: "none",
+            border: "none",
+            color: "#fff",
+            fontSize: "24px",
+            cursor: "pointer",
+            padding: "4px 8px",
+          }}
+          onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          {open ? "✕" : "☰"}
+          {mobileOpen ? "✕" : "☰"}
         </button>
       </div>
 
-      {/* Mobile dropdown menu */}
-      {open && (
-        <div className="navbar-mobile-menu">
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div style={{
+          borderTop: "1px solid rgba(255,255,255,0.1)",
+          background: "#2B3490",
+          maxHeight: "75vh",
+          overflowY: "auto",
+        }}>
           {navItems.map((item) => {
             const hasChildren = item.children && item.children.length > 0
             const isExpanded = expandedMobile === item.label
@@ -384,21 +284,45 @@ export default function Navbar() {
               return (
                 <div key={item.label}>
                   <div
-                    className={`navbar-mobile-parent ${isExpanded ? "expanded" : ""}`}
-                    onClick={() => toggleMobileExpand(item.label)}
-                    style={{ color: active ? "#FFE619" : "#fff" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "13px 8px",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      borderBottom: "1px solid rgba(255,255,255,0.08)",
+                      fontFamily: "'Rajdhani', sans-serif",
+                      color: active ? "#FFE619" : "#fff",
+                      cursor: "pointer",
+                      background: isExpanded ? "rgba(255,230,25,0.1)" : "transparent",
+                    }}
+                    onClick={() => setExpandedMobile(isExpanded ? null : item.label)}
                   >
                     <span>{item.label}</span>
-                    <span className={`navbar-mobile-arrow ${isExpanded ? "open" : ""}`}>▾</span>
+                    <span style={{
+                      transition: "transform 0.2s",
+                      transform: isExpanded ? "rotate(-180deg)" : "rotate(0deg)",
+                      fontSize: "12px",
+                    }}>▾</span>
                   </div>
                   {isExpanded && (
-                    <div className="navbar-mobile-children visible">
+                    <div style={{ background: "rgba(255,255,255,0.05)" }}>
                       {item.children?.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="navbar-mobile-child"
-                          onClick={() => setOpen(false)}
+                          style={{
+                            display: "block",
+                            padding: "10px 8px 10px 32px",
+                            fontSize: "13px",
+                            fontWeight: 500,
+                            borderBottom: "1px solid rgba(255,255,255,0.05)",
+                            fontFamily: "'Rajdhani', sans-serif",
+                            textDecoration: "none",
+                            color: "rgba(255,255,255,0.8)",
+                          }}
+                          onClick={() => setMobileOpen(false)}
                         >
                           {child.label}
                         </Link>
@@ -413,17 +337,30 @@ export default function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="navbar-mobile-item"
-                onClick={() => setOpen(false)}
-                style={{ color: active ? "#FFE619" : "#fff" }}
+                style={{
+                  display: "block",
+                  padding: "13px 8px",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  borderBottom: "1px solid rgba(255,255,255,0.08)",
+                  fontFamily: "'Rajdhani', sans-serif",
+                  textDecoration: "none",
+                  color: active ? "#FFE619" : "#fff",
+                }}
+                onClick={() => setMobileOpen(false)}
               >
                 {item.label}
               </Link>
             )
           })}
 
-          {/* Mobile social links */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "12px 8px", display: "flex", gap: "12px" }}>
+          {/* Mobile Social Links */}
+          <div style={{
+            borderTop: "1px solid rgba(255,255,255,0.1)",
+            padding: "12px 8px",
+            display: "flex",
+            gap: "12px",
+          }}>
             {socialLinks.map((link) => (
               <a
                 key={link.label}
