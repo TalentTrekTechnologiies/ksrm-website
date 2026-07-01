@@ -133,7 +133,10 @@ export default function PlacementsOverviewPage() {
                   <h3 className="overview-dean-name">Mr. Nagaraju Rayapati</h3>
                   <p className="overview-dean-designation">Dean – Training & Placements</p>
                   <p className="overview-dean-bio">
-                    Nagaraju Rayapati leads the Training & Placement initiatives with a vision to transform students into industry-ready professionals.
+                    Nagaraju Rayapati leads the Training & Placement initiatives at K.S.R.M. College of Engineering with a vision to transform students into industry-ready professionals. He is responsible for designing and implementing strategic employability programs, industry collaborations, career development initiatives, certification pathways, internships, and placement activities.
+                  </p>
+                  <p className="overview-dean-bio" style={{ marginTop: 12 }}>
+                    With extensive experience in academia, skill development, industry relations, and career services, he has been instrumental in establishing structured training ecosystems that focus on technical excellence, professional competencies, and holistic student development. His commitment to innovation and outcome-driven training has significantly contributed to enhancing student employability and career success.
                   </p>
                 </div>
               </div>
@@ -143,7 +146,10 @@ export default function PlacementsOverviewPage() {
                   <h3 className="overview-dean-name">Mr. Venugopal Marella</h3>
                   <p className="overview-dean-designation">Dean – Industry Relations</p>
                   <p className="overview-dean-bio">
-                    Mr. Venugopal Marella plays a pivotal role in coordinating campus recruitment activities and strengthening relationships with industry partners.
+                    Mr. Venugopal Marella plays a pivotal role in coordinating campus recruitment activities and strengthening relationships with industry partners. He works closely with recruiters, students, faculty, and placement coordinators to facilitate internship and placement opportunities across various sectors.
+                  </p>
+                  <p className="overview-dean-bio" style={{ marginTop: 12 }}>
+                    His responsibilities include organizing recruitment drives, coordinating employer engagement activities, managing placement operations, guiding students through the recruitment process, and ensuring seamless interaction between the institution and prospective employers. His dedicated efforts contribute significantly to creating meaningful career opportunities for KSRM students.
                   </p>
                 </div>
               </div>
