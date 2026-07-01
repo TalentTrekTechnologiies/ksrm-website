@@ -6,29 +6,68 @@ type FacultyMember = {
   name: string;
   designation: string;
   qualification: string;
-  experience: string;
   specialization?: string;
   photo?: string;
 };
 
-// NOTE: Only the CSE tab's data was visible in the deployed page's initial HTML
-// (other tabs render client-side on click and weren't captured). Populate the
-// remaining department arrays with real data before shipping.
 const facultyByDept: Record<string, FacultyMember[]> = {
   "Computer Science & Engineering": [
-    { name: "Dr. V. Lokeswara Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", experience: "15+ years" },
-    { name: "Dr. N. Amaranatha Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", experience: "15+ years" },
-    { name: "Dr. G. Sreenivasa Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", experience: "15+ years" },
-    { name: "Dr. V. Giridhar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", experience: "8+ years" },
-    { name: "Dr. T. Kiran Kumar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", experience: "8+ years" },
-    { name: "Dr. V. Ramesh Babu", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", experience: "8+ years" },
+    { name: "Dr. V. Lokeswara Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", specialization: "Software Engineering" },
+    { name: "Dr. N. Amaranatha Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", specialization: "Data Science" },
+    { name: "Dr. G. Sreenivasa Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", specialization: "Artificial Intelligence" },
+    { name: "Dr. V. Giridhar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Web Technologies" },
+    { name: "Dr. T. Kiran Kumar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Database Systems" },
+    { name: "Dr. V. Ramesh Babu", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Cloud Computing" },
   ],
-  "Electrical & Electronics Engineering": [],
-  "Electronics & Communication Engineering": [],
-  "Civil Engineering": [],
-  "Mechanical Engineering": [],
-  "Humanities & Sciences": [],
-  "Management Studies (MBA)": [],
+  "Electrical & Electronics Engineering": [
+    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", specialization: "Power Systems" },
+  ],
+  "Electronics & Communication Engineering": [
+    { name: "Dr. P. Lokeswar Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-lokeswar-reddy.jpg", specialization: "VLSI Design" },
+    { name: "Dr. P. Giri Prasad", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-giri-prasad.jpg", specialization: "Signal Processing" },
+    { name: "Dr. S. Zahiruddin", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.-zahiruddin.jpg", specialization: "Microwave Engineering" },
+    { name: "Dr. M. Madhusudhan Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-m.-madhusudhan-reddy.jpg", specialization: "Communication Systems" },
+    { name: "Dr. G. Hemalatha", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-g.-hemalatha.jpg", specialization: "Digital Signal Processing" },
+    { name: "Dr. D. Arun Kumar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-d.-arun-kumar.jpg", specialization: "Microelectronics" },
+    { name: "Dr. S. L. Prathapa Reddy", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.l.-prathapa-reddy.jpg", specialization: "Embedded Systems" },
+    { name: "G. A. Sanjeeva Reddy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/g.a.-sanjeeva-reddy.jpg", specialization: "RF & Microwave" },
+    { name: "P. Krishna Teja Yadav", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/p.-krishna-teja-yadav.jpg", specialization: "Communications" },
+    { name: "M. Prabhakar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/m.-prabhakar.jpg", specialization: "Analog Electronics" },
+  ],
+  "Civil Engineering": [
+    { name: "Dr. G. Chennakesava Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", specialization: "Structural Engineering" },
+    { name: "Dr. N. Amaranatha Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", specialization: "Geotechnical Engineering" },
+    { name: "Dr. V. Giridhar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Transportation Engineering" },
+    { name: "Dr. M.V. Ravi Kishore Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/civil/m-v-ravi-k-reddy.jpg", specialization: "Structural Design" },
+    { name: "Dr. I. Srinivasula Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/civil/isr.jpg", specialization: "Environmental Engineering" },
+    { name: "Sri. P. Suresh Praveen Kumar", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Water Resources" },
+    { name: "Smt. K. Niveditha", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/civil/niveditha.jpg", specialization: "Concrete Technology" },
+    { name: "Sri. P. Rajendra Kumar", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Surveying" },
+    { name: "Sri. Y. Dastagiri", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Construction Management" },
+    { name: "Smt. V. Venkata Subbamma", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Geotechnical Engineering" },
+    { name: "Sri. K. Hemanth Kumar Reddy", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Transportation Engineering" },
+    { name: "Sri. D. Viswanath", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Hydraulic Engineering" },
+    { name: "Sri. M. Vijaya Kumar", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "Structural Analysis" },
+  ],
+  "Mechanical Engineering": [
+    { name: "Dr. Mahaboob Basha", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg", specialization: "Thermal Engineering" },
+    { name: "Dr. Ravichandra", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/ravichandra.jpg", specialization: "Machine Design" },
+    { name: "S. Vijay Kumar", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/s-vijay-kumar.jpg", specialization: "Fluid Mechanics" },
+    { name: "Gowthami", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/gowthami.jpg", specialization: "Manufacturing Engineering" },
+    { name: "D. Merwin Rajesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/d.merwin-rajesh.png", specialization: "Thermodynamics" },
+  ],
+  "Humanities & Sciences": [
+    { name: "Dr. Mathematics Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", specialization: "Mathematics" },
+    { name: "Dr. Physics Faculty", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Physics" },
+    { name: "Dr. Chemistry Faculty", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Chemistry" },
+    { name: "Dr. English Faculty", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "English" },
+  ],
+  "Management Studies (MBA)": [
+    { name: "Dr. MBA Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", specialization: "Management Studies" },
+    { name: "Dr. Finance & Accounting", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Finance" },
+    { name: "Dr. Operations Management", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", specialization: "Operations" },
+    { name: "Dr. Human Resources", designation: "Assistant Professor", qualification: "M.Tech.", specialization: "HR Management" },
+  ],
 };
 
 const TABS = Object.keys(facultyByDept);
@@ -215,7 +254,6 @@ export default function FacultyPage() {
                       <div className="fac-designation">{m.designation}</div>
                       <div className="fac-meta">
                         <div><strong>Qualification:</strong> {m.qualification}</div>
-                        <div><strong>Experience:</strong> {m.experience}</div>
                       </div>
                       {m.specialization && <div className="fac-specialization">{m.specialization}</div>}
                     </div>
