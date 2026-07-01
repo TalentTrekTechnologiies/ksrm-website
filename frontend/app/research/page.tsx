@@ -1,858 +1,322 @@
-'use client'
+﻿"use client";
 
-export default function Page() {
+const missions = [
+  "Create a conducive environment for quality research and innovation",
+  "Promote industry-academia collaboration and knowledge transfer",
+  "Facilitate resource mobilization for research and development",
+  "Ensure ethical research practices and compliance with integrity standards",
+  "Support research scholars and supervisors in achieving excellence",
+];
+
+const committee = [
+  { name: "Sri K. Madan Mohan Reddy", designation: "Vice Chairman", dept: "Administration" },
+  { name: "Dr. K. Chandra Obul Reddy", designation: "Managing Director", dept: "Administration" },
+  { name: "Dr. T. Nageswara Prasad", designation: "Principal", dept: "Academic Administration" },
+  { name: "Dr. M. Venkatanarayana", designation: "Professor, ECE & Dean, R&D Cell", dept: "Electronics & Communication Engineering" },
+  { name: "Sri A. Ramprakash Reddy", designation: "Head of Department", dept: "Computer Science & Engineering" },
+  { name: "Dr. B. Bhaskar Reddy", designation: "Head of Department", dept: "Electronics & Communication Engineering" },
+  { name: "Dr. G. Chennakesava Reddy", designation: "Head of Department", dept: "Civil Engineering" },
+  { name: "Dr. M. S. Priyadarshini", designation: "Head of Department", dept: "Electrical & Electronics Engineering" },
+  { name: "Dr. D. Ravikanth", designation: "Head of Department", dept: "Mechanical Engineering" },
+];
+
+const policies = [
+  { icon: "📋", name: "RDC Policy", desc: "Overall research and development cell policies and procedures", file: "/documents/research/RDC-Policy.pdf" },
+  { icon: "🔬", name: "Research Promotion Policy", desc: "Policy for promoting research activities among faculty and students", file: "/documents/research/Research-Promotion-Policy.pdf" },
+  { icon: "💰", name: "Seed Fund Policy", desc: "Guidelines for seed funding schemes to support research initiation", file: "/documents/research/Seed-Funding-Scheme-Policy.pdf" },
+  { icon: "⚖️", name: "Code of Ethics for Research", desc: "Ethical guidelines for research conduct, plagiarism prevention, and integrity", file: "/documents/research/Code-of-Ethics-Research-Innovation.pdf" },
+  { icon: "🚀", name: "Startup & Innovation Policy", desc: "Policy framework for startup development and innovation initiatives", file: "/documents/research/Startup-Policy-KSRM-BICF.doc" },
+  { icon: "🔐", name: "Intellectual Property Rights (IPR) Policy", desc: "Guidelines for intellectual property protection and management", file: "/documents/research/IPR-Policy.pdf" },
+  { icon: "🤝", name: "Consultancy Policy", desc: "Framework for faculty and institutional consultancy projects", file: "/documents/research/Consultancy-Policy.pdf" },
+];
+
+const additionalDocs = [
+  { name: "RDC Policy Framework", file: "/documents/research/RDC-Policy.pdf" },
+  { name: "Research & Development Cell Guidelines", file: "/documents/research/Research%20and%20Development%20Cell%20(1).pdf" },
+  { name: "Seed Funding Scheme", file: "/documents/research/Seed%20Funding%20Scheme%20Policy%20(1)%20(1).pdf" },
+  { name: "Co-Working Agreement", file: "/documents/research/Co-Working_Agreement_KSRM-BICF.docx" },
+];
+
+const tabs = [
+  { label: "📖 About RDC", id: "about" },
+  { label: "🎯 Vision & Mission", id: "vision" },
+  { label: "👥 Advisory Committee", id: "committee" },
+  { label: "📋 Policies & Guidelines", id: "policies" },
+  { label: "📞 Contact", id: "contact" },
+];
+
+function DownloadIcon() {
   return (
-    <div dangerouslySetInnerHTML={{
-      __html: `<!DOCTYPE html><html lang="en" data-scroll-behavior="smooth" class="font-sans arimo_bb082808-module__YDM0vq__variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/_next/static/media/3206eb66b875a5b3-s.p.0newl065t398d.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/a079e02bba5bf7ab-s.p.0.s85e2kacc1m.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/aae5f0be330e13db-s.p.09~kfcksvwt3b.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/d23f31b94ad01e54-s.p.091biwio0g5wn.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" as="image" href="/ring.png"/><link rel="preload" as="image" href="/book.png"/><link rel="preload" as="image" href="/banner.png"/><link rel="preload" as="image" href="/logo.png"/><link rel="preload" as="image" href="/nba.png"/><link rel="preload" as="image" href="/naac.png"/><link rel="preload" as="image" href="/jntua.png"/><link rel="preload" as="image" href="/gnan.png"/><link rel="preload" as="image" href="/ksnr.png"/><link rel="stylesheet" href="/_next/static/chunks/0u-l-.84zqgxg.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/08r5p52~uyd_7.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/0sur~ccmg786l.js"/><script src="/_next/static/chunks/0am~qrn.2~amr.js" async=""></script><script src="/_next/static/chunks/06ni6111_fqel.js" async=""></script><script src="/_next/static/chunks/0piol93jdjrdh.js" async=""></script><script src="/_next/static/chunks/0ofc--.ubvo_z.js" async=""></script><script src="/_next/static/chunks/turbopack-0kk9ynu9gg9t3.js" async=""></script><script src="/_next/static/chunks/05fi3fb~3qmkl.js" async=""></script><script src="/_next/static/chunks/0mtwemt.1oqqp.js" async=""></script><script src="/_next/static/chunks/02fqch~ni_1x3.js" async=""></script><script src="/_next/static/chunks/0jprs_fd_n1y2.js" async=""></script><script src="/_next/static/chunks/0ir~j~nkoxbrr.js" async=""></script><meta name="next-size-adjust" content=""/><title>Research &amp; Development Cell | KSRM College of Engineering</title><meta name="description" content="Research &amp; Development Cell at KSRMCE - promoting research culture, innovation, industry-academia collaboration, and ethical research practices."/><link rel="icon" href="/favicon.ico?favicon.0x3dzn~oxb6tn.ico" sizes="256x256" type="image/x-icon"/><script src="/_next/static/chunks/03~yq9q893hmn.js" noModule=""></script></head><body class="rajdhani_ab1774d9-module__PVobqq__variable arimo_bb082808-module__YDM0vq__variable antialiased" style="font-family:var(--font-arimo), Arial, sans-serif"><div hidden=""><!--$--><!--/$--></div><div style="position:fixed;inset:0;z-index:9999;background:#f4f3ef;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity 1.1s ease;pointer-events:auto"><div style="position:absolute;width:clamp(540px, 79vw, 990px);height:clamp(540px, 79vw, 990px);border-radius:50%;background:radial-gradient(circle, rgba(43,52,144,0.12) 0%, rgba(43,52,144,0) 70%);opacity:0;transition:opacity 1.5s ease"></div><div style="position:relative;width:clamp(396px, 72vw, 810px);height:clamp(396px, 72vw, 810px);transform:scale(1);opacity:1;transition:transform 0.35s ease"><img src="/ring.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:all 2.3s cubic-bezier(0.16, 1, 0.3, 1);opacity:0;transform:translate(-90vw,0) rotate(-220deg) scale(0.5)"/><img src="/book.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:all 2.3s cubic-bezier(0.16, 1, 0.3, 1);opacity:0;transform:translate(0,-90vh) scale(0.6);transition-delay:0.5s"/><img src="/banner.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:all 2.3s cubic-bezier(0.16, 1, 0.3, 1);opacity:0;transform:translate(0,90vh) scale(0.6);transition-delay:1s"/></div></div><div style="background:#202a78;color:#fff;width:100%;overflow:hidden"><style>
-        .topbar-inner { width: 100%; margin: 0 auto; padding: 7px 5%; display: flex; justify-content: space-between; align-items: center; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .topbar-left { display: flex; gap: 18px; font-size: 13px; align-items: center; font-weight: 500; flex-shrink: 0; }
-        .topbar-center { font-size: 13px; font-weight: 600; text-align: center; flex: 1; }
-        .topbar-right { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
-        .topbar-social { color: #fff; display: flex; align-items: center; transition: color 0.2s; }
-        .topbar-social:hover { color: #D4A500; }
-
-        @media (max-width: 768px) {
-          .topbar-inner { padding: 6px 14px; justify-content: space-between; gap: 8px; }
-          .topbar-left { font-size: 11px; gap: 10px; flex-direction: row; align-items: center; }
-          .topbar-center { display: none; }
-          .topbar-right { gap: 12px; display: none; }
-        }
-        @media (max-width: 380px) {
-          .topbar-left { font-size: 10px; gap: 6px; }
-          .topbar-right { gap: 10px; display: none; }
-          .topbar-inner { padding: 5px 10px; }
-        }
-      </style><div class="topbar-inner" style="opacity:0;transform:translateY(-15px);transition:all 0.7s ease"><div class="topbar-left"><span>📞 +91 8143731960</span><span>📞 08562 295972</span></div><div class="topbar-center">EAPCET CODE: KSRM  |  Programs: CSE, AIML, CSE(DS), ECE, EEE, CIVIL, MECH, MBA</div><div class="topbar-right"><a href="https://facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a><a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.626 5.905-5.626zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a><a href="https://instagram.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg></a><a href="http://youtube.com/ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.6 2.8 12 2.8 12 2.8s-4.6 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.3.7 11.5v2.1c0 2.2.3 4.4.3 4.4s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 22.1 12 22.1 12 22.1s4.6 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.3 23 7 23 7zm-13.5 8.5v-7.6l6.5 3.8-6.5 3.8z"></path></svg></a></div></div></div><div style="width:100%"><style>
-        .top-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 8px 30px;
-          background: #fff;
-          gap: 15px;
-          min-height: 120px;
-        }
-
-        .header-left {
-          flex: 0 0 190px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .header-left img {
-          width: 170px;
-          height: auto;
-          display: block;
-        }
-
-        /* Structured flex footprint for balanced spacing distribution */
-        .header-center {
-          flex: 0.9;
-          padding-left: 10px;
-        }
-
-        .header-center h1 {
-          margin: 0;
-          color: #C8102E;
-          font-size: clamp(1.5rem, 4vw, 3rem);
-          font-weight: 800;
-          line-height: 1;
-          font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
-          letter-spacing: 0px;
-        }
-
-        .header-center p {
-          margin: 4px 0 0 0;
-          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-          color: #4b5563;
-          font-weight: 400;
-          line-height: 1.4;
-        }
-
-        /* 12px gap + flex layout space to let the ribbon breathe */
-        .header-right {
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          gap: 12px;
-          margin-left: 40px;
-          flex: 0.7;
-          flex-shrink: 0;
-        }
-
-        .header-right img {
-          width: auto;
-          object-fit: contain;
-        }
-
-        /* Refined Optical Balancing Sizes */
-        .logo-nba,
-        .logo-naac,
-        .logo-jntua {
-          height: 100px;
-        }
-
-        .logo-ksnr {
-          height: 115px;
-        }
-
-        .logo-gnan {
-          height: 125px;
-        }
-
-        /* Large Screen Optimization */
-        @media (min-width: 1400px) {
-          .header-center h1 {
-            font-size: 3rem;
-          }
-          .header-center p {
-            font-size: 0.875rem;
-          }
-        }
-
-        /* Tablet Adjustments (991px Breakpoint) */
-        @media (max-width: 991px) {
-          .top-header {
-            flex-direction: column;
-            text-align: center;
-            padding: 15px;
-          }
-
-          .header-center {
-            padding-left: 0;
-            flex: 1;
-          }
-
-          .header-center h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
-            color: #C8102E;
-            line-height: 1;
-          }
-
-          .header-center p {
-            font-size: 0.875rem;
-            font-weight: 400;
-            color: #4b5563;
-          }
-
-          .header-right {
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-left: 0;
-            flex: 1;
-          }
-
-          /* Balanced dimensions */
-          .logo-nba,
-          .logo-naac,
-          .logo-jntua {
-            height: 65px;
-          }
-
-          .logo-ksnr {
-            height: 75px;
-          }
-
-          .logo-gnan {
-            height: 82px;
-          }
-        }
-
-        /* MOBILE COMPACT HEADER (max-width: 768px) */
-        @media (max-width: 768px) {
-          .top-header {
-            /* Logo + name in compact horizontal row */
-            flex-direction: row;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: left;
-            padding: 10px 14px;
-            gap: 10px;
-            min-height: auto;
-          }
-
-          .header-left {
-            flex: 0 0 auto;
-            justify-content: flex-start;
-          }
-
-          .header-left img {
-            width: 48px;
-            height: 48px;
-          }
-
-          .header-center {
-            padding-left: 0;
-            flex: 1;
-            min-width: 0;
-          }
-
-          .header-center h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
-            line-height: 1;
-            margin: 0;
-            word-break: break-word;
-            letter-spacing: 0px;
-            color: #C8102E;
-          }
-
-          .header-center p {
-            font-size: 0.75rem;
-            margin: 3px 0 0 0;
-            line-height: 1.3;
-            color: #4b5563;
-            font-weight: 400;
-            display: none;
-          }
-
-          /* Show first line of tagline on larger phones */
-          .header-center p:first-of-type {
-            display: block;
-            margin: 3px 0 0 0;
-          }
-
-          /* HIDE ACCREDITATION BADGES ON MOBILE - saves crucial vertical space */
-          .header-right {
-            display: none !important;
-          }
-        }
-
-        /* Extra Small Screens (max-width: 480px) */
-        @media (max-width: 480px) {
-          .top-header {
-            padding: 8px 12px;
-            gap: 8px;
-          }
-          .header-left img {
-            width: 44px;
-            height: 44px;
-          }
-          .header-center h1 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
-            color: #C8102E;
-          }
-          .header-center p:first-of-type {
-            font-size: 0.7rem;
-            font-weight: 400;
-            color: #4b5563;
-          }
-        }
-
-        /* KSNR Founder Logo - Special Tribute */
-        .ksnr-tribute {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          overflow: visible;
-          padding: 4px;
-        }
-        .ksnr-tribute .ksnr-logo {
-          transform: scale(1.08);
-          filter: drop-shadow(0 0 10px rgba(255,179,71,.75));
-          border-radius: 8px;
-          position: relative;
-          z-index: 1;
-        }
-        .ksnr-petal {
-          position: absolute;
-          top: -16px;
-          font-size: 14px;
-          line-height: 1;
-          pointer-events: none;
-          opacity: 0;
-          z-index: 2;
-          animation: ksnrFall linear infinite;
-        }
-        @keyframes ksnrFall {
-          0%   { transform: translateY(-16px) translateX(0) rotate(0deg); opacity: 0; }
-          15%  { opacity: 1; }
-          100% { transform: translateY(78px) translateX(12px) rotate(360deg); opacity: 0; }
-        }
-        .p1{left:6%;  animation-duration:3.2s; animation-delay:0s}
-        .p2{left:20%; animation-duration:3.9s; animation-delay:.7s}
-        .p3{left:34%; animation-duration:3.0s; animation-delay:1.3s}
-        .p4{left:48%; animation-duration:4.1s; animation-delay:.4s}
-        .p5{left:60%; animation-duration:3.5s; animation-delay:1.7s}
-        .p6{left:74%; animation-duration:3.8s; animation-delay:1.0s}
-        .p7{left:88%; animation-duration:3.1s; animation-delay:2.1s}
-        .p8{left:42%; animation-duration:3.6s; animation-delay:2.5s}
-        @media (prefers-reduced-motion: reduce){ .ksnr-petal{ display:none } }
-      </style><header class="top-header"><div class="header-left"><img alt="KSRM Logo" width="170" height="170" decoding="async" data-nimg="1" style="color:transparent" src="/logo.png"/></div><div class="header-center"><h1>K.S.R.M COLLEGE OF ENGINEERING</h1><p>(UGC - Autonomous) | Kadapa, Andhra Pradesh</p><p>Approved by AICTE | Affiliated to JNTUA</p></div><div class="header-right" style="display:flex;align-items:center;gap:10px;max-height:170px;overflow:hidden;margin-left:-40px"><img src="/nba.png" alt="NBA Accreditation" style="height:110px;width:auto;object-fit:contain"/><img src="/naac.png" alt="NAAC Accreditation" style="height:110px;width:auto;object-fit:contain"/><img src="/jntua.png" alt="JNTUA Affiliation" style="height:110px;width:auto;object-fit:contain"/><img src="/gnan.png" alt="Gnan" style="height:110px;width:auto;object-fit:contain"/><div class="ksnr-tribute"><span class="ksnr-petal p1">🌸</span><span class="ksnr-petal p2">🌼</span><span class="ksnr-petal p3">🌸</span><span class="ksnr-petal p4">🏵️</span><span class="ksnr-petal p5">🌸</span><span class="ksnr-petal p6">🌼</span><span class="ksnr-petal p7">🌸</span><span class="ksnr-petal p8">🏵️</span><img src="/ksnr.png" alt="KSNR Memorial" style="height:150px;width:auto;object-fit:contain" class="ksnr-logo"/></div></div></header><div style="width:100%;height:3px;background:#2B3490"></div></div><div style="background:#2B3490;position:sticky;top:0;z-index:1000;box-shadow:0 5px 20px rgba(0,0,0,0.15)"><style>
-        .navbar-wrapper {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          height: 48px;
-          position: relative;
-          padding: 0 20px;
-          gap: 8px;
-        }
-
-        .navbar-desktop {
-          display: flex;
-          align-items: stretch;
-          flex: 1;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .navbar-scroll-container {
-          display: flex;
-          align-items: center;
-          flex: 1;
-          overflow-x: auto;
-          scroll-behavior: smooth;
-          gap: 0;
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        .navbar-scroll-container::-webkit-scrollbar {
-          display: none;
-        }
-
-        .navbar-scroll-fade-left {
-          position: absolute;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          width: 40px;
-          background: linear-gradient(to right, #2B3490, rgba(43, 52, 144, 0));
-          pointer-events: none;
-          z-index: 10;
-          opacity: 0;
-          transition: opacity 0.2s;
-        }
-
-        .navbar-scroll-fade-left.visible {
-          opacity: 1;
-        }
-
-        .navbar-scroll-fade-right {
-          position: absolute;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          width: 40px;
-          background: linear-gradient(to left, #2B3490, rgba(43, 52, 144, 0));
-          pointer-events: none;
-          z-index: 10;
-          opacity: 0;
-          transition: opacity 0.2s;
-        }
-
-        .navbar-scroll-fade-right.visible {
-          opacity: 1;
-        }
-
-        .navbar-scroll-btn {
-          position: relative;
-          background: none;
-          border: none;
-          color: #D4A500;
-          width: auto;
-          height: 48px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s;
-          z-index: 20;
-          opacity: 0;
-          pointer-events: none;
-          flex-shrink: 0;
-          padding: 0 8px;
-        }
-
-        .navbar-scroll-btn.visible {
-          opacity: 1;
-          pointer-events: auto;
-        }
-
-        .navbar-scroll-btn:hover {
-          transform: scale(1.2);
-        }
-
-        .navbar-hamburger {
-          display: none;
-          background: none;
-          border: none;
-          color: #fff;
-          font-size: 26px;
-          cursor: pointer;
-          flex-shrink: 0;
-          padding: 4px 8px;
-          line-height: 1;
-          margin-left: auto;
-          outline: none;
-          -webkit-tap-highlight-color: transparent;
-        }
-
-        .navbar-hamburger:focus-visible {
-          outline: 2px solid rgba(255, 230, 25, 0.5);
-          outline-offset: 2px;
-          border-radius: 4px;
-        }
-
-        .navbar-hamburger:focus:not(:focus-visible) {
-          outline: none;
-        }
-
-        .navbar-close-button {
-          outline: none;
-          -webkit-tap-highlight-color: transparent;
-        }
-
-        .navbar-close-button:focus-visible {
-          outline: 2px solid rgba(255, 230, 25, 0.5);
-          outline-offset: 2px;
-          border-radius: 4px;
-        }
-
-        .navbar-close-button:focus:not(:focus-visible) {
-          outline: none;
-        }
-
-        .navbar-mobile-menu {
-          border-top: 1px solid rgba(255,255,255,0.15);
-          background: #2B3490;
-          max-height: calc(100vh - 160px);
-          overflow-y: auto;
-          -webkit-overflow-scrolling: touch;
-          animation: slideInMenu 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes slideInMenu {
-          from {
-            opacity: 0;
-            transform: translateY(-12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .navbar-mobile-item {
-          display: flex;
-          align-items: center;
-          padding: 0 20px;
-          font-size: 16px;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
-          font-family: 'Rajdhani', sans-serif;
-          text-decoration: none;
-          color: rgba(255,255,255,0.9);
-          height: 60px;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .navbar-mobile-item:active {
-          background: rgba(255,230,25,0.12);
-          color: #FFE619;
-          padding-left: 24px;
-        }
-
-        .navbar-mobile-parent {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 20px;
-          font-size: 16px;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
-          font-family: 'Rajdhani', sans-serif;
-          color: rgba(255,255,255,0.9);
-          cursor: pointer;
-          height: 60px;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .navbar-mobile-parent:active {
-          background: rgba(255,230,25,0.12);
-          color: #FFE619;
-          padding-left: 24px;
-        }
-
-        .navbar-mobile-parent.expanded {
-          background: rgba(255,230,25,0.15);
-          color: #FFE619;
-        }
-
-        .navbar-mobile-arrow {
-          transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-          font-size: 14px;
-          color: rgba(255,255,255,0.5);
-        }
-
-        .navbar-mobile-arrow.open {
-          transform: rotate(-180deg);
-        }
-
-        .navbar-mobile-children {
-          display: none;
-          flex-direction: column;
-          background: rgba(0,0,0,0.15);
-          animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-          border-left: 3px solid rgba(255,230,25,0.4);
-        }
-
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-8px);
-            max-height: 0;
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-            max-height: 600px;
-          }
-        }
-
-        .navbar-mobile-children.visible {
-          display: flex;
-        }
-
-        .navbar-mobile-child {
-          display: flex;
-          align-items: center;
-          padding: 0 20px 0 50px;
-          font-size: 15px;
-          font-weight: 500;
-          border-bottom: none;
-          font-family: 'Rajdhani', sans-serif;
-          text-decoration: none;
-          color: rgba(255,255,255,0.8);
-          height: 56px;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .navbar-mobile-child:active {
-          background: rgba(255,230,25,0.1);
-          color: #FFE619;
-          padding-left: 54px;
-        }
-
-        .nav-dropdown {
-          position: fixed;
-          background: #fff;
-          min-width: 240px;
-          max-width: 90vw;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-          border-radius: 0 0 8px 8px;
-          z-index: 9999;
-          padding: 8px 0;
-          display: flex;
-          flex-direction: column;
-          margin-top: -1px;
-        }
-
-        .nav-dropdown a {
-          display: block;
-          padding: 12px 18px;
-          color: #2B3490;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 15px;
-          font-weight: 600;
-          text-decoration: none;
-          white-space: nowrap;
-          transition: background 0.2s;
-        }
-
-        .nav-dropdown a:hover {
-          background: #f2f4ff;
-        }
-
-        .nav-item-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-
-        .nav-item-link {
-          color: rgba(255,255,255,0.82);
-          text-decoration: none;
-          font-size: 15px;
-          font-weight: 600;
-          font-family: 'Rajdhani', sans-serif;
-          padding: 14px 12px;
-          height: 48px;
-          display: flex;
-          align-items: center;
-          border-bottom: 3px solid transparent;
-          transition: all 0.2s;
-          white-space: nowrap;
-        }
-
-        .nav-item-link.active {
-          color: #D4A500;
-          border-bottom-color: #D4A500;
-        }
-
-        .nav-item-link:hover {
-          color: #D4A500;
-        }
-
-        .nav-arrow {
-          margin-left: 5px;
-          font-size: 10px;
-          transition: transform 0.2s;
-          display: inline-block;
-        }
-
-        .nav-arrow.open {
-          transform: rotate(180deg);
-        }
-
-        @media (max-width: 768px) {
-          .navbar-desktop { display: none !important; }
-          .navbar-hamburger { display: flex !important; }
-          .navbar-wrapper {
-            padding: 0 12px;
-          }
-        }
-      </style><div class="navbar-wrapper"><div class="navbar-desktop"><div class="navbar-scroll-fade-left "></div><div class="navbar-scroll-fade-right "></div><button class="navbar-scroll-btn " aria-label="Scroll left" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="navbar-scroll-container"><a class="nav-item-link " href="/">Home</a><div class="nav-item-wrapper"><a class="nav-item-link " href="/about">About<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/departments">Departments<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/academics">Academics<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/admissions">Admissions<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/placements">Placements<span class="nav-arrow ">▾</span></a></div><a class="nav-item-link active" href="/research">Research</a><div class="nav-item-wrapper"><a class="nav-item-link " href="/campus-life">Campus Life<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/iqac">IQAC<span class="nav-arrow ">▾</span></a></div><a class="nav-item-link " href="/iic">IIC</a><a class="nav-item-link " href="/edc">EDC</a><a class="nav-item-link " href="/examinations">Examinations</a><a class="nav-item-link " href="/alumni">Alumni</a><a class="nav-item-link " href="/gallery">Gallery</a><a class="nav-item-link " href="/careers">Careers</a><a class="nav-item-link " href="/degree-verification">Degree Verification</a><a class="nav-item-link " href="/news">News &amp; Events</a><div class="nav-item-wrapper"><a class="nav-item-link " href="/contact">Contact<span class="nav-arrow ">▾</span></a></div></div><button class="navbar-scroll-btn " aria-label="Scroll right" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div><button class="navbar-hamburger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">☰</button></div></div><div><section style="background-image:url(&#x27;/banners/startup-banner.jpg&#x27;);background-size:cover;background-position:center;background-color:#2B3490;padding:80px 0;color:#fff;position:relative;overflow:hidden;min-height:320px;display:flex;align-items:flex-end"><div style="position:absolute;top:0;right:0;width:400px;height:400px;background:rgba(255, 230, 25, 0.03);border-radius:50%"></div><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div style="opacity:0"><p style="font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#D4A500;font-weight:600;margin:0 0 8px;opacity:0;transform:translateY(20px)">ðŸ”¬ Research Excellence</p><h1 style="font-size:clamp(2rem, 4vw, 3.2rem);font-weight:700;margin:0 0 16px;font-family:&#x27;Rajdhani&#x27;, sans-serif;opacity:0;transform:translateY(20px)">Research &amp; Development Cell (RDC)</h1><p style="font-size:18px;color:#D4A500;font-weight:600;margin:0 0 24px;opacity:0;transform:translateY(20px)">Advancing Knowledge Through Research &amp; Innovation</p><p style="font-size:16px;line-height:1.8;color:#e0e0e0;margin:0;max-width:600px;opacity:0;transform:translateY(20px)">The Research and Development Cell (RDC) of KSRMCE is committed to building a robust research ecosystem that fosters innovation, industry-academia collaboration, and ethical research practices among faculty and students.</p></div></div></section><section style="padding:40px 0;background:#f4f3ef;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.08)"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-behavior:smooth"><button style="padding:10px 20px;border:none;border-radius:8px;background:#2B3490;color:#D4A500;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.3s;font-size:14px">ðŸ“– About RDC</button><button style="padding:10px 20px;border:none;border-radius:8px;background:#2B3490;color:#D4A500;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.3s;font-size:14px">ðŸŽ¯ Vision &amp; Mission</button><button style="padding:10px 20px;border:none;border-radius:8px;background:#2B3490;color:#D4A500;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.3s;font-size:14px">ðŸ‘¥ Advisory Committee</button><button style="padding:10px 20px;border:none;border-radius:8px;background:#2B3490;color:#D4A500;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.3s;font-size:14px">ðŸ“‹ Policies &amp; Guidelines</button><button style="padding:10px 20px;border:none;border-radius:8px;background:#2B3490;color:#D4A500;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.3s;font-size:14px">ðŸ“ž Contact</button></div></div></section><section style="padding:80px 0;background:#fff"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div id="about" style="opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 32px;opacity:0;transform:translateY(20px)">About the Research &amp; Development Cell</h2><div style="background:#f9f9f9;border-left:4px solid #D4A500;border-radius:8px;padding:28px;font-size:16px;line-height:1.9;color:#444;opacity:0;transform:translateY(20px)">The Research and Development Cell (RDC) of KSRMCE facilitates and encourages the research culture among faculty and students. The establishment of the R&amp;D Cell is to develop and strengthen the research environment in the departments and to align it with the educational policies of India. The RDC provides a favorable environment for productive research, industrial and institutional collaborations, and mobilizes resources and grants. The college follows the research mandate by various National Missions, SDGs, and the Start-up India initiative leading to a Self-Reliant India (Atma-Nirbhar Bharat).
-
-RDC encourages faculty to conceive ideas through enhanced industry-academia interactions and prepare research proposals for funding from various agencies. It organizes events like capacity-building programs and research theme-based workshops and internships that motivate students, scholars, and faculty to participate actively in ideation and innovative research in emerging areas.
-
-RDC ensures that researchers understand the importance of integrity and ethics, comply with ethical codes of research, and follow publishing practices at institutional, national, and global levels. All papers undergo standard plagiarism checks, and necessary software is made available for all researchers.</div></div></div></section><section style="padding:80px 0;background:#f4f3ef"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div style="opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 40px;opacity:0;transform:translateY(20px)">ðŸ¤– Innovation &amp; Student Projects</h2></div></div></section><section style="padding:80px 0;background:#ffffff"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div style="opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 40px;text-align:center;opacity:0;transform:translateY(20px)">Campus Innovation Video</h2><div style="border-radius:8px;overflow:hidden;max-width:720px;margin:0 auto;opacity:0;transform:translateY(20px)"><video autoPlay="" loop="" muted="" playsInline="" style="width:100%;aspect-ratio:16 / 9;object-fit:cover;display:block"><source src="/videos/3d-robo.mp4" type="video/mp4"/></video></div></div></div></section><section style="padding:80px 0;background:#f4f3ef;border-top:1px solid #e8e8e8"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div id="vision" style="opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 32px;opacity:0;transform:translateY(20px)">Vision &amp; Mission</h2><div style="background:#fff;border:2px solid #D4A500;border-radius:8px;padding:24px;margin-bottom:48px;opacity:0;transform:translateY(20px)"><h3 style="color:#2B3490;font-weight:700;margin:0 0 12px">ðŸŽ¯ Vision</h3><p style="font-size:15px;color:#555;line-height:1.8;margin:0">To establish a robust mechanism for developing and strengthening the research ecosystem of the institution.</p></div><h3 style="color:#2B3490;font-weight:700;margin:0 0 20px;font-size:18px;opacity:0;transform:translateY(20px)">ðŸš€ Our Missions</h3><div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px"><div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;opacity:0;transform:translateY(20px)"><div style="font-size:12px;color:#2B3490;font-weight:700;margin-bottom:8px">MISSION <!-- -->1</div><p style="font-size:14px;color:#555;line-height:1.7;margin:0">Create a conducive environment for quality research and innovation</p></div><div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;opacity:0;transform:translateY(20px)"><div style="font-size:12px;color:#2B3490;font-weight:700;margin-bottom:8px">MISSION <!-- -->2</div><p style="font-size:14px;color:#555;line-height:1.7;margin:0">Promote industry-academia collaboration and knowledge transfer</p></div><div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;opacity:0;transform:translateY(20px)"><div style="font-size:12px;color:#2B3490;font-weight:700;margin-bottom:8px">MISSION <!-- -->3</div><p style="font-size:14px;color:#555;line-height:1.7;margin:0">Facilitate resource mobilization for research and development</p></div><div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;opacity:0;transform:translateY(20px)"><div style="font-size:12px;color:#2B3490;font-weight:700;margin-bottom:8px">MISSION <!-- -->4</div><p style="font-size:14px;color:#555;line-height:1.7;margin:0">Ensure ethical research practices and compliance with integrity standards</p></div><div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:20px;opacity:0;transform:translateY(20px)"><div style="font-size:12px;color:#2B3490;font-weight:700;margin-bottom:8px">MISSION <!-- -->5</div><p style="font-size:14px;color:#555;line-height:1.7;margin:0">Support research scholars and supervisors in achieving excellence</p></div></div></div></div></section><section style="padding:80px 0;background:#fff;border-top:1px solid #e8e8e8"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div id="committee" style="opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 32px;display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(20px)"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users" aria-hidden="true" style="color:#D4A500"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>Advisory Committee</h2><div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:24px"><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Sri K. Madan Mohan Reddy</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Vice Chairman</p><p style="font-size:12px;color:#999;margin:0">Administration</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">2</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. K. Chandra Obul Reddy</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Managing Director</p><p style="font-size:12px;color:#999;margin:0">Administration</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. T. Nageswara Prasad</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Principal</p><p style="font-size:12px;color:#999;margin:0">Academic Administration</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">4</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. M. Venkatanarayana</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Professor, ECE &amp; Dean, R&amp;D Cell</p><p style="font-size:12px;color:#999;margin:0">Electronics &amp; Communication Engineering</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">5</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Sri A. Ramprakash Reddy</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Head of Department</p><p style="font-size:12px;color:#999;margin:0">Computer Science &amp; Engineering</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">6</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. B. Bhaskar Reddy</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Head of Department</p><p style="font-size:12px;color:#999;margin:0">Electronics &amp; Communication Engineering</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">7</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. G. Chennakesava Reddy</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Head of Department</p><p style="font-size:12px;color:#999;margin:0">Civil Engineering</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">8</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. M. S. Priyadarshini</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Head of Department</p><p style="font-size:12px;color:#999;margin:0">Electrical &amp; Electronics Engineering</p></div><div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:20px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative;opacity:0;transform:translateY(20px)"><div style="position:absolute;top:12px;right:12px;background:#D4A500;color:#2B3490;border-radius:50%;width:24px;height:24px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">9</div><div style="font-size:12px;color:#D4A500;font-weight:700;margin-bottom:8px;letter-spacing:1px">COMMITTEE MEMBER</div><h3 style="font-size:15px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. D. Ravikanth</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Head of Department</p><p style="font-size:12px;color:#999;margin:0">Mechanical Engineering</p></div></div></div></div></section><section style="padding:80px 0;background:#f4f3ef;border-top:1px solid #e8e8e8"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div id="policies" style="opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 32px;opacity:0;transform:translateY(20px)">ðŸ“‹ Policies &amp; Guidelines</h2><div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:20px"><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">📋</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">RDC Policy</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Overall research and development cell policies and procedures</p><a href="/documents/research/RDC-Policy.pdf" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">🔬</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">Research Promotion Policy</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Policy for promoting research activities among faculty and students</p><a href="/documents/research/Research-Promotion-Policy.pdf" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">💰</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">Seed Fund Policy</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Guidelines for seed funding schemes to support research initiation</p><a href="/documents/research/Seed-Funding-Scheme-Policy.pdf" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">⚖️</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">Code of Ethics for Research</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Ethical guidelines for research conduct, plagiarism prevention, and integrity</p><a href="/documents/research/Code-of-Ethics-Research-Innovation.pdf" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">🚀</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">Startup &amp; Innovation Policy</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Policy framework for startup development and innovation initiatives</p><a href="/documents/research/Startup-Policy-KSRM-BICF.doc" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">🔐</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">Intellectual Property Rights (IPR) Policy</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Guidelines for intellectual property protection and management</p><a href="/documents/research/IPR-Policy.pdf" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div><div style="background:linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);border-radius:8px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:12px;transition:all 0.3s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="font-size:28px">🤝</div><h3 style="font-size:16px;font-weight:700;margin:0;color:#D4A500">Consultancy Policy</h3><p style="font-size:13px;color:#d0d0d0;line-height:1.6;margin:0">Framework for faculty and institutional consultancy projects</p><a href="/documents/research/Consultancy-Policy.pdf" download="" style="margin-top:auto;display:flex;align-items:center;gap:8px;color:#D4A500;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s;padding:8px 12px;border-radius:4px;background:rgba(255, 230, 25, 0.1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Download PDF</a></div></div><div style="margin-top:60px;opacity:0;transform:translateY(20px)"><h3 style="font-size:clamp(1.4rem, 2.5vw, 1.8rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 24px">ðŸ“¥ Additional Resources &amp; Documents</h3><div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:16px"><a href="/documents/research/RDC-Policy.pdf" download="" style="display:flex;align-items:center;gap:12px;padding:16px;background:#fff;border:1px solid #ddd;border-radius:8px;text-decoration:none;color:#2B3490;transition:all 0.2s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#eef1ff;border-radius:6px"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></div><div style="flex:1"><p style="margin:0;font-weight:600;font-size:13px">RDC Policy Framework</p><p style="margin:3px 0 0;font-size:11px;color:#999">Download â†’</p></div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg></a><a href="/documents/research/Research%20and%20Development%20Cell%20(1).pdf" download="" style="display:flex;align-items:center;gap:12px;padding:16px;background:#fff;border:1px solid #ddd;border-radius:8px;text-decoration:none;color:#2B3490;transition:all 0.2s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#eef1ff;border-radius:6px"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></div><div style="flex:1"><p style="margin:0;font-weight:600;font-size:13px">Research &amp; Development Cell Guidelines</p><p style="margin:3px 0 0;font-size:11px;color:#999">Download â†’</p></div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg></a><a href="/documents/research/Seed%20Funding%20Scheme%20Policy%20(1)%20(1).pdf" download="" style="display:flex;align-items:center;gap:12px;padding:16px;background:#fff;border:1px solid #ddd;border-radius:8px;text-decoration:none;color:#2B3490;transition:all 0.2s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#eef1ff;border-radius:6px"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></div><div style="flex:1"><p style="margin:0;font-weight:600;font-size:13px">Seed Funding Scheme</p><p style="margin:3px 0 0;font-size:11px;color:#999">Download â†’</p></div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg></a><a href="/documents/research/Co-Working_Agreement_KSRM-BICF.docx" download="" style="display:flex;align-items:center;gap:12px;padding:16px;background:#fff;border:1px solid #ddd;border-radius:8px;text-decoration:none;color:#2B3490;transition:all 0.2s;cursor:pointer;opacity:0;transform:translateY(20px)"><div style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#eef1ff;border-radius:6px"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></div><div style="flex:1"><p style="margin:0;font-weight:600;font-size:13px">Co-Working Agreement</p><p style="margin:3px 0 0;font-size:11px;color:#999">Download â†’</p></div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg></a></div></div></div></div></section><section style="padding:80px 0;background:#fff;border-top:1px solid #e8e8e8"><div style="max-width:1200px;margin:0 auto;padding:0 20px"><div id="contact" style="text-align:center;opacity:0"><h2 style="font-size:clamp(1.8rem, 3vw, 2.4rem);font-weight:700;color:#2B3490;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 32px;opacity:0;transform:translateY(20px)">Contact RDC</h2><div style="background:#eef1ff;border-radius:8px;padding:16px 24px;margin-bottom:24px;font-size:14px;color:#2B3490;font-weight:600;display:inline-block;opacity:0;transform:translateY(20px)">ðŸ“ KSRM College of Engineering, Cuddapah â€“ 516003, Andhra Pradesh</div><div style="background:#f9f9f9;border:2px solid #D4A500;border-radius:8px;padding:32px;max-width:600px;margin:0 auto;opacity:0;transform:translateY(20px)"><h3 style="font-size:18px;font-weight:700;color:#2B3490;margin:0 0 8px">Dr. M. Venkatanarayana</h3><p style="font-size:13px;color:#666;margin:0 0 4px;font-weight:600">Dean, Research &amp; Development Cell</p><p style="font-size:12px;color:#999;margin:0 0 20px">Professor, Electronics &amp; Communication Engineering</p><div style="display:flex;flex-direction:column;gap:12px"><a href="tel:918554233333380" style="display:flex;align-items:center;gap:12px;justify-content:center;color:#2B3490;text-decoration:none;font-weight:600;font-size:14px;padding:8px 12px;background:rgba(255, 230, 25, 0.1);border-radius:4px;transition:all 0.2s"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone" aria-hidden="true" style="color:#D4A500"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>+91-8554-233333 (Ext: 380)</a><a href="mailto:rdc@ksrmce.ac.in" style="display:flex;align-items:center;gap:12px;justify-content:center;color:#2B3490;text-decoration:none;font-weight:600;font-size:14px;padding:8px 12px;background:rgba(255, 230, 25, 0.1);border-radius:4px;transition:all 0.2s"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail" aria-hidden="true" style="color:#D4A500"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>rdc@ksrmce.ac.in</a></div></div></div></div></section></div><!--$--><!--/$--><footer style="width:100%;background:#1e2570;color:#ffffff;padding-top:56px"><style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-        .footer-grid {
-          display: grid;
-          grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr 1fr 1.5fr;
-          gap: 32px;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 0 40px;
-        }
-        .footer-bottom-inner {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 0 40px;
-        }
-        @media (max-width: 1100px) {
-          .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 32px 28px; padding: 0 28px; }
-        }
-        @media (max-width: 720px) {
-          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 24px; padding: 0 20px; }
-        }
-        /* MOBILE FOOTER - COMPLETELY NEW DESIGN */
-        @media (max-width: 768px) {
-          .footer-grid { display: none; }
-          .footer-bottom-inner { display: none; }
-          .footer-bottom-bar { display: none; }
-
-          .mobile-footer-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-            padding: 40px 20px;
-            margin-bottom: 120px;
-          }
-
-          /* LOGO SECTION */
-          .mobile-footer-logo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            text-align: center;
-            margin-bottom: 12px;
-          }
-
-          .mobile-footer-logo img {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: #ffffff;
-            padding: 8px;
-          }
-
-          .mobile-footer-logo-text h3 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            color: #FFE619;
-            font-family: 'Rajdhani', sans-serif;
-          }
-
-          .mobile-footer-logo-text p {
-            margin: 4px 0 0;
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-          }
-
-          /* QUICK LINKS 2-COLUMN GRID */
-          .mobile-footer-links {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px 24px;
-            width: 100%;
-            max-width: 280px;
-            text-align: center;
-          }
-
-          .mobile-footer-links a {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            padding: 8px 0;
-            transition: color 0.2s;
-            border-bottom: 1px solid rgba(255,230,25,0.2);
-          }
-
-          .mobile-footer-links a:hover {
-            color: #FFE619;
-            border-bottom-color: #FFE619;
-          }
-
-          /* CONTACT SECTION */
-          .mobile-footer-contact {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-            text-align: center;
-            width: 100%;
-          }
-
-          .mobile-footer-contact-item {
-            font-size: 14px;
-            color: rgba(255,255,255,0.75);
-            line-height: 1.4;
-          }
-
-          .mobile-footer-contact-item a {
-            color: #FFE619;
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.2s;
-          }
-
-          .mobile-footer-contact-item a:hover {
-            opacity: 0.8;
-          }
-
-          /* SOCIAL ICONS */
-          .mobile-footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-          }
-
-          .mobile-footer-social a {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255,230,25,0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFE619;
-            text-decoration: none;
-            transition: all 0.2s;
-            font-weight: 700;
-            font-size: 18px;
-          }
-
-          .mobile-footer-social a:hover {
-            background: #FFE619;
-            color: #1e2570;
-            transform: translateY(-2px);
-          }
-
-          /* COPYRIGHT */
-          .mobile-footer-copyright {
-            text-align: center;
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            padding: 24px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            width: 100%;
-          }
-
-          /* POWERED BY */
-          .mobile-footer-powered {
-            text-align: center;
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            padding-bottom: 12px;
-            width: 100%;
-          }
-        }
-      </style><div class="footer-grid"><div style="opacity:0;transform:translateY(24px)"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:58px;height:58px;border-radius:50%;background:#ffffff;display:flex;align-items:center;justify-content:center;flex-shrink:0"><img src="/logo.png" alt="KSRM Logo" style="width:48px;height:48px;object-fit:contain"/></div><div><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:23px;font-weight:700;color:#ffffff;line-height:1">KSRM</div><div style="font-size:12.5px;color:rgba(255,255,255,0.6);margin-top:2px">College of Engineering</div></div></div><p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 14px">46+ years of engineering excellence in Kadapa, Andhra Pradesh.</p><div style="display:flex;flex-direction:column;gap:5px;margin-bottom:16px"><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">UGC Autonomous</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">NAAC A++</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">NBA Accredited</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">AICTE Approved</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">ISO 9001:2015 Certified</span></div><div style="display:flex;gap:10px"><a href="https://facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a><a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.626 5.905-5.626zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a><a href="https://instagram.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="#ffffff" stroke="none"></circle></svg></a><a href="http://youtube.com/ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.6 2.8 12 2.8 12 2.8s-4.6 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.3.7 11.5v2.1c0 2.2.3 4.4.3 4.4s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 22.1 12 22.1 12 22.1s4.6 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.3 23 7 23 7zm-13.5 8.5v-7.6l6.5 3.8-6.5 3.8z"></path></svg></a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">UG Programs</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">CSE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">CSE (AI &amp; ML)</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/ece">ECE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/eee">EEE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/civil">Civil</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/mech">Mechanical</a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">PG Programs</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">M.Tech – CSE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/ece">M.Tech – VLSI &amp; ES</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/eee">M.Tech – Power Electronics</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/civil">M.Tech – Structural</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/mech">M.Tech – Thermal</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/mba">MBA</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">MCA</a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">Diploma</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in Civil</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in Mechanical</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in EEE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in ECE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in Computer Engg.</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/degree-verification">Degree Verification</a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">Quick Links</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/about">About</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions">Admissions</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/placements">Placements</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/research">Research</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/campus-life">Campus Life</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/alumni">Alumni</a></div></div><div style="opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">Contact</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE619" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg><span style="font-size:15px;color:rgba(255,255,255,0.7);line-height:1.55">KSRM College of Engineering,<br/>Kadapa, AP – 516003</span></div><div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE619" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg><span style="font-size:15px;color:rgba(255,255,255,0.7);line-height:1.55">+91 9000073434<br/>08562 295972</span></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE619" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail" aria-hidden="true" style="flex-shrink:0"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg><a href="mailto:info@ksrmce.ac.in" style="font-size:15px;color:rgba(255,255,255,0.7);text-decoration:none">info@ksrmce.ac.in</a></div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208" width="100%" height="150" style="border:none;border-radius:8px;display:block;opacity:0.9" allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe></div></div><div class="mobile-footer-container"><div class="mobile-footer-logo"><img src="/logo.png" alt="KSRM Logo"/><div class="mobile-footer-logo-text"><h3>KSRM</h3><p>College of Engineering</p></div></div><div class="mobile-footer-links"><a href="/about">About</a><a href="/admissions">Admissions</a><a href="/placements">Placements</a><a href="/research">Research</a><a href="/campus-life">Campus Life</a><a href="/alumni">Alumni</a></div><div class="mobile-footer-contact"><div class="mobile-footer-contact-item">📍 Kadapa, AP – 516003</div><div class="mobile-footer-contact-item">📞 <a href="tel:+919000073434">+91 9000073434</a></div><div class="mobile-footer-contact-item">📧 <a href="mailto:info@ksrmce.ac.in">info@ksrmce.ac.in</a></div></div><div class="mobile-footer-social"><a href="https://facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" title="Social Media">f</a><a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" title="Social Media">𝕏</a><a href="https://instagram.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" title="Social Media">◆</a><a href="http://youtube.com/ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" title="Social Media">▶</a></div><div class="mobile-footer-copyright">© <!-- -->2026<!-- --> KSRM College of Engineering. All Rights Reserved.<br/>A unit of Sri Kandula Obul Reddy Charities</div><div class="mobile-footer-powered">Powered by Talent Trek Technologies</div></div><div class="footer-bottom-bar" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:44px;padding:12px 0"><div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;padding:0 40px;gap:16px"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;color:rgba(255,255,255,0.7);font-weight:600">© <!-- -->2026<!-- --> KSRM College of Engineering. All Rights Reserved.</span><span style="font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:0.4px">A unit of Sri Kandula Obul Reddy Charities</span></div><div style="text-align:right;white-space:nowrap"><span style="font-size:15px;color:rgba(255,255,255,0.7);font-weight:600">Powered by Talent Trek Technologies</span></div></div></div></footer><style>
-        .back-to-top {
-          position: fixed;
-          bottom: 24px;
-          right: 24px;
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          background: #2B3490;
-          color: white;
-          border: none;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 16px rgba(43, 52, 144, 0.25);
-          transition: all 0.3s ease;
-          z-index: 50;
-          opacity: 0;
-          visibility: hidden;
-          pointer-events: none;
-        }
-
-        .back-to-top.visible {
-          opacity: 1;
-          visibility: visible;
-          pointer-events: auto;
-        }
-
-        .back-to-top:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(43, 52, 144, 0.35);
-        }
-
-        .back-to-top:active {
-          transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-          .back-to-top {
-            bottom: 160px;
-            right: 16px;
-            width: 44px;
-            height: 44px;
-          }
-        }
-
-        @media (max-width: 460px) {
-          .back-to-top {
-            bottom: 180px;
-            right: 12px;
-            width: 40px;
-            height: 40px;
-          }
-        }
-      </style><button class="back-to-top " aria-label="Back to top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up" aria-hidden="true"><path d="m18 15-6-6-6 6"></path></svg></button><script src="/_next/static/chunks/0sur~ccmg786l.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[76027,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n3:I[32035,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n4:I[91168,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n5:I[90665,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\",\"/_next/static/chunks/0ir~j~nkoxbrr.js\"],\"default\"]\nb:I[75115,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\",1]\n:HL[\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"style\"]\n:HL[\"/_next/static/chunks/08r5p52~uyd_7.css\",\"style\"]\n:HL[\"/_next/static/media/3206eb66b875a5b3-s.p.0newl065t398d.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/a079e02bba5bf7ab-s.p.0.s85e2kacc1m.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/aae5f0be330e13db-s.p.09~kfcksvwt3b.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/d23f31b94ad01e54-s.p.091biwio0g5wn.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n6:T50d,The Research and Development Cell (RDC) of KSRMCE facilitates and encourages the research culture among faculty and students. The establishment of the R\u0026D Cell is to develop and strengthen the research environment in the departments and to align it with the educational policies of India. The RDC provides a favorable environment for productive research, industrial and institutional collaborations, and mobilizes resources and grants. The college follows the research mandate by various National Missions, SDGs, and the Start-up India initiative leading to a Self-Reliant India (Atma-Nirbhar Bharat).\n\nRDC encourages faculty to conceive ideas through enhanced industry-academia interactions and prepare research proposals for funding from various agencies. It organizes events like capacity-building programs and research theme-based workshops and internships that motivate students, scholars, and faculty to participate actively in ideation and innovative research in emerging areas.\n\nRDC ensures that researchers understand the importance of integrity and ethics, comply with ethical codes of research, and follow publishing practices at institutional, national, and global levels. All papers undergo standard plagiarism checks, and necessary software is made available for all researchers."])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"research\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"research\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/08r5p52~uyd_7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"/_next/static/chunks/02fqch~ni_1x3.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-3\",{\"src\":\"/_next/static/chunks/0jprs_fd_n1y2.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"data-scroll-behavior\":\"smooth\",\"className\":\"font-sans arimo_bb082808-module__YDM0vq__variable\",\"children\":[\"$\",\"body\",null,{\"className\":\"rajdhani_ab1774d9-module__PVobqq__variable arimo_bb082808-module__YDM0vq__variable antialiased\",\"style\":{\"fontFamily\":\"var(--font-arimo), Arial, sans-serif\"},\"children\":[\"$\",\"$L2\",null,{\"children\":[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L5\",null,{\"data\":{\"title\":\"Research \u0026 Development Cell (RDC)\",\"tagline\":\"Advancing Knowledge Through Research \u0026 Innovation\",\"banner\":\"/banners/research.jpg\",\"intro\":\"The Research and Development Cell (RDC) of KSRMCE is committed to building a robust research ecosystem that fosters innovation, industry-academia collaboration, and ethical research practices among faculty and students.\",\"vision\":\"To establish a robust mechanism for developing and strengthening the research ecosystem of the institution.\",\"missions\":[\"Create a conducive environment for quality research and innovation\",\"Promote industry-academia collaboration and knowledge transfer\",\"Facilitate resource mobilization for research and development\",\"Ensure ethical research practices and compliance with integrity standards\",\"Support research scholars and supervisors in achieving excellence\"],\"aboutRDC\":\"$6\",\"advisoryCommittee\":[{\"name\":\"Sri K. Madan Mohan Reddy\",\"designation\":\"Vice Chairman\",\"department\":\"Administration\"},{\"name\":\"Dr. K. Chandra Obul Reddy\",\"designation\":\"Managing Director\",\"department\":\"Administration\"},{\"name\":\"Dr. T. Nageswara Prasad\",\"designation\":\"Principal\",\"department\":\"Academic Administration\"},{\"name\":\"Dr. M. Venkatanarayana\",\"designation\":\"Professor, ECE \u0026 Dean, R\u0026D Cell\",\"department\":\"Electronics \u0026 Communication Engineering\"},{\"name\":\"Sri A. Ramprakash Reddy\",\"designation\":\"Head of Department\",\"department\":\"Computer Science \u0026 Engineering\"},{\"name\":\"Dr. B. Bhaskar Reddy\",\"designation\":\"Head of Department\",\"department\":\"Electronics \u0026 Communication Engineering\"},{\"name\":\"Dr. G. Chennakesava Reddy\",\"designation\":\"Head of Department\",\"department\":\"Civil Engineering\"},{\"name\":\"Dr. M. S. Priyadarshini\",\"designation\":\"Head of Department\",\"department\":\"Electrical \u0026 Electronics Engineering\"},{\"name\":\"Dr. D. Ravikanth\",\"designation\":\"Head of Department\",\"department\":\"Mechanical Engineering\"}],\"policies\":[{\"name\":\"RDC Policy\",\"fileName\":\"RDC-Policy.pdf\",\"description\":\"Overall research and development cell policies and procedures\",\"icon\":\"📋\"},{\"name\":\"Research Promotion Policy\",\"fileName\":\"Research-Promotion-Policy.pdf\",\"description\":\"Policy for promoting research activities among faculty and students\",\"icon\":\"🔬\"},{\"name\":\"Seed Fund Policy\",\"fileName\":\"Seed-Funding-Scheme-Policy.pdf\",\"description\":\"Guidelines for seed funding schemes to support research initiation\",\"icon\":\"💰\"},{\"name\":\"Code of Ethics for Research\",\"fileName\":\"Code-of-Ethics-Research-Innovation.pdf\",\"description\":\"Ethical guidelines for research conduct, plagiarism prevention, and integrity\",\"icon\":\"⚖️\"},{\"name\":\"Startup \u0026 Innovation Policy\",\"fileName\":\"Startup-Policy-KSRM-BICF.doc\",\"description\":\"Policy framework for startup development and innovation initiatives\",\"icon\":\"🚀\"},{\"name\":\"Intellectual Property Rights (IPR) Policy\",\"fileName\":\"IPR-Policy.pdf\",\"description\":\"Guidelines for intellectual property protection and management\",\"icon\":\"🔐\"},{\"name\":\"Consultancy Policy\",\"fileName\":\"Consultancy-Policy.pdf\",\"description\":\"Framework for faculty and institutional consultancy projects\",\"icon\":\"🤝\"}],\"dean\":{\"name\":\"Dr. M. Venkatanarayana\",\"designation\":\"Dean, Research \u0026 Development Cell\",\"department\":\"Professor, Electronics \u0026 Communication Engineering\",\"email\":\"rdc@ksrmce.ac.in\",\"phone\":\"+91-8554-233333 (Ext: 380)\"}}}],[\"$L7\"],\"$L8\"]}],{},null,false,null]},null,false,\"$@9\"]},null,false,null],\"$La\",false]],\"m\":\"$undefined\",\"G\":[\"$b\",[\"$Lc\",\"$Ld\"]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"LFdLmrYGQ7Zi0mhiVAN1_\"}\n"])</script><script>self.__next_f.push([1,"e:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"OutletBoundary\"]\nf:\"$Sreact.suspense\"\n12:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"ViewportBoundary\"]\n14:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"MetadataBoundary\"]\n7:[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/0ir~j~nkoxbrr.js\",\"async\":true,\"nonce\":\"$undefined\"}]\n8:[\"$\",\"$Le\",null,{\"children\":[\"$\",\"$f\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@10\"}]}]\n11:[]\n9:\"$W11\"\na:[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$L12\",null,{\"children\":\"$L13\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$L14\",null,{\"children\":[\"$\",\"$f\",null,{\"name\":\"Next.Metadata\",\"children\":\"$L15\"}]}]}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}]\nc:[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\nd:[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/08r5p52~uyd_7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n"])</script><script>self.__next_f.push([1,"13:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"16:I[12843,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"IconMark\"]\n10:null\n15:[[\"$\",\"title\",\"0\",{\"children\":\"Research \u0026 Development Cell | KSRM College of Engineering\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Research \u0026 Development Cell at KSRMCE - promoting research culture, innovation, industry-academia collaboration, and ethical research practices.\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.0x3dzn~oxb6tn.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"$L16\",\"3\",{}]]\n"])</script></body></html>`
-    }} />
-  )
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" />
+    </svg>
+  );
+}
+function FileIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3490" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+      <path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+    </svg>
+  );
+}
+function UsersIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "#D4A500" }}>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><path d="M16 3.128a4 4 0 0 1 0 7.744" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" /><circle cx="9" cy="7" r="4" />
+    </svg>
+  );
+}
+function PhoneIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "#D4A500" }}>
+      <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
+    </svg>
+  );
+}
+function MailIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "#D4A500" }}>
+      <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" />
+    </svg>
+  );
+}
+
+export default function ResearchPage() {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <div>
+      <style>{`
+        .rdc-hero-btn {
+          padding: 10px 20px; border: none; border-radius: 8px; background: #2B3490;
+          color: #D4A500; font-weight: 600; cursor: pointer; white-space: nowrap;
+          transition: all 0.3s; font-size: 14px;
+        }
+        .rdc-hero-btn:hover { background: #1e2570; }
+        .rdc-policy-card { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); border-radius: 8px; padding: 24px; color: #fff; display: flex; flex-direction: column; gap: 12px; transition: all 0.3s; }
+        .rdc-policy-card:hover { transform: translateY(-4px); }
+        .rdc-policy-link {
+          margin-top: auto; display: flex; align-items: center; gap: 8px; color: #D4A500;
+          text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 12px;
+          border-radius: 4px; background: rgba(255,230,25,0.1);
+        }
+        .rdc-committee-card {
+          background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px;
+          text-align: center; position: relative;
+        }
+        .rdc-doc-link {
+          display: flex; align-items: center; gap: 12px; padding: 16px; background: #fff;
+          border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #2B3490;
+        }
+        .rdc-contact-link {
+          display: flex; align-items: center; gap: 12px; justify-content: center; color: #2B3490;
+          text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 12px;
+          background: rgba(255,230,25,0.1); border-radius: 4px;
+        }
+      `}</style>
+
+      {/* HERO */}
+      <section
+        style={{
+          backgroundImage: "url('/banners/startup-banner.jpg')", backgroundSize: "cover", backgroundPosition: "center",
+          backgroundColor: "#2B3490", padding: "80px 0", color: "#fff", position: "relative", overflow: "hidden",
+          minHeight: 320, display: "flex", alignItems: "flex-end",
+        }}
+      >
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <p style={{ fontSize: 14, letterSpacing: 2, textTransform: "uppercase", color: "#D4A500", fontWeight: 600, margin: "0 0 8px" }}>
+            🔬 Research Excellence
+          </p>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 700, margin: "0 0 16px", fontFamily: "'Rajdhani', sans-serif" }}>
+            Research &amp; Development Cell (RDC)
+          </h1>
+          <p style={{ fontSize: 18, color: "#D4A500", fontWeight: 600, margin: "0 0 24px" }}>
+            Advancing Knowledge Through Research &amp; Innovation
+          </p>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: "#e0e0e0", margin: 0, maxWidth: 600 }}>
+            The Research and Development Cell (RDC) of KSRMCE is committed to building a robust research ecosystem
+            that fosters innovation, industry-academia collaboration, and ethical research practices among faculty
+            and students.
+          </p>
+        </div>
+      </section>
+
+      {/* STICKY TAB BAR */}
+      <section style={{ padding: "40px 0", background: "#f4f3ef", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8 }}>
+            {tabs.map((t) => (
+              <button key={t.id} className="rdc-hero-btn" onClick={() => scrollTo(t.id)}>{t.label}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section style={{ padding: "80px 0", background: "#fff" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }} id="about">
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
+            About the Research &amp; Development Cell
+          </h2>
+          <div style={{ background: "#f9f9f9", borderLeft: "4px solid #D4A500", borderRadius: 8, padding: 28, fontSize: 16, lineHeight: 1.9, color: "#444" }}>
+            <p style={{ margin: "0 0 16px" }}>
+              The Research and Development Cell (RDC) of KSRMCE facilitates and encourages the research culture
+              among faculty and students. The establishment of the R&amp;D Cell is to develop and strengthen the
+              research environment in the departments and to align it with the educational policies of India. The
+              RDC provides a favorable environment for productive research, industrial and institutional
+              collaborations, and mobilizes resources and grants. The college follows the research mandate by
+              various National Missions, SDGs, and the Start-up India initiative leading to a Self-Reliant India
+              (Atma-Nirbhar Bharat).
+            </p>
+            <p style={{ margin: "0 0 16px" }}>
+              RDC encourages faculty to conceive ideas through enhanced industry-academia interactions and prepare
+              research proposals for funding from various agencies. It organizes events like capacity-building
+              programs and research theme-based workshops and internships that motivate students, scholars, and
+              faculty to participate actively in ideation and innovative research in emerging areas.
+            </p>
+            <p style={{ margin: 0 }}>
+              RDC ensures that researchers understand the importance of integrity and ethics, comply with ethical
+              codes of research, and follow publishing practices at institutional, national, and global levels. All
+              papers undergo standard plagiarism checks, and necessary software is made available for all researchers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* INNOVATION HEADING */}
+      <section style={{ padding: "80px 0", background: "#f4f3ef" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px" }}>
+            🤖 Innovation &amp; Student Projects
+          </h2>
+        </div>
+      </section>
+
+      {/* CAMPUS INNOVATION VIDEO */}
+      <section style={{ padding: "80px 0", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px", textAlign: "center" }}>
+            Campus Innovation Video
+          </h2>
+          <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 720, margin: "0 auto" }}>
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+              <source src="/videos/3d-robo.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      {/* VISION & MISSION */}
+      <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="vision">
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
+            Vision &amp; Mission
+          </h2>
+          <div style={{ background: "#fff", border: "2px solid #D4A500", borderRadius: 8, padding: 24, marginBottom: 48 }}>
+            <h3 style={{ color: "#2B3490", fontWeight: 700, margin: "0 0 12px" }}>🎯 Vision</h3>
+            <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8, margin: 0 }}>
+              To establish a robust mechanism for developing and strengthening the research ecosystem of the institution.
+            </p>
+          </div>
+          <h3 style={{ color: "#2B3490", fontWeight: 700, margin: "0 0 20px", fontSize: 18 }}>🚀 Our Missions</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+            {missions.map((m, i) => (
+              <div key={i} style={{ background: "#fff", border: "1px solid #ddd", borderRadius: 8, padding: 20 }}>
+                <div style={{ fontSize: 12, color: "#2B3490", fontWeight: 700, marginBottom: 8 }}>MISSION {i + 1}</div>
+                <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7, margin: 0 }}>{m}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ADVISORY COMMITTEE */}
+      <section style={{ padding: "80px 0", background: "#fff", borderTop: "1px solid #e8e8e8" }} id="committee">
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px", display: "flex", alignItems: "center", gap: 12 }}>
+            <UsersIcon />
+            Advisory Committee
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
+            {committee.map((c, i) => (
+              <div className="rdc-committee-card" key={c.name}>
+                <div style={{ position: "absolute", top: 12, right: 12, background: "#D4A500", color: "#2B3490", borderRadius: "50%", width: 24, height: 24, fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {i + 1}
+                </div>
+                <div style={{ fontSize: 12, color: "#D4A500", fontWeight: 700, marginBottom: 8, letterSpacing: 1 }}>COMMITTEE MEMBER</div>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}>{c.name}</h3>
+                <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}>{c.designation}</p>
+                <p style={{ fontSize: 12, color: "#999", margin: 0 }}>{c.dept}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* POLICIES */}
+      <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="policies">
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
+            📋 Policies &amp; Guidelines
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
+            {policies.map((p) => (
+              <div className="rdc-policy-card" key={p.name}>
+                <div style={{ fontSize: 28 }}>{p.icon}</div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#D4A500" }}>{p.name}</h3>
+                <p style={{ fontSize: 13, color: "#d0d0d0", lineHeight: 1.6, margin: 0 }}>{p.desc}</p>
+                <a href={p.file} download className="rdc-policy-link"><DownloadIcon />Download PDF</a>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 60 }}>
+            <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 24px" }}>
+              📥 Additional Resources &amp; Documents
+            </h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
+              {additionalDocs.map((d) => (
+                <a href={d.file} download className="rdc-doc-link" key={d.name}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, background: "#eef1ff", borderRadius: 6 }}>
+                    <FileIcon />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ margin: 0, fontWeight: 600, fontSize: 13 }}>{d.name}</p>
+                    <p style={{ margin: "3px 0 0", fontSize: 11, color: "#999" }}>Download →</p>
+                  </div>
+                  <span style={{ color: "#D4A500" }}><DownloadIcon /></span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section style={{ padding: "80px 0", background: "#fff", borderTop: "1px solid #e8e8e8" }} id="contact">
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", textAlign: "center" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
+            Contact RDC
+          </h2>
+          <div style={{ background: "#eef1ff", borderRadius: 8, padding: "16px 24px", marginBottom: 24, fontSize: 14, color: "#2B3490", fontWeight: 600, display: "inline-block" }}>
+            📍 KSRM College of Engineering, Cuddapah – 516003, Andhra Pradesh
+          </div>
+          <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 8, padding: 32, maxWidth: 600, margin: "0 auto" }}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}>Dr. M. Venkatanarayana</h3>
+            <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}>Dean, Research & Development Cell</p>
+            <p style={{ fontSize: 12, color: "#999", margin: "0 0 20px" }}>Professor, Electronics & Communication Engineering</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <a href="tel:+918554233333380" className="rdc-contact-link"><PhoneIcon />+91-8554-233333 (Ext: 380)</a>
+              <a href="mailto:rdc@ksrmce.ac.in" className="rdc-contact-link"><MailIcon />rdc@ksrmce.ac.in</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
