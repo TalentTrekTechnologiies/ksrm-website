@@ -471,9 +471,11 @@ export default function DepartmentPage({ department }: { department: Department 
                   background: "linear-gradient(135deg, #2B3490, #1e2570)",
                   display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
                 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={department.hod.photo} alt={department.hod.name}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+                  {department.hod.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={department.hod.photo} alt={department.hod.name}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+                  ) : null}
                 </div>
                 <div className="dept-card" style={{ marginTop: 24 }}>
                   <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>
