@@ -8,7 +8,17 @@ import { mech } from "@/data/departments/mech";
 import { mba } from "@/data/departments/mba";
 import { hs } from "@/data/departments/hs";
 
-const departments = { civil, cse, ece, eee, mechanical: mech, mba, hs, "humanities-sciences": hs };
+const departments = {
+  civil,
+  cse,
+  ece,
+  eee,
+  mechanical: mech,
+  mech: mech,
+  mba,
+  hs,
+  "humanities-sciences": hs
+};
 
 export function generateStaticParams() {
   return Object.keys(departments).map((slug) => ({ slug }));
