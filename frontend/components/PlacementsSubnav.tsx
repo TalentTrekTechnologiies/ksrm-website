@@ -1,4 +1,8 @@
-﻿const TABS = [
+﻿"use client";
+
+import Link from "next/link";
+
+const TABS = [
   { href: "/placements/overview", label: "Overview" },
   { href: "/placements/mous", label: "MoUs" },
   { href: "/placements/trainings", label: "Trainings" },
@@ -31,6 +35,7 @@ export default function PlacementsSubnav({ active }: { active: string }) {
           font-family: 'Rajdhani', sans-serif;
           white-space: nowrap;
           border: 2px solid transparent;
+          display: inline-block;
         }
         .placements-subnav-link:hover { color: #2B3490; border-color: #D4A500; }
         .placements-subnav-link.active { background: #2B3490; color: #ffffff; border-color: #2B3490; }
@@ -41,9 +46,9 @@ export default function PlacementsSubnav({ active }: { active: string }) {
       `}</style>
       <div className="placements-subnav-container">
         {TABS.map((t) => (
-          <a key={t.href} href={t.href} className={`placements-subnav-link ${active === t.href ? "active" : ""}`}>
+          <Link key={t.href} href={t.href} className={`placements-subnav-link ${active === t.href ? "active" : ""}`}>
             {t.label}
-          </a>
+          </Link>
         ))}
       </div>
     </div>

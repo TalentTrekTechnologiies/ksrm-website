@@ -13,6 +13,20 @@ export default function OurRecruitersPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
+        <section style={ background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)", padding: "60px 0 40px", color: "white", position: "relative" }>
+          <div style={ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 100%)", pointerEvents: "none" } />
+          <div className="responsive-container" style={ position: "relative", zIndex: 2 }>
+            <div style={ display: "flex", alignItems: "center", gap: 8, fontSize: 14, marginBottom: 12, color: "rgba(255,255,255,0.7)" }>
+              <a style={ color: "#D4A500", textDecoration: "none" } href="/">Home</a>
+              <span>/</span>
+              <a style={ color: "#D4A500", textDecoration: "none" } href="/placements">Placements</a>
+              <span>/</span>
+              <span>Our Recruiters</span>
+            </div>
+            <h1 style={ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.1, textAlign: "left" }>Our Recruiters</h1>
+            <p style={ color: "rgba(255,255,255,0.9)", fontSize: 16, marginTop: 12, maxWidth: 600 }>Placements & Career Development</p>
+          </div>
+        </section>
         <PlacementsSubnav active="/placements/our-recruiters" />
         <section className="section">
           <div className="responsive-container">
@@ -27,3 +41,4 @@ export default function OurRecruitersPage() {
     </>
   );
 }
+
