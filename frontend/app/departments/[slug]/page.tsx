@@ -1,24 +1,22 @@
-import { notFound } from "next/navigation"
-import DepartmentTemplate from "@/components/departments/DepartmentTemplate"
-import { departments, departmentOrder } from "@/data/departments"
+﻿import { notFound } from "next/navigation";
+import DepartmentPage from "@/components/DepartmentPage";
+import { civil } from "@/data/departments/civil";
+import { cse } from "@/data/departments/cse";
+import { ece } from "@/data/departments/ece";
+import { eee } from "@/data/departments/eee";
+import { mech } from "@/data/departments/mech";
+import { mba } from "@/data/departments/mba";
+import { hs } from "@/data/departments/hs";
 
-export async function generateStaticParams() {
-  return departmentOrder.map((slug) => ({
-    slug,
-  }))
+const departments = { civil, cse, ece, eee, mech, mba, hs };
+
+export function generateStaticParams() {
+  return Object.keys(departments).map((slug) => ({ slug }));
 }
 
-interface DepartmentPageProps {
-  params: Promise<{ slug: string }>
-}
-
-export default async function DepartmentPage({ params }: DepartmentPageProps) {
-  const { slug } = await params
-
-  const department = departments[slug]
-  if (!department) {
-    notFound()
-  }
-
-  return <DepartmentTemplate department={department} />
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const department = (departments as Record<string, typeof civil>)[slug];
+  if (!department) return notFound();
+  return <DepartmentPage department={department} />;
 }

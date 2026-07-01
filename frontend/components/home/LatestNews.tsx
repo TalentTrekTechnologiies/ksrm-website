@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { Calendar, ArrowRight } from "lucide-react"
 import Container from "@/components/ui/Container"
+import { homeData } from "@/data/home"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -118,11 +119,11 @@ export default function LatestNews() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
       >
-        {news.map((item, i) => {
+        {(Array.isArray(homeData?.news) ? homeData.news : news).map((item, i) => {
           const hovered = hoveredIndex === i
           return (
             <motion.div key={i} variants={cardVariants}>
-              <Link href={item.link} style={{ textDecoration: "none", display: "block" }}>
+              <Link href={item?.link ?? "/news"} style={{ textDecoration: "none", display: "block" }}>
                 <div
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
@@ -180,7 +181,7 @@ export default function LatestNews() {
                       color: "#1a1a2e", lineHeight: 1.3,
                       marginBottom: "14px",
                     }}>
-                      {item.title}
+                      {item?.title ?? ""}
                     </div>
 
                     {/* READ MORE */}
@@ -214,8 +215,8 @@ export default function LatestNews() {
           News &amp; Announcements
         </div>
 
-        {news.map((item, i) => (
-          <Link key={i} href={item.link} style={{
+        {(Array.isArray(news) ? news : []).map((item, i) => (
+          <Link key={i} href={item?.link ?? "/news"} style={{
             display: "flex",
             alignItems: "flex-start",
             gap: "10px",

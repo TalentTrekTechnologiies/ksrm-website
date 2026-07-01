@@ -1,319 +1,358 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
-import Container from "@/components/ui/Container"
-import { Target, Eye, GraduationCap, FlaskConical, Users } from "lucide-react"
+import Link from "next/link"
 
-const EASE = [0.22, 1, 0.36, 1] as const
+export default function About() {
+  const leadershipData = [
+    {
+      photo: "/images/leadership/correspondent.jpg",
+      name: "Smt. K. Rajeswari",
+      role: "Secretary cum Correspondent",
+      href: "/about/correspondent",
+      bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
+    },
+    {
+      photo: "/images/leadership/chairman.webp",
+      name: "Sri K. Madan Mohan Reddy",
+      role: "Chairman",
+      href: "/about/chairman",
+      bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership that guides the college towards educational excellence and social responsibility.",
+    },
+    {
+      photo: "/images/leadership/managing-director.webp",
+      name: "Dr. K. Chandra Obula Reddy",
+      role: "Vice Chairman & Managing Director",
+      email: "md@ksrmce.ac.in",
+      href: "/about/managing-director",
+      bio: "The Kandula Group of Institutions' youngest and most energetic Managing Director. An entrepreneur who founded KOR Ginning & Oil Mills Private Limited and serves as Director of three organizations. He took over as Managing Director to continue the legacy of his father and grandfather.",
+    },
+    {
+      photo: "/images/leadership/principalphoto.webp",
+      name: "Dr. T. Nageswara Prasad",
+      role: "Principal",
+      email: "principal@ksrmce.ac.in",
+      href: "/about/principal",
+      bio: "Since its inception in 1980, KSRMCE has shown its impact on producing quality technical graduates not only for the country but also the world. Over the past four decades, KSRMCE has transformed into a premier hub of learning, blending state-of-the-art infrastructure with human resource deeply committed to imparting quality technical education.",
+    },
+  ]
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-}
+  const statsData = [
+    { number: "45+", label: "Years of Excellence" },
+    { number: "35", label: "Acres Campus" },
+    { number: "26,700 sqm", label: "Built-up Area" },
+    { number: "1,000+", label: "Students Intake" },
+    { number: "8", label: "Departments" },
+    { number: "4", label: "Hostels" },
+  ]
 
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-}
+  const strategicDocs = [
+    { title: "Strategic Plan 2023-28", url: "https://ksrmce.ac.in/IQAC/StrategicPlan-2023-28.pdf", icon: "📊" },
+    { title: "Strategic Plan 2018-23", url: "https://ksrmce.ac.in/IQAC/StrategicPlan-2018-23.pdf", icon: "📊" },
+    { title: "Organizational Procedure Manual", url: "https://ksrmce.ac.in/NAAC/naac2020/cri6/Organizational%20Procedure%20manual1.pdf", icon: "📋" },
+    { title: "Student Hand Book", url: "https://ksrmce.ac.in/NAAC/naac2020/cri6/Student%20Hand%20book1.pdf", icon: "📚" },
+    { title: "Principal Hand Book", url: "https://ksrmce.ac.in/NAAC/naac2020/cri6/principals-handbook1.pdf", icon: "📖" },
+  ]
 
-const missions = [
-  {
-    icon: GraduationCap,
-    title: "Quality Education",
-    text: "High quality education with an enriched curriculum, blended with impactful teaching-learning practices.",
-  },
-  {
-    icon: FlaskConical,
-    title: "Research & Innovation",
-    text: "Promoting research, entrepreneurship and innovation through strong industry collaborations.",
-  },
-  {
-    icon: Users,
-    title: "Professional Leaders",
-    text: "Producing highly competent professional leaders contributing to the socio-economic development of the region and the nation.",
-  },
-]
+  const policyDocs = [
+    { title: "Institution Core Values", url: "https://ksrmce.ac.in/NAAC/Institution%20Core%20Values.pdf", icon: "🎯" },
+    { title: "Code of Professional Conduct", url: "https://ksrmce.ac.in/NAAC/Code%20of%20Professional%20Conduct.pdf", icon: "📜" },
+    { title: "Code of Conduct Handbook", url: "https://ksrmce.ac.in/CodeofConduct.pdf", icon: "📘" },
+    { title: "Faculty Evaluation System", url: "https://ksrmce.ac.in/NAAC/FacultyEvaluationSystem.pdf", icon: "📈" },
+    { title: "Code of Ethics in Research and Innovation", url: "https://ksrmce.ac.in/NAAC/code%20of%20ethics%20in%20research%20and%20innovation.pdf", icon: "🔬" },
+  ]
 
-const milestones = [
-  { year: "1979", text: "Technical Training Institute founded at Vempalli under Sri Kandula Obul Reddy Charities." },
-  { year: "1980", text: "KSRM College of Engineering established in memory of Sri Kandula Srinivasa Reddy. Inaugurated 14 Nov 1980 by the Chief Minister of Andhra Pradesh." },
-  { year: "1980-81", text: "First academic year began with 160 students across Civil, EEE, ECE and Mechanical Engineering." },
-  { year: "Today", text: "A UGC Autonomous institution affiliated to JNTUA, with NAAC A++ and NBA Tier-1 accreditation, serving over 10,000 students." },
-]
-
-export default function AboutPage() {
-  const [year, setYear] = useState(46)
-  useEffect(() => {
-    setYear(new Date().getFullYear() - 1980)
-  }, [])
+  const jbosDocuments = [
+    { title: "Board of Studies Members 2020-21", url: "/demo1/BOARD%20OF%20STUDIES%20MEMBERS%20FOR%20THE%20YEAR%202020-21.pdf", icon: "👥" },
+    { title: "04-09-2014", url: "/demo1/JBoSMeeting/JBoS%202014-09-04.pdf", icon: "📄" },
+    { title: "22-06-2015", url: "/demo1/JBoSMeeting/JBoS%202015-06-22.pdf", icon: "📄" },
+    { title: "08-06-2018", url: "/demo1/JBoSMeeting/JBoS%202018-06-08.pdf", icon: "📄" },
+    { title: "03-06-2019", url: "/demo1/JBoSMeeting/JBoS%202019-06-03.pdf", icon: "📄" },
+    { title: "28-12-2019", url: "/demo1/JBoSMeeting/JBoS%202019-12-28.pdf", icon: "📄" },
+    { title: "10-01-2021", url: "/demo1/JBoSMeeting/JBoS%202021-01-10.pdf", icon: "📄" },
+    { title: "04-08-2022", url: "/demo1/JBoSMeeting/JBoS%202022-08-04.pdf", icon: "📄" },
+  ]
 
   return (
-    <main style={{ background: "#ffffff" }}>
+    <main style={{ backgroundColor: "#F5EFE4", fontFamily: "Arimo, Arial, Helvetica, sans-serif", color: "#1F2937" }}>
       <style>{`
-        .about-hero {
-          position: relative;
-          background: linear-gradient(135deg, #2B3490 0%, #1e2570 60%, #0d1033 100%);
-          overflow: hidden;
-        }
-        .about-hero::after {
-          content: "";
-          position: absolute; inset: 0;
-          background-image: repeating-linear-gradient(60deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 18px);
-        }
-        .about-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
-          text-transform: uppercase; color: #2B3490;
-        }
-        .about-eyebrow::before { content: ""; width: 28px; height: 2px; background: #FFE619; }
-        .about-eyebrow.light { color: #FFE619; }
-        .about-eyebrow.light::before { background: #FFE619; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arimo, Arial, Helvetica, sans-serif; }
+        .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .k-section { padding: 72px 0; }
+        h2 { color: #2B3490; font-size: 40.8px; font-weight: 700; margin-bottom: 48px; text-align: left; }
+        h3 { color: #2B3490; font-size: 18px; font-weight: 700; }
 
-        @media (max-width: 900px) {
-          .about-story-grid { grid-template-columns: 1fr !important; }
-          .about-mission-grid { grid-template-columns: 1fr !important; }
-          .about-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .k-hero { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/banners/alumni-banner.jpg); background-size: cover; background-position: center; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; }
+        .k-hero-content { }
+        .k-hero-eyebrow { color: #D4A500; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .k-hero-title { font-size: 61.2px; font-weight: 700; margin-bottom: 8px; }
+        .k-hero-subtitle { color: #D4A500; font-size: 18px; font-weight: 600; }
+
+        .k-stats { background: white; border-top: 2px solid #D4A500; padding: 40px 0; }
+        .k-stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; text-align: center; }
+        .k-stat-item { }
+        .k-stat-number { color: #2B3490; font-size: 32px; font-weight: 700; font-family: Rajdhani; margin-bottom: 8px; }
+        .k-stat-label { color: #666; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .k-vision-mission { background: white; }
+        .k-vision-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+        .k-vision-box { background: #F9F9F9; border: 1.6px solid #D4A500; border-radius: 8px; padding: 28px; }
+        .k-mission-items { display: flex; flex-direction: column; gap: 16px; }
+        .k-mission-item { background: #F4F3EF; border-radius: 8px; padding: 20px; position: relative; }
+        .k-mission-badge { position: absolute; top: 12px; right: 12px; background: #2B3490; color: #D4A500; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; }
+        .k-mission-text { padding-top: 16px; color: #555; font-size: 14px; line-height: 1.7; }
+
+        .k-leadership { background: #F4F3EF; }
+        .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+        .k-leadership-card { background: white; border: 0.8px solid #E5E7EB; border-radius: 12px; padding: 28px; text-align: center; }
+        .k-leader-photo { width: 120px; height: 120px; border: 4px solid #D4A500; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; display: block; }
+        .k-leader-name { color: #2B3490; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
+        .k-leader-email { font-size: 12px; color: #999; margin-bottom: 12px; }
+        .k-leader-bio { color: #555; font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+        .k-leader-btn { display: inline-block; background: #2B3490; color: #D4A500; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .k-leadership-card:hover .k-leader-btn { background: #D4A500; color: #2B3490; }
+
+        .k-docs { background: white; }
+        .k-docs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .k-doc-card { background: white; border: 0.8px solid #DDD; border-radius: 8px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; position: relative; transition: all 0.2s; }
+        .k-doc-card:hover { border-color: #D4A500; box-shadow: 0 2px 8px rgba(212,165,0,0.1); }
+        .k-doc-icon { font-size: 28px; min-width: 44px; height: 44px; background: #EEF1FF; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .k-doc-content { flex: 1; }
+        .k-doc-title { color: #2B3490; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .k-doc-subtitle { color: #999; font-size: 12px; }
+        .k-doc-link { position: absolute; top: 12px; right: 12px; color: #D4A500; font-size: 16px; }
+
+        .k-contact { background: white; }
+        .k-contact-subtitle { text-align: center; color: #999; font-size: 14px; margin-bottom: 32px; }
+        .k-contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .k-contact-box { border-radius: 12px; padding: 32px; }
+        .k-contact-find { background: linear-gradient(135deg, #2B3490 0%, #1A1D4D 100%); color: white; }
+        .k-contact-find h3 { color: #D4A500; }
+        .k-contact-other { background: #F9F9F9; border-radius: 12px; padding: 32px; }
+        .k-contact-contact { border: 1.6px solid #D4A500; }
+        .k-contact-contact h3 { color: #2B3490; }
+        .k-contact-connect { border: 0.8px solid #E5E7EB; }
+        .k-contact-connect h3 { color: #2B3490; }
+        .k-contact-text { font-size: 14px; line-height: 1.8; margin-bottom: 12px; }
+        .k-contact-link { color: #2B3490; text-decoration: none; transition: color 0.2s; }
+        .k-contact-link:hover { color: #D4A500; }
+        .k-social-links { display: flex; gap: 12px; margin-top: 16px; }
+        .k-social-btn { display: inline-block; padding: 8px 14px; background: #2B3490; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .k-social-btn:hover { background: #D4A500; color: #2B3490; }
+
+        @media (max-width: 1024px) {
+          .k-stats-grid { grid-template-columns: repeat(3, 1fr); }
+          .k-leadership-grid { grid-template-columns: repeat(2, 1fr); }
+          .k-docs-grid { grid-template-columns: repeat(2, 1fr); }
+          .k-contact-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+          h2 { font-size: 28px; }
+          .k-stats-grid { grid-template-columns: repeat(2, 1fr); }
+          .k-vision-grid { grid-template-columns: 1fr; }
+          .k-leadership-grid { grid-template-columns: 1fr; }
+          .k-docs-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
-      {/* HERO */}
-      <section className="about-hero">
-        <Container>
-          <div style={{ padding: "84px 0 72px", position: "relative", zIndex: 1, maxWidth: 760 }}>
-            <motion.div initial="hidden" animate="visible" variants={stagger}>
-              <motion.div variants={fadeUp} className="about-eyebrow light" style={{ marginBottom: 18 }}>
-                About KSRM
-              </motion.div>
-              <motion.h1
-                variants={fadeUp}
-                style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
-                  fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0,
-                }}
-              >
-                Four Decades of Engineering Excellence in Rayalaseema
-              </motion.h1>
-              <motion.p
-                variants={fadeUp}
-                style={{
-                  color: "rgba(255,255,255,0.8)", fontSize: 17, lineHeight: 1.7,
-                  margin: "20px 0 0", maxWidth: 620, fontWeight: 300,
-                }}
-              >
-                Born from one family's vision to bring technical education to the region,
-                KSRM College of Engineering has grown into a UGC Autonomous institution
-                shaping engineers, innovators and leaders since 1980.
-              </motion.p>
-            </motion.div>
+      {/* HERO BANNER */}
+      <section className="k-hero" style={{ background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)" }}>
+        <div className="k-container">
+          <div className="k-hero-content">
+            <div className="k-hero-eyebrow">🏛️ ABOUT US</div>
+            <h1 className="k-hero-title">K.S.R.M. College of Engineering</h1>
+            <div className="k-hero-subtitle">Excellence in Technical Education Since 1980</div>
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* FOUNDING STORY */}
-      <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <Container>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1.15fr 1fr",
-              gap: 56, alignItems: "center",
-            }}
-            className="about-story-grid"
-          >
-            <motion.div
-              initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={stagger}
-            >
-              <motion.div variants={fadeUp} className="about-eyebrow" style={{ marginBottom: 16 }}>
-                Our Legacy
-              </motion.div>
-              <motion.h2
-                variants={fadeUp}
-                style={{
-                  fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.6rem)",
-                  fontWeight: 700, color: "#1a1a2e", lineHeight: 1.15, margin: "0 0 20px",
-                }}
-              >
-                A Memorial Built on a Dream
-              </motion.h2>
-              <motion.p variants={fadeUp} style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8, margin: "0 0 16px" }}>
-                The college owes its existence to the keen interest of Late Sri Kandula Obul Reddy,
-                who dreamed of developing technical education in the Rayalaseema region of Andhra Pradesh.
-                In 1979, a Technical Training Institute was started at Vempalli, Kadapa District, under
-                the aegis of Sri Kandula Obul Reddy Charities.
-              </motion.p>
-              <motion.p variants={fadeUp} style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8, margin: "0 0 16px" }}>
-                That same year, his youngest son — Sri Kandula Srinivasa Reddy, a brilliant third-year
-                Mechanical Engineering student at Delhi College of Engineering — met with an untimely death.
-                In 1980, the college was established to perpetuate his memory, giving the institution its name:
-                Kandula Srinivasa Reddy Memorial College of Engineering.
-              </motion.p>
-              <motion.p variants={fadeUp} style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8, margin: 0 }}>
-                Formally inaugurated on 14 November 1980 by the Chief Minister of Andhra Pradesh, the college
-                began with 160 students across four core branches. Today it stands among the region's most
-                respected engineering institutions.
-              </motion.p>
-            </motion.div>
+      {/* NAVIGATION MENU */}
+      <style>{`
+        .nav-menu { background: white; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #E5E7EB; }
+        .nav-menu .k-container { display: flex; gap: 12px; padding: 16px 0; overflow-x: auto; align-items: center; }
+        .nav-link { color: #666; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
+        .nav-link:hover { color: #333; }
+        .nav-link.active { background: #2B3490; color: white; }
+      `}</style>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.7, ease: EASE }}
-              style={{ position: "relative" }}
-            >
-              <div
-                style={{
-                  width: "100%", height: 360, borderRadius: 16, overflow: "hidden",
-                  background: "linear-gradient(135deg, #2B3490, #1e2570)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}
-              >
-                <img src="/images/campus/01.jpg" alt="KSRM Campus" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      <nav className="nav-menu">
+        <div className="k-container">
+          <a href="#stats" className="nav-link active" style={{ background: "#2B3490", color: "white" }}>About</a>
+          <a href="#vision-mission" className="nav-link">Vision & Mission</a>
+          <a href="#leadership" className="nav-link">Leadership</a>
+          <a href="#jbos" className="nav-link">Joint Board of Studies</a>
+          <a href="#strategic" className="nav-link">Strategic Plan</a>
+          <a href="#policies" className="nav-link">Policies</a>
+          <a href="#contact" className="nav-link">Contact</a>
+        </div>
+      </nav>
+
+      {/* STATS STRIP */}
+      <section className="k-stats" id="stats">
+        <div className="k-container">
+          <div className="k-stats-grid">
+            {statsData.map((stat, i) => (
+              <div key={i} className="k-stat-item">
+                <div className="k-stat-number">{stat.number}</div>
+                <div className="k-stat-label">{stat.label}</div>
               </div>
-              <div
-                style={{
-                  position: "absolute", bottom: -22, left: -22,
-                  background: "#FFE619", color: "#1a1a2e",
-                  padding: "18px 26px", borderRadius: 12,
-                  boxShadow: "0 12px 32px rgba(43,52,144,0.22)",
-                }}
-              >
-                <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 34, fontWeight: 700, lineHeight: 1 }}>
-                  {year}+
-                </div>
-                <div style={{ fontSize: 11, fontWeight: 600, marginTop: 2, letterSpacing: 0.5 }}>
-                  YEARS OF TRUST
-                </div>
-              </div>
-            </motion.div>
+            ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* VISION + MISSION */}
-      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
-        <Container>
-          {/* Vision */}
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={stagger}
-            style={{ maxWidth: 820, margin: "0 auto 56px", textAlign: "center" }}
-          >
-            <motion.div variants={fadeUp} className="about-eyebrow" style={{ justifyContent: "center", marginBottom: 16 }}>
-              <Eye size={15} /> Our Vision
-            </motion.div>
-            <motion.p
-              variants={fadeUp}
-              style={{
-                fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.3rem, 2.4vw, 1.9rem)",
-                fontWeight: 600, color: "#2B3490", lineHeight: 1.4, margin: 0,
-              }}
-            >
-              "To evolve as a centre of repute, providing quality academic programs amalgamated with
-              creative learning and research excellence — producing graduates with leadership qualities,
-              ethical and human values to serve the nation."
-            </motion.p>
-          </motion.div>
-
-          {/* Mission cards */}
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
-            <div className="about-eyebrow" style={{ justifyContent: "center", marginBottom: 8 }}>
-              <Target size={15} /> Our Mission
+      {/* VISION & MISSION */}
+      <section className="k-section k-vision-mission" id="vision-mission">
+        <div className="k-container">
+          <h2>Vision & Mission</h2>
+          <div className="k-vision-grid">
+            <div>
+              <h3 style={{ marginBottom: "16px" }}>Our Vision</h3>
+              <div className="k-vision-box">
+                <p style={{ color: "#555", fontSize: "14px", lineHeight: "1.7" }}>
+                  To evolve as center of repute for providing quality academic programs amalgamated with creative learning and research excellence to produce graduates with leadership qualities, ethical and human values to serve the nation.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h3 style={{ marginBottom: "16px" }}>Our Mission</h3>
+              <div className="k-mission-items">
+                <div className="k-mission-item">
+                  <div className="k-mission-badge">M1</div>
+                  <div className="k-mission-text">To provide high quality education with enriched curriculum blended with impactful teaching-learning practices.</div>
+                </div>
+                <div className="k-mission-item">
+                  <div className="k-mission-badge">M2</div>
+                  <div className="k-mission-text">To promote research, entrepreneurship and innovation through industry collaborations.</div>
+                </div>
+                <div className="k-mission-item">
+                  <div className="k-mission-badge">M3</div>
+                  <div className="k-mission-text">To produce highly competent professional leaders for contributing to Socio-economic development of region and the nation.</div>
+                </div>
+              </div>
             </div>
           </div>
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={stagger}
-            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }}
-            className="about-mission-grid"
-          >
-            {missions.map((m) => {
-              const Icon = m.icon
-              return (
-                <motion.div
-                  key={m.title} variants={fadeUp}
-                  style={{
-                    background: "#fff", border: "1px solid #eef0f3", borderRadius: 16,
-                    padding: "32px 26px", textAlign: "left",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 52, height: 52, borderRadius: 12, background: "#eef1ff",
-                      display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18,
-                    }}
-                  >
-                    <Icon size={24} color="#2B3490" />
+        </div>
+      </section>
+
+      {/* LEADERSHIP */}
+      <section className="k-section k-leadership" id="leadership">
+        <div className="k-container">
+          <h2>Leadership</h2>
+          <div className="k-leadership-grid">
+            {leadershipData.map((leader, i) => (
+              <Link key={i} href={leader.href} style={{ textDecoration: "none" }}>
+                <div className="k-leadership-card" style={{ cursor: "pointer" }}>
+                  <img src={leader.photo} alt={leader.name} className="k-leader-photo" />
+                  <div className="k-leader-name">{leader.name}</div>
+                  <div className="k-leader-role">{leader.role}</div>
+                  {leader.email && <div className="k-leader-email">📧 {leader.email}</div>}
+                  <div className="k-leader-bio">{leader.bio}</div>
+                  <div className="k-leader-btn">View Profile →</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* JOINT BOARD OF STUDIES */}
+      <section className="k-section k-docs" id="jbos">
+        <div className="k-container">
+          <h2>Joint Board of Studies</h2>
+          <div className="k-docs-grid">
+            {jbosDocuments.map((doc, i) => (
+              <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <div className="k-doc-card">
+                  <div className="k-doc-icon">{doc.icon}</div>
+                  <div className="k-doc-content">
+                    <div className="k-doc-title">{doc.title}</div>
+                    <div className="k-doc-subtitle">Download PDF →</div>
                   </div>
-                  <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>
-                    {m.title}
-                  </h3>
-                  <p style={{ color: "#666", fontSize: 14, lineHeight: 1.7, margin: 0 }}>{m.text}</p>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-        </Container>
+                  <div className="k-doc-link">↗</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* MILESTONES */}
-      <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <Container>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <div className="about-eyebrow" style={{ justifyContent: "center", marginBottom: 10 }}>
-              Our Journey
+      {/* STRATEGIC PLAN & DEPLOYMENT DOCUMENTS */}
+      <section className="k-section k-docs" id="strategic" style={{ background: "#F5EFE4" }}>
+        <div className="k-container">
+          <h2>Strategic Plan & Deployment Documents</h2>
+          <div className="k-docs-grid">
+            {strategicDocs.map((doc, i) => (
+              <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <div className="k-doc-card">
+                  <div className="k-doc-icon">{doc.icon}</div>
+                  <div className="k-doc-content">
+                    <div className="k-doc-title">{doc.title}</div>
+                    <div className="k-doc-subtitle">Download PDF →</div>
+                  </div>
+                  <div className="k-doc-link">↗</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* INSTITUTIONAL POLICY DOCUMENTS */}
+      <section className="k-section k-docs" id="policies">
+        <div className="k-container">
+          <h2>Institutional Policy Documents</h2>
+          <div className="k-docs-grid">
+            {policyDocs.map((doc, i) => (
+              <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <div className="k-doc-card">
+                  <div className="k-doc-icon">{doc.icon}</div>
+                  <div className="k-doc-content">
+                    <div className="k-doc-title">{doc.title}</div>
+                    <div className="k-doc-subtitle">Download PDF →</div>
+                  </div>
+                  <div className="k-doc-link">↗</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* GET IN TOUCH */}
+      <section className="k-section k-contact" id="contact">
+        <div className="k-container">
+          <h2 style={{ textAlign: "center" }}>Get In Touch</h2>
+          <div style={{ textAlign: "center", marginBottom: "32px" }} className="k-contact-subtitle">
+            EAPCET Code: KSRM | Affiliated to JNTUA | UGC Autonomous
+          </div>
+          <div className="k-contact-grid">
+            <div className="k-contact-box k-contact-find">
+              <h3>Find Us</h3>
+              <div className="k-contact-text">K.S.R.M. College of Engineering, Kadapa – 516003, Andhra Pradesh, India.</div>
+              <div className="k-contact-text" style={{ fontSize: "13px" }}>7 KM from Kadapa town on Kadapa–Pulivendula Highway.</div>
             </div>
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
-              Milestones Through the Years
-            </h2>
-          </div>
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={stagger}
-            style={{ maxWidth: 820, margin: "0 auto" }}
-          >
-            {milestones.map((m, i) => (
-              <motion.div
-                key={m.year} variants={fadeUp}
-                style={{ display: "flex", gap: 24, paddingBottom: i === milestones.length - 1 ? 0 : 28 }}
-              >
-                <div style={{ flexShrink: 0, width: 92, textAlign: "right" }}>
-                  <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 22, fontWeight: 700, color: "#2B3490" }}>
-                    {m.year}
-                  </span>
-                </div>
-                <div style={{ position: "relative", paddingLeft: 24 }}>
-                  <span style={{ position: "absolute", left: 0, top: 6, width: 11, height: 11, borderRadius: "50%", background: "#FFE619", border: "2px solid #2B3490" }} />
-                  {i !== milestones.length - 1 && (
-                    <span style={{ position: "absolute", left: 5, top: 18, bottom: -28, width: 1, background: "#e0e3ea" }} />
-                  )}
-                  <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7, margin: 0 }}>{m.text}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </Container>
-      </section>
-
-      {/* STATS BAND */}
-      <section style={{ padding: "56px 0", background: "linear-gradient(135deg, #2B3490, #1e2570)" }}>
-        <Container>
-          <div
-            style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, textAlign: "center" }}
-            className="about-stats-grid"
-          >
-            {[
-              { n: `${year}+`, l: "Years of Excellence" },
-              { n: "10K+", l: "Students" },
-              { n: "7", l: "Departments" },
-              { n: "200+", l: "Recruiters" },
-            ].map((s) => (
-              <div key={s.l}>
-                <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 3.5vw, 2.8rem)", fontWeight: 700, color: "#FFE619", lineHeight: 1 }}>
-                  {s.n}
-                </div>
-                <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, marginTop: 6, letterSpacing: 0.5 }}>{s.l}</div>
+            <div className="k-contact-box k-contact-other k-contact-contact">
+              <h3>Contact Us</h3>
+              <div className="k-contact-text"><a href="tel:+919000073434" className="k-contact-link">+91-9000073434</a></div>
+              <div className="k-contact-text"><a href="tel:+918143731960" className="k-contact-link">+91-8143731960</a></div>
+              <div className="k-contact-text"><a href="tel:+918562295972" className="k-contact-link">08562-295972</a></div>
+              <div className="k-contact-text"><a href="mailto:ksrmcengg@yahoo.co.in" className="k-contact-link">ksrmcengg@yahoo.co.in</a></div>
+              <div className="k-contact-text"><a href="mailto:principal@ksrmce.ac.in" className="k-contact-link">principal@ksrmce.ac.in</a></div>
+            </div>
+            <div className="k-contact-box k-contact-other k-contact-connect">
+              <h3>Connect With Us</h3>
+              <div className="k-contact-text"><a href="https://www.ksrmce.ac.in" target="_blank" rel="noopener noreferrer" className="k-contact-link">www.ksrmce.ac.in</a></div>
+              <div className="k-social-links">
+                <a href="https://www.facebook.com/ksrmce" target="_blank" rel="noopener noreferrer" className="k-social-btn">Facebook</a>
+                <a href="https://twitter.com/ksrmce" target="_blank" rel="noopener noreferrer" className="k-social-btn">Twitter</a>
+                <a href="https://www.instagram.com/ksrmce" target="_blank" rel="noopener noreferrer" className="k-social-btn">Instagram</a>
+                <a href="https://www.youtube.com/@ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" className="k-social-btn">YouTube</a>
               </div>
-            ))}
+            </div>
           </div>
-        </Container>
+        </div>
       </section>
     </main>
   )

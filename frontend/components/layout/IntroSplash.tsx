@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react"
 
 export default function IntroSplash() {
-  const [show, setShow] = useState(true)
+  const [mounted, setMounted] = useState(false)
+  const [show, setShow] = useState(false)
   const [phase, setPhase] = useState(0)
 
   useEffect(() => {
+    setMounted(true)
+    setShow(true)
     const timers = [
       setTimeout(() => setPhase(1), 150),   // parts fly in
       setTimeout(() => setPhase(2), 3700),  // dip (anticipation)
@@ -16,7 +19,7 @@ export default function IntroSplash() {
     return () => timers.forEach(clearTimeout)
   }, [])
 
-  if (!show) return null
+  if (!mounted || !show) return null
 
   const part: React.CSSProperties = {
     position: "absolute",

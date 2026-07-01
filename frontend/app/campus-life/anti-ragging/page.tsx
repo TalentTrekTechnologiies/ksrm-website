@@ -1,12 +1,9 @@
-import AntiRaggingTemplate from "@/components/campusLife/AntiRaggingTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Anti-Ragging | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
+  title: "Anti Ragging | K.S.R.M College of Engineering",
 }
 
-export default function AntiRaggingPage() {
-  return <AntiRaggingTemplate />
+export default function SubPage() {
+  return <main><h1>Anti Ragging</h1><p>Content</p></main>
 }

@@ -1,11 +1,9 @@
-import CulturalTemplate from "@/components/campusLife/CulturalTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Cultural Club | KSRM College of Engineering",
-  description: "KSRM College of Engineering Cultural Club celebrating creativity, talent and the spirit of togetherness through KALAKRITI and cultural events.",
+  title: "Cultural | K.S.R.M College of Engineering",
 }
 
-export default function CulturalPage() {
-  return <CulturalTemplate />
+export default function SubPage() {
+  return <main><h1>Cultural</h1><p>Content</p></main>
 }

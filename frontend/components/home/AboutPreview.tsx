@@ -88,7 +88,7 @@ export default function AboutPreview() {
 
           {/* LEGACY STATS */}
           <div style={{ display: "flex", gap: "28px", marginBottom: "32px" }}>
-            {legacyStats.map((s) => (
+            {(Array.isArray(legacyStats) ? legacyStats : []).map((s) => (
               <div key={s.label}>
                 <div style={{
                   fontFamily: "'Rajdhani', sans-serif",
@@ -129,7 +129,7 @@ export default function AboutPreview() {
         >
           <div style={{ position: "relative" }}>
             <img
-              src="/campus.webp"
+              src="/topview (1).jpg"
               alt="KSRM Campus"
               style={{
                 width: "100%", height: "340px",
@@ -170,7 +170,7 @@ export default function AboutPreview() {
             color: "#2B3490",
             letterSpacing: "0.4px",
           }}>
-            Smt. K. Rajeswari Garu
+            Aerial View of KSRM College Campus
           </p>
         </motion.div>
 

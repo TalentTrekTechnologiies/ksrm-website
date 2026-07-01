@@ -1,11 +1,9 @@
-import GrievanceTemplate from "@/components/campusLife/GrievanceTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Grievance Redressal | KSRM College of Engineering",
-  description: "KSRM College of Engineering grievance redressal system with fair, transparent and timely resolution for student complaints.",
+  title: "Grievance | K.S.R.M College of Engineering",
 }
 
-export default function GrievancePage() {
-  return <GrievanceTemplate />
+export default function SubPage() {
+  return <main><h1>Grievance</h1><p>Content</p></main>
 }

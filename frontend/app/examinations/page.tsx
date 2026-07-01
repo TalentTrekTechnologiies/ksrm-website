@@ -1,12 +1,883 @@
-import { Metadata } from "next"
-import ExaminationsTemplate from "@/components/examinations/ExaminationsTemplate"
+'use client'
 
-export const metadata: Metadata = {
-  title: "Examinations | KSRM College of Engineering",
-  description:
-    "Examination schedules, results, notifications and timetables for KSRM College of Engineering. View results online.",
-}
+export default function Page() {
+  return (
+    <div dangerouslySetInnerHTML={{
+      __html: `<!DOCTYPE html><html lang="en" data-scroll-behavior="smooth" class="font-sans arimo_bb082808-module__YDM0vq__variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/_next/static/media/3206eb66b875a5b3-s.p.0newl065t398d.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/a079e02bba5bf7ab-s.p.0.s85e2kacc1m.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/aae5f0be330e13db-s.p.09~kfcksvwt3b.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/d23f31b94ad01e54-s.p.091biwio0g5wn.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" as="image" href="/ring.png"/><link rel="preload" as="image" href="/book.png"/><link rel="preload" as="image" href="/banner.png"/><link rel="preload" as="image" href="/logo.png"/><link rel="preload" as="image" href="/nba.png"/><link rel="preload" as="image" href="/naac.png"/><link rel="preload" as="image" href="/jntua.png"/><link rel="preload" as="image" href="/gnan.png"/><link rel="preload" as="image" href="/ksnr.png"/><link rel="stylesheet" href="/_next/static/chunks/0u-l-.84zqgxg.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/08r5p52~uyd_7.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/0sur~ccmg786l.js"/><script src="/_next/static/chunks/0am~qrn.2~amr.js" async=""></script><script src="/_next/static/chunks/06ni6111_fqel.js" async=""></script><script src="/_next/static/chunks/0piol93jdjrdh.js" async=""></script><script src="/_next/static/chunks/0ofc--.ubvo_z.js" async=""></script><script src="/_next/static/chunks/turbopack-0kk9ynu9gg9t3.js" async=""></script><script src="/_next/static/chunks/05fi3fb~3qmkl.js" async=""></script><script src="/_next/static/chunks/0mtwemt.1oqqp.js" async=""></script><script src="/_next/static/chunks/02fqch~ni_1x3.js" async=""></script><script src="/_next/static/chunks/0jprs_fd_n1y2.js" async=""></script><script src="/_next/static/chunks/0vvbcb160e94u.js" async=""></script><meta name="next-size-adjust" content=""/><title>Examinations | KSRM College of Engineering</title><meta name="description" content="Examination schedules, results, notifications and timetables for KSRM College of Engineering. View results online."/><link rel="icon" href="/favicon.ico?favicon.0x3dzn~oxb6tn.ico" sizes="256x256" type="image/x-icon"/><script src="/_next/static/chunks/03~yq9q893hmn.js" noModule=""></script></head><body class="rajdhani_ab1774d9-module__PVobqq__variable arimo_bb082808-module__YDM0vq__variable antialiased" style="font-family:var(--font-arimo), Arial, sans-serif"><div hidden=""><!--$--><!--/$--></div><div style="position:fixed;inset:0;z-index:9999;background:#f4f3ef;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity 1.1s ease;pointer-events:auto"><div style="position:absolute;width:clamp(540px, 79vw, 990px);height:clamp(540px, 79vw, 990px);border-radius:50%;background:radial-gradient(circle, rgba(43,52,144,0.12) 0%, rgba(43,52,144,0) 70%);opacity:0;transition:opacity 1.5s ease"></div><div style="position:relative;width:clamp(396px, 72vw, 810px);height:clamp(396px, 72vw, 810px);transform:scale(1);opacity:1;transition:transform 0.35s ease"><img src="/ring.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:all 2.3s cubic-bezier(0.16, 1, 0.3, 1);opacity:0;transform:translate(-90vw,0) rotate(-220deg) scale(0.5)"/><img src="/book.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:all 2.3s cubic-bezier(0.16, 1, 0.3, 1);opacity:0;transform:translate(0,-90vh) scale(0.6);transition-delay:0.5s"/><img src="/banner.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:all 2.3s cubic-bezier(0.16, 1, 0.3, 1);opacity:0;transform:translate(0,90vh) scale(0.6);transition-delay:1s"/></div></div><div style="background:#202a78;color:#fff;width:100%;overflow:hidden"><style>
+        .topbar-inner { width: 100%; margin: 0 auto; padding: 7px 5%; display: flex; justify-content: space-between; align-items: center; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .topbar-left { display: flex; gap: 18px; font-size: 13px; align-items: center; font-weight: 500; flex-shrink: 0; }
+        .topbar-center { font-size: 13px; font-weight: 600; text-align: center; flex: 1; }
+        .topbar-right { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
+        .topbar-social { color: #fff; display: flex; align-items: center; transition: color 0.2s; }
+        .topbar-social:hover { color: #D4A500; }
 
-export default function ExaminationsPage() {
-  return <ExaminationsTemplate />
+        @media (max-width: 768px) {
+          .topbar-inner { padding: 6px 14px; justify-content: space-between; gap: 8px; }
+          .topbar-left { font-size: 11px; gap: 10px; flex-direction: row; align-items: center; }
+          .topbar-center { display: none; }
+          .topbar-right { gap: 12px; display: none; }
+        }
+        @media (max-width: 380px) {
+          .topbar-left { font-size: 10px; gap: 6px; }
+          .topbar-right { gap: 10px; display: none; }
+          .topbar-inner { padding: 5px 10px; }
+        }
+      </style><div class="topbar-inner" style="opacity:0;transform:translateY(-15px);transition:all 0.7s ease"><div class="topbar-left"><span>📞 +91 8143731960</span><span>📞 08562 295972</span></div><div class="topbar-center">EAPCET CODE: KSRM  |  Programs: CSE, AIML, CSE(DS), ECE, EEE, CIVIL, MECH, MBA</div><div class="topbar-right"><a href="https://facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a><a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.626 5.905-5.626zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a><a href="https://instagram.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg></a><a href="http://youtube.com/ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="topbar-social"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.6 2.8 12 2.8 12 2.8s-4.6 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.3.7 11.5v2.1c0 2.2.3 4.4.3 4.4s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 22.1 12 22.1 12 22.1s4.6 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.3 23 7 23 7zm-13.5 8.5v-7.6l6.5 3.8-6.5 3.8z"></path></svg></a></div></div></div><div style="width:100%"><style>
+        .top-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 30px;
+          background: #fff;
+          gap: 15px;
+          min-height: 120px;
+        }
+
+        .header-left {
+          flex: 0 0 190px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .header-left img {
+          width: 170px;
+          height: auto;
+          display: block;
+        }
+
+        /* Structured flex footprint for balanced spacing distribution */
+        .header-center {
+          flex: 0.9;
+          padding-left: 10px;
+        }
+
+        .header-center h1 {
+          margin: 0;
+          color: #C8102E;
+          font-size: clamp(1.5rem, 4vw, 3rem);
+          font-weight: 800;
+          line-height: 1;
+          font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+          letter-spacing: 0px;
+        }
+
+        .header-center p {
+          margin: 4px 0 0 0;
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+          color: #4b5563;
+          font-weight: 400;
+          line-height: 1.4;
+        }
+
+        /* 12px gap + flex layout space to let the ribbon breathe */
+        .header-right {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 12px;
+          margin-left: 40px;
+          flex: 0.7;
+          flex-shrink: 0;
+        }
+
+        .header-right img {
+          width: auto;
+          object-fit: contain;
+        }
+
+        /* Refined Optical Balancing Sizes */
+        .logo-nba,
+        .logo-naac,
+        .logo-jntua {
+          height: 100px;
+        }
+
+        .logo-ksnr {
+          height: 115px;
+        }
+
+        .logo-gnan {
+          height: 125px;
+        }
+
+        /* Large Screen Optimization */
+        @media (min-width: 1400px) {
+          .header-center h1 {
+            font-size: 3rem;
+          }
+          .header-center p {
+            font-size: 0.875rem;
+          }
+        }
+
+        /* Tablet Adjustments (991px Breakpoint) */
+        @media (max-width: 991px) {
+          .top-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 15px;
+          }
+
+          .header-center {
+            padding-left: 0;
+            flex: 1;
+          }
+
+          .header-center h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+            color: #C8102E;
+            line-height: 1;
+          }
+
+          .header-center p {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: #4b5563;
+          }
+
+          .header-right {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-left: 0;
+            flex: 1;
+          }
+
+          /* Balanced dimensions */
+          .logo-nba,
+          .logo-naac,
+          .logo-jntua {
+            height: 65px;
+          }
+
+          .logo-ksnr {
+            height: 75px;
+          }
+
+          .logo-gnan {
+            height: 82px;
+          }
+        }
+
+        /* MOBILE COMPACT HEADER (max-width: 768px) */
+        @media (max-width: 768px) {
+          .top-header {
+            /* Logo + name in compact horizontal row */
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 10px 14px;
+            gap: 10px;
+            min-height: auto;
+          }
+
+          .header-left {
+            flex: 0 0 auto;
+            justify-content: flex-start;
+          }
+
+          .header-left img {
+            width: 48px;
+            height: 48px;
+          }
+
+          .header-center {
+            padding-left: 0;
+            flex: 1;
+            min-width: 0;
+          }
+
+          .header-center h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+            line-height: 1;
+            margin: 0;
+            word-break: break-word;
+            letter-spacing: 0px;
+            color: #C8102E;
+          }
+
+          .header-center p {
+            font-size: 0.75rem;
+            margin: 3px 0 0 0;
+            line-height: 1.3;
+            color: #4b5563;
+            font-weight: 400;
+            display: none;
+          }
+
+          /* Show first line of tagline on larger phones */
+          .header-center p:first-of-type {
+            display: block;
+            margin: 3px 0 0 0;
+          }
+
+          /* HIDE ACCREDITATION BADGES ON MOBILE - saves crucial vertical space */
+          .header-right {
+            display: none !important;
+          }
+        }
+
+        /* Extra Small Screens (max-width: 480px) */
+        @media (max-width: 480px) {
+          .top-header {
+            padding: 8px 12px;
+            gap: 8px;
+          }
+          .header-left img {
+            width: 44px;
+            height: 44px;
+          }
+          .header-center h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+            color: #C8102E;
+          }
+          .header-center p:first-of-type {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #4b5563;
+          }
+        }
+
+        /* KSNR Founder Logo - Special Tribute */
+        .ksnr-tribute {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          overflow: visible;
+          padding: 4px;
+        }
+        .ksnr-tribute .ksnr-logo {
+          transform: scale(1.08);
+          filter: drop-shadow(0 0 10px rgba(255,179,71,.75));
+          border-radius: 8px;
+          position: relative;
+          z-index: 1;
+        }
+        .ksnr-petal {
+          position: absolute;
+          top: -16px;
+          font-size: 14px;
+          line-height: 1;
+          pointer-events: none;
+          opacity: 0;
+          z-index: 2;
+          animation: ksnrFall linear infinite;
+        }
+        @keyframes ksnrFall {
+          0%   { transform: translateY(-16px) translateX(0) rotate(0deg); opacity: 0; }
+          15%  { opacity: 1; }
+          100% { transform: translateY(78px) translateX(12px) rotate(360deg); opacity: 0; }
+        }
+        .p1{left:6%;  animation-duration:3.2s; animation-delay:0s}
+        .p2{left:20%; animation-duration:3.9s; animation-delay:.7s}
+        .p3{left:34%; animation-duration:3.0s; animation-delay:1.3s}
+        .p4{left:48%; animation-duration:4.1s; animation-delay:.4s}
+        .p5{left:60%; animation-duration:3.5s; animation-delay:1.7s}
+        .p6{left:74%; animation-duration:3.8s; animation-delay:1.0s}
+        .p7{left:88%; animation-duration:3.1s; animation-delay:2.1s}
+        .p8{left:42%; animation-duration:3.6s; animation-delay:2.5s}
+        @media (prefers-reduced-motion: reduce){ .ksnr-petal{ display:none } }
+      </style><header class="top-header"><div class="header-left"><img alt="KSRM Logo" width="170" height="170" decoding="async" data-nimg="1" style="color:transparent" src="/logo.png"/></div><div class="header-center"><h1>K.S.R.M COLLEGE OF ENGINEERING</h1><p>(UGC - Autonomous) | Kadapa, Andhra Pradesh</p><p>Approved by AICTE | Affiliated to JNTUA</p></div><div class="header-right" style="display:flex;align-items:center;gap:10px;max-height:170px;overflow:hidden;margin-left:-40px"><img src="/nba.png" alt="NBA Accreditation" style="height:110px;width:auto;object-fit:contain"/><img src="/naac.png" alt="NAAC Accreditation" style="height:110px;width:auto;object-fit:contain"/><img src="/jntua.png" alt="JNTUA Affiliation" style="height:110px;width:auto;object-fit:contain"/><img src="/gnan.png" alt="Gnan" style="height:110px;width:auto;object-fit:contain"/><div class="ksnr-tribute"><span class="ksnr-petal p1">🌸</span><span class="ksnr-petal p2">🌼</span><span class="ksnr-petal p3">🌸</span><span class="ksnr-petal p4">🏵️</span><span class="ksnr-petal p5">🌸</span><span class="ksnr-petal p6">🌼</span><span class="ksnr-petal p7">🌸</span><span class="ksnr-petal p8">🏵️</span><img src="/ksnr.png" alt="KSNR Memorial" style="height:150px;width:auto;object-fit:contain" class="ksnr-logo"/></div></div></header><div style="width:100%;height:3px;background:#2B3490"></div></div><div style="background:#2B3490;position:sticky;top:0;z-index:1000;box-shadow:0 5px 20px rgba(0,0,0,0.15)"><style>
+        .navbar-wrapper {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 48px;
+          position: relative;
+          padding: 0 20px;
+          gap: 8px;
+        }
+
+        .navbar-desktop {
+          display: flex;
+          align-items: stretch;
+          flex: 1;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .navbar-scroll-container {
+          display: flex;
+          align-items: center;
+          flex: 1;
+          overflow-x: auto;
+          scroll-behavior: smooth;
+          gap: 0;
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+
+        .navbar-scroll-container::-webkit-scrollbar {
+          display: none;
+        }
+
+        .navbar-scroll-fade-left {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 40px;
+          background: linear-gradient(to right, #2B3490, rgba(43, 52, 144, 0));
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+
+        .navbar-scroll-fade-left.visible {
+          opacity: 1;
+        }
+
+        .navbar-scroll-fade-right {
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 40px;
+          background: linear-gradient(to left, #2B3490, rgba(43, 52, 144, 0));
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+
+        .navbar-scroll-fade-right.visible {
+          opacity: 1;
+        }
+
+        .navbar-scroll-btn {
+          position: relative;
+          background: none;
+          border: none;
+          color: #D4A500;
+          width: auto;
+          height: 48px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          z-index: 20;
+          opacity: 0;
+          pointer-events: none;
+          flex-shrink: 0;
+          padding: 0 8px;
+        }
+
+        .navbar-scroll-btn.visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .navbar-scroll-btn:hover {
+          transform: scale(1.2);
+        }
+
+        .navbar-hamburger {
+          display: none;
+          background: none;
+          border: none;
+          color: #fff;
+          font-size: 26px;
+          cursor: pointer;
+          flex-shrink: 0;
+          padding: 4px 8px;
+          line-height: 1;
+          margin-left: auto;
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .navbar-hamburger:focus-visible {
+          outline: 2px solid rgba(255, 230, 25, 0.5);
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+
+        .navbar-hamburger:focus:not(:focus-visible) {
+          outline: none;
+        }
+
+        .navbar-close-button {
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .navbar-close-button:focus-visible {
+          outline: 2px solid rgba(255, 230, 25, 0.5);
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+
+        .navbar-close-button:focus:not(:focus-visible) {
+          outline: none;
+        }
+
+        .navbar-mobile-menu {
+          border-top: 1px solid rgba(255,255,255,0.15);
+          background: #2B3490;
+          max-height: calc(100vh - 160px);
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          animation: slideInMenu 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideInMenu {
+          from {
+            opacity: 0;
+            transform: translateY(-12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .navbar-mobile-item {
+          display: flex;
+          align-items: center;
+          padding: 0 20px;
+          font-size: 16px;
+          font-weight: 600;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          font-family: 'Rajdhani', sans-serif;
+          text-decoration: none;
+          color: rgba(255,255,255,0.9);
+          height: 60px;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-mobile-item:active {
+          background: rgba(255,230,25,0.12);
+          color: #FFE619;
+          padding-left: 24px;
+        }
+
+        .navbar-mobile-parent {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 20px;
+          font-size: 16px;
+          font-weight: 600;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          font-family: 'Rajdhani', sans-serif;
+          color: rgba(255,255,255,0.9);
+          cursor: pointer;
+          height: 60px;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-mobile-parent:active {
+          background: rgba(255,230,25,0.12);
+          color: #FFE619;
+          padding-left: 24px;
+        }
+
+        .navbar-mobile-parent.expanded {
+          background: rgba(255,230,25,0.15);
+          color: #FFE619;
+        }
+
+        .navbar-mobile-arrow {
+          transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+          font-size: 14px;
+          color: rgba(255,255,255,0.5);
+        }
+
+        .navbar-mobile-arrow.open {
+          transform: rotate(-180deg);
+        }
+
+        .navbar-mobile-children {
+          display: none;
+          flex-direction: column;
+          background: rgba(0,0,0,0.15);
+          animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          border-left: 3px solid rgba(255,230,25,0.4);
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-8px);
+            max-height: 0;
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 600px;
+          }
+        }
+
+        .navbar-mobile-children.visible {
+          display: flex;
+        }
+
+        .navbar-mobile-child {
+          display: flex;
+          align-items: center;
+          padding: 0 20px 0 50px;
+          font-size: 15px;
+          font-weight: 500;
+          border-bottom: none;
+          font-family: 'Rajdhani', sans-serif;
+          text-decoration: none;
+          color: rgba(255,255,255,0.8);
+          height: 56px;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-mobile-child:active {
+          background: rgba(255,230,25,0.1);
+          color: #FFE619;
+          padding-left: 54px;
+        }
+
+        .nav-dropdown {
+          position: fixed;
+          background: #fff;
+          min-width: 240px;
+          max-width: 90vw;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+          border-radius: 0 0 8px 8px;
+          z-index: 9999;
+          padding: 8px 0;
+          display: flex;
+          flex-direction: column;
+          margin-top: -1px;
+        }
+
+        .nav-dropdown a {
+          display: block;
+          padding: 12px 18px;
+          color: #2B3490;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 15px;
+          font-weight: 600;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: background 0.2s;
+        }
+
+        .nav-dropdown a:hover {
+          background: #f2f4ff;
+        }
+
+        .nav-item-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .nav-item-link {
+          color: rgba(255,255,255,0.82);
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 600;
+          font-family: 'Rajdhani', sans-serif;
+          padding: 14px 12px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          border-bottom: 3px solid transparent;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+
+        .nav-item-link.active {
+          color: #D4A500;
+          border-bottom-color: #D4A500;
+        }
+
+        .nav-item-link:hover {
+          color: #D4A500;
+        }
+
+        .nav-arrow {
+          margin-left: 5px;
+          font-size: 10px;
+          transition: transform 0.2s;
+          display: inline-block;
+        }
+
+        .nav-arrow.open {
+          transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+          .navbar-desktop { display: none !important; }
+          .navbar-hamburger { display: flex !important; }
+          .navbar-wrapper {
+            padding: 0 12px;
+          }
+        }
+      </style><div class="navbar-wrapper"><div class="navbar-desktop"><div class="navbar-scroll-fade-left "></div><div class="navbar-scroll-fade-right "></div><button class="navbar-scroll-btn " aria-label="Scroll left" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="navbar-scroll-container"><a class="nav-item-link " href="/">Home</a><div class="nav-item-wrapper"><a class="nav-item-link " href="/about">About<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/departments">Departments<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/academics">Academics<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/admissions">Admissions<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/placements">Placements<span class="nav-arrow ">▾</span></a></div><a class="nav-item-link " href="/research">Research</a><div class="nav-item-wrapper"><a class="nav-item-link " href="/campus-life">Campus Life<span class="nav-arrow ">▾</span></a></div><div class="nav-item-wrapper"><a class="nav-item-link " href="/iqac">IQAC<span class="nav-arrow ">▾</span></a></div><a class="nav-item-link " href="/iic">IIC</a><a class="nav-item-link " href="/edc">EDC</a><a class="nav-item-link active" href="/examinations">Examinations</a><a class="nav-item-link " href="/alumni">Alumni</a><a class="nav-item-link " href="/gallery">Gallery</a><a class="nav-item-link " href="/careers">Careers</a><a class="nav-item-link " href="/degree-verification">Degree Verification</a><a class="nav-item-link " href="/news">News &amp; Events</a><div class="nav-item-wrapper"><a class="nav-item-link " href="/contact">Contact<span class="nav-arrow ">▾</span></a></div></div><button class="navbar-scroll-btn " aria-label="Scroll right" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div><button class="navbar-hamburger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">☰</button></div></div><main style="background:#ffffff"><section style="position:relative;background-image:url(&#x27;/banners/examinations-banner.jpg&#x27;);background-size:cover;background-position:center;background-color:#2B3490;padding:80px 0;color:white;min-height:320px;display:flex;align-items:flex-end;overflow:hidden"><div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);pointer-events:none"></div><div style="position:relative;z-index:2;width:100%"><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div style="opacity:0"><div style="text-align:left"><div style="display:inline-block;background:#D4A500;color:#2B3490;padding:8px 20px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px">📋 Examinations</div><h1 style="font-size:clamp(2.2rem, 4vw, 3.6rem);font-weight:800;font-family:&#x27;Rajdhani&#x27;, sans-serif;margin:0 0 8px;opacity:0;transform:translateY(20px)">Examination Portal</h1><p style="font-size:20px;font-weight:600;color:#D4A500;margin:0 0 16px;opacity:0;transform:translateY(20px)">K.S.R.M. College of Engineering (Autonomous)</p><p style="font-size:15px;color:rgba(255,255,255,0.9);line-height:1.8;max-width:700px;margin:0 auto;opacity:0;transform:translateY(20px)">Access academic calendars, exam timetables, notifications, results and all examination-related information.</p></div></div></div></div></section><section style="padding:40px 0;background:white"><style>
+          .exam-quick-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+          }
+          @media (max-width: 1024px) {
+            .exam-quick-links {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+          @media (max-width: 640px) {
+            .exam-quick-links {
+              grid-template-columns: 1fr;
+              gap: 16px;
+            }
+          }
+        </style><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div class="exam-quick-links"><a href="#calendars" style="background:#f4f3ef;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;text-decoration:none;display:block;transition:all 0.2s"><div style="font-size:32px;margin-bottom:12px">📅</div><div style="font-size:14px;font-weight:700;color:#2B3490">Academic Calendars</div></a><a href="#notifications" style="background:#f4f3ef;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;text-decoration:none;display:block;transition:all 0.2s"><div style="font-size:32px;margin-bottom:12px">🔔</div><div style="font-size:14px;font-weight:700;color:#2B3490">Notifications</div></a><a href="#timetables" style="background:#f4f3ef;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;text-decoration:none;display:block;transition:all 0.2s"><div style="font-size:32px;margin-bottom:12px">⏰</div><div style="font-size:14px;font-weight:700;color:#2B3490">Time Tables</div></a><a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" style="background:#f4f3ef;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;text-decoration:none;display:block;transition:all 0.2s"><div style="font-size:32px;margin-bottom:12px">📊</div><div style="font-size:14px;font-weight:700;color:#2B3490">Exam Results</div></a><a href="https://ksrmce.ac.in/SBI_CHALLAN_FORM.pdf" target="_blank" rel="noopener noreferrer" style="background:#f4f3ef;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;text-decoration:none;display:block;transition:all 0.2s"><div style="font-size:32px;margin-bottom:12px">💳</div><div style="font-size:14px;font-weight:700;color:#2B3490">SBI Challan Form</div></a><a href="#contact" style="background:#f4f3ef;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;text-decoration:none;display:block;transition:all 0.2s"><div style="font-size:32px;margin-bottom:12px">📞</div><div style="font-size:14px;font-weight:700;color:#2B3490">Contact Exam Cell</div></a></div></div></section><section id="calendars" style="padding:80px 0;background:#f4f3ef"><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div style="opacity:0;transform:translateY(20px)"><h2 style="font-size:clamp(2rem, 3vw, 2.6rem);font-weight:800;font-family:&#x27;Rajdhani&#x27;, sans-serif;color:#2B3490;margin-bottom:48px;text-align:center">Academic Calendars</h2><div><div style="font-size:18px;font-weight:700;color:#2B3490;border-left:4px solid #D4A500;padding-left:16px;margin:0 0 16px">AY 2025-26</div><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar – I Year M.Tech (AY 2025-26).pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – M.Tech I Semester AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">27-10-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar for I Year MBA (2025 Admitted Batch) for the AY 2025-2026.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – MBA I Year AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">30-08-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar -  I B.Tech. For AY 2025-2026.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech I Semester AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">30-08-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-B.Tech_IV_Year.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech VII &amp; VIII Semester AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">17-07-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-B.Tech_III_Year.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech V &amp; VI Semester AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">17-07-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-B.Tech_II_Year.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech III &amp; IV Semester AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">17-07-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-Honour-Minor.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech Honour and Minor Degree AY 2025-26</div><div style="color:#999;font-size:12px;margin-top:2px">17-07-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><div style="font-size:18px;font-weight:700;color:#2B3490;border-left:4px solid #D4A500;padding-left:16px;margin:32px 0 16px">AY 2024-25</div><a href="https://ksrmce.ac.in/demo1/academic-calenders/Revised Academic Calendar for M.Tech II Semester for 2024-25.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Revised Academic Calendar – M.Tech II Semester 2024-25</div><div style="color:#999;font-size:12px;margin-top:2px">05-05-2025</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar for M.Tech II, IV Semesters (R22PG) for AY 2024-25.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – M.Tech II, IV Semesters (R22PG) AY 2024-25</div><div style="color:#999;font-size:12px;margin-top:2px">20-12-2024</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar for B.Tech. II, IV Sems(R23UG) and VI, VIII Sems (R20UG) for AY 2024-25.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech Even Semester Programs 2024-25</div><div style="color:#999;font-size:12px;margin-top:2px">20-12-2024</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a><a href="https://ksrmce.ac.in/demo1/academic-calenders/Academic Calender for BTech Programs.pdf" target="_blank" rel="noopener noreferrer" style="background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;text-decoration:none;transition:all 0.2s"><div style="background:#eef1ff;width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📅</div><div style="flex:1"><div style="color:#2B3490;font-weight:600;font-size:14px">Academic Calendar – B.Tech Odd Semester Programs 2024-25</div><div style="color:#999;font-size:12px;margin-top:2px">25-07-2024</div></div><div style="color:white;background:#2B3490;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700">Download →</div></a></div></div></div></section><section id="notifications" style="padding:80px 0;background:white"><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div style="opacity:0;transform:translateY(20px)"><h2 style="font-size:clamp(2rem, 3vw, 2.6rem);font-weight:800;font-family:&#x27;Rajdhani&#x27;, sans-serif;color:#2B3490;margin-bottom:48px;text-align:center">Latest Notifications</h2><div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="background:#e63946;color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px">NEW</div><div style="font-size:12px;color:#999">10-04-2026</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Revaluation - MTech I Sem (R25PG) Regular &amp; Supple Examinations, Feb-March 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/Revaluation Notification - M.Tech I Sem.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="background:#e63946;color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px">NEW</div><div style="font-size:12px;color:#999">10-04-2026</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech VIII Sem (R20UG) Regular &amp; Supple End Examinations, April 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_VIII Sem R20.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="background:#e63946;color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px">NEW</div><div style="font-size:12px;color:#999">10-04-2026</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech VII Sem (R20UG) Supple (Advanced) End Examinations, April-May 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_VII Sem R20 Adv..jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="background:#e63946;color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px">NEW</div><div style="font-size:12px;color:#999">10-04-2026</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech VI Sem (R23UG) Regular &amp; Supple End Examinations, April-May 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_VI Sem R23.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="background:#e63946;color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px">NEW</div><div style="font-size:12px;color:#999">10-04-2026</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech IV Sem (R23UG) Regular &amp; Supple End Examinations, April-May 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_IV Sem R23.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="font-size:12px;color:#999">27-11-2025</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech I Sem (R23, R20, R18) Supple End Examinations Dec/Jan 2025-26</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/I Sem Reg. &amp; Supple. Notification 2025.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="font-size:12px;color:#999">08-11-2025</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech III Sem (R23 UG) Reg &amp; Supply Examinations Nov/Dec 2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/III Sem R23 Notifications.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="font-size:12px;color:#999">08-11-2025</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech V Sem (R23 UG) Reg &amp; Supply Examinations Nov/Dec 2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/V Sem R23 Notifications.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="font-size:12px;color:#999">08-11-2025</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">B.Tech VII Sem (R20 UG) Reg &amp; Supply Examinations Nov/Dec 2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/VII Sem  R20 Notifications.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px"><div style="font-size:12px;color:#999">30-08-2025</div></div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Revaluation notification - M.Tech. (R22PG) AY 2024-25</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/Notifications/Revaluation notification - M.Tech. (R22PG) - AY 2024-25.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:#f4f3ef;border-radius:4px">View →</a></div></div></div></div></section><section id="timetables" style="padding:80px 0;background:#f4f3ef"><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div style="opacity:0;transform:translateY(20px)"><h2 style="font-size:clamp(2rem, 3vw, 2.6rem);font-weight:800;font-family:&#x27;Rajdhani&#x27;, sans-serif;color:#2B3490;margin-bottom:48px;text-align:center">Exam Time Tables</h2><div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">10-04-2026</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. VI Sem (R23UG) End Regular &amp; Supple, April-May 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_VI Sem  End Exams..jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">10-04-2026</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. IV Sem (R23UG) End Regular &amp; Supple, April-May 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_IV Sem End Exams.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">10-04-2026</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. VI Sem (R23UG) II Mid Examinations, April 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_VI Sem II-Mid.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">10-04-2026</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. IV Sem (R23UG) II Mid Examinations, April 2026</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_IV Sem II-Mid.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">29-11-2025</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. I Sem (R23UG) Supple End Examinations, Dec-2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/I Sem R23 Supply Time Table.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">29-11-2025</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. I Sem (R20UG) Supple End Examinations, Dec-2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/I Sem R20 Supply Time Table.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">27-11-2025</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. VIII Sem (R18UG) Supple End Examinations, Dec-2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/VIII Sem R18 Time Table.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div><div style="display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f0f0"><div style="min-width:90px;font-size:12px;color:#999">27-11-2025</div><div style="flex:1"><div style="font-size:14px;color:#2B3490;font-weight:500;line-height:1.5">Timetable - B.Tech. VI Sem (R20UG) Supple End Examinations, Dec-2025</div></div><a href="https://ksrmce.ac.in/demo1/Examsection/TimeTable/VI Sem R20 Time Table.jpg" target="_blank" rel="noopener noreferrer" style="color:#2B3490;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;padding:4px 12px;background:white;border-radius:4px">View →</a></div></div></div></div></section><section id="results" style="padding:80px 0;background:white"><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div style="opacity:0;transform:translateY(20px)"><h2 style="font-size:clamp(2rem, 3vw, 2.6rem);font-weight:800;font-family:&#x27;Rajdhani&#x27;, sans-serif;color:#2B3490;margin-bottom:48px;text-align:center">Results &amp; Fee Payment</h2><style>
+              .exam-results-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px;
+              }
+              @media (max-width: 1024px) {
+                .exam-results-grid {
+                  grid-template-columns: 1fr;
+                  gap: 24px;
+                }
+              }
+            </style><div class="exam-results-grid"><a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(135deg, #2B3490, #1a1d4d);border-radius:12px;padding:40px;color:white;text-decoration:none;transition:all 0.2s"><div style="font-size:48px;margin-bottom:16px">📊</div><div style="color:#D4A500;font-size:22px;font-weight:700;margin-bottom:12px">Exam Results</div><div style="color:#ccc;font-size:15px;line-height:1.7;margin:12px 0 24px">Check B.Tech, M.Tech and MBA results on the KSRM results portal powered by JEM Exam.</div><div style="background:#D4A500;color:#2B3490;padding:14px 28px;border-radius:8px;font-weight:800;font-size:15px;display:inline-block">View Results →</div></a><div style="background:#f9f9f9;border:2px solid #D4A500;border-radius:12px;padding:40px"><div style="font-size:48px;margin-bottom:16px">💳</div><div style="color:#2B3490;font-size:22px;font-weight:700;margin-bottom:12px">Online Fee Payment</div><div style="color:#555;font-size:15px;line-height:1.7;margin:12px 0 24px">Pay tuition and exam fee via SBI Collect or download the SBI Challan Form for offline payment.</div><div style="display:flex;flex-direction:column;gap:8px"><a href="https://www.onlinesbi.sbi/sbicollect/icollecthome.htm" target="_blank" rel="noopener noreferrer" style="background:#2B3490;color:white;padding:14px 28px;border-radius:8px;font-weight:800;font-size:15px;text-decoration:none;display:block;text-align:center;transition:all 0.2s">Pay Online (SBI Collect)</a><a href="https://ksrmce.ac.in/SBI_CHALLAN_FORM.pdf" download="" style="background:white;color:#2B3490;border:2px solid #2B3490;padding:14px 28px;border-radius:8px;font-weight:800;font-size:15px;text-decoration:none;display:block;text-align:center;transition:all 0.2s">Download Challan Form</a></div></div></div></div></div></section><section id="contact" style="padding:80px 0;background:#f4f3ef"><div style="max-width:1400px;margin:0 auto;padding:0 40px"><div style="opacity:0;transform:translateY(20px)"><h2 style="font-size:clamp(2rem, 3vw, 2.6rem);font-weight:800;font-family:&#x27;Rajdhani&#x27;, sans-serif;color:#2B3490;margin-bottom:48px;text-align:center">Contact Examination Cell</h2><div style="max-width:600px;margin:0 auto;border:2px solid #D4A500;border-radius:12px;padding:40px"><div style="font-size:20px;font-weight:700;color:#2B3490;margin-bottom:8px">Controller of Examinations</div><div style="font-size:14px;color:#666;margin-bottom:8px">K.S.R.M. College of Engineering (Autonomous)</div><div style="font-size:16px;color:#444;font-weight:600;margin-bottom:24px">Dr. M. V. Ravi Kishore Reddy</div><div style="display:flex;flex-direction:column;gap:8px"><a href="tel:+918554233333" style="background:rgba(255,230,25,0.1);color:#2B3490;padding:12px 16px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px;display:flex;gap:8px"><span>📞</span><span>+91-8554-233333 (Ext: 350)</span></a><a href="mailto:exams@ksrmce.ac.in" style="background:rgba(255,230,25,0.1);color:#2B3490;padding:12px 16px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px;display:flex;gap:8px"><span>✉️</span><span>exams@ksrmce.ac.in</span></a></div></div></div></div></section></main><!--$--><!--/$--><footer style="width:100%;background:#1e2570;color:#ffffff;padding-top:56px"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+        .footer-grid {
+          display: grid;
+          grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr 1fr 1.5fr;
+          gap: 32px;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 40px;
+        }
+        .footer-bottom-inner {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 40px;
+        }
+        @media (max-width: 1100px) {
+          .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 32px 28px; padding: 0 28px; }
+        }
+        @media (max-width: 720px) {
+          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 24px; padding: 0 20px; }
+        }
+        /* MOBILE FOOTER - COMPLETELY NEW DESIGN */
+        @media (max-width: 768px) {
+          .footer-grid { display: none; }
+          .footer-bottom-inner { display: none; }
+          .footer-bottom-bar { display: none; }
+
+          .mobile-footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding: 40px 20px;
+            margin-bottom: 120px;
+          }
+
+          /* LOGO SECTION */
+          .mobile-footer-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            margin-bottom: 12px;
+          }
+
+          .mobile-footer-logo img {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 8px;
+          }
+
+          .mobile-footer-logo-text h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #FFE619;
+            font-family: 'Rajdhani', sans-serif;
+          }
+
+          .mobile-footer-logo-text p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+          }
+
+          /* QUICK LINKS 2-COLUMN GRID */
+          .mobile-footer-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
+          }
+
+          .mobile-footer-links a {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 8px 0;
+            transition: color 0.2s;
+            border-bottom: 1px solid rgba(255,230,25,0.2);
+          }
+
+          .mobile-footer-links a:hover {
+            color: #FFE619;
+            border-bottom-color: #FFE619;
+          }
+
+          /* CONTACT SECTION */
+          .mobile-footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+          }
+
+          .mobile-footer-contact-item {
+            font-size: 14px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.4;
+          }
+
+          .mobile-footer-contact-item a {
+            color: #FFE619;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+          }
+
+          .mobile-footer-contact-item a:hover {
+            opacity: 0.8;
+          }
+
+          /* SOCIAL ICONS */
+          .mobile-footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+          }
+
+          .mobile-footer-social a {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,230,25,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFE619;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 18px;
+          }
+
+          .mobile-footer-social a:hover {
+            background: #FFE619;
+            color: #1e2570;
+            transform: translateY(-2px);
+          }
+
+          /* COPYRIGHT */
+          .mobile-footer-copyright {
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            padding: 24px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+          }
+
+          /* POWERED BY */
+          .mobile-footer-powered {
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            padding-bottom: 12px;
+            width: 100%;
+          }
+        }
+      </style><div class="footer-grid"><div style="opacity:0;transform:translateY(24px)"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div style="width:58px;height:58px;border-radius:50%;background:#ffffff;display:flex;align-items:center;justify-content:center;flex-shrink:0"><img src="/logo.png" alt="KSRM Logo" style="width:48px;height:48px;object-fit:contain"/></div><div><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:23px;font-weight:700;color:#ffffff;line-height:1">KSRM</div><div style="font-size:12.5px;color:rgba(255,255,255,0.6);margin-top:2px">College of Engineering</div></div></div><p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 14px">46+ years of engineering excellence in Kadapa, Andhra Pradesh.</p><div style="display:flex;flex-direction:column;gap:5px;margin-bottom:16px"><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">UGC Autonomous</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">NAAC A++</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">NBA Accredited</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">AICTE Approved</span><span style="font-size:13.5px;color:rgba(255,255,255,0.55)">ISO 9001:2015 Certified</span></div><div style="display:flex;gap:10px"><a href="https://facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a><a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.626 5.905-5.626zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a><a href="https://instagram.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="#ffffff" stroke="none"></circle></svg></a><a href="http://youtube.com/ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.6 2.8 12 2.8 12 2.8s-4.6 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.3.7 11.5v2.1c0 2.2.3 4.4.3 4.4s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 22.1 12 22.1 12 22.1s4.6 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.3 23 7 23 7zm-13.5 8.5v-7.6l6.5 3.8-6.5 3.8z"></path></svg></a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">UG Programs</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">CSE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">CSE (AI &amp; ML)</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/ece">ECE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/eee">EEE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/civil">Civil</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/mech">Mechanical</a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">PG Programs</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">M.Tech – CSE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/ece">M.Tech – VLSI &amp; ES</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/eee">M.Tech – Power Electronics</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/civil">M.Tech – Structural</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/mech">M.Tech – Thermal</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/mba">MBA</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/departments/cse">MCA</a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">Diploma</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in Civil</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in Mechanical</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in EEE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in ECE</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions/diploma">Diploma in Computer Engg.</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/degree-verification">Degree Verification</a></div></div><div style="display:flex;flex-direction:column;opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">Quick Links</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;flex-direction:column;gap:2px"><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/about">About</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/admissions">Admissions</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/placements">Placements</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/research">Research</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/campus-life">Campus Life</a><a style="display:flex;align-items:center;gap:5px;padding:7px 0;line-height:1.4;color:rgba(255,255,255,0.72);font-size:15.5px;text-decoration:none;transition:color 0.2s ease" href="/alumni">Alumni</a></div></div><div style="opacity:0;transform:translateY(24px)"><div style="margin-bottom:18px;line-height:1.2"><div style="font-family:&#x27;Rajdhani&#x27;, sans-serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;letter-spacing:0.6px;text-transform:uppercase">Contact</div><div style="width:24px;height:2px;background:#FFE619"></div></div><div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE619" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg><span style="font-size:15px;color:rgba(255,255,255,0.7);line-height:1.55">KSRM College of Engineering,<br/>Kadapa, AP – 516003</span></div><div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE619" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg><span style="font-size:15px;color:rgba(255,255,255,0.7);line-height:1.55">+91 9000073434<br/>08562 295972</span></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE619" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail" aria-hidden="true" style="flex-shrink:0"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg><a href="mailto:info@ksrmce.ac.in" style="font-size:15px;color:rgba(255,255,255,0.7);text-decoration:none">info@ksrmce.ac.in</a></div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208" width="100%" height="150" style="border:none;border-radius:8px;display:block;opacity:0.9" allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe></div></div><div class="mobile-footer-container"><div class="mobile-footer-logo"><img src="/logo.png" alt="KSRM Logo"/><div class="mobile-footer-logo-text"><h3>KSRM</h3><p>College of Engineering</p></div></div><div class="mobile-footer-links"><a href="/about">About</a><a href="/admissions">Admissions</a><a href="/placements">Placements</a><a href="/research">Research</a><a href="/campus-life">Campus Life</a><a href="/alumni">Alumni</a></div><div class="mobile-footer-contact"><div class="mobile-footer-contact-item">📍 Kadapa, AP – 516003</div><div class="mobile-footer-contact-item">📞 <a href="tel:+919000073434">+91 9000073434</a></div><div class="mobile-footer-contact-item">📧 <a href="mailto:info@ksrmce.ac.in">info@ksrmce.ac.in</a></div></div><div class="mobile-footer-social"><a href="https://facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" title="Social Media">f</a><a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" title="Social Media">𝕏</a><a href="https://instagram.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" title="Social Media">◆</a><a href="http://youtube.com/ksrmceofficialmedia" target="_blank" rel="noopener noreferrer" title="Social Media">▶</a></div><div class="mobile-footer-copyright">© <!-- -->2026<!-- --> KSRM College of Engineering. All Rights Reserved.<br/>A unit of Sri Kandula Obul Reddy Charities</div><div class="mobile-footer-powered">Powered by Talent Trek Technologies</div></div><div class="footer-bottom-bar" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:44px;padding:12px 0"><div style="display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;padding:0 40px;gap:16px"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;color:rgba(255,255,255,0.7);font-weight:600">© <!-- -->2026<!-- --> KSRM College of Engineering. All Rights Reserved.</span><span style="font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:0.4px">A unit of Sri Kandula Obul Reddy Charities</span></div><div style="text-align:right;white-space:nowrap"><span style="font-size:15px;color:rgba(255,255,255,0.7);font-weight:600">Powered by Talent Trek Technologies</span></div></div></div></footer><style>
+        .back-to-top {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: #2B3490;
+          color: white;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 16px rgba(43, 52, 144, 0.25);
+          transition: all 0.3s ease;
+          z-index: 50;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
+
+        .back-to-top.visible {
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+        }
+
+        .back-to-top:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(43, 52, 144, 0.35);
+        }
+
+        .back-to-top:active {
+          transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+          .back-to-top {
+            bottom: 160px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+          }
+        }
+
+        @media (max-width: 460px) {
+          .back-to-top {
+            bottom: 180px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+          }
+        }
+      </style><button class="back-to-top " aria-label="Back to top"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up" aria-hidden="true"><path d="m18 15-6-6-6 6"></path></svg></button><script src="/_next/static/chunks/0sur~ccmg786l.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[76027,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n3:I[32035,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n4:I[91168,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n5:I[85830,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\",\"/_next/static/chunks/0vvbcb160e94u.js\"],\"default\"]\n6:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"OutletBoundary\"]\n7:\"$Sreact.suspense\"\na:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"ViewportBoundary\"]\nc:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"MetadataBoundary\"]\ne:I[75115,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\",1]\n:HL[\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"style\"]\n:HL[\"/_next/static/chunks/08r5p52~uyd_7.css\",\"style\"]\n:HL[\"/_next/static/media/3206eb66b875a5b3-s.p.0newl065t398d.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/a079e02bba5bf7ab-s.p.0.s85e2kacc1m.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/aae5f0be330e13db-s.p.09~kfcksvwt3b.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/d23f31b94ad01e54-s.p.091biwio0g5wn.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"examinations\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"examinations\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/08r5p52~uyd_7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"/_next/static/chunks/02fqch~ni_1x3.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-3\",{\"src\":\"/_next/static/chunks/0jprs_fd_n1y2.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"data-scroll-behavior\":\"smooth\",\"className\":\"font-sans arimo_bb082808-module__YDM0vq__variable\",\"children\":[\"$\",\"body\",null,{\"className\":\"rajdhani_ab1774d9-module__PVobqq__variable arimo_bb082808-module__YDM0vq__variable antialiased\",\"style\":{\"fontFamily\":\"var(--font-arimo), Arial, sans-serif\"},\"children\":[\"$\",\"$L2\",null,{\"children\":[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L5\",null,{}],[[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/0vvbcb160e94u.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L6\",null,{\"children\":[\"$\",\"$7\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@8\"}]}]]}],{},null,false,null]},null,false,\"$@9\"]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$La\",null,{\"children\":\"$Lb\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Lc\",null,{\"children\":[\"$\",\"$7\",null,{\"name\":\"Next.Metadata\",\"children\":\"$Ld\"}]}]}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$e\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/08r5p52~uyd_7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"LFdLmrYGQ7Zi0mhiVAN1_\"}\n"])</script><script>self.__next_f.push([1,"f:[]\n9:\"$Wf\"\n"])</script><script>self.__next_f.push([1,"b:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"10:I[12843,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"IconMark\"]\n8:null\nd:[[\"$\",\"title\",\"0\",{\"children\":\"Examinations | KSRM College of Engineering\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Examination schedules, results, notifications and timetables for KSRM College of Engineering. View results online.\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.0x3dzn~oxb6tn.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"$L10\",\"3\",{}]]\n"])</script></body></html>`
+    }} />
+  )
 }

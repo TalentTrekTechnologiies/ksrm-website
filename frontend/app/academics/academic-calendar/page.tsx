@@ -1,11 +1,9 @@
-import AcademicCalendarTemplate from "@/components/academics/AcademicCalendarTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Academic Calendar | KSRM College of Engineering",
-  description: "KSRM College of Engineering academic calendar with downloadable PDFs for B.Tech, M.Tech, and MBA programmes following JNTUA regulations.",
+  title: "Academic Calendar | K.S.R.M College of Engineering",
 }
 
-export default function AcademicCalendarPage() {
-  return <AcademicCalendarTemplate />
+export default function SubPage() {
+  return <main><h1>Academic Calendar</h1><p>Content</p></main>
 }

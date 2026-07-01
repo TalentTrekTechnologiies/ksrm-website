@@ -1,224 +1,247 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
-
-const EASE = [0.22, 1, 0.36, 1] as const
-
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
-
-interface Stat {
-  prefix: string
-  value: number
-  suffix: string
-  label: string
-}
-
-const stats: Stat[] = [
-  { prefix: "",  value: 95,   suffix: "%",    label: "Placement Rate"  },
-  { prefix: "₹", value: 12,   suffix: " LPA", label: "Highest Package" },
-  { prefix: "",  value: 200,  suffix: "+",    label: "Recruiters"      },
-  { prefix: "",  value: 1500, suffix: "+",    label: "Offers (2025)"   },
-]
-
-const recruiters = [
-  "TCS", "Infosys", "Wipro", "Cognizant",
-  "Accenture", "Capgemini", "Tech Mahindra",
-]
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-}
+import { homeData } from "@/data/home"
 
 export default function Placements() {
-  const [counts, setCounts] = useState<number[]>(stats.map(() => 0))
-  const sectionRef = useRef<HTMLElement>(null)
-  const hasStarted = useRef(false)
-
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || hasStarted.current) return
-        hasStarted.current = true
-        observer.disconnect()
-
-        const startTime = performance.now()
-        const duration = 2000
-
-        const tick = (now: number) => {
-          const elapsed = now - startTime
-          const progress = Math.min(elapsed / duration, 1)
-          const eased = easeOut(progress)
-          setCounts(stats.map((s) => Math.floor(s.value * eased)))
-          if (progress < 1) requestAnimationFrame(tick)
-          else setCounts(stats.map((s) => s.value))
-        }
-
-        requestAnimationFrame(tick)
-      },
-      { threshold: 0.25 }
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section
-      ref={sectionRef}
-      className="placements-section"
-      style={{
-        width: "100%",
-        background: "#ffffff",
-        borderTop: "1px solid #f1f5f9",
-        padding: "56px 0",
-      }}
-    >
+    <section style={{ width: "100%", background: "#f8f9fa", padding: "80px 0" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
-        .placements-section { box-sizing: border-box; }
 
         .placements-stats {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 24px;
-          margin-bottom: 48px;
+          margin-bottom: 60px;
         }
 
-        .p-stat-value {
+        .stat-box {
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          padding: 40px 24px;
+          border-radius: 12px;
+          text-align: center;
+          border: none;
+        }
+
+        .stat-number {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 42px;
+          font-size: 48px;
+          font-weight: 700;
+          color: #FFE619;
+          margin-bottom: 8px;
+        }
+
+        .stat-label {
+          font-size: 14px;
+          color: #ffffff;
+          font-weight: 500;
+        }
+
+        .photo-carousel {
+          margin-bottom: 60px;
+          overflow: hidden;
+        }
+
+        .carousel-title {
+          text-align: center;
+          font-size: 28px;
           font-weight: 700;
           color: #2B3490;
-          line-height: 1;
+          margin-bottom: 32px;
+          font-family: 'Rajdhani', sans-serif;
         }
 
-        .p-stat-label {
-          font-size: 13px;
-          color: #6B7280;
-          margin-top: 6px;
+        .photo-track {
+          display: flex;
+          gap: 16px;
+          animation: scroll 30s linear infinite;
         }
 
-        @keyframes marquee-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
+        .photo-item {
+          flex-shrink: 0;
+          width: 280px;
+          height: 200px;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+
+        .photo-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .photo-carousel:hover .photo-track {
+          animation-play-state: paused;
+        }
+
+        .recruiter-section {
+          background: white;
+          padding: 48px 0;
+          border-radius: 12px;
+        }
+
+        .recruiter-header {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 40px;
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          padding: 32px 40px;
+          border-radius: 12px;
+        }
+
+        .recruiter-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          color: white;
+          flex: 1;
+        }
+
+        .recruiter-badge {
+          background: #FFE619;
+          color: #1a1a2e;
+          padding: 20px 28px;
+          border-radius: 10px;
+          text-align: center;
+          font-family: 'Rajdhani', sans-serif;
+        }
+
+        .badge-value {
+          font-size: 28px;
+          font-weight: 700;
+          display: block;
+        }
+
+        .badge-label {
+          font-size: 12px;
+          font-weight: 600;
+          margin-top: 4px;
         }
 
         .recruiter-track {
           display: flex;
-          gap: 14px;
-          width: max-content;
-          animation: marquee-scroll 18s linear infinite;
+          gap: 20px;
+          animation: scroll 25s linear infinite;
         }
 
-        .recruiter-marquee:hover .recruiter-track {
+        .recruiter-logo {
+          flex-shrink: 0;
+          width: 160px;
+          height: 100px;
+          background: white;
+          border: 1.5px solid #e5e5e5;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px;
+        }
+
+        .recruiter-logo img {
+          width: 90%;
+          height: 90%;
+          object-fit: contain;
+        }
+
+        .recruiter-carousel:hover .recruiter-track {
           animation-play-state: paused;
         }
 
-        .placements-heading { font-size: 34px; }
-
-        @media (max-width: 768px) {
-          .placements-section  { padding: 36px 0 !important; }
-          .placements-stats    { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-          .p-stat-value        { font-size: 32px !important; }
-          .placements-heading  { font-size: 26px !important; }
+        @media (max-width: 1024px) {
+          .placements-stats { grid-template-columns: repeat(2, 1fr); }
+          .photo-item { width: 220px; height: 160px; }
+          .recruiter-logo { width: 140px; height: 90px; }
         }
-        @media (max-width: 480px) {
-          .placements-section { padding: 28px 0 !important; }
-          .p-stat-value       { font-size: 26px !important; }
-          .placements-heading { font-size: 22px !important; }
+
+        @media (max-width: 640px) {
+          .placements-stats { grid-template-columns: 1fr; }
+          .photo-item { width: 100%; height: 200px; }
+          .recruiter-header { flex-direction: column; }
         }
       `}</style>
 
       <Container>
-
-        {/* HEADER */}
-        <div style={{ textAlign: "center", marginBottom: "44px" }}>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE }}
-            style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}
-          >
+        {/* HEADING */}
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <p style={{ fontSize: "12px", letterSpacing: "3px", color: "#2B3490", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
             TRAINING & PLACEMENTS
-          </motion.div>
-          <motion.h2
-            className="placements-heading"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-            style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}
-          >
+          </p>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "40px", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
             Where Talent Meets Opportunity
-          </motion.h2>
+          </h2>
+          <p style={{ fontSize: "16px", color: "#666", margin: 0 }}>
+            Join 1200+ graduates placed at India's top companies
+          </p>
         </div>
 
-        {/* STATS ROW */}
-        <motion.div
-          className="placements-stats"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          {stats.map((stat, i) => (
-            <motion.div key={stat.label} variants={itemVariants} style={{ textAlign: "center" }}>
-              <div className="p-stat-value">
-                {stat.prefix}{counts[i]}{stat.suffix}
+        {/* STATS */}
+        <div className="placements-stats">
+          {(Array.isArray(homeData?.placements?.stats) ? homeData.placements.stats : []).map((stat) => (
+            <div key={stat.label} className="stat-box">
+              <div className="stat-number">
+                {stat.number}{stat.suffix}
               </div>
-              <div className="p-stat-label">{stat.label}</div>
-            </motion.div>
+              <div className="stat-label">{stat.label}</div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* RECRUITER MARQUEE */}
-        <div>
-          <div style={{
-            textAlign: "center",
-            fontSize: "12px", letterSpacing: "1px",
-            color: "#888",
-            textTransform: "uppercase" as const,
-            marginBottom: "18px",
-          }}>
-            OUR TOP RECRUITERS
-          </div>
-
-          <div className="recruiter-marquee" style={{ overflow: "hidden" }}>
-            <div className="recruiter-track">
-              {/* Doubled for seamless infinite loop — translateX(-50%) moves exactly one full set */}
-              {[...recruiters, ...recruiters].map((name, i) => (
-                <div key={i} style={{
-                  background: "#eef1ff",
-                  borderRadius: "10px",
-                  padding: "16px 28px",
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: "18px", fontWeight: 700,
-                  color: "#2B3490",
-                  minWidth: "130px",
-                  textAlign: "center",
-                  whiteSpace: "nowrap" as const,
-                  flexShrink: 0,
-                }}>
-                  {name}
+        {/* PHOTO CAROUSEL */}
+        <div className="photo-carousel">
+          <div className="carousel-title">2025 Placements</div>
+          <div style={{ overflow: "hidden" }}>
+            <div className="photo-track">
+              {(Array.isArray(homeData?.placements?.posters) ? [...homeData.placements.posters, ...homeData.placements.posters] : []).map((poster, i) => (
+                <div key={i} className="photo-item">
+                  <img src={poster} alt={`Placement ${i}`} />
                 </div>
               ))}
             </div>
           </div>
         </div>
 
+        {/* RECRUITER SECTION */}
+        <div className="recruiter-section">
+          <div className="recruiter-header">
+            <div className="recruiter-title">Recruited by <span style={{ color: "#FFE619" }}>200+ Top Companies</span></div>
+            <div className="recruiter-badge">
+              <span className="badge-value">90%</span>
+              <span className="badge-label">Placement Rate</span>
+            </div>
+          </div>
+
+          <div className="recruiter-carousel" style={{ overflow: "hidden" }}>
+            <div className="recruiter-track">
+              {(Array.isArray(homeData?.recruiters) ? [...homeData.recruiters, ...homeData.recruiters] : []).map((recruiter, i) => {
+                const logo = recruiter?.logo ?? recruiter ?? '';
+                const filename = logo.split('/').pop() || '';
+                const encodedPath = `/recruiters/${encodeURIComponent(filename)}`;
+                return (
+                  <div key={i} className="recruiter-logo">
+                    <img
+                      src={encodedPath}
+                      alt={recruiter?.name ?? ''}
+                      title={recruiter?.name ?? ''}
+                      style={{ filter: 'brightness(1.2) contrast(1.1)' }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = '0.3'
+                        (e.target as HTMLImageElement).style.filter = 'none'
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </Container>
     </section>
   )

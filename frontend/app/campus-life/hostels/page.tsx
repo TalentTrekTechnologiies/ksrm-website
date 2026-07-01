@@ -1,12 +1,9 @@
-import HostelsTemplate from "@/components/campusLife/HostelsTemplate"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Hostels | KSRM College of Engineering",
-  description:
-    "KSRM College of Engineering boys and girls hostels with modern facilities, mess, Wi-Fi, and 24/7 security.",
+  title: "Hostels | K.S.R.M College of Engineering",
 }
 
-export default function HostelsPage() {
-  return <HostelsTemplate />
+export default function SubPage() {
+  return <main><h1>Hostels</h1><p>Content</p></main>
 }

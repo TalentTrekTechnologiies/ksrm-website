@@ -1,496 +1,320 @@
 "use client"
 
-import Link from "next/link"
-import { useEffect, useState } from "react"
+import Image from "next/image"
 
 export default function Header() {
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    setLoaded(true)
-  }, [])
-
-  const badges = [
-    { src: "/nba.png",   label: "NBA",   memorial: false },
-    { src: "/naac.png",  label: "NAAC",  memorial: false },
-    { src: "/jntua.png", label: "JNTUA", memorial: false },
-    { src: "/ksnr.png",  label: "KSNR",  memorial: true  },
-    { src: "/gnan.png",  label: "GNAN",  memorial: false },
-  ]
-
-  const showerPetals = [
-    { emoji: "🌸", size: "14px", duration: 2.8, delay: 0,    left: "8%",  anim: "petal-shower-a" },
-    { emoji: "🌺", size: "12px", duration: 3.2, delay: 0.5,  left: "25%", anim: "petal-shower-b" },
-    { emoji: "🌼", size: "15px", duration: 2.6, delay: 1.0,  left: "45%", anim: "petal-shower-c" },
-    { emoji: "🌸", size: "11px", duration: 3.0, delay: 1.5,  left: "65%", anim: "petal-shower-d" },
-    { emoji: "🌺", size: "13px", duration: 2.9, delay: 2.0,  left: "85%", anim: "petal-shower-a" },
-    { emoji: "🌼", size: "14px", duration: 3.1, delay: 0.3,  left: "16%", anim: "petal-shower-b" },
-    { emoji: "🌸", size: "12px", duration: 2.7, delay: 0.8,  left: "38%", anim: "petal-shower-c" },
-    { emoji: "🌺", size: "13px", duration: 3.3, delay: 1.3,  left: "58%", anim: "petal-shower-d" },
-    { emoji: "🌼", size: "11px", duration: 2.5, delay: 1.8,  left: "78%", anim: "petal-shower-a" },
-    { emoji: "🌸", size: "15px", duration: 3.0, delay: 0.6,  left: "33%", anim: "petal-shower-b" },
-  ]
-
   return (
     <div style={{ width: "100%" }}>
       <style>{`
-        @keyframes petal-shower-a {
-          0%   { transform: translateY(-25px) rotate(-10deg); opacity: 0.9; }
-          60%  { opacity: 0.7; }
-          100% { transform: translateY(128px) translateX(12px) rotate(200deg); opacity: 0; }
-        }
-        @keyframes petal-shower-b {
-          0%   { transform: translateY(-25px) rotate(20deg); opacity: 0.9; }
-          60%  { opacity: 0.6; }
-          100% { transform: translateY(122px) translateX(-15px) rotate(-170deg); opacity: 0; }
-        }
-        @keyframes petal-shower-c {
-          0%   { transform: translateY(-25px) rotate(5deg); opacity: 0.9; }
-          40%  { transform: translateY(50px) translateX(16px) rotate(80deg); opacity: 0.8; }
-          100% { transform: translateY(125px) translateX(20px) rotate(180deg); opacity: 0; }
-        }
-        @keyframes petal-shower-d {
-          0%   { transform: translateY(-25px) rotate(-25deg); opacity: 0.9; }
-          50%  { transform: translateY(55px) translateX(-12px) rotate(-80deg); opacity: 0.7; }
-          100% { transform: translateY(120px) translateX(-20px) rotate(-200deg); opacity: 0; }
-        }
-
-        /* ── HEADER GRID ARCHITECTURE ── */
-        .header-tier-1 {
-          width: 100%;
-          background: #ffffff;
-          padding: clamp(8px, 1vw, 16px) clamp(16px, 2vw, 40px);
-          display: grid;
-          grid-template-columns: minmax(110px, 9%) minmax(420px, 1fr) minmax(420px, 32%);
-          gap: clamp(12px, 2vw, 28px);
-          align-items: center;
-          box-sizing: border-box;
-        }
-
-        .header-identity-group {
+        .top-header {
           display: flex;
           align-items: center;
-          gap: clamp(12px, 1.5vw, 20px);
-          text-decoration: none;
-          color: inherit;
-          border: none;
-          outline: none;
-          min-width: 0;
-          grid-column: 1 / 3;
+          justify-content: space-between;
+          padding: 8px 30px;
+          background: #fff;
+          gap: 15px;
+          min-height: 120px;
         }
 
-        .header-logo {
-          width: clamp(90px, 7vw, 130px);
-          height: clamp(90px, 7vw, 130px);
-          flex-shrink: 0;
-          flex-grow: 0;
+        .header-left {
+          flex: 0 0 190px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: transparent;
         }
 
-        .header-logo-img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          background: transparent;
-          border: none;
+        .header-left img {
+          width: 170px;
+          height: auto;
+          display: block;
         }
 
-        .header-text-block {
-          display: flex;
-          flex-direction: column;
-          gap: clamp(2px, 0.5vw, 6px);
-          min-width: 0;
-          grid-column: 2 / 3;
-          align-self: center;
+        /* Structured flex footprint for balanced spacing distribution */
+        .header-center {
+          flex: 0.9;
+          padding-left: 10px;
         }
 
-        .header-title {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: clamp(2.4rem, 3.2vw, 4rem);
+        .header-center h1 {
+          margin: 0;
+          color: #C8102E;
+          font-size: clamp(1.5rem, 4vw, 3rem);
           font-weight: 700;
-          color: #E8112D;
-          line-height: 1.15;
-          letter-spacing: 1px;
-          margin: 0;
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-          white-space: normal;
-          text-transform: uppercase;
-        }
-
-        .header-subtitle {
-          font-size: clamp(1rem, 1.2vw, 1.3rem);
-          color: #555;
-          letter-spacing: 0;
-          line-height: 1.3;
-          margin: 0;
-          white-space: normal;
-          overflow: visible;
-        }
-
-        /* Mobile-only header versions */
-        .header-mobile-title {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 22px;
-          font-weight: 700;
-          color: #E8112D;
           line-height: 1;
-          letter-spacing: 0.5px;
-          margin: 0;
-          display: none;
+          font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+          letter-spacing: 0px;
         }
 
-        .header-mobile-college {
-          font-size: 11px;
-          font-weight: 600;
-          color: #333;
-          letter-spacing: 0.3px;
-          line-height: 1;
-          margin: 0;
-          display: none;
+        .header-center p {
+          margin: 4px 0 0 0;
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+          color: #4b5563;
+          font-weight: 400;
+          line-height: 1.4;
         }
 
-        .header-mobile-subtitle {
-          font-size: 8px;
-          color: #888;
-          letter-spacing: 0.3px;
-          line-height: 1;
-          margin: 0;
-          display: none;
-        }
-
-        /* Show mobile versions on mobile, hide desktop versions */
-        @media (max-width: 768px) {
-          .header-title {
-            display: none;
-          }
-          .header-subtitle {
-            display: none;
-          }
-          .header-mobile-title {
-            display: block;
-          }
-          .header-mobile-college {
-            display: block;
-          }
-          .header-mobile-subtitle {
-            display: block;
-          }
-        }
-
-        .header-badges-row {
+        /* 12px gap + flex layout space to let the ribbon breathe */
+        .header-right {
           display: flex;
           align-items: center;
-          gap: clamp(10px, 1.5vw, 16px);
-          width: 100%;
-          height: 100%;
-          flex-wrap: nowrap;
           justify-content: flex-end;
-          grid-column: 3 / 4;
-          align-self: center;
-        }
-
-        .header-badges-left {
-          display: flex;
-          gap: clamp(10px, 1.5vw, 16px);
-          align-items: center;
+          gap: 12px;
+          margin-left: 40px;
+          flex: 0.7;
           flex-shrink: 0;
         }
 
-        .header-badges-right {
-          display: flex;
-          gap: clamp(10px, 1.5vw, 16px);
-          align-items: center;
-          flex-shrink: 0;
-        }
-
-        .header-badge-wrapper {
-          position: relative;
+        .header-right img {
           width: auto;
-          height: clamp(72px, 5vw, 96px);
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          aspect-ratio: 1;
-        }
-
-        .header-badge-circle {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          overflow: hidden;
-          background: transparent;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .header-badge-img {
-          width: 100%;
-          height: 100%;
           object-fit: contain;
         }
 
-        .header-badge-wrapper[data-badge="GNAN"] .header-badge-img {
-          transform: scale(2);
+        /* Refined Optical Balancing Sizes */
+        .logo-nba,
+        .logo-naac,
+        .logo-jntua {
+          height: 100px;
         }
 
-        .header-badge-wrapper[data-badge="KSNR"] .header-badge-img {
-          transform: scale(1.2);
+        .logo-ksnr {
+          height: 115px;
         }
 
-        /* ── BOTTOM BORDER ── */
-        .header-bottom-border {
-          width: 100%;
-          height: 3px;
-          background: #2B3490;
+        .logo-gnan {
+          height: 125px;
         }
 
-        /* ── RESPONSIVE: ULTRA-WIDE / THEATRE SCREEN (>1920px) ── */
-        @media (min-width: 1921px) {
-          .header-tier-1 {
-            padding: 12px 4%;
+        /* Large Screen Optimization */
+        @media (min-width: 1400px) {
+          .header-center h1 {
+            font-size: 3rem;
           }
-          .header-identity-group {
-            gap: 18px;
-          }
-          .header-badges-row {
-            gap: 12px;
+          .header-center p {
+            font-size: 0.875rem;
           }
         }
 
-        /* ── RESPONSIVE: LARGE DESKTOP (1600px - 1920px) ── */
-        @media (min-width: 1600px) and (max-width: 1920px) {
-          .header-logo {
-            width: clamp(80px, 5.5vw, 110px);
-            height: clamp(80px, 5.5vw, 110px);
+        /* Tablet Adjustments (991px Breakpoint) */
+        @media (max-width: 991px) {
+          .top-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 15px;
           }
-          .header-badge-wrapper {
-            width: clamp(70px, 4.5vw, 85px);
-            height: clamp(70px, 4.5vw, 85px);
+
+          .header-center {
+            padding-left: 0;
+            flex: 1;
+          }
+
+          .header-center h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+            color: #C8102E;
+            line-height: 1;
+          }
+
+          .header-center p {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: #4b5563;
+          }
+
+          .header-right {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-left: 0;
+            flex: 1;
+          }
+
+          /* Balanced dimensions */
+          .logo-nba,
+          .logo-naac,
+          .logo-jntua {
+            height: 65px;
+          }
+
+          .logo-ksnr {
+            height: 75px;
+          }
+
+          .logo-gnan {
+            height: 82px;
           }
         }
 
-        /* ── RESPONSIVE: STANDARD DESKTOP (1440px - 1600px) ── */
-        @media (min-width: 1440px) and (max-width: 1599px) {
-          .header-logo {
-            width: clamp(75px, 5.2vw, 105px);
-            height: clamp(75px, 5.2vw, 105px);
-          }
-          .header-badge-wrapper {
-            width: clamp(65px, 4.4vw, 80px);
-            height: clamp(65px, 4.4vw, 80px);
-          }
-        }
-
-        /* ── RESPONSIVE: LAPTOP/DESKTOP (1280px - 1440px) ── */
-        @media (min-width: 1280px) and (max-width: 1439px) {
-          .header-logo {
-            width: clamp(70px, 4.8vw, 100px);
-            height: clamp(70px, 4.8vw, 100px);
-          }
-          .header-badge-wrapper {
-            width: clamp(60px, 4.2vw, 75px);
-            height: clamp(60px, 4.2vw, 75px);
-          }
-        }
-
-        /* ── RESPONSIVE: 1024px - 1280px ── */
-        @media (min-width: 1024px) and (max-width: 1279px) {
-          .header-tier-1 {
-            padding: clamp(8px, 1vw, 10px) clamp(12px, 2vw, 30px);
-          }
-          .header-logo {
-            width: clamp(60px, 4.5vw, 90px);
-            height: clamp(60px, 4.5vw, 90px);
-          }
-          .header-title {
-            font-size: clamp(1.6rem, 1.9vw, 2.4rem);
-          }
-          .header-subtitle {
-            font-size: clamp(0.75rem, 1rem, 0.9rem);
-          }
-          .header-badge-wrapper {
-            width: clamp(50px, 3.8vw, 70px);
-            height: clamp(50px, 3.8vw, 70px);
-          }
-        }
-
-        /* ── RESPONSIVE: TABLET LANDSCAPE (768px - 1024px) ── */
-        @media (max-width: 1024px) and (min-width: 769px) {
-          .header-tier-1 {
-            padding: 10px 4%;
-          }
-          .header-identity-group {
-            gap: 14px;
-          }
-          .header-badges-row {
-            gap: 9px;
-          }
-        }
-
-        /* ── RESPONSIVE: MOBILE COMPACT (≤768px) ── */
+        /* MOBILE COMPACT HEADER (max-width: 768px) */
         @media (max-width: 768px) {
-          .header-tier-1 {
-            display: flex;
-            padding: 6px 5%;
-            gap: 8px;
-            flex-wrap: nowrap;
-            justify-content: space-between;
+          .top-header {
+            /* Logo + name in compact horizontal row */
+            flex-direction: row;
             align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 10px 14px;
+            gap: 10px;
+            min-height: auto;
           }
-          .header-logo {
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
+
+          .header-left {
+            flex: 0 0 auto;
+            justify-content: flex-start;
           }
-          .header-identity-group {
-            gap: 4px;
-            flex-shrink: 1;
+
+          .header-left img {
+            width: 48px;
+            height: 48px;
+          }
+
+          .header-center {
+            padding-left: 0;
+            flex: 1;
             min-width: 0;
           }
-          .header-text-block {
-            gap: 1px;
-          }
-          .header-mobile-title {
-            font-size: 20px;
-            line-height: 1.05;
-          }
-          .header-mobile-college {
-            font-size: 10px;
+
+          .header-center h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
             line-height: 1;
+            margin: 0;
+            word-break: break-word;
+            letter-spacing: 0px;
+            color: #C8102E;
           }
-          .header-mobile-subtitle {
-            font-size: 8px;
-            line-height: 1;
+
+          .header-center p {
+            font-size: 0.75rem;
+            margin: 3px 0 0 0;
+            line-height: 1.3;
+            color: #4b5563;
+            font-weight: 400;
+            display: none;
           }
-          .header-badges-row {
-            width: auto;
-            gap: 6px;
-            justify-content: flex-end;
-            flex-shrink: 0;
+
+          /* Show first line of tagline on larger phones */
+          .header-center p:first-of-type {
+            display: block;
+            margin: 3px 0 0 0;
+          }
+
+          /* HIDE ACCREDITATION BADGES ON MOBILE - saves crucial vertical space */
+          .header-right {
+            display: none !important;
           }
         }
 
-        /* ── RESPONSIVE: SMALL PHONE (≤480px) ── */
+        /* Extra Small Screens (max-width: 480px) */
         @media (max-width: 480px) {
-          .header-tier-1 {
-            display: flex;
-            padding: 5px 5%;
-            gap: 6px;
-            flex-wrap: nowrap;
-            justify-content: space-between;
+          .top-header {
+            padding: 8px 12px;
+            gap: 8px;
           }
-          .header-logo {
-            width: 36px;
-            height: 36px;
+          .header-left img {
+            width: 44px;
+            height: 44px;
           }
-          .header-identity-group {
-            gap: 3px;
-            flex-shrink: 1;
-            min-width: 0;
+          .header-center h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: var(--font-arimo), Arial, Helvetica, sans-serif;
+            color: #C8102E;
           }
-          .header-mobile-title {
-            font-size: 18px;
-            line-height: 1;
-          }
-          .header-mobile-college {
-            font-size: 9px;
-            line-height: 1;
-          }
-          .header-mobile-subtitle {
-            font-size: 7.5px;
-          }
-          .header-badges-row {
-            width: auto;
-            gap: 4px;
-            justify-content: flex-end;
-            flex-shrink: 0;
+          .header-center p:first-of-type {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #4b5563;
           }
         }
+
+        /* KSNR Founder Logo - Special Tribute */
+        .ksnr-tribute {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          overflow: visible;
+          padding: 4px;
+        }
+        .ksnr-tribute .ksnr-logo {
+          transform: scale(1.08);
+          filter: drop-shadow(0 0 10px rgba(255,179,71,.75));
+          border-radius: 8px;
+          position: relative;
+          z-index: 1;
+        }
+        .ksnr-petal {
+          position: absolute;
+          top: -16px;
+          font-size: 14px;
+          line-height: 1;
+          pointer-events: none;
+          opacity: 0;
+          z-index: 2;
+          animation: ksnrFall linear infinite;
+        }
+        @keyframes ksnrFall {
+          0%   { transform: translateY(-16px) translateX(0) rotate(0deg); opacity: 0; }
+          15%  { opacity: 1; }
+          100% { transform: translateY(78px) translateX(12px) rotate(360deg); opacity: 0; }
+        }
+        .p1{left:6%;  animation-duration:3.2s; animation-delay:0s}
+        .p2{left:20%; animation-duration:3.9s; animation-delay:.7s}
+        .p3{left:34%; animation-duration:3.0s; animation-delay:1.3s}
+        .p4{left:48%; animation-duration:4.1s; animation-delay:.4s}
+        .p5{left:60%; animation-duration:3.5s; animation-delay:1.7s}
+        .p6{left:74%; animation-duration:3.8s; animation-delay:1.0s}
+        .p7{left:88%; animation-duration:3.1s; animation-delay:2.1s}
+        .p8{left:42%; animation-duration:3.6s; animation-delay:2.5s}
+        @media (prefers-reduced-motion: reduce){ .ksnr-petal{ display:none } }
       `}</style>
 
-      {/* SINGLE HEADER ROW - OPTION C: CLEAN ORIGINAL LAYOUT */}
-      <div className="header-tier-1">
-        {/* LEFT: Logo + Name (enlarged) */}
-        <Link href="/" className="header-identity-group">
-          {/* Logo with load animation */}
-          <div
-            className="header-logo"
-            style={{
-              transform: loaded ? "scale(1) rotate(0deg)" : "scale(0.7) rotate(-8deg)",
-              opacity: loaded ? 1 : 0,
-              transition: "all 0.9s cubic-bezier(0.34,1.56,0.64,1)",
-            }}
-          >
-            <img
-              src="/logo.png"
-              alt="KSRM Logo"
-              className="header-logo-img"
-            />
-          </div>
-
-          {/* Text block with slide-in animation */}
-          <div
-            className="header-text-block"
-            style={{
-              opacity: loaded ? 1 : 0,
-              transform: loaded ? "translateX(0)" : "translateX(-25px)",
-              transition: "all 0.8s ease 0.2s",
-            }}
-          >
-            {/* Desktop version - full name and address lines */}
-            <h1 className="header-title">KSRM College of Engineering</h1>
-            <p className="header-subtitle">
-              (UGC – Autonomous) | Kadapa, Andhra Pradesh<br />
-              Approved by AICTE | Affiliated to JNTUA
-            </p>
-
-            {/* Mobile version - short name, college type, and short address */}
-            <h1 className="header-mobile-title">KSRM</h1>
-            <p className="header-mobile-college">College of Engineering</p>
-            <p className="header-mobile-subtitle">UGC Autonomous · Kadapa, AP</p>
-          </div>
-        </Link>
-
-        {/* RIGHT: All 5 Accreditation Badges */}
-        <div className="header-badges-row">
-          {badges.map((badge) => (
-            <div key={badge.label} className="header-badge-wrapper" data-badge={badge.label}>
-              <div className="header-badge-circle">
-                <img
-                  src={badge.src}
-                  alt={badge.label}
-                  className="header-badge-img"
-                />
-              </div>
-
-              {/* PETAL SHOWER — KSNR only */}
-              {badge.memorial && showerPetals.map((p, i) => (
-                <span key={i} style={{
-                  position: "absolute",
-                  left: p.left,
-                  top: "-15px",
-                  fontSize: p.size,
-                  lineHeight: 1,
-                  pointerEvents: "none",
-                  zIndex: 10,
-                  animation: `${p.anim} ${p.duration}s ease-in ${p.delay}s infinite`,
-                }}>
-                  {p.emoji}
-                </span>
-              ))}
-            </div>
-          ))}
+      {/* PREMIUM CLEAN 3-COLUMN HEADER */}
+      <header className="top-header">
+        {/* Left - College Logo */}
+        <div className="header-left">
+          <Image
+            src="/logo.png"
+            alt="KSRM Logo"
+            width={170}
+            height={170}
+            priority
+          />
         </div>
-      </div>
+
+        {/* Center - College Name & Info */}
+        <div className="header-center">
+          <h1>K.S.R.M COLLEGE OF ENGINEERING</h1>
+          <p>(UGC - Autonomous) | Kadapa, Andhra Pradesh</p>
+          <p>Approved by AICTE | Affiliated to JNTUA</p>
+        </div>
+
+        {/* Right - Proportional Ribbon Layout with Breathing Space */}
+        <div className="header-right" style={{ display: "flex", alignItems: "center", gap: "10px", maxHeight: "170px", overflow: "hidden", marginLeft: "-40px" }}>
+          <img src="/nba.png" alt="NBA Accreditation" style={{ height: "110px", width: "auto", objectFit: "contain" }} />
+          <img src="/naac.png" alt="NAAC Accreditation" style={{ height: "110px", width: "auto", objectFit: "contain" }} />
+          <img src="/jntua.png" alt="JNTUA Affiliation" style={{ height: "110px", width: "auto", objectFit: "contain" }} />
+          <img src="/gnan.png" alt="Gnan" style={{ height: "110px", width: "auto", objectFit: "contain" }} />
+
+          {/* KSNR Founder Logo - Special Tribute with Falling Petals */}
+          <div className="ksnr-tribute">
+            <span className="ksnr-petal p1">🌸</span>
+            <span className="ksnr-petal p2">🌼</span>
+            <span className="ksnr-petal p3">🌸</span>
+            <span className="ksnr-petal p4">🏵️</span>
+            <span className="ksnr-petal p5">🌸</span>
+            <span className="ksnr-petal p6">🌼</span>
+            <span className="ksnr-petal p7">🌸</span>
+            <span className="ksnr-petal p8">🏵️</span>
+            <img src="/ksnr.png" alt="KSNR Memorial" style={{ height: "150px", width: "auto", objectFit: "contain" }} className="ksnr-logo" />
+          </div>
+        </div>
+      </header>
 
       {/* Bottom border */}
-      <div className="header-bottom-border" />
+      <div style={{ width: "100%", height: "3px", background: "#2B3490" }} />
     </div>
   )
 }
