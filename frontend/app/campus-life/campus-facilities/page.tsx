@@ -41,39 +41,39 @@ const exploreSections = [
   {
     title: "🔬 Laboratories",
     images: [
-      { src: "/gallery/labs/lab.jpg", alt: "Robotics laboratory with ABB robotic arm" },
-      { src: "/gallery/labs/roboticslab.jpg", alt: "Robotic 3D printing lab" },
-      { src: "/gallery/labs/ab.jpg", alt: "Computer laboratory" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/lab.jpg", alt: "Robotics laboratory with ABB robotic arm" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/roboticslab.jpg", alt: "Robotic 3D printing lab" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/ab.jpg", alt: "Computer laboratory" },
     ],
   },
   {
     title: "📚 Library",
     images: [
-      { src: "/gallery/library/library.jpg", alt: "Central Library building" },
-      { src: "/gallery/library/studentsinlib.jpg", alt: "Students reading in library" },
-      { src: "/gallery/library/studentsinlib2.jpg", alt: "Students studying in library" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/library.jpg", alt: "Central Library building" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/studentsinlib.jpg", alt: "Students reading in library" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/studentsinlib2.jpg", alt: "Students studying in library" },
     ],
   },
   {
     title: "🏆 Sports & Grounds",
     images: [
-      { src: "/gallery/sports/volleyball.jpg", alt: "Volleyball match" },
-      { src: "/gallery/sports/sportsg3.jpg", alt: "Indoor badminton court" },
-      { src: "/gallery/sports/sportsground.jpg", alt: "Basketball court" },
-      { src: "/gallery/sports/sportsground2.jpg", alt: "Sports ground aerial view" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/volleyball.jpg", alt: "Volleyball match" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsg3.jpg", alt: "Indoor badminton court" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsground.jpg", alt: "Basketball court" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsground2.jpg", alt: "Sports ground aerial view" },
     ],
   },
   {
     title: "🎉 Events & Activities",
     images: [
-      { src: "/gallery/events/fest.jpg", alt: "Award ceremony" },
-      { src: "/gallery/events/fest2.jpg", alt: "Cultural fest performance" },
-      { src: "/gallery/events/event.jpg", alt: "KGCET poster launch" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/fest.jpg", alt: "Award ceremony" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/fest2.jpg", alt: "Cultural fest performance" },
+      { src: "/gallery/Gallery _ KSRM College of Engineering_files/event.jpg", alt: "KGCET poster launch" },
     ],
   },
   {
     title: "🚌 Transportation",
-    images: [{ src: "/gallery/transport/buses.jpg", alt: "KSRM college bus fleet" }],
+    images: [{ src: "/gallery/Gallery _ KSRM College of Engineering_files/buses.jpg", alt: "KSRM college bus fleet" }],
   },
 ];
 
