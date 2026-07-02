@@ -32,6 +32,7 @@ const newsItems = [
 
 const heroSlides = [
   { type: "video", src: "/videos/main-block.mp4" },
+  { type: "video", src: "/campus-video.mp4" },
 ]
 
 export default function Hero() {
