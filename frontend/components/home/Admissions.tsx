@@ -148,13 +148,24 @@ export default function Admissions() {
           line-height: 1.4;
         }
 
+        @keyframes ripple {
+          0% {
+            transform: scale(0);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+
         .admissions-button {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: #FFE619;
+          background: linear-gradient(135deg, #FFE619 0%, #FFD700 100%);
           color: #2B3490;
-          padding: 10px 20px;
+          padding: 12px 28px;
           border-radius: 8px;
           font-family: 'Rajdhani', sans-serif;
           font-size: 14px;
@@ -164,12 +175,32 @@ export default function Admissions() {
           cursor: pointer;
           transition: all 0.3s ease;
           width: fit-content;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 4px 15px rgba(255, 230, 25, 0.2);
+        }
+
+        .admissions-button::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba(43, 52, 144, 0.1);
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+        }
+
+        .admissions-button:active::before {
+          animation: ripple 0.6s ease-out;
         }
 
         .admissions-button:hover {
-          background: #ffe300;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(255, 230, 25, 0.3);
+          background: linear-gradient(135deg, #FFD700 0%, #FFC700 100%);
+          transform: translateY(-4px);
+          box-shadow: 0 8px 25px rgba(255, 230, 25, 0.4);
         }
 
         .admissions-helpline {
@@ -255,7 +286,7 @@ export default function Admissions() {
 
                   {/* BRANCHES */}
                   <div className="admissions-branches">
-                    {(["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"] || []).map((branch) => (
+                    {["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"].map((branch) => (
                       <span key={branch} className="admissions-branch-pill">
                         {branch}
                       </span>

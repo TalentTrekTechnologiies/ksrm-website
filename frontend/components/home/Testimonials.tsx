@@ -103,7 +103,7 @@ export default function Testimonials() {
                     display: "flex", alignItems: "center", justifyContent: "center",
                     color: "#ffffff", fontWeight: 700, fontSize: "14px",
                   }}>
-                    {testimonial.avatar}
+                    {testimonial.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                   </div>
                   <div>
                     <div style={{

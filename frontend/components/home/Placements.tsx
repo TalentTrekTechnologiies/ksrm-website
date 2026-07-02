@@ -231,9 +231,10 @@ export default function Placements() {
                       alt={recruiter?.name ?? ''}
                       title={recruiter?.name ?? ''}
                       style={{ filter: 'brightness(1.2) contrast(1.1)' }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.opacity = '0.3'
-                        (e.target as HTMLImageElement).style.filter = 'none'
+                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                        const target = e.currentTarget;
+                        target.style.opacity = '0.3'
+                        target.style.filter = 'none'
                       }}
                     />
                   </div>

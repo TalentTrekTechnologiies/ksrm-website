@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Disallow admin routes
+Disallow: /admin/
+Disallow: /dashboard/
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://ksrmce.ac.in/sitemap.xml

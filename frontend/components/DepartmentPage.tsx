@@ -427,6 +427,9 @@ export default function DepartmentPage({ department }: { department: Department 
                   height="auto"
                   style={{ borderRadius: 12, boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}
                   controls
+                  autoPlay
+                  muted
+                  loop
                 >
                   <source src={department.aboutVideo} type="video/mp4" />
                   Your browser does not support the video tag.

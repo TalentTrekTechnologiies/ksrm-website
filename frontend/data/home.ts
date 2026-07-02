@@ -55,9 +55,9 @@ export const homeData = {
     { name: "Management Studies", code: "MBA", hod: "Department of MBA", link: "/departments/mba", svg: "/posters/departments/mba.svg" },
   ],
   news: [
-    { category: "Examinations", date: "2026-05-15", title: "KGCET 2K26 Results Announced" },
-    { category: "Events", date: "2026-04-01", title: "Graduation Day 2026 Applications Open" },
-    { category: "Events", date: "2025-08-15", title: "Freshers Orientation 2025-26" },
+    { category: "Examinations", date: "2026-05-15", title: "KGCET 2K26 Results Announced", link: "/news", gradient: "linear-gradient(135deg, #2B3490, #1e2570)" },
+    { category: "Events", date: "2026-04-01", title: "Graduation Day 2026 Applications Open", link: "/news", gradient: "linear-gradient(135deg, #1a6ea8, #134e7a)" },
+    { category: "Events", date: "2025-08-15", title: "Freshers Orientation 2025-26", link: "/news", gradient: "linear-gradient(135deg, #9c2752, #6e1839)" },
   ],
   testimonials: [
     { name: "Rahul Sharma", degree: "B.Tech CSE 2023", company: "TCS", quote: "KSRMCE gave me not just a degree but the skills and confidence to excel in the software industry.", rating: 5 },

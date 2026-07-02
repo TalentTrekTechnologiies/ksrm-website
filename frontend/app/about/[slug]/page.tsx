@@ -1,11 +1,16 @@
-"use client"
-
 import Link from "next/link"
-import { useParams } from "next/navigation"
 
-export default function LeadershipDetail() {
-  const params = useParams()
-  const slug = params.slug as string
+export function generateStaticParams() {
+  return [
+    { slug: "correspondent" },
+    { slug: "chairman" },
+    { slug: "managing-director" },
+    { slug: "principal" },
+  ]
+}
+
+export default function LeadershipDetail({ params }: { params: { slug: string } }) {
+  const slug = params.slug
 
   const leadershipData = {
     correspondent: {

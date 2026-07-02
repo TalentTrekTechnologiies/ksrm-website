@@ -180,13 +180,15 @@ export default function CampusVideos() {
               border: "none",
               cursor: "pointer",
             }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.background = "#b8001a"
-              (e.target as HTMLElement).style.transform = "scale(1.05)"
+            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              const target = e.currentTarget;
+              target.style.background = "#b8001a";
+              target.style.transform = "scale(1.05)";
             }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.background = "#d6001c"
-              (e.target as HTMLElement).style.transform = "scale(1)"
+            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              const target = e.currentTarget;
+              target.style.background = "#d6001c";
+              target.style.transform = "scale(1)";
             }}
           >
             ▶ Subscribe on YouTube
