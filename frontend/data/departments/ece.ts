@@ -67,14 +67,14 @@ export const ece: Department = {
     { name: "M.Tech - Microwave and Antenna Engineering", level: "Postgraduate", intake: "24" }
   ],
   labs: [
-    { name: "Simulation Laboratory", description: "Circuit simulation and analysis using SPICE, MATLAB, and related tools", imageUrl: "/Labs/ECE/1.webp" },
-    { name: "Project Laboratory", description: "Hands-on project design and implementation laboratory", imageUrl: "/Labs/ECE/2.webp" },
-    { name: "Microwave Laboratory", description: "Microwave components, antennas, and RF device characterization", imageUrl: "/Labs/ECE/3.webp" },
-    { name: "Microprocessors Laboratory", description: "8085, 8086, and ARM microprocessor programming and interfacing", imageUrl: "/Labs/ECE/4.webp" },
-    { name: "IoT Laboratory", description: "Internet of Things, embedded systems, and sensor network projects", imageUrl: "/Labs/ECE/5.webp" },
-    { name: "IC Applications Laboratory", description: "Integrated circuit design, testing, and applications", imageUrl: "/Labs/ECE/6.webp" },
-    { name: "Devices & Circuits Laboratory", description: "Electronic devices, transistor circuits, and analog electronics", imageUrl: "/Labs/ECE/7.webp" },
-    { name: "Communications Laboratory", description: "Digital and analog communication systems, signal processing", imageUrl: "/Labs/ECE/8.webp" }
+    { name: "Simulation Laboratory", description: "Circuit simulation and analysis using SPICE, MATLAB, and related tools", imageUrl: "/Labs/ECE/ece1.webp" },
+    { name: "Project Laboratory", description: "Hands-on project design and implementation laboratory", imageUrl: "/Labs/ECE/ece2.webp" },
+    { name: "Microwave Laboratory", description: "Microwave components, antennas, and RF device characterization", imageUrl: "/Labs/ECE/ece3.webp" },
+    { name: "Microprocessors Laboratory", description: "8085, 8086, and ARM microprocessor programming and interfacing", imageUrl: "/Labs/ECE/ece4.webp" },
+    { name: "IoT Laboratory", description: "Internet of Things, embedded systems, and sensor network projects", imageUrl: "/Labs/ECE/ece5.webp" },
+    { name: "IC Applications Laboratory", description: "Integrated circuit design, testing, and applications", imageUrl: "/Labs/ECE/ece6.webp" },
+    { name: "Devices & Circuits Laboratory", description: "Electronic devices, transistor circuits, and analog electronics", imageUrl: "/Labs/ECE/ece7.webp" },
+    { name: "Communications Laboratory", description: "Digital and analog communication systems, signal processing", imageUrl: "/Labs/ECE/ece8.webp" }
   ],
   heroImage: "/banner.png"
 };
