@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Rajdhani, DM_Sans } from "next/font/google"
 import "./globals.css"
 import IntroSplash from "@/components/layout/IntroSplash"
@@ -52,8 +52,12 @@ export const metadata: Metadata = {
     description: "K.S.R.M College of Engineering, Kadapa — 45+ years of engineering excellence",
     images: ["https://ksrmce.ac.in/og-image.jpg"],
   },
-  viewport: "width=device-width, initial-scale=1",
   metadataBase: new URL("https://ksrmce.ac.in"),
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({
