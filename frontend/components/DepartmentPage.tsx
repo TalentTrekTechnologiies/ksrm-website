@@ -220,13 +220,12 @@ export default function DepartmentPage({ department }: { department: Department 
 
         .dept-faculty-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
           gap: 24px;
           margin-top: 24px;
-          align-items: stretch;
         }
         @media (max-width: 1024px) {
-          .dept-faculty-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+          .dept-faculty-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
         }
         @media (max-width: 640px) {
           .dept-faculty-grid { grid-template-columns: 1fr; }
@@ -237,9 +236,6 @@ export default function DepartmentPage({ department }: { department: Department 
           border-radius: 12px;
           overflow: hidden;
           transition: all 0.2s;
-          display: flex;
-          flex-direction: column;
-          height: 100%;
         }
         .dept-faculty-card.hod {
           border: 2px solid #D4A500;
@@ -285,12 +281,7 @@ export default function DepartmentPage({ department }: { department: Department 
           margin: 0;
           letter-spacing: 1px;
         }
-        .dept-faculty-info {
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-        }
+        .dept-faculty-info { padding: 20px; }
         .dept-faculty-info h3 {
           font-family: 'Rajdhani', sans-serif;
           font-size: 16px; font-weight: 700; color: #1a1a2e;
@@ -330,10 +321,9 @@ export default function DepartmentPage({ department }: { department: Department 
 
         .dept-labs-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
           gap: 20px;
           margin-top: 24px;
-          align-items: stretch;
         }
         .dept-lab-card {
           background: #fff;
@@ -341,16 +331,12 @@ export default function DepartmentPage({ department }: { department: Department 
           border-radius: 12px;
           overflow: hidden;
           transition: all 0.2s;
-          display: flex;
-          flex-direction: column;
-          height: 100%;
         }
         .dept-lab-img {
           position: relative;
           width: 100%;
           height: 220px;
           overflow: hidden;
-          flex-shrink: 0;
         }
         .dept-lab-img img {
           width: 100%;
@@ -359,12 +345,7 @@ export default function DepartmentPage({ department }: { department: Department 
           object-position: center;
           display: block;
         }
-        .dept-lab-body {
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-        }
+        .dept-lab-body { padding: 20px; }
         .dept-lab-body h3 {
           font-family: 'Rajdhani', sans-serif;
           font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0;
