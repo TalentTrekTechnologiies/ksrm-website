@@ -39,7 +39,9 @@ export default function IntroSplash() {
           display: "block",
         }}
       >
-        <source src="/KSRM LOGO 4Sec.mov" type="video/quicktime" />
+        <source src="/ksrm-logo.mov" type="video/quicktime" />
+        <source src="/ksrm-logo.mov" type="video/mp4" />
+        Your browser does not support the video tag.
       </video>
     </div>
   )
