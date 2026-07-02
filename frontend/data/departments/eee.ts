@@ -53,18 +53,18 @@ export const eee: Department = {
   },
   faculty: [
     { name: "Dr. M.S. Priyadarshini", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Electrical & Electronics Engineering" },
-    { name: "M. Bhaskar Reddy", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Power Electronics" },
-    { name: "K. Rama Mohan Reddy", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Power Systems" },
-    { name: "C. Kumar Reddy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Electrical Machines" },
-    { name: "K. Kalyan Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Control Systems" },
-    { name: "T. Kishore Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Power Electronics" },
+    { name: "M. Bhaskar Reddy", designation: "Associate Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/bhaskar.jpg", specialization: "Power Electronics" },
+    { name: "K. Rama Mohan Reddy", designation: "Associate Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/kumar-reddy.jpg", specialization: "Power Systems" },
+    { name: "C. Kumar Reddy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/dr.-c-kumar-reddy.jpg", specialization: "Electrical Machines" },
+    { name: "K. Kalyan Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/k-kalyan-kumar.jpg", specialization: "Control Systems" },
+    { name: "T. Kishore Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/ec.jpg", specialization: "Power Electronics" },
     { name: "N. Siddhik", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Electrical Machines" },
-    { name: "S. Khader Vali", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Power Systems" },
+    { name: "S. Khader Vali", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/s-khadarvalli.jpg", specialization: "Power Systems" },
     { name: "A. Jyothirmayi", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Control Systems" },
-    { name: "T. Naresh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Electrical Machines" },
-    { name: "T. Mariprasath", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "", specialization: "Power Electronics" },
+    { name: "T. Naresh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/eem.jpg", specialization: "Electrical Machines" },
+    { name: "T. Mariprasath", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/pe.jpg", specialization: "Power Electronics" },
     { name: "C.N. Arpitha", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "", specialization: "Power Systems" },
-    { name: "G. Hussain Basha", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "", specialization: "Control Systems" }
+    { name: "G. Hussain Basha", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "/images/departments/eee/faculty/g-hussain-basha.jpg", specialization: "Control Systems" }
   ],
   programmes: [
     { name: "B.Tech - Electrical & Electronics Engineering", level: "Undergraduate", intake: "60" },

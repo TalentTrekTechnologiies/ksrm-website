@@ -52,12 +52,12 @@ export const mech: Department = {
     email: "hod.mech@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Dr. D. Ravikanth", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/dr-d-ravikanth.jpg", specialization: "Thermal Engineering" },
-    { name: "Dr. Ravichandra", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/ravichandra.jpg", specialization: "Machine Design" },
-    { name: "Dr. Mahaboob Basha", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg", specialization: "Manufacturing & Production Engineering" },
-    { name: "S. Vijay Kumar", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/s-vijay-kumar.jpg", specialization: "Fluid Mechanics" },
-    { name: "Gowthami", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/gowthami.jpg", specialization: "Manufacturing Engineering" },
-    { name: "D. Merwin Rajesh", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/d.merwin-rajesh.png", specialization: "Thermodynamics" },
+    { name: "Dr. D. Ravikanth", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Thermal Engineering" },
+    { name: "Dr. Ravichandra", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/images/departments/mechanical/faculty/ravichandra.jpg", specialization: "Machine Design" },
+    { name: "Dr. Mahaboob Basha", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/images/departments/mechanical/faculty/suresh-babu.jpg", specialization: "Manufacturing & Production Engineering" },
+    { name: "S. Vijay Kumar", designation: "Associate Professor", qualification: "M.Tech.", photo: "/images/departments/mechanical/faculty/s-vijay-kumar.jpg", specialization: "Fluid Mechanics" },
+    { name: "Gowthami", designation: "Associate Professor", qualification: "M.Tech.", photo: "/images/departments/mechanical/faculty/gowthami.jpg", specialization: "Manufacturing Engineering" },
+    { name: "D. Merwin Rajesh", designation: "Associate Professor", qualification: "M.Tech.", photo: "/images/departments/mechanical/faculty/d.merwin-rajesh.png", specialization: "Thermodynamics" },
     { name: "K. Anand", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "CAD/CAM" },
     { name: "S. Hari Prasad", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Production Engineering" },
     { name: "A. Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Thermal Engineering" },
