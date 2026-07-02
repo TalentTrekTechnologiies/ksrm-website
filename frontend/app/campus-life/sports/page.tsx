@@ -9,7 +9,18 @@
   { title: "Swimming Pool", desc: "Olympic-size swimming pool with dedicated coaching staff.", type: "Outdoor", cap: "400" },
 ];
 
-const achievements = [
+type AchievementBadge = "state" | "national" | "university";
+
+type Achievement = {
+  badge: AchievementBadge;
+  icon: string;
+  title: string;
+  result: string;
+  level: string;
+  year: string;
+};
+
+const achievements: Achievement[] = [
   { badge: "state", icon: "🏆", title: "Inter-College Basketball Tournament", result: "Winners (Men'\''s & Women'\''s)", level: "🏆 State Level", year: "2024" },
   { badge: "national", icon: "🥇", title: "All-India Engineering Games Cricket", result: "Runners-up (Men'\''s)", level: "🥇 National Level", year: "2024" },
   { badge: "university", icon: "🏅", title: "JNTUA Sports Championships", result: "Overall Champions", level: "🏅 University Level", year: "2023" },
@@ -18,7 +29,7 @@ const achievements = [
   { badge: "state", icon: "🏆", title: "Volleyball Tournament", result: "Winners (Women'\''s)", level: "🏆 State Level", year: "2022" },
 ];
 
-const badgeColors = { state: "#3498db", national: "#e74c3c", university: "#27ae60" };
+const badgeColors: Record<AchievementBadge, string> = { state: "#3498db", national: "#e74c3c", university: "#27ae60" };
 
 const achievementImages = [
   { src: "/gallery/Gallery _ KSRM College of Engineering_files/volleyball.jpg", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },

@@ -6,6 +6,7 @@ export const mech: Department = {
   shortName: "MECH",
   tagline: "Engineering Precision, Delivering Excellence",
   about: "The Department of Mechanical Engineering at KSRM College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Mechanical Engineering.",
+  aboutVideo: "/videos/mechanical-block.mp4",
   vision: "To be a leading center of excellence in Mechanical Engineering education and research, producing competent engineers who contribute to technological advancement and societal development.",
   mission: [
     "To provide quality education with industry-relevant curriculum and innovative teaching methods.",

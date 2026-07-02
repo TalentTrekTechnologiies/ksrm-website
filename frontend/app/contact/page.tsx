@@ -1,4 +1,6 @@
-﻿const infoCards = [
+﻿import type { ReactElement } from "react";
+
+const infoCards = [
   { icon: "map-pin", title: "Address", content: "K.S.R.M. College of Engineering, Kadapa – 516 003, Andhra Pradesh, India", isLink: false },
   { icon: "phone", title: "Phone", content: "+91 9000073434", href: "tel:+91 9000073434" },
   { icon: "phone", title: "Alternate", content: "08562 295972", href: "tel:08562 295972" },
@@ -23,7 +25,7 @@ function IconPhone() {
 function IconMail() {
   return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg>);
 }
-const icons: Record<string, () => JSX.Element> = { "map-pin": IconMapPin, phone: IconPhone, mail: IconMail };
+const icons: Record<string, () => ReactElement> = { "map-pin": IconMapPin, phone: IconPhone, mail: IconMail };
 
 export default function ContactPage() {
   return (

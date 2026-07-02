@@ -51,6 +51,7 @@ export interface Department {
   tagline: string;
   intro?: string;
   about: string;
+  aboutVideo?: string;
   vision: string;
   mission: string[];
   peos: PEO[];

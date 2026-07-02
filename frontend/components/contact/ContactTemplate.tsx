@@ -210,7 +210,7 @@ export default function ContactTemplate() {
               <div className="contact-breadcrumb">
                 <a href="/">Home</a>
                 <span>/</span>
-                <span>{contact.pageTitle}</span>
+                <span>{(contact as any).pageTitle}</span>
               </div>
               <motion.h1
                 variants={fadeUp}
@@ -223,7 +223,7 @@ export default function ContactTemplate() {
                   margin: 0,
                 }}
               >
-                {contact.pageTitle}
+                {(contact as any).pageTitle}
               </motion.h1>
               <motion.p
                 variants={fadeUp}
@@ -236,7 +236,7 @@ export default function ContactTemplate() {
                   maxWidth: 600,
                 }}
               >
-                {contact.subtitle}
+                {(contact as any).subtitle}
               </motion.p>
             </motion.div>
           </div>
@@ -260,35 +260,59 @@ export default function ContactTemplate() {
               </div>
 
               {/* Phones */}
-              {contact.phones.map((phone, idx) => (
-                <div key={idx} className="contact-info-card">
-                  <div className="contact-info-icon">
-                    <Phone size={24} />
+              {Array.isArray((contact as any).phones)
+                ? (contact as any).phones.map((phone: string, idx: number) => (
+                    <div key={idx} className="contact-info-card">
+                      <div className="contact-info-icon">
+                        <Phone size={24} />
+                      </div>
+                      <div className="contact-info-content">
+                        <h3>{idx === 0 ? "Phone" : "Alternate"}</h3>
+                        <a href={`tel:${phone}`}>{phone}</a>
+                      </div>
+                    </div>
+                  ))
+                : (
+                  <div className="contact-info-card">
+                    <div className="contact-info-icon">
+                      <Phone size={24} />
+                    </div>
+                    <div className="contact-info-content">
+                      <h3>Phone</h3>
+                      <a href={`tel:${(contact as any).phone}`}>{(contact as any).phone}</a>
+                    </div>
                   </div>
-                  <div className="contact-info-content">
-                    <h3>{idx === 0 ? "Phone" : "Alternate"}</h3>
-                    <a href={`tel:${phone}`}>{phone}</a>
-                  </div>
-                </div>
-              ))}
+                )}
 
               {/* Emails */}
-              {contact.emails.map((email, idx) => (
-                <div key={idx} className="contact-info-card">
-                  <div className="contact-info-icon">
-                    <Mail size={24} />
+              {Array.isArray((contact as any).emails)
+                ? (contact as any).emails.map((email: string, idx: number) => (
+                    <div key={idx} className="contact-info-card">
+                      <div className="contact-info-icon">
+                        <Mail size={24} />
+                      </div>
+                      <div className="contact-info-content">
+                        <h3>{idx === 0 ? "Email" : "Alternate"}</h3>
+                        <a href={`mailto:${email}`}>{email}</a>
+                      </div>
+                    </div>
+                  ))
+                : (
+                  <div className="contact-info-card">
+                    <div className="contact-info-icon">
+                      <Mail size={24} />
+                    </div>
+                    <div className="contact-info-content">
+                      <h3>Email</h3>
+                      <a href={`mailto:${(contact as any).email}`}>{(contact as any).email}</a>
+                    </div>
                   </div>
-                  <div className="contact-info-content">
-                    <h3>{idx === 0 ? "Email" : "Alternate"}</h3>
-                    <a href={`mailto:${email}`}>{email}</a>
-                  </div>
-                </div>
-              ))}
+                )}
             </motion.div>
 
             {/* MAP */}
             <motion.div variants={fadeUp} className="contact-map">
-              <iframe src={contact.mapEmbedUrl}></iframe>
+              <iframe src={(contact as any).mapEmbedUrl}></iframe>
             </motion.div>
           </motion.div>
         </Container>
@@ -311,7 +335,7 @@ export default function ContactTemplate() {
               Department Contacts
             </motion.h2>
             <motion.div variants={stagger} className="contact-departments-grid">
-              {contact.departments.map((dept, idx) => (
+              {(contact as any).departments?.map((dept: any, idx: number) => (
                 <motion.div key={idx} variants={fadeUp} className="contact-dept-card">
                   <h3>{dept.name}</h3>
                   <p>Phone:</p>
@@ -330,7 +354,7 @@ export default function ContactTemplate() {
         <Container>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="contact-hours-banner">
             <h3>📅 Working Hours</h3>
-            <p style={{ margin: "12px 0 0", fontSize: 16 }}>{contact.workingHours}</p>
+            <p style={{ margin: "12px 0 0", fontSize: 16 }}>{(contact as any).workingHours}</p>
           </motion.div>
         </Container>
       </section>
@@ -343,16 +367,16 @@ export default function ContactTemplate() {
               Follow Us
             </h3>
             <div className="contact-social">
-              <a href={contact.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Facebook">
+              <a href={(contact as any).socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Facebook">
                 <Share2 size={20} />
               </a>
-              <a href={contact.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Twitter">
+              <a href={(contact as any).socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Twitter">
                 <Heart size={20} />
               </a>
-              <a href={contact.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Instagram">
+              <a href={(contact as any).socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Instagram">
                 <Globe size={20} />
               </a>
-              <a href={contact.socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="YouTube">
+              <a href={(contact as any).socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="contact-social-link" title="YouTube">
                 <Music size={20} />
               </a>
             </div>

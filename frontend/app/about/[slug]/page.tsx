@@ -102,8 +102,7 @@ export default function LeadershipDetail() {
               <div className="k-profile-name">{leader.name}</div>
               <div className="k-profile-role">{leader.role}</div>
               <div className="k-quote-icon">"</div>
-              <div className="k-profile-bio">{leader.bio}</div>
-              <div className="k-profile-bio" style={{ marginBottom: "32px" }}>{leader.about}</div>
+              <div className="k-profile-bio" style={{ marginBottom: "32px" }}>{leader.bio}</div>
               {leader.email && (
                 <div style={{ color: "#888", fontSize: "14px", marginTop: "0" }}>
                   📧 <a href={`mailto:${leader.email}`} style={{ color: "#2B3490", textDecoration: "none" }}>

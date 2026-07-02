@@ -417,9 +417,22 @@ export default function DepartmentPage({ department }: { department: Department 
         <section id="about" style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
             <h2 className="dept-section-title">About the Department</h2>
-            <p style={{ color: "#555", fontSize: 17, lineHeight: 1.8, margin: 0, maxWidth: 900 }}>
-              {department.about}
-            </p>
+            <div style={{ display: "grid", gridTemplateColumns: department.aboutVideo ? "1fr 1fr" : "1fr", gap: 48, alignItems: "start" }}>
+              <p style={{ color: "#555", fontSize: 17, lineHeight: 1.8, margin: 0, maxWidth: 900 }}>
+                {department.about}
+              </p>
+              {department.aboutVideo && (
+                <video
+                  width="100%"
+                  height="auto"
+                  style={{ borderRadius: 12, boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}
+                  controls
+                >
+                  <source src={department.aboutVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+            </div>
           </div>
         </section>
 

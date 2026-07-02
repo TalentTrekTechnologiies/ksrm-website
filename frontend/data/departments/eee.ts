@@ -6,6 +6,7 @@ export const eee: Department = {
   shortName: "EEE",
   tagline: "Powering Innovation, Energizing the Future",
   about: "The Department of Electrical & Electronics Engineering at KSRM College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Electrical & Electronics Engineering.",
+  aboutVideo: "/videos/block-e.mp4",
   vision: "To be a leading center of excellence in Electrical & Electronics Engineering education and research, producing competent engineers who contribute to technological advancement and societal development.",
   mission: [
     "To provide quality education with industry-relevant curriculum and innovative teaching methods.",

@@ -1,4 +1,5 @@
-﻿import PlacementsSubnav from "@/components/PlacementsSubnav";
+﻿import type { ReactNode } from "react";
+import PlacementsSubnav from "@/components/PlacementsSubnav";
 
 const objectives = [
   { icon: "trending-up", text: "To enhance students' employability through industry-relevant skill development, certifications, and career readiness programs." },
@@ -9,7 +10,7 @@ const objectives = [
 ];
 
 function Icon({ name }: { name: string }) {
-  const icons: Record<string, JSX.Element> = {
+  const icons: Record<string, ReactNode> = {
     "trending-up": (<><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></>),
     "award": (<><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /><circle cx="12" cy="8" r="6" /></>),
     "briefcase": (<><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /><rect width="20" height="14" x="2" y="6" rx="2" /></>),

@@ -7,6 +7,7 @@ export const civil: Department = {
   tagline: "Empowering Resilient Futures with Intelligent Infrastructure",
   about:
     "Civil Engineering is one of the five founding departments, established with the college in 1980. The motto of the department is EXCEED (Excellence in Civil Engineering Education). It offers a B.Tech programme with an intake of 180 and an M.Tech in Geotechnical Engineering with an intake of 18. The department has well-equipped laboratories for undergraduate and postgraduate study, has produced many skilled engineers serving in India and abroad, and provides valuable consultancy services to government and non-government organizations.",
+  aboutVideo: "/videos/civil-block.mp4",
   vision:
     "To be a center of excellence in Civil Engineering education and research, producing competent engineers committed to sustainable development and societal welfare.",
   mission: [

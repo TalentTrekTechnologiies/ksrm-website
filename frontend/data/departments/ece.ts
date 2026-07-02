@@ -6,6 +6,7 @@ export const ece: Department = {
   shortName: "ECE",
   tagline: "Building Connections, Advancing Communication",
   about: "The Department of Electronics & Communication Engineering at KSRM College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Electronics & Communication Engineering.",
+  aboutVideo: "/videos/3d-robo.mp4",
   vision: "To be a leading center of excellence in Electronics & Communication Engineering education and research, producing competent engineers who contribute to technological advancement and societal development.",
   mission: [
     "To provide quality education with industry-relevant curriculum and innovative teaching methods.",
