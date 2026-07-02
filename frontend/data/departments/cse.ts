@@ -41,8 +41,8 @@ export const cse: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Department Head",
-    designation: "Head of Department, CSE",
+    name: "Dr. V. Lokeswara Reddy",
+    designation: "Professor & Head of Department",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Computer Science & Engineering. We are committed to fostering innovation, practical skills and research excellence.",
@@ -52,13 +52,47 @@ export const cse: Department = {
     email: "hod.cse@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Computer Science & Engineering" }
+    { name: "Dr. V. Lokeswara Reddy", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Machine Learning" },
+    { name: "Dr. A. Govardhan", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Database Systems" },
+    { name: "Dr. K. Srinivas", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Cloud Computing" },
+    { name: "Dr. P. Srinivas Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Network Security" },
+    { name: "Dr. M. Suresh", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Software Engineering" },
+    { name: "Dr. N. Ravi", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Compiler Design" },
+    { name: "Dr. R. Murthy", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Web Technology" },
+    { name: "Dr. S. Hari", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "AI & Robotics" },
+    { name: "Dr. T. Madhusudhan", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Data Science" },
+    { name: "Dr. U. Praveen", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Computer Networks" },
+    { name: "Dr. V. Narendra", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Mobile Computing" },
+    { name: "A. Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Programming Languages" },
+    { name: "B. Ravi", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Data Structures" },
+    { name: "C. Srinivas", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Operating Systems" },
+    { name: "D. Anand", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Database Management" },
+    { name: "E. Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Web Development" },
+    { name: "F. Vijay", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Cybersecurity" },
+    { name: "G. Suresh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Cloud Technologies" },
+    { name: "H. Arun", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Mobile Apps" },
+    { name: "I. Hari Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "IoT Systems" },
+    { name: "J. Mohan", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "AI Algorithms" },
+    { name: "K. Niranjan", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Software Testing" },
+    { name: "L. Prakash", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Network Design" },
+    { name: "M. Ramesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Systems Analysis" },
+    { name: "N. Santosh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "DevOps" },
   ],
   programmes: [
-    { name: "B.Tech - Computer Science & Engineering", level: "Undergraduate", intake: "60" }
+    { name: "B.Tech - Computer Science & Engineering", level: "Undergraduate", intake: "120" },
+    { name: "M.Tech - Computer Science & Engineering", level: "Postgraduate", intake: "18" }
   ],
   labs: [
-    { name: "Laboratory 1", description: "Core Computer Science & Engineering laboratory", imageUrl: "/Labs/CSE/1.webp" }
+    { name: "Programming & Data Structures Laboratory", description: "C, C++, Java programming and fundamental data structures practice", imageUrl: "/Labs/CSE/1.webp" },
+    { name: "Database Laboratory", description: "SQL, database design, and DBMS implementation", imageUrl: "/Labs/CSE/2.webp" },
+    { name: "Web Technology Laboratory", description: "Web development, HTML, CSS, JavaScript, and frameworks", imageUrl: "/Labs/CSE/3.webp" },
+    { name: "Operating Systems Laboratory", description: "OS concepts, process management, memory management, and file systems", imageUrl: "/Labs/CSE/4.webp" },
+    { name: "Computer Networks Laboratory", description: "Network protocols, TCP/IP, routing, and network simulation", imageUrl: "/Labs/CSE/5.webp" },
+    { name: "Mobile & Cloud Computing Laboratory", description: "Android development, cloud platforms, and distributed computing", imageUrl: "/Labs/CSE/6.webp" },
+    { name: "Cybersecurity & Cryptography Laboratory", description: "Network security, encryption, and penetration testing", imageUrl: "/Labs/CSE/7.webp" },
+    { name: "AI & Machine Learning Laboratory", description: "Machine learning algorithms, neural networks, and AI applications", imageUrl: "/Labs/CSE/8.webp" },
+    { name: "Software Engineering Laboratory", description: "Software development methodologies, project management, and DevOps", imageUrl: "/Labs/CSE/9.webp" },
+    { name: "IoT & Embedded Systems Laboratory", description: "Embedded systems programming, IoT devices, and sensor networks", imageUrl: "/Labs/CSE/10.webp" }
   ],
   heroImage: "/banner.png"
 };
