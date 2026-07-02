@@ -41,8 +41,8 @@ export const eee: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Department Head",
-    designation: "Head of Department, EEE",
+    name: "Dr. M.S. Priyadarshini",
+    designation: "Professor & Head of Department",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Electrical & Electronics Engineering. We are committed to fostering innovation, practical skills and research excellence.",
@@ -52,13 +52,30 @@ export const eee: Department = {
     email: "hod.eee@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Department Head", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Electrical & Electronics Engineering" }
+    { name: "Dr. M.S. Priyadarshini", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Electrical & Electronics Engineering" },
+    { name: "M. Bhaskar Reddy", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Power Electronics" },
+    { name: "K. Rama Mohan Reddy", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Power Systems" },
+    { name: "C. Kumar Reddy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Electrical Machines" },
+    { name: "K. Kalyan Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Control Systems" },
+    { name: "T. Kishore Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Power Electronics" },
+    { name: "N. Siddhik", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Electrical Machines" },
+    { name: "S. Khader Vali", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Power Systems" },
+    { name: "A. Jyothirmayi", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Control Systems" },
+    { name: "T. Naresh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Electrical Machines" },
+    { name: "T. Mariprasath", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "", specialization: "Power Electronics" },
+    { name: "C.N. Arpitha", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "", specialization: "Power Systems" },
+    { name: "G. Hussain Basha", designation: "Assistant Professor (M.Tech)", qualification: "M.Tech.", photo: "", specialization: "Control Systems" }
   ],
   programmes: [
-    { name: "B.Tech - Electrical & Electronics Engineering", level: "Undergraduate", intake: "60" }
+    { name: "B.Tech - Electrical & Electronics Engineering", level: "Undergraduate", intake: "60" },
+    { name: "M.Tech - Power Electronics and Drives", level: "Postgraduate", intake: "18" }
   ],
   labs: [
-    { name: "Laboratory 1", description: "Core Electrical & Electronics Engineering laboratory", imageUrl: "/Labs/EEE/1.webp" }
+    { name: "Circuits & Measurements Laboratory", description: "Fundamental circuits, measurement techniques, and practical electrical measurement experiments", imageUrl: "/Labs/EEE/1.webp" },
+    { name: "Electrical Machines Laboratory", description: "DC and AC machines, transformer testing, and motor-generator characteristics", imageUrl: "/Labs/EEE/2.webp" },
+    { name: "Power Electronics Laboratory", description: "Power electronic converters, inverters, rectifiers, and power device testing", imageUrl: "/Labs/EEE/3.webp" },
+    { name: "Power Systems Laboratory", description: "Power flow analysis, fault studies, load flow, and power system protection", imageUrl: "/Labs/EEE/4.webp" },
+    { name: "Simulation & CAD Laboratory", description: "MATLAB/Simulink, PSPICE, and CAD tools for circuit and system simulation", imageUrl: "/Labs/EEE/5.webp" }
   ],
   heroImage: "/banner.png"
 };
