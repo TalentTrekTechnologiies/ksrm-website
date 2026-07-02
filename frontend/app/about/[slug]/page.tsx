@@ -59,7 +59,9 @@ export default function LeadershipDetail() {
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-        .k-hero { background-image: url('/banners/about banner.jpg'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; padding: 0; display: flex; align-items: center; color: white; position: relative; }
+        .k-hero { position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 280px; padding: 0; display: flex; align-items: center; color: white; overflow: hidden; }
+        .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
+        .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 80px 0; }
         .k-hero-title { font-size: 72px; font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
         .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }

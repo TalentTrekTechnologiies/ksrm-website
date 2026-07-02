@@ -82,7 +82,9 @@ export default function About() {
         h2 { color: #2B3490; font-size: 40.8px; font-weight: 700; margin-bottom: 48px; text-align: left; }
         h3 { color: #2B3490; font-size: 18px; font-weight: 700; }
 
-        .k-hero { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/banners/alumni-banner.jpg); background-size: cover; background-position: center; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; }
+        .k-hero { position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; overflow: hidden; }
+        .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
+        .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { }
         .k-hero-eyebrow { color: #D4A500; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
         .k-hero-title { font-size: 61.2px; font-weight: 700; margin-bottom: 8px; }

@@ -27,8 +27,8 @@ export default function IICPage() {
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
-        .iic-hero { position: relative; background-image: url('/banners/edc-banner.avif'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
-        .iic-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%); z-index: 1; }
+        .iic-hero { position: relative; background-image: url('/banners/startup banner.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
+        .iic-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .iic-hero > * { position: relative; z-index: 2; }
         .iic-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 700; color: #fff; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.7); line-height: 1.08; }
         .iic-subtitle { color: rgba(255,255,255,0.95); font-size: 18px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); font-weight: 300; }
