@@ -142,7 +142,7 @@ export default function TransportPage() {
             </div>
             <div>
               <div className="trn-rules-image">
-                <img src="/gallery/transport/buses.jpg" alt="KSRM college bus fleet" />
+                <img src="/gallery/Gallery _ KSRM College of Engineering_files/buses.jpg" alt="KSRM college bus fleet" />
               </div>
               <div style={{ marginTop: 16, padding: 16, background: "#f4f3ef", borderRadius: 8, borderLeft: "4px solid #2B3490" }}>
                 <p style={{ margin: 0, fontSize: 13, color: "#555", lineHeight: 1.6 }}>
