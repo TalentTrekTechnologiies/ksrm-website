@@ -1,4 +1,6 @@
-﻿export const metadata = {
+﻿import Link from "next/link";
+
+export const metadata = {
   title: "Startup Cell | KSRM College of Engineering",
   description:
     "KSRM College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
@@ -61,6 +63,43 @@ const objectives = [
 export default function StartupCellPage() {
   return (
     <main style={{ background: "#ffffff" }}>
+      {/* Hero */}
+      <section
+        style={{
+          background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)",
+          padding: "60px 40px",
+          color: "#fff",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              fontSize: "clamp(2rem, 4vw, 3rem)",
+              fontWeight: 700,
+              margin: "0 0 16px",
+            }}
+          >
+            Innovation &amp; Startup Cell
+          </h1>
+          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}>
+            Fostering Entrepreneurship &amp; Innovation
+          </p>
+          <div style={{ display: "flex", gap: 8, fontSize: 14, justifyContent: "center" }}>
+            <Link href="/" style={{ color: "#D4A500" }}>
+              Home
+            </Link>
+            <span>/</span>
+            <Link href="/campus-life" style={{ color: "#D4A500" }}>
+              Campus Life
+            </Link>
+            <span>/</span>
+            <span>Innovation &amp; Startup Cell</span>
+          </div>
+        </div>
+      </section>
+
       {/* About */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>

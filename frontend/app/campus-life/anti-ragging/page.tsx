@@ -1,4 +1,6 @@
-﻿export const metadata = {
+﻿import Link from "next/link";
+
+export const metadata = {
   title: "Anti-Ragging | KSRM College of Engineering",
   description:
     "KSRM College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
@@ -79,6 +81,43 @@ const affidavits = [
 export default function AntiRaggingPage() {
   return (
     <main style={{ background: "#ffffff" }}>
+      {/* Hero */}
+      <section
+        style={{
+          background: "linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)",
+          padding: "60px 40px",
+          color: "#fff",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              fontSize: "clamp(2rem, 4vw, 3rem)",
+              fontWeight: 700,
+              margin: "0 0 16px",
+            }}
+          >
+            Anti-Ragging
+          </h1>
+          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}>
+            Zero Tolerance Policy
+          </p>
+          <div style={{ display: "flex", gap: 8, fontSize: 14, justifyContent: "center" }}>
+            <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
+              Home
+            </Link>
+            <span>/</span>
+            <Link href="/campus-life" style={{ color: "#D4A500", textDecoration: "none" }}>
+              Campus Life
+            </Link>
+            <span>/</span>
+            <span>Anti-Ragging</span>
+          </div>
+        </div>
+      </section>
+
       {/* Intro */}
       <section style={{ padding: "56px 0", background: "#F5EFE4" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
