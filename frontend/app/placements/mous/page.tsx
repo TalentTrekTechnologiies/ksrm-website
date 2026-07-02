@@ -26,6 +26,45 @@ export default function MoUsPage() {
       <style>{`
         .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
+
+        .mous-hero {
+          position: relative;
+          background-image: url('/banners/startup banner.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #f5f5f5;
+          min-height: 280px;
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: 40px;
+          overflow: hidden;
+        }
+        .mous-hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
+          z-index: 1;
+        }
+        .mous-hero > * { position: relative; z-index: 2; }
+        .mous-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .mous-breadcrumb a { color: #D4A500; text-decoration: none; }
+        .mous-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: clamp(2.2rem, 4vw, 3.2rem);
+          font-weight: 700;
+          color: #fff;
+          margin: 8px 0 0;
+          line-height: 1.1;
+          text-align: left;
+        }
+        .mous-subtitle {
+          color: rgba(255,255,255,0.9);
+          font-size: 16px;
+          margin-top: 12px;
+          max-width: 600px;
+        }
+
         .mous-intro-section { padding: 72px 0; background: #ffffff; }
         .mous-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; }
         .mous-text { font-size: 16px; line-height: 1.8; color: #555; text-align: justify; margin: 16px 0; }
@@ -44,18 +83,15 @@ export default function MoUsPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
-        <section style={{ background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)", padding: "60px 0 40px", color: "white", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 100%)", pointerEvents: "none" }} />
-          <div className="responsive-container" style={{ position: "relative", zIndex: 2 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, marginBottom: 12, color: "rgba(255,255,255,0.7)" }}>
-              <a style={{ color: "#D4A500", textDecoration: "none" }} href="/">Home</a>
-              <span>/</span>
-              <a style={{ color: "#D4A500", textDecoration: "none" }} href="/placements">Placements</a>
-              <span>/</span>
-              <span>MoUs</span>
+        <section className="mous-hero">
+          <div className="responsive-container">
+            <div style={{ paddingTop: 40 }}>
+              <div className="mous-breadcrumb">
+                <a href="/">Home</a> / <a href="/placements">Placements</a> / MoUs
+              </div>
+              <h1 className="mous-title">MoUs</h1>
+              <p className="mous-subtitle">Placements & Career Development</p>
             </div>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.1, textAlign: "left" }}>MoUs</h1>
-            <p style={{ color: "rgba(255,255,255,0.9)", fontSize: 16, marginTop: 12, maxWidth: 600 }}>Placements & Career Development</p>
           </div>
         </section>
         <PlacementsSubnav active="/placements/mous" />

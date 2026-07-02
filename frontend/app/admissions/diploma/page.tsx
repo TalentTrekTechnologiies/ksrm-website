@@ -51,7 +51,26 @@ export default function DiplomaAdmissionsPage() {
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
-        .dip-hero { background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; }
+        .dip-hero {
+          position: relative;
+          background-image: url('/banners/contact us banner.webp');
+          background-size: cover;
+          background-position: center;
+          background-color: #f5f5f5;
+          min-height: 320px;
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: 40px;
+          overflow: hidden;
+        }
+        .dip-hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
+          z-index: 1;
+        }
+        .dip-hero > * { position: relative; z-index: 2; }
         .dip-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
         .dip-breadcrumb a { color: #D4A500; text-decoration: none; }
         .dip-title {

@@ -6,6 +6,45 @@ export default function InternshipsPage() {
       <style>{`
         .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
+
+        .internships-hero {
+          position: relative;
+          background-image: url('/banners/startup banner.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #f5f5f5;
+          min-height: 280px;
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: 40px;
+          overflow: hidden;
+        }
+        .internships-hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
+          z-index: 1;
+        }
+        .internships-hero > * { position: relative; z-index: 2; }
+        .internships-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .internships-breadcrumb a { color: #D4A500; text-decoration: none; }
+        .internships-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: clamp(2.2rem, 4vw, 3.2rem);
+          font-weight: 700;
+          color: #fff;
+          margin: 8px 0 0;
+          line-height: 1.1;
+          text-align: left;
+        }
+        .internships-subtitle {
+          color: rgba(255,255,255,0.9);
+          font-size: 16px;
+          margin-top: 12px;
+          max-width: 600px;
+        }
+
         .internships-section { padding: 72px 0; background: #ffffff; }
         .internships-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; }
         .internships-text { font-size: 16px; line-height: 1.8; color: #555; margin: 16px 0; }
@@ -15,18 +54,15 @@ export default function InternshipsPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
-        <section style={{ background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)", padding: "60px 0 40px", color: "white", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 100%)", pointerEvents: "none" }} />
-          <div className="responsive-container" style={{ position: "relative", zIndex: 2 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, marginBottom: 12, color: "rgba(255,255,255,0.7)" }}>
-              <a style={{ color: "#D4A500", textDecoration: "none" }} href="/">Home</a>
-              <span>/</span>
-              <a style={{ color: "#D4A500", textDecoration: "none" }} href="/placements">Placements</a>
-              <span>/</span>
-              <span>Internships</span>
+        <section className="internships-hero">
+          <div className="responsive-container">
+            <div style={{ paddingTop: 40 }}>
+              <div className="internships-breadcrumb">
+                <a href="/">Home</a> / <a href="/placements">Placements</a> / Internships
+              </div>
+              <h1 className="internships-title">Internships</h1>
+              <p className="internships-subtitle">Placements & Career Development</p>
             </div>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.1, textAlign: "left" }}>Internships</h1>
-            <p style={{ color: "rgba(255,255,255,0.9)", fontSize: 16, marginTop: 12, maxWidth: 600 }}>Placements & Career Development</p>
           </div>
         </section>
         <PlacementsSubnav active="/placements/internships" />

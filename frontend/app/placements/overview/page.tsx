@@ -32,6 +32,43 @@ export default function PlacementsOverviewPage() {
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
+        .overview-hero {
+          position: relative;
+          background-image: url('/banners/startup banner.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #f5f5f5;
+          min-height: 320px;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          padding-bottom: 40px;
+        }
+        .overview-hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
+          z-index: 1;
+        }
+        .overview-hero > * { position: relative; z-index: 2; }
+        .overview-hero-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+          line-height: 1.08;
+        }
+        .overview-hero-subtitle {
+          color: rgba(255,255,255,0.85);
+          font-size: 18px;
+          margin: 16px 0 0;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+          font-weight: 300;
+        }
+
         .overview-intro-section { padding: 72px 0; background: #ffffff; }
         .overview-intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
         .overview-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; }
@@ -80,6 +117,15 @@ export default function PlacementsOverviewPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
+        <section className="overview-hero">
+          <div className="responsive-container">
+            <div>
+              <h1 className="overview-hero-title">Placements & Training</h1>
+              <p className="overview-hero-subtitle">Career Development & Training and Placement Cell</p>
+            </div>
+          </div>
+        </section>
+
         <PlacementsSubnav active="/placements/overview" />
 
         <section className="overview-intro-section">

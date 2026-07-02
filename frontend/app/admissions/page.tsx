@@ -49,18 +49,18 @@ export default function AdmissionsPage() {
           background-image: url('/banners/contact us banner.webp');
           background-size: cover;
           background-position: center;
-          background-color: #2B3490;
+          background-color: #f5f5f5;
           min-height: 320px;
           display: flex;
           align-items: flex-end;
           overflow: hidden;
           padding-bottom: 40px;
         }
-        .adm-hero::after {
+        .adm-hero::before {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%);
+          background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
           z-index: 1;
         }
         .adm-hero > * { position: relative; z-index: 2; }
