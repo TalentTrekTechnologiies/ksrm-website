@@ -21,9 +21,9 @@ const achievements = [
 const badgeColors = { state: "#3498db", national: "#e74c3c", university: "#27ae60" };
 
 const achievementImages = [
-  { src: "/gallery/sports/volleyball.jpg", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },
-  { src: "/gallery/sports/sportsg3.jpg", alt: "Indoor badminton court", caption: "Indoor games - Badminton facility" },
-  { src: "/gallery/sports/sportsground.jpg", alt: "Basketball court", caption: "Basketball court - Outdoor sports" },
+  { src: "/gallery/Gallery _ KSRM College of Engineering_files/volleyball.jpg", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },
+  { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsg3.jpg", alt: "Indoor badminton court", caption: "Indoor games - Badminton facility" },
+  { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsground.jpg", alt: "Basketball court", caption: "Basketball court - Outdoor sports" },
 ];
 
 const upcomingEvents = [
