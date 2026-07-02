@@ -1,6 +1,4 @@
-﻿import Link from "next/link";
-
-export const metadata = {
+﻿export const metadata = {
   title: "Cultural Club | KSRM College of Engineering",
   description:
     "KSRM College of Engineering Cultural Club celebrating creativity, talent and the spirit of togetherness through KALAKRITI and cultural events.",
@@ -87,33 +85,6 @@ const committee = [
 export default function CulturalClubPage() {
   return (
     <main style={{ background: "#ffffff" }}>
-      {/* Hero */}
-      <section
-        style={{
-          backgroundImage: "url('/header.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: 280,
-          display: "flex",
-          alignItems: "flex-end",
-          paddingBottom: 20,
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
-          <div style={{ display: "flex", gap: 8, fontSize: 14, color: "#fff" }}>
-            <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
-              Home
-            </Link>
-            <span>/</span>
-            <Link href="/campus-life" style={{ color: "#D4A500", textDecoration: "none" }}>
-              Campus Life
-            </Link>
-            <span>/</span>
-            <span>Cultural Club</span>
-          </div>
-        </div>
-      </section>
-
       {/* About */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
