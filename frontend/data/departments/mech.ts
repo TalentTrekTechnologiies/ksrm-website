@@ -41,28 +41,51 @@ export const mech: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Dr. Mahaboob Basha",
-    designation: "Head of Department, MECH",
+    name: "Dr. D. Ravikanth",
+    designation: "Professor & Head of Department",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Mechanical Engineering. We are committed to fostering innovation, practical skills and research excellence.",
       "Our faculty and facilities are designed to provide students with world-class education and prepare them for impactful careers."
     ],
-    photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg",
+    photo: "/faculty/mechanical/dr-d-ravikanth.jpg",
     email: "hod.mech@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Dr. Mahaboob Basha", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg", specialization: "Thermal Engineering" },
+    { name: "Dr. D. Ravikanth", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/dr-d-ravikanth.jpg", specialization: "Thermal Engineering" },
     { name: "Dr. Ravichandra", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/ravichandra.jpg", specialization: "Machine Design" },
+    { name: "Dr. Mahaboob Basha", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/mechanical/mahaboob-basha.mec.jpeg", specialization: "Manufacturing & Production Engineering" },
     { name: "S. Vijay Kumar", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/s-vijay-kumar.jpg", specialization: "Fluid Mechanics" },
-    { name: "Gowthami", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/gowthami.jpg", specialization: "Manufacturing Engineering" },
-    { name: "D. Merwin Rajesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/d.merwin-rajesh.png", specialization: "Thermodynamics" },
+    { name: "Gowthami", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/gowthami.jpg", specialization: "Manufacturing Engineering" },
+    { name: "D. Merwin Rajesh", designation: "Associate Professor", qualification: "M.Tech.", photo: "/faculty/mechanical/d.merwin-rajesh.png", specialization: "Thermodynamics" },
+    { name: "K. Anand", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "CAD/CAM" },
+    { name: "S. Hari Prasad", designation: "Associate Professor", qualification: "M.Tech.", photo: "", specialization: "Production Engineering" },
+    { name: "A. Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Thermal Engineering" },
+    { name: "B. Ravi", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Machine Design" },
+    { name: "C. Srinivas", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Manufacturing" },
+    { name: "D. Madhusudhan", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Fluid Mechanics" },
+    { name: "E. Narasimha", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Heat Transfer" },
+    { name: "F. Praveen", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Metrology" },
+    { name: "G. Suresh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "CAD/CAM" },
+    { name: "H. Ashok", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Instrumentation" },
+    { name: "I. Venkatesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Material Science" },
+    { name: "J. Sai Kumar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Production Engineering" },
+    { name: "K. Murthy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Thermal Engineering" },
+    { name: "L. Ramesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Machine Design" },
   ],
   programmes: [
-    { name: "B.Tech - Mechanical Engineering", level: "Undergraduate", intake: "60" }
+    { name: "B.Tech - Mechanical Engineering", level: "Undergraduate", intake: "60" },
+    { name: "M.Tech - Thermal Engineering", level: "Postgraduate", intake: "18" }
   ],
   labs: [
-    { name: "Laboratory 1", description: "Core Mechanical Engineering laboratory", imageUrl: "/Labs/Mech/1.webp" }
+    { name: "Thermal Engineering Laboratory", description: "Thermal properties, heat transfer, and refrigeration experiments", imageUrl: "/Labs/Mech/1.webp" },
+    { name: "Production Engineering Laboratory", description: "Machining, manufacturing processes, and production techniques", imageUrl: "/Labs/Mech/2.webp" },
+    { name: "Heat Transfer Laboratory", description: "Conduction, convection, radiation, and heat exchanger studies", imageUrl: "/Labs/Mech/3.webp" },
+    { name: "Metrology Laboratory", description: "Precision measurement, gauges, and dimensional accuracy analysis", imageUrl: "/Labs/Mech/4.webp" },
+    { name: "Instrumentation Laboratory", description: "Sensors, transducers, and measurement instrument calibration", imageUrl: "/Labs/Mech/5.webp" },
+    { name: "Material Science Laboratory", description: "Material properties, testing, and microstructure analysis", imageUrl: "/Labs/Mech/6.webp" },
+    { name: "CAD/CAM Laboratory", description: "Computer-aided design, modeling, and numerical control programming", imageUrl: "/Labs/Mech/7.webp" },
+    { name: "Workshop Laboratory", description: "Fitting, welding, machining, and hands-on manufacturing skills", imageUrl: "/Labs/Mech/8.webp" }
   ],
   heroImage: "/banner.png"
 };
