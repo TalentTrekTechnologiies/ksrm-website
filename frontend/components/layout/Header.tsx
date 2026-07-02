@@ -1,23 +1,26 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
   return (
     <header style={{ width: "100%", background: "#fff" }}>
       <Link href="/">
-        <Image
-          src="/header.png"
-          alt="KSRM College of Engineering"
-          width={2048}
-          height={333}
-          priority
+        <video
+          width="100%"
+          height="auto"
+          autoPlay
+          loop
+          muted
+          playsInline
           style={{
-            width: "100%",
-            height: "auto",
             display: "block",
             objectFit: "contain",
+            width: "100%",
+            height: "auto",
           }}
-        />
+        >
+          <source src="/KSRM LOGO 4Sec.mov" type="video/quicktime" />
+          <source src="/header.png" type="image/png" />
+        </video>
       </Link>
     </header>
   );
