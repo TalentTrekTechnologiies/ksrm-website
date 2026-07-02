@@ -6,6 +6,7 @@
   "/videos/sliver-jubilee-block.mp4",
   "/videos/kor-auditorium.mp4",
   "/videos/pg-block.mp4",
+  "/videos/3d-robo.mp4",
 ];
 
 const stats = [

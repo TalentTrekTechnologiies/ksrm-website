@@ -114,6 +114,11 @@ export default function SportsPage() {
                 <source src="/videos/sports-event.mp4" type="video/mp4" />
               </video>
             </div>
+            <div style={{ borderRadius: 8, overflow: "hidden" }}>
+              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+                <source src="/videos/sports-winners.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
         </div>
       </section>

@@ -222,6 +222,42 @@ export default function CulturalClubPage() {
         </div>
       </section>
 
+      {/* Event Videos */}
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+              fontWeight: 700,
+              color: "#2B3490",
+              margin: "0 0 48px",
+              textAlign: "center",
+            }}
+          >
+            Event Highlights
+          </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 24,
+            }}
+          >
+            <div style={{ borderRadius: 8, overflow: "hidden" }}>
+              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+                <source src="/videos/flash-mob.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div style={{ borderRadius: 8, overflow: "hidden" }}>
+              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+                <source src="/videos/sivananda-smaranam-night-event.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Committee */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
