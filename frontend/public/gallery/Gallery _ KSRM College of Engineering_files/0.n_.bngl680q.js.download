@@ -1,0 +1,50 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,32213,e=>{"use strict";var i=e.i(48277);e.s(["default",0,function({children:e,className:s}){return(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)("style",{children:`
+        .responsive-container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+        @media (max-width: 1024px) {
+          .responsive-container {
+            padding-left: 32px;
+            padding-right: 32px;
+          }
+        }
+        @media (max-width: 768px) {
+          .responsive-container {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+        @media (max-width: 480px) {
+          .responsive-container {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
+      `}),(0,i.jsx)("div",{className:`responsive-container ${s||""}`,children:e})]})}])},17179,e=>{"use strict";var i=e.i(48277),s=e.i(35691),t=e.i(32213);let n="Student Hostels",a=[{name:"Boys' Hostel",type:"Male Students",description:"Spacious, well-furnished accommodation with dedicated study areas and recreational facilities.",capacity:"200+ Students",rooms:"Single, Double, Triple sharing options"},{name:"Girls' Hostel",type:"Female Students",description:"Secure, comfortable living spaces with modern amenities and supervised environment.",capacity:"150+ Students",rooms:"Single, Double, Triple sharing options"}],o=[{icon:"🛏️",name:"Spacious Rooms",description:"Well-ventilated, comfortable rooms with modern furnishings"},{icon:"🍽️",name:"Nutritious Mess Food",description:"Hygienic, nutritious meals prepared by experienced kitchen staff"},{icon:"🔒",name:"24/7 Security",description:"Round-the-clock security personnel and CCTV surveillance for student safety"},{icon:"📶",name:"Wi-Fi Connectivity",description:"High-speed internet access in rooms and common areas"},{icon:"🎮",name:"Recreation Areas",description:"Game rooms, TV lounges, and outdoor sports facilities for leisure activities"},{icon:"⚕️",name:"Medical Care",description:"On-campus medical center with qualified staff for health support"},{icon:"🧺",name:"Laundry Services",description:"In-house laundry facilities with regular washing and ironing services"},{icon:"💧",name:"RO Drinking Water",description:"Pure, filtered drinking water available round-the-clock"},{icon:"📚",name:"Study Areas",description:"Quiet common rooms and reading halls for academic work"},{icon:"🔧",name:"Maintenance & Upkeep",description:"Regular maintenance and housekeeping to ensure cleanliness"}];var r=e.i(16506);let l={hidden:{opacity:0,y:28},visible:{opacity:1,y:0,transition:{duration:.6,ease:[.22,1,.36,1]}}},d={hidden:{},visible:{transition:{staggerChildren:.12}}};e.s(["default",0,function(){return(0,i.jsxs)("main",{style:{background:"#ffffff"},children:[(0,i.jsx)("style",{children:`
+        .hostels-hero { position: relative; background-image: url('/banners/hostel-banner.jpg'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
+        .hostels-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%); z-index: 1; }
+        .hostels-hero > * { position: relative; z-index: 2; }
+        .hostels-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 700; color: #fff; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.7); line-height: 1.08; }
+        .hostels-subtitle { color: rgba(255,255,255,0.95); font-size: 18px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+        .hostels-about { padding: 72px 0; background: #ffffff; }
+        .hostels-about-text { font-size: 16px; color: #555; line-height: 1.8; text-align: justify; max-width: 900px; margin: 0 auto; }
+        .hostels-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 48px; text-align: center; }
+        .hostels-section { padding: 72px 0; }
+        .hostels-hostels { background: #f4f3ef; }
+        .hostels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
+        .hostel-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); color: #fff; padding: 28px; border-radius: 8px; }
+        .hostel-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 8px; }
+        .hostel-card p { font-size: 14px; line-height: 1.6; margin: 8px 0; opacity: 0.9; }
+        .hostels-facilities { background: #ffffff; }
+        .facilities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px; }
+        .facility-card { background: #fff; border: 1px solid #eef0f3; border-radius: 8px; padding: 20px; text-align: center; transition: all 0.3s; }
+        .facility-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(43, 52, 144, 0.12); }
+        .facility-icon { font-size: 32px; margin-bottom: 12px; }
+        .facility-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .facility-card p { font-size: 13px; color: #666; line-height: 1.5; margin: 0; }
+        @media (max-width: 768px) { .hostels-grid { grid-template-columns: 1fr; } .facilities-grid { grid-template-columns: 1fr; } }
+      `}),(0,i.jsx)("section",{className:"hostels-hero",children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(s.motion.div,{initial:"hidden",animate:"visible",variants:d,children:[(0,i.jsx)(s.motion.h1,{variants:l,className:"hostels-title",children:n}),(0,i.jsx)(s.motion.p,{variants:l,className:"hostels-subtitle",children:"Safe, Comfortable Living on Campus"}),(0,i.jsxs)(s.motion.div,{variants:l,style:{display:"flex",gap:8,fontSize:14,marginTop:16,color:"rgba(255,255,255,0.7)"},children:[(0,i.jsx)(r.default,{href:"/",style:{color:"#D4A500"},children:"Home"}),(0,i.jsx)("span",{children:"/"}),(0,i.jsx)(r.default,{href:"/campus-life",style:{color:"#D4A500"},children:"Campus Life"}),(0,i.jsx)("span",{children:"/"}),(0,i.jsx)("span",{children:n})]})]})})}),(0,i.jsx)("section",{className:"hostels-about",children:(0,i.jsx)(t.default,{children:(0,i.jsx)(s.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0},variants:l,children:(0,i.jsx)("p",{className:"hostels-about-text",children:"KSRMCE provides separate, well-maintained hostel facilities for boys and girls within the campus. The hostels offer a safe, comfortable, and conducive environment for students to live and study, with modern amenities and round-the-clock security. Our hostels foster a sense of community and provide essential support for residential students."})})})}),(0,i.jsx)("section",{className:"hostels-section hostels-hostels",children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(s.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0},variants:d,children:[(0,i.jsx)("h2",{className:"hostels-heading",children:"Our Hostels"}),(0,i.jsx)("div",{className:"hostels-grid",children:a.map((e,t)=>(0,i.jsxs)(s.motion.div,{variants:l,className:"hostel-card",children:[(0,i.jsx)("h3",{children:e.name}),(0,i.jsx)("p",{children:(0,i.jsx)("strong",{children:e.type})}),(0,i.jsx)("p",{children:e.description}),(0,i.jsxs)("p",{style:{marginTop:16,paddingTop:16,borderTop:"1px solid rgba(255,255,255,0.3)"},children:["👥 ",e.capacity,(0,i.jsx)("br",{}),"🏠 ",e.rooms]})]},t))})]})})}),(0,i.jsx)("section",{className:"hostels-section hostels-facilities",children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(s.motion.div,{initial:"hidden",animate:"visible",variants:d,children:[(0,i.jsx)("h2",{className:"hostels-heading",children:"Hostel Tours"}),(0,i.jsxs)("div",{className:"hostels-grid",children:[(0,i.jsx)(s.motion.div,{variants:l,style:{borderRadius:"8px",overflow:"hidden"},children:(0,i.jsx)("video",{autoPlay:!0,loop:!0,muted:!0,playsInline:!0,style:{width:"100%",aspectRatio:"16 / 9",objectFit:"cover",display:"block"},children:(0,i.jsx)("source",{src:"/videos/hostel-kandula.mp4",type:"video/mp4"})})}),(0,i.jsx)(s.motion.div,{variants:l,style:{borderRadius:"8px",overflow:"hidden"},children:(0,i.jsx)("video",{autoPlay:!0,loop:!0,muted:!0,playsInline:!0,style:{width:"100%",aspectRatio:"16 / 9",objectFit:"cover",display:"block"},children:(0,i.jsx)("source",{src:"/videos/hostel-ganesh.mp4",type:"video/mp4"})})})]})]})})}),(0,i.jsx)("section",{className:"hostels-section hostels-facilities",children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(s.motion.div,{initial:"hidden",animate:"visible",variants:d,children:[(0,i.jsx)("h2",{className:"hostels-heading",children:"Facilities"}),(0,i.jsx)("div",{className:"facilities-grid",children:o.map((e,t)=>(0,i.jsxs)(s.motion.div,{variants:l,className:"facility-card",children:[(0,i.jsx)("div",{className:"facility-icon",children:e.icon}),(0,i.jsx)("h4",{children:e.name}),(0,i.jsx)("p",{children:e.description})]},t))})]})})})]})}],17179)}]);

@@ -90,7 +90,9 @@ export default function CulturalClubPage() {
       {/* Hero */}
       <section
         style={{
-          background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)",
+          backgroundImage: "url('/banners/cultural banner.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           padding: "60px 40px",
           color: "#fff",
           textAlign: "center",

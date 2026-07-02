@@ -1,0 +1,277 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,32213,i=>{"use strict";var e=i.i(48277);i.s(["default",0,function({children:i,className:a}){return(0,e.jsxs)(e.Fragment,{children:[(0,e.jsx)("style",{children:`
+        .responsive-container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+        @media (max-width: 1024px) {
+          .responsive-container {
+            padding-left: 32px;
+            padding-right: 32px;
+          }
+        }
+        @media (max-width: 768px) {
+          .responsive-container {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+        @media (max-width: 480px) {
+          .responsive-container {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
+      `}),(0,e.jsx)("div",{className:`responsive-container ${a||""}`,children:i})]})}])},95870,i=>{"use strict";let e=(0,i.i(17381).default)("book-open",[["path",{d:"M12 7v14",key:"1akyts"}],["path",{d:"M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",key:"ruj8y"}]]);i.s(["BookOpen",0,e],95870)},14422,i=>{"use strict";let e=(0,i.i(17381).default)("clock",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"M12 6v6l4 2",key:"mmk7yg"}]]);i.s(["Clock",0,e],14422)},34836,i=>{"use strict";let e=(0,i.i(17381).default)("monitor",[["rect",{width:"20",height:"14",x:"2",y:"3",rx:"2",key:"48i651"}],["line",{x1:"8",x2:"16",y1:"21",y2:"21",key:"1svkeh"}],["line",{x1:"12",x2:"12",y1:"17",y2:"21",key:"vw1qmm"}]]);i.s(["Monitor",0,e],34836)},45959,i=>{"use strict";var e=i.i(48277),a=i.i(35691),n=i.i(32213);let s="Library",r="45,000+",t="150+",o="25+",l="500+",c=[{name:"Reference Section",description:"Houses encyclopedias, dictionaries, handbooks, standards, and reference materials for quick consultation. Non-circulating collection available for in-library use."},{name:"Periodicals Section",description:"Comprehensive collection of national and international journals, magazines, and newspapers covering all disciplines. Both print and digital subscriptions available."},{name:"Digital Resources",description:"Access to e-books, online journals, research databases, and digital archives. OPAC system for easy search and retrieval of library materials."},{name:"Lending Section",description:"Circulating collection of books available for home borrowing. Self-checkout system and easy renewal options for member convenience."}],d=[{name:"NPTEL (National Programme on Technology Enhanced Learning)",description:"Free online courses and video lectures in engineering, science, and humanities from IIT and IISC faculty.",accessLink:"https://nptel.ac.in"},{name:"IEEE Xplore",description:"Access to IEEE transactions, conferences, and standards in electrical engineering and computer science.",accessLink:"#"},{name:"Springer Link",description:"Digital library with access to journals, e-books, and research articles across all disciplines.",accessLink:"#"},{name:"JSTOR",description:"Comprehensive archive of academic journals, books, and primary sources in humanities, social sciences, and sciences.",accessLink:"#"},{name:"ProQuest Dissertations & Theses",description:"Global collection of dissertations and theses from universities worldwide for research reference.",accessLink:"#"}],p=["All students, faculty, and staff are eligible library members with a valid identity card.","Library hours: Monday-Friday 8:00 AM - 8:00 PM, Saturday 9:00 AM - 5:00 PM, Closed on Sundays and public holidays.","Maximum borrowing limit: 4 books per member for 14 days.","Overdue fine: ₹5 per book per day (maximum ₹50 per book).","Lost or damaged books must be replaced or full amount paid.","Silence is mandatory in the library. Mobile phones must be on silent mode.","Food and beverages are strictly prohibited inside the library.","Reservation of books is allowed up to 7 days in advance.","Photocopying and printing facilities available at nominal charges.","Members must return all borrowed materials before graduation or termination of course."],m="Librarian (Dr. [Name])",h="+91-8554-233333 (Ext: 250)",x="library@ksrmce.ac.in",b="Monday-Friday: 8:00 AM - 8:00 PM | Saturday: 9:00 AM - 5:00 PM | Closed: Sundays & Public Holidays";var f=i.i(17381);let g=(0,f.default)("book",[["path",{d:"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20",key:"k3hazp"}]]);var u=i.i(95870),v=i.i(34836);let y=(0,f.default)("bookmark",[["path",{d:"M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z",key:"oz39mx"}]]);var j=i.i(88506),k=i.i(3119),w=i.i(14422),N=i.i(16506);let z={hidden:{opacity:0,y:28},visible:{opacity:1,y:0,transition:{duration:.6,ease:[.22,1,.36,1]}}},S={hidden:{},visible:{transition:{staggerChildren:.12}}},A=[g,u.BookOpen,v.Monitor,y];i.s(["default",0,function(){return(0,e.jsxs)("main",{style:{background:"#ffffff"},children:[(0,e.jsx)("style",{children:`
+        .lib-hero {
+          position: relative;
+          background-image: url('/banners/hostel-banner.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #2B3490;
+          min-height: 320px;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          padding-bottom: 40px;
+        }
+        .lib-hero::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
+          pointer-events: none;
+        }
+        .lib-hero > * {
+          position: relative;
+          z-index: 2;
+        }
+        .lib-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #D4A500;
+        }
+        .lib-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+          margin-top: 24px;
+          font-family: "DM Sans", sans-serif;
+        }
+        .lib-breadcrumb a {
+          color: #D4A500;
+          text-decoration: none;
+          transition: opacity 0.2s;
+        }
+        .lib-breadcrumb a:hover {
+          opacity: 0.8;
+        }
+        .lib-breadcrumb span {
+          color: #D4A500;
+        }
+        .lib-stats-bar {
+          background: #2B3490;
+          padding: 32px 0;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 32px;
+        }
+        .lib-stat-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          text-align: center;
+        }
+        .lib-stat-icon {
+          width: 48px;
+          height: 48px;
+          background: rgba(255, 230, 25, 0.2);
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .lib-stat-number {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 26px;
+          font-weight: 700;
+          color: #D4A500;
+        }
+        .lib-stat-label {
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.8);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .lib-section-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 24px;
+          margin-top: 40px;
+        }
+        .lib-section-card {
+          background: #fff;
+          border: 1px solid #eef0f3;
+          border-radius: 12px;
+          padding: 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          transition: all 0.2s;
+        }
+        .lib-section-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(43, 52, 144, 0.12);
+          border-color: #D4A500;
+        }
+        .lib-section-icon {
+          width: 48px;
+          height: 48px;
+          background: #eef1ff;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .lib-section-card h3 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0;
+        }
+        .lib-section-card p {
+          color: #555;
+          font-size: 14px;
+          line-height: 1.6;
+          margin: 0;
+        }
+        .lib-eresources-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
+          margin-top: 40px;
+        }
+        .lib-eresource-card {
+          background: #f4f3ef;
+          border: 1px solid #eef0f3;
+          border-radius: 12px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .lib-eresource-card h4 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 15px;
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0;
+        }
+        .lib-eresource-card p {
+          color: #555;
+          font-size: 13px;
+          line-height: 1.6;
+          margin: 0;
+        }
+        .lib-eresource-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: #2B3490;
+          font-size: 12px;
+          font-weight: 700;
+          text-decoration: none;
+          transition: color 0.2s;
+          width: fit-content;
+        }
+        .lib-eresource-link:hover {
+          color: #D4A500;
+        }
+        .lib-rules {
+          margin-top: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .lib-rule {
+          background: #fff;
+          border-left: 4px solid #2B3490;
+          padding: 16px 20px;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #555;
+          line-height: 1.6;
+        }
+        .lib-contact-card {
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          border-radius: 12px;
+          padding: 40px;
+          color: #fff;
+          margin-top: 40px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+        }
+        .lib-contact-item {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .lib-contact-item-icon {
+          width: 48px;
+          height: 48px;
+          background: rgba(255, 230, 25, 0.2);
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: fit-content;
+        }
+        .lib-contact-item h4 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: #D4A500;
+          margin: 0;
+        }
+        .lib-contact-item p {
+          font-size: 15px;
+          margin: 0;
+          line-height: 1.6;
+        }
+        .lib-contact-item a {
+          color: #D4A500;
+          text-decoration: none;
+          transition: opacity 0.2s;
+        }
+        .lib-contact-item a:hover {
+          opacity: 0.8;
+        }
+        .lib-contact-librarian {
+          border-right: 1px solid rgba(255, 230, 25, 0.2);
+        }
+        @media (max-width: 900px) {
+          .lib-contact-card {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .lib-contact-librarian {
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 230, 25, 0.2);
+            padding-bottom: 32px;
+          }
+        }
+      `}),(0,e.jsxs)("section",{className:"lib-hero",style:{backgroundImage:"url('/images/campus/12.jpg')",backgroundSize:"cover",backgroundPosition:"center",position:"relative"},children:[(0,e.jsx)("div",{style:{position:"absolute",inset:0,backgroundColor:"rgba(43, 52, 144, 0.85)"}}),(0,e.jsx)(n.default,{children:(0,e.jsx)("div",{style:{padding:"72px 0",position:"relative",zIndex:1},children:(0,e.jsxs)(a.motion.div,{initial:"hidden",animate:"visible",variants:S,children:[(0,e.jsx)(a.motion.div,{variants:z,className:"lib-eyebrow",style:{marginBottom:16},children:"Campus Life"}),(0,e.jsx)(a.motion.h1,{variants:z,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(2.2rem, 4.5vw, 3.6rem)",fontWeight:700,color:"#fff",lineHeight:1.08,margin:0},children:s}),(0,e.jsx)(a.motion.p,{variants:z,style:{color:"rgba(255,255,255,0.85)",fontSize:18,lineHeight:1.6,margin:"16px 0 0",fontWeight:300,maxWidth:700},children:"Knowledge Hub of the Campus"}),(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-breadcrumb",children:[(0,e.jsx)(N.default,{href:"/",children:"Home"}),(0,e.jsx)("span",{children:"/"}),(0,e.jsx)(N.default,{href:"/campus-life",children:"Campus Life"}),(0,e.jsx)("span",{children:"/"}),(0,e.jsx)("span",{children:s})]})]})})})]}),(0,e.jsx)("section",{style:{padding:"56px 0",background:"#f4f3ef"},children:(0,e.jsx)(n.default,{children:(0,e.jsx)(a.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:z,style:{maxWidth:820},children:(0,e.jsx)("p",{style:{color:"#555",fontSize:16,lineHeight:1.8,margin:0},children:"The Central Library of KSRM College of Engineering is a state-of-the-art facility designed to support academic excellence and research. With an extensive collection of books, journals, and digital resources, our library serves as the knowledge hub of the campus. Our dedicated staff is committed to providing excellent service and fostering a conducive learning environment."})})})}),(0,e.jsx)("section",{style:{padding:"72px 0",background:"#ffffff"},children:(0,e.jsx)(n.default,{children:(0,e.jsxs)(a.motion.div,{initial:"hidden",animate:"visible",variants:S,children:[(0,e.jsx)(a.motion.h2,{variants:z,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#2B3490",margin:"0 0 40px"},children:"Library Tour"}),(0,e.jsx)(a.motion.div,{variants:z,style:{borderRadius:"8px",overflow:"hidden",maxWidth:"1000px",margin:"0 auto"},children:(0,e.jsx)("video",{autoPlay:!0,loop:!0,muted:!0,playsInline:!0,style:{width:"100%",aspectRatio:"16 / 9",objectFit:"cover",display:"block"},children:(0,e.jsx)("source",{src:"/videos/central-library.mp4",type:"video/mp4"})})})]})})}),(0,e.jsx)("section",{style:{padding:"40px 0",background:"#2B3490"},children:(0,e.jsx)(n.default,{children:(0,e.jsxs)(a.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:S,className:"lib-stats-bar",children:[(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-stat-item",children:[(0,e.jsx)("div",{className:"lib-stat-icon",children:(0,e.jsx)(g,{size:24,color:"#D4A500"})}),(0,e.jsx)("div",{className:"lib-stat-number",children:r}),(0,e.jsx)("div",{className:"lib-stat-label",children:"Books"})]}),(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-stat-item",children:[(0,e.jsx)("div",{className:"lib-stat-icon",children:(0,e.jsx)(u.BookOpen,{size:24,color:"#D4A500"})}),(0,e.jsx)("div",{className:"lib-stat-number",children:t}),(0,e.jsx)("div",{className:"lib-stat-label",children:"Journals"})]}),(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-stat-item",children:[(0,e.jsx)("div",{className:"lib-stat-icon",children:(0,e.jsx)(v.Monitor,{size:24,color:"#D4A500"})}),(0,e.jsx)("div",{className:"lib-stat-number",children:o}),(0,e.jsx)("div",{className:"lib-stat-label",children:"E-Resources"})]}),(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-stat-item",children:[(0,e.jsx)("div",{className:"lib-stat-icon",children:(0,e.jsx)(y,{size:24,color:"#D4A500"})}),(0,e.jsx)("div",{className:"lib-stat-number",children:l}),(0,e.jsx)("div",{className:"lib-stat-label",children:"Seating"})]})]})})}),(0,e.jsx)("section",{style:{padding:"72px 0",background:"#ffffff"},children:(0,e.jsx)(n.default,{children:(0,e.jsxs)(a.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:S,children:[(0,e.jsx)(a.motion.h2,{variants:z,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#1a1a2e",margin:"0 0 40px"},children:"Library Sections"}),(0,e.jsx)("div",{className:"lib-section-grid",children:c.map((i,n)=>{let s=A[n];return(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-section-card",children:[(0,e.jsx)("div",{className:"lib-section-icon",children:(0,e.jsx)(s,{size:24,color:"#2B3490"})}),(0,e.jsx)("h3",{children:i.name}),(0,e.jsx)("p",{children:i.description})]},n)})})]})})}),(0,e.jsx)("section",{style:{padding:"72px 0",background:"#f4f3ef"},children:(0,e.jsx)(n.default,{children:(0,e.jsxs)(a.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:S,children:[(0,e.jsx)(a.motion.h2,{variants:z,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#1a1a2e",margin:"0 0 40px"},children:"Digital Resources & E-Resources"}),(0,e.jsx)("div",{className:"lib-eresources-grid",children:d.map((i,n)=>(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-eresource-card",children:[(0,e.jsx)("h4",{children:i.name}),(0,e.jsx)("p",{children:i.description}),(0,e.jsx)("a",{href:i.accessLink,className:"lib-eresource-link",target:"_blank",rel:"noopener noreferrer",children:"Access Resource â†’"})]},n))})]})})}),(0,e.jsx)("section",{style:{padding:"72px 0",background:"#ffffff"},children:(0,e.jsx)(n.default,{children:(0,e.jsxs)(a.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:S,children:[(0,e.jsx)(a.motion.h2,{variants:z,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#1a1a2e",margin:"0 0 40px"},children:"Library Rules & Regulations"}),(0,e.jsx)("div",{className:"lib-rules",children:p.map((i,n)=>(0,e.jsxs)(a.motion.div,{variants:z,className:"lib-rule",children:[(0,e.jsxs)("strong",{children:[n+1,"."]})," ",i]},n))})]})})}),(0,e.jsx)("section",{style:{padding:"72px 0",background:"#f4f3ef"},children:(0,e.jsx)(n.default,{children:(0,e.jsxs)(a.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:z,className:"lib-contact-card",children:[(0,e.jsx)("div",{className:"lib-contact-librarian",children:(0,e.jsxs)("div",{className:"lib-contact-item",children:[(0,e.jsx)("div",{className:"lib-contact-item-icon",children:(0,e.jsx)(u.BookOpen,{size:24})}),(0,e.jsx)("h4",{children:m}),(0,e.jsx)("p",{style:{fontSize:15,marginTop:8},children:"Head of the Central Library with 20+ years of experience in library management and digital resource curation."})]})}),(0,e.jsxs)("div",{children:[(0,e.jsxs)("div",{className:"lib-contact-item",children:[(0,e.jsx)("div",{className:"lib-contact-item-icon",children:(0,e.jsx)(j.Phone,{size:24})}),(0,e.jsx)("h4",{children:"Phone"}),(0,e.jsx)("p",{children:(0,e.jsx)("a",{href:`tel:${h}`,children:h})})]}),(0,e.jsxs)("div",{className:"lib-contact-item",style:{marginTop:24},children:[(0,e.jsx)("div",{className:"lib-contact-item-icon",children:(0,e.jsx)(k.Mail,{size:24})}),(0,e.jsx)("h4",{children:"Email"}),(0,e.jsx)("p",{children:(0,e.jsx)("a",{href:`mailto:${x}`,children:x})})]}),(0,e.jsxs)("div",{className:"lib-contact-item",style:{marginTop:24},children:[(0,e.jsx)("div",{className:"lib-contact-item-icon",children:(0,e.jsx)(w.Clock,{size:24})}),(0,e.jsx)("h4",{children:"Timings"}),(0,e.jsx)("p",{children:b})]})]})]})})})]})}],45959)}]);

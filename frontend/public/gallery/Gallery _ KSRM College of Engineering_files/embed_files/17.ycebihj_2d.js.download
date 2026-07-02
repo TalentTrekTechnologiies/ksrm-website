@@ -1,0 +1,191 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,32213,e=>{"use strict";var i=e.i(48277);e.s(["default",0,function({children:e,className:n}){return(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)("style",{children:`
+        .responsive-container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+        @media (max-width: 1024px) {
+          .responsive-container {
+            padding-left: 32px;
+            padding-right: 32px;
+          }
+        }
+        @media (max-width: 768px) {
+          .responsive-container {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+        @media (max-width: 480px) {
+          .responsive-container {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
+      `}),(0,i.jsx)("div",{className:`responsive-container ${n||""}`,children:e})]})}])},99254,e=>{"use strict";var i=e.i(48277),n=e.i(35691),a=e.i(32213),t=e.i(16506);let r=(0,e.i(17381).default)("clipboard-list",[["rect",{width:"8",height:"4",x:"8",y:"2",rx:"1",ry:"1",key:"tgr4d6"}],["path",{d:"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2",key:"116196"}],["path",{d:"M12 11h4",key:"1jrz19"}],["path",{d:"M12 16h4",key:"n85exb"}],["path",{d:"M8 11h.01",key:"1dfujw"}],["path",{d:"M8 16h.01",key:"18s6g9"}]]),o={hidden:{opacity:0,y:28},visible:{opacity:1,y:0,transition:{duration:.6}}},s={hidden:{},visible:{transition:{staggerChildren:.12}}},d=[{name:"Computer Science & Engineering",code:"CSE",intake:240},{name:"CSE (AI & Machine Learning)",code:"CSE-AIML",intake:60},{name:"CSE (Data Science)",code:"CSE-DS",intake:60},{name:"AI & Machine Learning",code:"AIML",intake:60},{name:"Electronics & Communication Engineering",code:"ECE",intake:180},{name:"Electrical & Electronics Engineering",code:"EEE",intake:60},{name:"Mechanical Engineering",code:"MECH",intake:60},{name:"Civil Engineering",code:"CIVIL",intake:90}],l=d.reduce((e,i)=>e+i.intake,0);e.s(["default",0,function(){return(0,i.jsxs)("main",{style:{background:"#ffffff"},children:[(0,i.jsx)("style",{children:`
+        .ug-hero {
+          position: relative;
+          background-image: url('/banners/cse-banner.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #2B3490;
+          min-height: 280px;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          padding-bottom: 40px;
+        }
+        .ug-hero::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%);
+          z-index: 1;
+        }
+        .ug-hero > * {
+          position: relative;
+          z-index: 2;
+        }
+        .ug-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          color: rgba(255,255,255,0.7);
+          margin-bottom: 16px;
+        }
+        .ug-breadcrumb a {
+          color: #D4A500;
+          text-decoration: none;
+        }
+        .ug-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+          line-height: 1.08;
+        }
+        .ug-subtitle {
+          color: rgba(255,255,255,0.85);
+          font-size: 16px;
+          margin: 12px 0 0;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .ug-content-section {
+          padding: 72px 0;
+          background: #ffffff;
+        }
+        .ug-intro {
+          font-size: 16px;
+          color: #555;
+          line-height: 1.8;
+          max-width: 800px;
+          margin: 0 auto 48px;
+          text-align: center;
+        }
+        .ug-summary {
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          color: #fff;
+          padding: 32px;
+          border-radius: 12px;
+          margin-bottom: 48px;
+          text-align: center;
+        }
+        .ug-summary h3 {
+          margin: 0 0 16px;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+        }
+        .ug-summary p {
+          margin: 0;
+          font-size: 15px;
+          opacity: 0.95;
+        }
+        .ug-table-wrapper {
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(43, 52, 144, 0.08);
+          margin-bottom: 48px;
+        }
+        .ug-table {
+          width: 100%;
+          border-collapse: collapse;
+          background: #fff;
+          font-size: 15px;
+        }
+        .ug-table th {
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          color: #fff;
+          padding: 18px;
+          text-align: left;
+          font-family: 'Rajdhani', sans-serif;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-size: 13px;
+        }
+        .ug-table td {
+          padding: 16px 18px;
+          border-bottom: 1px solid #eef0f3;
+          color: #555;
+        }
+        .ug-table tr:nth-child(even) {
+          background: rgba(43, 52, 144, 0.02);
+        }
+        .ug-table tr:hover {
+          background: rgba(43, 52, 144, 0.06);
+        }
+        .ug-program-name {
+          font-weight: 600;
+          color: #2B3490;
+        }
+        .ug-program-code {
+          background: rgba(43, 52, 144, 0.1);
+          color: #2B3490;
+          padding: 4px 10px;
+          border-radius: 4px;
+          font-weight: 600;
+          display: inline-block;
+          font-size: 12px;
+        }
+        .ug-intake-badge {
+          background: #D4A500;
+          color: #1a1a2e;
+          padding: 6px 14px;
+          border-radius: 6px;
+          font-weight: 700;
+          display: inline-block;
+          text-align: center;
+          min-width: 50px;
+        }
+        .ug-info-box {
+          background: #f7f8fa;
+          border-left: 4px solid #D4A500;
+          padding: 24px;
+          border-radius: 8px;
+          margin-top: 48px;
+        }
+        .ug-info-box h4 {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 16px;
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0 0 12px;
+        }
+        .ug-info-box p {
+          font-size: 14px;
+          color: #555;
+          margin: 0;
+          line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+          .ug-table { font-size: 13px; }
+          .ug-table th, .ug-table td { padding: 12px 10px; }
+          .ug-content-section { padding: 48px 0; }
+        }
+      `}),(0,i.jsx)("section",{className:"ug-hero",children:(0,i.jsx)(a.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",animate:"visible",variants:s,children:[(0,i.jsxs)(n.motion.div,{variants:o,className:"ug-breadcrumb",children:[(0,i.jsx)(t.default,{href:"/admissions",children:"Admissions"}),(0,i.jsx)("span",{children:"/"}),(0,i.jsx)("span",{children:"UG Programs"})]}),(0,i.jsx)(n.motion.h1,{variants:o,className:"ug-title",children:"Undergraduate Programs"}),(0,i.jsx)(n.motion.p,{variants:o,className:"ug-subtitle",children:"B.Tech Engineering Programs at KSRM"})]})})}),(0,i.jsx)("section",{className:"ug-content-section",children:(0,i.jsx)(a.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.2},variants:s,children:[(0,i.jsx)(n.motion.p,{variants:o,className:"ug-intro",children:"KSRM College offers eight B.Tech undergraduate programs with a total intake of 810 seats. Each program is designed to provide quality technical education with hands-on learning and industry collaboration."}),(0,i.jsxs)(n.motion.div,{variants:o,className:"ug-summary",children:[(0,i.jsx)("h3",{children:"Total UG Intake"}),(0,i.jsxs)("p",{children:[l," Seats across ",d.length," Programs"]})]}),(0,i.jsx)(n.motion.div,{variants:o,className:"ug-table-wrapper",children:(0,i.jsxs)("table",{className:"ug-table",children:[(0,i.jsx)("thead",{children:(0,i.jsxs)("tr",{children:[(0,i.jsx)("th",{children:"Program"}),(0,i.jsx)("th",{children:"Code"}),(0,i.jsx)("th",{children:"Annual Intake"})]})}),(0,i.jsx)("tbody",{children:d.map((e,n)=>(0,i.jsxs)("tr",{children:[(0,i.jsx)("td",{className:"ug-program-name",children:e.name}),(0,i.jsx)("td",{children:(0,i.jsx)("span",{className:"ug-program-code",children:e.code})}),(0,i.jsx)("td",{children:(0,i.jsx)("span",{className:"ug-intake-badge",children:e.intake})})]},n))})]})}),(0,i.jsxs)(n.motion.div,{variants:o,className:"ug-info-box",children:[(0,i.jsxs)("h4",{style:{display:"flex",alignItems:"center",gap:"8px"},children:[(0,i.jsx)(r,{size:20,color:"#2B3490"}),"Admission Code: KSRM"]}),(0,i.jsxs)("p",{children:["Use the code ",(0,i.jsx)("strong",{children:"KSRM"})," when applying through EAPCET. Admissions are merit-based and follow the norms set by JNTUA and the Government of Andhra Pradesh for engineering programs."]})]})]})})})]})}],99254)}]);

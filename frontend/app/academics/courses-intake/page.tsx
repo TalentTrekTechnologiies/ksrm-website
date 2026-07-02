@@ -97,6 +97,7 @@ export default function CoursesIntakePage() {
 
         .ci-hero {
           position: relative;
+          background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/classroom2.jpg');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;
@@ -105,6 +106,17 @@ export default function CoursesIntakePage() {
           align-items: flex-end;
           overflow: hidden;
           padding-bottom: 40px;
+        }
+        .ci-hero::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
+          z-index: 0;
+        }
+        .ci-hero > * {
+          position: relative;
+          z-index: 1;
         }
         .ci-eyebrow {
           display: inline-flex;

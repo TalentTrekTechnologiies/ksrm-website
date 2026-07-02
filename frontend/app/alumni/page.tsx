@@ -78,7 +78,7 @@ export default function AlumniPage() {
         .alumni-top-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 48px; }
       `}</style>
 
-      <section style={{ background: "linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)", padding: "80px 0", color: "white" }}>
+      <section style={{ backgroundImage: "url('/banners/alumni banner.jpg')", backgroundSize: "cover", backgroundPosition: "center", padding: "80px 0", color: "white" }}>
         <div className="responsive-container">
           <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>🎓 Alumni Association</div>
           <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>KSRM Alumni Association</h1>

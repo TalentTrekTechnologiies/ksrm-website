@@ -122,7 +122,7 @@ export default function ResearchPage() {
       {/* HERO */}
       <section
         style={{
-          backgroundImage: "url('/banners/startup-banner.jpg')", backgroundSize: "cover", backgroundPosition: "center",
+          backgroundImage: "url('/banners/startup banner.jpg')", backgroundSize: "cover", backgroundPosition: "center",
           backgroundColor: "#2B3490", padding: "80px 0", color: "#fff", position: "relative", overflow: "hidden",
           minHeight: 320, display: "flex", alignItems: "flex-end",
         }}

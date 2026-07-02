@@ -126,9 +126,21 @@ export default function RegulationsPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .reg-hero {
-          position: relative; background-size: cover; background-position: center;
+          position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/library.jpg');
+          background-size: cover; background-position: center;
           background-color: #2B3490; min-height: 320px; display: flex;
           align-items: flex-end; overflow: hidden; padding-bottom: 40px;
+        }
+        .reg-hero::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
+          z-index: 0;
+        }
+        .reg-hero > * {
+          position: relative;
+          z-index: 1;
         }
         .reg-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;

@@ -59,7 +59,7 @@ export default function LeadershipDetail() {
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-        .k-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); min-height: 280px; padding: 0; display: flex; align-items: center; color: white; position: relative; }
+        .k-hero { background-image: url('/banners/about banner.jpg'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; padding: 0; display: flex; align-items: center; color: white; position: relative; }
         .k-hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 80px 0; }
         .k-hero-title { font-size: 72px; font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
         .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }

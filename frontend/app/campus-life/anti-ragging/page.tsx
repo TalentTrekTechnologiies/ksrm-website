@@ -84,7 +84,9 @@ export default function AntiRaggingPage() {
       {/* Hero */}
       <section
         style={{
-          background: "linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)",
+          backgroundImage: "url('/banners/anti-ragging banner.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           padding: "60px 40px",
           color: "#fff",
           textAlign: "center",

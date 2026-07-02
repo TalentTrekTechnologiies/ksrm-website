@@ -89,7 +89,7 @@ export default function SyllabusPage() {
 
         .syl-hero {
           position: relative;
-          background-image: url('/banners/cse-banner.jpg');
+          background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/campus.jpg');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;

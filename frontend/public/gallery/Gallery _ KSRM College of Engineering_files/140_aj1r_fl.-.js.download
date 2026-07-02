@@ -1,0 +1,488 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,61875,e=>{"use strict";var i=e.i(48277),t=e.i(16506),n=e.i(35691),a=e.i(53938),r=e.i(30668);let o=[.22,1,.36,1],s={hidden:{opacity:0,y:28},visible:e=>({opacity:1,y:0,transition:{duration:.75,ease:o,delay:e}})},l=[{label:"RESEARCH & INNOVATION",text:"State-of-the-art Laboratories"},{label:"CAMPUS LIFE",text:"Vibrant Cultural Activities"},{label:"EXCELLENCE",text:"Sports & Achievements"},{label:"ENVIRONMENT",text:"Beautiful Green Campus"},{label:"LEARNING",text:"Modern Digital Library"}],d=[{isNew:!0,date:"May 28",text:"Sem-End Exams May-June 2026 Preponed"},{isNew:!0,date:"May 20",text:"M.Tech II Sem Supplementary Results Out"},{isNew:!1,date:"May 15",text:"Graduation Day 2K26 Forms Open"},{isNew:!1,date:"May 10",text:"KGCET-2K26 Results Announced"}],p=[{type:"video",src:"/videos/main-block.mp4"},{type:"video",src:"/videos/ksnr-gat.mp4"},{type:"video",src:"/videos/gate-entrace.mp4"}];e.s(["default",0,function(){let[e,c]=(0,r.useState)(0),[x,g]=(0,r.useState)(0),[m,h]=(0,r.useState)(!1),f=(0,r.useRef)(null);return(0,r.useEffect)(()=>{let e=setInterval(()=>{c(e=>(e+1)%l.length)},3e3);return()=>clearInterval(e)},[]),(0,r.useEffect)(()=>{let e=setInterval(()=>{h(!0),setTimeout(()=>{g(e=>(e+1)%p.length),h(!1)},500)},2e3);return()=>clearInterval(e)},[]),(0,i.jsxs)("section",{className:"hero-section",style:{position:"relative",width:"100%",height:"70vh",minHeight:"500px",overflow:"hidden"},children:[(0,i.jsx)("style",{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400&display=swap');
+
+        @keyframes pulse-dot {
+          0%   { box-shadow: 0 0 0 0 rgba(232,17,45,0.7); }
+          70%  { box-shadow: 0 0 0 6px rgba(232,17,45,0); }
+          100% { box-shadow: 0 0 0 0 rgba(232,17,45,0); }
+        }
+        @keyframes news-scroll {
+          from { transform: translateY(0); }
+          to   { transform: translateY(-50%); }
+        }
+
+        .pulse-dot {
+          width: 8px; height: 8px;
+          border-radius: 50%;
+          background: #E8112D;
+          flex-shrink: 0;
+          animation: pulse-dot 1.5s infinite;
+        }
+
+        .news-track {
+          animation: news-scroll 12s linear infinite;
+        }
+        .hero-glass:hover .news-track {
+          animation-play-state: paused;
+        }
+
+        .news-item {
+          padding: 14px 20px;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          cursor: pointer;
+          transition: background 0.2s ease;
+          text-decoration: none;
+          display: block;
+        }
+        .news-item:hover {
+          background: rgba(255,255,255,0.08);
+        }
+
+        /* TABLET */
+        @media (max-width: 1024px) {
+          .hero-glass { width: 300px !important; height: 360px !important; }
+        }
+        /* MOBILE */
+        @media (max-width: 768px) {
+          .hero-section  { height: 90vh !important; height: 90svh !important; min-height: 460px !important; }
+          .hero-layout   { align-items: flex-end !important; padding: 0 20px 36px !important; }
+          .hero-glass    { display: none !important; }
+          .hero-heading  { font-size: 28px !important; }
+          .hero-subtitle { font-size: 14px !important; }
+          .hero-buttons  { flex-direction: column !important; gap: 10px !important; }
+          .hero-btn      { width: 100% !important; text-align: center !important; display: block !important; padding: 12px 20px !important; }
+          .carousel-dots { display: none !important; }
+          .carousel-arrow { display: none !important; }
+        }
+      `}),(0,i.jsx)("div",{style:{position:"absolute",inset:0,zIndex:0},children:(0,i.jsx)("video",{ref:f,autoPlay:!0,muted:!0,loop:!0,playsInline:!0,style:{width:"100%",height:"100%",objectFit:"cover",opacity:+!m,transition:"opacity 0.5s ease"},children:(0,i.jsx)("source",{src:p[x].src,type:"video/mp4"})})}),(0,i.jsx)("div",{style:{position:"absolute",inset:0,zIndex:1,background:"linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.7) 100%)"}}),(0,i.jsx)("div",{className:"carousel-dots",style:{position:"absolute",bottom:24,left:"50%",transform:"translateX(-50%)",zIndex:3,display:"flex",alignItems:"center",justifyContent:"center",gap:8},children:p.slice(0,8).map((e,t)=>{let n=t===x||x>=8&&7===t;return(0,i.jsx)("button",{onClick:()=>{h(!0),setTimeout(()=>{g(t),h(!1)},500)},style:{width:8,height:8,borderRadius:"50%",background:n?"white":"rgba(255,255,255,0.4)",border:"none",cursor:"pointer",flexShrink:0,padding:0,lineHeight:1}},t)})}),(0,i.jsxs)("div",{className:"hero-layout",style:{position:"absolute",inset:0,zIndex:2,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 44px",gap:"32px"},children:[(0,i.jsxs)("div",{style:{maxWidth:"540px"},children:[(0,i.jsx)(n.motion.div,{variants:s,initial:"hidden",animate:"visible",custom:0,style:{width:"48px",height:"3px",background:"#D4A500",marginBottom:"20px"}}),(0,i.jsx)(n.motion.p,{variants:s,initial:"hidden",animate:"visible",custom:.1,style:{margin:"0 0 16px",fontSize:"11px",letterSpacing:"3px",color:"rgba(255,255,255,0.85)",fontFamily:"sans-serif",textTransform:"uppercase",fontWeight:400},children:"NAAC A++ · NBA Tier-1 · UGC Autonomous"}),(0,i.jsxs)(n.motion.h2,{className:"hero-heading",variants:s,initial:"hidden",animate:"visible",custom:.2,style:{margin:"0 0 18px",fontFamily:"'Rajdhani', sans-serif",fontSize:"46px",fontWeight:700,color:"#ffffff",lineHeight:1.05},children:["Ignite Your Potential,",(0,i.jsx)("br",{}),"Engineer Your Future"]}),(0,i.jsx)(n.motion.p,{className:"hero-subtitle",variants:s,initial:"hidden",animate:"visible",custom:.3,style:{margin:"0 0 20px",fontFamily:"'DM Sans', sans-serif",fontSize:"18px",fontWeight:300,color:"rgba(255,255,255,0.8)",maxWidth:"480px",lineHeight:1.65},children:"KSRM College of Engineering, Kadapa — 45 years of engineering excellence."}),(0,i.jsx)(n.motion.div,{variants:s,initial:"hidden",animate:"visible",custom:.35,style:{height:"58px",overflow:"hidden"},children:(0,i.jsx)(a.AnimatePresence,{mode:"wait",children:(0,i.jsxs)(n.motion.div,{initial:{opacity:0,y:14},animate:{opacity:1,y:0},exit:{opacity:0,y:-10},transition:{duration:.4,ease:o},children:[(0,i.jsx)("div",{style:{fontSize:"14px",fontWeight:600,letterSpacing:"2px",color:"#D4A500",textTransform:"uppercase",marginBottom:"7px",fontFamily:"sans-serif"},children:l[e].label}),(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"26px",fontWeight:600,color:"#ffffff"},children:l[e].text})]},e)})}),(0,i.jsxs)(n.motion.div,{className:"hero-buttons",variants:s,initial:"hidden",animate:"visible",custom:.4,style:{display:"flex",gap:"14px",alignItems:"center"},children:[(0,i.jsx)(t.default,{href:"/admissions",className:"hero-btn touch-target btn btn-primary",children:"Apply Now"}),(0,i.jsx)(t.default,{href:"/about",className:"hero-btn touch-target btn btn-secondary",children:"Explore Campus"})]})]}),(0,i.jsxs)(n.motion.div,{className:"hero-glass",initial:{opacity:0,x:40},animate:{opacity:1,x:0},transition:{duration:.9,ease:o,delay:.5},style:{width:"380px",height:"430px",flexShrink:0,background:"rgba(255,255,255,0.12)",backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",border:"1px solid rgba(255,255,255,0.25)",borderRadius:"16px",overflow:"hidden",boxShadow:"0 8px 40px rgba(0,0,0,0.3)"},children:[(0,i.jsxs)("div",{style:{padding:"16px 20px",borderBottom:"1px solid rgba(255,255,255,0.18)",display:"flex",alignItems:"center",gap:"10px"},children:[(0,i.jsx)("div",{className:"pulse-dot"}),(0,i.jsx)("span",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"16px",fontWeight:700,color:"#ffffff"},children:"Latest Updates"})]}),(0,i.jsx)("div",{style:{height:"375px",overflow:"hidden"},children:(0,i.jsx)("div",{className:"news-track",children:[...d,...d].map((e,n)=>(0,i.jsxs)(t.default,{href:"/news",className:"news-item",children:[(0,i.jsxs)("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"5px"},children:[e.isNew&&(0,i.jsx)("span",{style:{background:"#D4A500",color:"#1a1a2e",fontSize:"8px",fontWeight:700,padding:"1px 6px",borderRadius:"3px",letterSpacing:"0.5px",flexShrink:0},children:"NEW"}),(0,i.jsx)("span",{style:{fontSize:"10px",color:"rgba(255,255,255,0.6)"},children:e.date})]}),(0,i.jsx)("div",{style:{fontSize:"15px",color:"#ffffff",lineHeight:1.4},children:e.text})]},n))})})]})]})]})}])},10837,e=>{"use strict";var i=e.i(48277),t=e.i(30668),n=e.i(35691),a=e.i(32213);let r={hidden:{opacity:0,y:20},visible:{opacity:1,y:0,transition:{duration:.6}}},o={hidden:{},visible:{transition:{staggerChildren:.1}}},s=[{number:45,suffix:"+",label:"Years of Excellence"},{number:35,suffix:" Acres",label:"Campus Area"},{number:1e3,suffix:"+",label:"Students Intake"},{number:200,suffix:"+",label:"Faculty Members"},{number:8,suffix:"",label:"Departments"},{number:95,suffix:"%",label:"Placement Rate"},{number:1e4,suffix:"+",label:"Alumni Network"},{number:50,suffix:"+",label:"Companies Recruiting"}];function l({number:e,suffix:a,label:o,index:s}){let[d,p]=(0,t.useState)(0);return(0,t.useEffect)(()=>{let i,t=null,n=a=>{t||(t=a);let r=a-t;r<2e3?(p(Math.floor(r/2e3*e)),i=requestAnimationFrame(n)):p(e)};return i=requestAnimationFrame(n),()=>cancelAnimationFrame(i)},[e]),(0,i.jsxs)(n.motion.div,{variants:r,style:{background:"rgba(255,255,255,0.08)",borderRadius:12,padding:28,textAlign:"center",border:"1px solid rgba(255,255,255,0.1)"},children:[(0,i.jsxs)("div",{style:{fontSize:42,fontWeight:800,color:"#D4A500",margin:0},children:[d,a]}),(0,i.jsx)("div",{style:{fontSize:14,color:"#ccc",marginTop:8,letterSpacing:"1px"},children:o})]})}e.s(["default",0,function(){return(0,i.jsxs)("section",{style:{background:"linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)",padding:"60px 0 80px 0"},children:[(0,i.jsx)("style",{children:`
+        @media (max-width: 768px) {
+          .achievements-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .achievements-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+        }
+      `}),(0,i.jsx)(a.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",animate:"visible",variants:o,children:[(0,i.jsx)("div",{className:"achievements-grid",style:{display:"grid",gridTemplateColumns:"repeat(4, 1fr)",gap:24,marginBottom:60},children:s.map((e,t)=>(0,i.jsx)(l,{...e,index:t},t))}),(0,i.jsx)("div",{style:{width:"100%",height:4,background:"linear-gradient(90deg, transparent, #D4A500, transparent)",marginTop:60}})]})})]})}])},51455,e=>{"use strict";var i=e.i(48277),t=e.i(35691);let n={hidden:{opacity:0,y:20},visible:{opacity:1,y:0,transition:{duration:.6}}};e.s(["default",0,function(){return(0,i.jsxs)(i.Fragment,{children:[(0,i.jsxs)("div",{style:{background:"white",padding:"48px 0 0",textAlign:"center",width:"100%"},children:[(0,i.jsx)("p",{style:{fontSize:13,letterSpacing:"3px",textTransform:"uppercase",color:"#2B3490",fontWeight:700,margin:"0 0 8px"},children:"Who We Are"}),(0,i.jsx)("h2",{style:{fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#1a1d4d",fontFamily:"'Rajdhani', sans-serif",margin:0,marginBottom:48,paddingBottom:0},children:"Our Vision & Mission"})]}),(0,i.jsxs)("section",{style:{width:"100%",display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(min(100%, 300px), 1fr))",position:"relative",zIndex:1,minHeight:500},children:[(0,i.jsxs)(t.motion.div,{initial:"hidden",animate:"visible",variants:n,style:{background:"linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)",padding:"clamp(32px, 6vw, 80px) clamp(20px, 5vw, 60px)",color:"white",display:"flex",flexDirection:"column",justifyContent:"center"},children:[(0,i.jsx)("div",{style:{fontSize:12,letterSpacing:"3px",textTransform:"uppercase",color:"#D4A500",marginBottom:16,fontWeight:700},children:"Our Vision"}),(0,i.jsx)("div",{style:{fontSize:80,color:"rgba(255,230,25,0.2)",lineHeight:.8,display:"block",marginBottom:8},children:'"'}),(0,i.jsx)("p",{style:{fontSize:20,lineHeight:1.9,fontStyle:"italic",color:"white",margin:0,marginBottom:32},children:"To evolve as center of repute for providing quality academic programs amalgamated with creative learning and research excellence to produce graduates with leadership qualities, ethical and human values to serve the nation."}),(0,i.jsx)("div",{style:{width:60,height:3,background:"#D4A500"}})]}),(0,i.jsxs)(t.motion.div,{initial:"hidden",animate:"visible",variants:n,style:{background:"#D4A500",padding:"clamp(32px, 6vw, 80px) clamp(20px, 5vw, 60px)",display:"flex",flexDirection:"column",justifyContent:"center"},children:[(0,i.jsx)("div",{style:{fontSize:12,letterSpacing:"3px",textTransform:"uppercase",color:"#2B3490",marginBottom:24,fontWeight:700},children:"Our Mission"}),(0,i.jsx)("div",{style:{display:"flex",flexDirection:"column",gap:24},children:[{code:"M1",text:"To provide high quality education with enriched curriculum blended with impactful teaching-learning practices."},{code:"M2",text:"To promote research, entrepreneurship and innovation through industry collaborations."},{code:"M3",text:"To produce highly competent professional leaders for contributing to Socio-economic development of region and the nation."}].map(e=>(0,i.jsxs)("div",{style:{display:"flex",gap:16},children:[(0,i.jsx)("div",{style:{background:"#2B3490",color:"#D4A500",width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,flexShrink:0},children:e.code}),(0,i.jsx)("p",{style:{fontSize:15,color:"#1a1d4d",lineHeight:1.7,fontWeight:500,margin:0},children:e.text})]},e.code))})]}),(0,i.jsx)("style",{children:`
+        @media (max-width: 768px) {
+          section[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `})]})]})}])},30646,e=>{"use strict";var i=e.i(48277),t=e.i(16506),n=e.i(42588),a=e.i(35691),r=e.i(32213);let o=[.22,1,.36,1],s=new Date().getFullYear()-1980,l=[{num:"1980",label:"Established"},{num:"7+",label:"Departments"},{num:"UGC",label:"Autonomous"}];e.s(["default",0,function(){return(0,i.jsxs)("section",{className:"about-section",style:{width:"100%",background:"#ffffff",padding:"52px 0"},children:[(0,i.jsx)("style",{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=DM+Sans:opsz,wght@9..40,400&display=swap');
+
+        .about-section { box-sizing: border-box; }
+
+        .about-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 1fr;
+          gap: 64px;
+          align-items: center;
+        }
+
+        .about-heading { font-size: 42px; }
+
+        @media (max-width: 1024px) {
+          .about-section { padding: 40px 0 !important; }
+          .about-grid    { gap: 36px !important; }
+        }
+        @media (max-width: 768px) {
+          .about-section { padding: 36px 0 !important; }
+          .about-grid    { grid-template-columns: 1fr !important; gap: 28px !important; }
+          .about-heading { font-size: 26px !important; }
+          .about-img-col { order: -1; }
+        }
+        @media (max-width: 480px) {
+          .about-section { padding: 28px 0 !important; }
+          .about-heading { font-size: 22px !important; }
+        }
+      `}),(0,i.jsx)(r.default,{children:(0,i.jsxs)("div",{className:"about-grid",children:[(0,i.jsxs)(a.motion.div,{initial:{opacity:0,x:-40},whileInView:{opacity:1,x:0},viewport:{once:!0,amount:.2},transition:{duration:.75,ease:o},children:[(0,i.jsxs)("div",{style:{display:"flex",alignItems:"center",gap:"12px",marginBottom:"20px"},children:[(0,i.jsx)("div",{style:{width:"28px",height:"2px",background:"#D4A500",flexShrink:0}}),(0,i.jsx)("span",{style:{fontSize:"12px",fontWeight:700,letterSpacing:"2px",color:"#2B3490",textTransform:"uppercase"},children:"OUR LEGACY"})]}),(0,i.jsxs)("h2",{className:"about-heading",style:{fontFamily:"'Rajdhani', sans-serif",fontWeight:700,lineHeight:1.1,margin:"0 0 24px"},children:[(0,i.jsx)("span",{style:{color:"#1a1a2e"},children:"Four Decades of "}),(0,i.jsx)("span",{style:{color:"#2B3490"},children:"Engineering Excellence"})]}),(0,i.jsx)("p",{style:{color:"#555",fontSize:"16px",lineHeight:1.7,margin:"0 0 16px"},children:"Established in 1980 in memory of Late Sri Srinivasa Reddy, KSRM College of Engineering was born from the vision of Late Sri Kandula Obul Reddy to bring quality technical education to the Rayalaseema region of Andhra Pradesh."}),(0,i.jsx)("p",{style:{color:"#555",fontSize:"16px",lineHeight:1.7,margin:"0 0 28px"},children:"Today, as a UGC Autonomous institution affiliated to JNTUA, we continue that legacy — shaping engineers, innovators, and leaders who carry our values into the world."}),(0,i.jsx)("div",{style:{display:"flex",gap:"28px",marginBottom:"32px"},children:l.map(e=>(0,i.jsxs)("div",{children:[(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"30px",fontWeight:700,color:"#2B3490",lineHeight:1},children:e.num}),(0,i.jsx)("div",{style:{fontSize:"14px",color:"#888",marginTop:"4px"},children:e.label})]},e.label))}),(0,i.jsx)(t.default,{href:"/about",style:{display:"inline-block",padding:"12px 26px",background:"#2B3490",color:"#ffffff",fontFamily:"'Rajdhani', sans-serif",fontSize:"15px",fontWeight:600,borderRadius:"6px",textDecoration:"none",transition:"background 0.2s ease"},children:"Read Our Story →"})]}),(0,i.jsxs)(a.motion.div,{className:"about-img-col",initial:{opacity:0,x:40},whileInView:{opacity:1,x:0},viewport:{once:!0,amount:.2},transition:{duration:.75,ease:o,delay:.1},style:{position:"relative"},children:[(0,i.jsxs)("div",{style:{position:"relative",overflow:"hidden",borderRadius:"12px",transition:"transform 0.3s ease, box-shadow 0.3s ease"},onMouseEnter:e=>{e.currentTarget.style.transform="scale(1.02)",e.currentTarget.style.boxShadow="0 12px 32px rgba(43,52,144,0.12)"},onMouseLeave:e=>{e.currentTarget.style.transform="scale(1)",e.currentTarget.style.boxShadow="none"},children:[(0,i.jsx)(n.default,{src:"/gallery/campus/topview.jpg",alt:"Aerial view of KSRM College campus",width:600,height:340,style:{width:"100%",height:"auto",objectFit:"cover",display:"block"}}),(0,i.jsxs)("div",{style:{position:"absolute",bottom:"20px",left:"20px",background:"#D4A500",color:"#1a1a2e",padding:"18px 24px",borderRadius:"10px",boxShadow:"0 10px 30px rgba(43,52,144,0.2)"},children:[(0,i.jsxs)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"32px",fontWeight:700,lineHeight:1},children:[s,"+"]}),(0,i.jsx)("div",{style:{fontSize:"11px",fontWeight:600,marginTop:"5px",letterSpacing:"0.5px"},children:"YEARS OF TRUST"})]})]}),(0,i.jsx)("p",{style:{marginTop:"12px",textAlign:"center",fontSize:"16px",fontWeight:600,color:"#2B3490",letterSpacing:"0.4px"},children:"Aerial View of KSRM College Campus"})]})]})})]})}])},84966,e=>{"use strict";var i=e.i(48277),t=e.i(16506),n=e.i(42588),a=e.i(35691),r=e.i(30668),o=e.i(32213);let s=[{title:"Admissions",desc:"Apply & eligibility",link:"/admissions",imageCode:"admissions"},{title:"Examinations",desc:"Results & timetables",link:"/results",imageCode:"examinations"},{title:"Placements",desc:"Careers & recruiters",link:"/placements",imageCode:"placements"},{title:"Library",desc:"E-resources & OPAC",link:"/library",imageCode:"library"},{title:"Syllabus",desc:"Download by semester",link:"/academics",imageCode:"syllabus"},{title:"Student Portal",desc:"Login portal",link:"/contact",imageCode:"student-portal"},{title:"Alumni",desc:"Network & events",link:"/alumni",imageCode:"alumni"},{title:"Research",desc:"Publications & R&D",link:"/research",imageCode:"research"}],l={hidden:{},visible:{transition:{staggerChildren:.08}}},d={hidden:{opacity:0,y:24},visible:{opacity:1,y:0,transition:{duration:.5,ease:[.22,1,.36,1]}}};e.s(["default",0,function(){let[e,p]=(0,r.useState)(null);return(0,i.jsxs)("section",{className:"services-section",style:{width:"100%",background:"#ffffff",padding:"52px 0",borderTop:"1px solid #f1f5f9"},children:[(0,i.jsx)("style",{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+
+        .services-section { box-sizing: border-box; }
+
+        .services-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin: 32px 0 0;
+        }
+
+        @media (max-width: 1024px) {
+          .services-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 640px) {
+          .services-section { padding: 32px 0 !important; }
+          .services-grid    { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        }
+        @media (max-width: 380px) {
+          .services-grid { grid-template-columns: 1fr; }
+        }
+      `}),(0,i.jsxs)(o.default,{children:[(0,i.jsxs)("div",{style:{textAlign:"center"},children:[(0,i.jsx)("div",{style:{fontSize:"12px",fontWeight:700,letterSpacing:"2px",color:"#2B3490",textTransform:"uppercase"},children:"QUICK ACCESS"}),(0,i.jsx)("h2",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"32px",fontWeight:700,color:"#1a1a2e",margin:"8px 0 0"},children:"Digital Campus Services"})]}),(0,i.jsx)(a.motion.div,{className:"services-grid",variants:l,initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.1},children:s.map((r,o)=>{let s=e===o;return(0,i.jsx)(a.motion.div,{variants:d,children:(0,i.jsx)(t.default,{href:r.link,style:{textDecoration:"none",display:"block",height:"100%"},children:(0,i.jsxs)("div",{onMouseEnter:()=>p(o),onMouseLeave:()=>p(null),style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"14px",overflow:"hidden",position:"relative",cursor:"pointer",height:"100%",boxSizing:"border-box",transform:s?"scale(1.02)":"scale(1)",boxShadow:s?"0 14px 34px rgba(43,52,144,0.14)":"0 1px 4px rgba(0,0,0,0.04)",transition:"transform 0.25s ease, box-shadow 0.25s ease"},children:[(0,i.jsx)("div",{style:{position:"relative",width:"100%",height:"128px",overflow:"hidden"},children:(0,i.jsx)(n.default,{src:`/services/${r.imageCode}.svg`,alt:r.title,fill:!0,sizes:"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw",style:{objectFit:"cover"},priority:!1})}),(0,i.jsxs)("div",{style:{padding:"20px",textAlign:"center"},children:[(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"19px",fontWeight:700,color:"#1a1a2e",marginBottom:"4px"},children:r.title}),(0,i.jsx)("div",{style:{fontSize:"12.5px",color:"#888"},children:r.desc})]}),(0,i.jsx)("div",{style:{position:"absolute",top:0,left:0,width:"100%",height:"3px",background:"#D4A500",transform:s?"scaleX(1)":"scaleX(0)",transformOrigin:"left",transition:"transform 0.25s ease"}})]})})},r.title)})})]})]})}])},9913,e=>{"use strict";var i=e.i(48277),t=e.i(16506),n=e.i(42588),a=e.i(35691),r=e.i(30668),o=e.i(22996),s=e.i(32213);let l=[{code:"CSE",name:"Computer Science & Engineering",hod:"Dr. V. Lokeswara Reddy",link:"/departments/cse",imageCode:"cse"},{code:"ECE",name:"Electronics & Communication",hod:"Dr. M. Venkatanarayana",link:"/departments/ece",imageCode:"ece"},{code:"EEE",name:"Electrical & Electronics",hod:"Dr. M.S. Priyadarshini",link:"/departments/eee",imageCode:"eee"},{code:"MECH",name:"Mechanical Engineering",hod:"Dr. D. Ravikanth",link:"/departments/mech",imageCode:"mech"},{code:"CIVIL",name:"Civil Engineering",hod:"Dr. G. Chennakesava Reddy",link:"/departments/civil",imageCode:"civil"},{code:"H&S",name:"Humanities & Sciences",hod:"Dr. V. Ramachandra Reddy",link:"/departments/hs",imageCode:"hs"},{code:"MBA",name:"Management Studies",hod:"Department of MBA",link:"/departments/mba",imageCode:"mba"}],d={hidden:{},visible:{transition:{staggerChildren:.07}}},p={hidden:{opacity:0,y:24},visible:{opacity:1,y:0,transition:{duration:.5,ease:[.22,1,.36,1]}}};e.s(["default",0,function(){let[e,c]=(0,r.useState)(null);return(0,i.jsxs)("section",{className:"depts-section",style:{width:"100%",background:"#ffffff",padding:"56px 0",borderTop:"1px solid #f1f5f9"},children:[(0,i.jsx)("style",{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+        .depts-section { box-sizing: border-box; }
+        .depts-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin: 32px 0 0;
+        }
+        @media (max-width: 1024px) {
+          .depts-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 640px) {
+          .depts-section { padding: 32px 0 !important; }
+          .depts-grid    { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        }
+        @media (max-width: 380px) {
+          .depts-grid { grid-template-columns: 1fr; }
+        }
+      `}),(0,i.jsxs)(s.default,{children:[(0,i.jsxs)("div",{style:{textAlign:"center"},children:[(0,i.jsx)("div",{style:{fontSize:"12px",fontWeight:700,letterSpacing:"2px",color:"#2B3490",textTransform:"uppercase"},children:"ACADEMICS"}),(0,i.jsx)("h2",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"36px",fontWeight:700,color:"#1a1a2e",margin:"8px 0 6px"},children:"Our Departments"}),(0,i.jsx)("p",{style:{fontSize:"16px",color:"#888",margin:0},children:"Seven departments. Decades of academic excellence."})]}),(0,i.jsxs)(a.motion.div,{className:"depts-grid",variants:d,initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.1},children:[l.map((r,s)=>{let l=e===s;return(0,i.jsx)(a.motion.div,{variants:p,style:{height:"100%"},children:(0,i.jsx)(t.default,{href:r.link,style:{textDecoration:"none",display:"block",height:"100%"},children:(0,i.jsxs)("div",{onMouseEnter:()=>c(s),onMouseLeave:()=>c(null),style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"14px",overflow:"hidden",position:"relative",cursor:"pointer",height:"100%",boxSizing:"border-box",transform:l?"scale(1.02)":"scale(1)",boxShadow:l?"0 14px 32px rgba(43,52,144,0.16)":"0 1px 4px rgba(0,0,0,0.04)",transition:"transform 0.25s ease, box-shadow 0.25s ease"},children:[(0,i.jsx)("div",{style:{position:"relative",width:"100%",height:"144px",overflow:"hidden"},children:(0,i.jsx)(n.default,{src:`/departments/${r.imageCode}.svg`,alt:r.name,fill:!0,sizes:"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",style:{objectFit:"cover"},priority:!1})}),(0,i.jsxs)("div",{style:{padding:"20px"},children:[(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"17px",fontWeight:700,color:"#1a1a2e",lineHeight:1.25,marginBottom:"8px",transition:"color 0.25s ease"},children:r.name}),(0,i.jsx)("div",{style:{fontSize:"14px",color:"#888",marginBottom:"12px",transition:"color 0.25s ease"},children:r.hod}),(0,i.jsxs)("div",{style:{display:"flex",alignItems:"center",gap:"4px",fontSize:"15px",fontWeight:600,color:"#2B3490",transition:"color 0.25s ease, gap 0.25s ease"},children:["Explore ",(0,i.jsx)(o.ArrowRight,{size:13,strokeWidth:2,style:{transition:"transform 0.25s ease",transform:l?"translateX(4px)":"translateX(0)"}})]})]}),(0,i.jsx)("div",{style:{position:"absolute",inset:0,background:l?"rgba(43, 52, 144, 0.05)":"transparent",pointerEvents:"none",transition:"background 0.25s ease"}})]})})},r.code)}),(0,i.jsx)(a.motion.div,{variants:p,style:{height:"100%"},children:(0,i.jsx)(t.default,{href:"/departments",style:{textDecoration:"none",display:"block",height:"100%"},children:(0,i.jsxs)("div",{onMouseEnter:()=>c(l.length),onMouseLeave:()=>c(null),style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"14px",overflow:"hidden",position:"relative",cursor:"pointer",height:"100%",boxSizing:"border-box",transform:e===l.length?"scale(1.02)":"scale(1)",boxShadow:e===l.length?"0 14px 32px rgba(43,52,144,0.16)":"0 1px 4px rgba(0,0,0,0.04)",transition:"transform 0.25s ease, box-shadow 0.25s ease"},children:[(0,i.jsx)("div",{style:{position:"relative",width:"100%",height:"144px",overflow:"hidden"},children:(0,i.jsx)(n.default,{src:"/departments/all departments.svg",alt:"All Departments",fill:!0,sizes:"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",style:{objectFit:"cover"},priority:!1})}),(0,i.jsxs)("div",{style:{padding:"20px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"120px"},children:[(0,i.jsxs)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"17px",fontWeight:700,color:"#1a1a2e",lineHeight:1.25,marginBottom:"8px",textAlign:"center"},children:["View All",(0,i.jsx)("br",{}),"Departments"]}),(0,i.jsx)("div",{style:{fontSize:"14px",color:"#2B3490",fontWeight:600,marginTop:"8px"},children:"Explore all →"})]})]})})})]})]})]})}])},77980,e=>{"use strict";var i=e.i(48277),t=e.i(16506),n=e.i(35691),a=e.i(30668),r=e.i(75878),o=e.i(22996),s=e.i(32213);e.i(39057);let l="http://localhost:4000";async function d(e,i){let t=localStorage.getItem("adminToken"),n=await fetch(`${l}${e}`,{...i,headers:{"Content-Type":"application/json",...t?{Authorization:`Bearer ${t}`}:{},...i?.headers}});if(!n.ok)throw Error(await n.text()||`API error: ${n.status}`);return n.json()}var p=e.i(22204);let c={hidden:{},visible:{transition:{staggerChildren:.1}}},x={hidden:{opacity:0,y:24},visible:{opacity:1,y:0,transition:{duration:.55,ease:[.22,1,.36,1]}}};e.s(["default",0,function(){let[e,g]=(0,a.useState)(null),{news:m}=l&&l.length>0?function(){let[e,i]=(0,a.useState)([]),[t,n]=(0,a.useState)(!0),[r,o]=(0,a.useState)(null),s=async()=>{try{o(null);let e=await d("/news");i(Array.isArray(e)?e:[])}catch(e){o(e.message),i([])}finally{n(!1)}};return(0,a.useEffect)(()=>{n(!0),s();let e=setInterval(s,3e4);return()=>clearInterval(e)},[void 0]),{news:e,loading:t,error:r,refresh:s}}():{news:[]},h=(0,a.useMemo)(()=>(m&&m.length>0?m:p.news.news).map(e=>{let i,t;return{id:e.id,category:e.category||"News",date:e.date,title:e.title,link:"/news",isNew:(i=new Date(e.date),(t=new Date).setDate(t.getDate()-10),i>=t),gradient:e.gradient||"linear-gradient(135deg, #2B3490, #1e2570)"}}).slice(0,3),[m]);return(0,i.jsxs)("section",{className:"news-section",style:{width:"100%",background:"#f7f8fa",padding:"56px 0"},children:[(0,i.jsx)("style",{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+        .news-section { box-sizing: border-box; }
+        @keyframes badge-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+
+        .news-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin: 0 0 28px;
+        }
+        .news-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 22px;
+        }
+
+        .news-desktop-view { display: block; }
+        .news-mobile-view  { display: none; }
+
+        @media (max-width: 1024px) {
+          .news-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .news-section { padding: 40px 0 !important; }
+        }
+        @media (max-width: 768px) {
+          .news-section      { padding: 0 !important; background: #fff !important; }
+          .news-desktop-view { display: none !important; }
+          .news-mobile-view  { display: block !important; }
+        }
+      `}),(0,i.jsx)("div",{className:"news-desktop-view",children:(0,i.jsxs)(s.default,{children:[(0,i.jsxs)("div",{className:"news-header",children:[(0,i.jsxs)("div",{children:[(0,i.jsx)("div",{style:{fontSize:"12px",fontWeight:700,letterSpacing:"2px",color:"#2B3490",textTransform:"uppercase"},children:"STAY UPDATED"}),(0,i.jsx)("h2",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"36px",fontWeight:700,color:"#1a1a2e",margin:"8px 0 0"},children:"Latest News & Events"})]}),(0,i.jsxs)(t.default,{href:"/news",style:{fontSize:"16px",fontWeight:600,color:"#2B3490",textDecoration:"none",display:"flex",alignItems:"center",gap:"4px",flexShrink:0,paddingBottom:"4px"},children:["View All ",(0,i.jsx)(o.ArrowRight,{size:15,strokeWidth:2})]})]}),(0,i.jsx)(n.motion.div,{className:"news-grid",variants:c,initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.1},children:h.map((a,s)=>{let l=e===s;return(0,i.jsx)(n.motion.div,{variants:x,children:(0,i.jsx)(t.default,{href:a.link,style:{textDecoration:"none",display:"block"},children:(0,i.jsxs)("div",{onMouseEnter:()=>g(s),onMouseLeave:()=>g(null),style:{background:"#ffffff",borderRadius:"14px",overflow:"hidden",border:"1px solid #eef0f3",cursor:"pointer",transform:l?"translateY(-6px)":"translateY(0)",boxShadow:l?"0 16px 36px rgba(43,52,144,0.13)":"0 1px 4px rgba(0,0,0,0.05)",transition:"transform 0.25s ease, box-shadow 0.25s ease",position:"relative"},children:[(0,i.jsxs)("div",{style:{height:"160px",background:a.gradient,position:"relative"},children:[(0,i.jsx)("div",{style:{position:"absolute",top:"12px",left:"12px",background:"rgba(255,255,255,0.95)",color:"#2B3490",fontSize:"10px",fontWeight:700,padding:"4px 10px",borderRadius:"20px",textTransform:"uppercase",letterSpacing:"0.5px"},children:a.category}),a.isNew&&(0,i.jsx)("div",{style:{position:"absolute",top:"12px",right:"12px",background:"#E8112D",color:"#fff",fontSize:"10px",fontWeight:700,padding:"4px 10px",borderRadius:"4px",textTransform:"uppercase",letterSpacing:"0.5px",animation:"badge-pulse 2s infinite"},children:"NEW"})]}),(0,i.jsxs)("div",{style:{padding:"18px 18px 22px"},children:[(0,i.jsxs)("div",{style:{display:"flex",alignItems:"center",gap:"5px",fontSize:"14px",color:"#999",marginBottom:"8px"},children:[(0,i.jsx)(r.Calendar,{size:13,strokeWidth:1.8}),a.date]}),(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"18px",fontWeight:700,color:"#1a1a2e",lineHeight:1.3,marginBottom:"14px"},children:a.title}),(0,i.jsxs)("div",{style:{display:"flex",alignItems:"center",gap:"4px",fontSize:"15px",fontWeight:600,color:"#2B3490"},children:["Read More ",(0,i.jsx)(o.ArrowRight,{size:14,strokeWidth:2})]})]})]})})},a.id||s)})})]})}),(0,i.jsxs)("div",{className:"news-mobile-view",children:[(0,i.jsx)("div",{style:{background:"#2B3490",color:"#fff",padding:"11px 16px",fontSize:"13px",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase"},children:"News & Announcements"}),h.map((e,n)=>(0,i.jsxs)(t.default,{href:e.link,style:{display:"flex",alignItems:"flex-start",gap:"10px",padding:"13px 16px",borderBottom:"1px solid #eee",background:"#fff",textDecoration:"none"},children:[e.isNew&&(0,i.jsx)("span",{style:{background:"#E8112D",color:"#fff",fontSize:"8px",fontWeight:800,padding:"2px 6px",borderRadius:"3px",letterSpacing:"0.5px",flexShrink:0,marginTop:"3px",display:"inline-block",textTransform:"uppercase"},children:"NEW"}),(0,i.jsx)("span",{style:{fontSize:"15px",fontWeight:600,color:"#1a3a8a",lineHeight:1.45},children:e.title})]},e.id||n)),(0,i.jsx)(t.default,{href:"/news",style:{display:"block",padding:"12px 16px",background:"#f4f6fb",color:"#2B3490",fontSize:"13px",fontWeight:600,textDecoration:"none",textAlign:"center",borderTop:"2px solid #e5e9f5"},children:"View All Notifications →"})]})]})}],77980)},51172,e=>{"use strict";var i=e.i(48277),t=e.i(30668),n=e.i(35691),a=e.i(32213);let r={hidden:{opacity:0,y:20},visible:{opacity:1,y:0,transition:{duration:.6}}},o={hidden:{},visible:{transition:{staggerChildren:.1}}};e.s(["default",0,function(){let[e,s]=(0,t.useState)(!1);return(0,i.jsxs)("section",{style:{background:"white",padding:"80px 0",width:"100%"},children:[(0,i.jsx)(a.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",animate:"visible",variants:o,children:[(0,i.jsxs)(n.motion.div,{variants:r,style:{textAlign:"center",marginBottom:60},children:[(0,i.jsx)("div",{style:{display:"inline-block",background:"#2B3490",color:"#D4A500",padding:"6px 20px",borderRadius:20,fontSize:12,fontWeight:700,letterSpacing:"3px",textTransform:"uppercase",marginBottom:16},children:"Admissions 2025-26"}),(0,i.jsx)("h2",{style:{fontSize:"clamp(2rem, 4vw, 3rem)",fontWeight:800,color:"#1a1d4d",fontFamily:"'Rajdhani', sans-serif",margin:0,marginBottom:8},children:"Begin Your Engineering Journey"}),(0,i.jsx)("p",{style:{fontSize:15,color:"#666",marginTop:8},children:"EAPCET Code: KSRM | Kadapa, Andhra Pradesh"})]}),(0,i.jsx)("style",{children:`
+            .brochures-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 32px;
+              max-width: 1400px;
+              margin: 0 auto;
+              padding: 0 40px;
+              margin-bottom: 48px;
+            }
+            @media (max-width: 1024px) {
+              .brochures-grid {
+                padding: 0 32px;
+                gap: 24px;
+              }
+            }
+            @media (max-width: 768px) {
+              .brochures-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+                gap: 20px;
+              }
+            }
+            @media (max-width: 480px) {
+              .brochures-grid {
+                padding: 0 14px;
+                gap: 16px;
+              }
+            }
+          `}),(0,i.jsxs)("div",{className:"brochures-grid",children:[(0,i.jsxs)(n.motion.div,{variants:r,style:{position:"relative",borderRadius:16,overflow:"hidden",boxShadow:"0 20px 60px rgba(43,52,144,0.2)",cursor:"pointer"},children:[(0,i.jsx)("div",{style:{position:"absolute",top:12,left:12,zIndex:10},title:"KGCET 2025",children:(0,i.jsx)("img",{src:encodeURI("/documents/adv/WhatsApp Image 2026-06-09 at 7.55.18 PM.jpeg"),alt:"KGCET 2025",style:{width:60,height:60,borderRadius:"50%",border:"3px solid #D4A500",objectFit:"cover"},title:"KGCET 2025"})}),(0,i.jsx)("img",{src:"/documents/adv/B tech banner.png",alt:"B.Tech Admissions 2025-26",style:{width:"100%",height:260,objectFit:"cover",objectPosition:"top",display:"block"}}),(0,i.jsxs)("div",{style:{background:"linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)",padding:"20px 24px"},children:[(0,i.jsx)("div",{style:{background:"rgba(255,230,25,0.15)",color:"#D4A500",fontSize:11,fontWeight:700,letterSpacing:"2px",padding:"4px 12px",borderRadius:4,display:"inline-block",marginBottom:10,textTransform:"uppercase"},children:"B.Tech Programmes"}),(0,i.jsx)("h3",{style:{fontSize:18,fontWeight:800,color:"white",margin:"0 0 6px"},children:"B.Tech Engineering"}),(0,i.jsx)("div",{style:{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12},children:["CSE","ECE","EEE","CIVIL","MECH","AI&ML","DS","AIML"].map(e=>(0,i.jsx)("span",{style:{background:"rgba(255,255,255,0.1)",color:"white",fontSize:10,padding:"2px 8px",borderRadius:20},children:e},e))}),(0,i.jsx)("p",{style:{fontSize:12,color:"#ccc",margin:0},children:"750+ Seats | 8 Branches | 4 Years"}),(0,i.jsx)("button",{onClick:()=>s(!0),style:{background:"#D4A500",color:"#2B3490",padding:"10px 20px",borderRadius:8,fontWeight:800,fontSize:13,border:"none",cursor:"pointer",display:"inline-block",marginTop:12,textDecoration:"none",transition:"all 0.2s"},onMouseEnter:e=>{e.currentTarget.style.transform="translateY(-2px)",e.currentTarget.style.boxShadow="0 8px 16px rgba(43,52,144,0.2)"},onMouseLeave:e=>{e.currentTarget.style.transform="translateY(0)",e.currentTarget.style.boxShadow="none"},children:"View Brochure ↗"})]})]}),(0,i.jsxs)(n.motion.div,{variants:r,style:{position:"relative",borderRadius:16,overflow:"hidden",boxShadow:"0 20px 60px rgba(43,52,144,0.2)"},children:[(0,i.jsx)("img",{src:"/documents/adv/Diploma banner.png",alt:"Diploma Admissions 2025-26",style:{width:"100%",height:260,objectFit:"cover",objectPosition:"top",display:"block"}}),(0,i.jsxs)("div",{style:{background:"linear-gradient(135deg, #1a1d4d 0%, #0d0f2e 100%)",padding:"20px 24px"},children:[(0,i.jsx)("div",{style:{background:"rgba(255,230,25,0.15)",color:"#D4A500",fontSize:11,fontWeight:700,letterSpacing:"2px",padding:"4px 12px",borderRadius:4,display:"inline-block",marginBottom:10,textTransform:"uppercase"},children:"Diploma / Polytechnic"}),(0,i.jsx)("h3",{style:{fontSize:18,fontWeight:800,color:"white",margin:"0 0 6px"},children:"Diploma Programmes"}),(0,i.jsx)("div",{style:{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12},children:["Civil","Mechanical","ECE","EEE","CSE"].map(e=>(0,i.jsx)("span",{style:{background:"rgba(255,255,255,0.1)",color:"white",fontSize:10,padding:"2px 8px",borderRadius:20},children:e},e))}),(0,i.jsx)("p",{style:{fontSize:12,color:"#ccc",margin:0},children:"Lateral Entry Available | 3 Years | EAPCET Eligible"}),(0,i.jsx)("a",{href:encodeURI("/documents/adv/diploma pamplet pdf.pdf"),download:"Diploma-Brochure-KSRMCE.pdf",style:{background:"#D4A500",color:"#2B3490",padding:"10px 20px",borderRadius:8,fontWeight:800,fontSize:13,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:8,marginTop:12,transition:"all 0.2s",cursor:"pointer"},onMouseEnter:e=>{e.currentTarget.style.transform="translateY(-2px)",e.currentTarget.style.boxShadow="0 8px 16px rgba(43,52,144,0.2)"},onMouseLeave:e=>{e.currentTarget.style.transform="translateY(0)",e.currentTarget.style.boxShadow="none"},children:"📥 Download Brochure"})]})]})]}),(0,i.jsxs)(n.motion.div,{variants:r,style:{background:"#f4f3ef",borderRadius:12,padding:"24px 40px",maxWidth:1100,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:16},children:[(0,i.jsxs)("div",{style:{fontSize:15,color:"#2B3490",fontWeight:600},children:["📞 Admissions Helpline: ",(0,i.jsx)("a",{href:"tel:+919000073434",style:{color:"#2B3490",textDecoration:"none",fontWeight:700},children:"+91-9000073434"})," | ",(0,i.jsx)("a",{href:"tel:+918143731980",style:{color:"#2B3490",textDecoration:"none",fontWeight:700},children:"+91-8143731980"})]}),(0,i.jsxs)("div",{style:{fontSize:15,color:"#2B3490",fontWeight:600},children:["✉️ ",(0,i.jsx)("a",{href:"mailto:ksrmcengg@yahoo.co.in",style:{color:"#2B3490",textDecoration:"none",fontWeight:700},children:"ksrmcengg@yahoo.co.in"})]})]})]})}),e&&(0,i.jsx)("div",{onClick:()=>s(!1),style:{position:"fixed",inset:0,background:"rgba(0,0,0,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:9999,padding:20},children:(0,i.jsxs)("div",{style:{position:"relative",maxWidth:"90vw",maxHeight:"90vh"},children:[(0,i.jsx)("img",{src:"/documents/adv/B tech banner.png",alt:"B.Tech Brochure",style:{width:"100%",height:"auto",maxHeight:"90vh",objectFit:"contain"},onClick:e=>e.stopPropagation()}),(0,i.jsx)("button",{onClick:()=>s(!1),style:{position:"absolute",top:20,right:20,background:"white",border:"none",borderRadius:"50%",width:40,height:40,fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:"bold"},children:"✕"})]})}),(0,i.jsx)("style",{children:`
+        @media (max-width: 768px) {
+          section > div > div:nth-child(2) {
+            grid-template-columns: 1fr !important;
+          }
+          section > div > div:nth-child(3) {
+            flex-direction: column !important;
+            gap: 12px !important;
+          }
+        }
+      `})]})}])},47809,e=>{"use strict";var i=e.i(48277),t=e.i(35691),n=e.i(16506);let a=[{label:"Students Placed",value:1200,suffix:"+",isTarget:!0},{label:"Recruiting Companies",value:200,suffix:"+",isTarget:!0},{label:"Highest Package",value:12,suffix:" LPA",isAmount:!0,isTarget:!0},{label:"Placement Rate",value:90,suffix:"%",isTarget:!0}],r=["/placements/01.webp","/placements/02.webp","/placements/03.webp","/placements/04.webp","/placements/05.webp","/placements/06.webp","/placements/07.webp","/placements/08.webp","/placements/09.webp","/placements/10.webp","/placements/11.webp","/placements/12.webp"];var o=e.i(30668);let s={hidden:{opacity:0,y:28},visible:{opacity:1,y:0,transition:{duration:.4}}},l={hidden:{},visible:{transition:{staggerChildren:.1}}};function d({stat:e,shouldCount:n}){let a=function(e){let{target:i,duration:t=2e3,start:n=!1,suffix:a=""}=e,[r,s]=(0,o.useState)(0),l=(0,o.useRef)(null),d=(0,o.useRef)(null);return(0,o.useEffect)(()=>{if(!n)return void s(0);let e=n=>{null===d.current&&(d.current=n);let a=Math.min((n-d.current)/t,1);s(Math.floor(a*i)),a<1?l.current=requestAnimationFrame(e):s(i)};return l.current=requestAnimationFrame(e),()=>{null!==l.current&&cancelAnimationFrame(l.current),d.current=null}},[n,i,t]),r.toLocaleString()+a}({target:e.value,duration:1200,start:n,suffix:""});return(0,i.jsxs)(t.motion.div,{variants:s,className:"stat-card",children:[(0,i.jsxs)("div",{className:"stat-number",children:[a,e.suffix]}),(0,i.jsx)("div",{className:"stat-label",children:e.label})]})}e.s(["default",0,function(){let[e,p]=(0,o.useState)(!1),[c,x]=(0,o.useState)(!1);return(0,o.useEffect)(()=>{let e=new IntersectionObserver(([e])=>{e.isIntersecting&&x(!0)},{threshold:.3}),i=document.getElementById("placements-home-stats");return i&&e.observe(i),()=>e.disconnect()},[]),(0,i.jsxs)("section",{style:{padding:"80px 0",background:"#f4f3ef",width:"100%"},children:[(0,i.jsx)("style",{children:`
+        .placements-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 16px;
+        }
+        @media (min-width: 768px) {
+          .placements-container {
+            padding: 0 32px;
+          }
+        }
+        .placements-heading {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0 0 8px;
+          text-align: center;
+        }
+        .placements-subtitle {
+          font-size: 16px;
+          color: #666;
+          text-align: center;
+          margin: 0 0 48px;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 28px;
+          margin-bottom: 64px;
+        }
+        .stat-card {
+          background: #fff;
+          border-radius: 12px;
+          padding: 28px;
+          text-align: center;
+          border: 1px solid #eef0f3;
+          transition: all 0.3s;
+        }
+        .stat-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(43, 52, 144, 0.1);
+        }
+        .stat-number {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 36px;
+          font-weight: 700;
+          color: #1e2a78;
+          line-height: 1;
+          margin-bottom: 8px;
+        }
+        .stat-label {
+          font-size: 14px;
+          color: #666;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .scroll-section {
+          margin-bottom: 24px;
+          text-align: center;
+        }
+        .scroll-label {
+          font-size: 14px;
+          color: #1e2a78;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          margin-bottom: 16px;
+          display: inline-block;
+          background: #D4A500;
+          padding: 6px 16px;
+          border-radius: 20px;
+          margin-left: auto;
+          margin-right: auto;
+          width: fit-content;
+        }
+        .poster-wrapper {
+          position: relative;
+          overflow-x: auto;
+          overflow-y: hidden;
+          border-radius: 16px;
+          background: #fff;
+          padding: 8px;
+          -webkit-overflow-scrolling: touch;
+        }
+        .poster-track {
+          display: flex;
+          gap: 24px;
+          width: max-content;
+          animation: scrollX 50s linear infinite;
+          padding: 0;
+        }
+        .poster-track:hover {
+          animation-play-state: paused;
+        }
+        .poster-item {
+          flex: 0 0 auto;
+          width: 260px;
+          height: 260px;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+          transition: transform 0.3s ease;
+          cursor: pointer;
+        }
+        .poster-item:hover {
+          transform: scale(1.05);
+          box-shadow: 0 12px 32px rgba(43, 52, 144, 0.2);
+        }
+        .poster-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        @keyframes scrollX {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+        .cta-button {
+          display: inline-block;
+          background: #D4A500;
+          color: #1a1a2e;
+          padding: 16px 40px;
+          border-radius: 8px;
+          font-weight: 700;
+          text-decoration: none;
+          transition: all 0.2s;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 16px;
+          cursor: pointer;
+          border: none;
+          margin-top: 4px;
+        }
+        .cta-button:hover {
+          background: #2B3490;
+          color: #D4A500;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(255, 230, 25, 0.3);
+        }
+        .cta-wrapper {
+          text-align: center;
+        }
+        .marquee {
+          overflow: hidden;
+        }
+        .marquee-track {
+          display: flex;
+          gap: 1.5rem;
+          width: max-content;
+          animation: scroll 30s linear infinite;
+        }
+        .marquee:hover .marquee-track {
+          animation-play-state: paused;
+        }
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+        @media (max-width: 768px) {
+          .poster-item {
+            width: 200px;
+            height: 200px;
+          }
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+          .stat-number {
+            font-size: 28px;
+          }
+          /* Keep auto-scroll animation on mobile, smooth scrolling behavior */
+          .poster-track {
+            animation: scrollX 50s linear infinite;
+            scroll-behavior: smooth;
+          }
+          .poster-track:hover {
+            animation-play-state: paused;
+          }
+          /* Hide duplicate posters on mobile */
+          .poster-track > div:nth-child(n + 10) {
+            display: none;
+          }
+          .recruiter-logos {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+          }
+        }
+      `}),(0,i.jsxs)("div",{className:"placements-container",children:[(0,i.jsxs)(t.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0},variants:s,children:[(0,i.jsx)("h2",{className:"placements-heading",children:"Placements"}),(0,i.jsx)("p",{className:"placements-subtitle",children:"Join 1200+ graduates placed at India's top companies"})]}),(0,i.jsx)(t.motion.div,{id:"placements-home-stats",initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:l,className:"stats-grid",children:a.map((e,t)=>(0,i.jsx)(d,{stat:e,shouldCount:c},t))}),(0,i.jsxs)("div",{className:"scroll-section",children:[(0,i.jsx)("span",{className:"scroll-label",children:"🎓 2025 Placements"}),(0,i.jsx)("div",{className:"poster-wrapper",children:(0,i.jsxs)("div",{className:"poster-track",onMouseEnter:()=>p(!0),onMouseLeave:()=>p(!1),children:[r.map((e,t)=>(0,i.jsx)("div",{className:"poster-item",children:(0,i.jsx)("img",{src:e,alt:`Placement ${t+1}`,loading:"lazy"})},`original-${t}`)),r.map((e,t)=>(0,i.jsx)("div",{className:"poster-item",children:(0,i.jsx)("img",{src:e,alt:`Placement ${t+1}`,loading:"lazy"})},`duplicate-${t}`))]})})]}),(0,i.jsx)(t.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0},variants:s,className:"cta-wrapper",children:(0,i.jsx)(n.default,{href:"/placements",className:"cta-button",children:"View Full Placements"})}),(0,i.jsxs)("div",{style:{marginTop:"64px",paddingTop:"48px",borderTop:"1px solid #eef0f3"},children:[(0,i.jsxs)(t.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0},variants:s,style:{background:"linear-gradient(135deg, #2B3490 0%, #1e2a78 100%)",border:"1px solid #1e2a78",borderRadius:"16px",padding:"32px",marginBottom:"40px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"32px"},children:[(0,i.jsx)("div",{style:{flex:1},children:(0,i.jsxs)("h2",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"28px",fontWeight:700,margin:0,lineHeight:1.3},children:[(0,i.jsx)("span",{style:{color:"#ffffff"},children:"Recruited by "}),(0,i.jsx)("span",{style:{color:"#D4A500"},children:"200+ Top Companies"})]})}),(0,i.jsxs)("div",{style:{textAlign:"right",minWidth:"200px"},children:[(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"48px",fontWeight:700,color:"#D4A500",lineHeight:1,marginBottom:"8px"},children:"90%"}),(0,i.jsx)("div",{style:{fontSize:"14px",color:"#ffffff",fontWeight:600,marginBottom:"12px"},children:"Placement Rate"}),(0,i.jsx)("div",{style:{width:"100%",height:"6px",background:"rgba(255, 255, 255, 0.3)",borderRadius:"3px",overflow:"hidden"},children:(0,i.jsx)("div",{style:{height:"100%",width:"90%",background:"#D4A500",borderRadius:"3px"}})})]})]}),(0,i.jsx)(t.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0},variants:s,className:"marquee",style:{marginBottom:"40px"},children:(0,i.jsxs)("div",{className:"marquee-track",children:[[{name:"TCS",logo:"/recruiters/tcs.jpg"},{name:"Infosys",logo:"/recruiters/infosys.jpg"},{name:"Wipro",logo:"/recruiters/wipro.jpg"},{name:"Cognizant",logo:"/recruiters/cognizant.jpg"},{name:"Capgemini",logo:"/recruiters/capegemini.jpg"},{name:"HCL",logo:"/recruiters/hcl.jpg"},{name:"Mindtree",logo:"/recruiters/mindtree.jpg"},{name:"Mphasis",logo:"/recruiters/mphasis.jpg"},{name:"NTT Data",logo:"/recruiters/ntt data.jpg"},{name:"Hexaware",logo:"/recruiters/hexaware.jpg"},{name:"Birla Soft",logo:"/recruiters/birla soft.jpg"},{name:"Virtusa",logo:"/recruiters/virtusa.jpg"},{name:"Atos",logo:"/recruiters/Atos.jpg"},{name:"Zoho",logo:"/recruiters/zoho.jpg"},{name:"GND Solutions",logo:"/recruiters/gnd solutions.jpg"},{name:"Goldman Sachs",logo:"/recruiters/goldsachs.jpg"},{name:"Renault",logo:"/recruiters/renault.jpg"}].map((e,t)=>(0,i.jsx)("div",{style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"12px",padding:"16px",height:"80px",minWidth:"140px",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0},children:(0,i.jsx)("img",{src:e.logo,alt:e.name,style:{maxWidth:"100%",maxHeight:"100%",objectFit:"contain"},onError:i=>{i.target.style.display="none";let t=i.target.parentElement;t&&(t.style.color="#ccc"),t&&(t.textContent=e.name)}})},`original-${t}`)),[{name:"TCS",logo:"/recruiters/tcs.jpg"},{name:"Infosys",logo:"/recruiters/infosys.jpg"},{name:"Wipro",logo:"/recruiters/wipro.jpg"},{name:"Cognizant",logo:"/recruiters/cognizant.jpg"},{name:"Capgemini",logo:"/recruiters/capegemini.jpg"},{name:"HCL",logo:"/recruiters/hcl.jpg"},{name:"Mindtree",logo:"/recruiters/mindtree.jpg"},{name:"Mphasis",logo:"/recruiters/mphasis.jpg"},{name:"NTT Data",logo:"/recruiters/ntt data.jpg"},{name:"Hexaware",logo:"/recruiters/hexaware.jpg"},{name:"Birla Soft",logo:"/recruiters/birla soft.jpg"},{name:"Virtusa",logo:"/recruiters/virtusa.jpg"},{name:"Atos",logo:"/recruiters/Atos.jpg"},{name:"Zoho",logo:"/recruiters/zoho.jpg"},{name:"GND Solutions",logo:"/recruiters/gnd solutions.jpg"},{name:"Goldman Sachs",logo:"/recruiters/goldsachs.jpg"},{name:"Renault",logo:"/recruiters/renault.jpg"}].map((e,t)=>(0,i.jsx)("div",{style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"12px",padding:"16px",height:"80px",minWidth:"140px",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0},children:(0,i.jsx)("img",{src:e.logo,alt:e.name,style:{maxWidth:"100%",maxHeight:"100%",objectFit:"contain"},onError:i=>{i.target.style.display="none";let t=i.target.parentElement;t&&(t.style.color="#ccc"),t&&(t.textContent=e.name)}})},`duplicate-${t}`))]})})]})]})]})}],47809)},57740,e=>{"use strict";var i=e.i(48277),t=e.i(30668);let n=[{name:"Rahul Sharma",batch:"B.Tech CSE 2023",company:"TCS",initial:"R",text:"KSRMCE gave me not just a degree but the skills and confidence to excel in the software industry."},{name:"Priya Reddy",batch:"B.Tech ECE 2022",company:"Infosys",initial:"P",text:"The labs and infrastructure at KSRMCE are top-notch. I learned hands-on skills that directly helped me in my career."},{name:"Venkat Krishna",batch:"B.Tech MECH 2023",company:"L&T",initial:"V",text:"From day one, the college focused on our overall development. The placement cell worked tirelessly for us."},{name:"Divya Lakshmi",batch:"MBA 2024",company:"Deloitte",initial:"D",text:"The MBA programme has a perfect blend of theory and practical exposure. Guest lectures were invaluable."},{name:"Arun Kumar",batch:"B.Tech EEE 2022",company:"BHEL",initial:"A",text:"KSRMCE has excellent faculty who are always available for guidance. Research opportunities abound here."}];e.s(["default",0,function(){let[e,a]=(0,t.useState)(0),r=Math.ceil(n.length/3),o=3*e,s=n.slice(o,o+3);return(0,i.jsxs)("section",{style:{background:"white",padding:"60px 0",width:"100%"},children:[(0,i.jsxs)("div",{style:{maxWidth:"1400px",margin:"0 auto",padding:"0 16px",paddingLeft:"max(16px, env(safe-area-inset-left))",paddingRight:"max(16px, env(safe-area-inset-right))"},className:"testimonials-container",children:[(0,i.jsxs)("div",{style:{textAlign:"center",marginBottom:"44px"},children:[(0,i.jsx)("div",{style:{fontSize:"12px",fontWeight:700,letterSpacing:"2px",color:"#2B3490",textTransform:"uppercase",marginBottom:"12px"},children:"STUDENT VOICES"}),(0,i.jsx)("h2",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"32px",fontWeight:700,color:"#1a1a2e",margin:0},children:"What Our Students Say"})]}),(0,i.jsx)("div",{style:{display:"grid",gridTemplateColumns:"repeat(1, 1fr)",gap:"24px",marginBottom:r>1?"32px":"0"},className:"testimonials-grid",children:s.map((t,n)=>(0,i.jsxs)("div",{style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"16px",padding:"28px 24px",display:"flex",flexDirection:"column",textAlign:"center",transition:"all 0.3s ease",cursor:"default"},onMouseEnter:e=>{e.currentTarget.style.boxShadow="0 8px 24px rgba(43,52,144,0.12)",e.currentTarget.style.transform="translateY(-2px)"},onMouseLeave:e=>{e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)",e.currentTarget.style.transform="translateY(0)"},children:[(0,i.jsxs)("p",{style:{fontSize:"15px",lineHeight:"1.6",color:"#555",marginBottom:"16px",flex:1,margin:"0 0 16px 0"},children:['"',t.text,'"']}),(0,i.jsx)("div",{style:{display:"flex",justifyContent:"center",gap:"4px",marginBottom:"16px"},children:[void 0,void 0,void 0,void 0,void 0].map((e,t)=>(0,i.jsx)("span",{style:{fontSize:"14px",color:"#D4A500"},children:"★"},t))}),(0,i.jsx)("div",{style:{background:"#2B3490",color:"#D4A500",width:"56px",height:"56px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"24px",fontWeight:700,margin:"0 auto 12px"},children:t.initial}),(0,i.jsx)("p",{style:{fontSize:"16px",fontWeight:700,color:"#1a1a2e",margin:"0 0 4px 0"},children:t.name}),(0,i.jsxs)("div",{style:{fontSize:"12px",color:"#888",margin:0},children:[t.batch," • ",t.company]})]},`${e}-${n}`))}),r>1&&(0,i.jsx)("div",{style:{display:"flex",justifyContent:"center",alignItems:"center",gap:"8px",marginTop:"24px"},children:[...Array(r)].map((t,n)=>(0,i.jsx)("button",{onClick:()=>a(n),style:{width:"8px",height:"8px",borderRadius:"50%",background:n===e?"#1e2a78":"#cbd5e1",border:"none",cursor:"pointer",flexShrink:0,padding:0,lineHeight:1}},n))})]}),(0,i.jsx)("style",{children:`
+        .testimonials-container {
+          padding: 0 16px;
+        }
+
+        @media (min-width: 768px) {
+          .testimonials-container {
+            padding: 0 32px;
+          }
+          .testimonials-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .testimonials-container {
+            padding: 0 48px;
+          }
+        }
+      `})]})}])},96654,e=>{"use strict";var i=e.i(48277),t=e.i(35691),n=e.i(32213);let a={hidden:{opacity:0,y:20},visible:{opacity:1,y:0,transition:{duration:.6}}},r={hidden:{},visible:{transition:{staggerChildren:.1}}},o=[{id:"opMcRto95Pg",title:"Get a Sight of KSRMCE Kadapa",tag:"Campus Tour"},{id:"faqh__a-PKI",title:"KSRM College of Engineering Official Ad",tag:"Official"},{id:"Si_PEgnmoG8",title:"KSRM College of Engineering, Kadapa",tag:"College Tour"}];e.s(["default",0,function(){return(0,i.jsxs)("section",{style:{background:"linear-gradient(135deg, #1a1d4d 0%, #2B3490 100%)",padding:"80px 0",width:"100%"},children:[(0,i.jsx)(n.default,{children:(0,i.jsxs)(t.motion.div,{initial:"hidden",animate:"visible",variants:r,children:[(0,i.jsxs)(t.motion.div,{variants:a,style:{textAlign:"center",marginBottom:48},children:[(0,i.jsx)("div",{style:{display:"inline-block",background:"rgba(255,230,25,0.15)",color:"#D4A500",fontSize:12,fontWeight:700,letterSpacing:"2px",padding:"6px 20px",borderRadius:20,marginBottom:16,textTransform:"uppercase"},children:"▶ KSRMCE Official"}),(0,i.jsx)("h2",{style:{fontSize:"clamp(2rem, 4vw, 2.8rem)",fontWeight:800,color:"white",fontFamily:"'Rajdhani', sans-serif",margin:"0 0 8px"},children:"Campus Life in Action"}),(0,i.jsx)("p",{style:{fontSize:15,color:"#aaa",margin:0},children:"Watch our official videos and campus tours"})]}),(0,i.jsx)("style",{children:`
+            .campus-videos-grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 20px;
+              max-width: 100%;
+              margin: 0 auto;
+              padding: 0 40px;
+              margin-bottom: 40px;
+            }
+            @media (max-width: 1024px) {
+              .campus-videos-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 0 32px;
+              }
+            }
+            @media (max-width: 640px) {
+              .campus-videos-grid {
+                grid-template-columns: 1fr;
+                padding: 0 16px;
+                gap: 16px;
+              }
+            }
+          `}),(0,i.jsx)("div",{className:"campus-videos-grid",children:o.map((e,n)=>(0,i.jsxs)(t.motion.div,{variants:a,style:{borderRadius:12,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,0.3)",position:"relative"},children:[(0,i.jsx)("div",{style:{position:"absolute",top:0,left:0,background:"#D4A500",color:"#2B3490",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:"0 0 8px 0",zIndex:10},children:e.tag}),(0,i.jsx)("iframe",{width:"100%",height:220,src:`https://www.youtube.com/embed/${e.id}?rel=0&modestbranding=1`,title:e.title,frameBorder:"0",allow:"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",allowFullScreen:!0,style:{display:"block"}}),(0,i.jsx)("div",{style:{background:"rgba(0,0,0,0.8)",padding:"12px 16px",color:"white",fontSize:13,fontWeight:600},children:e.title})]},e.id))}),(0,i.jsx)(t.motion.div,{variants:a,style:{marginTop:40,textAlign:"center"},children:(0,i.jsx)("a",{href:"https://www.youtube.com/ksrmceofficialmedia",target:"_blank",rel:"noopener noreferrer",style:{display:"inline-flex",alignItems:"center",gap:10,background:"#FF0000",color:"white",padding:"14px 32px",borderRadius:8,fontWeight:700,fontSize:15,textDecoration:"none",transition:"all 0.2s"},onMouseEnter:e=>{e.currentTarget.style.background="#CC0000",e.currentTarget.style.transform="translateY(-2px)"},onMouseLeave:e=>{e.currentTarget.style.background="#FF0000",e.currentTarget.style.transform="translateY(0)"},children:"▶ Subscribe on YouTube"})})]})}),(0,i.jsx)("style",{children:`
+        @media (max-width: 1024px) {
+          section > div > div:nth-child(2) {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 768px) {
+          section > div > div:nth-child(2) {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `})]})}])},24983,e=>{"use strict";var i=e.i(48277),t=e.i(16506),n=e.i(35691),a=e.i(30668),r=e.i(22996),o=e.i(32213);let s=[{shortName:"NAAC",grade:"A++",name:"NAAC Accredited",sub:"3.60 CGPA",link:"/accreditation",linkText:"View Certificate",colorClass:"naac",image:"/naac.png"},{shortName:"NBA",grade:"Tier-1",name:"NBA Accredited",sub:"CE, ECE, CSE, EEE, ME",link:"/accreditation",linkText:"View Programs",colorClass:"nba",image:"/nba.png"},{shortName:"NIRF",grade:"Ranked",name:"NIRF India",sub:"Engineering Category",link:"/accreditation",linkText:"View Ranking",colorClass:"nirf",image:"/nirf.jpg"},{shortName:"UGC",grade:"Autonomous",name:"UGC Status",sub:"Affiliated to JNTUA",link:"/accreditation",linkText:"Learn More",colorClass:"ugc",image:"/ugc.webp"}],l={naac:"linear-gradient(135deg, #c8960c, #a8540c)",nba:"linear-gradient(135deg, #1a8fb8, #134e7a)",nirf:"linear-gradient(135deg, #2B3490, #1e2570)",ugc:"linear-gradient(135deg, #0d7a4d, #064d30)"},d={hidden:{},visible:{transition:{staggerChildren:.08}}},p={hidden:{opacity:0,y:24},visible:{opacity:1,y:0,transition:{duration:.5,ease:[.22,1,.36,1]}}};e.s(["default",0,function(){let[e,c]=(0,a.useState)(null);return(0,i.jsxs)("section",{className:"accred-section",style:{width:"100%",background:"#f7f8fa",padding:"56px 0"},children:[(0,i.jsx)("style",{children:`
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+        .accred-section { box-sizing: border-box; }
+        .accred-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 18px;
+          margin: 32px 0 0;
+        }
+        @media (max-width: 1024px) {
+          .accred-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+          .accred-section { padding: 32px 0 !important; }
+          .accred-grid    { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        }
+        @media (max-width: 380px) {
+          .accred-grid { grid-template-columns: 1fr; }
+        }
+      `}),(0,i.jsxs)(o.default,{children:[(0,i.jsxs)("div",{style:{textAlign:"center"},children:[(0,i.jsx)("div",{style:{fontSize:"12px",fontWeight:700,letterSpacing:"2px",color:"#2B3490",textTransform:"uppercase"},children:"RECOGNIZED FOR QUALITY"}),(0,i.jsx)("h2",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"32px",fontWeight:700,color:"#1a1a2e",margin:"8px 0 6px"},children:"Accreditations & Rankings"}),(0,i.jsx)("p",{style:{fontSize:"14px",color:"#888",margin:0},children:"Certified excellence you can trust."})]}),(0,i.jsx)(n.motion.div,{className:"accred-grid",variants:d,initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.1},children:s.map((a,o)=>{let s=e===o;return(0,i.jsx)(n.motion.div,{variants:p,children:(0,i.jsx)(t.default,{href:a.link,style:{textDecoration:"none",display:"block"},children:(0,i.jsxs)("div",{onMouseEnter:()=>c(o),onMouseLeave:()=>c(null),style:{background:"#ffffff",border:"1px solid #eef0f3",borderRadius:"16px",padding:"28px 22px",textAlign:"center",cursor:"pointer",transform:s?"translateY(-5px)":"translateY(0)",boxShadow:s?"0 14px 32px rgba(43,52,144,0.13)":"0 1px 4px rgba(0,0,0,0.04)",transition:"transform 0.25s ease, box-shadow 0.25s ease"},children:[(0,i.jsx)("div",{style:{width:"72px",height:"72px",borderRadius:"50%",background:a.image?"#ffffff":l[a.colorClass],border:a.image?"1px solid #eef0f3":"none",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",overflow:"hidden"},children:a.image?(0,i.jsx)("img",{src:a.image,alt:a.shortName,style:{width:"88%",height:"88%",objectFit:"contain"}}):(0,i.jsx)("span",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"18px",fontWeight:700,color:"#ffffff"},children:a.shortName})}),(0,i.jsx)("div",{style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"26px",fontWeight:700,color:"#1a1a2e",lineHeight:1},children:a.grade}),(0,i.jsx)("div",{style:{fontSize:"13px",color:"#555",fontWeight:600,margin:"6px 0 4px"},children:a.name}),(0,i.jsx)("div",{style:{fontSize:"11px",color:"#999"},children:a.sub}),(0,i.jsxs)("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px",marginTop:"14px",fontSize:"12px",fontWeight:600,color:"#2B3490"},children:[a.linkText," ",(0,i.jsx)(r.ArrowRight,{size:13,strokeWidth:2})]})]})})},a.shortName)})})]})]})}])}]);

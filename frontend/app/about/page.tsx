@@ -157,7 +157,7 @@ export default function About() {
       `}</style>
 
       {/* HERO BANNER */}
-      <section className="k-hero" style={{ background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)" }}>
+      <section className="k-hero" style={{ backgroundImage: "url('/banners/about banner.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="k-container">
           <div className="k-hero-content">
             <div className="k-hero-eyebrow">🏛️ ABOUT US</div>

@@ -1,0 +1,167 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,32213,e=>{"use strict";var t=e.i(48277);e.s(["default",0,function({children:e,className:r}){return(0,t.jsxs)(t.Fragment,{children:[(0,t.jsx)("style",{children:`
+        .responsive-container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+        @media (max-width: 1024px) {
+          .responsive-container {
+            padding-left: 32px;
+            padding-right: 32px;
+          }
+        }
+        @media (max-width: 768px) {
+          .responsive-container {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+        @media (max-width: 480px) {
+          .responsive-container {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
+      `}),(0,t.jsx)("div",{className:`responsive-container ${r||""}`,children:e})]})}])},89177,e=>{"use strict";let t=(0,e.i(17381).default)("x",[["path",{d:"M18 6 6 18",key:"1bl5f8"}],["path",{d:"m6 6 12 12",key:"d8bk6v"}]]);e.s(["X",0,t],89177)},65702,e=>{"use strict";let t=[{src:"/gallery/campus/topview.jpg",alt:"KSRM College aerial campus view",category:"Campus"},{src:"/gallery/campus/blocktop.jpg",alt:"Main block aerial view",category:"Campus"},{src:"/gallery/campus/block.jpg",alt:"Main administrative block",category:"Campus"},{src:"/gallery/campus/19.jpg",alt:"Solar powered campus",category:"Campus"},{src:"/gallery/campus/22.jpg",alt:"Solar parking facility",category:"Campus"},{src:"/gallery/labs/lab.jpg",alt:"Robotics laboratory with ABB robotic arm",category:"Labs"},{src:"/gallery/labs/roboticslab.jpg",alt:"Robotic 3D printing lab",category:"Labs"},{src:"/gallery/labs/ab.jpg",alt:"Computer laboratory",category:"Labs"},{src:"/gallery/labs/labw.jpg",alt:"Computer lab examination",category:"Labs"},{src:"/gallery/labs/lab2.jpg",alt:"Chemistry laboratory",category:"Labs"},{src:"/gallery/labs/lab3.jpg",alt:"Electrical engineering lab",category:"Labs"},{src:"/gallery/sports/volleyball.jpg",alt:"Volleyball match",category:"Sports"},{src:"/gallery/sports/sportsg3.jpg",alt:"Indoor badminton court",category:"Sports"},{src:"/gallery/sports/sportsground.jpg",alt:"Basketball court",category:"Sports"},{src:"/gallery/sports/sportsground2.jpg",alt:"Sports ground aerial view",category:"Sports"},{src:"/gallery/library/library.jpg",alt:"Central Library building",category:"Library"},{src:"/gallery/library/studentsinlib.jpg",alt:"Students reading in library",category:"Library"},{src:"/gallery/library/studentsinlib2.jpg",alt:"Students studying in library",category:"Library"},{src:"/gallery/events/fest.jpg",alt:"Award ceremony",category:"Events"},{src:"/gallery/events/fest2.jpg",alt:"Cultural fest performance",category:"Events"},{src:"/gallery/events/event.jpg",alt:"KGCET poster launch",category:"Events"},{src:"/gallery/events/event2.jpg",alt:"CONNECT 2K26 technical fest",category:"Events"},{src:"/gallery/events/seminar.jpg",alt:"Seminar in auditorium",category:"Events"},{src:"/gallery/events/inaugaration.jpg",alt:"Statue inauguration ceremony",category:"Events"},{src:"/gallery/events/inaugaration2.jpg",alt:"Event inauguration ribbon cutting",category:"Events"},{src:"/gallery/events/achievements.jpg",alt:"Achievement award",category:"Events"},{src:"/gallery/events/activity.jpg",alt:"College activity",category:"Events"},{src:"/gallery/events/activity2.jpg",alt:"Campus tour activity",category:"Events"},{src:"/gallery/events/activity3.jpg",alt:"Bharat Environment Program",category:"Events"},{src:"/gallery/events/activity4.jpg",alt:"INSPIRON 2K26 event",category:"Events"},{src:"/hero/KSR00001.webp",alt:"Campus event - day view",category:"Events"},{src:"/hero/KSR00007.webp",alt:"Campus gathering and activities",category:"Events"},{src:"/hero/KSR00014.webp",alt:"Students engaged in event",category:"Events"},{src:"/hero/KSR00016.webp",alt:"Campus life moment",category:"Events"},{src:"/hero/KSR00017.webp",alt:"College event participation",category:"Events"},{src:"/hero/KSR00019.webp",alt:"Campus event scene",category:"Events"},{src:"/hero/KSR00027.webp",alt:"Student activities on campus",category:"Events"},{src:"/hero/KSR00028.webp",alt:"Event with student participation",category:"Events"},{src:"/hero/KSR00048.webp",alt:"Campus gathering and networking",category:"Events"},{src:"/hero/KSR00053.webp",alt:"Event moment on campus",category:"Events"},{src:"/hero/KSR00058.webp",alt:"Students at campus event",category:"Events"},{src:"/hero/KSR00104.webp",alt:"Campus celebration event",category:"Events"},{src:"/hero/KSR00116.webp",alt:"Crowd at campus event",category:"Events"},{src:"/hero/KSR00140.webp",alt:"Event scene with students",category:"Events"},{src:"/hero/KSR00163.webp",alt:"Large campus event gathering",category:"Events"},{src:"/hero/KSR09989.webp",alt:"Campus activity highlight",category:"Events"},{src:"/gallery/transport/buses.jpg",alt:"KSRM college bus fleet",category:"Transport"}];e.s(["galleryCategories",0,["All","Campus","Labs","Sports","Library","Events","Transport"],"getImagesByCategory",0,e=>"All"===e?t:t.filter(t=>t.category===e)])},53938,e=>{"use strict";e.i(39057);var t=e.i(48277),r=e.i(30668),a=e.i(56298),i=e.i(50772),n=e.i(53899),s=e.i(8812),o=e.i(21216),l=r,c=e.i(43533);function g(e,t){if("function"==typeof e)return e(t);null!=e&&(e.current=t)}class d extends l.Component{getSnapshotBeforeUpdate(e){let t=this.props.childRef.current;if((0,o.isHTMLElement)(t)&&e.isPresent&&!this.props.isPresent&&!1!==this.props.pop){let e=t.offsetParent,r=(0,o.isHTMLElement)(e)&&e.offsetWidth||0,a=(0,o.isHTMLElement)(e)&&e.offsetHeight||0,i=getComputedStyle(t),n=this.props.sizeRef.current;n.height=parseFloat(i.height),n.width=parseFloat(i.width),n.top=t.offsetTop,n.left=t.offsetLeft,n.right=r-n.width-n.left,n.bottom=a-n.height-n.top,n.direction=i.direction}return null}componentDidUpdate(){}render(){return this.props.children}}function p({children:e,isPresent:a,anchorX:i,anchorY:n,root:s,pop:o}){let u=(0,l.useId)(),h=(0,l.useRef)(null),m=(0,l.useRef)({width:0,height:0,top:0,left:0,right:0,bottom:0,direction:"ltr"}),{nonce:y}=(0,l.useContext)(c.MotionConfigContext),f=function(...e){return r.useCallback(function(...e){return t=>{let r=!1,a=e.map(e=>{let a=g(e,t);return r||"function"!=typeof a||(r=!0),a});if(r)return()=>{for(let t=0;t<a.length;t++){let r=a[t];"function"==typeof r?r():g(e[t],null)}}}}(...e),e)}(h,e.props?.ref??e?.ref);return(0,l.useInsertionEffect)(()=>{let{width:e,height:t,top:r,left:l,right:c,bottom:g,direction:d}=m.current;if(a||!1===o||!h.current||!e||!t)return;let p="rtl"===d,f="left"===i?p?`right: ${c}`:`left: ${l}`:p?`left: ${l}`:`right: ${c}`,b="bottom"===n?`bottom: ${g}`:`top: ${r}`;h.current.dataset.motionPopId=u;let x=document.createElement("style");y&&(x.nonce=y);let v=s??document.head;return v.appendChild(x),x.sheet&&x.sheet.insertRule(`
+          [data-motion-pop-id="${u}"] {
+            position: absolute !important;
+            width: ${e}px !important;
+            height: ${t}px !important;
+            ${f}px !important;
+            ${b}px !important;
+          }
+        `),()=>{h.current?.removeAttribute("data-motion-pop-id"),v.contains(x)&&v.removeChild(x)}},[a]),(0,t.jsx)(d,{isPresent:a,childRef:h,sizeRef:m,pop:o,children:!1===o?e:l.cloneElement(e,{ref:f})})}let u=({children:e,initial:a,isPresent:n,onExitComplete:o,custom:l,presenceAffectsLayout:c,mode:g,anchorX:d,anchorY:u,root:m})=>{let y=(0,i.useConstant)(h),f=(0,r.useId)(),b=!0,x=(0,r.useMemo)(()=>(b=!1,{id:f,initial:a,isPresent:n,custom:l,onExitComplete:e=>{for(let t of(y.set(e,!0),y.values()))if(!t)return;o&&o()},register:e=>(y.set(e,!1),()=>y.delete(e))}),[n,y,o]);return c&&b&&(x={...x}),(0,r.useMemo)(()=>{y.forEach((e,t)=>y.set(t,!1))},[n]),r.useEffect(()=>{n||y.size||!o||o()},[n]),e=(0,t.jsx)(p,{pop:"popLayout"===g,isPresent:n,anchorX:d,anchorY:u,root:m,children:e}),(0,t.jsx)(s.PresenceContext.Provider,{value:x,children:e})};function h(){return new Map}var m=e.i(3363);let y=e=>e.key||"";function f(e){let t=[];return r.Children.forEach(e,e=>{(0,r.isValidElement)(e)&&t.push(e)}),t}e.s(["AnimatePresence",0,({children:e,custom:s,initial:o=!0,onExitComplete:l,presenceAffectsLayout:c=!0,mode:g="sync",propagate:d=!1,anchorX:p="left",anchorY:h="top",root:b})=>{let[x,v]=(0,m.usePresence)(d),j=(0,r.useMemo)(()=>f(e),[e]),w=d&&!x?[]:j.map(y),C=(0,r.useRef)(!0),E=(0,r.useRef)(j),k=(0,i.useConstant)(()=>new Map),S=(0,r.useRef)(new Set),[R,L]=(0,r.useState)(j),[K,M]=(0,r.useState)(j);(0,n.useIsomorphicLayoutEffect)(()=>{C.current=!1,E.current=j;for(let e=0;e<K.length;e++){let t=y(K[e]);w.includes(t)?(k.delete(t),S.current.delete(t)):!0!==k.get(t)&&k.set(t,!1)}},[K,w.length,w.join("-")]);let T=[];if(j!==R){let e=[...j];for(let t=0;t<K.length;t++){let r=K[t],a=y(r);w.includes(a)||(e.splice(t,0,r),T.push(r))}return"wait"===g&&T.length&&(e=T),M(f(e)),L(j),null}let{forceRender:z}=(0,r.useContext)(a.LayoutGroupContext);return(0,t.jsx)(t.Fragment,{children:K.map(e=>{let r=y(e),a=(!d||!!x)&&(j===K||w.includes(r));return(0,t.jsx)(u,{isPresent:a,initial:(!C.current||!!o)&&void 0,custom:s,presenceAffectsLayout:c,mode:g,root:b,onExitComplete:a?void 0:()=>{if(S.current.has(r)||!k.has(r))return;S.current.add(r),k.set(r,!0);let e=!0;k.forEach(t=>{t||(e=!1)}),e&&(z?.(),M(E.current),d&&v?.(),l&&l())},anchorX:p,anchorY:h,children:e},r)})})}],53938)},7608,e=>{"use strict";var t=e.i(48277),r=e.i(35691),a=e.i(53938),i=e.i(30668),n=e.i(32213),s=e.i(89177),o=e.i(55100),l=e.i(46793),c=e.i(65702);let g=[.22,1,.36,1],d={hidden:{opacity:0,y:28},visible:{opacity:1,y:0,transition:{duration:.4,ease:g}}},p={hidden:{},visible:{transition:{staggerChildren:.08}}},u={hidden:{opacity:0,scale:.95},visible:{opacity:1,scale:1,transition:{duration:.3,ease:g}}};e.s(["default",0,function(){let[e,g]=(0,i.useState)("All"),[h,m]=(0,i.useState)(!1),[y,f]=(0,i.useState)(0),[b,x]=(0,i.useState)(!1),v=(0,c.getImagesByCategory)(e),j=v[y],w=()=>{m(!1)},C=()=>{x(!0),f(e=>0===e?v.length-1:e-1),setTimeout(()=>x(!1),300)},E=()=>{x(!0),f(e=>e===v.length-1?0:e+1),setTimeout(()=>x(!1),300)};return(0,i.useEffect)(()=>{let e=e=>{h&&("Escape"===e.key&&w(),"ArrowLeft"===e.key&&C(),"ArrowRight"===e.key&&E())};return window.addEventListener("keydown",e),()=>window.removeEventListener("keydown",e)},[h,v.length]),(0,t.jsxs)("main",{style:{background:"#ffffff"},children:[(0,t.jsx)("style",{children:`
+        .gal-hero {
+          position: relative;
+          background-image: url('/gallery/sports/sportsground2.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #2B3490;
+          min-height: 280px;
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: 40px;
+          overflow: hidden;
+        }
+        .gal-hero::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 100%;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
+          pointer-events: none;
+        }
+        .gal-hero > * {
+          position: relative;
+          z-index: 2;
+        }
+        .gal-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          color: rgba(255,255,255,0.7);
+          margin-bottom: 24px;
+        }
+        .gal-breadcrumb a {
+          color: #D4A500;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        .gal-breadcrumb a:hover {
+          color: #fff;
+        }
+        .gal-filters {
+          display: flex;
+          gap: 12px;
+          margin: 32px 0;
+          flex-wrap: wrap;
+        }
+        .gal-filter-btn {
+          background: #f7f8fa;
+          border: 1px solid #eef0f3;
+          color: #2B3490;
+          padding: 12px 24px;
+          border-radius: 24px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: 'Rajdhani', sans-serif;
+          transition: all 0.2s;
+        }
+        .gal-filter-btn.active {
+          background: #2B3490;
+          color: #D4A500;
+          border-color: #2B3490;
+        }
+        .gal-filter-btn:hover {
+          background: #2B3490;
+          color: #D4A500;
+          border-color: #2B3490;
+        }
+        .gal-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+          margin: 32px 0;
+        }
+        .gal-card {
+          background: #f7f8fa;
+          border: 1px solid #eef0f3;
+          border-radius: 12px;
+          overflow: hidden;
+          transition: all 0.2s;
+          cursor: pointer;
+        }
+        .gal-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(43,52,144,0.1);
+        }
+        .gal-card-image {
+          width: 100%;
+          height: 200px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
+        }
+        .gal-card-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0,0,0,0.2);
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+        .gal-card:hover .gal-card-overlay {
+          opacity: 1;
+        }
+        .gal-card-content {
+          padding: 16px;
+        }
+        .gal-card-title {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 16px;
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0 0 8px;
+        }
+        .gal-card-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 13px;
+          color: #999;
+        }
+        @media (max-width: 1200px) {
+          .gal-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+          .gal-grid { grid-template-columns: 1fr; }
+          .gal-filters { gap: 8px; }
+          .gal-filter-btn { padding: 10px 16px; font-size: 13px; }
+        }
+      `}),(0,t.jsx)("section",{className:"gal-hero",children:(0,t.jsx)(n.default,{children:(0,t.jsxs)(r.motion.div,{initial:"hidden",animate:"visible",variants:p,children:[(0,t.jsxs)("div",{className:"gal-breadcrumb",style:{marginBottom:16,textShadow:"0 2px 8px rgba(0,0,0,0.6)"},children:[(0,t.jsx)("a",{href:"/",children:"Home"}),(0,t.jsx)("span",{children:"/"}),(0,t.jsx)("span",{children:"Gallery"})]}),(0,t.jsx)(r.motion.h1,{variants:d,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(2.2rem, 4.5vw, 3.6rem)",fontWeight:700,color:"#fff",lineHeight:1.08,margin:0,textShadow:"0 2px 12px rgba(0,0,0,0.7)"},children:"Campus Gallery"}),(0,t.jsx)(r.motion.p,{variants:d,style:{color:"rgba(255,255,255,0.85)",fontSize:18,lineHeight:1.6,margin:"16px 0 0",fontWeight:300,maxWidth:"100%",textShadow:"0 2px 8px rgba(0,0,0,0.6)"},children:"Explore life at KSRM College of Engineering"})]})})}),(0,t.jsx)("section",{style:{padding:"48px 0",background:"#ffffff"},children:(0,t.jsx)(n.default,{children:(0,t.jsx)(r.motion.div,{initial:"visible",animate:"visible",variants:d,children:(0,t.jsx)("div",{className:"gal-filters",children:c.galleryCategories.map(r=>(0,t.jsx)("button",{className:`gal-filter-btn ${e===r?"active":""}`,onClick:()=>{g(r),m(!1),f(0)},children:r},r))})})})}),(0,t.jsx)("section",{style:{padding:"72px 0",background:"#f7f8fa"},children:(0,t.jsx)(n.default,{children:(0,t.jsx)(r.motion.div,{initial:"visible",animate:"visible",variants:p,children:v.length>0?(0,t.jsx)(a.AnimatePresence,{children:(0,t.jsx)(r.motion.div,{variants:p,initial:"visible",animate:"visible",className:"gal-grid",children:v.map((a,i)=>(0,t.jsxs)(r.motion.div,{variants:d,initial:"visible",animate:"visible",className:"gal-card",layout:!0,onClick:()=>{f(i),m(!0)},children:[(0,t.jsxs)("div",{className:"gal-card-image",style:{background:"transparent",overflow:"hidden",position:"relative"},children:[(0,t.jsx)("img",{src:a.src,alt:a.alt,loading:"lazy",style:{width:"100%",height:"200px",objectFit:"cover",transition:"transform 0.3s ease"},onMouseEnter:e=>{e.target.style.transform="scale(1.05)"},onMouseLeave:e=>{e.target.style.transform="scale(1)"}}),(0,t.jsx)("div",{className:"gal-card-overlay"})]}),(0,t.jsxs)("div",{className:"gal-card-content",children:[(0,t.jsx)("h3",{className:"gal-card-title",children:a.alt}),(0,t.jsx)("div",{className:"gal-card-meta",children:(0,t.jsx)("span",{style:{color:"#2B3490",fontWeight:600},children:a.category})})]})]},`${e}-${i}`))})}):(0,t.jsx)("div",{style:{textAlign:"center",padding:"60px 20px",color:"#6B7280"},children:(0,t.jsx)("p",{style:{fontFamily:"var(--font-dm-sans), sans-serif",fontSize:"16px"},children:"No images found in this category"})})})})}),(0,t.jsx)("section",{style:{padding:"72px 0",background:"#ffffff"},children:(0,t.jsx)(n.default,{children:(0,t.jsxs)(r.motion.div,{initial:"hidden",animate:"visible",variants:p,children:[(0,t.jsx)(r.motion.h2,{variants:d,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#2B3490",margin:"0 0 40px"},children:"Campus Videos"}),(0,t.jsx)("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))",gap:24,marginTop:40},children:["/videos/flash-mob.mp4","/videos/3d-robo.mp4","/videos/sports-winners.mp4","/videos/sivananda-smaranam-night-event.mp4"].map((e,a)=>(0,t.jsx)(r.motion.div,{variants:d,style:{borderRadius:"8px",overflow:"hidden"},children:(0,t.jsx)("video",{autoPlay:!0,loop:!0,muted:!0,playsInline:!0,style:{width:"100%",aspectRatio:"16 / 9",objectFit:"cover",display:"block"},children:(0,t.jsx)("source",{src:e,type:"video/mp4"})})},a))})]})})}),(0,t.jsx)(a.AnimatePresence,{children:h&&j&&(0,t.jsx)(r.motion.div,{initial:{opacity:0},animate:{opacity:1},exit:{opacity:0},onClick:w,style:{position:"fixed",inset:0,background:"rgba(0, 0, 0, 0.9)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1e3,padding:"20px"},children:(0,t.jsxs)(r.motion.div,{variants:u,initial:"hidden",animate:"visible",exit:"hidden",onClick:e=>e.stopPropagation(),style:{position:"relative",display:"flex",alignItems:"center",justifyContent:"center",maxWidth:"90vw",maxHeight:"90vh"},children:[(0,t.jsx)("img",{src:j.src,alt:j.alt,style:{maxWidth:"100%",maxHeight:"75vh",objectFit:"contain",borderRadius:"8px",opacity:b?.8:1,transition:"opacity 0.3s ease"}}),(0,t.jsx)("button",{onClick:w,style:{position:"absolute",top:"20px",right:"20px",background:"rgba(255, 255, 255, 0.2)",border:"none",color:"white",cursor:"pointer",padding:"8px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.2s ease"},onMouseEnter:e=>{e.currentTarget.style.background="rgba(255, 255, 255, 0.3)"},onMouseLeave:e=>{e.currentTarget.style.background="rgba(255, 255, 255, 0.2)"},children:(0,t.jsx)(s.X,{size:24})}),v.length>1&&(0,t.jsx)("button",{onClick:C,style:{position:"absolute",left:"20px",background:"rgba(255, 255, 255, 0.2)",border:"none",color:"white",cursor:"pointer",padding:"12px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.2s ease"},onMouseEnter:e=>{e.currentTarget.style.background="rgba(255, 255, 255, 0.3)"},onMouseLeave:e=>{e.currentTarget.style.background="rgba(255, 255, 255, 0.2)"},children:(0,t.jsx)(o.ChevronLeft,{size:28})}),v.length>1&&(0,t.jsx)("button",{onClick:E,style:{position:"absolute",right:"20px",background:"rgba(255, 255, 255, 0.2)",border:"none",color:"white",cursor:"pointer",padding:"12px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.2s ease"},onMouseEnter:e=>{e.currentTarget.style.background="rgba(255, 255, 255, 0.3)"},onMouseLeave:e=>{e.currentTarget.style.background="rgba(255, 255, 255, 0.2)"},children:(0,t.jsx)(l.ChevronRight,{size:28})}),(0,t.jsxs)("div",{style:{position:"absolute",bottom:"0",left:"0",right:"0",background:"rgba(0, 0, 0, 0.5)",color:"white",padding:"16px",textAlign:"center",borderRadius:"0 0 8px 8px"},children:[(0,t.jsx)("p",{style:{margin:0,fontSize:"14px",fontFamily:"var(--font-dm-sans), sans-serif"},children:j.alt}),v.length>1&&(0,t.jsxs)("p",{style:{margin:"8px 0 0 0",fontSize:"12px",opacity:.8},children:[y+1," / ",v.length]})]})]})})})]})}])}]);

@@ -44,7 +44,7 @@ export default function NAACPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .naac-hero {
-          position: relative; background-image: url('/banners/naac-banner.webp'); background-size: cover;
+          position: relative; background-image: url('/banners/naac banner.webp'); background-size: cover;
           background-position: center; background-color: #2B3490; min-height: 280px; display: flex;
           align-items: flex-end; padding-bottom: 40px; overflow: hidden;
         }

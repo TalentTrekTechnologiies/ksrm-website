@@ -1,0 +1,213 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,32213,e=>{"use strict";var i=e.i(48277);e.s(["default",0,function({children:e,className:n}){return(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)("style",{children:`
+        .responsive-container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+        @media (max-width: 1024px) {
+          .responsive-container {
+            padding-left: 32px;
+            padding-right: 32px;
+          }
+        }
+        @media (max-width: 768px) {
+          .responsive-container {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+        @media (max-width: 480px) {
+          .responsive-container {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+        }
+      `}),(0,i.jsx)("div",{className:`responsive-container ${n||""}`,children:e})]})}])},40685,e=>{"use strict";let i=(0,e.i(17381).default)("circle-alert",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["line",{x1:"12",x2:"12",y1:"8",y2:"12",key:"1pkeuh"}],["line",{x1:"12",x2:"12.01",y1:"16",y2:"16",key:"4dfq90"}]]);e.s(["AlertCircle",0,i],40685)},59323,e=>{"use strict";var i=e.i(48277),n=e.i(35691),t=e.i(32213);let r="Grievance Redressal",a=[{type:"Academic Grievances",description:"Issues related to examinations, evaluations, course content, faculty behavior, or academic standards."},{type:"Hostel-Related Issues",description:"Problems concerning hostel facilities, management, discipline, or accommodation."},{type:"Financial Matters",description:"Issues related to fee structure, refunds, scholarships, or financial irregularities."},{type:"Disciplinary Concerns",description:"Appeal against disciplinary action or concerns about disciplinary processes."},{type:"Harassment & Bullying",description:"Any form of harassment, bullying, discrimination, or unfair treatment."},{type:"Infrastructure & Services",description:"Issues related to campus facilities, maintenance, canteen, or support services."}],s=[{step:"File Complaint",description:"Submit grievance in writing to the Grievance Officer with detailed description and supporting documents."},{step:"Acknowledgement",description:"Grievance Officer acknowledges receipt within 7 working days with reference number."},{step:"Preliminary Investigation",description:"Initial review to verify if grievance is valid and determine appropriate resolution pathway."},{step:"Hearing",description:"Opportunity for complainant to present case and provide evidence before the committee."},{step:"Resolution",description:"Committee deliberates and issues written resolution with recommendations within 30 days."},{step:"Appeal",description:"Unsatisfied parties can file appeal within 15 days for higher authority review."}],o="7 working days",l="30 working days",d="15 working days",c="Chief Grievance Officer",p="+91-8554-233333 (Ext: 390)",g="grievance@ksrmce.ac.in",m="Monday to Friday, 10:00 AM - 4:00 PM";var h=e.i(40685),f=e.i(16506);let x={hidden:{opacity:0,y:28},visible:{opacity:1,y:0,transition:{duration:.6,ease:[.22,1,.36,1]}}},v={hidden:{},visible:{transition:{staggerChildren:.12}}};e.s(["default",0,function(){return(0,i.jsxs)("main",{style:{background:"#ffffff"},children:[(0,i.jsx)("style",{children:`
+        .grv-hero {
+          position: relative;
+          background-image: url('/banners/hostel-banner.jpg');
+          background-size: cover;
+          background-position: center;
+          background-color: #2B3490;
+          min-height: 320px;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          padding-bottom: 40px;
+        }
+        .grv-hero::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
+          pointer-events: none;
+        }
+        .grv-hero > * {
+          position: relative;
+          z-index: 2;
+        }
+        .grv-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #D4A500;
+        }
+        .grv-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+          margin-top: 24px;
+          font-family: "DM Sans", sans-serif;
+        }
+        .grv-breadcrumb a {
+          color: #D4A500;
+          text-decoration: none;
+        }
+        .grv-breadcrumb span {
+          color: #D4A500;
+        }
+        .grv-policy {
+          background: #2B3490;
+          color: #fff;
+          padding: 28px;
+          border-left: 4px solid #D4A500;
+          border-radius: 8px;
+          margin-top: 40px;
+          font-size: 15px;
+          line-height: 1.8;
+        }
+        .grv-type-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
+          margin-top: 40px;
+        }
+        .grv-type-card {
+          background: #fff;
+          border: 1px solid #eef0f3;
+          border-radius: 12px;
+          padding: 24px;
+          transition: all 0.2s;
+        }
+        .grv-type-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(43, 52, 144, 0.12);
+        }
+        .grv-type-card h3 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 16px;
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0 0 12px;
+        }
+        .grv-type-card p {
+          font-size: 13px;
+          color: #555;
+          margin: 0;
+          line-height: 1.6;
+        }
+        .grv-process {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-top: 40px;
+        }
+        .grv-process-step {
+          display: flex;
+          gap: 16px;
+          align-items: flex-start;
+        }
+        .grv-step-num {
+          flex-shrink: 0;
+          width: 44px;
+          height: 44px;
+          background: #D4A500;
+          color: #2B3490;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Rajdhani", sans-serif;
+          font-weight: 700;
+        }
+        .grv-step-content h4 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 15px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0 0 4px;
+        }
+        .grv-step-content p {
+          font-size: 13px;
+          color: #555;
+          margin: 0;
+          line-height: 1.6;
+        }
+        .grv-timeline-bar {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+          margin-top: 40px;
+        }
+        .grv-timeline-item {
+          background: #f4f3ef;
+          padding: 20px;
+          border-radius: 8px;
+          text-align: center;
+          border-top: 3px solid #2B3490;
+        }
+        .grv-timeline-item h4 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0 0 8px;
+        }
+        .grv-timeline-item p {
+          font-size: 20px;
+          font-weight: 700;
+          color: #2B3490;
+          margin: 0;
+          font-family: "Rajdhani", sans-serif;
+        }
+        .grv-contact-card {
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          border-radius: 12px;
+          padding: 40px;
+          color: #fff;
+          margin-top: 40px;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 32px;
+        }
+        .grv-contact-item h4 {
+          font-family: "Rajdhani", sans-serif;
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: #D4A500;
+          margin: 0;
+        }
+        .grv-contact-item p {
+          font-size: 14px;
+          margin: 8px 0 0;
+        }
+        .grv-contact-item a {
+          color: #D4A500;
+          text-decoration: none;
+        }
+        @media (max-width: 900px) {
+          .grv-contact-card {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}),(0,i.jsx)("section",{className:"grv-hero",children:(0,i.jsx)(t.default,{children:(0,i.jsx)("div",{style:{padding:"72px 0",position:"relative",zIndex:1},children:(0,i.jsxs)(n.motion.div,{initial:"hidden",animate:"visible",variants:v,children:[(0,i.jsx)(n.motion.div,{variants:x,className:"grv-eyebrow",style:{marginBottom:16},children:"Campus Life"}),(0,i.jsx)(n.motion.h1,{variants:x,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(2.2rem, 4.5vw, 3.6rem)",fontWeight:700,color:"#fff",lineHeight:1.08,margin:0},children:r}),(0,i.jsx)(n.motion.p,{variants:x,style:{color:"rgba(255,255,255,0.85)",fontSize:18,lineHeight:1.6,margin:"16px 0 0",fontWeight:300,maxWidth:700},children:"Fair & Transparent Resolution"}),(0,i.jsxs)(n.motion.div,{variants:x,className:"grv-breadcrumb",children:[(0,i.jsx)(f.default,{href:"/",children:"Home"}),(0,i.jsx)("span",{children:"/"}),(0,i.jsx)(f.default,{href:"/campus-life",children:"Campus Life"}),(0,i.jsx)("span",{children:"/"}),(0,i.jsx)("span",{children:r})]})]})})})}),(0,i.jsx)("section",{style:{padding:"56px 0",background:"#f4f3ef"},children:(0,i.jsx)(t.default,{children:(0,i.jsx)(n.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:x,style:{maxWidth:820},children:(0,i.jsx)("p",{style:{color:"#555",fontSize:16,lineHeight:1.8,margin:0},children:"KSRM College of Engineering has established a comprehensive grievance redressal system to address student concerns and complaints. We believe in fair, transparent, and timely resolution of all grievances while maintaining confidentiality and respecting the dignity of all parties involved."})})})}),(0,i.jsx)("section",{style:{padding:"72px 0",background:"#ffffff"},children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:x,className:"grv-policy",children:[(0,i.jsx)(h.AlertCircle,{size:24,style:{display:"inline",marginRight:12}}),"Every student has the right to file a grievance without fear of victimization or retaliation. The college is committed to providing a fair and transparent process for grievance redressal. All grievances will be treated with utmost confidentiality and resolved within the stipulated timelines. Any form of victimization for filing a genuine grievance is strictly prohibited and will result in disciplinary action."]})})}),(0,i.jsx)("section",{style:{padding:"72px 0",background:"#f4f3ef"},children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:v,children:[(0,i.jsx)(n.motion.h2,{variants:x,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#1a1a2e",margin:"0 0 40px"},children:"Types of Grievances Addressed"}),(0,i.jsx)("div",{className:"grv-type-grid",children:a.map((e,t)=>(0,i.jsxs)(n.motion.div,{variants:x,className:"grv-type-card",children:[(0,i.jsx)("h3",{children:e.type}),(0,i.jsx)("p",{children:e.description})]},t))})]})})}),(0,i.jsx)("section",{style:{padding:"72px 0",background:"#ffffff"},children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:v,children:[(0,i.jsx)(n.motion.h2,{variants:x,style:{fontFamily:"'Rajdhani', sans-serif",fontSize:"clamp(1.8rem, 3vw, 2.4rem)",fontWeight:700,color:"#1a1a2e",margin:"0 0 40px"},children:"Grievance Resolution Process"}),(0,i.jsx)("div",{className:"grv-process",children:s.map((e,t)=>(0,i.jsxs)(n.motion.div,{variants:x,className:"grv-process-step",children:[(0,i.jsx)("div",{className:"grv-step-num",children:t+1}),(0,i.jsxs)("div",{className:"grv-step-content",children:[(0,i.jsx)("h4",{children:e.step}),(0,i.jsx)("p",{children:e.description})]})]},t))}),(0,i.jsxs)(n.motion.div,{variants:v,className:"grv-timeline-bar",children:[(0,i.jsxs)(n.motion.div,{variants:x,className:"grv-timeline-item",children:[(0,i.jsx)("h4",{children:"Acknowledgement"}),(0,i.jsx)("p",{children:o})]}),(0,i.jsxs)(n.motion.div,{variants:x,className:"grv-timeline-item",children:[(0,i.jsx)("h4",{children:"Resolution"}),(0,i.jsx)("p",{children:l})]}),(0,i.jsxs)(n.motion.div,{variants:x,className:"grv-timeline-item",children:[(0,i.jsx)("h4",{children:"Appeal"}),(0,i.jsx)("p",{children:d})]})]})]})})}),(0,i.jsx)("section",{style:{padding:"72px 0",background:"#f4f3ef"},children:(0,i.jsx)(t.default,{children:(0,i.jsxs)(n.motion.div,{initial:"hidden",whileInView:"visible",viewport:{once:!0,amount:.3},variants:x,className:"grv-contact-card",children:[(0,i.jsxs)("div",{className:"grv-contact-item",children:[(0,i.jsx)("h4",{children:c}),(0,i.jsx)("p",{children:"Available for grievance filing and consultation"})]}),(0,i.jsxs)("div",{className:"grv-contact-item",children:[(0,i.jsx)("h4",{children:"Phone"}),(0,i.jsx)("p",{children:(0,i.jsx)("a",{href:`tel:${p}`,children:p})})]}),(0,i.jsxs)("div",{className:"grv-contact-item",children:[(0,i.jsx)("h4",{children:"Email"}),(0,i.jsx)("p",{children:(0,i.jsx)("a",{href:`mailto:${g}`,children:g})})]}),(0,i.jsxs)("div",{className:"grv-contact-item",children:[(0,i.jsx)("h4",{children:"Office Hours"}),(0,i.jsx)("p",{children:m})]})]})})})]})}],59323)}]);

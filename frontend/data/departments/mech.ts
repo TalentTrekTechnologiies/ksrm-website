@@ -87,7 +87,7 @@ export const mech: Department = {
     { name: "CAD/CAM Laboratory", description: "Computer-aided design, modeling, and numerical control programming", imageUrl: "/Labs/Mech/7.webp" },
     { name: "Workshop Laboratory", description: "Fitting, welding, machining, and hands-on manufacturing skills", imageUrl: "/Labs/Mech/8.webp" }
   ],
-  heroImage: "/banner.png"
+  heroImage: "/banners/mechanical banner.jpg"
 };
 
 export default mech;
