@@ -41,18 +41,18 @@ export const ece: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Dr. G. Hemalatha",
+    name: "Dr. M. Venkatanarayana",
     designation: "Professor & Head of Department",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Electronics & Communication Engineering. We are committed to fostering innovation, practical skills and research excellence.",
       "Our faculty and facilities are designed to provide students with world-class education and prepare them for impactful careers."
     ],
-    photo: "/faculty/ece/dr.-g.-hemalatha.jpg",
+    photo: "",
     email: "hod.ece@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Dr. G. Hemalatha", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-g.-hemalatha.jpg", specialization: "Digital Signal Processing" },
+    { name: "Dr. M. Venkatanarayana", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "", specialization: "Electronics & Communication Engineering" },
     { name: "Dr. P. Giri Prasad", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-giri-prasad.jpg", specialization: "Signal Processing" },
     { name: "Dr. S. Zahiruddin", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.-zahiruddin.jpg", specialization: "Microwave Engineering" },
     { name: "Dr. M. Madhusudhan Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-m.-madhusudhan-reddy.jpg", specialization: "Communication Systems" },
