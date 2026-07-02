@@ -71,11 +71,11 @@ export const eee: Department = {
     { name: "M.Tech - Power Electronics and Drives", level: "Postgraduate", intake: "18" }
   ],
   labs: [
-    { name: "Circuits & Measurements Laboratory", description: "Fundamental circuits, measurement techniques, and practical electrical measurement experiments", imageUrl: "/Labs/EEE/1.webp" },
-    { name: "Electrical Machines Laboratory", description: "DC and AC machines, transformer testing, and motor-generator characteristics", imageUrl: "/Labs/EEE/2.webp" },
-    { name: "Power Electronics Laboratory", description: "Power electronic converters, inverters, rectifiers, and power device testing", imageUrl: "/Labs/EEE/3.webp" },
-    { name: "Power Systems Laboratory", description: "Power flow analysis, fault studies, load flow, and power system protection", imageUrl: "/Labs/EEE/4.webp" },
-    { name: "Simulation & CAD Laboratory", description: "MATLAB/Simulink, PSPICE, and CAD tools for circuit and system simulation", imageUrl: "/Labs/EEE/5.webp" }
+    { name: "Circuits & Measurements Laboratory", description: "Fundamental circuits, measurement techniques, and practical electrical measurement experiments", imageUrl: "/images/departments/eee/labs/circuits-lab.jpg" },
+    { name: "Electrical Machines Laboratory", description: "DC and AC machines, transformer testing, and motor-generator characteristics", imageUrl: "/images/departments/eee/labs/machines-lab.jpg" },
+    { name: "Power Electronics Laboratory", description: "Power electronic converters, inverters, rectifiers, and power device testing", imageUrl: "/images/departments/eee/labs/power-electronics-lab.jpg" },
+    { name: "Power Systems Laboratory", description: "Power flow analysis, fault studies, load flow, and power system protection", imageUrl: "/images/departments/eee/labs/power-systems-lab.jpg" },
+    { name: "Simulation & CAD Laboratory", description: "MATLAB/Simulink, PSPICE, and CAD tools for circuit and system simulation", imageUrl: "/images/departments/eee/labs/simulation-lab.jpg" }
   ],
   heroImage: "/banner.png"
 };
