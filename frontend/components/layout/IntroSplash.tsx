@@ -1,12 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 
 export default function IntroSplash() {
   const [show, setShow] = useState(true)
 
   useEffect(() => {
-    // Video duration is 4 seconds, show splash for 4.5 seconds then fade out
+    // Show splash for 4.5 seconds
     const timer = setTimeout(() => setShow(false), 4500)
     return () => clearTimeout(timer)
   }, [])
@@ -14,35 +15,42 @@ export default function IntroSplash() {
   if (!show) return null
 
   return (
-    <div style={{
-      position: "fixed",
-      inset: 0,
-      zIndex: 9999,
-      background: "#f4f3ef",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      opacity: 1,
-      transition: "opacity 0.5s ease",
-      pointerEvents: "auto",
-    }}>
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        background: "#f4f3ef",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: 1,
+        pointerEvents: "auto",
+      }}
+    >
+      <div
         style={{
+          position: "relative",
           width: "clamp(300px, 80vw, 900px)",
           height: "auto",
           maxHeight: "90vh",
-          objectFit: "contain",
-          display: "block",
         }}
       >
-        <source src="/ksrm-logo.mov" type="video/quicktime" />
-        <source src="/ksrm-logo.mov" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+        <video
+          autoPlay
+          muted
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            display: "block",
+          }}
+        >
+          <source src="/ksrm-logo.mp4" type="video/mp4" />
+          <source src="/ksrm-logo.mov" type="video/quicktime" />
+        </video>
+      </div>
     </div>
   )
 }
