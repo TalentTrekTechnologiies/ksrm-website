@@ -41,22 +41,21 @@ export const ece: Department = {
     { title: "Sustainable Solutions", description: "Engineer solutions for environmental challenges." }
   ],
   hod: {
-    name: "Dr. P. Lokeswar Reddy",
-    designation: "Head of Department, ECE",
+    name: "Dr. G. Hemalatha",
+    designation: "Professor & Head of Department",
     qualification: "M.Tech., Ph.D.",
     message: [
       "Welcome to the Department of Electronics & Communication Engineering. We are committed to fostering innovation, practical skills and research excellence.",
       "Our faculty and facilities are designed to provide students with world-class education and prepare them for impactful careers."
     ],
-    photo: "/faculty/ece/dr.-p.-lokeswar-reddy.jpg",
+    photo: "/faculty/ece/dr.-g.-hemalatha.jpg",
     email: "hod.ece@ksrmce.ac.in"
   },
   faculty: [
-    { name: "Dr. P. Lokeswar Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-lokeswar-reddy.jpg", specialization: "VLSI Design" },
+    { name: "Dr. G. Hemalatha", designation: "Professor & HOD", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-g.-hemalatha.jpg", specialization: "Digital Signal Processing" },
     { name: "Dr. P. Giri Prasad", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-p.-giri-prasad.jpg", specialization: "Signal Processing" },
     { name: "Dr. S. Zahiruddin", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.-zahiruddin.jpg", specialization: "Microwave Engineering" },
     { name: "Dr. M. Madhusudhan Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-m.-madhusudhan-reddy.jpg", specialization: "Communication Systems" },
-    { name: "Dr. G. Hemalatha", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-g.-hemalatha.jpg", specialization: "Digital Signal Processing" },
     { name: "Dr. D. Arun Kumar", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.-d.-arun-kumar.jpg", specialization: "Microelectronics" },
     { name: "Dr. S. L. Prathapa Reddy", designation: "Associate Professor", qualification: "M.Tech., Ph.D.", photo: "/faculty/ece/dr.s.l.-prathapa-reddy.jpg", specialization: "Embedded Systems" },
     { name: "G. A. Sanjeeva Reddy", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/g.a.-sanjeeva-reddy.jpg", specialization: "RF & Microwave" },
@@ -64,10 +63,18 @@ export const ece: Department = {
     { name: "M. Prabhakar", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/faculty/ece/m.-prabhakar.jpg", specialization: "Analog Electronics" },
   ],
   programmes: [
-    { name: "B.Tech - Electronics & Communication Engineering", level: "Undergraduate", intake: "60" }
+    { name: "B.Tech - Electronics & Communication Engineering", level: "Undergraduate", intake: "60" },
+    { name: "M.Tech - Microwave and Antenna Engineering", level: "Postgraduate", intake: "24" }
   ],
   labs: [
-    { name: "Laboratory 1", description: "Core Electronics & Communication Engineering laboratory", imageUrl: "/Labs/ECE/ece1.webp" }
+    { name: "Simulation Laboratory", description: "Circuit simulation and analysis using SPICE, MATLAB, and related tools", imageUrl: "/Labs/ECE/1.webp" },
+    { name: "Project Laboratory", description: "Hands-on project design and implementation laboratory", imageUrl: "/Labs/ECE/2.webp" },
+    { name: "Microwave Laboratory", description: "Microwave components, antennas, and RF device characterization", imageUrl: "/Labs/ECE/3.webp" },
+    { name: "Microprocessors Laboratory", description: "8085, 8086, and ARM microprocessor programming and interfacing", imageUrl: "/Labs/ECE/4.webp" },
+    { name: "IoT Laboratory", description: "Internet of Things, embedded systems, and sensor network projects", imageUrl: "/Labs/ECE/5.webp" },
+    { name: "IC Applications Laboratory", description: "Integrated circuit design, testing, and applications", imageUrl: "/Labs/ECE/6.webp" },
+    { name: "Devices & Circuits Laboratory", description: "Electronic devices, transistor circuits, and analog electronics", imageUrl: "/Labs/ECE/7.webp" },
+    { name: "Communications Laboratory", description: "Digital and analog communication systems, signal processing", imageUrl: "/Labs/ECE/8.webp" }
   ],
   heroImage: "/banner.png"
 };
