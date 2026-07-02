@@ -87,7 +87,7 @@ export default function GrievanceRedressalPage() {
           backgroundImage: "url('/header.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          minHeight: 240,
+          minHeight: 280,
           display: "flex",
           alignItems: "flex-end",
           paddingBottom: 20,
