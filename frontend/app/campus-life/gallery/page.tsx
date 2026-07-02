@@ -152,28 +152,18 @@ export default function CampusGalleryPage() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
                   style={{
-                    position: "relative",
                     width: "100%",
-                    paddingBottom: "66.67%",
-                    overflow: "hidden",
+                    height: "auto",
+                    minHeight: "220px",
+                    objectFit: "cover",
+                    display: "block",
                   }}
-                >
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
-                  />
-                </div>
+                  loading="lazy"
+                />
               </div>
             ))}
           </div>
