@@ -1,9 +1,484 @@
-import { Metadata } from "next"
+﻿import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Grievance | K.S.R.M College of Engineering",
-}
+export const metadata = {
+  title: "Grievance Redressal | KSRM College of Engineering",
+  description:
+    "KSRM College of Engineering grievance redressal system with fair, transparent and timely resolution for student complaints.",
+};
 
-export default function SubPage() {
-  return <main><h1>Grievance</h1><p>Content</p></main>
+const grievanceTypes = [
+  {
+    title: "Academic Grievances",
+    description:
+      "Issues related to examinations, evaluations, course content, faculty behavior, or academic standards.",
+  },
+  {
+    title: "Hostel-Related Issues",
+    description:
+      "Problems concerning hostel facilities, management, discipline, or accommodation.",
+  },
+  {
+    title: "Financial Matters",
+    description:
+      "Issues related to fee structure, refunds, scholarships, or financial irregularities.",
+  },
+  {
+    title: "Disciplinary Concerns",
+    description:
+      "Appeal against disciplinary action or concerns about disciplinary processes.",
+  },
+  {
+    title: "Harassment & Bullying",
+    description:
+      "Any form of harassment, bullying, discrimination, or unfair treatment.",
+  },
+  {
+    title: "Infrastructure & Services",
+    description:
+      "Issues related to campus facilities, maintenance, canteen, or support services.",
+  },
+];
+
+const processSteps = [
+  {
+    title: "File Complaint",
+    description:
+      "Submit grievance in writing to the Grievance Officer with detailed description and supporting documents.",
+  },
+  {
+    title: "Acknowledgement",
+    description:
+      "Grievance Officer acknowledges receipt within 7 working days with reference number.",
+  },
+  {
+    title: "Preliminary Investigation",
+    description:
+      "Initial review to verify if grievance is valid and determine appropriate resolution pathway.",
+  },
+  {
+    title: "Hearing",
+    description:
+      "Opportunity for complainant to present case and provide evidence before the committee.",
+  },
+  {
+    title: "Resolution",
+    description:
+      "Committee deliberates and issues written resolution with recommendations within 30 days.",
+  },
+  {
+    title: "Appeal",
+    description:
+      "Unsatisfied parties can file appeal within 15 days for higher authority review.",
+  },
+];
+
+const timeline = [
+  { label: "Acknowledgement", value: "7 working days" },
+  { label: "Resolution", value: "30 working days" },
+  { label: "Appeal", value: "15 working days" },
+];
+
+export default function GrievanceRedressalPage() {
+  return (
+    <main style={{ background: "#ffffff" }}>
+      {/* Hero */}
+      <section
+        style={{
+          position: "relative",
+          backgroundImage: "url('/banners/hostel-banner.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundColor: "#2B3490",
+          minHeight: 320,
+          display: "flex",
+          alignItems: "flex-end",
+          paddingBottom: 40,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)",
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            width: "100%",
+            maxWidth: 1400,
+            margin: "0 auto",
+            padding: "72px 40px 0",
+          }}
+        >
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              color: "#D4A500",
+              marginBottom: 16,
+            }}
+          >
+            Campus Life
+          </div>
+          <h1
+            style={{
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
+              fontWeight: 700,
+              color: "#fff",
+              margin: 0,
+              lineHeight: 1.08,
+            }}
+          >
+            Grievance Redressal
+          </h1>
+          <p
+            style={{
+              color: "rgba(255,255,255,0.85)",
+              fontSize: 18,
+              lineHeight: 1.6,
+              margin: "16px 0 0",
+              fontWeight: 300,
+              maxWidth: 700,
+            }}
+          >
+            Fair &amp; Transparent Resolution
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 14,
+              color: "rgba(255,255,255,0.7)",
+              marginTop: 24,
+            }}
+          >
+            <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
+              Home
+            </Link>
+            <span style={{ color: "#D4A500" }}>/</span>
+            <Link
+              href="/campus-life"
+              style={{ color: "#D4A500", textDecoration: "none" }}
+            >
+              Campus Life
+            </Link>
+            <span style={{ color: "#D4A500" }}>/</span>
+            <span>Grievance Redressal</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro */}
+      <section style={{ padding: "56px 0", background: "#F5EFE4" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <p
+            style={{
+              color: "#555",
+              fontSize: 16,
+              lineHeight: 1.8,
+              margin: 0,
+              maxWidth: 820,
+            }}
+          >
+            KSRM College of Engineering has established a comprehensive
+            grievance redressal system to address student concerns and
+            complaints. We believe in fair, transparent, and timely
+            resolution of all grievances while maintaining confidentiality
+            and respecting the dignity of all parties involved.
+          </p>
+        </div>
+      </section>
+
+      {/* Policy statement */}
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <div
+            style={{
+              background: "#2B3490",
+              color: "#fff",
+              padding: 28,
+              borderLeft: "4px solid #D4A500",
+              borderRadius: 8,
+              fontSize: 15,
+              lineHeight: 1.8,
+              display: "flex",
+              gap: 12,
+              alignItems: "flex-start",
+            }}
+          >
+            <span style={{ fontSize: 20, flexShrink: 0 }}>ⓘ</span>
+            <span>
+              Every student has the right to file a grievance without fear
+              of victimization or retaliation. The college is committed to
+              providing a fair and transparent process for grievance
+              redressal. All grievances will be treated with utmost
+              confidentiality and resolved within the stipulated timelines.
+              Any form of victimization for filing a genuine grievance is
+              strictly prohibited and will result in disciplinary action.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Grievance Types */}
+      <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+              fontWeight: 700,
+              color: "#1a1a2e",
+              margin: "0 0 40px",
+            }}
+          >
+            Types of Grievances Addressed
+          </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 20,
+            }}
+          >
+            {grievanceTypes.map((type) => (
+              <div
+                key={type.title}
+                style={{
+                  background: "#fff",
+                  border: "1px solid #eef0f3",
+                  borderRadius: 12,
+                  padding: 24,
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "var(--font-rajdhani), sans-serif",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "#2B3490",
+                    margin: "0 0 12px",
+                  }}
+                >
+                  {type.title}
+                </h3>
+                <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.6 }}>
+                  {type.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Process */}
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+              fontWeight: 700,
+              color: "#1a1a2e",
+              margin: "0 0 40px",
+            }}
+          >
+            Grievance Resolution Process
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {processSteps.map((step, i) => (
+              <div key={step.title} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                <div
+                  style={{
+                    flexShrink: 0,
+                    width: 44,
+                    height: 44,
+                    background: "#D4A500",
+                    color: "#2B3490",
+                    borderRadius: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-rajdhani), sans-serif",
+                    fontWeight: 700,
+                  }}
+                >
+                  {i + 1}
+                </div>
+                <div>
+                  <h4
+                    style={{
+                      fontFamily: "var(--font-rajdhani), sans-serif",
+                      fontSize: 15,
+                      fontWeight: 700,
+                      color: "#1a1a2e",
+                      margin: "0 0 4px",
+                    }}
+                  >
+                    {step.title}
+                  </h4>
+                  <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.6 }}>
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 20,
+              marginTop: 40,
+            }}
+          >
+            {timeline.map((t) => (
+              <div
+                key={t.label}
+                style={{
+                  background: "#f4f3ef",
+                  padding: 20,
+                  borderRadius: 8,
+                  textAlign: "center",
+                  borderTop: "3px solid #2B3490",
+                }}
+              >
+                <h4
+                  style={{
+                    fontFamily: "var(--font-rajdhani), sans-serif",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#1a1a2e",
+                    margin: "0 0 8px",
+                  }}
+                >
+                  {t.label}
+                </h4>
+                <p
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#2B3490",
+                    margin: 0,
+                    fontFamily: "var(--font-rajdhani), sans-serif",
+                  }}
+                >
+                  {t.value}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)",
+              borderRadius: 12,
+              padding: 40,
+              color: "#fff",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 32,
+            }}
+          >
+            <div>
+              <h4
+                style={{
+                  fontFamily: "var(--font-rajdhani), sans-serif",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  color: "#D4A500",
+                  margin: 0,
+                }}
+              >
+                Chief Grievance Officer
+              </h4>
+              <p style={{ fontSize: 14, margin: "8px 0 0" }}>
+                Available for grievance filing and consultation
+              </p>
+            </div>
+            <div>
+              <h4
+                style={{
+                  fontFamily: "var(--font-rajdhani), sans-serif",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  color: "#D4A500",
+                  margin: 0,
+                }}
+              >
+                Phone
+              </h4>
+              <p style={{ fontSize: 14, margin: "8px 0 0" }}>
+                <a href="tel:+918554233333" style={{ color: "#D4A500", textDecoration: "none" }}>
+                  +91-8554-233333 (Ext: 390)
+                </a>
+              </p>
+            </div>
+            <div>
+              <h4
+                style={{
+                  fontFamily: "var(--font-rajdhani), sans-serif",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  color: "#D4A500",
+                  margin: 0,
+                }}
+              >
+                Email
+              </h4>
+              <p style={{ fontSize: 14, margin: "8px 0 0" }}>
+                <a
+                  href="mailto:grievance@ksrmce.ac.in"
+                  style={{ color: "#D4A500", textDecoration: "none" }}
+                >
+                  grievance@ksrmce.ac.in
+                </a>
+              </p>
+            </div>
+            <div>
+              <h4
+                style={{
+                  fontFamily: "var(--font-rajdhani), sans-serif",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  color: "#D4A500",
+                  margin: 0,
+                }}
+              >
+                Office Hours
+              </h4>
+              <p style={{ fontSize: 14, margin: "8px 0 0" }}>
+                Monday to Friday, 10:00 AM - 4:00 PM
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }
