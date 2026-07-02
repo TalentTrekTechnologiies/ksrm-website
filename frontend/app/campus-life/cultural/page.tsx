@@ -169,16 +169,7 @@ export default function CulturalClubPage() {
                   borderRadius: 8,
                   borderTop: "4px solid #D4A500",
                   boxShadow: "0 4px 12px rgba(43, 52, 144, 0.08)",
-                  transition: "all 0.3s ease",
                   cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(43, 52, 144, 0.12)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(43, 52, 144, 0.08)";
                 }}
               >
                 <div style={{ fontSize: 48, marginBottom: 12 }}>
@@ -253,17 +244,8 @@ export default function CulturalClubPage() {
                   padding: 32,
                   borderRadius: 12,
                   textAlign: "center",
-                  transition: "all 0.3s ease",
                   boxShadow: "0 4px 12px rgba(43, 52, 144, 0.1)",
                   cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(43, 52, 144, 0.15)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(43, 52, 144, 0.1)";
                 }}
               >
                 <div
