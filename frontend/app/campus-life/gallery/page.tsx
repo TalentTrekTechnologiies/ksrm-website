@@ -1,59 +1,64 @@
-export const metadata = {
-  title: "Campus Photo Gallery | KSRM College of Engineering",
-  description:
-    "Photo gallery showcasing campus events, ceremonies, and memorable moments at KSRM College of Engineering",
-};
+"use client";
+
+import { useState } from "react";
 
 const galleryPhotos = [
-  { src: "/Filtered/KSR00001.JPG", alt: "Inauguration ceremony with golden statue dedication" },
-  { src: "/Filtered/KSR00007.JPG", alt: "Campus event with faculty and staff" },
-  { src: "/Filtered/KSR00014.JPG", alt: "College event and gathering" },
-  { src: "/Filtered/KSR00016.JPG", alt: "Performance rewards recognition ceremony" },
-  { src: "/Filtered/KSR00017.JPG", alt: "Campus activity and team gathering" },
-  { src: "/Filtered/KSR00019.JPG", alt: "College event moment" },
-  { src: "/Filtered/KSR00027.JPG", alt: "Campus gathering" },
-  { src: "/Filtered/KSR00027 (1).JPG", alt: "Campus moment" },
-  { src: "/Filtered/KSR00028.JPG", alt: "Event photograph" },
-  { src: "/Filtered/KSR00028 (1).JPG", alt: "Campus event" },
-  { src: "/Filtered/KSR00048.JPG", alt: "Campus activity" },
-  { src: "/Filtered/KSR00053.JPG", alt: "College event" },
-  { src: "/Filtered/KSR00058.JPG", alt: "Campus gathering" },
-  { src: "/Filtered/KSR00104.JPG", alt: "Event moment" },
-  { src: "/Filtered/KSR00116.JPG", alt: "Campus photo" },
-  { src: "/Filtered/KSR00140.JPG", alt: "College event" },
-  { src: "/Filtered/KSR00163.JPG", alt: "Campus moment" },
-  { src: "/Filtered/KSR09989.JPG", alt: "Campus activity" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM.jpeg", alt: "Campus event with faculty lineup" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM (1).jpeg", alt: "Construction/foundation laying ceremony" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM (2).jpeg", alt: "Campus event gathering" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM.jpeg", alt: "Campus moment" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM (1).jpeg", alt: "Event photograph" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM (2).jpeg", alt: "Campus gathering" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM.jpeg", alt: "College event" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM (1).jpeg", alt: "Campus photo" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM (2).jpeg", alt: "Event moment" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.34 PM.jpeg", alt: "Campus activity" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.34 PM (1).jpeg", alt: "College gathering" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM.jpeg", alt: "Campus event" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM (1).jpeg", alt: "Event photo" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM (2).jpeg", alt: "Campus moment" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.36 PM.jpeg", alt: "College event" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.36 PM (1).jpeg", alt: "Campus gathering" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM.jpeg", alt: "Event photograph" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM (1).jpeg", alt: "Campus photo" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM (2).jpeg", alt: "College activity" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.38 PM.jpeg", alt: "Campus event" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.38 PM (1).jpeg", alt: "Event moment" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM.jpeg", alt: "Campus gathering" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM (1).jpeg", alt: "College photo" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM (2).jpeg", alt: "Campus moment" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.40 PM.jpeg", alt: "Event photo" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.40 PM (1).jpeg", alt: "Campus activity" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM.jpeg", alt: "College event" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM (1).jpeg", alt: "Campus gathering" },
+  { src: "/Filtered/KSR00001.JPG", alt: "Inauguration ceremony with golden statue dedication", category: "Events" },
+  { src: "/Filtered/KSR00007.JPG", alt: "Campus event with faculty and staff", category: "Events" },
+  { src: "/Filtered/KSR00014.JPG", alt: "College event and gathering", category: "Events" },
+  { src: "/Filtered/KSR00016.JPG", alt: "Performance rewards recognition ceremony", category: "Events" },
+  { src: "/Filtered/KSR00017.JPG", alt: "Campus activity and team gathering", category: "Campus" },
+  { src: "/Filtered/KSR00019.JPG", alt: "College event moment", category: "Events" },
+  { src: "/Filtered/KSR00027.JPG", alt: "Campus gathering", category: "Campus" },
+  { src: "/Filtered/KSR00027 (1).JPG", alt: "Campus moment", category: "Campus" },
+  { src: "/Filtered/KSR00028.JPG", alt: "Event photograph", category: "Events" },
+  { src: "/Filtered/KSR00028 (1).JPG", alt: "Campus event", category: "Events" },
+  { src: "/Filtered/KSR00048.JPG", alt: "Campus activity", category: "Campus" },
+  { src: "/Filtered/KSR00053.JPG", alt: "College event", category: "Events" },
+  { src: "/Filtered/KSR00058.JPG", alt: "Campus gathering", category: "Campus" },
+  { src: "/Filtered/KSR00104.JPG", alt: "Event moment", category: "Events" },
+  { src: "/Filtered/KSR00116.JPG", alt: "Campus photo", category: "Campus" },
+  { src: "/Filtered/KSR00140.JPG", alt: "College event", category: "Events" },
+  { src: "/Filtered/KSR00163.JPG", alt: "Campus moment", category: "Campus" },
+  { src: "/Filtered/KSR09989.JPG", alt: "Campus activity", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM.jpeg", alt: "Campus event with faculty lineup", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM (1).jpeg", alt: "Construction/foundation laying ceremony", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM (2).jpeg", alt: "Campus event gathering", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM.jpeg", alt: "Campus moment", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM (1).jpeg", alt: "Event photograph", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM (2).jpeg", alt: "Campus gathering", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM.jpeg", alt: "College event", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM (1).jpeg", alt: "Campus photo", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM (2).jpeg", alt: "Event moment", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.34 PM.jpeg", alt: "Campus activity", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.34 PM (1).jpeg", alt: "College gathering", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM.jpeg", alt: "Campus event", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM (1).jpeg", alt: "Event photo", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM (2).jpeg", alt: "Campus moment", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.36 PM.jpeg", alt: "College event", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.36 PM (1).jpeg", alt: "Campus gathering", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM.jpeg", alt: "Event photograph", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM (1).jpeg", alt: "Campus photo", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM (2).jpeg", alt: "College activity", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.38 PM.jpeg", alt: "Campus event", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.38 PM (1).jpeg", alt: "Event moment", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM.jpeg", alt: "Campus gathering", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM (1).jpeg", alt: "College photo", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM (2).jpeg", alt: "Campus moment", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.40 PM.jpeg", alt: "Event photo", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.40 PM (1).jpeg", alt: "Campus activity", category: "Campus" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM.jpeg", alt: "College event", category: "Events" },
+  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM (1).jpeg", alt: "Campus gathering", category: "Campus" },
 ];
 
+const categories = ["All", "Campus", "Events"];
+
 export default function CampusGalleryPage() {
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredPhotos =
+    activeCategory === "All" ? galleryPhotos : galleryPhotos.filter((photo) => photo.category === activeCategory);
+
   return (
     <main style={{ background: "#ffffff" }}>
       {/* Hero */}
@@ -110,6 +115,34 @@ export default function CampusGalleryPage() {
         </div>
       </section>
 
+      {/* Filters */}
+      <section style={{ padding: "40px 0", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                style={{
+                  padding: "10px 24px",
+                  borderRadius: "24px",
+                  border: "1.5px solid #eef0f3",
+                  background: activeCategory === cat ? "#2B3490" : "#fff",
+                  color: activeCategory === cat ? "#fff" : "#555",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  fontFamily: "var(--font-rajdhani), sans-serif",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Gallery Grid */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
@@ -123,7 +156,7 @@ export default function CampusGalleryPage() {
               textAlign: "center",
             }}
           >
-            Events & Moments
+            {activeCategory === "All" ? "All Photos" : activeCategory}
           </h2>
           <div
             style={{
@@ -132,7 +165,7 @@ export default function CampusGalleryPage() {
               gap: 20,
             }}
           >
-            {galleryPhotos.map((photo, index) => (
+            {filteredPhotos.map((photo, index) => (
               <div
                 key={index}
                 style={{
@@ -144,8 +177,7 @@ export default function CampusGalleryPage() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-8px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 12px 24px rgba(43, 52, 144, 0.15)";
+                  e.currentTarget.style.boxShadow = "0 12px 24px rgba(43, 52, 144, 0.15)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
@@ -189,10 +221,7 @@ export default function CampusGalleryPage() {
           >
             <span style={{ fontSize: 20, flexShrink: 0 }}>📸</span>
             <span>
-              These photos capture the spirit of KSRM College of Engineering -
-              from academic excellence and cultural celebrations to groundbreaking
-              ceremonies and student achievements. Each moment represents our
-              commitment to holistic development and community engagement.
+              These photos capture the spirit of KSRM College of Engineering - from academic excellence and cultural celebrations to groundbreaking ceremonies and student achievements. Each moment represents our commitment to holistic development and community engagement.
             </span>
           </div>
         </div>
