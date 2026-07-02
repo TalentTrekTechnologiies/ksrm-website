@@ -66,69 +66,17 @@ export default function StartupCellPage() {
       {/* Hero */}
       <section
         style={{
-          position: "relative",
-          backgroundImage: "url('/banners/startup-banner.jpg')",
+          backgroundImage: "url('/header.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundColor: "#2B3490",
-          minHeight: 320,
+          minHeight: 240,
           display: "flex",
           alignItems: "flex-end",
-          paddingBottom: 40,
-          overflow: "hidden",
+          paddingBottom: 20,
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%)",
-            zIndex: 1,
-          }}
-        />
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            width: "100%",
-            maxWidth: 1400,
-            margin: "0 auto",
-            padding: "0 40px",
-          }}
-        >
-          <h1
-            style={{
-              fontFamily: "var(--font-rajdhani), sans-serif",
-              fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
-              fontWeight: 700,
-              color: "#fff",
-              margin: 0,
-              textShadow: "0 2px 12px rgba(0,0,0,0.7)",
-              lineHeight: 1.08,
-            }}
-          >
-            Innovation &amp; Startup Cell
-          </h1>
-          <p
-            style={{
-              color: "rgba(255,255,255,0.95)",
-              fontSize: 18,
-              margin: "16px 0 0",
-              textShadow: "0 2px 8px rgba(0,0,0,0.6)",
-            }}
-          >
-            Fostering Entrepreneurship &amp; Innovation
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              fontSize: 14,
-              marginTop: 16,
-              color: "rgba(255,255,255,0.7)",
-            }}
-          >
+        <div style={{ width: "100%", maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <div style={{ display: "flex", gap: 8, fontSize: 14, color: "#fff" }}>
             <Link href="/" style={{ color: "#D4A500" }}>
               Home
             </Link>

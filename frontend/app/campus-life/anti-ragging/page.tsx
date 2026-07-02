@@ -84,94 +84,22 @@ export default function AntiRaggingPage() {
       {/* Hero */}
       <section
         style={{
-          position: "relative",
-          backgroundImage: "url('/images/campus/02.jpg')",
+          backgroundImage: "url('/header.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundColor: "#2B3490",
-          minHeight: 280,
+          minHeight: 240,
           display: "flex",
           alignItems: "flex-end",
-          paddingBottom: 40,
-          overflow: "hidden",
+          paddingBottom: 20,
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "rgba(43, 52, 144, 0.85)",
-          }}
-        />
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            width: "100%",
-            maxWidth: 1400,
-            margin: "0 auto",
-            padding: "0 40px",
-          }}
-        >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              color: "#D4A500",
-              marginBottom: 16,
-            }}
-          >
-            Campus Life
-          </div>
-          <h1
-            style={{
-              fontFamily: "var(--font-rajdhani), sans-serif",
-              fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
-              fontWeight: 700,
-              color: "#fff",
-              margin: 0,
-              textShadow: "0 2px 12px rgba(0,0,0,0.7)",
-              lineHeight: 1.08,
-            }}
-          >
-            Anti-Ragging
-          </h1>
-          <p
-            style={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: 18,
-              lineHeight: 1.6,
-              margin: "16px 0 0",
-              fontWeight: 300,
-              textShadow: "0 2px 8px rgba(0,0,0,0.6)",
-            }}
-          >
-            Zero Tolerance Policy
-          </p>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 14,
-              color: "rgba(255,255,255,0.7)",
-              marginTop: 24,
-              marginBottom: 16,
-            }}
-          >
+        <div style={{ width: "100%", maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+          <div style={{ display: "flex", gap: 8, fontSize: 14, color: "#fff" }}>
             <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
               Home
             </Link>
             <span style={{ color: "#D4A500" }}>/</span>
-            <Link
-              href="/campus-life"
-              style={{ color: "#D4A500", textDecoration: "none" }}
-            >
+            <Link href="/campus-life" style={{ color: "#D4A500", textDecoration: "none" }}>
               Campus Life
             </Link>
             <span style={{ color: "#D4A500" }}>/</span>
