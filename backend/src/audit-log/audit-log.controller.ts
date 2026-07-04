@@ -1,4 +1,13 @@
-﻿import { Controller, Get, Query, UseGuards, Request } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  UseGuards,
+  Request,
+  ForbiddenException,
+} from "@nestjs/common";
 import { AuditLogService } from "./audit-log.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
@@ -16,7 +25,7 @@ export class AuditLogController {
   ) {
     // Only super admin can view audit logs
     if (!req.user.isSuperAdmin) {
-      throw new Error("Only super admins can view audit logs");
+      throw new ForbiddenException("Only super admins can view audit logs");
     }
 
     return this.auditLogService.getAll({
@@ -28,13 +37,17 @@ export class AuditLogController {
 
   @Get("admin/:adminId")
   @UseGuards(JwtAuthGuard)
-  async getByAdminId(@Query("limit") limit?: string, @Request() req?) {
+  async getByAdminId(
+    @Param("adminId", ParseIntPipe) adminId: number,
+    @Query("limit") limit?: string,
+    @Request() req?,
+  ) {
     if (!req.user.isSuperAdmin) {
-      throw new Error("Only super admins can view audit logs");
+      throw new ForbiddenException("Only super admins can view audit logs");
     }
 
     return this.auditLogService.getByAdminId(
-      req.user.id,
+      adminId,
       limit ? parseInt(limit) : 50,
     );
   }
@@ -42,15 +55,16 @@ export class AuditLogController {
   @Get("module/:module")
   @UseGuards(JwtAuthGuard)
   async getByModule(
+    @Param("module") module: string,
     @Query("limit") limit?: string,
     @Request() req?,
   ) {
     if (!req.user.isSuperAdmin) {
-      throw new Error("Only super admins can view audit logs");
+      throw new ForbiddenException("Only super admins can view audit logs");
     }
 
     return this.auditLogService.getByModule(
-      req.params.module,
+      module,
       limit ? parseInt(limit) : 100,
     );
   }
