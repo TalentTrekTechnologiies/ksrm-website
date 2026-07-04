@@ -9,6 +9,7 @@ import { DegreeVerificationModule } from './degree-verification/degree-verificat
 import { ExamNotificationsModule } from './exam-notifications/exam-notifications.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     PrismaModule,
     AuthModule,
+    AuditLogModule,
     FacultyModule,
     NewsModule,
     GalleryModule,
