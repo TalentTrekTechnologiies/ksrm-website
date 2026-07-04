@@ -1,17 +1,9 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-
-// Read at runtime (not a compile-time `import`) so tsc's rootDir inference
-// for `nest build` isn't dragged back up to the package root by a file
-// outside src/.
-const { version } = JSON.parse(
-  readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'),
-);
+import { APP_VERSION } from './version';
 
 function assertRequiredEnv() {
   const missing = ['DATABASE_URL', 'JWT_SECRET'].filter((key) => !process.env[key]);
@@ -50,7 +42,7 @@ async function bootstrap() {
       new DocumentBuilder()
         .setTitle('KSRM College CMS API')
         .setDescription('Admin-facing REST API for the KSRM College CMS backend')
-        .setVersion(version)
+        .setVersion(APP_VERSION)
         .addBearerAuth()
         .build(),
     );
