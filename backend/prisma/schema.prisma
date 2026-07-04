@@ -7,12 +7,100 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// =============================================================================
+// PHASE 1 - ADDITIVE ONLY
+//
+// Every model below that existed before this migration keeps every one of its
+// existing fields, with the exact same name/type/nullability/default it had
+// before. New fields on existing models are grouped under a clearly marked
+// "Phase 1 additive fields" comment. No existing column is renamed, retyped,
+// or dropped. No data is backfilled by this migration - new FK/lookup columns
+// are nullable and unpopulated until a later, separate migration.
+//
+// See backend/DATA_MODEL_DESIGN.md for the full design rationale, the
+// migration phase plan, and the list of items explicitly deferred out of
+// Phase 1 (§5.5: Notification -> TickerNotice rename; Research.type /
+// DegreeVerification.degree / AuditLog.action enum conversions;
+// AuditLog.adminId FK constraint; RBAC assignment to existing admins).
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// ENUMS (all new - none of these existed before Phase 1)
+// -----------------------------------------------------------------------------
+
+enum OutcomeType {
+  PEO
+  PO
+  PSO
+}
+
+enum ProgrammeLevel {
+  UG
+  PG
+  PHD
+  DIPLOMA
+}
+
+/// Restricted to committees that actually exist on the current site today
+/// (Anti-Ragging, Grievance Redressal). OTHER is the escape hatch for a
+/// future committee rather than a speculative pre-seeded type - no
+/// Women's-Cell/SC-ST-Cell values are included since no such page/content
+/// exists yet (per explicit instruction: don't invent future committee data).
+enum CommitteeType {
+  ANTI_RAGGING
+  GRIEVANCE_REDRESSAL
+  OTHER
+}
+
+enum CategoryDomain {
+  NEWS
+  GALLERY
+  EXAM_NOTIFICATION
+  DOWNLOAD
+}
+
+enum DownloadCategory {
+  SYLLABUS
+  QUESTION_PAPER
+  BROCHURE
+  AFFIDAVIT
+  FORM
+  OTHER
+}
+
+/// Value-type hint for SiteSetting.value, so the admin UI knows how to
+/// render/validate a setting without special-casing every key by name.
+enum SiteSettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  URL
+  EMAIL
+  IMAGE_URL
+}
+
+// -----------------------------------------------------------------------------
+// EXISTING MODELS - untouched original fields, additive columns only
+// -----------------------------------------------------------------------------
+
 model Notification {
   id        Int      @id @default(autoincrement())
   text      String
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // --- Phase 1 additive fields ---
+  // NOTE: approved to be renamed to `TickerNotice` in a later phase via an
+  // explicit `ALTER TABLE ... RENAME TO ...` migration (hand-written, not a
+  // naive Prisma schema diff, which would DROP+CREATE and destroy data).
+  // Left as `Notification` here on purpose - see DATA_MODEL_DESIGN.md §5.5.
+  startsAt  DateTime?
+  endsAt    DateTime?
+  sortOrder Int       @default(0)
+
+  @@index([isActive])
 }
 
 model News {
@@ -25,6 +113,22 @@ model News {
   isPublished Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // --- Phase 1 additive fields ---
+  slug          String?   @unique
+  categoryId    Int?
+  authorAdminId Int?
+  deletedAt     DateTime?
+  deletedBy     Int?
+  version       Int       @default(1)
+
+  categoryRef    Category? @relation("News_Category", fields: [categoryId], references: [id], onDelete: SetNull)
+  authorAdmin    Admin?    @relation("News_Author", fields: [authorAdminId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?    @relation("News_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([authorAdminId])
+  @@index([deletedAt])
 }
 
 model Faculty {
@@ -41,6 +145,24 @@ model Faculty {
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  // --- Phase 1 additive fields ---
+  departmentId   Int?
+  welcomeMessage String?
+  sortOrder      Int       @default(0)
+  deletedAt      DateTime?
+  deletedBy      Int?
+  version        Int       @default(1)
+
+  departmentRef        Department?       @relation("Faculty_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  hodOfDepartment      Department?       @relation("Department_Hod")
+  deletedByAdmin       Admin?            @relation("Faculty_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  labsInCharge         Lab[]             @relation("Lab_InCharge")
+  committeeMemberships CommitteeMember[] @relation("CommitteeMember_Faculty")
+
+  @@index([departmentId])
+  @@index([isActive])
+  @@index([deletedAt])
 }
 
 model Placement {
@@ -52,16 +174,47 @@ model Placement {
   year        Int
   imageUrl    String?
   createdAt   DateTime @default(now())
+
+  // --- Phase 1 additive fields ---
+  departmentId   Int?
+  companyLogoUrl String?
+  isPublished    Boolean   @default(true)
+  updatedAt      DateTime  @default(now()) @updatedAt
+  deletedAt      DateTime?
+  deletedBy      Int?
+  version        Int       @default(1)
+
+  departmentRef  Department? @relation("Placement_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?      @relation("Placement_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([deletedAt])
 }
 
 model GalleryImage {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   imageUrl  String
   category  String
   date      DateTime?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  // --- Phase 1 additive fields ---
+  categoryId   Int?
+  departmentId Int?
+  sortOrder    Int       @default(0)
+  deletedAt    DateTime?
+  deletedBy    Int?
+  version      Int       @default(1)
+
+  categoryRef    Category?   @relation("GalleryImage_Category", fields: [categoryId], references: [id], onDelete: SetNull)
+  departmentRef  Department? @relation("GalleryImage_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?      @relation("GalleryImage_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([departmentId])
+  @@index([deletedAt])
 }
 
 model DegreeVerification {
@@ -73,6 +226,15 @@ model DegreeVerification {
   degree        String
   isVerified    Boolean  @default(true)
   createdAt     DateTime @default(now())
+
+  // --- Phase 1 additive fields ---
+  departmentId     Int?
+  cgpaOrPercentage Decimal? @db.Decimal(5, 2)
+  updatedAt        DateTime @default(now()) @updatedAt
+
+  departmentRef Department? @relation("DegreeVerification_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
 }
 
 model Admin {
@@ -82,10 +244,44 @@ model Admin {
   name         String
   isSuperAdmin Boolean  @default(false)
   permissions  String[] // "faculty", "news", "gallery", "placements", "exam", "notifications", "research", "degree_verification", "admins"
-  department   String?  // optional, for faculty management
+  department   String? // optional, for faculty management
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  // --- Phase 1 additive fields ---
+  // NOTE: `permissions` (above) stays untouched in Phase 1. Roles are seeded
+  // (see prisma/seed.ts) but NOT yet assigned to any existing admin - that
+  // assignment is an explicit, separate, reviewed data migration (see
+  // DATA_MODEL_DESIGN.md §9 Phase 5), not part of this additive migration.
+  departmentId Int?
+  lastLoginAt  DateTime?
+
+  departmentRef Department? @relation("Admin_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+
+  roles         AdminRole[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+
+  authoredNews News[] @relation("News_Author")
+
+  // Reverse side of every `deletedBy` FK across the schema - see
+  // DATA_MODEL_DESIGN.md §5 for the soft-delete matrix these correspond to.
+  deletedNews                 News[]                @relation("News_DeletedBy")
+  deletedFaculty              Faculty[]             @relation("Faculty_DeletedBy")
+  deletedPlacements           Placement[]           @relation("Placement_DeletedBy")
+  deletedGalleryImages        GalleryImage[]        @relation("GalleryImage_DeletedBy")
+  deletedLabs                 Lab[]                 @relation("Lab_DeletedBy")
+  deletedDepartments          Department[]          @relation("Department_DeletedBy")
+  deletedLearningOutcomes     LearningOutcome[]     @relation("LearningOutcome_DeletedBy")
+  deletedDepartmentProgrammes DepartmentProgramme[] @relation("DepartmentProgramme_DeletedBy")
+  deletedDepartmentHighlights DepartmentHighlight[] @relation("DepartmentHighlight_DeletedBy")
+  deletedDownloads            Download[]            @relation("Download_DeletedBy")
+  deletedCommittees           Committee[]           @relation("Committee_DeletedBy")
+  deletedCommitteeMembers     CommitteeMember[]     @relation("CommitteeMember_DeletedBy")
+  updatedSiteSettings         SiteSetting[]         @relation("SiteSetting_UpdatedBy")
+
+  @@index([departmentId])
 }
 
 model Research {
@@ -98,32 +294,394 @@ model Research {
   type       String
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
+
+  // --- Phase 1 additive fields ---
+  // NOTE: `type` (above) is NOT converted to the planned `ResearchType` enum
+  // in Phase 1 - see DATA_MODEL_DESIGN.md §5.5 (deferred, same reasoning as
+  // the other existing-column type changes). Research is also intentionally
+  // NOT given soft-delete columns - it wasn't in the approved soft-delete
+  // scope list (Faculty/Labs/News/Gallery/Downloads/Placements/Committees/
+  // Department content); `isActive` already serves as its hide/show toggle.
+  departmentId Int?
+  doiOrLink    String?
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  departmentRef Department? @relation("Research_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([year])
 }
 
 model ExamNotification {
-  id       Int      @id @default(autoincrement())
-  title    String
-  fileUrl  String?
-  category String
-  date     DateTime
-  isActive Boolean  @default(true)
+  id        Int      @id @default(autoincrement())
+  title     String
+  fileUrl   String?
+  category  String
+  date      DateTime
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
+
+  // --- Phase 1 additive fields ---
+  // NOTE: also intentionally not given soft-delete columns - same reasoning
+  // as Research (not in the approved soft-delete scope list).
+  categoryId   Int?
+  departmentId Int?
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  categoryRef   Category?   @relation("ExamNotification_Category", fields: [categoryId], references: [id], onDelete: SetNull)
+  departmentRef Department? @relation("ExamNotification_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([departmentId])
 }
 
 // Audit Log for tracking admin actions
 model AuditLog {
-  id        Int      @id @default(autoincrement())
-  adminId   Int
-  adminName String
+  id         Int      @id @default(autoincrement())
+  adminId    Int
+  adminName  String
   adminEmail String
-  action    String   // "CREATE" | "UPDATE" | "DELETE"
-  module    String   // "faculty" | "news" | "gallery" | "placements" | "exam" | "notifications" | "degree_verification"
-  targetId  Int?     // ID of the affected record
-  details   String?  // JSON string with changes
-  ipAddress String?  // IP address of the admin
-  createdAt DateTime @default(now())
+  action     String // "CREATE" | "UPDATE" | "DELETE"
+  module     String // "faculty" | "news" | "gallery" | "placements" | "exam" | "notifications" | "degree_verification"
+  targetId   Int? // ID of the affected record
+  details    String? // JSON string with changes
+  ipAddress  String? // IP address of the admin
+  createdAt  DateTime @default(now())
+
+  // --- Phase 1 additive fields ---
+  // NOTE: `adminId` (above) does NOT get an FK constraint added in Phase 1.
+  // Adding one now would require every existing AuditLog.adminId value to
+  // already reference a real Admin.id, which hasn't been verified against
+  // live data - a constraint that could fail partway through applying is
+  // exactly the kind of risk Phase 1 is designed to avoid. The real FK
+  // (`adminRef`, nullable, SetNull) is added here as a NEW, separate,
+  // unenforced-until-backfilled column; the plain `adminId` Int stays
+  // exactly as it was. See DATA_MODEL_DESIGN.md §5.5 and §9 Phase 4.
+  // `action` also stays a free String in Phase 1 for the same reason - the
+  // AuditAction enum conversion is deferred alongside it.
+  adminRefId Int?
+
+  adminRef Admin? @relation(fields: [adminRefId], references: [id], onDelete: SetNull)
 
   @@index([adminId])
   @@index([module])
   @@index([createdAt])
+  @@index([module, createdAt])
+  @@index([adminRefId])
+}
+
+// -----------------------------------------------------------------------------
+// NEW MODELS
+// -----------------------------------------------------------------------------
+
+model Department {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  name            String
+  shortName       String?
+  tagline         String?
+  intro           String?
+  about           String
+  aboutVideoUrl   String?
+  heroImageUrl    String?
+  vision          String?
+  mission         String[]
+  establishedYear Int?
+  hodId           Int?     @unique
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Soft delete + optimistic locking - "Department content" is explicitly
+  // in the approved soft-delete scope.
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  hod            Faculty? @relation("Department_Hod", fields: [hodId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?   @relation("Department_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  faculties           Faculty[]             @relation("Faculty_Department")
+  labs                Lab[]                 @relation("Lab_Department")
+  researches          Research[]            @relation("Research_Department")
+  placements          Placement[]           @relation("Placement_Department")
+  degreeVerifications DegreeVerification[]  @relation("DegreeVerification_Department")
+  learningOutcomes    LearningOutcome[]     @relation("LearningOutcome_Department")
+  programmes          DepartmentProgramme[] @relation("DepartmentProgramme_Department")
+  highlights          DepartmentHighlight[] @relation("DepartmentHighlight_Department")
+  galleryImages       GalleryImage[]        @relation("GalleryImage_Department")
+  examNotifications   ExamNotification[]    @relation("ExamNotification_Department")
+  downloads           Download[]            @relation("Download_Department")
+  admins              Admin[]               @relation("Admin_Department")
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+model LearningOutcome {
+  id           Int         @id @default(autoincrement())
+  departmentId Int
+  type         OutcomeType
+  code         String
+  title        String?
+  text         String
+  sortOrder    Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  department     Department @relation("LearningOutcome_Department", fields: [departmentId], references: [id], onDelete: Cascade)
+  deletedByAdmin Admin?     @relation("LearningOutcome_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@unique([departmentId, type, code])
+  @@index([departmentId, type])
+  @@index([deletedAt])
+}
+
+model DepartmentProgramme {
+  id           Int            @id @default(autoincrement())
+  departmentId Int
+  name         String
+  level        ProgrammeLevel
+  intake       Int
+  sortOrder    Int            @default(0)
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  department     Department @relation("DepartmentProgramme_Department", fields: [departmentId], references: [id], onDelete: Cascade)
+  deletedByAdmin Admin?     @relation("DepartmentProgramme_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([deletedAt])
+}
+
+model DepartmentHighlight {
+  id           Int      @id @default(autoincrement())
+  departmentId Int
+  title        String
+  description  String
+  sortOrder    Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  department     Department @relation("DepartmentHighlight_Department", fields: [departmentId], references: [id], onDelete: Cascade)
+  deletedByAdmin Admin?     @relation("DepartmentHighlight_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([deletedAt])
+}
+
+model Lab {
+  id                Int      @id @default(autoincrement())
+  departmentId      Int
+  name              String
+  description       String
+  imageUrl          String?
+  capacity          Int?
+  inChargeFacultyId Int?
+  sortOrder         Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  department      Department @relation("Lab_Department", fields: [departmentId], references: [id], onDelete: Cascade)
+  inChargeFaculty Faculty?   @relation("Lab_InCharge", fields: [inChargeFacultyId], references: [id], onDelete: SetNull)
+  deletedByAdmin  Admin?     @relation("Lab_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([inChargeFacultyId])
+  @@index([deletedAt])
+}
+
+model Committee {
+  id          Int           @id @default(autoincrement())
+  name        String
+  type        CommitteeType
+  description String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("Committee_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  members CommitteeMember[] @relation("CommitteeMember_Committee")
+
+  @@unique([type, name])
+  @@index([deletedAt])
+}
+
+model CommitteeMember {
+  id          Int      @id @default(autoincrement())
+  committeeId Int
+  facultyId   Int?
+  name        String
+  designation String
+  role        String
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  committee      Committee @relation("CommitteeMember_Committee", fields: [committeeId], references: [id], onDelete: Cascade)
+  faculty        Faculty?  @relation("CommitteeMember_Faculty", fields: [facultyId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?    @relation("CommitteeMember_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([committeeId])
+  @@index([facultyId])
+  @@index([deletedAt])
+}
+
+model Category {
+  id        Int            @id @default(autoincrement())
+  domain    CategoryDomain
+  name      String
+  slug      String
+  sortOrder Int            @default(0)
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+
+  news              News[]             @relation("News_Category")
+  galleryImages     GalleryImage[]     @relation("GalleryImage_Category")
+  examNotifications ExamNotification[] @relation("ExamNotification_Category")
+  downloads         Download[]         @relation("Download_Category")
+
+  @@unique([domain, slug])
+  @@index([domain])
+}
+
+model Download {
+  id           Int              @id @default(autoincrement())
+  title        String
+  description  String?
+  category     DownloadCategory
+  departmentId Int?
+  categoryId   Int?
+  fileUrl      String
+  sortOrder    Int              @default(0)
+  isActive     Boolean          @default(true)
+  publishedAt  DateTime         @default(now())
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  department     Department? @relation("Download_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  categoryRef    Category?   @relation("Download_Category", fields: [categoryId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?      @relation("Download_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([category])
+  @@index([deletedAt])
+}
+
+model Permission {
+  id          Int     @id @default(autoincrement())
+  key         String  @unique
+  description String?
+
+  roles RolePermission[]
+}
+
+model Role {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  description  String?
+  isSystemRole Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  permissions RolePermission[]
+  admins      AdminRole[]
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model AdminRole {
+  adminId    Int
+  roleId     Int
+  assignedAt DateTime @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  role  Role  @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([adminId, roleId])
+  @@index([roleId])
+}
+
+model RefreshToken {
+  id          Int       @id @default(autoincrement())
+  adminId     Int
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdByIp String?
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+/// Global, admin-editable site configuration (contact details, social links,
+/// logo, SEO defaults, footer data) instead of hardcoded values scattered
+/// through the frontend. No soft-delete/versioning - this is system
+/// configuration, not "content" in the sense the soft-delete policy covers;
+/// removing a setting just falls back to a hardcoded default in code.
+model SiteSetting {
+  id          Int             @id @default(autoincrement())
+  key         String          @unique
+  value       String
+  type        SiteSettingType
+  group       String
+  isPublic    Boolean         @default(false)
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  // Addition beyond the requested field list, flagged for your review: an
+  // accountability trail for who last changed a given setting.
+  updatedBy Int?
+
+  updatedByAdmin Admin? @relation("SiteSetting_UpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([group])
+  @@index([isPublic])
 }
