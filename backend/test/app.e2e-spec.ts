@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { HealthStatus } from './../src/app.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -18,11 +19,12 @@ describe('AppController (e2e)', () => {
 
   it('/health (GET)', async () => {
     const res = await request(app.getHttpServer()).get('/health').expect(200);
-    expect(res.body.status).toMatch(/^(ok|degraded)$/);
-    expect(res.body.database).toMatch(/^(connected|disconnected)$/);
-    expect(typeof res.body.uptime).toBe('number');
-    expect(typeof res.body.version).toBe('string');
-    expect(typeof res.body.timestamp).toBe('string');
+    const body = res.body as HealthStatus;
+    expect(body.status).toMatch(/^(ok|degraded)$/);
+    expect(body.database).toMatch(/^(connected|disconnected)$/);
+    expect(typeof body.uptime).toBe('number');
+    expect(typeof body.version).toBe('string');
+    expect(typeof body.timestamp).toBe('string');
   });
 
   afterEach(async () => {

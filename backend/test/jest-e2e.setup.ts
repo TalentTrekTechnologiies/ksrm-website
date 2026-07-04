@@ -4,4 +4,5 @@
 // connection, so a placeholder DATABASE_URL is enough for the module graph
 // to initialize; only DB-touching assertions would need a real database.
 process.env.JWT_SECRET ??= 'e2e-test-secret-not-for-production';
-process.env.DATABASE_URL ??= 'postgresql://test:test@localhost:5432/test?schema=public';
+process.env.DATABASE_URL ??=
+  'postgresql://test:test@localhost:5432/test?schema=public';
