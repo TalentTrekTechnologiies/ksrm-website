@@ -5,6 +5,7 @@
   Body,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DegreeVerificationService } from './degree-verification.service';
 import {
   CreateDegreeVerificationDto,
@@ -14,6 +15,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
 
+@ApiTags('degree-verification')
 @Controller('degree-verification')
 export class DegreeVerificationController {
   constructor(private readonly degreeVerificationService: DegreeVerificationService) {}

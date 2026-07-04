@@ -11,12 +11,14 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FacultyService } from './faculty.service';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
 
+@ApiTags('faculty')
 @Controller('faculty')
 export class FacultyController {
   constructor(private readonly facultyService: FacultyService) {}

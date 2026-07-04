@@ -9,12 +9,14 @@
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { PlacementsService } from './placements.service';
 import { CreatePlacementDto } from './dto/create-placement.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
 
+@ApiTags('placements')
 @Controller('placements')
 export class PlacementsController {
   constructor(private readonly placementsService: PlacementsService) {}

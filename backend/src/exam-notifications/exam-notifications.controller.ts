@@ -10,12 +10,14 @@
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ExamNotificationsService } from './exam-notifications.service';
 import { CreateExamNotificationDto } from './dto/create-exam-notification.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
 
+@ApiTags('exam-notifications')
 @Controller('exam-notifications')
 export class ExamNotificationsController {
   constructor(private readonly examNotificationsService: ExamNotificationsService) {}

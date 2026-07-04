@@ -8,9 +8,11 @@ import {
   Request,
   ForbiddenException,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { AuditLogService } from "./audit-log.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
+@ApiTags("audit-logs")
 @Controller("audit-logs")
 export class AuditLogController {
   constructor(private readonly auditLogService: AuditLogService) {}
