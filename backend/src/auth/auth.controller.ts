@@ -9,6 +9,7 @@
   UseGuards,
   Request,
   ParseIntPipe,
+  ForbiddenException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -38,7 +39,7 @@ export class AuthController {
   register(@Body() registerAdminDto: RegisterAdminDto, @Request() req) {
     // Only super admin can register other admins
     if (!req.user.isSuperAdmin) {
-      throw new Error('Only super admins can register new admins');
+      throw new ForbiddenException('Only super admins can register new admins');
     }
     return this.authService.registerAdmin(registerAdminDto);
   }
