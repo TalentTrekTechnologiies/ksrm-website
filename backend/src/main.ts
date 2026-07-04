@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { APP_VERSION } from './version';
+import { configureApp } from './configure-app';
 
 function assertRequiredEnv() {
-  const missing = ['DATABASE_URL', 'JWT_SECRET'].filter((key) => !process.env[key]);
+  const missing = ['DATABASE_URL', 'JWT_SECRET'].filter(
+    (key) => !process.env[key],
+  );
   if (missing.length > 0) {
     console.error(
       `FATAL: missing required environment variable(s): ${missing.join(', ')}. ` +
@@ -22,18 +24,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Enable validation
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
-
-  // Enable CORS
-  app.enableCors({
-    origin: configService.get<string>('CORS_ORIGIN') ?? 'http://localhost:3000',
-    credentials: true,
-  });
+  configureApp(app, configService);
 
   // Swagger docs - not exposed in production
   if (configService.get<string>('NODE_ENV') !== 'production') {
@@ -41,7 +32,9 @@ async function bootstrap() {
       app,
       new DocumentBuilder()
         .setTitle('KSRM College CMS API')
-        .setDescription('Admin-facing REST API for the KSRM College CMS backend')
+        .setDescription(
+          'Admin-facing REST API for the KSRM College CMS backend',
+        )
         .setVersion(APP_VERSION)
         .addBearerAuth()
         .build(),
@@ -53,4 +46,4 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`🚀 Backend server running on http://localhost:${port}`);
 }
-bootstrap();
+void bootstrap();
