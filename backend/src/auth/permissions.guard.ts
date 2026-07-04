@@ -13,7 +13,7 @@ export class PermissionsGuard implements CanActivate {
     if (!user) throw new ForbiddenException('Not authenticated');
     if (user.isSuperAdmin) return true;
 
-    if (!user.permissions.includes(requiredPermission)) {
+    if (!user.permissions?.includes(requiredPermission)) {
       throw new ForbiddenException(`You don't have permission to access this resource`);
     }
     return true;
