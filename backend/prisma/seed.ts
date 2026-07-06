@@ -3,69 +3,112 @@ import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-// Permission catalog - one key per manageable domain. "departments.manage"
-// deliberately covers Department + Lab + LearningOutcome +
-// DepartmentProgramme + DepartmentHighlight as one bundle, matching how
-// the approved soft-delete scope groups them together as "department
-// content" rather than splitting each into its own permission.
-const PERMISSIONS: { key: string; description: string }[] = [
-  {
-    key: 'faculty.manage',
-    description: 'Create, update, and remove faculty directory entries',
-  },
-  {
-    key: 'departments.manage',
-    description:
-      'Manage department profiles, labs, learning outcomes, programmes, and highlights',
-  },
-  { key: 'news.manage', description: 'Create, update, and remove news posts' },
-  {
-    key: 'gallery.manage',
-    description: 'Create, update, and remove gallery images',
-  },
-  {
-    key: 'placements.manage',
-    description: 'Create, update, and remove placement records',
-  },
-  {
-    key: 'exam_notifications.manage',
-    description: 'Create, update, and remove exam notifications',
-  },
-  {
-    key: 'notifications.manage',
-    description: 'Create, update, and remove scrolling ticker notices',
-  },
-  {
-    key: 'research.manage',
-    description: 'Create, update, and remove research publication records',
-  },
-  {
-    key: 'degree_verification.manage',
-    description: 'Create and view degree verification records',
-  },
-  {
-    key: 'downloads.manage',
-    description: 'Create, update, and remove downloadable documents',
-  },
-  {
-    key: 'committees.manage',
-    description: 'Manage committees and committee membership rosters',
-  },
-  {
-    key: 'admins.manage',
-    description:
-      'Create, deactivate, and manage admin accounts and their roles',
-  },
-  {
-    key: 'site_settings.manage',
-    description:
-      'Edit global site configuration (contact info, social links, SEO defaults)',
-  },
-];
+// -----------------------------------------------------------------------------
+// Permission catalog - module.action granularity (not role names). Every
+// permission is scoped to exactly one module and one CRUD-level action;
+// nothing here ever grants access based on a role's *name* - only an
+// admin's actual, individually-checked permission set decides what they can
+// do (see DATA_MODEL_DESIGN.md's Authorization Principles section).
+//
+// The `module.action` convention is deliberately flat and string-keyed so it
+// can extend later without a schema change: a future page-level permission
+// is just a new key like `pages.homepage.update`, and a future field-level
+// permission is just `faculty.update.email` - both fit the existing
+// Permission.key column (a plain unique String) with no migration needed.
+// -----------------------------------------------------------------------------
+
+const CRUD_ACTIONS = ['view', 'create', 'update', 'delete'] as const;
+
+// Every module gets the full view/create/update/delete set EXCEPT
+// degree_verification, which deliberately has no `delete` action -
+// verification records are compliance-sensitive and should never be
+// removable through this permission system; a correction is made by
+// superseding/flagging a record via `update`, never by deleting it.
+const MODULE_ACTIONS: Record<string, readonly string[]> = {
+  faculty: CRUD_ACTIONS,
+  departments: CRUD_ACTIONS,
+  news: CRUD_ACTIONS,
+  gallery: CRUD_ACTIONS,
+  placements: CRUD_ACTIONS,
+  exam_notifications: CRUD_ACTIONS,
+  notifications: CRUD_ACTIONS,
+  research: CRUD_ACTIONS,
+  degree_verification: ['view', 'create', 'update'],
+  downloads: CRUD_ACTIONS,
+  committees: CRUD_ACTIONS,
+  site_settings: CRUD_ACTIONS,
+  // page_content bundles every page-driven marketing/institutional content
+  // type added in the page-content audit: PageBanner, SiteStatistic,
+  // Testimonial, CampusVideo, AccreditationBadge, Recruiter, Faq,
+  // LeadershipProfile, ContentCard - one permission module, matching how
+  // "departments" already bundles five related tables.
+  page_content: CRUD_ACTIONS,
+  // Kept separate from site_settings/page_content: contact office directory
+  // entries are repeating rows (Principal/Admissions/Exam/Placement/Main),
+  // not singular config values - see DATA_MODEL_DESIGN.md's ContactChannel
+  // vs SiteSetting note.
+  contact: CRUD_ACTIONS,
+  // Admin-account management and RBAC self-management (roles/permission
+  // assignment) are deliberately kept out of every seeded role below
+  // except Super Admin - see the ROLES list.
+  admins: CRUD_ACTIONS,
+  roles: CRUD_ACTIONS,
+};
+
+const MODULE_LABELS: Record<string, string> = {
+  faculty: 'faculty directory entries',
+  departments:
+    'department profiles, labs, learning outcomes, programmes, and highlights',
+  news: 'news posts',
+  gallery: 'gallery images',
+  placements: 'placement records',
+  exam_notifications: 'exam notifications',
+  notifications: 'scrolling ticker notices',
+  research: 'research publication records',
+  degree_verification: 'degree verification records',
+  downloads: 'downloadable documents',
+  committees: 'committees and committee membership rosters',
+  site_settings:
+    'global site configuration (social links, SEO defaults, footer data)',
+  page_content:
+    'page banners, site statistics, testimonials, campus videos, accreditation badges, recruiters, FAQs, leadership profiles, and generic content cards',
+  contact: 'contact office directory entries',
+  admins: 'admin accounts',
+  roles: 'roles and their permission assignments (RBAC self-management)',
+};
+
+const ACTION_VERBS: Record<(typeof CRUD_ACTIONS)[number], string> = {
+  view: 'View',
+  create: 'Create',
+  update: 'Update',
+  delete: 'Delete',
+};
+
+const PERMISSIONS: { key: string; description: string }[] = Object.entries(
+  MODULE_ACTIONS,
+).flatMap(([module, actions]) =>
+  actions.map((action) => ({
+    key: `${module}.${action}`,
+    description: `${ACTION_VERBS[action as (typeof CRUD_ACTIONS)[number]]} ${MODULE_LABELS[module]}`,
+  })),
+);
 
 const ALL_PERMISSION_KEYS = PERMISSIONS.map((p) => p.key);
-const CONTENT_PERMISSION_KEYS = ALL_PERMISSION_KEYS.filter(
-  (k) => k !== 'admins.manage',
+
+function permissionsFor(...modules: string[]): string[] {
+  return ALL_PERMISSION_KEYS.filter((key) =>
+    modules.some((module) => key.startsWith(`${module}.`)),
+  );
+}
+
+function viewOnlyPermissions(): string[] {
+  return ALL_PERMISSION_KEYS.filter((key) => key.endsWith('.view'));
+}
+
+// Every content module except admins/roles themselves - i.e. everything a
+// "CMS Administrator" should touch, but not admin-account or RBAC management.
+const CONTENT_MODULES = Object.keys(MODULE_ACTIONS).filter(
+  (m) => m !== 'admins' && m !== 'roles',
 );
 
 // Proposed default role -> permission mapping. This is a starting point for
@@ -73,6 +116,15 @@ const CONTENT_PERMISSION_KEYS = ALL_PERMISSION_KEYS.filter(
 // current responsibilities - see DATA_MODEL_DESIGN.md §6 for the reasoning
 // and the explicit note that existing admins are NOT assigned any of these
 // roles by this script (that's a separate, later, reviewed data migration).
+//
+// Deliberately, only "Super Admin" is ever given any `admins.*`/`roles.*`
+// permission below - admin-account management and RBAC self-management
+// (creating roles, changing what a role grants) are the two most
+// privilege-sensitive actions in the whole system, and granting either to
+// a non-Super-Admin role would let that role holder escalate their own
+// access. If a real need for a narrower "can manage other admins but isn't
+// Super Admin" role emerges, that's a deliberate future addition, not a
+// default.
 const ROLES: {
   name: string;
   description: string;
@@ -82,63 +134,68 @@ const ROLES: {
   {
     name: 'Super Admin',
     description:
-      'Full system access. In practice, bypass is enforced via Admin.isSuperAdmin, not this role - it exists so "Super Admin" appears as a real, selectable entry in admin-management screens.',
+      'Full system access, including RBAC self-management (creating roles, assigning permissions to roles, assigning roles to admins). In practice, the authorization bypass is enforced via Admin.isSuperAdmin, not this role - it exists so "Super Admin" appears as a real, selectable entry in admin-management screens, and so its full permission set is visible/auditable like any other role.',
     isSystemRole: true,
     permissionKeys: ALL_PERMISSION_KEYS,
   },
   {
     name: 'CMS Administrator',
     description:
-      'Full content management across every domain, excluding admin-account management.',
+      'Full content management (view/create/update/delete) across every content module, excluding admin-account management and RBAC self-management.',
     isSystemRole: true,
-    permissionKeys: CONTENT_PERMISSION_KEYS,
+    permissionKeys: permissionsFor(...CONTENT_MODULES),
   },
   {
     name: 'Department Administrator',
     description:
-      'Manages department content and faculty, typically scoped to their own department via Admin.departmentId (scoping enforced in application code, not by this role alone).',
+      'Full department-content and faculty management, typically scoped to their own department via Admin.departmentId (scoping enforced in application code, not by this role alone).',
     isSystemRole: true,
-    permissionKeys: ['departments.manage', 'faculty.manage'],
+    permissionKeys: permissionsFor('departments', 'faculty'),
   },
   {
     name: 'Department Editor',
     description:
       'Edits department profile content (about/vision/labs/outcomes/programmes) but not the faculty roster itself.',
     isSystemRole: true,
-    permissionKeys: ['departments.manage'],
+    permissionKeys: permissionsFor('departments'),
   },
   {
     name: 'Faculty Manager',
     description:
       'Institution-wide faculty directory management, not tied to one department.',
     isSystemRole: true,
-    permissionKeys: ['faculty.manage'],
+    permissionKeys: permissionsFor('faculty'),
   },
   {
     name: 'Placements Officer',
     description: 'Manages placement records.',
     isSystemRole: true,
-    permissionKeys: ['placements.manage'],
+    permissionKeys: permissionsFor('placements'),
   },
   {
     name: 'Examination Cell',
     description: 'Manages exam notifications.',
     isSystemRole: true,
-    permissionKeys: ['exam_notifications.manage'],
+    permissionKeys: permissionsFor('exam_notifications'),
   },
   {
     name: 'Content Editor',
     description:
-      'General content and communications: news, gallery, ticker notices.',
+      'General content and communications: news, gallery, ticker notices, and page-driven marketing content (banners, statistics, testimonials, videos, FAQs, leadership profiles). Does not include the contact office directory, which is kept more restricted.',
     isSystemRole: true,
-    permissionKeys: ['news.manage', 'gallery.manage', 'notifications.manage'],
+    permissionKeys: permissionsFor(
+      'news',
+      'gallery',
+      'notifications',
+      'page_content',
+    ),
   },
   {
     name: 'Viewer',
     description:
-      'Read-only - relies entirely on already-public GET endpoints. No write permissions.',
+      'Read-only across every module, including admin-panel views the public site does not expose (e.g. unpublished/draft content). No create/update/delete permissions, and no admin-account or RBAC visibility beyond what "view" grants elsewhere.',
     isSystemRole: true,
-    permissionKeys: [],
+    permissionKeys: viewOnlyPermissions(),
   },
 ];
 

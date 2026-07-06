@@ -1,24 +1,31 @@
 # KSRM College CMS — Production Data Model Design
 
-**Status:** Phase 1 (additive schema) generated and verified. **Not applied to any database** (no live Postgres in this environment — see §9). No existing column was renamed, retyped, dropped, or backfilled. No application code (controllers/services/DTOs) was touched. Waiting for your approval before Phase 2 (data migration/backfill) or any implementation work begins.
+**Status:** Phase 1 + Phase 1B (both additive schema only) generated and verified. **Not applied to any database** (no live Postgres in this environment — see §9). No existing column was renamed, retyped, dropped, or backfilled. No application code (controllers/services/DTOs) was touched. Waiting for your approval before data migration/backfill or any implementation work begins.
 
 **Scope:** the CMS content-management domain only — no students, courses, enrollment, attendance, exam results, or fees.
 **Tenancy:** single-tenant (KSRM only). §8 documents the path to multi-tenancy without building it now.
 
-This document has been revised after your Phase 1A approval to incorporate: the RBAC system-role seed list, the restricted (real-only) committee scope, the `Notification` → `TickerNotice` rename (documented, execution deferred), soft delete, optimistic locking, and the new `SiteSetting` entity. **The 100+ schema edge-case review you asked for is in the companion document `DATA_MODEL_EDGE_CASES.md`** (101 items, organized by category) rather than inline here, to keep each document navigable.
+This document has been revised twice since the original design:
+- **Phase 1A approval:** the RBAC system-role seed list, the restricted (real-only) committee scope, the `Notification` → `TickerNotice` rename (documented, execution deferred), soft delete, optimistic locking, and the new `SiteSetting` entity.
+- **Phase 1B (this revision):** a systematic page-by-page audit of the entire frontend (§13) driving 10 new content entities so nothing on the site requires a developer to change hardcoded content; and a full RBAC redesign from one coarse `.manage` permission per module to real `module.action` granularity (§14, §3.16), per the explicit instruction that authorization must be permission-based, not role-based.
+
+**The 100+ schema edge-case review is in the companion document `DATA_MODEL_EDGE_CASES.md`** (now 122 items, organized by category) rather than inline here, to keep each document navigable.
 
 ---
 
-## 0. What Phase 1 actually generated
+## 0. What Phase 1 + Phase 1B actually generated
 
 | File | What it is |
 |---|---|
 | `backend/prisma/schema.prisma` | The updated schema — every original field on the 9 pre-existing models kept exactly as it was; new tables and new nullable/defaulted columns added alongside them |
-| `backend/prisma/migrations/20260704083958_phase1_additive_cms_data_model/migration.sql` | The generated migration SQL — verified to contain **zero** `DROP TABLE`, `DROP COLUMN`, `RENAME`, or `ALTER COLUMN ... TYPE` statements (checked by direct grep against the output, not just asserted — see §9) |
-| `backend/prisma/seed.ts` | Extended (not replaced) to also seed the `Permission` catalog and the 9 system `Role`s with their permission mappings — the pre-existing super-admin seed logic is untouched. **No existing admin is assigned any role by this script.** |
-| `backend/DATA_MODEL_EDGE_CASES.md` | The 101-item structured edge-case review |
+| `backend/prisma/migrations/20260704083958_phase1_additive_cms_data_model/migration.sql` | Phase 1's migration SQL — 15 tables, 6 enums, additive columns on 9 existing tables |
+| `backend/prisma/migrations/20260706065815_phase1b_page_driven_content_and_rbac_granularity/migration.sql` | Phase 1B's migration SQL — 10 more tables, 3 additive columns on `Department` (SEO fields). No enums added. |
+| `backend/prisma/seed.ts` | Extended (not replaced) across both phases to seed a `Permission` catalog and the 9 system `Role`s — the pre-existing super-admin seed logic is untouched. **No existing admin is assigned any role by this script.** |
+| `backend/DATA_MODEL_EDGE_CASES.md` | The structured edge-case review — 101 items from Phase 1, 21 more added in Phase 1B (122 total) |
 
-**Verified, not assumed:** `npx prisma validate` passes; `npx prisma generate` succeeds; `npx tsc --noEmit` passes for both the application (`tsconfig.build.json`) and the whole project including the updated seed script (`tsconfig.json`) — confirming the regenerated Prisma Client doesn't break any existing NestJS code, since nothing in `src/` was changed. Full regression build/test results are in §11.
+Both migrations were independently verified to contain **zero** `DROP TABLE`, `DROP COLUMN`, `RENAME`, or `ALTER COLUMN ... TYPE` statements (checked by direct grep against each migration's output, not just asserted — see §9).
+
+**Verified, not assumed:** `npx prisma validate` passes; `npx prisma generate` succeeds; `npx tsc --noEmit` passes for both the application (`tsconfig.build.json`) and the whole project including the updated seed script (`tsconfig.json`) — confirming the regenerated Prisma Client doesn't break any existing NestJS code, since nothing in `src/` was changed, after **both** migrations. Full regression build/test results are in §11.
 
 ---
 
@@ -159,7 +166,7 @@ erDiagram
     }
 ```
 
-*(Full field list for every entity, including ones abbreviated above for diagram legibility, is in §3.)*
+*(Full field list for every entity, including ones abbreviated above for diagram legibility, is in §3. The 10 Phase 1B page-driven content entities — `PageBanner`, `SiteStatistic`, `ContactChannel`, `Testimonial`, `CampusVideo`, `AccreditationBadge`, `Recruiter`, `Faq`, `LeadershipProfile`, `ContentCard` — are deliberately left off this diagram to keep it legible; none of them relate to each other or to the rest of the schema beyond the standard `deletedBy → Admin` pattern every soft-deletable entity has. Full detail in §13.)*
 
 ---
 
@@ -260,25 +267,35 @@ Unchanged existing fields kept as-is, including `permissions: String[]` and `dep
 
 Plus the full set of reverse relations needed for every `deletedBy`/`authorAdminId`/`updatedBy` FK elsewhere in the schema (17 array fields — see the actual `schema.prisma` for the complete list; `Admin` is structurally a "hub" model and this is an unavoidable, correct consequence of giving every soft-delete/attribution field a real FK rather than a bare untyped integer).
 
-### 3.16 RBAC: `Permission`, `Role`, `RolePermission`, `AdminRole` — **now seeded, not just designed**
+### 3.16 RBAC: `Permission`, `Role`, `RolePermission`, `AdminRole` — **now seeded with real `module.action` granularity**
 
-**13 permissions** (see `prisma/seed.ts` for the authoritative list): `faculty.manage`, `departments.manage` (covers Department + Lab + LearningOutcome + Programme + Highlight as one bundle), `news.manage`, `gallery.manage`, `placements.manage`, `exam_notifications.manage`, `notifications.manage`, `research.manage`, `degree_verification.manage`, `downloads.manage`, `committees.manage`, `admins.manage`, `site_settings.manage`.
+Revised in Phase 1B per the explicit instruction that authorization must be **permission-based, not role-based**: every permission is scoped to one module and one CRUD-level action (`view`/`create`/`update`/`delete`), not one coarse `.manage` blanket per module as originally seeded. See §14 for the full authorization principles this follows.
 
-**9 system roles**, per your list, with a proposed default permission mapping (a starting point for your review — see `DATA_MODEL_EDGE_CASES.md` #81-85 for the caveats on this mapping):
+**15 modules × 4 actions each (view/create/update/delete), minus one exception = 59 permissions** (see `prisma/seed.ts` for the authoritative, programmatically-generated list — the module/action/description mapping lives in code, not copy-pasted 59 times):
+
+`faculty`, `departments` (still bundles Department + Lab + LearningOutcome + Programme + Highlight), `news`, `gallery`, `placements`, `exam_notifications`, `notifications`, `research`, `downloads`, `committees`, `site_settings`, `page_content` (new in Phase 1B — bundles all 9 §13 content entities), `contact` (new in Phase 1B — `ContactChannel` only), `admins`, `roles` (new — RBAC self-management).
+
+**One deliberate exception:** `degree_verification` gets only `view`/`create`/`update` — no `delete` action exists for it at all, anywhere in the permission catalog. Verification records are compliance-sensitive and should never be removable through this permission system; a correction is made by superseding/flagging a record via `update`, never by deleting it.
+
+**9 system roles**, per your list, with a proposed default permission mapping revised for the new granularity (a starting point for your review — see `DATA_MODEL_EDGE_CASES.md` #81-85, #102-105 for the caveats):
 
 | Role | Permissions |
 |---|---|
-| Super Admin | All 13 (cosmetic/documentational — actual bypass is still `Admin.isSuperAdmin`, unrelated to this role; see edge case #83) |
-| CMS Administrator | All 12 content permissions (everything except `admins.manage`) |
-| Department Administrator | `departments.manage`, `faculty.manage` |
-| Department Editor | `departments.manage` only |
-| Faculty Manager | `faculty.manage` only (institution-wide, not department-scoped) |
-| Placements Officer | `placements.manage` |
-| Examination Cell | `exam_notifications.manage` |
-| Content Editor | `news.manage`, `gallery.manage`, `notifications.manage` |
-| Viewer | none (read-only via existing public GET endpoints) |
+| Super Admin | All 59 (cosmetic/documentational — actual bypass is still `Admin.isSuperAdmin`, unrelated to this role; see edge case #83) |
+| CMS Administrator | Full CRUD on every content module — everything except `admins.*` and `roles.*` |
+| Department Administrator | Full CRUD on `departments.*` + `faculty.*` |
+| Department Editor | Full CRUD on `departments.*` only (no faculty access at all — the distinction from Department Administrator) |
+| Faculty Manager | Full CRUD on `faculty.*` only (institution-wide, not department-scoped) |
+| Placements Officer | Full CRUD on `placements.*` |
+| Examination Cell | Full CRUD on `exam_notifications.*` |
+| Content Editor | Full CRUD on `news.*`, `gallery.*`, `notifications.*`, `page_content.*` — **not** `contact.*`, kept more restricted |
+| Viewer | Every `*.view` permission across all 15 modules, **and nothing else** — a meaningful improvement over the original design, where Viewer had zero permissions and thus zero real capability beyond already-public endpoints (this directly resolves what was flagged as edge case #85 in the original review) |
 
-All 9 roles are seeded with `isSystemRole: true`. **No existing admin is assigned any of these roles by the seed script** — that assignment is Phase 5 (§9), an explicit, separate, reviewed data migration.
+**Deliberately, only `Super Admin` is ever given any `admins.*` or `roles.*` permission.** Admin-account management and RBAC self-management (creating roles, changing what a role grants) are the two most privilege-sensitive actions in the system — granting either to a non-Super-Admin role would let that role holder escalate their own access. If a genuine need for a narrower "manages other admins but isn't Super Admin" role emerges later, that's a deliberate future addition, not a default.
+
+All 9 roles are seeded with `isSystemRole: true`. **No existing admin is assigned any of these roles by the seed script** — that assignment remains a later, explicit, reviewed data migration (§9).
+
+**Extensibility, confirmed not just claimed:** the `module.action` string-keyed convention was chosen specifically so a future page-level permission (`pages.homepage.update`) or field-level permission (`faculty.update.email`) fits the existing `Permission.key` column — a plain unique `String` — with no schema change at all, only new seed rows. Nothing was added to the schema now to "support" this; the existing design already does.
 
 ### 3.17 `RefreshToken`
 
@@ -386,14 +403,88 @@ No `tenantId`/`institutionId` column exists anywhere in this design. If the degr
 
 ## 11. Regression verification performed
 
-- `npx prisma validate` — clean.
-- `npx prisma generate` — clean, Prisma Client regenerated successfully.
-- `npx tsc -p tsconfig.build.json --noEmit` (application code) — clean, zero errors against the regenerated client.
-- `npx tsc -p tsconfig.json --noEmit` (whole project, including the updated `prisma/seed.ts`) — clean.
-- Full existing unit + e2e test suites (`npx jest`, `npx jest --config ./test/jest-e2e.json`) and `nest build` — see the final report for this session for pass/fail confirmation; run after this document was written, as the last verification step before considering Phase 1 complete.
+Run independently after **both** Phase 1 and Phase 1B:
+
+- `npx prisma validate` — clean both times.
+- `npx prisma generate` — clean both times, Prisma Client regenerated successfully.
+- `npx tsc -p tsconfig.build.json --noEmit` (application code) — clean both times, zero errors against the regenerated client.
+- `npx tsc -p tsconfig.json --noEmit` (whole project, including `prisma/seed.ts`) — clean both times.
+- `nest build` — clean both times, `dist/main.js` produced correctly.
+- Full existing unit + e2e test suites (`npx jest`, `npx jest --config ./test/jest-e2e.json`) — all passing both times (5 e2e tests, 1 unit test — unchanged in count, since Phase 1B added no new tests of its own; it's schema/seed only).
 
 ---
 
-## 12. What happens next
+## 12. Deferred out of Phase 1B (in addition to §7's Phase 1 list)
 
-Nothing beyond Phase 1 — until you review this update and `DATA_MODEL_EDGE_CASES.md` and tell me how to proceed on Phase 2 (data backfill). No data migration, no backfill, no application code, no further schema changes without your explicit go-ahead.
+Nothing new needed deferring in Phase 1B — every addition (10 new tables, 3 new nullable columns on the already-new-in-Phase-1 `Department` table) was purely additive with no existing-column risk, since `Department` itself has never been applied to any database either.
+
+---
+
+## 13. Page-driven content entities (Phase 1B)
+
+Added after a systematic audit of every frontend page (`frontend/app/**`), per the instruction to design every module from the perspective of the website pages: every piece of editable content on a page — title, subtitle, cards, images, buttons, documents, banners, statistics, FAQs, contact details, metadata — should be CMS-manageable unless intentionally static.
+
+**Finding:** outside of the homepage (`data/home.ts`) and department pages (`data/departments/*.ts`), essentially **every other page's content is hardcoded inline in the page's own `.tsx` file** — there is no shared CMS-like data layer for it at all. This is a much larger gap than the original Phase 1 audit (which sampled only department/anti-ragging/syllabus pages) surfaced.
+
+**A concrete, already-live bug this is designed to fix:** the "years of institutional history" statistic is hardcoded independently in at least three places (homepage, About page, Alumni page) with **different, conflicting values** ("45+" vs "46+"). There is currently no single source of truth for any of the site's recurring statistics.
+
+### 3.20 `PageBanner`
+
+One row per non-department page's hero banner **and** SEO metadata combined (a page has exactly one of each, so one table serves both rather than two nearly-1:1 tables). `id`, `pageKey` **unique** (free-text, matching the frontend route — e.g. `"about"`, `"contact"`, `"naac"` — deliberately not a DB enum, since pages are added routinely and shouldn't need a migration to get a banner), `title`, `subtitle?`, `eyebrow?`, `imageUrl`, `breadcrumbs?: Json` (an array of `{label, href}` — a `Json` column rather than a child table, since breadcrumbs are always edited as a whole unit per page, unlike `LearningOutcome`/`DepartmentProgramme` which need independent row-by-row CRUD), `metaTitle?`, `metaDescription?`, `ogImageUrl?`, `isActive`, `deletedAt`/`deletedBy`/`version`. Department pages keep using `Department`'s own `heroImageUrl`/`metaTitle`/etc. (added to that table in this same phase) rather than this table.
+
+### 3.21 `SiteStatistic`
+
+Directly resolves the conflicting-stats bug above. `id`, `scope` (a lightweight grouping tag — `"homepage"`, `"about"`, `"alumni"` — not a full `Category` relation, since these groupings are page-specific rather than a shared cross-content taxonomy), `label`, `value: Int`, `suffix?` (e.g. `value: 45, suffix: "+"`, reconstructed as `"45+"` at render time — chosen as `Int` + optional suffix rather than a flat string specifically so the frontend's animated count-up counters have a real number to animate toward), `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.22 `ContactChannel`
+
+The contact page's multiple named office contacts (Principal, Admissions, Examination Cell, Placement Office, Main Office), each independently hardcoded today. `id`, `name`, `phones: String[]`, `emails: String[]`, `address?`, `mapEmbedUrl?`, `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`. **Deliberately separate from `SiteSetting`**: this is a repeating structure (multiple rows of the same shape), not the singular global values (main phone, social links, logo) `SiteSetting` is meant for — seeing five near-identical `contact.admissions.phone`-style `SiteSetting` keys would lose the "which office" grouping and need an awkward new key every time a new office is added.
+
+### 3.23 `Testimonial`
+
+`id`, `name`, `role`, `company?`, `quote`, `rating: Int` (1–5, not enforced by a DB constraint in Phase 1B — validate at the application layer), `photoUrl?`, `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.24 `CampusVideo`
+
+`id`, `title`, `youtubeUrl`, `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.25 `AccreditationBadge`
+
+`id`, `shortName`, `grade?`, `name`, `subtext?`, `linkUrl?`, `linkText?`, `imageUrl` (logo), `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.26 `Recruiter`
+
+Company logos for the placements-page marquee — distinct from the existing `Placement` model (which records individual student placements). `id`, `name`, `logoUrl`, `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.27 `Faq`
+
+**No FAQ pattern exists anywhere on the site today** (confirmed by the audit — grepped the whole frontend, zero hits). Seeded proactively per the explicit instruction that the CMS should manage FAQs if a page has them — this table exists ready for whenever one is built, rather than waiting for a real page to force a later migration. `id`, `question`, `answer`, `pageKey?` (nullable — null means a general/global FAQ), `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.28 `LeadershipProfile`
+
+Institutional leadership (Chairman, Secretary cum Correspondent, Vice Chairman & MD, Principal) — the About page's leadership cards plus their individual `/about/[slug]` detail pages, currently hardcoded per-person with `generateStaticParams`. `id`, `slug` **unique**, `name`, `role`, `photoUrl`, `email?`, `shortBio?` (card preview), `longBio` (detail page), `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+### 3.29 `ContentCard` — deliberately generic, unlike every other model in this schema
+
+Covers the long tail of one-off card/list patterns the audit found that don't individually justify a dedicated table: homepage service cards, admission program highlight cards, and IIC/EDC/RDC/Careers objective-and-icon lists. `id`, `section` (a namespaced convention key, e.g. `"homepage.services"`, `"iic.objectives"` — coordinated between admins and developers by convention, **not** a DB-enforced taxonomy), `icon?`, `imageUrl?`, `title?`, `description?`, `tags: String[]` (e.g. branch-code pills on admission program cards), `linkUrl?`, `linkText?`, `sortOrder`, `isActive`, `deletedAt`/`deletedBy`/`version`.
+
+**This is a deliberate flexibility/type-safety tradeoff, flagged for your review**: every other model in this schema has a strict, dedicated shape; `ContentCard` trades that strictness for covering many disparate one-off content patterns without exploding into ten more near-identical single-purpose tables. If any one `section` grows a genuinely distinct required shape (e.g. needs a field none of the others do), it should graduate to its own dedicated table rather than growing more optional columns onto this one.
+
+**Soft-delete/optimistic-locking scope note:** all 10 entities above are included in the same soft-delete + `version` scope as the original Phase 1 list, as a documented extension of "content" more broadly — none of them existed when your original soft-delete scope list was written, so this is my judgment call applying the same principle consistently, not something you explicitly approved for these specific new tables. Flagged for your review, same as the `SiteSetting.updatedBy` addition was in Phase 1.
+
+---
+
+## 14. Authorization principles (governing the Phase 1B RBAC redesign)
+
+Per your explicit instruction, these now govern the RBAC design and every future module built on top of it:
+
+1. **Permission-based, not role-based.** Every authorization check must test for a specific permission (e.g. `faculty.update`), never a role name (e.g. `if (role === 'Faculty Manager')`). Roles are purely a convenience bundle of permissions for admin-panel usability — the schema, and any future authorization code, must never branch on which role an admin holds.
+2. **Roles are collections of permissions**, managed by a Super Admin: creating roles, assigning permissions to roles, and assigning roles to admins are three distinct actions, all supported by the existing `Role`/`RolePermission`/`AdminRole` tables — no schema change was needed to support this workflow, since `Role` was never restricted to only the 9 seeded rows (custom roles are just new `Role` rows with `isSystemRole: false`).
+3. **`module.action` granularity, with room to extend.** §3.16 explains the extensibility guarantee: a future page-level or field-level permission fits the existing `Permission.key` column with zero schema change, only new seed/admin-created rows.
+4. **Every administrative action must be auditable; nothing that changes production content should bypass authorization or audit logging.** This is enforced today only for `faculty`/`news`/`gallery` (the only three modules whose services call `AuditLogService.log()`, per the earlier stabilization-phase audit) — **extending audit logging to every mutating action across every module, including RBAC management itself** (creating a `Role`, changing a `RolePermission` grant, assigning an `AdminRole`) is required application-code work for Phase 6, not something the schema alone guarantees. The schema doesn't prevent a developer from forgetting to call the audit logger in a new service; a recommended (not yet built) mitigation is a NestJS interceptor/decorator pattern (e.g. `@Audited(module, action)`) that logs automatically after any successful mutation, making it structurally hard to forget rather than relying on every future service author remembering by convention.
+
+---
+
+## 15. What happens next
+
+Nothing beyond Phase 1 + Phase 1B — until you review this update, `DATA_MODEL_EDGE_CASES.md`, and tell me how to proceed on data backfill (§9's Phase 2 onward). No data migration, no backfill, no application code, no further schema changes without your explicit go-ahead.

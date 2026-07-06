@@ -281,6 +281,20 @@ model Admin {
   deletedCommitteeMembers     CommitteeMember[]     @relation("CommitteeMember_DeletedBy")
   updatedSiteSettings         SiteSetting[]         @relation("SiteSetting_UpdatedBy")
 
+  // Reverse side of the page-driven content entities added after the
+  // frontend content audit (see DATA_MODEL_DESIGN.md's Page-Driven Content
+  // Entities section).
+  deletedPageBanners         PageBanner[]         @relation("PageBanner_DeletedBy")
+  deletedSiteStatistics      SiteStatistic[]      @relation("SiteStatistic_DeletedBy")
+  deletedContactChannels     ContactChannel[]     @relation("ContactChannel_DeletedBy")
+  deletedTestimonials        Testimonial[]        @relation("Testimonial_DeletedBy")
+  deletedCampusVideos        CampusVideo[]        @relation("CampusVideo_DeletedBy")
+  deletedAccreditationBadges AccreditationBadge[] @relation("AccreditationBadge_DeletedBy")
+  deletedRecruiters          Recruiter[]          @relation("Recruiter_DeletedBy")
+  deletedFaqs                Faq[]                @relation("Faq_DeletedBy")
+  deletedLeadershipProfiles  LeadershipProfile[]  @relation("LeadershipProfile_DeletedBy")
+  deletedContentCards        ContentCard[]        @relation("ContentCard_DeletedBy")
+
   @@index([departmentId])
 }
 
@@ -391,6 +405,13 @@ model Department {
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  // Added after the frontend content audit: department pages, like almost
+  // every other page on the site, currently inherit only the root layout's
+  // title/description with no per-page override.
+  metaTitle       String?
+  metaDescription String?
+  ogImageUrl      String?
 
   // Soft delete + optimistic locking - "Department content" is explicitly
   // in the approved soft-delete scope.
@@ -660,11 +681,14 @@ model RefreshToken {
   @@index([expiresAt])
 }
 
-/// Global, admin-editable site configuration (contact details, social links,
-/// logo, SEO defaults, footer data) instead of hardcoded values scattered
-/// through the frontend. No soft-delete/versioning - this is system
-/// configuration, not "content" in the sense the soft-delete policy covers;
-/// removing a setting just falls back to a hardcoded default in code.
+/// Global, admin-editable site configuration - singular values only (main
+/// phone/email, social links, logo, SEO defaults, footer tagline) instead of
+/// hardcoded values scattered through the frontend. Repeating structures
+/// (the multiple named office contacts found in the content audit) live in
+/// ContactChannel instead - see that model's comment for the reasoning.
+/// No soft-delete/versioning - this is system configuration, not "content"
+/// in the sense the soft-delete policy covers; removing a setting just
+/// falls back to a hardcoded default in code.
 model SiteSetting {
   id          Int             @id @default(autoincrement())
   key         String          @unique
@@ -684,4 +708,299 @@ model SiteSetting {
 
   @@index([group])
   @@index([isPublic])
+}
+
+// =============================================================================
+// PAGE-DRIVEN CONTENT ENTITIES
+//
+// Added after a systematic audit of every frontend page (per the
+// "design every module from the perspective of the website pages"
+// instruction). Finding: outside of the homepage (data/home.ts) and
+// department pages (data/departments/*.ts), essentially every page's
+// content - hero banners, statistics, testimonials, videos, accreditation
+// badges, recruiter logos, contact office details, leadership profiles -
+// is hardcoded inline in the page.tsx file itself, requiring a developer
+// to change it. These 10 tables give every one of those content types a
+// real, admin-manageable home. See DATA_MODEL_DESIGN.md for the full
+// per-entity rationale, including which duplicated/conflicting hardcoded
+// values (e.g. two different pages currently claim "45+" vs "46+" years
+// of institutional history) this is intended to consolidate.
+//
+// None of these are department-scoped (no evidence any of them need to
+// vary per department) or given a `sortOrder`-independent unique key
+// beyond what's noted per model. All are in the approved soft-delete +
+// optimistic-locking scope, as an extension of "Department content"/
+// "content" more broadly - a judgment call flagged for review, since none
+// of these existed when the original soft-delete scope list was written.
+// =============================================================================
+
+/// One row per non-department page's hero banner AND SEO metadata combined
+/// (a page has exactly one of each, so one table serves both rather than
+/// two nearly-1:1 tables). Department pages keep using Department's own
+/// heroImageUrl/metaTitle/etc. fields instead of this table.
+model PageBanner {
+  id              Int      @id @default(autoincrement())
+  /// Free-text, unique key matching the frontend route it represents (e.g.
+  /// "about", "contact", "naac"; NOT a DB enum - new pages are added to the
+  /// frontend routinely and shouldn't require a migration to get a banner).
+  pageKey         String   @unique
+  title           String
+  subtitle        String?
+  eyebrow         String?
+  imageUrl        String
+  /// [{ "label": string, "href": string | null }, ...] - always edited as a
+  /// whole unit per page, not independently CRUD'd row by row like
+  /// LearningOutcome/DepartmentProgramme, so a Json column is used instead
+  /// of a child table.
+  breadcrumbs     Json?
+  metaTitle       String?
+  metaDescription String?
+  ogImageUrl      String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("PageBanner_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// Resolves a real data-quality bug found in the audit: the same figures
+/// (years of institutional history, campus area, student count, department
+/// count) are hardcoded independently on the homepage, About page, and
+/// Alumni page, with DIFFERENT, CONFLICTING values on each (e.g. "45+" vs
+/// "46+" years). One admin-editable source of truth per stat.
+model SiteStatistic {
+  id        Int      @id @default(autoincrement())
+  /// Which page/section this stat belongs to (e.g. "homepage", "about",
+  /// "alumni") - a lightweight grouping tag, not a full Category relation,
+  /// since these groupings are page-specific rather than a shared taxonomy.
+  scope     String
+  label     String
+  value     Int
+  suffix    String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("SiteStatistic_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([scope])
+  @@index([deletedAt])
+}
+
+/// The contact page's multiple named office contacts (Principal, Admissions,
+/// Examination Cell, Placement Office, Main Office), each independently
+/// hardcoded today - a repeating structure, unlike SiteSetting's singular
+/// values, which is why this is its own table rather than more
+/// awkwardly-named SiteSetting keys.
+model ContactChannel {
+  id          Int      @id @default(autoincrement())
+  name        String
+  phones      String[]
+  emails      String[]
+  address     String?
+  mapEmbedUrl String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("ContactChannel_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  company   String?
+  quote     String
+  /// 1-5. Not enforced by a CHECK constraint in Phase 1 (Prisma's schema DSL
+  /// doesn't express one directly) - validate at the application layer.
+  rating    Int
+  photoUrl  String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("Testimonial_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+model CampusVideo {
+  id         Int      @id @default(autoincrement())
+  title      String
+  youtubeUrl String
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("CampusVideo_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+model AccreditationBadge {
+  id        Int      @id @default(autoincrement())
+  shortName String
+  grade     String?
+  name      String
+  subtext   String?
+  linkUrl   String?
+  linkText  String?
+  imageUrl  String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("AccreditationBadge_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// Company logos for the placements marquee - distinct from the Placement
+/// model (which records individual student placements): this is purely
+/// "logos of companies that recruit here" for marketing display.
+model Recruiter {
+  id        Int      @id @default(autoincrement())
+  name      String
+  logoUrl   String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("Recruiter_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// No FAQ pattern exists anywhere on the site today (confirmed by the audit)
+/// - seeded proactively per the "if a page has FAQs, the CMS should manage
+/// them" instruction, ready for whenever one is built.
+model Faq {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  /// Nullable - null means a general/global FAQ not tied to one page.
+  pageKey   String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("Faq_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([pageKey])
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// Institutional leadership (Chairman, Secretary cum Correspondent, Vice
+/// Chairman & MD, Principal) - the About page's leadership cards plus their
+/// individual /about/[slug] detail pages, currently hardcoded per-person in
+/// the frontend with `generateStaticParams`.
+model LeadershipProfile {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  name      String
+  role      String
+  photoUrl  String
+  email     String?
+  shortBio  String?
+  longBio   String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("LeadershipProfile_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// Deliberately generic, unlike every other model in this schema: covers
+/// the long tail of one-off card/list patterns found in the audit (homepage
+/// service cards, admission program highlight cards, IIC/EDC/RDC/Careers
+/// objective-and-icon lists) that don't individually justify a dedicated
+/// table. `section` is a namespaced convention key (e.g.
+/// "homepage.services", "iic.objectives") coordinated between admins and
+/// developers, not a DB-enforced taxonomy - a deliberate flexibility/
+/// type-safety tradeoff flagged for review; if any one `section` grows a
+/// genuinely distinct required shape, it should graduate to its own table.
+model ContentCard {
+  id          Int      @id @default(autoincrement())
+  section     String
+  icon        String?
+  imageUrl    String?
+  title       String?
+  description String?
+  /// e.g. branch-code pills on the homepage's admission program cards.
+  tags        String[]
+  linkUrl     String?
+  linkText    String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("ContentCard_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([section])
+  @@index([isActive])
+  @@index([deletedAt])
 }
