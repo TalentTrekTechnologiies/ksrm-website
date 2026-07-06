@@ -271,9 +271,9 @@ Plus the full set of reverse relations needed for every `deletedBy`/`authorAdmin
 
 Revised in Phase 1B per the explicit instruction that authorization must be **permission-based, not role-based**: every permission is scoped to one module and one CRUD-level action (`view`/`create`/`update`/`delete`), not one coarse `.manage` blanket per module as originally seeded. See §14 for the full authorization principles this follows.
 
-**15 modules × 4 actions each (view/create/update/delete), minus one exception = 59 permissions** (see `prisma/seed.ts` for the authoritative, programmatically-generated list — the module/action/description mapping lives in code, not copy-pasted 59 times):
+**16 modules × 4 actions each (view/create/update/delete), minus one exception = 63 permissions** (see `prisma/seed.ts` for the authoritative, programmatically-generated list — the module/action/description mapping lives in code, not copy-pasted 63 times):
 
-`faculty`, `departments` (still bundles Department + Lab + LearningOutcome + Programme + Highlight), `news`, `gallery`, `placements`, `exam_notifications`, `notifications`, `research`, `downloads`, `committees`, `site_settings`, `page_content` (new in Phase 1B — bundles all 9 §13 content entities), `contact` (new in Phase 1B — `ContactChannel` only), `admins`, `roles` (new — RBAC self-management).
+`faculty`, `departments` (still bundles Department + Lab + LearningOutcome + Programme + Highlight), `news`, `gallery`, `placements`, `exam_notifications`, `notifications`, `research`, `degree_verification`, `downloads`, `committees`, `site_settings`, `page_content` (new in Phase 1B — bundles all 9 §13 content entities), `contact` (new in Phase 1B — `ContactChannel` only), `admins`, `roles` (new — RBAC self-management).
 
 **One deliberate exception:** `degree_verification` gets only `view`/`create`/`update` — no `delete` action exists for it at all, anywhere in the permission catalog. Verification records are compliance-sensitive and should never be removable through this permission system; a correction is made by superseding/flagging a record via `update`, never by deleting it.
 
@@ -281,7 +281,7 @@ Revised in Phase 1B per the explicit instruction that authorization must be **pe
 
 | Role | Permissions |
 |---|---|
-| Super Admin | All 59 (cosmetic/documentational — actual bypass is still `Admin.isSuperAdmin`, unrelated to this role; see edge case #83) |
+| Super Admin | All 63 (cosmetic/documentational — actual bypass is still `Admin.isSuperAdmin`, unrelated to this role; see edge case #83) |
 | CMS Administrator | Full CRUD on every content module — everything except `admins.*` and `roles.*` |
 | Department Administrator | Full CRUD on `departments.*` + `faculty.*` |
 | Department Editor | Full CRUD on `departments.*` only (no faculty access at all — the distinction from Department Administrator) |
@@ -289,7 +289,7 @@ Revised in Phase 1B per the explicit instruction that authorization must be **pe
 | Placements Officer | Full CRUD on `placements.*` |
 | Examination Cell | Full CRUD on `exam_notifications.*` |
 | Content Editor | Full CRUD on `news.*`, `gallery.*`, `notifications.*`, `page_content.*` — **not** `contact.*`, kept more restricted |
-| Viewer | Every `*.view` permission across all 15 modules, **and nothing else** — a meaningful improvement over the original design, where Viewer had zero permissions and thus zero real capability beyond already-public endpoints (this directly resolves what was flagged as edge case #85 in the original review) |
+| Viewer | Every `*.view` permission across all 16 modules, **and nothing else** — a meaningful improvement over the original design, where Viewer had zero permissions and thus zero real capability beyond already-public endpoints (this directly resolves what was flagged as edge case #85 in the original review) |
 
 **Deliberately, only `Super Admin` is ever given any `admins.*` or `roles.*` permission.** Admin-account management and RBAC self-management (creating roles, changing what a role grants) are the two most privilege-sensitive actions in the system — granting either to a non-Super-Admin role would let that role holder escalate their own access. If a genuine need for a narrower "manages other admins but isn't Super Admin" role emerges later, that's a deliberate future addition, not a default.
 

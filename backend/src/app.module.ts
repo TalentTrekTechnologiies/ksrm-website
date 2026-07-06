@@ -12,6 +12,7 @@ import { ExamNotificationsModule } from './exam-notifications/exam-notifications
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     DegreeVerificationModule,
     ExamNotificationsModule,
     NotificationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

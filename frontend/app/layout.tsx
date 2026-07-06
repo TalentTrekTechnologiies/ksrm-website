@@ -1,12 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Rajdhani, DM_Sans } from "next/font/google"
 import "./globals.css"
-import IntroSplash from "@/components/layout/IntroSplash"
-import TopBar from "@/components/layout/TopBar"
-import Header from "@/components/layout/Header"
-import Navbar from "@/components/layout/Navbar"
-import Footer from "@/components/layout/Footer"
-import BackToTop from "@/components/layout/BackToTop"
+import ChromeGate from "@/components/layout/ChromeGate"
 
 const rajdhani = Rajdhani({
   subsets: ["latin"],
@@ -106,13 +101,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${rajdhani.variable} ${dmSans.variable} antialiased`}>
-        <IntroSplash />
-        <TopBar />
-         <Header />
-        <Navbar />
-        {children}
-        <Footer />
-        <BackToTop />
+        <ChromeGate>{children}</ChromeGate>
       </body>
     </html>
   )
