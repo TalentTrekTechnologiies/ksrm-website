@@ -1,7 +1,8 @@
 import { RecentActivityItem } from "@/lib/dashboard-api"
+import { widgetIcon } from "@/lib/dashboard-icons"
 
 const ACTION_STYLES: Record<string, string> = {
-  CREATE: "bg-green-50 text-green-700",
+  CREATE: "bg-emerald-50 text-emerald-700",
   UPDATE: "bg-blue-50 text-blue-700",
   DELETE: "bg-red-50 text-red-700",
 }
@@ -18,33 +19,49 @@ function timeAgo(iso: string): string {
 
 export default function RecentActivityFeed({ items }: { items: RecentActivityItem[] }) {
   return (
-    <div className="rounded-xl bg-white p-5 shadow-[var(--shadow-card)]">
-      <p style={{ fontFamily: "var(--font-heading)", color: "var(--color-navy)" }} className="mb-4 text-lg font-bold">
+    <div
+      style={{ boxShadow: "var(--shadow-admin-card)" }}
+      className="rounded-xl border border-admin-border bg-white p-5"
+    >
+      <p
+        style={{ fontFamily: "var(--font-admin-heading)" }}
+        className="mb-4 text-lg font-bold text-admin-primary"
+      >
         Recent Activity
       </p>
       {items.length === 0 ? (
-        <p className="text-sm text-neutral-500">No recent activity to show.</p>
+        <p className="text-sm text-slate-400">No recent activity to show.</p>
       ) : (
-        <ul className="space-y-3">
-          {items.map((item) => (
-            <li key={item.id} className="flex items-center justify-between gap-3 text-sm">
-              <div className="min-w-0">
+        <ul className="space-y-1">
+          {items.map((item) => {
+            const Icon = widgetIcon(item.module)
+            return (
+              <li
+                key={item.id}
+                className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-sm transition-colors hover:bg-admin-bg"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-admin-primary/10 text-admin-primary">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-slate-700">
+                    <span className="font-medium">{item.adminName}</span>{" "}
+                    <span className="text-slate-500">{item.module}</span>
+                  </p>
+                </div>
                 <span
-                  className={`mr-2 inline-block rounded px-1.5 py-0.5 text-xs font-semibold ${
-                    ACTION_STYLES[item.action] ?? "bg-neutral-100 text-neutral-700"
+                  className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold ${
+                    ACTION_STYLES[item.action] ?? "bg-slate-100 text-slate-600"
                   }`}
                 >
                   {item.action}
                 </span>
-                <span className="text-neutral-700">
-                  {item.adminName} &middot; {item.module}
+                <span className="w-14 shrink-0 text-right text-xs text-slate-400">
+                  {timeAgo(item.createdAt)}
                 </span>
-              </div>
-              <span className="shrink-0 text-xs text-neutral-400">
-                {timeAgo(item.createdAt)}
-              </span>
-            </li>
-          ))}
+              </li>
+            )
+          })}
         </ul>
       )}
     </div>

@@ -36,35 +36,75 @@
   --shadow-navbar: 0 2px 20px rgba(43, 52, 144, 0.15);
   --shadow-card:   0 4px 20px rgba(43, 52, 144, 0.10);
 
+  /* ── Admin Panel Design Tokens (KSRM CMS) ──
+     Scoped separately from the public site's palette above - the admin
+     panel uses its own enterprise blue/white/gold system, deliberately
+     not the public marketing site's navy/yellow/cream tokens. */
+  --color-admin-primary:      #1E3A8A;  /* Primary Blue */
+  --color-admin-primary-dark: #16296B;
+  --color-admin-primary-light: #3B5FCE;
+  --color-admin-sidebar:      #0F172A;  /* Sidebar / near-black navy */
+  --color-admin-sidebar-hover: #1E293B;
+  --color-admin-gold:         #D4AF37;  /* Accent Gold */
+  --color-admin-gold-light:   #F1E4B8;
+  --color-admin-bg:           #F8FAFC;  /* Page background */
+  --color-admin-card:         #FFFFFF;
+  --color-admin-border:       #E2E8F0;
+
+  --font-admin-heading: var(--font-rajdhani), sans-serif;
+  --font-admin-body:    var(--font-inter), sans-serif;
+
+  --shadow-admin-card: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-admin-card-hover: 0 8px 24px rgba(15, 23, 42, 0.10);
+  --shadow-admin-sidebar: 4px 0 24px rgba(15, 23, 42, 0.12);
+
 }
 
-/* ── Base Styles ── */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ── Admin panel background pattern (login page) ── */
+.admin-grid-pattern {
+  background-image:
+    linear-gradient(rgba(30, 58, 138, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 58, 138, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;   /* prevent horizontal scroll on all devices */
-}
+/* ── Base Styles ──
+   Wrapped in Tailwind's `base` cascade layer (not left unlayered) so that
+   utility classes - including margin/padding utilities like `mt-6` or
+   `space-y-4`, which this reset would otherwise silently override, since
+   `*`/`html`/`body` selectors have the same specificity as a single
+   Tailwind utility class and previously came later in the file - always
+   win, regardless of source order. This was overriding every margin
+   utility site-wide before this fix; it's why existing components lean on
+   inline styles or padding instead of margin utilities. */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body {
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  color: #1F2937;
-  background: #F5EFE4;
-  overflow-x: hidden;
-  min-width: 0;
-}
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;   /* prevent horizontal scroll on all devices */
+  }
 
-img, video, iframe {
-  max-width: 100%;
-}
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    color: #1F2937;
+    background: #F5EFE4;
+    overflow-x: hidden;
+    min-width: 0;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  line-height: 1.2;
+  img, video, iframe {
+    max-width: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+  }
 }

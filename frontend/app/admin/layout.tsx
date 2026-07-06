@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const [authChecked, setAuthChecked] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   useEffect(() => {
     // Reading localStorage (via isLoggedIn) must happen post-hydration, not
@@ -46,17 +47,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!authChecked) {
     return (
-      <div style={{ background: "var(--color-cream)" }} className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-neutral-500">Loading...</p>
+      <div style={{ background: "var(--color-admin-bg)" }} className="flex min-h-screen items-center justify-center">
+        <p className="text-sm text-slate-500">Loading...</p>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen" style={{ background: "var(--color-cream)" }}>
+    <div className="flex min-h-screen" style={{ background: "var(--color-admin-bg)" }}>
       {/* Desktop sidebar */}
       <div className="hidden md:block">
-        <AdminSidebar />
+        <AdminSidebar collapsed={collapsed} onToggleCollapse={() => setCollapsed((v) => !v)} />
       </div>
 
       {/* Mobile sidebar drawer */}

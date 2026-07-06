@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Rajdhani, DM_Sans } from "next/font/google"
+import { Rajdhani, DM_Sans, Inter } from "next/font/google"
 import "./globals.css"
 import ChromeGate from "@/components/layout/ChromeGate"
 
@@ -14,6 +14,15 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-dm-sans",
+  display: "swap",
+})
+
+// Admin panel only (see globals.css's --font-admin-body) - the public site
+// keeps DM Sans throughout, unchanged.
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
 })
 
@@ -100,7 +109,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className={`${rajdhani.variable} ${dmSans.variable} antialiased`}>
+      <body className={`${rajdhani.variable} ${dmSans.variable} ${inter.variable} antialiased`}>
         <ChromeGate>{children}</ChromeGate>
       </body>
     </html>
