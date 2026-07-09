@@ -80,6 +80,17 @@ enum SiteSettingType {
   IMAGE_URL
 }
 
+/// Homepage CMS (Sprint 1B). Deliberately just 2 values for now - SCHEDULED
+/// is added later (Sprint 1D) alongside real publishAt/expiresAt evaluation
+/// logic; Postgres enums extend additively so reserving the value now isn't
+/// needed and would just be dead until 1D wires it up. The admin UI's status
+/// badge already color-codes for a future "Scheduled" state, it just can't
+/// be reached yet.
+enum SectionStatus {
+  DRAFT
+  PUBLISHED
+}
+
 // -----------------------------------------------------------------------------
 // EXISTING MODELS - untouched original fields, additive columns only
 // -----------------------------------------------------------------------------
@@ -111,6 +122,9 @@ model News {
   imageUrl    String?
   date        DateTime
   isPublished Boolean  @default(true)
+  /// Sprint 1C - lets the homepage's Latest News section prioritize
+  /// hand-picked stories instead of always showing just the N most recent.
+  isFeatured  Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -295,6 +309,16 @@ model Admin {
   deletedLeadershipProfiles  LeadershipProfile[]  @relation("LeadershipProfile_DeletedBy")
   deletedContentCards        ContentCard[]        @relation("ContentCard_DeletedBy")
 
+  // Homepage CMS (Sprint 1A).
+  deletedHomepageHeroes HomepageHero[] @relation("HomepageHero_DeletedBy")
+
+  // Homepage CMS (Sprint 1B).
+  deletedHomepageSections HomepageSection[] @relation("HomepageSection_DeletedBy")
+
+  // New content modules (Careers, Events).
+  deletedCareers Career[] @relation("Career_DeletedBy")
+  deletedEvents  Event[]  @relation("Event_DeletedBy")
+
   @@index([departmentId])
 }
 
@@ -374,6 +398,13 @@ model AuditLog {
   // `action` also stays a free String in Phase 1 for the same reason - the
   // AuditAction enum conversion is deferred alongside it.
   adminRefId Int?
+
+  // Homepage CMS (Sprint 1A) - the correlation ID from the existing
+  // request-id middleware (see common/middleware/request-id.middleware.ts),
+  // so a single HTTP request's audit entries can be traced back to the
+  // request that produced them. Nullable/additive: existing audit rows
+  // predate this middleware and never had a request ID to record.
+  requestId String?
 
   adminRef Admin? @relation(fields: [adminRefId], references: [id], onDelete: SetNull)
 
@@ -577,6 +608,62 @@ model CommitteeMember {
   @@index([deletedAt])
 }
 
+/// Sprint "tonight" build - job openings shown on the public Careers page.
+/// `employmentType` kept as a plain string (not an enum) for build speed;
+/// tighten to an enum later if the values need real validation.
+model Career {
+  id             Int       @id @default(autoincrement())
+  title          String
+  department     String?
+  employmentType String?
+  location       String?
+  description    String
+  applyUrl       String?
+  applyEmail     String?
+  postedAt       DateTime  @default(now())
+  closingAt      DateTime?
+  sortOrder      Int       @default(0)
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("Career_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// Sprint "tonight" build - a campus events calendar, distinct from
+/// `ExamNotification`/scrolling ticker notices (Notification model).
+model Event {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  eventDate   DateTime
+  endDate     DateTime?
+  location    String?
+  imageUrl    String?
+  category    String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("Event_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+  @@index([eventDate])
+}
+
 model Category {
   id        Int            @id @default(autoincrement())
   domain    CategoryDomain
@@ -734,6 +821,75 @@ model SiteSetting {
 // of these existed when the original soft-delete scope list was written.
 // =============================================================================
 
+/// Homepage CMS (Sprint 1A) - the full-screen video hero banner at the top
+/// of the public homepage. A singleton (application code always reads/writes
+/// id=1) rather than a page-keyed row like PageBanner, since the homepage
+/// hero has fields (video, rotating captions, a news ticker, two CTAs) that
+/// don't generalize to other pages the way PageBanner's simpler
+/// title/subtitle/image shape does - see DATA_MODEL_DESIGN.md's homepage
+/// research for the full content inventory this maps to.
+model HomepageHero {
+  id                 Int     @id @default(autoincrement())
+  accreditationLabel String?
+  heading            String
+  subtitle           String
+  videoUrl           String
+  ctaPrimaryText     String?
+  ctaPrimaryHref     String?
+  ctaSecondaryText   String?
+  ctaSecondaryHref   String?
+  panelLabel         String?
+  /// [{ "label": string, "text": string }, ...] - rotating caption strip
+  /// inside the glass panel. Edited as a whole unit, not row-by-row, so a
+  /// Json column is used instead of a child table (same reasoning as
+  /// PageBanner.breadcrumbs below).
+  captions           Json?
+  /// [{ "isNew": boolean, "date": string, "text": string, "href": string | null }, ...]
+  newsTicker         Json?
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("HomepageHero_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// Homepage CMS (Sprint 1B) - one row per fixed homepage section (vision,
+/// mission, about, admissions this sprint). `key` is the stable identifier
+/// the frontend/backend both key off; `content` is a Json blob whose shape
+/// depends on `key` (validated per-key at the DTO layer, e.g. VisionContentDto
+/// vs AboutContentDto - see src/homepage/sections/). One table instead of
+/// one per section since every section shares the same envelope (status,
+/// versioning, soft-delete) and only the payload shape differs, same
+/// reasoning as HomepageHero.captions/newsTicker using Json over child
+/// tables. `sortOrder` is reserved for Sprint 1C/1D's cross-section
+/// drag-reorder once every homepage section (not just these 4) is under
+/// management - not exposed in any Sprint 1B UI.
+model HomepageSection {
+  id        Int           @id @default(autoincrement())
+  key       String        @unique
+  content   Json
+  status    SectionStatus @default(DRAFT)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("HomepageSection_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([deletedAt])
+}
+
 /// One row per non-department page's hero banner AND SEO metadata combined
 /// (a page has exactly one of each, so one table serves both rather than
 /// two nearly-1:1 tables). Department pages keep using Department's own
@@ -855,6 +1011,10 @@ model CampusVideo {
   id         Int      @id @default(autoincrement())
   title      String
   youtubeUrl String
+  /// Nullable - the public component falls back to a generic "Campus Video"
+  /// label when unset. Replaces the previous by-array-position badge text,
+  /// which silently mislabeled videos whenever they were reordered.
+  badgeLabel String?
   sortOrder  Int      @default(0)
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())

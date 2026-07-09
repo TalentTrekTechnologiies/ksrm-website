@@ -24,18 +24,25 @@ const CRUD_ACTIONS = ['view', 'create', 'update', 'delete'] as const;
 // verification records are compliance-sensitive and should never be
 // removable through this permission system; a correction is made by
 // superseding/flagging a record via `update`, never by deleting it.
+// 'restore' added alongside bringing each module up to the same
+// soft-delete/restore pattern every CMS module now uses - CRUD_ACTIONS
+// alone has no restore action. (site_settings is the deliberate exception:
+// SiteSetting has no soft-delete columns by design - system config, not
+// content - so it keeps plain CRUD_ACTIONS.)
 const MODULE_ACTIONS: Record<string, readonly string[]> = {
-  faculty: CRUD_ACTIONS,
-  departments: CRUD_ACTIONS,
-  news: CRUD_ACTIONS,
-  gallery: CRUD_ACTIONS,
-  placements: CRUD_ACTIONS,
+  faculty: [...CRUD_ACTIONS, 'restore'],
+  departments: [...CRUD_ACTIONS, 'restore'],
+  news: [...CRUD_ACTIONS, 'restore'],
+  gallery: [...CRUD_ACTIONS, 'restore'],
+  placements: [...CRUD_ACTIONS, 'restore'],
   exam_notifications: CRUD_ACTIONS,
   notifications: CRUD_ACTIONS,
   research: CRUD_ACTIONS,
   degree_verification: ['view', 'create', 'update'],
-  downloads: CRUD_ACTIONS,
-  committees: CRUD_ACTIONS,
+  downloads: [...CRUD_ACTIONS, 'restore'],
+  committees: [...CRUD_ACTIONS, 'restore'],
+  careers: [...CRUD_ACTIONS, 'restore'],
+  events: [...CRUD_ACTIONS, 'restore'],
   site_settings: CRUD_ACTIONS,
   // page_content bundles every page-driven marketing/institutional content
   // type added in the page-content audit: PageBanner, SiteStatistic,
@@ -53,6 +60,22 @@ const MODULE_ACTIONS: Record<string, readonly string[]> = {
   // except Super Admin - see the ROLES list.
   admins: CRUD_ACTIONS,
   roles: CRUD_ACTIONS,
+  // Homepage CMS (Sprint 1A) - a deliberately non-CRUD action set, matching
+  // the explicit spec for this module rather than the flat CRUD_ACTIONS
+  // every other module uses. `publish`/`preview` are seeded now even though
+  // Sprint 1A's routes don't exercise them yet (full publish/schedule
+  // workflow lands in Sprint 1D) - avoids a second permission migration
+  // later. `seo.edit` is checked separately from `edit` on the future SEO
+  // sub-resource (Sprint 1D), kept in the catalog now for the same reason.
+  homepage: [
+    'view',
+    'edit',
+    'publish',
+    'delete',
+    'restore',
+    'preview',
+    'seo.edit',
+  ],
 };
 
 const MODULE_LABELS: Record<string, string> = {
@@ -68,6 +91,8 @@ const MODULE_LABELS: Record<string, string> = {
   degree_verification: 'degree verification records',
   downloads: 'downloadable documents',
   committees: 'committees and committee membership rosters',
+  careers: 'job openings on the public Careers page',
+  events: 'campus events calendar entries',
   site_settings:
     'global site configuration (social links, SEO defaults, footer data)',
   page_content:
@@ -75,13 +100,22 @@ const MODULE_LABELS: Record<string, string> = {
   contact: 'contact office directory entries',
   admins: 'admin accounts',
   roles: 'roles and their permission assignments (RBAC self-management)',
+  homepage:
+    'the public homepage - hero banner, statistics, and quick links (Sprint 1A)',
 };
 
-const ACTION_VERBS: Record<(typeof CRUD_ACTIONS)[number], string> = {
+// A plain Record<string, string> (not keyed to CRUD_ACTIONS) so non-CRUD
+// modules like `homepage` can contribute their own action verbs here.
+const ACTION_VERBS: Record<string, string> = {
   view: 'View',
   create: 'Create',
   update: 'Update',
   delete: 'Delete',
+  edit: 'Edit',
+  publish: 'Publish',
+  restore: 'Restore',
+  preview: 'Preview draft/unpublished',
+  'seo.edit': 'Edit SEO settings for',
 };
 
 const PERMISSIONS: { key: string; description: string }[] = Object.entries(
@@ -89,7 +123,7 @@ const PERMISSIONS: { key: string; description: string }[] = Object.entries(
 ).flatMap(([module, actions]) =>
   actions.map((action) => ({
     key: `${module}.${action}`,
-    description: `${ACTION_VERBS[action as (typeof CRUD_ACTIONS)[number]]} ${MODULE_LABELS[module]}`,
+    description: `${ACTION_VERBS[action]} ${MODULE_LABELS[module]}`,
   })),
 );
 
@@ -181,13 +215,14 @@ const ROLES: {
   {
     name: 'Content Editor',
     description:
-      'General content and communications: news, gallery, ticker notices, and page-driven marketing content (banners, statistics, testimonials, videos, FAQs, leadership profiles). Does not include the contact office directory, which is kept more restricted.',
+      'General content and communications: news, gallery, ticker notices, page-driven marketing content (banners, statistics, testimonials, videos, FAQs, leadership profiles), and the public homepage. Does not include the contact office directory, which is kept more restricted.',
     isSystemRole: true,
     permissionKeys: permissionsFor(
       'news',
       'gallery',
       'notifications',
       'page_content',
+      'homepage',
     ),
   },
   {

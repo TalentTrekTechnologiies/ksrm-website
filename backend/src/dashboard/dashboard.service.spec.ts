@@ -6,7 +6,7 @@ import { EffectivePermissionsService } from '../auth/effective-permissions.servi
 describe('DashboardService', () => {
   let service: DashboardService;
   let prisma: {
-    [key: string]: { count: jest.Mock } | jest.Mock;
+    [key: string]: { count: jest.Mock } | { findMany: jest.Mock } | jest.Mock;
     auditLog: { findMany: jest.Mock };
   };
   let effectivePermissions: {
@@ -64,9 +64,11 @@ describe('DashboardService', () => {
   describe('getOverview', () => {
     it('includes every widget for a super admin, regardless of permissions', async () => {
       const result = await service.getOverview({ id: 1, isSuperAdmin: true });
-      expect(result.widgets.length).toBe(16);
+      expect(result.widgets.length).toBe(18);
       expect(result.widgets.map((w) => w.key)).toContain('admins');
       expect(result.widgets.map((w) => w.key)).toContain('roles');
+      expect(result.widgets.map((w) => w.key)).toContain('careers');
+      expect(result.widgets.map((w) => w.key)).toContain('events');
     });
 
     it('only includes widgets the admin has <key>.view permission for', async () => {

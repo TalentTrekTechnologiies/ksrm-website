@@ -3,12 +3,14 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
+import { EffectivePermissionsService } from '../effective-permissions.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly effectivePermissions: EffectivePermissionsService,
   ) {
     const secret = configService.get<string>('JWT_SECRET');
     if (!secret) {
@@ -44,7 +46,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Account is inactive or no longer exists');
     }
 
-    const { isActive, ...user } = admin;
-    return user;
+    // The legacy `admin.permissions` string array predates the Role/Permission
+    // schema and is never populated for role-based grants - the real,
+    // current permission set only exists via AdminRole -> Role ->
+    // RolePermission. Resolve it here so every downstream guard check
+    // reflects an admin's actual roles, not a stale/empty legacy column.
+    const effectivePermissions = await this.effectivePermissions.getEffectivePermissions(admin);
+
+    const { isActive, permissions: _legacyPermissions, ...rest } = admin;
+    return { ...rest, permissions: Array.from(effectivePermissions) };
   }
 }

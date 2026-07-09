@@ -70,4 +70,33 @@ export class AuditLogController {
       limit ? parseInt(limit) : 100,
     );
   }
+
+  // Deliberately NOT super-admin-gated like the three routes above - this
+  // is scoped to one record's history, not the global cross-module log,
+  // and the caller already needed `<module>.view` to reach whatever admin
+  // page's "Audit History" button links here. See AuditLogService.getByTarget.
+  @Get("target")
+  @UseGuards(JwtAuthGuard)
+  async getByTarget(
+    @Query("module") module: string,
+    @Query("targetId", ParseIntPipe) targetId: number,
+    @Query("limit") limit?: string,
+  ) {
+    return this.auditLogService.getByTarget(
+      module,
+      targetId,
+      limit ? parseInt(limit) : 50,
+    );
+  }
+
+  // Same non-super-admin-gated reasoning as getByTarget above - backs
+  // CmsRecordMeta's Created By/Updated By line.
+  @Get("target/creator-updater")
+  @UseGuards(JwtAuthGuard)
+  async getCreatorAndUpdater(
+    @Query("module") module: string,
+    @Query("targetId", ParseIntPipe) targetId: number,
+  ) {
+    return this.auditLogService.getCreatorAndUpdater(module, targetId);
+  }
 }

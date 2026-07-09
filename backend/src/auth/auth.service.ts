@@ -2,6 +2,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
+import { EffectivePermissionsService } from './effective-permissions.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -9,6 +10,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private effectivePermissions: EffectivePermissionsService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -29,13 +31,21 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    // Role-resolved permissions, not the legacy admin.permissions column -
+    // see JwtStrategy.validate() for why. The frontend uses this response's
+    // `admin.permissions` for sidebar visibility immediately after login,
+    // before any subsequent request would otherwise re-resolve it.
+    const permissions = Array.from(
+      await this.effectivePermissions.getEffectivePermissions(admin),
+    );
+
     const token = this.jwtService.sign(
       {
         sub: admin.id,
         email: admin.email,
         name: admin.name,
         isSuperAdmin: admin.isSuperAdmin,
-        permissions: admin.permissions,
+        permissions,
         department: admin.department,
       },
       { expiresIn: '7d' },
@@ -48,7 +58,7 @@ export class AuthService {
         name: admin.name,
         email: admin.email,
         isSuperAdmin: admin.isSuperAdmin,
-        permissions: admin.permissions,
+        permissions,
       },
     };
   }
@@ -61,7 +71,6 @@ export class AuthService {
         name: true,
         email: true,
         isSuperAdmin: true,
-        permissions: true,
         department: true,
       },
     });
@@ -70,7 +79,11 @@ export class AuthService {
       throw new UnauthorizedException('Admin not found');
     }
 
-    return admin;
+    const permissions = Array.from(
+      await this.effectivePermissions.getEffectivePermissions(admin),
+    );
+
+    return { ...admin, permissions };
   }
 
   async registerAdmin(registerData: {

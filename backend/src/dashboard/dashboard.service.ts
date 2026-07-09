@@ -99,6 +99,8 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   },
   { key: 'admins', label: 'Admin Accounts', count: (p) => p.admin.count() },
   { key: 'roles', label: 'Roles', count: (p) => p.role.count() },
+  { key: 'careers', label: 'Job Openings', count: (p) => p.career.count() },
+  { key: 'events', label: 'Events', count: (p) => p.event.count() },
 ];
 
 @Injectable()

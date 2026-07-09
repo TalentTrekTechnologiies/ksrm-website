@@ -13,6 +13,13 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { HomepageModule } from './homepage/homepage.module';
+import { DownloadsModule } from './downloads/downloads.module';
+import { CareersModule } from './careers/careers.module';
+import { EventsModule } from './events/events.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { CommitteesModule } from './committees/committees.module';
+import { SiteSettingsModule } from './site-settings/site-settings.module';
 
 @Module({
   imports: [
@@ -31,6 +38,13 @@ import { DashboardModule } from './dashboard/dashboard.module';
     ExamNotificationsModule,
     NotificationsModule,
     DashboardModule,
+    HomepageModule,
+    DownloadsModule,
+    CareersModule,
+    EventsModule,
+    DepartmentsModule,
+    CommitteesModule,
+    SiteSettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -14,6 +14,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { FacultyService } from './faculty.service';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
+import { UpdateFacultyDto } from './dto/update-faculty.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
@@ -28,6 +29,13 @@ export class FacultyController {
     return this.facultyService.findAll(department);
   }
 
+  @Get('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('faculty.view')
+  findAllAdmin(@Query('includeDeleted') includeDeleted?: string) {
+    return this.facultyService.findAllAdmin(includeDeleted === 'true');
+  }
+
   @Get('hod/:department')
   findHod(@Param('department') department: string) {
     return this.facultyService.findHodByDepartment(department);
@@ -40,26 +48,33 @@ export class FacultyController {
 
   @Post()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('faculty')
+  @RequirePermission('faculty.create')
   create(@Body() createFacultyDto: CreateFacultyDto, @Request() req) {
-    return this.facultyService.create(createFacultyDto, req.user);
+    return this.facultyService.create(createFacultyDto, req.user, req.requestId);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('faculty')
+  @RequirePermission('faculty.update')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateFacultyDto: CreateFacultyDto,
+    @Body() updateFacultyDto: UpdateFacultyDto,
     @Request() req,
   ) {
-    return this.facultyService.update(id, updateFacultyDto, req.user);
+    return this.facultyService.update(id, updateFacultyDto, req.user, req.requestId);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('faculty')
+  @RequirePermission('faculty.delete')
   delete(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.facultyService.delete(id, req.user);
+    return this.facultyService.softDelete(id, req.user, req.requestId);
+  }
+
+  @Post(':id/restore')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('faculty.restore')
+  restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.facultyService.restore(id, req.user, req.requestId);
   }
 }
