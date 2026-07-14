@@ -69,6 +69,8 @@ export default function ApplicationForm({
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [notRobot, setNotRobot] = useState(false)
+  const [agreedTerms, setAgreedTerms] = useState(false)
 
   function setField(key: keyof FormState, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -108,6 +110,8 @@ export default function ApplicationForm({
     if (!resume) next.resume = "Please attach your resume (PDF, DOC, or DOCX)."
     if (form.linkedinUrl && !/^https?:\/\//.test(form.linkedinUrl)) next.linkedinUrl = "Include http:// or https://"
     if (form.portfolioUrl && !/^https?:\/\//.test(form.portfolioUrl)) next.portfolioUrl = "Include http:// or https://"
+    if (!notRobot) next.notRobot = "Please confirm you're not a robot."
+    if (!agreedTerms) next.terms = "Please accept the Terms & Conditions to continue."
 
     setErrors(next)
     return Object.keys(next).length === 0
@@ -174,6 +178,18 @@ export default function ApplicationForm({
         .af-submit { width: 100%; background: #D4A500; color: #1a1a2e; padding: 14px; border-radius: 8px; font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 17px; border: none; cursor: pointer; margin-top: 8px; }
         .af-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .af-submit-error { background: #fdecea; color: #d32f2f; padding: 12px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 16px; }
+        .af-robot { display: inline-flex; align-items: center; gap: 12px; border: 1px solid #d3d3d3; border-radius: 6px; padding: 11px 14px; background: #f9f9f9; min-width: 300px; cursor: pointer; user-select: none; transition: border-color 0.15s, background 0.15s; }
+        .af-robot:hover { border-color: #b5b5b5; }
+        .af-robot.checked { border-color: #2B3490; background: #f5f6ff; }
+        .af-robot.af-invalid { border-color: #d32f2f; }
+        .af-robot-box { width: 26px; height: 26px; border: 2px solid #c1c1c1; border-radius: 3px; background: #fff; display: flex; align-items: center; justify-content: center; color: #2B3490; font-weight: 800; font-size: 17px; flex-shrink: 0; }
+        .af-robot.checked .af-robot-box { border-color: #2B3490; }
+        .af-robot-label { font-size: 15px; color: #333; flex: 1; }
+        .af-robot-badge { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; color: #9aa0a6; line-height: 1.2; text-align: center; }
+        .af-robot-shield { font-size: 20px; }
+        .af-terms { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; font-size: 14px; color: #444; line-height: 1.55; cursor: pointer; }
+        .af-terms input { margin-top: 2px; width: 17px; height: 17px; flex-shrink: 0; accent-color: #2B3490; cursor: pointer; }
+        .af-terms a { color: #2B3490; font-weight: 600; }
         .af-success { text-align: center; padding: 20px 0; }
         .af-success-icon { font-size: 48px; margin-bottom: 16px; }
       `
@@ -310,6 +326,38 @@ export default function ApplicationForm({
               <label>Additional Notes</label>
               <textarea rows={2} value={form.additionalNotes} onChange={(e) => setField("additionalNotes", e.target.value)} />
             </div>
+
+      <div className="af-section-label">Verification</div>
+      <div
+        className={`af-robot ${notRobot ? "checked" : ""} ${errors.notRobot ? "af-invalid" : ""}`}
+        onClick={() => { setNotRobot((v) => !v); setErrors((p) => ({ ...p, notRobot: "" })) }}
+        role="checkbox"
+        aria-checked={notRobot}
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setNotRobot((v) => !v); setErrors((p) => ({ ...p, notRobot: "" })) } }}
+      >
+        <span className="af-robot-box">{notRobot ? "✓" : ""}</span>
+        <span className="af-robot-label">I&apos;m not a robot</span>
+        <span className="af-robot-badge">
+          <span className="af-robot-shield">🛡️</span>
+          <span>Privacy · Terms</span>
+        </span>
+      </div>
+      {errors.notRobot && <p className="af-error" style={{ marginTop: 6 }}>{errors.notRobot}</p>}
+
+      <label className="af-terms">
+        <input
+          type="checkbox"
+          checked={agreedTerms}
+          onChange={(e) => { setAgreedTerms(e.target.checked); setErrors((p) => ({ ...p, terms: "" })) }}
+        />
+        <span>
+          I have read and agree to the{" "}
+          <a href="/about#policies" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>{" "}
+          and consent to K.S.R.M. College of Engineering processing my details for recruitment purposes.
+        </span>
+      </label>
+      {errors.terms && <p className="af-error" style={{ marginTop: 4 }}>{errors.terms}</p>}
 
       <button type="submit" className="af-submit" disabled={submitting}>
         {submitting ? "Submitting..." : "Submit Application"}

@@ -1,87 +1,123 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { MapPin, Briefcase, Building2, CalendarDays, Clock } from "lucide-react"
+import { getCareersPublic, Career } from "@/lib/careers-api"
 import ApplicationForm from "@/components/careers/ApplicationForm"
 
-const WHY_JOIN = [
-  "Recognised for academic excellence",
-  "Active research & innovation culture",
-  "Collaborative, supportive workplace",
-  "Structured professional growth",
-]
+function fmtDate(iso?: string | null) {
+  if (!iso) return null
+  try {
+    return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })
+  } catch {
+    return null
+  }
+}
 
 function ApplyInner() {
   const params = useSearchParams()
   const careerIdRaw = params.get("careerId")
   const careerId = careerIdRaw && !Number.isNaN(Number(careerIdRaw)) ? Number(careerIdRaw) : undefined
-  const title = params.get("title") || undefined
-  const dept = params.get("dept") || undefined
+  const titleParam = params.get("title") || undefined
+  const deptParam = params.get("dept") || undefined
+
+  const [career, setCareer] = useState<Career | null>(null)
+  const [loading, setLoading] = useState<boolean>(!!careerId)
+
+  useEffect(() => {
+    if (!careerId) return
+    let cancelled = false
+    getCareersPublic()
+      .then((items) => {
+        if (cancelled) return
+        setCareer(items.find((c) => c.id === careerId) ?? null)
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [careerId])
+
+  const title = career?.title || titleParam || "General Application"
+  const dept = career?.department || deptParam || null
+  const posted = fmtDate(career?.postedAt)
+  const closing = fmtDate(career?.closingAt)
+  const description = career?.description?.trim()
+
+  const chips: { icon: React.ReactNode; text: string }[] = []
+  if (dept) chips.push({ icon: <Building2 size={15} />, text: dept })
+  if (career?.location) chips.push({ icon: <MapPin size={15} />, text: career.location })
+  if (career?.employmentType) chips.push({ icon: <Briefcase size={15} />, text: career.employmentType })
+  if (posted) chips.push({ icon: <CalendarDays size={15} />, text: `Posted ${posted}` })
 
   return (
     <main style={{ background: "#f4f6fb", minHeight: "70vh" }}>
       <style>{`
-        .ap-wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-        .ap-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 55%, #0d1033 100%); color: #fff; padding: 46px 0 56px; }
-        .ap-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.72); margin-bottom: 14px; }
-        .ap-breadcrumb a { color: #FFE619; text-decoration: none; }
-        .ap-breadcrumb a:hover { text-decoration: underline; }
-        .ap-grid { display: grid; grid-template-columns: 330px 1fr; gap: 28px; margin: -34px auto 64px; align-items: start; }
-        @media (max-width: 900px) { .ap-grid { grid-template-columns: 1fr; margin-top: -24px; } }
-        .ap-card { background: #fff; border: 1px solid #e6e8f0; border-radius: 16px; box-shadow: 0 12px 36px rgba(43,52,144,0.09); }
-        .ap-side { padding: 26px 24px; position: sticky; top: 20px; }
-        @media (max-width: 900px) { .ap-side { position: static; } }
-        .ap-side-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8a8fb5; }
-        .ap-job-title { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: #1a1a2e; margin: 5px 0 6px; line-height: 1.2; }
-        .ap-divider { height: 1px; background: #eef0f6; margin: 18px 0; }
-        .ap-why { list-style: none; padding: 0; margin: 0; }
-        .ap-why li { font-size: 14px; color: #555; margin-bottom: 9px; padding-left: 22px; position: relative; line-height: 1.4; }
-        .ap-why li::before { content: '✓'; position: absolute; left: 0; color: #2B3490; font-weight: 800; }
-        .ap-form-card { padding: 34px; }
-        @media (max-width: 560px) { .ap-form-card { padding: 22px 18px; } }
+        .jp-wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .jp-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 55%, #0d1033 100%); color: #fff; padding: 44px 0 56px; }
+        .jp-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.72); margin-bottom: 16px; }
+        .jp-breadcrumb a { color: #FFE619; text-decoration: none; }
+        .jp-breadcrumb a:hover { text-decoration: underline; }
+        .jp-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.9rem, 3.6vw, 2.8rem); font-weight: 700; line-height: 1.1; margin: 0; }
+        .jp-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+        .jp-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 13.5px; font-weight: 500; padding: 6px 13px; border-radius: 20px; }
+        .jp-closing { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 13.5px; color: #FFE619; font-weight: 600; }
+        .jp-apply-btn { display: inline-block; margin-top: 22px; background: #FFE619; color: #1a1d4d; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; padding: 12px 30px; border-radius: 8px; text-decoration: none; box-shadow: 0 8px 22px rgba(0,0,0,0.25); }
+        .jp-body { margin: -34px auto 64px; }
+        .jp-card { background: #fff; border: 1px solid #e6e8f0; border-radius: 16px; box-shadow: 0 12px 36px rgba(43,52,144,0.09); padding: 34px; margin-bottom: 24px; }
+        @media (max-width: 560px) { .jp-card { padding: 22px 18px; } }
+        .jp-card h2 { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
+        .jp-card h2 + .jp-sub { color: #888; font-size: 14px; margin: 0 0 20px; }
+        .jp-desc-text { white-space: pre-wrap; font-size: 15.5px; line-height: 1.8; color: #444; }
       `}</style>
 
-      <section className="ap-hero">
-        <div className="ap-wrap">
-          <div className="ap-breadcrumb">
+      {/* JOB HEADER */}
+      <section className="jp-hero">
+        <div className="jp-wrap">
+          <div className="jp-breadcrumb">
             <Link href="/">Home</Link> / <Link href="/careers">Careers</Link> / Apply
           </div>
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3.4vw, 2.6rem)", fontWeight: 700, margin: 0 }}>
-            Application Form
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.84)", margin: "10px 0 0", fontSize: 16 }}>
-            {title ? `You are applying for ${title}` : "Submit your application to K.S.R.M. College of Engineering"}
-          </p>
+          <h1 className="jp-title">{title}</h1>
+          {chips.length > 0 && (
+            <div className="jp-chips">
+              {chips.map((c, i) => (
+                <span className="jp-chip" key={i}>{c.icon} {c.text}</span>
+              ))}
+            </div>
+          )}
+          {closing && (
+            <div className="jp-closing"><Clock size={15} /> Applications close on {closing}</div>
+          )}
+          <a href="#apply" className="jp-apply-btn">Apply for this position ↓</a>
         </div>
       </section>
 
-      <div className="ap-wrap">
-        <div className="ap-grid">
-          {/* JOB SUMMARY SIDEBAR */}
-          <aside className="ap-card ap-side">
-            <div className="ap-side-label">You are applying for</div>
-            <div className="ap-job-title">{title || "General Application"}</div>
-            {dept && <div style={{ fontSize: 14, color: "#666" }}>{dept}</div>}
+      <div className="jp-wrap jp-body">
+        {/* JOB DESCRIPTION */}
+        {description && (
+          <section className="jp-card">
+            <h2>Job Description</h2>
+            <div className="jp-desc-text">{description}</div>
+          </section>
+        )}
 
-            <div className="ap-divider" />
-            <div className="ap-side-label" style={{ marginBottom: 11 }}>Why join KSRM</div>
-            <ul className="ap-why">
-              {WHY_JOIN.map((w) => <li key={w}>{w}</li>)}
-            </ul>
+        {/* APPLICATION FORM */}
+        <section id="apply" className="jp-card">
+          <h2>Apply for this position</h2>
+          <p className="jp-sub">{title !== "General Application" ? `Complete the form below to apply for ${title}.` : "Complete the form below to submit your application."}</p>
+          <ApplicationForm asPage careerId={careerId} jobTitle={career?.title || titleParam} />
+        </section>
 
-            <div className="ap-divider" />
-            <div className="ap-side-label" style={{ marginBottom: 6 }}>Need help?</div>
-            <a href="mailto:hr@ksrmce.ac.in" style={{ fontSize: 14, color: "#2B3490", fontWeight: 600, textDecoration: "none" }}>
-              hr@ksrmce.ac.in
-            </a>
-          </aside>
-
-          {/* APPLICATION FORM */}
-          <div className="ap-card ap-form-card">
-            <ApplicationForm asPage careerId={careerId} jobTitle={title} />
-          </div>
-        </div>
+        {!description && !loading && careerId && (
+          <p style={{ textAlign: "center", color: "#999", fontSize: 14 }}>
+            Full role details will be shared by our HR team after you apply.
+          </p>
+        )}
       </div>
     </main>
   )
