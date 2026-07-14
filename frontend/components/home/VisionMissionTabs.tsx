@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import Container from '@/components/ui/Container'
 import { getSectionPublic, VisionContent, MissionContent } from '@/lib/homepage-api'
 import { useLiveData } from '@/lib/use-live-data'
 
@@ -17,18 +18,23 @@ const FALLBACK_MISSION: MissionContent = {
   missions: [
     {
       code: 'M1',
-      text: 'To provide high quality education with enriched curriculum blended with impactful teaching-learning practices.',
+      text: 'To provide high quality education with an enriched curriculum blended with impactful teaching-learning practices.',
     },
     {
       code: 'M2',
-      text: 'To promote research, entrepreneurship and innovation through industry collaborations.',
+      text: 'To promote research, entrepreneurship and innovation through strong industry collaborations.',
     },
     {
       code: 'M3',
-      text: 'To produce highly competent professional leaders for contributing to Socio-economic development of region and the nation.',
+      text: 'To produce highly competent professional leaders contributing to the socio-economic development of the region and the nation.',
     },
   ],
 }
+
+// Static supporting copy shown under the heading — frames the official
+// vision/mission statements (which come from the CMS) without altering them.
+const INTRO =
+  'Rooted in the ideals of our founders, K.S.R.M. College of Engineering pursues one clear purpose — to shape capable, ethical and innovative engineers who serve society and the nation. The vision and mission below guide every programme we design, every class we teach and every graduate we send into the world.'
 
 interface VisionMissionState {
   vision: VisionContent
@@ -64,153 +70,134 @@ export default function VisionMissionTabs({
   }, [])
 
   const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    hidden: { opacity: 0, y: 22 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
   }
 
   return (
-    <>
-      <section style={{ background: 'white', padding: '48px 0 0', textAlign: 'center', width: '100%' }}>
-        <p
-          style={{
-            fontSize: '13px',
-            letterSpacing: '3px',
-            textTransform: 'uppercase',
-            color: '#2B3490',
-            fontWeight: 700,
-            margin: '0 0 8px',
-          }}
-        >
-          {vision.eyebrow ?? 'Who We Are'}
-        </p>
-        <h2
-          style={{
-            fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
-            fontWeight: 700,
-            color: '#1a1d4d',
-            fontFamily: "'Rajdhani', sans-serif",
-            margin: '0 0 48px',
-            paddingBottom: '0',
-          }}
-        >
-          {vision.heading}
-        </h2>
-      </section>
+    <section className="vm-section">
+      <style>{`
+        .vm-section {
+          position: relative;
+          width: 100%;
+          padding: 44px 0 52px;
+          background: url('/Filtered/campus%20entrance.jpeg') center center / cover no-repeat;
+          overflow: hidden;
+        }
+        .vm-overlay {
+          position: absolute; inset: 0; z-index: 0;
+          background: linear-gradient(180deg, rgba(12,18,45,0.46) 0%, rgba(12,18,45,0.66) 100%);
+        }
+        .vm-inner { position: relative; z-index: 1; }
+        .vm-head { text-align: center; max-width: 860px; margin: 0 auto 30px; }
+        .vm-eyebrow {
+          font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+          color: #FFE619; font-weight: 700; margin: 0 0 8px;
+        }
+        .vm-title {
+          font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff;
+          font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.1; margin: 0 0 12px;
+          text-shadow: 0 2px 18px rgba(0,0,0,0.35);
+        }
+        .vm-intro {
+          font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.9);
+          margin: 0; text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+        }
+        .vm-grid {
+          display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch;
+        }
+        .vm-card {
+          background: linear-gradient(155deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.07) 55%, rgba(255,255,255,0.05) 100%);
+          backdrop-filter: blur(22px) saturate(150%);
+          -webkit-backdrop-filter: blur(22px) saturate(150%);
+          border: 1px solid rgba(255,255,255,0.35);
+          border-radius: 18px;
+          padding: 30px 32px;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 18px 50px rgba(0,0,0,0.32);
+          color: #fff;
+          display: flex; flex-direction: column;
+        }
+        .vm-kicker {
+          font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+          color: #FFE619; font-weight: 700; margin-bottom: 4px;
+        }
+        .vm-card-title {
+          font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff;
+          font-size: 27px; line-height: 1; margin: 0 0 14px;
+        }
+        .vm-quote {
+          font-family: Georgia, serif; font-size: 50px; line-height: 0.5;
+          color: rgba(255,230,25,0.45); display: block; margin-bottom: 4px;
+        }
+        .vm-text { font-size: 16px; line-height: 1.75; color: rgba(255,255,255,0.95); margin: 0; font-style: italic; }
+        .vm-rule { width: 56px; height: 3px; background: #FFE619; margin-top: 18px; border-radius: 2px; }
+        .vm-missions { display: flex; flex-direction: column; gap: 15px; }
+        .vm-mission-row { display: flex; gap: 14px; align-items: flex-start; }
+        .vm-mcode {
+          flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+          background: #FFE619; color: #1a1d4d; font-weight: 800; font-size: 13px;
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Rajdhani', sans-serif; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        }
+        .vm-mtext { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.92); margin: 2px 0 0; }
+        @media (max-width: 900px) {
+          .vm-grid { grid-template-columns: 1fr; gap: 18px; }
+          .vm-card { padding: 26px 24px; }
+        }
+      `}</style>
 
-      <section
-        style={{
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-          position: 'relative',
-          zIndex: 1,
-          minHeight: '500px',
-        }}
-      >
-        {/* Vision */}
-        <motion.div
-          initial="hidden"
-          animate={mounted ? "visible" : "hidden"}
-          variants={fadeUp}
-          style={{
-            background: 'linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%)',
-            padding: 'clamp(32px, 6vw, 80px) clamp(20px, 5vw, 60px)',
-            color: 'white',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '12px',
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              color: '#D4A500',
-              marginBottom: '16px',
-              fontWeight: 700,
-            }}
-          >
-            {vision.label}
-          </div>
-          <div style={{ fontSize: '80px', color: 'rgba(212, 165, 0, 0.2)', lineHeight: '0.8', display: 'block', marginBottom: '8px' }}>
-            &ldquo;
-          </div>
-          <p
-            style={{
-              fontSize: '20px',
-              lineHeight: 1.9,
-              fontStyle: 'italic',
-              color: 'white',
-              margin: '0 0 32px',
-            }}
-          >
-            {vision.text}
-          </p>
-          <div style={{ width: '60px', height: '3px', background: '#D4A500' }} />
-        </motion.div>
+      <div className="vm-overlay" />
 
-        {/* Mission */}
-        <motion.div
-          initial="hidden"
-          animate={mounted ? "visible" : "hidden"}
-          variants={fadeUp}
-          style={{
-            background: '#D4A500',
-            padding: 'clamp(32px, 6vw, 80px) clamp(20px, 5vw, 60px)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '12px',
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              color: '#2B3490',
-              marginBottom: '24px',
-              fontWeight: 700,
-            }}
+      <Container>
+        <div className="vm-inner">
+          <motion.div
+            className="vm-head"
+            initial="hidden"
+            animate={mounted ? 'visible' : 'hidden'}
+            variants={fadeUp}
           >
-            {mission.label}
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {mission.missions.map((item, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '16px' }}>
-                <div
-                  style={{
-                    background: '#2B3490',
-                    color: '#D4A500',
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 800,
-                    fontSize: '13px',
-                    flexShrink: 0,
-                  }}
-                >
-                  {item.code}
-                </div>
-                <p
-                  style={{
-                    fontSize: '15px',
-                    color: '#1a1d4d',
-                    lineHeight: 1.7,
-                    fontWeight: 500,
-                    margin: '0',
-                  }}
-                >
-                  {item.text}
-                </p>
+            <p className="vm-eyebrow">{vision.eyebrow ?? 'Who We Are'}</p>
+            <h2 className="vm-title">{vision.heading}</h2>
+            <p className="vm-intro">{INTRO}</p>
+          </motion.div>
+
+          <div className="vm-grid">
+            {/* VISION */}
+            <motion.div
+              className="vm-card"
+              initial="hidden"
+              animate={mounted ? 'visible' : 'hidden'}
+              variants={fadeUp}
+            >
+              <div className="vm-kicker">{vision.label}</div>
+              <h3 className="vm-card-title">Vision</h3>
+              <span className="vm-quote">&ldquo;</span>
+              <p className="vm-text">{vision.text}</p>
+              <div className="vm-rule" />
+            </motion.div>
+
+            {/* MISSION */}
+            <motion.div
+              className="vm-card"
+              initial="hidden"
+              animate={mounted ? 'visible' : 'hidden'}
+              variants={fadeUp}
+              transition={{ delay: 0.1 }}
+            >
+              <div className="vm-kicker">{mission.label}</div>
+              <h3 className="vm-card-title">Mission</h3>
+              <div className="vm-missions">
+                {mission.missions.map((item, idx) => (
+                  <div key={idx} className="vm-mission-row">
+                    <span className="vm-mcode">{item.code}</span>
+                    <p className="vm-mtext">{item.text}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </motion.div>
           </div>
-        </motion.div>
-      </section>
-    </>
+        </div>
+      </Container>
+    </section>
   )
 }
