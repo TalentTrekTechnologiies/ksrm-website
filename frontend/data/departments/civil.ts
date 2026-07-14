@@ -82,7 +82,7 @@ export const civil: Department = {
     { name: "Transportation Engineering Lab", description: "Highway and traffic analysis", imageUrl: "/Labs/Civil/6.webp" },
     { name: "Environmental Engineering Lab", description: "Water and waste treatment", imageUrl: "/Labs/Civil/7.webp" },
   ],
-  heroImage: "/navbar%20images/Departmentss/CIVIL.png"
+  heroImage: "/campus/aerial-campus.jpg"
 };
 
 export default civil;

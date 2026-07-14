@@ -95,7 +95,7 @@ export const cse: Department = {
     { name: "Software Engineering Laboratory", description: "Software development methodologies, project management, and DevOps", imageUrl: "/Labs/CSE/9.webp" },
     { name: "IoT & Embedded Systems Laboratory", description: "Embedded systems programming, IoT devices, and sensor networks", imageUrl: "/Labs/CSE/10.webp" }
   ],
-  heroImage: "/navbar%20images/Departmentss/CSE.png"
+  heroImage: "/campus/main-building.jpg"
 };
 
 export default cse;

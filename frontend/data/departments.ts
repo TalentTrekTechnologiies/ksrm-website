@@ -305,7 +305,7 @@ export const departments: Record<string, Department> = {
       { name: "Web & Mobile Application Development Lab", description: "Full-stack web and mobile development" },
       { name: "Project & Research Lab", description: "Capstone projects and research initiatives" },
     ],
-    heroImage: "/departments/cse/hero.jpg",
+    heroImage: "/campus/main-building.jpg",
   },
   ece: {
     slug: "ece",
@@ -410,7 +410,7 @@ export const departments: Record<string, Department> = {
       { name: "Embedded Systems Lab" },
       { name: "Microprocessors & Microcontrollers Lab" },
     ],
-    heroImage: "/departments/ece/hero.jpg",
+    heroImage: "/campus/academic-block.jpg",
   },
   eee: {
     slug: "eee",
@@ -620,7 +620,7 @@ export const departments: Record<string, Department> = {
       { name: "Electrical Measurements Lab", description: "Precision measurements", imageUrl: "/images/departments/eee/labs/measurements-lab.jpg" },
       { name: "Simulation Lab", description: "PSCAD and MATLAB simulations", imageUrl: "/images/departments/eee/labs/simulation-lab.jpg" },
     ],
-    heroImage: "/departments/eee/hero.jpg",
+    heroImage: "/campus/robotics-lab.jpg",
   },
   civil: {
     slug: "civil",
@@ -783,7 +783,7 @@ export const departments: Record<string, Department> = {
       "/images/departments/civil/gallery/g5.jpg",
       "/images/departments/civil/gallery/g6.jpg",
     ],
-    heroImage: "/departments/civil/hero.jpg",
+    heroImage: "/campus/aerial-campus.jpg",
   },
   mechanical: {
     slug: "mechanical",
@@ -889,7 +889,7 @@ export const departments: Record<string, Department> = {
       { name: "Metrology & Measurements Lab" },
       { name: "Strength of Materials Lab" },
     ],
-    heroImage: "/departments/mechanical/hero.jpg",
+    heroImage: "/campus/academic-block.jpg",
   },
   "humanities-sciences": {
     slug: "humanities-sciences",
@@ -992,7 +992,7 @@ export const departments: Record<string, Department> = {
       { name: "English Language Communication Skills Lab" },
       { name: "Mathematics / Computational Lab" },
     ],
-    heroImage: "/departments/humanities-sciences/hero.jpg",
+    heroImage: "/campus/central-library.jpg",
   },
   mba: {
     slug: "mba",
@@ -1092,7 +1092,7 @@ export const departments: Record<string, Department> = {
       { name: "Computer & Analytics Lab" },
       { name: "Business Simulation Lab" },
     ],
-    heroImage: "/departments/mba/hero.jpg",
+    heroImage: "/campus/students-library.jpg",
   },
 }
 

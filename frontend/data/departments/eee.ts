@@ -78,7 +78,7 @@ export const eee: Department = {
     { name: "Power Systems Laboratory", description: "Power flow analysis, fault studies, load flow, and power system protection", imageUrl: "/images/departments/eee/labs/power-systems-lab.jpg" },
     { name: "Simulation & CAD Laboratory", description: "MATLAB/Simulink, PSPICE, and CAD tools for circuit and system simulation", imageUrl: "/images/departments/eee/labs/simulation-lab.jpg" }
   ],
-  heroImage: "/navbar%20images/Departmentss/EEE.png"
+  heroImage: "/campus/robotics-lab.jpg"
 };
 
 export default eee;

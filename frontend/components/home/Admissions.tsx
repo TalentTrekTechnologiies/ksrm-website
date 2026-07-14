@@ -191,12 +191,35 @@ export default function Admissions({
 
         .admissions-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: repeat(3, 1fr);
           gap: 28px;
           max-width: 1760px;
           margin: 0 auto;
           align-items: stretch;
           padding: 0 16px;
+        }
+
+        .admissions-poster-card {
+          display: block;
+          height: 480px;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+          border: 1px solid #eef0f3;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .admissions-poster-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 14px 36px rgba(43, 52, 144, 0.18);
+        }
+
+        .admissions-poster-card img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center top;
+          display: block;
         }
 
         .admissions-card {
@@ -206,7 +229,8 @@ export default function Admissions({
           box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
           display: flex;
           flex-direction: column;
-          max-width: 540px;
+          width: 100%;
+          height: 480px;
         }
 
         .admissions-card-image {
@@ -356,13 +380,26 @@ export default function Admissions({
           text-decoration: underline;
         }
 
-        @media (max-width: 768px) {
-          .admissions-heading { font-size: 32px; }
+        @media (max-width: 1024px) {
           .admissions-grid {
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 22px;
+            justify-items: center;
           }
-          .admissions-card { max-width: none; }
+          .admissions-poster-card {
+            height: auto;
+            width: 100%;
+            max-width: 460px;
+          }
+          .admissions-poster-card img { height: auto; }
+          .admissions-card {
+            height: auto;
+            max-width: 460px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .admissions-heading { font-size: 32px; }
           .admissions-card-image { height: 200px; }
           .admissions-card-panel { padding: 18px 20px; }
         }
@@ -382,8 +419,22 @@ export default function Admissions({
           <p className="admissions-subtitle">{admissions.subtitle}</p>
         </motion.div>
 
-        {/* CARDS GRID */}
+        {/* CARDS GRID — poster + programme cards, all three side by side */}
         <div className="admissions-grid">
+          <a
+            href="/admissions-2026-poster.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View full Admissions 2026-27 details"
+            className="admissions-poster-card"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- static admissions poster */}
+            <img
+              src="/admissions-2026-poster.jpg"
+              alt="K.S.R.M. College of Engineering — Admissions Open 2026-27"
+              loading="lazy"
+            />
+          </a>
           {programs.map((program) => (
             <div key={program.id}>
               <div className="admissions-card">
