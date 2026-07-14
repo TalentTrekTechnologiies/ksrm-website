@@ -107,15 +107,23 @@ export default function VisionMissionTabs({
           display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch;
         }
         .vm-card {
-          background: linear-gradient(155deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.07) 55%, rgba(255,255,255,0.05) 100%);
+          position: relative;
+          background: linear-gradient(155deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 55%, rgba(255,255,255,0.05) 100%);
           backdrop-filter: blur(22px) saturate(150%);
           -webkit-backdrop-filter: blur(22px) saturate(150%);
           border: 1px solid rgba(255,255,255,0.35);
+          border-top: 3px solid #FFE619;
           border-radius: 18px;
-          padding: 30px 32px;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 18px 50px rgba(0,0,0,0.32);
+          padding: 28px 32px 32px;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 18px 50px rgba(0,0,0,0.34);
           color: #fff;
           display: flex; flex-direction: column;
+        }
+        .vm-icon {
+          width: 52px; height: 52px; border-radius: 14px;
+          background: linear-gradient(135deg, #FFE619 0%, #f5c400 100%);
+          color: #1a1d4d; display: flex; align-items: center; justify-content: center;
+          margin-bottom: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.28);
         }
         .vm-kicker {
           font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
@@ -169,6 +177,12 @@ export default function VisionMissionTabs({
               animate={mounted ? 'visible' : 'hidden'}
               variants={fadeUp}
             >
+              <div className="vm-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
               <div className="vm-kicker">{vision.label}</div>
               <h3 className="vm-card-title">Vision</h3>
               <span className="vm-quote">&ldquo;</span>
@@ -184,6 +198,14 @@ export default function VisionMissionTabs({
               variants={fadeUp}
               transition={{ delay: 0.1 }}
             >
+              <div className="vm-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09Z" />
+                  <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z" />
+                  <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+                  <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                </svg>
+              </div>
               <div className="vm-kicker">{mission.label}</div>
               <h3 className="vm-card-title">Mission</h3>
               <div className="vm-missions">
