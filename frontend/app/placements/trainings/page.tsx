@@ -1,50 +1,5 @@
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 
-const stages = [
-  {
-    letter: "K",
-    title: "Know Yourself (Assessment & Discovery)",
-    desc: "Every successful career journey begins with self-awareness. The first phase identifies students' strengths, interests, aptitude levels, learning gaps, and career aspirations.",
-    activities: ["Diagnostic assessments and skill mapping", "Aptitude and logical reasoning evaluations", "Communication proficiency assessments", "Technical competency evaluation", "Career interest identification"],
-    outcome: "A personalized development roadmap for every student.",
-  },
-  {
-    letter: "R",
-    title: "Reinforce Knowledge (Training & Skill Development)",
-    desc: "Based on assessment outcomes, students undergo structured training interventions designed to strengthen their technical, analytical, and professional skills.",
-    activities: ["Programming and coding proficiency", "Data Structures and Algorithms", "Core engineering skill enhancement", "Aptitude and reasoning training", "Communication and soft skills development", "Emerging technology training"],
-    outcome: "Strong conceptual understanding and industry-relevant competencies.",
-  },
-  {
-    letter: "E",
-    title: "Engage Through Practice (Experiential Learning)",
-    desc: "Learning becomes meaningful when knowledge is applied. This phase emphasizes hands-on learning through real-world problem-solving activities.",
-    activities: ["Coding challenges and competitions", "Skill drills and technical assignments", "Mini projects and capstone projects", "Hackathons and innovation challenges", "Industry case studies", "Collaborative learning activities"],
-    outcome: "Enhanced problem-solving abilities and practical skill application.",
-  },
-  {
-    letter: "A",
-    title: "Achieve Industry Validation (Certifications)",
-    desc: "Industry-recognized certifications validate student competencies and improve career prospects by demonstrating mastery of in-demand skills.",
-    activities: ["ServiceNow Certifications", "AWS Academy Certifications", "Cisco Networking Certifications", "Oracle Academy Certifications", "Salesforce Credentials", "Industry-specific certification pathways"],
-    outcome: "Globally recognized credentials that strengthen employability.",
-  },
-  {
-    letter: "T",
-    title: "Transform Through Industry Exposure (Internships & Industry Connect)",
-    desc: "Students gain valuable exposure to workplace practices, professional environments, and industry expectations through internships and collaborative engagements.",
-    activities: ["Internships", "Live industry projects", "Expert talks and workshops", "Industrial visits", "Mentoring by industry professionals", "Industry-academia collaborations"],
-    outcome: "Real-world experience and enhanced professional readiness.",
-  },
-  {
-    letter: "E",
-    title: "Excel in Career Opportunities (Placement Readiness & Career Success)",
-    desc: "The final stage focuses on preparing students for successful career transitions through intensive placement readiness programs.",
-    activities: ["Resume building and portfolio development", "Mock interviews and group discussions", "Company-specific preparation", "Placement boot camps", "Career counseling and mentoring", "Campus recruitment drives"],
-    outcome: "Career-ready graduates equipped to secure rewarding employment opportunities.",
-  },
-];
-
 export default function TrainingsPage() {
   return (
     <>
@@ -125,47 +80,10 @@ export default function TrainingsPage() {
         <PlacementsSubnav active="/placements/trainings" />
         <section className="trainings-intro-section">
           <div className="responsive-container">
-            <h2 className="trainings-heading">Trainings & k-ReATE Framework</h2>
-            <span className="trainings-framework-title">Knowledge for Recruitment And Talent Enablement</span>
+            <h2 className="trainings-heading">Trainings</h2>
             <p className="trainings-text">
-              At K.S.R.M. College of Engineering, training is not viewed as a standalone activity but as a strategic and continuous process designed to nurture talent, build competencies, and enhance employability. The institution's unique k-ReATE Framework serves as a comprehensive roadmap that guides students from foundational learning to successful career outcomes.
+              At K.S.R.M. College of Engineering, training is not viewed as a standalone activity but as a strategic and continuous process designed to nurture talent, build competencies, and enhance employability. The framework is built on a systematic approach that integrates assessment, skill development, practical application, industry exposure, certifications, internships, and placement readiness. Through trainings, students are empowered to develop the knowledge, skills, attitude, and professional competencies required to excel in a dynamic and competitive global workforce.
             </p>
-            <p className="trainings-text">
-              The framework is built on a systematic approach that integrates assessment, skill development, practical application, industry exposure, certifications, internships, and placement readiness. Through k-ReATE, students are empowered to develop the knowledge, skills, attitude, and professional competencies required to excel in a dynamic and competitive global workforce.
-            </p>
-          </div>
-        </section>
-        <section className="trainings-stages-section">
-          <div className="responsive-container">
-            <h2 className="trainings-section-heading">The k-ReATE Framework Stages</h2>
-            {stages.map((s, i) => (
-              <div className="trainings-stage-card" key={i}>
-                <div className="trainings-letter-circle">{s.letter}</div>
-                <div className="trainings-stage-content">
-                  <h3>{s.title}</h3>
-                  <p className="trainings-stage-desc">{s.desc}</p>
-                  <p className="trainings-stage-subheading">Key Activities:</p>
-                  <ul className="trainings-activities">
-                    {s.activities.map((a) => <li key={a}>{a}</li>)}
-                  </ul>
-                  <p className="trainings-stage-subheading">Outcome:</p>
-                  <p className="trainings-outcome">{s.outcome}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className="trainings-advantage-section">
-          <div className="responsive-container">
-            <div className="trainings-advantage-box">
-              <h3 className="trainings-advantage-heading">The k-ReATE Advantage</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.8, margin: "0 0 24px" }}>
-                The k-ReATE Framework embodies KSRMCE's commitment to transforming potential into performance and aspirations into achievements. By integrating assessment, training, practice, certification, industry exposure, and placement readiness into a single cohesive ecosystem, the framework ensures that every student is empowered to build a successful and sustainable career.
-              </p>
-              <div className="trainings-journey">
-                Know Yourself → Reinforce Knowledge → Engage Through Practice → Achieve Industry Validation → Transform Through Industry Exposure → Excel in Career Opportunities
-              </div>
-            </div>
           </div>
         </section>
       </main>

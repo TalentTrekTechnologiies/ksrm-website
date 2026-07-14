@@ -176,16 +176,6 @@ export default function PlacementsOverviewPage() {
             <h2 className="overview-section-heading">Our Leadership Team</h2>
             <div className="overview-team-grid">
               <div className="overview-dean-card">
-                <div className="overview-dean-photo">Dean – Training & Placements</div>
-                <div className="overview-dean-info">
-                  <h3 className="overview-dean-name">Mr. Nagaraju Rayapati</h3>
-                  <p className="overview-dean-designation">Dean – Training & Placements</p>
-                  <p className="overview-dean-bio">
-                    Nagaraju Rayapati leads the Training & Placement initiatives with a vision to transform students into industry-ready professionals.
-                  </p>
-                </div>
-              </div>
-              <div className="overview-dean-card">
                 <div className="overview-dean-photo">Dean – Industry Relations</div>
                 <div className="overview-dean-info">
                   <h3 className="overview-dean-name">Mr. Venugopal Marella</h3>
