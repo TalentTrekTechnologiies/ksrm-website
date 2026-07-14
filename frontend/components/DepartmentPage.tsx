@@ -722,7 +722,8 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                   .map((w) => w[0])
                   .join("")
                   .toUpperCase();
-                const isHod = f.designation.toLowerCase().includes("head");
+                const desig = f.designation.toLowerCase();
+                const isHod = desig.includes("head") || desig.includes("hod");
                 return (
                   <div className={`dept-faculty-card ${isHod ? "hod" : ""}`} key={i}>
                     <div className="dept-faculty-photo">

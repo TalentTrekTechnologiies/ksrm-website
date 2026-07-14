@@ -26,7 +26,9 @@ export class FacultyService {
         ...(department && { department }),
         ...(departmentId !== undefined && { departmentId }),
       },
-      orderBy: { name: 'asc' },
+      // HOD leads the grid, then the department's own roster order
+      // (sortOrder), falling back to alphabetical for equal ranks.
+      orderBy: [{ isHod: 'desc' }, { sortOrder: 'asc' }, { name: 'asc' }],
     });
   }
 
