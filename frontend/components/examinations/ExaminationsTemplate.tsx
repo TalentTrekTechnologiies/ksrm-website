@@ -44,7 +44,7 @@ export default function ExaminationsTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -77,7 +77,7 @@ export default function ExaminationsTemplate() {
           align-items: center;
           justify-content: center;
           min-height: 100px;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
           color: #2B3490;
           font-family: 'Rajdhani', sans-serif;
@@ -106,7 +106,7 @@ export default function ExaminationsTemplate() {
           border-radius: 8px;
           cursor: pointer;
           font-weight: 600;
-          font-size: 14px;
+          font-size: 15px;
           font-family: 'Rajdhani', sans-serif;
           transition: all 0.2s;
         }
@@ -138,14 +138,14 @@ export default function ExaminationsTemplate() {
           transform: translateX(4px);
         }
         .calendar-item-date {
-          font-size: 12px;
+          font-size: 13px;
           color: #999;
           font-weight: 600;
           margin-bottom: 8px;
         }
         .calendar-item-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0;
@@ -160,7 +160,7 @@ export default function ExaminationsTemplate() {
           cursor: pointer;
           border: none;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 17px;
         }
         .exam-link-button.primary {
           background: #FFE619;
@@ -205,14 +205,14 @@ export default function ExaminationsTemplate() {
           transform: translateX(4px);
         }
         .exam-list-item-date {
-          font-size: 12px;
+          font-size: 13px;
           color: #999;
           font-weight: 600;
           margin-bottom: 8px;
         }
         .exam-list-item-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0;
@@ -251,7 +251,7 @@ export default function ExaminationsTemplate() {
         }
         .exam-contact-card p {
           color: #666;
-          font-size: 14px;
+          font-size: 15px;
           margin: 0 0 12px;
         }
         .exam-contact-card a {
@@ -321,7 +321,7 @@ export default function ExaminationsTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

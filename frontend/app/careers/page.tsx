@@ -55,7 +55,7 @@ export default function CareersPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -63,14 +63,14 @@ export default function CareersPage() {
         .car-hero { position: relative; background-image: url('/banners/careers.png'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .car-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); pointer-events: none; }
         .car-hero > * { position: relative; z-index: 2; }
-        .car-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .car-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .car-breadcrumb a { color: #D4A500; text-decoration: none; }
         .car-whyjoin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 32px 0; }
         .car-whyjoin-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; }
-        .car-whyjoin-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #2B3490; margin: 0 0 12px; display: flex; align-items: center; gap: 12px; }
-        .car-whyjoin-card p { font-size: 14px; color: #666; margin: 0; }
+        .car-whyjoin-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; margin: 0 0 12px; display: flex; align-items: center; gap: 12px; }
+        .car-whyjoin-card p { font-size: 15px; color: #666; margin: 0; }
         .car-opening-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
-        .car-opening-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .car-opening-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
         .car-cta-button { display: inline-block; background: #D4A500; color: #1a1a2e; padding: 16px 40px; border-radius: 8px; font-weight: 700; text-decoration: none; font-family: 'Rajdhani', sans-serif; border: none; margin: 24px 0; }
         @media (max-width: 1200px) { .car-whyjoin-grid { grid-template-columns: 1fr; } }
       `}</style>
@@ -79,7 +79,7 @@ export default function CareersPage() {
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
             <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Careers at KSRM</h1>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 600 }}>Join Our Team of Excellence</p>
+            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Join Our Team of Excellence</p>
           </div>
         </div>
       </section>

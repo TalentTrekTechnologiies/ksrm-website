@@ -147,7 +147,7 @@ export default function GalleryPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -155,7 +155,7 @@ export default function GalleryPage() {
         .gal-hero { position: relative; background-image: url('/banners/gallery.png'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .gal-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); pointer-events: none; }
         .gal-hero > * { position: relative; z-index: 2; }
-        .gal-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .gal-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .gal-breadcrumb a { color: #D4A500; text-decoration: none; }
         .gal-filters { display: flex; gap: 12px; margin: 32px 0; flex-wrap: wrap; }
         .gal-filter-btn { background: #f7f8fa; border: 1px solid #eef0f3; color: #2B3490; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
@@ -165,7 +165,7 @@ export default function GalleryPage() {
         .gal-card-image { width: 100%; height: 200px; }
         .gal-card-image img { width: 100%; height: 200px; object-fit: cover; }
         .gal-card-content { padding: 16px; }
-        .gal-card-title { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .gal-card-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
         .gal-video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
         .gal-video-wrap { border-radius: 8px; overflow: hidden; }
         .gal-video-wrap video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
@@ -177,7 +177,7 @@ export default function GalleryPage() {
       <section className="gal-hero">
         <div className="responsive-container">
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Campus Gallery</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Explore life at KSRM College of Engineering</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Explore life at KSRM College of Engineering</p>
         </div>
       </section>
 

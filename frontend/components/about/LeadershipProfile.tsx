@@ -52,7 +52,7 @@ export default function LeadershipProfile({ leader }: LeadershipProfileProps) {
         }
         .leadership-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
+          font-size: 13px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; color: #2B3490;
         }
         .leadership-tabs {
@@ -60,7 +60,7 @@ export default function LeadershipProfile({ leader }: LeadershipProfileProps) {
           flex-wrap: wrap;
         }
         .leadership-tab {
-          padding: 10px 20px; border-radius: 24px; font-size: 14px; font-weight: 600;
+          padding: 10px 20px; border-radius: 24px; font-size: 15px; font-weight: 600;
           border: 1.5px solid #e0e3ea; color: #555; text-decoration: none;
           transition: all 0.3s ease;
         }
@@ -92,23 +92,23 @@ export default function LeadershipProfile({ leader }: LeadershipProfileProps) {
           color: #1a1a2e; margin: 0 0 8px;
         }
         .leadership-credentials {
-          font-size: 13px; font-weight: 600; color: #2B3490; margin: 0 0 16px;
+          font-size: 14px; font-weight: 600; color: #2B3490; margin: 0 0 16px;
           text-transform: uppercase; letter-spacing: 0.5px;
         }
         .leadership-role {
-          font-size: 14px; color: #666; margin: 0 0 20px; line-height: 1.6;
+          font-size: 15px; color: #666; margin: 0 0 20px; line-height: 1.6;
         }
         .leadership-contact {
           display: flex; flex-direction: column; gap: 10px;
           padding-top: 16px; border-top: 1px solid #e0e3ea;
         }
         .leadership-contact-item {
-          display: flex; align-items: center; gap: 10px; font-size: 13px; color: #555;
+          display: flex; align-items: center; gap: 10px; font-size: 14px; color: #555;
         }
         .leadership-contact-item svg { flex-shrink: 0; color: #2B3490; }
 
         .leadership-message {
-          font-size: 16px; line-height: 1.8; color: #555;
+          font-size: 17px; line-height: 1.8; color: #555;
         }
         .leadership-message p { margin: 0 0 16px; }
         .leadership-message p:last-child { margin-bottom: 0; }

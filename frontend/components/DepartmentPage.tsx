@@ -195,7 +195,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
       <style>{`
         .responsive-container {
           width: 100%;
-          max-width: 1400px;
+          max-width:  1720px;
           margin: 0 auto;
           padding-left: 40px;
           padding-right: 40px;
@@ -233,7 +233,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -251,10 +251,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         }
         .dept-hero-tagline {
           color: rgba(255,255,255,0.85);
-          font-size: 18px;
+          font-size: 19px;
           line-height: 1.6;
           margin: 16px 0 0;
-          font-weight: 300;
+          font-weight: 400;
           text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
 
@@ -277,7 +277,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         .dept-nav-pill {
           padding: 10px 18px;
           border-radius: 24px;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
           font-family: 'Rajdhani', sans-serif;
           border: 1.5px solid #eef0f3;
@@ -345,7 +345,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           color: #2B3490;
           display: flex; align-items: center; justify-content: center;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 14px; font-weight: 700;
+          font-size: 15px; font-weight: 700;
           flex-shrink: 0;
         }
 
@@ -363,13 +363,13 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         }
         .dept-ai-card h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 12px;
         }
         .dept-ai-card p {
-          font-size: 15px;
+          font-size: 16px;
           color: #666;
           line-height: 1.6;
           margin: 0;
@@ -450,17 +450,17 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         .dept-faculty-info { padding: 20px; }
         .dept-faculty-info h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px; font-weight: 700; color: #1a1a2e;
+          font-size: 17px; font-weight: 700; color: #1a1a2e;
           margin: 0 0 6px;
         }
         .dept-faculty-designation {
           color: #D4A500;
-          font-size: 12px; font-weight: 700;
+          font-size: 13px; font-weight: 700;
           margin: 0 0 10px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
         }
-        .dept-faculty-qual { color: #777; font-size: 13px; margin: 0 0 12px; line-height: 1.4; }
+        .dept-faculty-qual { color: #777; font-size: 14px; margin: 0 0 12px; line-height: 1.4; }
         .dept-faculty-spec {
           display: inline-block;
           background: #eef1ff;
@@ -514,9 +514,9 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         .dept-lab-body { padding: 20px; }
         .dept-lab-body h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0;
+          font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0;
         }
-        .dept-lab-body p { color: #666; font-size: 15px; line-height: 1.6; margin: 8px 0 0; }
+        .dept-lab-body p { color: #666; font-size: 16px; line-height: 1.6; margin: 8px 0 0; }
 
         .dept-outcomes-grid {
           display: grid;
@@ -538,10 +538,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         }
         .dept-po-item h4 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 14px; font-weight: 700; color: #2B3490;
+          font-size: 15px; font-weight: 700; color: #2B3490;
           margin: 0 0 6px;
         }
-        .dept-po-item p { color: #555; font-size: 13px; line-height: 1.6; margin: 0; }
+        .dept-po-item p { color: #555; font-size: 14px; line-height: 1.6; margin: 0; }
 
         @media (max-width: 900px) {
           .dept-programmes-grid, .dept-labs-grid, .dept-outcomes-grid,

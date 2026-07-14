@@ -45,7 +45,7 @@ export default function CulturalTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -55,7 +55,7 @@ export default function CulturalTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -82,7 +82,7 @@ export default function CulturalTemplate() {
           margin: 0 0 16px;
         }
         .cul-fest-desc {
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.7;
           margin: 0 0 20px;
         }
@@ -109,7 +109,7 @@ export default function CulturalTemplate() {
           color: #2B3490;
           padding: 8px 14px;
           border-radius: 20px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           font-family: "Rajdhani", sans-serif;
         }
@@ -143,19 +143,19 @@ export default function CulturalTemplate() {
         }
         .cul-club-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 12px;
         }
         .cul-club-card p {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           line-height: 1.6;
           margin: 0 0 12px;
         }
         .cul-coordinator {
-          font-size: 12px;
+          font-size: 13px;
           color: #2B3490;
           font-weight: 600;
         }
@@ -177,12 +177,12 @@ export default function CulturalTemplate() {
         }
         .cul-achievement-card h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           margin: 0;
         }
         .cul-achievement-card p {
-          font-size: 13px;
+          font-size: 14px;
           margin: 0;
           line-height: 1.6;
         }
@@ -208,7 +208,7 @@ export default function CulturalTemplate() {
         }
         .cul-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -216,7 +216,7 @@ export default function CulturalTemplate() {
           margin: 0;
         }
         .cul-contact-item p {
-          font-size: 14px;
+          font-size: 15px;
           margin: 8px 0 0;
         }
         .cul-contact-item a {
@@ -270,7 +270,7 @@ export default function CulturalTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

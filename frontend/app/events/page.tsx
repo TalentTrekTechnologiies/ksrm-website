@@ -28,7 +28,7 @@ export default function EventsPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -41,10 +41,10 @@ export default function EventsPage() {
         .evt-card-image { width: 100%; height: 180px; background: #e5e7eb; }
         .evt-card-image img { width: 100%; height: 180px; object-fit: cover; display: block; }
         .evt-content { padding: 20px; }
-        .evt-date { font-size: 12px; color: #2B3490; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
-        .evt-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; line-height: 1.4; }
-        .evt-location { font-size: 13px; color: #666; margin: 0 0 8px; }
-        .evt-desc { font-size: 14px; color: #666; line-height: 1.6; margin: 0; }
+        .evt-date { font-size: 13px; color: #2B3490; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
+        .evt-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; line-height: 1.4; }
+        .evt-location { font-size: 14px; color: #666; margin: 0 0 8px; }
+        .evt-desc { font-size: 15px; color: #666; line-height: 1.6; margin: 0; }
         .evt-empty { text-align: center; padding: 64px 20px; color: #999; }
         @media (max-width: 1024px) { .evt-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .evt-grid { grid-template-columns: 1fr; } }
@@ -54,7 +54,7 @@ export default function EventsPage() {
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
             <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Campus Events</h1>
-            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 600 }}>Upcoming events and activities at KSRM College of Engineering</p>
+            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Upcoming events and activities at KSRM College of Engineering</p>
           </div>
         </div>
       </section>

@@ -8,7 +8,7 @@ export default function DegreeVerificationPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -16,16 +16,16 @@ export default function DegreeVerificationPage() {
         .dv-hero { position: relative; background-image: url('/banners/degree-verification.png'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .dv-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); pointer-events: none; }
         .dv-hero > * { position: relative; z-index: 2; }
-        .dv-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .dv-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .dv-breadcrumb a { color: #D4A500; text-decoration: none; }
         .dv-about { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 40px; margin: 0 auto; max-width: 820px; }
         .dv-about p { color: #555; font-size: 15.5px; line-height: 1.8; margin: 0; text-align: center; }
-        .dv-cta-button { display: inline-block; background: #D4A500; color: #1a1a2e; padding: 20px 48px; border-radius: 8px; font-weight: 700; text-decoration: none; font-family: 'Rajdhani', sans-serif; font-size: 16px; }
+        .dv-cta-button { display: inline-block; background: #D4A500; color: #1a1a2e; padding: 20px 48px; border-radius: 8px; font-weight: 700; text-decoration: none; font-family: 'Rajdhani', sans-serif; font-size: 17px; }
         .dv-steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
         .dv-step-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 40px 28px; text-align: center; }
         .dv-step-number { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; color: #D4A500; margin-bottom: 20px; }
         .dv-step-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #2B3490; margin: 0 0 12px; }
-        .dv-step-card p { color: #666; font-size: 14px; line-height: 1.6; margin: 0; }
+        .dv-step-card p { color: #666; font-size: 15px; line-height: 1.6; margin: 0; }
         .dv-contact-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 32px; margin: 0 auto; max-width: 600px; }
         .dv-contact-card h2 { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; color: #1a1a2e; margin: 0 0 20px; }
         .dv-contact-card a { color: #2B3490; font-weight: 600; text-decoration: none; display: block; margin-bottom: 8px; }
@@ -35,7 +35,7 @@ export default function DegreeVerificationPage() {
       <section className="dv-hero">
         <div className="responsive-container">
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Degree Verification</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Verify the authenticity of degrees issued by KSRM College of Engineering</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Verify the authenticity of degrees issued by KSRM College of Engineering</p>
         </div>
       </section>
 

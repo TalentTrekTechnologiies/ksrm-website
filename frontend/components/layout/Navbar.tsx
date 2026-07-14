@@ -187,7 +187,7 @@ export default function Navbar() {
                     height: "48px",
                     color: active || isOpen ? "#FFE619" : "rgba(255, 255, 255, 0.82)",
                     textDecoration: "none",
-                    fontSize: "14px",
+                    fontSize: "15px",
                     fontWeight: 600,
                     fontFamily: "'Rajdhani', sans-serif",
                     whiteSpace: "nowrap",
@@ -226,7 +226,7 @@ export default function Navbar() {
                           padding: "10px 18px",
                           color: "#2B3490",
                           fontFamily: "'Rajdhani', sans-serif",
-                          fontSize: "14px",
+                          fontSize: "15px",
                           fontWeight: 600,
                           textDecoration: "none",
                           whiteSpace: "nowrap",
@@ -290,7 +290,7 @@ export default function Navbar() {
                       alignItems: "center",
                       justifyContent: "space-between",
                       padding: "13px 8px",
-                      fontSize: "14px",
+                      fontSize: "15px",
                       fontWeight: 600,
                       borderBottom: "1px solid rgba(255,255,255,0.08)",
                       fontFamily: "'Rajdhani', sans-serif",
@@ -304,7 +304,7 @@ export default function Navbar() {
                     <span style={{
                       transition: "transform 0.2s",
                       transform: isExpanded ? "rotate(-180deg)" : "rotate(0deg)",
-                      fontSize: "12px",
+                      fontSize: "13px",
                     }}>▾</span>
                   </div>
                   {isExpanded && (
@@ -316,7 +316,7 @@ export default function Navbar() {
                           style={{
                             display: "block",
                             padding: "10px 8px 10px 32px",
-                            fontSize: "13px",
+                            fontSize: "14px",
                             fontWeight: 500,
                             borderBottom: "1px solid rgba(255,255,255,0.05)",
                             fontFamily: "'Rajdhani', sans-serif",
@@ -341,7 +341,7 @@ export default function Navbar() {
                 style={{
                   display: "block",
                   padding: "13px 8px",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   fontWeight: 600,
                   borderBottom: "1px solid rgba(255,255,255,0.08)",
                   fontFamily: "'Rajdhani', sans-serif",
@@ -369,7 +369,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={link.label}
-                style={{ color: "#fff", fontSize: "16px", textDecoration: "none" }}
+                style={{ color: "#fff", fontSize: "17px", textDecoration: "none" }}
               >
                 {link.Icon}
               </a>

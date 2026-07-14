@@ -41,7 +41,7 @@ export default function NAACPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -56,26 +56,26 @@ export default function NAACPage() {
           background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none;
         }
         .naac-hero > * { position: relative; z-index: 2; }
-        .naac-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .naac-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .naac-breadcrumb a { color: #D4A500; text-decoration: none; }
         .naac-badge {
           background: #f7f8fa; border: 2px solid #D4A500; border-radius: 12px; padding: 40px; text-align: center;
           margin: 48px auto; max-width: 500px;
         }
         .naac-grade { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; color: #D4A500; margin-bottom: 12px; }
-        .naac-badge-detail { font-size: 16px; color: #555; margin: 8px 0; }
+        .naac-badge-detail { font-size: 17px; color: #555; margin: 8px 0; }
         .naac-criteria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; }
         .naac-criteria-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 28px; transition: all 0.2s; }
         .naac-criteria-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(43,52,144,0.1); border-color: #D4A500; }
         .naac-criteria-number { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: #D4A500; margin-bottom: 12px; }
-        .naac-criteria-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0 0 12px; }
-        .naac-criteria-card p { color: #666; font-size: 14px; line-height: 1.6; margin: 0; }
+        .naac-criteria-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #2B3490; margin: 0 0 12px; }
+        .naac-criteria-card p { color: #666; font-size: 15px; line-height: 1.6; margin: 0; }
         .naac-document-item {
           background: #f7f8fa; border: 1px solid #eef0f3; padding: 20px; border-radius: 8px; margin-bottom: 16px;
           display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
         }
         .naac-document-item:hover { background: #eef1ff; border-color: #2B3490; }
-        .naac-document-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 600; color: #1a1a2e; margin: 0; }
+        .naac-document-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 600; color: #1a1a2e; margin: 0; }
         .naac-document-link {
           background: #2B3490; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none;
           font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
@@ -100,7 +100,7 @@ export default function NAACPage() {
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>
             NAAC
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
             National Assessment and Accreditation Council
           </p>
         </div>

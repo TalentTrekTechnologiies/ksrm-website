@@ -39,7 +39,7 @@ export default function LibraryTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -49,7 +49,7 @@ export default function LibraryTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -95,7 +95,7 @@ export default function LibraryTemplate() {
           color: #FFE619;
         }
         .lib-stat-label {
-          font-size: 13px;
+          font-size: 14px;
           color: rgba(255, 255, 255, 0.8);
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -132,14 +132,14 @@ export default function LibraryTemplate() {
         }
         .lib-section-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0;
         }
         .lib-section-card p {
           color: #555;
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1.6;
           margin: 0;
         }
@@ -160,14 +160,14 @@ export default function LibraryTemplate() {
         }
         .lib-eresource-card h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           color: #2B3490;
           margin: 0;
         }
         .lib-eresource-card p {
           color: #555;
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.6;
           margin: 0;
         }
@@ -176,7 +176,7 @@ export default function LibraryTemplate() {
           align-items: center;
           gap: 6px;
           color: #2B3490;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-decoration: none;
           transition: color 0.2s;
@@ -196,7 +196,7 @@ export default function LibraryTemplate() {
           border-left: 4px solid #2B3490;
           padding: 16px 20px;
           border-radius: 4px;
-          font-size: 14px;
+          font-size: 15px;
           color: #555;
           line-height: 1.6;
         }
@@ -227,7 +227,7 @@ export default function LibraryTemplate() {
         }
         .lib-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -235,7 +235,7 @@ export default function LibraryTemplate() {
           margin: 0;
         }
         .lib-contact-item p {
-          font-size: 15px;
+          font-size: 16px;
           margin: 0;
           line-height: 1.6;
         }
@@ -300,7 +300,7 @@ export default function LibraryTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

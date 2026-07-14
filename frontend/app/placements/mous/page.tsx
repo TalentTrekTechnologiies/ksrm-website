@@ -24,7 +24,7 @@ export default function MoUsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
 
         .mous-hero {
@@ -47,7 +47,7 @@ export default function MoUsPage() {
           z-index: 1;
         }
         .mous-hero > * { position: relative; z-index: 2; }
-        .mous-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .mous-breadcrumb { font-size: 15px; color: rgba(255,255,255,0.7); }
         .mous-breadcrumb a { color: #D4A500; text-decoration: none; }
         .mous-title {
           font-family: 'Rajdhani', sans-serif;
@@ -60,24 +60,24 @@ export default function MoUsPage() {
         }
         .mous-subtitle {
           color: rgba(255,255,255,0.9);
-          font-size: 16px;
+          font-size: 17px;
           margin-top: 12px;
           max-width: 600px;
         }
 
         .mous-intro-section { padding: 72px 0; background: #ffffff; }
         .mous-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; }
-        .mous-text { font-size: 16px; line-height: 1.8; color: #555; text-align: justify; margin: 16px 0; }
+        .mous-text { font-size: 17px; line-height: 1.8; color: #555; text-align: justify; margin: 16px 0; }
         .mous-section-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 48px; text-align: center; }
         .mous-table-section { padding: 72px 0; background: #ffffff; }
         .mous-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #fff; border-radius: 8px; }
         .mous-table-wrapper { overflow-x: auto; }
-        .mous-table th { background: #2B3490; color: #fff; padding: 16px 14px; text-align: left; font-weight: 700; font-size: 13px; text-transform: uppercase; }
-        .mous-table td { padding: 14px; border-bottom: 1px solid #eef0f3; color: #555; font-size: 14px; }
+        .mous-table th { background: #2B3490; color: #fff; padding: 16px 14px; text-align: left; font-weight: 700; font-size: 14px; text-transform: uppercase; }
+        .mous-table td { padding: 14px; border-bottom: 1px solid #eef0f3; color: #555; font-size: 15px; }
         .mous-table tr:nth-child(even) { background: #f7f8fa; }
         .mous-checkmark { color: #2B3490; font-weight: 700; }
         .mous-list { list-style: none; padding: 0; margin: 32px 0; }
-        .mous-list li { padding: 12px 0 12px 28px; position: relative; font-size: 15px; color: #555; line-height: 1.6; }
+        .mous-list li { padding: 12px 0 12px 28px; position: relative; font-size: 16px; color: #555; line-height: 1.6; }
         .mous-list li::before { content: '✓'; position: absolute; left: 0; color: #D4A500; font-weight: 700; }
         .mous-impact-section { padding: 72px 0; background: #f4f3ef; }
       `}</style>

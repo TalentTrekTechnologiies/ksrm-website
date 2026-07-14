@@ -37,7 +37,7 @@ export default function GrievanceTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -47,7 +47,7 @@ export default function GrievanceTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -66,7 +66,7 @@ export default function GrievanceTemplate() {
           border-left: 4px solid #FFE619;
           border-radius: 8px;
           margin-top: 40px;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.8;
         }
         .grv-type-grid {
@@ -88,13 +88,13 @@ export default function GrievanceTemplate() {
         }
         .grv-type-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 12px;
         }
         .grv-type-card p {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           margin: 0;
           line-height: 1.6;
@@ -125,13 +125,13 @@ export default function GrievanceTemplate() {
         }
         .grv-step-content h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 4px;
         }
         .grv-step-content p {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           margin: 0;
           line-height: 1.6;
@@ -151,7 +151,7 @@ export default function GrievanceTemplate() {
         }
         .grv-timeline-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 8px;
@@ -175,7 +175,7 @@ export default function GrievanceTemplate() {
         }
         .grv-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -183,7 +183,7 @@ export default function GrievanceTemplate() {
           margin: 0;
         }
         .grv-contact-item p {
-          font-size: 14px;
+          font-size: 15px;
           margin: 8px 0 0;
         }
         .grv-contact-item a {
@@ -234,7 +234,7 @@ export default function GrievanceTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

@@ -42,7 +42,7 @@ export default function AccreditationTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -86,7 +86,7 @@ export default function AccreditationTemplate() {
           color: #FFE619;
           font-weight: 700;
           margin-right: 12px;
-          font-size: 18px;
+          font-size: 19px;
         }
         .acc-programs-list li:last-child {
           border-bottom: none;
@@ -126,7 +126,7 @@ export default function AccreditationTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

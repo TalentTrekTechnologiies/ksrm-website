@@ -142,7 +142,7 @@ export default function FacultyPage() {
     <>
       <style>{`
         .responsive-container {
-          width: 100%; max-width: 1400px; margin: 0 auto;
+          width: 100%; max-width:  1720px; margin: 0 auto;
           padding-left: 40px; padding-right: 40px;
         }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
@@ -168,10 +168,10 @@ export default function FacultyPage() {
         }
         .fac-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
+          font-size: 13px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; color: #D4A500;
         }
-        .fac-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px; }
+        .fac-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px; }
         .fac-breadcrumb a { color: #D4A500; text-decoration: none; }
         .fac-breadcrumb span { color: #D4A500; }
 
@@ -182,12 +182,12 @@ export default function FacultyPage() {
         .fac-stat-item { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
         .fac-stat-icon { width: 48px; height: 48px; background: rgba(255,230,25,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
         .fac-stat-number { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: #D4A500; }
-        .fac-stat-label { font-size: 13px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
+        .fac-stat-label { font-size: 14px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .fac-tabs { display: flex; gap: 8px; padding: 40px 0; overflow-x: auto; scrollbar-width: none; margin-bottom: 40px; }
         .fac-tabs::-webkit-scrollbar { display: none; }
         .fac-tab {
-          padding: 10px 18px; border-radius: 24px; font-size: 14px; font-weight: 600;
+          padding: 10px 18px; border-radius: 24px; font-size: 15px; font-weight: 600;
           font-family: 'Rajdhani', sans-serif; border: 1.5px solid #eef0f3; background: #fff;
           color: #555; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
         }
@@ -200,9 +200,9 @@ export default function FacultyPage() {
         .fac-photo { width: 100%; aspect-ratio: 1/1; background: linear-gradient(135deg, #2B3490, #1e2570); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .fac-photo img { width: 100%; height: 100%; object-fit: cover; }
         .fac-info { padding: 20px; }
-        .fac-name { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
-        .fac-designation { color: #2B3490; font-size: 12px; font-weight: 700; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .fac-meta { font-size: 13px; color: #666; margin: 0 0 12px; display: flex; flex-direction: column; gap: 4px; }
+        .fac-name { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+        .fac-designation { color: #2B3490; font-size: 13px; font-weight: 700; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .fac-meta { font-size: 14px; color: #666; margin: 0 0 12px; display: flex; flex-direction: column; gap: 4px; }
         .fac-meta strong { color: #2B3490; }
         .fac-specialization { display: inline-block; background: #eef1ff; color: #2B3490; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
 
@@ -219,7 +219,7 @@ export default function FacultyPage() {
             <div style={{ padding: "72px 0" }}>
               <div className="fac-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Faculty</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Meet Our Experienced Educators</p>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Meet Our Experienced Educators</p>
             </div>
           </div>
         </section>

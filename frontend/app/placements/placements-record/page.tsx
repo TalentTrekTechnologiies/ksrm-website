@@ -29,7 +29,7 @@ export default function PlacementsRecordPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
 
         .record-hero {
@@ -52,7 +52,7 @@ export default function PlacementsRecordPage() {
           z-index: 1;
         }
         .record-hero > * { position: relative; z-index: 2; }
-        .record-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .record-breadcrumb { font-size: 15px; color: rgba(255,255,255,0.7); }
         .record-breadcrumb a { color: #D4A500; text-decoration: none; }
         .record-title {
           font-family: 'Rajdhani', sans-serif;
@@ -65,7 +65,7 @@ export default function PlacementsRecordPage() {
         }
         .record-subtitle {
           color: rgba(255,255,255,0.9);
-          font-size: 16px;
+          font-size: 17px;
           margin-top: 12px;
           max-width: 600px;
         }
@@ -73,16 +73,16 @@ export default function PlacementsRecordPage() {
         .section { padding: 100px 0; background: #ffffff; }
         .heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; text-align: center; }
         .coming-soon-box { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); color: #ffffff; padding: 60px 40px; border-radius: 12px; text-align: center; }
-        .coming-soon-text { font-size: 18px; line-height: 1.8; margin: 0; }
+        .coming-soon-text { font-size: 19px; line-height: 1.8; margin: 0; }
         .coming-soon-icon { font-size: 48px; margin-bottom: 16px; }
         .record-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; margin-top: 40px; }
         .record-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; text-align: center; }
         .record-photo { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; }
         .record-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .record-name { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0 0 6px; }
-        .record-company { color: #2B3490; font-weight: 600; font-size: 14px; margin: 0 0 4px; }
-        .record-meta { font-size: 13px; color: #666; margin: 0; }
-        .record-package { display: inline-block; background: #eef1ff; color: #2B3490; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 10px; }
+        .record-name { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 6px; }
+        .record-company { color: #2B3490; font-weight: 600; font-size: 15px; margin: 0 0 4px; }
+        .record-meta { font-size: 14px; color: #666; margin: 0; }
+        .record-package { display: inline-block; background: #eef1ff; color: #2B3490; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-top: 10px; }
       `}</style>
 
       <main style={{ background: "#ffffff" }}>

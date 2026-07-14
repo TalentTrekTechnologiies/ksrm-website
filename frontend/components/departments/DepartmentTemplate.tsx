@@ -102,7 +102,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
         .dept-nav-pill {
           padding: 10px 18px;
           border-radius: 24px;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
           font-family: 'Rajdhani', sans-serif;
           border: 1.5px solid #eef0f3;
@@ -123,7 +123,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
         }
         .dept-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
+          font-size: 13px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; color: #FFE619;
         }
         .dept-card {
@@ -200,7 +200,7 @@ export default function DepartmentTemplate({ department }: DepartmentTemplatePro
                   variants={fadeUp}
                   style={{
                     color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6,
-                    margin: "16px 0 0", fontWeight: 300, maxWidth: 700,
+                    margin: "16px 0 0", fontWeight: 400, maxWidth: 700,
                   }}
                 >
                   {department.tagline}

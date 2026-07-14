@@ -41,7 +41,7 @@ export default function AdmissionsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -77,14 +77,14 @@ export default function AdmissionsPage() {
         }
         .adm-subtitle {
           color: rgba(255,255,255,0.85);
-          font-size: 18px;
+          font-size: 19px;
           margin: 16px 0 0;
           text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-          font-weight: 300;
+          font-weight: 400;
         }
         .adm-intro-section { padding: 72px 0; background: #ffffff; }
         .adm-intro-text {
-          font-size: 16px;
+          font-size: 17px;
           color: #555;
           line-height: 1.8;
           max-width: 800px;
@@ -108,7 +108,7 @@ export default function AdmissionsPage() {
         .adm-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(43, 52, 144, 0.13); border-color: #D4A500; }
         .adm-card-icon { width: 48px; height: 48px; background: #f7f8fa; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
         .adm-card-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #2B3490; margin: 0; }
-        .adm-card-desc { font-size: 14px; color: #888; margin: 0; }
+        .adm-card-desc { font-size: 15px; color: #888; margin: 0; }
 
         @media (max-width: 1024px) { .adm-cards-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .adm-cards-grid { grid-template-columns: 1fr; } .adm-intro-section { padding: 48px 0; } }

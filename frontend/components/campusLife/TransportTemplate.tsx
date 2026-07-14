@@ -37,7 +37,7 @@ export default function TransportTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -47,7 +47,7 @@ export default function TransportTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -93,7 +93,7 @@ export default function TransportTemplate() {
           color: #FFE619;
         }
         .trn-stat-label {
-          font-size: 13px;
+          font-size: 14px;
           color: rgba(255, 255, 255, 0.8);
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -105,7 +105,7 @@ export default function TransportTemplate() {
         .trn-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 14px;
+          font-size: 15px;
         }
         .trn-table thead th {
           background: #2B3490;
@@ -114,7 +114,7 @@ export default function TransportTemplate() {
           text-align: left;
           font-family: "Rajdhani", sans-serif;
           font-weight: 700;
-          font-size: 12px;
+          font-size: 13px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
         }
@@ -138,7 +138,7 @@ export default function TransportTemplate() {
           color: #2B3490;
         }
         .trn-via {
-          font-size: 12px;
+          font-size: 13px;
           color: #666;
         }
         .trn-rules {
@@ -152,7 +152,7 @@ export default function TransportTemplate() {
           border-left: 4px solid #2B3490;
           padding: 14px 16px;
           border-radius: 4px;
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           line-height: 1.6;
         }
@@ -172,7 +172,7 @@ export default function TransportTemplate() {
         }
         .trn-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -180,7 +180,7 @@ export default function TransportTemplate() {
           margin: 0;
         }
         .trn-contact-item p {
-          font-size: 14px;
+          font-size: 15px;
           margin: 8px 0 0;
           line-height: 1.6;
         }
@@ -227,7 +227,7 @@ export default function TransportTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

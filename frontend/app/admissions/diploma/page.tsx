@@ -46,7 +46,7 @@ export default function DiplomaAdmissionsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -64,7 +64,7 @@ export default function DiplomaAdmissionsPage() {
           overflow: hidden;
         }
         .dip-hero > * { position: relative; z-index: 2; }
-        .dip-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .dip-breadcrumb { font-size: 15px; color: rgba(255,255,255,0.7); }
         .dip-breadcrumb a { color: #D4A500; text-decoration: none; }
         .dip-title {
           font-family: 'Rajdhani', sans-serif;
@@ -73,11 +73,11 @@ export default function DiplomaAdmissionsPage() {
           color: #fff;
           margin: 8px 0 0;
         }
-        .dip-subtitle { font-size: 16px; color: rgba(255,255,255,0.85); margin-top: 12px; }
+        .dip-subtitle { font-size: 17px; color: rgba(255,255,255,0.85); margin-top: 12px; }
 
         .dip-section { padding: 72px 0; background: #ffffff; }
         .dip-section-alt { padding: 72px 0; background: #f4f3ef; }
-        .dip-intro { font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 48px; max-width: 820px; }
+        .dip-intro { font-size: 17px; color: #555; line-height: 1.8; margin-bottom: 48px; max-width: 820px; }
         .dip-heading { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; color: #2B3490; margin: 0 0 48px; }
 
         .dip-courses-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -85,15 +85,15 @@ export default function DiplomaAdmissionsPage() {
         .dip-course-code {
           background: rgba(255,230,25,0.2);
           color: #D4A500;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           border-radius: 4px;
           padding: 4px 10px;
           display: inline-block;
           margin-bottom: 12px;
         }
-        .dip-course-name { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
-        .dip-course-desc { font-size: 14px; color: #666; margin: 0; }
+        .dip-course-name { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .dip-course-desc { font-size: 15px; color: #666; margin: 0; }
 
         .dip-features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
         .dip-feature-card { background: #fff; border: 1.6px solid #eef0f3; border-radius: 12px; padding: 32px; text-align: center; }
@@ -101,24 +101,24 @@ export default function DiplomaAdmissionsPage() {
           width: 48px; height: 48px; background: rgba(255,230,25,0.1); border-radius: 8px;
           display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
         }
-        .dip-feature-title { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
-        .dip-feature-desc { font-size: 14px; color: #555; margin: 0; line-height: 1.6; }
+        .dip-feature-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .dip-feature-desc { font-size: 15px; color: #555; margin: 0; line-height: 1.6; }
 
         .dip-accred-list { display: flex; flex-direction: column; gap: 14px; }
-        .dip-accred-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #555; }
+        .dip-accred-item { display: flex; align-items: center; gap: 10px; font-size: 16px; color: #555; }
 
         .dip-ranking-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
         .dip-ranking-card {
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           border-radius: 8px; padding: 24px; text-align: center;
         }
-        .dip-ranking-title { font-size: 12px; color: #fff; opacity: 0.85; }
+        .dip-ranking-title { font-size: 13px; color: #fff; opacity: 0.85; }
         .dip-ranking-value { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin-top: 8px; }
 
         .dip-bus-pills { display: flex; flex-wrap: wrap; gap: 10px; }
         .dip-bus-pill {
           background: #fff; border: 1px solid #eef0f3; border-radius: 20px;
-          padding: 8px 16px; font-size: 14px; color: #555;
+          padding: 8px 16px; font-size: 15px; color: #555;
         }
 
         .dip-contact {
@@ -126,7 +126,7 @@ export default function DiplomaAdmissionsPage() {
           padding: 48px; border-radius: 12px; text-align: center; color: #fff;
         }
         .dip-contact h2 { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; margin: 0 0 12px; }
-        .dip-contact-item { font-size: 15px; color: #fff; margin: 4px 0; }
+        .dip-contact-item { font-size: 16px; color: #fff; margin: 4px 0; }
 
         @media (max-width: 1024px) {
           .dip-courses-grid, .dip-features-grid { grid-template-columns: repeat(2, 1fr); }

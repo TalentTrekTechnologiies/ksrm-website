@@ -47,7 +47,7 @@ export function HeroBanner({
           position: relative;
           z-index: 2;
           width: 100%;
-          max-width: 1400px;
+          max-width: 1720px;
           margin: 0 auto;
           padding: 0 40px;
           color: white;
@@ -89,8 +89,8 @@ export function HeroBanner({
         }
 
         .hero-subtitle {
-          font-size: 18px;
-          font-weight: 300;
+          font-size: 19px;
+          font-weight: 400;
           line-height: 1.6;
           margin: 0;
           max-width: 700px;
@@ -101,7 +101,7 @@ export function HeroBanner({
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           margin-top: 24px;
           opacity: 0.85;
         }

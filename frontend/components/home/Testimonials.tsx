@@ -84,7 +84,7 @@ export default function Testimonials() {
           style={{ textAlign: "center", marginBottom: "20px" }}
         >
           <div style={{
-            fontSize: "13px", fontWeight: 700, letterSpacing: "2px",
+            fontSize: "14px", fontWeight: 700, letterSpacing: "2px",
             color: "#2B3490", textTransform: "uppercase", marginBottom: "12px",
           }}>
             STUDENT VOICES
@@ -95,7 +95,7 @@ export default function Testimonials() {
           }}>
             What Our Students Say
           </h2>
-          <p style={{ fontSize: "17px", color: "#666", margin: 0 }}>
+          <p style={{ fontSize: "18px", color: "#666", margin: 0 }}>
             Real stories from real achievers
           </p>
         </motion.div>
@@ -126,7 +126,7 @@ export default function Testimonials() {
 
                 {/* QUOTE */}
                 <p style={{
-                  fontSize: "16px", color: "#666", lineHeight: 1.7, marginBottom: "24px", fontStyle: "italic",
+                  fontSize: "17px", color: "#666", lineHeight: 1.7, marginBottom: "24px", fontStyle: "italic",
                   margin: "0 0 24px",
                 }}>
                   &ldquo;{testimonial.quote}&rdquo;
@@ -139,18 +139,18 @@ export default function Testimonials() {
                     borderRadius: "50%",
                     background: "#2B3490",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "#ffffff", fontWeight: 700, fontSize: "15px",
+                    color: "#ffffff", fontWeight: 700, fontSize: "16px",
                   }}>
                     {testimonial.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                   </div>
                   <div>
                     <div style={{
                       fontFamily: "'Rajdhani', sans-serif",
-                      fontSize: "15px", fontWeight: 700, color: "#1a1a2e",
+                      fontSize: "16px", fontWeight: 700, color: "#1a1a2e",
                     }}>
                       {testimonial.name}
                     </div>
-                    <div style={{ fontSize: "13px", color: "#888" }}>
+                    <div style={{ fontSize: "14px", color: "#888" }}>
                       {testimonial.degree} • {testimonial.company}
                     </div>
                   </div>

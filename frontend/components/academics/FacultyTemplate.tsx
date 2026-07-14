@@ -41,7 +41,7 @@ export default function FacultyTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -51,7 +51,7 @@ export default function FacultyTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -97,7 +97,7 @@ export default function FacultyTemplate() {
           color: #FFE619;
         }
         .fac-stat-label {
-          font-size: 13px;
+          font-size: 14px;
           color: rgba(255, 255, 255, 0.8);
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -116,7 +116,7 @@ export default function FacultyTemplate() {
         .fac-tab {
           padding: 10px 18px;
           border-radius: 24px;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
           font-family: "Rajdhani", sans-serif;
           border: 1.5px solid #eef0f3;
@@ -171,21 +171,21 @@ export default function FacultyTemplate() {
         }
         .fac-name {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 4px;
         }
         .fac-designation {
           color: #2B3490;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           margin: 0 0 8px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
         }
         .fac-meta {
-          font-size: 13px;
+          font-size: 14px;
           color: #666;
           margin: 0 0 12px;
           display: flex;
@@ -259,7 +259,7 @@ export default function FacultyTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

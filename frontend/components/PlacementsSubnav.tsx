@@ -16,7 +16,7 @@ export default function PlacementsSubnav({ active }: { active: string }) {
     <div style={{ background: "#ffffff", borderBottom: "1px solid #eef0f3", padding: "24px 0" }}>
       <style>{`
         .placements-subnav-container {
-          max-width: 1400px;
+          max-width: 1720px;
           margin: 0 auto;
           padding: 0 16px;
           display: flex;
@@ -29,7 +29,7 @@ export default function PlacementsSubnav({ active }: { active: string }) {
           text-decoration: none;
           color: #555;
           font-weight: 600;
-          font-size: 14px;
+          font-size: 15px;
           border-radius: 24px;
           transition: all 0.3s;
           font-family: 'Rajdhani', sans-serif;
@@ -41,7 +41,7 @@ export default function PlacementsSubnav({ active }: { active: string }) {
         .placements-subnav-link.active { background: #2B3490; color: #ffffff; border-color: #2B3490; }
         @media (max-width: 768px) {
           .placements-subnav-container { gap: 8px; }
-          .placements-subnav-link { padding: 8px 16px; font-size: 13px; }
+          .placements-subnav-link { padding: 8px 16px; font-size: 14px; }
         }
       `}</style>
       <div className="placements-subnav-container">

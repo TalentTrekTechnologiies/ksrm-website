@@ -160,7 +160,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
           .hero-layout   { align-items: flex-end !important; padding: 0 20px 36px !important; }
           .hero-glass    { display: none !important; }
           .hero-heading  { font-size: 28px !important; }
-          .hero-subtitle { font-size: 15px !important; }
+          .hero-subtitle { font-size: 16px !important; }
           .hero-buttons  { flex-direction: column !important; gap: 10px !important; }
           .hero-btn      { width: 100% !important; text-align: center !important; display: block !important; padding: 12px 20px !important; }
           .carousel-dots { display: none !important; }
@@ -241,7 +241,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
           <motion.p
             className="hero-subtitle"
             variants={fadeUp} initial="hidden" animate="visible" custom={0.3}
-            style={{ margin: "0 0 20px", fontFamily: "'DM Sans', sans-serif", fontSize: "18px", fontWeight: 400, color: "rgba(255,255,255,0.8)", maxWidth: "480px", lineHeight: 1.65 }}
+            style={{ margin: "0 0 20px", fontFamily: "'DM Sans', sans-serif", fontSize: "19px", fontWeight: 500, color: "rgba(255,255,255,0.8)", maxWidth: "480px", lineHeight: 1.65 }}
           >
             {subtitle}
           </motion.p>
@@ -259,7 +259,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: EASE }}
               >
-                <div style={{ fontSize: "15px", fontWeight: 600, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase", marginBottom: "7px", fontFamily: "sans-serif" }}>
+                <div style={{ fontSize: "16px", fontWeight: 600, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase", marginBottom: "7px", fontFamily: "sans-serif" }}>
                   {captions[activeIndex]?.label}
                 </div>
                 <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "26px", fontWeight: 600, color: "#ffffff" }}>
@@ -311,7 +311,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
             display: "flex", alignItems: "center", gap: "10px",
           }}>
             <div className="pulse-dot" />
-            <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "17px", fontWeight: 700, color: "#ffffff" }}>
+            <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "18px", fontWeight: 700, color: "#ffffff" }}>
               {panelLabel}
             </span>
           </div>
@@ -338,7 +338,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
                     <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)" }}>{item.date}</span>
                   </div>
                   {/* TEXT */}
-                  <div style={{ fontSize: "16px", color: "#ffffff", lineHeight: 1.4 }}>
+                  <div style={{ fontSize: "17px", color: "#ffffff", lineHeight: 1.4 }}>
                     {item.text}
                   </div>
                 </Link>

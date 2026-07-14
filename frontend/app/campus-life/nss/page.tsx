@@ -26,7 +26,7 @@ export default function NSSPage() {
   return (
     <main style={{ background: "#ffffff", overflowX: "hidden" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -35,32 +35,32 @@ export default function NSSPage() {
         .nss-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%); z-index: 1; }
         .nss-hero > * { position: relative; z-index: 2; }
         .nss-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 700; color: #fff; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.7); line-height: 1.08; }
-        .nss-subtitle { color: rgba(255,255,255,0.95); font-size: 18px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); font-weight: 300; }
-        .nss-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-top: 16px; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+        .nss-subtitle { color: rgba(255,255,255,0.95); font-size: 19px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); font-weight: 400; }
+        .nss-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-top: 16px; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
         .nss-breadcrumb a { color: #D4A500; text-decoration: none; }
         .nss-breadcrumb span { color: rgba(255,255,255,0.7); }
 
         .nss-motto-section { padding: 72px 0; background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); text-align: center; }
         .nss-motto-quote { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 700; color: #D4A500; margin: 0 0 24px; letter-spacing: 1px; }
-        .nss-motto-desc { font-size: 16px; color: rgba(255,255,255,0.95); line-height: 1.8; max-width: 800px; margin: 0 auto; }
+        .nss-motto-desc { font-size: 17px; color: rgba(255,255,255,0.95); line-height: 1.8; max-width: 800px; margin: 0 auto; }
 
-        .nss-history-text { font-size: 16px; color: #555; line-height: 1.8; text-align: justify; max-width: 900px; margin: 0 auto; }
+        .nss-history-text { font-size: 17px; color: #555; line-height: 1.8; text-align: justify; max-width: 900px; margin: 0 auto; }
         .nss-section-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 48px; text-align: center; }
 
         .nss-aims-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         .nss-aim-card { background: #fff; padding: 28px; border-radius: 8px; border-left: 4px solid #D4A500; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
         .nss-aim-number { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; color: #D4A500; margin: 0 0 8px; }
-        .nss-aim-text { font-size: 15px; color: #555; line-height: 1.7; margin: 0; }
+        .nss-aim-text { font-size: 16px; color: #555; line-height: 1.7; margin: 0; }
 
         .nss-symbol-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
         .nss-symbol-image { text-align: center; }
         .nss-symbol-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; color: #2B3490; margin: 0 0 16px; }
-        .nss-symbol-content p { font-size: 16px; color: #555; line-height: 1.8; margin: 0; }
+        .nss-symbol-content p { font-size: 17px; color: #555; line-height: 1.8; margin: 0; }
 
         .nss-activities-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 40px; }
         .nss-activity-item { background: #fff; padding: 24px; border-radius: 8px; border-top: 3px solid #D4A500; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
-        .nss-activity-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
-        .nss-activity-item p { font-size: 14px; color: #666; line-height: 1.6; margin: 0; }
+        .nss-activity-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .nss-activity-item p { font-size: 15px; color: #666; line-height: 1.6; margin: 0; }
 
         @media (max-width: 768px) {
           .nss-symbol-container { grid-template-columns: 1fr; gap: 32px; }

@@ -65,7 +65,7 @@ export default function AnimatedCounter({ end, suffix = "", duration = 2, label 
       {label && (
         <div
           style={{
-            fontSize: "14px",
+            fontSize: "15px",
             fontWeight: 600,
             color: "#666",
             marginTop: "8px",

@@ -79,7 +79,7 @@ export default function SyllabusPage() {
       <style>{`
         .responsive-container {
           width: 100%;
-          max-width: 1400px;
+          max-width:  1720px;
           margin: 0 auto;
           padding-left: 40px;
           padding-right: 40px;
@@ -110,12 +110,12 @@ export default function SyllabusPage() {
         .syl-hero > * { position: relative; z-index: 2; }
         .syl-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
+          font-size: 13px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; color: #D4A500;
         }
         .syl-breadcrumb {
           display: flex; align-items: center; gap: 8px;
-          font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px;
+          font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px;
         }
         .syl-breadcrumb a { color: #D4A500; text-decoration: none; }
         .syl-breadcrumb a:hover { opacity: 0.8; }
@@ -126,7 +126,7 @@ export default function SyllabusPage() {
         .syl-accordion-header {
           background: #2B3490; color: #fff; padding: 20px 24px; cursor: pointer;
           display: flex; align-items: center; justify-content: space-between;
-          font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700;
+          font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700;
           transition: all 0.2s; border: none; width: 100%;
         }
         .syl-accordion-header:hover { background: #1e2570; }
@@ -143,7 +143,7 @@ export default function SyllabusPage() {
         .syl-download-btn {
           display: inline-flex; align-items: center; gap: 6px;
           background: #D4A500; color: #2B3490; padding: 8px 14px; border-radius: 6px;
-          font-size: 12px; font-weight: 700; font-family: 'Rajdhani', sans-serif;
+          font-size: 13px; font-weight: 700; font-family: 'Rajdhani', sans-serif;
           text-decoration: none; border: none; cursor: pointer; transition: all 0.2s;
         }
         .syl-download-btn:hover { background: #ffd700; transform: translateY(-2px); }
@@ -152,10 +152,10 @@ export default function SyllabusPage() {
           background: #f4f3ef; border-left: 4px solid #2B3490; padding: 24px;
           border-radius: 8px; margin-top: 40px;
         }
-        .syl-note p { color: #555; font-size: 15px; line-height: 1.7; margin: 0; }
+        .syl-note p { color: #555; font-size: 16px; line-height: 1.7; margin: 0; }
 
         @media (max-width: 900px) {
-          .syl-accordion-header { font-size: 14px; padding: 16px 20px; }
+          .syl-accordion-header { font-size: 15px; padding: 16px 20px; }
         }
       `}</style>
 
@@ -165,7 +165,7 @@ export default function SyllabusPage() {
             <div style={{ padding: "72px 0" }}>
               <div className="syl-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Syllabus</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Regulation-wise syllabus for all programmes</p>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Regulation-wise syllabus for all programmes</p>
             </div>
           </div>
         </section>

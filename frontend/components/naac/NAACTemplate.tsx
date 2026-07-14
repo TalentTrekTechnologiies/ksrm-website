@@ -43,7 +43,7 @@ export default function NAACTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -70,7 +70,7 @@ export default function NAACTemplate() {
           margin-bottom: 12px;
         }
         .naac-badge-detail {
-          font-size: 16px;
+          font-size: 17px;
           color: #555;
           margin: 8px 0;
         }
@@ -101,14 +101,14 @@ export default function NAACTemplate() {
         }
         .naac-criteria-card h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 12px;
         }
         .naac-criteria-card p {
           color: #666;
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1.6;
           margin: 0;
         }
@@ -134,7 +134,7 @@ export default function NAACTemplate() {
         }
         .naac-document-item h4 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 600;
           color: #1a1a2e;
           margin: 0;
@@ -175,7 +175,7 @@ export default function NAACTemplate() {
           font-family: 'Rajdhani', sans-serif;
           cursor: pointer;
           border: none;
-          font-size: 16px;
+          font-size: 17px;
         }
         .naac-cta-button:hover {
           background: #FFE619;
@@ -232,7 +232,7 @@ export default function NAACTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

@@ -56,7 +56,7 @@ export default function StatsBar() {
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(6, 1fr);
-          max-width: 1400px;
+          max-width: 1720px;
           margin: 0 auto;
           padding: 0 32px;
         }
@@ -78,7 +78,7 @@ export default function StatsBar() {
         }
         .stat-label {
           font-family: 'DM Sans', sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           color: #6B7280;
           letter-spacing: 0.5px;
           font-weight: 500;

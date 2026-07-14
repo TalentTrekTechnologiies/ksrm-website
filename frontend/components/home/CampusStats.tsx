@@ -105,7 +105,7 @@ export default function CampusStats() {
         }
 
         .stat-label {
-          font-size: 15px;
+          font-size: 16px;
           color: #FFFFFF;
           font-weight: 500;
           line-height: 1.5;

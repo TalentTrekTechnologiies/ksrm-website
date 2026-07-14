@@ -23,7 +23,7 @@ export default function HostelsPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -32,18 +32,18 @@ export default function HostelsPage() {
         .hostels-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%); z-index: 1; }
         .hostels-hero > * { position: relative; z-index: 2; }
         .hostels-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 700; color: #fff; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.7); line-height: 1.08; }
-        .hostels-subtitle { color: rgba(255,255,255,0.95); font-size: 18px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
-        .hostels-about-text { font-size: 16px; color: #555; line-height: 1.8; text-align: justify; max-width: 900px; margin: 0 auto; }
+        .hostels-subtitle { color: rgba(255,255,255,0.95); font-size: 19px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+        .hostels-about-text { font-size: 17px; color: #555; line-height: 1.8; text-align: justify; max-width: 900px; margin: 0 auto; }
         .hostels-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 48px; text-align: center; }
         .hostels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
         .hostel-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); color: #fff; padding: 28px; border-radius: 8px; }
-        .hostel-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 8px; }
-        .hostel-card p { font-size: 14px; line-height: 1.6; margin: 8px 0; opacity: 0.9; }
+        .hostel-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; margin: 0 0 8px; }
+        .hostel-card p { font-size: 15px; line-height: 1.6; margin: 8px 0; opacity: 0.9; }
         .facilities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px; }
         .facility-card { background: #fff; border: 1px solid #eef0f3; border-radius: 8px; padding: 20px; text-align: center; }
         .facility-icon { font-size: 32px; margin-bottom: 12px; }
-        .facility-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
-        .facility-card p { font-size: 13px; color: #666; line-height: 1.5; margin: 0; }
+        .facility-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
+        .facility-card p { font-size: 14px; color: #666; line-height: 1.5; margin: 0; }
         @media (max-width: 768px) { .hostels-grid { grid-template-columns: 1fr; } .facilities-grid { grid-template-columns: 1fr; } }
       `}</style>
 

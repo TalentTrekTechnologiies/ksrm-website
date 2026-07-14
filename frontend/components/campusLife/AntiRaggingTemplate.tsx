@@ -37,7 +37,7 @@ export default function AntiRaggingTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -47,7 +47,7 @@ export default function AntiRaggingTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -70,7 +70,7 @@ export default function AntiRaggingTemplate() {
           padding: 28px;
           color: #fff;
           margin-top: 40px;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.8;
           display: flex;
           gap: 16px;
@@ -109,7 +109,7 @@ export default function AntiRaggingTemplate() {
         }
         .arr-helpline-label {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -135,7 +135,7 @@ export default function AntiRaggingTemplate() {
         }
         .arr-section h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 20px;
@@ -152,7 +152,7 @@ export default function AntiRaggingTemplate() {
         }
         .arr-section li {
           color: #555;
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.6;
           padding-left: 20px;
           position: relative;
@@ -163,13 +163,13 @@ export default function AntiRaggingTemplate() {
           left: 0;
           color: #e74c3c;
           font-weight: bold;
-          font-size: 16px;
+          font-size: 17px;
         }
         .arr-committee-table {
           width: 100%;
           border-collapse: collapse;
           margin-top: 40px;
-          font-size: 14px;
+          font-size: 15px;
         }
         .arr-committee-table thead th {
           background: #2B3490;
@@ -178,7 +178,7 @@ export default function AntiRaggingTemplate() {
           text-align: left;
           font-family: "Rajdhani", sans-serif;
           font-weight: 700;
-          font-size: 12px;
+          font-size: 13px;
           text-transform: uppercase;
         }
         .arr-committee-table tbody td {
@@ -207,12 +207,12 @@ export default function AntiRaggingTemplate() {
         }
         .arr-affidavit-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           margin: 0;
         }
         .arr-affidavit-card p {
-          font-size: 13px;
+          font-size: 14px;
           margin: 0;
           line-height: 1.6;
         }
@@ -224,7 +224,7 @@ export default function AntiRaggingTemplate() {
           color: #2B3490;
           padding: 10px 16px;
           border-radius: 6px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           font-family: "Rajdhani", sans-serif;
           text-decoration: none;
@@ -282,7 +282,7 @@ export default function AntiRaggingTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

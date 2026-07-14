@@ -37,7 +37,7 @@ export default function AdmissionsTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -47,7 +47,7 @@ export default function AdmissionsTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -79,7 +79,7 @@ export default function AdmissionsTemplate() {
           font-size: 32px;
         }
         .adm-eapcet-text {
-          font-size: 14px;
+          font-size: 15px;
         }
         .adm-route-grid {
           display: grid;
@@ -98,7 +98,7 @@ export default function AdmissionsTemplate() {
         }
         .adm-route-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #2B3490;
           margin: 0;
@@ -116,7 +116,7 @@ export default function AdmissionsTemplate() {
           letter-spacing: 0.5px;
         }
         .adm-route-value {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           line-height: 1.6;
         }
@@ -129,7 +129,7 @@ export default function AdmissionsTemplate() {
           gap: 6px;
         }
         .adm-quota-list li {
-          font-size: 12px;
+          font-size: 13px;
           color: #555;
           padding-left: 18px;
           position: relative;
@@ -168,13 +168,13 @@ export default function AdmissionsTemplate() {
         }
         .adm-step-content h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 4px;
         }
         .adm-step-content p {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           margin: 0;
           line-height: 1.6;
@@ -199,7 +199,7 @@ export default function AdmissionsTemplate() {
           margin-top: 2px;
         }
         .adm-doc-text {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           line-height: 1.5;
         }
@@ -226,7 +226,7 @@ export default function AdmissionsTemplate() {
         }
         .adm-link-text {
           flex: 1;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
           font-family: "Rajdhani", sans-serif;
         }
@@ -242,7 +242,7 @@ export default function AdmissionsTemplate() {
         }
         .adm-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -250,7 +250,7 @@ export default function AdmissionsTemplate() {
           margin: 0;
         }
         .adm-contact-item p {
-          font-size: 14px;
+          font-size: 15px;
           margin: 8px 0 0;
           line-height: 1.6;
         }
@@ -324,7 +324,7 @@ export default function AdmissionsTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

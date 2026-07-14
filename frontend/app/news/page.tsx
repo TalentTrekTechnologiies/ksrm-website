@@ -80,7 +80,7 @@ export default function NewsPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -88,19 +88,19 @@ export default function NewsPage() {
         .news-hero { position: relative; background-image: url('/banners/news.png'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .news-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); pointer-events: none; }
         .news-hero > * { position: relative; z-index: 2; }
-        .news-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .news-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .news-breadcrumb a { color: #D4A500; text-decoration: none; }
         .news-filters { display: flex; gap: 12px; margin: 48px 0; flex-wrap: wrap; }
-        .news-filter-btn { background: #f7f8fa; border: 1px solid #eef0f3; color: #666; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-family: 'Rajdhani', sans-serif; font-size: 14px; }
+        .news-filter-btn { background: #f7f8fa; border: 1px solid #eef0f3; color: #666; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-family: 'Rajdhani', sans-serif; font-size: 15px; }
         .news-filter-btn.active { background: #2B3490; color: #fff; border-color: #2B3490; }
         .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin: 32px 0; }
         .news-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; position: relative; }
-        .news-badge { position: absolute; top: 12px; left: 12px; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; z-index: 10; }
+        .news-badge { position: absolute; top: 12px; left: 12px; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; z-index: 10; }
         .news-new-badge { position: absolute; top: 12px; right: 12px; background: #FF6B6B; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; z-index: 10; }
         .news-content { padding: 24px; }
-        .news-date { font-size: 12px; color: #999; margin-bottom: 12px; display: block; }
-        .news-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 12px; line-height: 1.4; }
-        .news-description { font-size: 14px; color: #666; line-height: 1.6; margin: 0 0 16px; }
+        .news-date { font-size: 13px; color: #999; margin-bottom: 12px; display: block; }
+        .news-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #1a1a2e; margin: 0 0 12px; line-height: 1.4; }
+        .news-description { font-size: 15px; color: #666; line-height: 1.6; margin: 0 0 16px; }
         .news-read-more { color: #2B3490; text-decoration: none; font-weight: 600; }
         @media (max-width: 1024px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .news-grid { grid-template-columns: 1fr; } }
@@ -110,7 +110,7 @@ export default function NewsPage() {
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
             <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>News &amp; Events</h1>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 600 }}>Stay updated with the latest from KSRM</p>
+            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Stay updated with the latest from KSRM</p>
           </div>
         </div>
       </section>

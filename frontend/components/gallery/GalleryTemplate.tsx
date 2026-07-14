@@ -59,7 +59,7 @@ export default function GalleryTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -140,7 +140,7 @@ export default function GalleryTemplate() {
         }
         .gal-card-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 8px;
@@ -149,7 +149,7 @@ export default function GalleryTemplate() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 13px;
+          font-size: 14px;
           color: #999;
         }
         @media (max-width: 1200px) {
@@ -158,7 +158,7 @@ export default function GalleryTemplate() {
         @media (max-width: 768px) {
           .gal-grid { grid-template-columns: 1fr; }
           .gal-filters { gap: 8px; }
-          .gal-filter-btn { padding: 10px 16px; font-size: 13px; }
+          .gal-filter-btn { padding: 10px 16px; font-size: 14px; }
         }
       `}</style>
 
@@ -192,7 +192,7 @@ export default function GalleryTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

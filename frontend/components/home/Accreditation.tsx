@@ -112,13 +112,13 @@ export default function Accreditation() {
       <Container>
       {/* HEADER */}
       <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
+        <div style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
           RECOGNIZED FOR QUALITY
         </div>
         <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "32px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 6px" }}>
           Accreditations & Rankings
         </h2>
-        <p style={{ fontSize: "15px", color: "#888", margin: 0 }}>
+        <p style={{ fontSize: "16px", color: "#888", margin: 0 }}>
           Certified excellence you can trust.
         </p>
       </div>
@@ -172,7 +172,7 @@ export default function Accreditation() {
                     ) : (
                       <span style={{
                         fontFamily: "'Rajdhani', sans-serif",
-                        fontSize: "18px", fontWeight: 700,
+                        fontSize: "19px", fontWeight: 700,
                         color: "#ffffff",
                       }}>
                         {item.shortName}
@@ -190,7 +190,7 @@ export default function Accreditation() {
                   </div>
 
                   {/* NAME */}
-                  <div style={{ fontSize: "14px", color: "#555", fontWeight: 600, margin: "6px 0 4px" }}>
+                  <div style={{ fontSize: "15px", color: "#555", fontWeight: 600, margin: "6px 0 4px" }}>
                     {item?.name ?? ""}
                   </div>
 
@@ -203,7 +203,7 @@ export default function Accreditation() {
                   <div style={{
                     display: "flex", alignItems: "center", justifyContent: "center", gap: "4px",
                     marginTop: "14px",
-                    fontSize: "13px", fontWeight: 600, color: "#2B3490",
+                    fontSize: "14px", fontWeight: 600, color: "#2B3490",
                   }}>
                     {item?.linkText ?? "Learn More"} <ArrowRight size={13} strokeWidth={2} />
                   </div>

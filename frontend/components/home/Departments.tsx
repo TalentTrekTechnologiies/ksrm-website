@@ -83,7 +83,7 @@ export default function Departments() {
 
         .dept-code {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 700;
           color: #FFE619;
           text-transform: uppercase;
@@ -101,7 +101,7 @@ export default function Departments() {
 
         .dept-name {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 17px;
+          font-size: 18px;
           font-weight: 700;
           color: #1a1a2e;
           margin-bottom: 6px;
@@ -109,7 +109,7 @@ export default function Departments() {
         }
 
         .dept-hod {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
           margin-bottom: 12px;
           line-height: 1.3;
@@ -119,7 +119,7 @@ export default function Departments() {
           color: #2B3490;
           text-decoration: none;
           font-weight: 600;
-          font-size: 15px;
+          font-size: 16px;
           transition: color 0.2s;
         }
 
@@ -134,7 +134,7 @@ export default function Departments() {
         @media (max-width: 640px) {
           .depts-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
           .dept-card { padding: 16px; }
-          .dept-name { font-size: 15px; }
+          .dept-name { font-size: 16px; }
         }
 
         @media (max-width: 480px) {
@@ -145,13 +145,13 @@ export default function Departments() {
       <Container>
         {/* HEADER */}
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <p style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase", margin: 0 }}>
+          <p style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase", margin: 0 }}>
             ACADEMICS
           </p>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "36px", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
             Our Departments
           </h2>
-          <p style={{ fontSize: "15px", color: "#888", margin: 0 }}>
+          <p style={{ fontSize: "16px", color: "#888", margin: 0 }}>
             Seven departments. Decades of academic excellence.
           </p>
         </div>

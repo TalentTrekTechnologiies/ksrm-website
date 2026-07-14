@@ -43,7 +43,7 @@ export default function DegreeVerificationTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -78,7 +78,7 @@ export default function DegreeVerificationTemplate() {
           text-decoration: none;
           transition: all 0.2s;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           cursor: pointer;
           border: none;
           margin: 32px 0;
@@ -118,7 +118,7 @@ export default function DegreeVerificationTemplate() {
         }
         .dv-step-card p {
           color: #666;
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1.6;
           margin: 0;
         }
@@ -152,7 +152,7 @@ export default function DegreeVerificationTemplate() {
         }
         .dv-contact-card p {
           color: #666;
-          font-size: 14px;
+          font-size: 15px;
           margin: 0 0 12px;
         }
         .dv-contact-card a {
@@ -206,7 +206,7 @@ export default function DegreeVerificationTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

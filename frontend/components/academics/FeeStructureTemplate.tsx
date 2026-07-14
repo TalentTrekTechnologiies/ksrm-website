@@ -37,7 +37,7 @@ export default function FeeStructureTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -47,7 +47,7 @@ export default function FeeStructureTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -85,7 +85,7 @@ export default function FeeStructureTemplate() {
         }
         .fee-notice-content p {
           color: #2B3490;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.6;
           margin: 0;
           font-weight: 500;
@@ -97,7 +97,7 @@ export default function FeeStructureTemplate() {
         .fee-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 15px;
+          font-size: 16px;
         }
         .fee-table thead th {
           background: #2B3490;
@@ -106,7 +106,7 @@ export default function FeeStructureTemplate() {
           text-align: left;
           font-family: "Rajdhani", sans-serif;
           font-weight: 700;
-          font-size: 14px;
+          font-size: 15px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
         }
@@ -130,7 +130,7 @@ export default function FeeStructureTemplate() {
         }
         .fee-programme-title {
           font-family: "Rajdhani", sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 40px 0 20px;
@@ -170,14 +170,14 @@ export default function FeeStructureTemplate() {
         }
         .fee-scholarship-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0;
         }
         .fee-scholarship-card p {
           color: #555;
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1.6;
           margin: 0;
         }
@@ -217,7 +217,7 @@ export default function FeeStructureTemplate() {
         }
         .fee-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           text-transform: uppercase;
           letter-spacing: 1px;
           color: #FFE619;
@@ -225,7 +225,7 @@ export default function FeeStructureTemplate() {
           font-weight: 700;
         }
         .fee-contact-item p {
-          font-size: 15px;
+          font-size: 16px;
           margin: 0;
           line-height: 1.6;
         }
@@ -238,7 +238,7 @@ export default function FeeStructureTemplate() {
           opacity: 0.8;
         }
         .fee-contact-note {
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1.6;
           padding-top: 24px;
           border-top: 1px solid rgba(255, 230, 25, 0.3);
@@ -279,7 +279,7 @@ export default function FeeStructureTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

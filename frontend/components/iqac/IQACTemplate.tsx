@@ -43,7 +43,7 @@ export default function IQACTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -72,7 +72,7 @@ export default function IQACTemplate() {
         }
         .iqac-card p {
           color: #555;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.8;
           margin: 0;
         }
@@ -85,7 +85,7 @@ export default function IQACTemplate() {
         }
         .iqac-objectives ol {
           color: #555;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.8;
           padding-left: 20px;
           margin: 0;
@@ -113,14 +113,14 @@ export default function IQACTemplate() {
         }
         .iqac-function-card h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 12px;
         }
         .iqac-function-card p {
           color: #666;
-          font-size: 14px;
+          font-size: 15px;
           line-height: 1.6;
           margin: 0;
         }
@@ -160,7 +160,7 @@ export default function IQACTemplate() {
         }
         .iqac-aqar-item h4 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #2B3490;
           margin: 0;
@@ -201,7 +201,7 @@ export default function IQACTemplate() {
             grid-template-columns: 1fr;
           }
           .iqac-table {
-            font-size: 14px;
+            font-size: 15px;
           }
           .iqac-table th, .iqac-table td {
             padding: 12px;
@@ -244,7 +244,7 @@ export default function IQACTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

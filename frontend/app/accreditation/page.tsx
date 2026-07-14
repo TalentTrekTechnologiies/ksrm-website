@@ -18,7 +18,7 @@ export default function AccreditationPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -33,14 +33,14 @@ export default function AccreditationPage() {
           background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none;
         }
         .acc-hero > * { position: relative; z-index: 2; }
-        .acc-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .acc-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .acc-breadcrumb a { color: #D4A500; text-decoration: none; transition: color 0.2s; }
         .acc-breadcrumb a:hover { color: #fff; }
         .acc-section-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 32px; margin: 32px 0; }
         .acc-section-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: #2B3490; margin: 0 0 16px; }
         .acc-programs-list { list-style: none; padding: 0; margin: 16px 0; }
         .acc-programs-list li { padding: 12px 0; color: #666; border-bottom: 1px solid #eef0f3; display: flex; align-items: center; }
-        .acc-programs-list li:before { content: "✓"; display: inline-block; color: #D4A500; font-weight: 700; margin-right: 12px; font-size: 18px; }
+        .acc-programs-list li:before { content: "✓"; display: inline-block; color: #D4A500; font-weight: 700; margin-right: 12px; font-size: 19px; }
         .acc-programs-list li:last-child { border-bottom: none; }
         @media (max-width: 768px) { .acc-section-card { padding: 20px; } }
         @media (max-width: 900px) { .acc-affiliations-grid { grid-template-columns: 1fr !important; } }
@@ -51,7 +51,7 @@ export default function AccreditationPage() {
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>
             Accreditations &amp; Rankings
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
             Recognition of Excellence
           </p>
         </div>

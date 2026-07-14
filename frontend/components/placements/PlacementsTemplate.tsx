@@ -45,7 +45,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -78,7 +78,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
           margin-bottom: 8px;
         }
         .place-stat-label {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
           font-weight: 600;
         }
@@ -120,13 +120,13 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
         }
         .place-program-card h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 12px;
         }
         .place-program-card p {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
           line-height: 1.6;
           margin: 0;
@@ -187,7 +187,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
           .place-stats-grid { grid-template-columns: 1fr; }
           .place-programs-grid { grid-template-columns: 1fr; }
           .place-recruiters-grid { grid-template-columns: repeat(2, 1fr); }
-          .place-table { font-size: 14px; }
+          .place-table { font-size: 15px; }
           .place-table th, .place-table td { padding: 12px; }
         }
       `}</style>
@@ -222,7 +222,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

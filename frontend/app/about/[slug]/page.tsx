@@ -69,16 +69,16 @@ export default function LeadershipDetail({ params }: { params: { slug: string } 
         .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 80px 0; }
         .k-hero-title { font-size: 72px; font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
-        .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }
+        .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }
         .k-back-btn:hover { color: #FFD700; }
         .k-section { padding: 60px 0; }
         .k-profile-header { display: grid; grid-template-columns: 400px 1fr; gap: 48px; padding: 0; align-items: stretch; }
         .k-profile-photo { width: 100%; object-fit: cover; border: 8px solid #2B3490; border-radius: 8px; box-shadow: 0 4px 12px rgba(43, 52, 144, 0.15); }
         .k-profile-info { padding: 0; display: flex; flex-direction: column; justify-content: flex-start; }
         .k-profile-name { color: #2B3490; font-size: 42px; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
-        .k-profile-role { color: #D4A500; font-size: 16px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #D4A500; width: fit-content; }
+        .k-profile-role { color: #D4A500; font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #D4A500; width: fit-content; }
         .k-quote-icon { font-size: 48px; color: #FFE619; opacity: 0.6; margin-bottom: 16px; }
-        .k-profile-bio { color: #555; font-size: 15px; line-height: 1.8; margin-bottom: 24px; }
+        .k-profile-bio { color: #555; font-size: 16px; line-height: 1.8; margin-bottom: 24px; }
         @media (max-width: 768px) {
           .k-hero { min-height: 280px; }
           .k-hero-title { font-size: 48px; }
@@ -109,7 +109,7 @@ export default function LeadershipDetail({ params }: { params: { slug: string } 
               <div className="k-quote-icon">"</div>
               <div className="k-profile-bio" style={{ marginBottom: "32px" }}>{leader.bio}</div>
               {leader.email && (
-                <div style={{ color: "#888", fontSize: "14px", marginTop: "0" }}>
+                <div style={{ color: "#888", fontSize: "15px", marginTop: "0" }}>
                   📧 <a href={`mailto:${leader.email}`} style={{ color: "#2B3490", textDecoration: "none" }}>
                     {leader.email}
                   </a>

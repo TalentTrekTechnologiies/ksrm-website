@@ -4,7 +4,7 @@ export default function InternshipsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
 
         .internships-hero {
@@ -27,7 +27,7 @@ export default function InternshipsPage() {
           z-index: 1;
         }
         .internships-hero > * { position: relative; z-index: 2; }
-        .internships-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .internships-breadcrumb { font-size: 15px; color: rgba(255,255,255,0.7); }
         .internships-breadcrumb a { color: #D4A500; text-decoration: none; }
         .internships-title {
           font-family: 'Rajdhani', sans-serif;
@@ -40,16 +40,16 @@ export default function InternshipsPage() {
         }
         .internships-subtitle {
           color: rgba(255,255,255,0.9);
-          font-size: 16px;
+          font-size: 17px;
           margin-top: 12px;
           max-width: 600px;
         }
 
         .internships-section { padding: 72px 0; background: #ffffff; }
         .internships-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; }
-        .internships-text { font-size: 16px; line-height: 1.8; color: #555; margin: 16px 0; }
+        .internships-text { font-size: 17px; line-height: 1.8; color: #555; margin: 16px 0; }
         .internships-list { list-style: none; padding: 0; margin: 32px 0; }
-        .internships-list li { padding: 12px 0 12px 28px; position: relative; font-size: 15px; color: #555; line-height: 1.6; }
+        .internships-list li { padding: 12px 0 12px 28px; position: relative; font-size: 16px; color: #555; line-height: 1.6; }
         .internships-list li::before { content: '✓'; position: absolute; left: 0; color: #D4A500; font-weight: 700; }
       `}</style>
 

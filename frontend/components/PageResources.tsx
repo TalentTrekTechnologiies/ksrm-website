@@ -93,10 +93,10 @@ export default function PageResources({
   return (
     <section style={{ width: "100%", background, padding: "56px 0" }}>
       <style>{`
-        .pr-container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .pr-container { width: 100%; max-width: 1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .pr-container { padding: 0 20px; } }
         .pr-head { text-align: center; }
-        .pr-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #2B3490; text-transform: uppercase; }
+        .pr-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #2B3490; text-transform: uppercase; }
         .pr-title { font-family: 'Rajdhani', sans-serif; font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 8px 0 0; }
         .pr-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px; gap: 14px; margin-top: 28px; }
         @media (max-width: 1024px) { .pr-gallery { grid-template-columns: repeat(3, 1fr); } }
@@ -105,25 +105,25 @@ export default function PageResources({
         @media (max-width: 760px) { .pr-videos { grid-template-columns: 1fr; } }
         .pr-video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #eef0f3; }
         .pr-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .pr-video-cap { font-size: 13px; font-weight: 600; color: #444; margin-top: 8px; text-align: center; }
+        .pr-video-cap { font-size: 14px; font-weight: 600; color: #444; margin-top: 8px; text-align: center; }
         .pr-tile { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #eef0f3; }
         .pr-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
         .pr-tile:hover img { transform: scale(1.06); }
         .pr-cap { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity 0.3s ease; background: linear-gradient(180deg, rgba(14,21,51,0) 55%, rgba(14,21,51,0.78) 100%); }
         .pr-tile:hover .pr-cap { opacity: 1; }
-        .pr-cap span { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
+        .pr-cap span { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
         /* Full-width stacked rows - matches the existing hardcoded document
            lists on Examinations / Syllabus (the "AY 2025-26" style) so
            uploaded docs read as the same list, not a separate widget. */
         .pr-list { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; max-width: 900px; margin-left: auto; margin-right: auto; }
-        .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 26px 0 14px; }
+        .pr-group-head { font-size: 19px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 26px 0 14px; }
         .pr-list > div:first-child .pr-group-head { margin-top: 0; }
         .pr-row { display: flex; align-items: center; gap: 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.2s ease; }
         .pr-row:hover { border-color: #D4A500; box-shadow: 0 8px 20px rgba(43,52,144,0.08); }
         .pr-icon { width: 40px; height: 40px; border-radius: 6px; background: #eef1ff; color: #2B3490; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .pr-doc-title { display: block; font-size: 14px; font-weight: 600; color: #2B3490; line-height: 1.4; }
-        .pr-doc-desc { display: block; font-size: 12px; color: #999; margin-top: 2px; }
-        .pr-pill { margin-left: auto; flex-shrink: 0; color: #fff; background: #2B3490; padding: 5px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .pr-doc-title { display: block; font-size: 15px; font-weight: 600; color: #2B3490; line-height: 1.4; }
+        .pr-doc-desc { display: block; font-size: 13px; color: #999; margin-top: 2px; }
+        .pr-pill { margin-left: auto; flex-shrink: 0; color: #fff; background: #2B3490; padding: 5px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; white-space: nowrap; }
       `}</style>
       <div className="pr-container">
         {/* VIDEOS */}

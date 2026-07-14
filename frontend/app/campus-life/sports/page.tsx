@@ -48,7 +48,7 @@ export default function SportsPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -56,36 +56,36 @@ export default function SportsPage() {
         .spo-hero { position: relative; background-image: url('/banners/sports.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .spo-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .spo-hero > * { position: relative; z-index: 2; }
-        .spo-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
-        .spo-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px; }
+        .spo-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
+        .spo-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px; }
         .spo-breadcrumb a { color: #D4A500; text-decoration: none; }
         .spo-breadcrumb span { color: #D4A500; }
         .spo-filters { display: flex; gap: 12px; margin: 40px 0; flex-wrap: wrap; }
-        .spo-filter-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid #eef0f3; background: #fff; color: #555; font-size: 13px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
+        .spo-filter-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid #eef0f3; background: #fff; color: #555; font-size: 14px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
         .spo-filter-btn.active { background: #2B3490; color: #fff; border-color: #2B3490; }
         .spo-facility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
         .spo-facility-card { background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
         .spo-facility-icon { width: 44px; height: 44px; background: #eef1ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .spo-facility-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0; }
-        .spo-facility-card p { font-size: 13px; color: #555; line-height: 1.6; margin: 0; }
-        .spo-facility-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid #eef0f3; font-size: 12px; color: #666; }
+        .spo-facility-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0; }
+        .spo-facility-card p { font-size: 14px; color: #555; line-height: 1.6; margin: 0; }
+        .spo-facility-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid #eef0f3; font-size: 13px; color: #666; }
         .spo-achievements-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
         .spo-achievement-card { background: #f4f3ef; border-left: 4px solid #2B3490; padding: 20px; border-radius: 8px; display: flex; gap: 16px; margin-bottom: 16px; }
         .spo-achievement-badge { flex-shrink: 0; width: 56px; height: 56px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; }
-        .spo-achievement-content h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
-        .spo-achievement-content p { font-size: 13px; color: #555; margin: 0; line-height: 1.6; }
+        .spo-achievement-content h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+        .spo-achievement-content p { font-size: 14px; color: #555; margin: 0; line-height: 1.6; }
         .spo-achievement-level { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-top: 8px; }
         .spo-achievements-image { position: relative; height: 220px; border-radius: 12px; overflow: hidden; margin-bottom: 8px; }
         .spo-achievements-image img { width: 100%; height: 100%; object-fit: cover; }
-        .spo-achievements-caption { margin-top: 16px; padding: 12px; background: #f4f3ef; border-left: 4px solid #2B3490; border-radius: 4px; font-size: 13px; color: #555; line-height: 1.6; }
+        .spo-achievements-caption { margin-top: 16px; padding: 12px; background: #f4f3ef; border-left: 4px solid #2B3490; border-radius: 4px; font-size: 14px; color: #555; line-height: 1.6; }
         .spo-upcoming-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
         .spo-event-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); color: #fff; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
-        .spo-event-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; margin: 0; }
-        .spo-event-card p { font-size: 13px; margin: 0; line-height: 1.6; }
+        .spo-event-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; margin: 0; }
+        .spo-event-card p { font-size: 14px; margin: 0; line-height: 1.6; }
         .spo-coordinator-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); border-radius: 12px; padding: 40px; color: #fff; text-align: center; }
         .spo-contact-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-top: 24px; }
-        .spo-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
-        .spo-contact-item p { font-size: 14px; margin: 8px 0 0; line-height: 1.6; }
+        .spo-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
+        .spo-contact-item p { font-size: 15px; margin: 8px 0 0; line-height: 1.6; }
         .spo-contact-item a { color: #D4A500; text-decoration: none; }
         @media (max-width: 900px) { .spo-achievements-container { grid-template-columns: 1fr; gap: 32px; } .spo-contact-info { grid-template-columns: 1fr; } }
       `}</style>
@@ -94,7 +94,7 @@ export default function SportsPage() {
         <div className="responsive-container">
           <div className="spo-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Sports</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Excellence Through Athletic Pursuits</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Excellence Through Athletic Pursuits</p>
         </div>
       </section>
 

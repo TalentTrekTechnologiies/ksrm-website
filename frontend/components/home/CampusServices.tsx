@@ -72,7 +72,7 @@ export default function CampusServices() {
       {/* SECTION HEADER */}
       <div style={{ textAlign: "center" }}>
         <div style={{
-          fontSize: "13px", fontWeight: 700, letterSpacing: "2px",
+          fontSize: "14px", fontWeight: 700, letterSpacing: "2px",
           color: "#2B3490", textTransform: "uppercase",
         }}>
           QUICK ACCESS
@@ -128,7 +128,7 @@ export default function CampusServices() {
                 }}>
                   <div style={{
                     fontFamily: "'Rajdhani', sans-serif",
-                    fontSize: "18px",
+                    fontSize: "19px",
                     fontWeight: 700,
                     color: "#1a1a2e",
                     marginBottom: "6px",
@@ -136,7 +136,7 @@ export default function CampusServices() {
                     {service.title}
                   </div>
                   <div style={{
-                    fontSize: "14px",
+                    fontSize: "15px",
                     color: "#888",
                   }}>
                     {service.desc}

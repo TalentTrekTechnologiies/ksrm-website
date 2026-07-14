@@ -53,7 +53,7 @@ export default function NewsTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -77,7 +77,7 @@ export default function NewsTemplate() {
           font-weight: 600;
           transition: all 0.2s;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
+          font-size: 15px;
         }
         .news-filter-btn:hover {
           border-color: #2B3490;
@@ -112,7 +112,7 @@ export default function NewsTemplate() {
           left: 12px;
           padding: 6px 12px;
           border-radius: 6px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           z-index: 10;
         }
@@ -132,21 +132,21 @@ export default function NewsTemplate() {
           padding: 24px;
         }
         .news-date {
-          font-size: 12px;
+          font-size: 13px;
           color: #999;
           margin-bottom: 12px;
           display: block;
         }
         .news-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0 0 12px;
           line-height: 1.4;
         }
         .news-description {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
           line-height: 1.6;
           margin: 0 0 16px;
@@ -205,7 +205,7 @@ export default function NewsTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

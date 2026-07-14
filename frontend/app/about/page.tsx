@@ -81,21 +81,21 @@ export default function About() {
         .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
         .k-section { padding: 72px 0; }
         h2 { color: #2B3490; font-size: 40.8px; font-weight: 700; margin-bottom: 48px; text-align: left; }
-        h3 { color: #2B3490; font-size: 18px; font-weight: 700; }
+        h3 { color: #2B3490; font-size: 19px; font-weight: 700; }
 
         .k-hero { position: relative; background-image: url('/site-images/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; overflow: hidden; }
         .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { }
-        .k-hero-eyebrow { color: #D4A500; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .k-hero-eyebrow { color: #D4A500; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
         .k-hero-title { font-size: 61.2px; font-weight: 700; margin-bottom: 8px; }
-        .k-hero-subtitle { color: #D4A500; font-size: 18px; font-weight: 600; }
+        .k-hero-subtitle { color: #D4A500; font-size: 19px; font-weight: 600; }
 
         .k-stats { background: white; border-top: 2px solid #D4A500; padding: 40px 0; }
         .k-stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; text-align: center; }
         .k-stat-item { }
         .k-stat-number { color: #2B3490; font-size: 32px; font-weight: 700; font-family: Rajdhani; margin-bottom: 8px; }
-        .k-stat-label { color: #666; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .k-stat-label { color: #666; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
         .k-vision-mission { background: white; }
         .k-vision-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
@@ -103,17 +103,17 @@ export default function About() {
         .k-mission-items { display: flex; flex-direction: column; gap: 16px; }
         .k-mission-item { background: #F4F3EF; border-radius: 8px; padding: 20px; position: relative; }
         .k-mission-badge { position: absolute; top: 12px; right: 12px; background: #2B3490; color: #D4A500; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; }
-        .k-mission-text { padding-top: 16px; color: #555; font-size: 14px; line-height: 1.7; }
+        .k-mission-text { padding-top: 16px; color: #555; font-size: 15px; line-height: 1.7; }
 
         .k-leadership { background: #F4F3EF; }
         .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
         .k-leadership-card { background: white; border: 0.8px solid #E5E7EB; border-radius: 12px; padding: 28px; text-align: center; }
         .k-leader-photo { width: 120px; height: 120px; border: 4px solid #D4A500; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; display: block; }
-        .k-leader-name { color: #2B3490; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-        .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
-        .k-leader-email { font-size: 12px; color: #999; margin-bottom: 12px; }
-        .k-leader-bio { color: #555; font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
-        .k-leader-btn { display: inline-block; background: #2B3490; color: #D4A500; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .k-leader-name { color: #2B3490; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 14px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
+        .k-leader-email { font-size: 13px; color: #999; margin-bottom: 12px; }
+        .k-leader-bio { color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
+        .k-leader-btn { display: inline-block; background: #2B3490; color: #D4A500; padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
         .k-leadership-card:hover .k-leader-btn { background: #D4A500; color: #2B3490; }
 
         .k-docs { background: white; }
@@ -122,12 +122,12 @@ export default function About() {
         .k-doc-card:hover { border-color: #D4A500; box-shadow: 0 2px 8px rgba(212,165,0,0.1); }
         .k-doc-icon { font-size: 28px; min-width: 44px; height: 44px; background: #EEF1FF; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
         .k-doc-content { flex: 1; }
-        .k-doc-title { color: #2B3490; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .k-doc-subtitle { color: #999; font-size: 12px; }
-        .k-doc-link { position: absolute; top: 12px; right: 12px; color: #D4A500; font-size: 16px; }
+        .k-doc-title { color: #2B3490; font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .k-doc-subtitle { color: #999; font-size: 13px; }
+        .k-doc-link { position: absolute; top: 12px; right: 12px; color: #D4A500; font-size: 17px; }
 
         .k-contact { background: white; }
-        .k-contact-subtitle { text-align: center; color: #999; font-size: 14px; margin-bottom: 32px; }
+        .k-contact-subtitle { text-align: center; color: #999; font-size: 15px; margin-bottom: 32px; }
         .k-contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .k-contact-box { border-radius: 12px; padding: 32px; }
         .k-contact-find { background: linear-gradient(135deg, #2B3490 0%, #1A1D4D 100%); color: white; }
@@ -137,11 +137,11 @@ export default function About() {
         .k-contact-contact h3 { color: #2B3490; }
         .k-contact-connect { border: 0.8px solid #E5E7EB; }
         .k-contact-connect h3 { color: #2B3490; }
-        .k-contact-text { font-size: 14px; line-height: 1.8; margin-bottom: 12px; }
+        .k-contact-text { font-size: 15px; line-height: 1.8; margin-bottom: 12px; }
         .k-contact-link { color: #2B3490; text-decoration: none; transition: color 0.2s; }
         .k-contact-link:hover { color: #D4A500; }
         .k-social-links { display: flex; gap: 12px; margin-top: 16px; }
-        .k-social-btn { display: inline-block; padding: 8px 14px; background: #2B3490; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .k-social-btn { display: inline-block; padding: 8px 14px; background: #2B3490; color: white; border-radius: 4px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
         .k-social-btn:hover { background: #D4A500; color: #2B3490; }
 
         @media (max-width: 1024px) {
@@ -174,7 +174,7 @@ export default function About() {
       <style>{`
         .nav-menu { background: white; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #E5E7EB; }
         .nav-menu .k-container { display: flex; gap: 12px; padding: 16px 0; overflow-x: auto; align-items: center; }
-        .nav-link { color: #666; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
+        .nav-link { color: #666; text-decoration: none; font-weight: 600; font-size: 15px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
         .nav-link:hover { color: #333; }
         .nav-link.active { background: #2B3490; color: white; }
       `}</style>
@@ -213,7 +213,7 @@ export default function About() {
             <div>
               <h3 style={{ marginBottom: "16px" }}>Our Vision</h3>
               <div className="k-vision-box">
-                <p style={{ color: "#555", fontSize: "14px", lineHeight: "1.7" }}>
+                <p style={{ color: "#555", fontSize: "15px", lineHeight: "1.7" }}>
                   To evolve as center of repute for providing quality academic programs amalgamated with creative learning and research excellence to produce graduates with leadership qualities, ethical and human values to serve the nation.
                 </p>
               </div>
@@ -334,7 +334,7 @@ export default function About() {
             <div className="k-contact-box k-contact-find">
               <h3>Find Us</h3>
               <div className="k-contact-text">K.S.R.M. College of Engineering, Kadapa – 516003, Andhra Pradesh, India.</div>
-              <div className="k-contact-text" style={{ fontSize: "13px" }}>7 KM from Kadapa town on Kadapa–Pulivendula Highway.</div>
+              <div className="k-contact-text" style={{ fontSize: "14px" }}>7 KM from Kadapa town on Kadapa–Pulivendula Highway.</div>
             </div>
             <div className="k-contact-box k-contact-other k-contact-contact">
               <h3>Contact Us</h3>

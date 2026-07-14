@@ -96,14 +96,14 @@ export default function ResearchPage() {
         .rdc-hero-btn {
           padding: 10px 20px; border: none; border-radius: 8px; background: #2B3490;
           color: #D4A500; font-weight: 600; cursor: pointer; white-space: nowrap;
-          transition: all 0.3s; font-size: 14px;
+          transition: all 0.3s; font-size: 15px;
         }
         .rdc-hero-btn:hover { background: #1e2570; }
         .rdc-policy-card { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); border-radius: 8px; padding: 24px; color: #fff; display: flex; flex-direction: column; gap: 12px; transition: all 0.3s; }
         .rdc-policy-card:hover { transform: translateY(-4px); }
         .rdc-policy-link {
           margin-top: auto; display: flex; align-items: center; gap: 8px; color: #D4A500;
-          text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 12px;
+          text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 12px;
           border-radius: 4px; background: rgba(255,230,25,0.1);
         }
         .rdc-committee-card {
@@ -116,7 +116,7 @@ export default function ResearchPage() {
         }
         .rdc-contact-link {
           display: flex; align-items: center; gap: 12px; justify-content: center; color: #2B3490;
-          text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 12px;
+          text-decoration: none; font-weight: 600; font-size: 15px; padding: 8px 12px;
           background: rgba(255,230,25,0.1); border-radius: 4px;
         }
       `}</style>

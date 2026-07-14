@@ -10,7 +10,7 @@ export default function PGAdmissionsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -35,7 +35,7 @@ export default function PGAdmissionsPage() {
           z-index: 1;
         }
         .pg-hero > * { position: relative; z-index: 2; }
-        .pg-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .pg-breadcrumb { font-size: 15px; color: rgba(255,255,255,0.7); }
         .pg-breadcrumb a { color: #D4A500; text-decoration: none; }
         .pg-title {
           font-family: 'Rajdhani', sans-serif;
@@ -44,10 +44,10 @@ export default function PGAdmissionsPage() {
           color: #fff;
           margin: 8px 0 0;
         }
-        .pg-subtitle { font-size: 16px; color: rgba(255,255,255,0.85); margin-top: 12px; }
+        .pg-subtitle { font-size: 17px; color: rgba(255,255,255,0.85); margin-top: 12px; }
 
         .pg-content-section { padding: 72px 0; background: #ffffff; }
-        .pg-intro { font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 48px; max-width: 820px; }
+        .pg-intro { font-size: 17px; color: #555; line-height: 1.8; margin-bottom: 48px; max-width: 820px; }
         .pg-summary-boxes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 8px; }
         .pg-summary-box {
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
@@ -72,13 +72,13 @@ export default function PGAdmissionsPage() {
           padding: 18px;
           text-align: left;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 700;
           text-transform: uppercase;
         }
-        .pg-table tbody td { padding: 16px 18px; color: #555; font-size: 15px; border-bottom: 0.8px solid #eef0f3; }
+        .pg-table tbody td { padding: 16px 18px; color: #555; font-size: 16px; border-bottom: 0.8px solid #eef0f3; }
         .pg-program-name { font-weight: 600; color: #555; }
-        .pg-intake-badge { color: #1a1a2e; font-weight: 700; font-family: Arimo, Arial, sans-serif; font-size: 15px; }
+        .pg-intake-badge { color: #1a1a2e; font-weight: 700; font-family: Arimo, Arial, sans-serif; font-size: 16px; }
 
         @media (max-width: 900px) {
           .pg-summary-boxes { grid-template-columns: 1fr; }

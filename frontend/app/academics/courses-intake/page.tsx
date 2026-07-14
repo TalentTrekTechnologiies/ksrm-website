@@ -86,7 +86,7 @@ export default function CoursesIntakePage() {
       <style>{`
         .responsive-container {
           width: 100%;
-          max-width: 1400px;
+          max-width:  1720px;
           margin: 0 auto;
           padding-left: 40px;
           padding-right: 40px;
@@ -122,7 +122,7 @@ export default function CoursesIntakePage() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -138,17 +138,17 @@ export default function CoursesIntakePage() {
         }
         .ci-hero-tagline {
           color: rgba(255,255,255,0.85);
-          font-size: 18px;
+          font-size: 19px;
           line-height: 1.6;
           margin: 16px 0 0;
-          font-weight: 300;
+          font-weight: 400;
           max-width: 700px;
         }
         .ci-breadcrumb {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-top: 24px;
         }
@@ -172,7 +172,7 @@ export default function CoursesIntakePage() {
           color: #fff;
           padding: 8px 16px;
           border-radius: 20px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           font-family: 'Rajdhani', sans-serif;
         }
@@ -185,7 +185,7 @@ export default function CoursesIntakePage() {
           text-align: center;
           margin-top: 40px;
         }
-        .ci-eapcet-label { font-size: 14px; opacity: 0.9; }
+        .ci-eapcet-label { font-size: 15px; opacity: 0.9; }
         .ci-eapcet-code {
           font-family: 'Rajdhani', sans-serif;
           font-size: 48px;
@@ -211,7 +211,7 @@ export default function CoursesIntakePage() {
           border: 1px solid #eef0f3;
           border-radius: 8px;
         }
-        .ci-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .ci-table { width: 100%; border-collapse: collapse; font-size: 15px; }
         .ci-table thead th {
           background: #2B3490;
           color: #fff;
@@ -219,7 +219,7 @@ export default function CoursesIntakePage() {
           text-align: left;
           font-family: 'Rajdhani', sans-serif;
           font-weight: 700;
-          font-size: 12px;
+          font-size: 13px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
         }
@@ -241,7 +241,7 @@ export default function CoursesIntakePage() {
           font-family: 'Rajdhani', sans-serif;
           font-weight: 700;
           color: #2B3490;
-          font-size: 15px;
+          font-size: 16px;
         }
         .ci-nba-badge {
           display: inline-block;
@@ -266,20 +266,20 @@ export default function CoursesIntakePage() {
         }
         .ci-contact-item h4 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
           color: #D4A500;
           margin: 0;
         }
-        .ci-contact-item p { font-size: 14px; margin: 8px 0 0; line-height: 1.6; }
+        .ci-contact-item p { font-size: 15px; margin: 8px 0 0; line-height: 1.6; }
         .ci-contact-item a { color: #D4A500; text-decoration: none; }
         .ci-contact-item a:hover { opacity: 0.8; }
 
         @media (max-width: 900px) {
           .ci-contact-card { grid-template-columns: 1fr; gap: 24px; }
-          .ci-table { font-size: 12px; }
+          .ci-table { font-size: 13px; }
           .ci-table thead th, .ci-table tbody td { padding: 10px; }
         }
       `}</style>

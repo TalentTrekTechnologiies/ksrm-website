@@ -9,9 +9,10 @@ export default function Container({ children, className }: ContainerProps) {
       className={className}
       style={{
         width: "100%",
+        maxWidth: "1720px",
         margin: "0 auto",
-        paddingLeft: "5%",
-        paddingRight: "5%",
+        paddingLeft: "3%",
+        paddingRight: "3%",
       }}
     >
       {children}

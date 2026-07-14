@@ -89,7 +89,7 @@ export default function ResearchTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-bottom: 24px;
         }
@@ -122,7 +122,7 @@ export default function ResearchTemplate() {
           margin-bottom: 8px;
         }
         .res-stat-label {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
           font-weight: 600;
         }
@@ -145,13 +145,13 @@ export default function ResearchTemplate() {
         }
         .res-center-card h3 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 12px;
         }
         .res-center-card p {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
           line-height: 1.6;
           margin: 0 0 16px;
@@ -229,7 +229,7 @@ export default function ResearchTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 600,
                 }}
               >

@@ -29,7 +29,7 @@ export default function PlacementsOverviewPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -65,22 +65,22 @@ export default function PlacementsOverviewPage() {
         }
         .overview-hero-subtitle {
           color: rgba(255,255,255,0.85);
-          font-size: 18px;
+          font-size: 19px;
           margin: 16px 0 0;
           text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-          font-weight: 300;
+          font-weight: 400;
         }
 
         .overview-intro-section { padding: 72px 0; background: #ffffff; }
         .overview-intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
         .overview-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; }
-        .overview-highlight { font-size: 14px; font-weight: 700; color: #D4A500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: inline-block; }
-        .overview-text { font-size: 16px; line-height: 1.8; color: #555; text-align: justify; margin: 16px 0; }
+        .overview-highlight { font-size: 15px; font-weight: 700; color: #D4A500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: inline-block; }
+        .overview-text { font-size: 17px; line-height: 1.8; color: #555; text-align: justify; margin: 16px 0; }
         .overview-image {
           width: 100%; height: 400px;
           background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);
           border-radius: 12px; display: flex; align-items: center; justify-content: center;
-          color: rgba(255,255,255,0.5); font-size: 14px; text-align: center; padding: 40px;
+          color: rgba(255,255,255,0.5); font-size: 15px; text-align: center; padding: 40px;
         }
 
         .overview-objectives-section { padding: 72px 0; background: #f4f3ef; }
@@ -92,7 +92,7 @@ export default function PlacementsOverviewPage() {
           width: 60px; height: 60px; background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);
           border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #D4A500;
         }
-        .overview-objective-text { font-size: 15px; color: #555; line-height: 1.6; margin: 0; font-weight: 500; }
+        .overview-objective-text { font-size: 16px; color: #555; line-height: 1.6; margin: 0; font-weight: 500; }
 
         .overview-team-section { padding: 72px 0; background: #ffffff; }
         .overview-team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; margin: 48px 0; }
@@ -100,15 +100,15 @@ export default function PlacementsOverviewPage() {
         .overview-dean-card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(43,52,144,0.12); border-color: #D4A500; }
         .overview-dean-photo {
           width: 100%; height: 280px; background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);
-          display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-size: 13px; text-align: center;
+          display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-size: 14px; text-align: center;
         }
         .overview-dean-info { padding: 28px 24px; }
-        .overview-dean-name { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #2B3490; margin: 0 0 6px; }
-        .overview-dean-designation { color: #D4A500; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px; }
-        .overview-dean-bio { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
+        .overview-dean-name { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; margin: 0 0 6px; }
+        .overview-dean-designation { color: #D4A500; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px; }
+        .overview-dean-bio { font-size: 14px; color: #666; line-height: 1.6; margin: 0; }
         .overview-commitment-box { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); color: #ffffff; padding: 40px; border-radius: 12px; margin-top: 40px; }
         .overview-commitment-heading { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; margin: 0 0 16px; color: #D4A500; }
-        .overview-commitment-text { font-size: 15px; line-height: 1.8; margin: 0; }
+        .overview-commitment-text { font-size: 16px; line-height: 1.8; margin: 0; }
 
         @media (max-width: 768px) {
           .overview-intro-grid { grid-template-columns: 1fr; gap: 32px; }

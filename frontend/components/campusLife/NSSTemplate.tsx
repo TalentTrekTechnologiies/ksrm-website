@@ -39,7 +39,7 @@ export default function NSSTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -49,7 +49,7 @@ export default function NSSTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -71,7 +71,7 @@ export default function NSSTemplate() {
           border-radius: 12px;
           padding: 32px;
           margin-top: 40px;
-          font-size: 15px;
+          font-size: 16px;
           color: #555;
           line-height: 1.8;
         }
@@ -106,7 +106,7 @@ export default function NSSTemplate() {
           color: #FFE619;
         }
         .nss-stat-label {
-          font-size: 13px;
+          font-size: 14px;
           color: rgba(255, 255, 255, 0.8);
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -142,13 +142,13 @@ export default function NSSTemplate() {
         }
         .nss-activity-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0;
         }
         .nss-activity-card p {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           line-height: 1.6;
           margin: 0;
@@ -171,12 +171,12 @@ export default function NSSTemplate() {
         }
         .nss-achievement-card h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           margin: 0;
         }
         .nss-achievement-card p {
-          font-size: 13px;
+          font-size: 14px;
           margin: 0;
           line-height: 1.6;
         }
@@ -192,12 +192,12 @@ export default function NSSTemplate() {
         }
         .nss-officer-info h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           margin: 0 0 4px;
         }
         .nss-officer-info p {
-          font-size: 13px;
+          font-size: 14px;
           margin: 0;
           opacity: 0.9;
         }
@@ -208,7 +208,7 @@ export default function NSSTemplate() {
         }
         .nss-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -216,7 +216,7 @@ export default function NSSTemplate() {
           margin: 0;
         }
         .nss-contact-item p {
-          font-size: 14px;
+          font-size: 15px;
           margin: 6px 0 0;
         }
         .nss-contact-item a {
@@ -272,7 +272,7 @@ export default function NSSTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

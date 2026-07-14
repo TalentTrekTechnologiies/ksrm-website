@@ -31,7 +31,7 @@ export default function EDCPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -44,40 +44,40 @@ export default function EDCPage() {
         .edc-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .edc-hero > * { position: relative; z-index: 2; }
         .edc-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 700; color: #fff; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.7); line-height: 1.08; }
-        .edc-subtitle { color: rgba(255,255,255,0.95); font-size: 18px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); font-weight: 300; }
-        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 16px; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+        .edc-subtitle { color: rgba(255,255,255,0.95); font-size: 19px; margin: 16px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,0.6); font-weight: 400; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 16px; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
         .breadcrumb a { color: #D4A500; text-decoration: none; }
         .breadcrumb span { color: rgba(255,255,255,0.7); }
 
         .edc-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-        .edc-about-text { font-size: 16px; color: #555; line-height: 1.8; text-align: justify; margin: 0; }
+        .edc-about-text { font-size: 17px; color: #555; line-height: 1.8; text-align: justify; margin: 0; }
         .edc-meta { display: flex; flex-direction: column; gap: 24px; }
         .edc-meta-item { display: flex; flex-direction: column; gap: 8px; }
-        .edc-meta-label { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: #D4A500; text-transform: uppercase; letter-spacing: 1px; }
-        .edc-meta-value { font-size: 16px; color: #2B3490; font-weight: 600; }
+        .edc-meta-label { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #D4A500; text-transform: uppercase; letter-spacing: 1px; }
+        .edc-meta-value { font-size: 17px; color: #2B3490; font-weight: 600; }
 
         .edc-vision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .edc-vision-card { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
         .edc-vision-title { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: #2B3490; margin-bottom: 16px; }
-        .edc-vision-text { font-size: 16px; color: #555; line-height: 1.8; margin: 0; }
+        .edc-vision-text { font-size: 17px; color: #555; line-height: 1.8; margin: 0; }
 
         .edc-section-heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 48px; }
         .edc-objectives-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
         .edc-objective-card { background: #f7f8fa; border-left: 4px solid #D4A500; padding: 24px; border-radius: 8px; }
-        .edc-objective-text { font-size: 16px; color: #555; line-height: 1.7; margin: 0; }
+        .edc-objective-text { font-size: 17px; color: #555; line-height: 1.7; margin: 0; }
 
         .edc-dst-card { background: rgba(255,255,255,0.95); padding: 48px; border-radius: 12px; box-shadow: 0 12px 48px rgba(0,0,0,0.2); }
         .edc-dst-title { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: #2B3490; margin: 0 0 16px; }
-        .edc-dst-content { font-size: 16px; color: #555; line-height: 1.8; margin: 0 0 24px; }
+        .edc-dst-content { font-size: 17px; color: #555; line-height: 1.8; margin: 0 0 24px; }
         .edc-dst-camps { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-        .edc-dst-camp-badge { background: #D4A500; color: #2B3490; padding: 12px 16px; border-radius: 6px; font-weight: 600; text-align: center; font-size: 14px; }
+        .edc-dst-camp-badge { background: #D4A500; color: #2B3490; padding: 12px 16px; border-radius: 6px; font-weight: 600; text-align: center; font-size: 15px; }
 
         .edc-committee-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
-        .edc-committee-table th { background: #2B3490; color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px; padding: 18px; text-align: left; border-bottom: 2px solid #D4A500; }
-        .edc-committee-table td { padding: 16px 18px; border-bottom: 1px solid #eef0f3; font-size: 15px; color: #555; }
+        .edc-committee-table th { background: #2B3490; color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; padding: 18px; text-align: left; border-bottom: 2px solid #D4A500; }
+        .edc-committee-table td { padding: 16px 18px; border-bottom: 1px solid #eef0f3; font-size: 16px; color: #555; }
         .edc-committee-table tr:last-child td { border-bottom: none; }
         .edc-committee-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #2B3490; }
-        .edc-committee-role { font-weight: 600; color: #D4A500; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .edc-committee-role { font-weight: 600; color: #D4A500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         @media (max-width: 1024px) { .edc-about-grid { grid-template-columns: 1fr; } .edc-vision-grid { grid-template-columns: 1fr; } }
       `}</style>

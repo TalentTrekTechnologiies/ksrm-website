@@ -101,7 +101,7 @@ export default function FeeStructurePage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -128,10 +128,10 @@ export default function FeeStructurePage() {
         .fee-hero > * { position: relative; z-index: 2; }
         .fee-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
+          font-size: 13px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; color: #D4A500;
         }
-        .fee-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px; }
+        .fee-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px; }
         .fee-breadcrumb a { color: #D4A500; text-decoration: none; }
         .fee-breadcrumb span { color: #D4A500; }
 
@@ -145,13 +145,13 @@ export default function FeeStructurePage() {
           align-items: flex-start;
         }
         .fee-notice-icon { flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
-        .fee-notice-content p { color: #2B3490; font-size: 15px; line-height: 1.6; margin: 0; font-weight: 500; }
+        .fee-notice-content p { color: #2B3490; font-size: 16px; line-height: 1.6; margin: 0; font-weight: 500; }
 
         .fee-table-wrapper { overflow-x: auto; margin-top: 24px; }
-        .fee-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        .fee-table { width: 100%; border-collapse: collapse; font-size: 16px; }
         .fee-table thead th {
           background: #2B3490; color: #fff; padding: 16px; text-align: left;
-          font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px;
+          font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px;
           text-transform: uppercase; letter-spacing: 0.5px;
         }
         .fee-table tbody td { padding: 14px 16px; border-bottom: 1px solid #eef0f3; }
@@ -160,7 +160,7 @@ export default function FeeStructurePage() {
         .fee-table tbody tr:hover { background: #fffaed; }
         .fee-table tbody tr:hover td { color: #2B3490; font-weight: 600; }
 
-        .fee-programme-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 40px 0 20px; }
+        .fee-programme-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #1a1a2e; margin: 40px 0 20px; }
 
         .fee-scholarship-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px; }
         .fee-scholarship-card {
@@ -169,8 +169,8 @@ export default function FeeStructurePage() {
         }
         .fee-scholarship-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(43,52,144,0.12); border-color: #D4A500; }
         .fee-scholarship-icon { width: 44px; height: 44px; background: #eef1ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .fee-scholarship-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0; }
-        .fee-scholarship-card p { color: #555; font-size: 14px; line-height: 1.6; margin: 0; }
+        .fee-scholarship-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0; }
+        .fee-scholarship-card p { color: #555; font-size: 15px; line-height: 1.6; margin: 0; }
 
         .fee-contact-card {
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
@@ -180,11 +180,11 @@ export default function FeeStructurePage() {
         .fee-contact-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-bottom: 24px; }
         .fee-contact-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .fee-contact-item-icon { width: 48px; height: 48px; background: rgba(255,230,25,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .fee-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; font-weight: 700; }
-        .fee-contact-item p { font-size: 15px; margin: 0; line-height: 1.6; }
+        .fee-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; font-weight: 700; }
+        .fee-contact-item p { font-size: 16px; margin: 0; line-height: 1.6; }
         .fee-contact-item a { color: #D4A500; text-decoration: none; }
         .fee-contact-item a:hover { opacity: 0.8; }
-        .fee-contact-note { font-size: 14px; line-height: 1.6; padding-top: 24px; border-top: 1px solid rgba(255,230,25,0.3); }
+        .fee-contact-note { font-size: 15px; line-height: 1.6; padding-top: 24px; border-top: 1px solid rgba(255,230,25,0.3); }
 
         @media (max-width: 900px) { .fee-contact-items { grid-template-columns: 1fr; gap: 24px; } }
       `}</style>
@@ -195,7 +195,7 @@ export default function FeeStructurePage() {
             <div style={{ padding: "72px 0" }}>
               <div className="fee-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Fee Structure</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Transparent and Affordable Education</p>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Transparent and Affordable Education</p>
             </div>
           </div>
         </section>

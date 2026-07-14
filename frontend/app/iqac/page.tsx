@@ -120,14 +120,14 @@ export default function IQACPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .iqac-tab-btn {
           background: #2B3490; color: #D4A500; padding: 8px 16px; border-radius: 6px; font-weight: 600;
-          font-size: 13px; border: none; cursor: pointer; text-decoration: none; white-space: nowrap;
+          font-size: 14px; border: none; cursor: pointer; text-decoration: none; white-space: nowrap;
         }
         .iqac-about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 48px; }
         @media (max-width: 1024px) { .iqac-about-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
@@ -136,13 +136,13 @@ export default function IQACPage() {
         .iqac-table-wrapper { overflow-x: auto; }
         .iqac-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
         .iqac-table thead tr { background: #2B3490; color: white; }
-        .iqac-table th { padding: 14px 16px; text-align: left; font-size: 13px; font-weight: 700; }
-        .iqac-table td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid #e5e7eb; }
-        @media (max-width: 640px) { .iqac-table th, .iqac-table td { padding: 10px 12px; font-size: 12px; } }
+        .iqac-table th { padding: 14px 16px; text-align: left; font-size: 14px; font-weight: 700; }
+        .iqac-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
+        @media (max-width: 640px) { .iqac-table th, .iqac-table td { padding: 10px 12px; font-size: 13px; } }
 
         .iqac-minutes-btn {
           background: #f4f3ef; padding: 16px 20px; width: 100%; text-align: left; font-weight: 700;
-          color: #2B3490; font-size: 16px; cursor: pointer; border: none; border-bottom: 1px solid #e5e7eb;
+          color: #2B3490; font-size: 17px; cursor: pointer; border: none; border-bottom: 1px solid #e5e7eb;
           display: flex; justify-content: space-between; align-items: center;
         }
         .iqac-doc-link {
@@ -151,7 +151,7 @@ export default function IQACPage() {
         }
         .iqac-feedback-btn {
           background: #2B3490; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;
-          font-size: 14px; font-weight: 600; display: inline-block;
+          font-size: 15px; font-weight: 600; display: inline-block;
         }
         .iqac-apex-card {
           background: white; border-radius: 12px; padding: 40px; text-align: center; border: 1px solid #e5e7eb;
@@ -159,11 +159,11 @@ export default function IQACPage() {
         }
         .iqac-apex-btn {
           background: #2B3490; color: #D4A500; padding: 12px 28px; border-radius: 6px; text-decoration: none;
-          font-weight: 700; font-size: 14px; display: inline-block;
+          font-weight: 700; font-size: 15px; display: inline-block;
         }
         .iqac-contact-link {
           display: flex; gap: 12px; padding: 10px 16px; background: rgba(255,230,25,0.1); border-radius: 4px;
-          color: #2B3490; font-weight: 600; font-size: 14px; text-decoration: none; margin-bottom: 8px;
+          color: #2B3490; font-weight: 600; font-size: 15px; text-decoration: none; margin-bottom: 8px;
         }
       `}</style>
 

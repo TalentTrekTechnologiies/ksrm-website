@@ -60,7 +60,7 @@ export default function Recruiters() {
         }
 
         .recruiters-badge-label {
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
           letter-spacing: 0.5px;
         }

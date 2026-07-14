@@ -40,7 +40,7 @@ export default function SyllabusTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -50,7 +50,7 @@ export default function SyllabusTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -87,7 +87,7 @@ export default function SyllabusTemplate() {
           align-items: center;
           justify-content: space-between;
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           transition: all 0.2s;
           border: none;
@@ -118,7 +118,7 @@ export default function SyllabusTemplate() {
           max-height: 1000px;
         }
         .syl-regulations {
-          font-size: 13px;
+          font-size: 14px;
           color: #666;
           margin-bottom: 20px;
           font-family: "Rajdhani", sans-serif;
@@ -129,7 +129,7 @@ export default function SyllabusTemplate() {
         .syl-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 14px;
+          font-size: 15px;
         }
         .syl-table thead th {
           background: #fff;
@@ -138,7 +138,7 @@ export default function SyllabusTemplate() {
           text-align: left;
           font-family: "Rajdhani", sans-serif;
           font-weight: 700;
-          font-size: 13px;
+          font-size: 14px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
           color: #2B3490;
@@ -165,7 +165,7 @@ export default function SyllabusTemplate() {
           color: #2B3490;
           padding: 8px 14px;
           border-radius: 6px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           font-family: "Rajdhani", sans-serif;
           text-decoration: none;
@@ -187,13 +187,13 @@ export default function SyllabusTemplate() {
         }
         .syl-note p {
           color: #555;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.7;
           margin: 0;
         }
         @media (max-width: 900px) {
           .syl-accordion-header {
-            font-size: 14px;
+            font-size: 15px;
             padding: 16px 20px;
           }
         }
@@ -236,7 +236,7 @@ export default function SyllabusTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

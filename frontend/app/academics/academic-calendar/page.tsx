@@ -65,7 +65,7 @@ export default function AcademicCalendarPage() {
       <style>{`
         .responsive-container {
           width: 100%;
-          max-width: 1400px;
+          max-width:  1720px;
           margin: 0 auto;
           padding-left: 40px;
           padding-right: 40px;
@@ -89,7 +89,7 @@ export default function AcademicCalendarPage() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -105,17 +105,17 @@ export default function AcademicCalendarPage() {
         }
         .ac-hero-tagline {
           color: rgba(255,255,255,0.85);
-          font-size: 18px;
+          font-size: 19px;
           line-height: 1.6;
           margin: 16px 0 0;
-          font-weight: 300;
+          font-weight: 400;
           max-width: 700px;
         }
         .ac-breadcrumb {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255,255,255,0.7);
           margin-top: 24px;
         }
@@ -129,7 +129,7 @@ export default function AcademicCalendarPage() {
           padding: 10px 20px;
           border-radius: 20px;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           margin-top: 24px;
         }
@@ -142,7 +142,7 @@ export default function AcademicCalendarPage() {
           padding: 12px 24px;
           border-radius: 8px;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           text-decoration: none;
           border: none;
@@ -182,9 +182,9 @@ export default function AcademicCalendarPage() {
         .ac-calendar-row:hover { background: #fffaed; border-color: #D4A500; }
         .ac-calendar-info h4 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 15px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px;
+          font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px;
         }
-        .ac-calendar-info p { font-size: 12px; color: #666; margin: 0; }
+        .ac-calendar-info p { font-size: 13px; color: #666; margin: 0; }
         .ac-download-btn {
           display: inline-flex;
           align-items: center;
@@ -193,7 +193,7 @@ export default function AcademicCalendarPage() {
           color: #fff;
           padding: 8px 12px;
           border-radius: 6px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           font-family: 'Rajdhani', sans-serif;
           text-decoration: none;
@@ -208,7 +208,7 @@ export default function AcademicCalendarPage() {
           padding: 24px;
           border-radius: 8px;
           margin-top: 40px;
-          font-size: 14px;
+          font-size: 15px;
           color: #555;
           line-height: 1.7;
         }
@@ -224,10 +224,10 @@ export default function AcademicCalendarPage() {
         }
         .ac-contact-item h4 {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 12px; font-weight: 700; text-transform: uppercase;
+          font-size: 13px; font-weight: 700; text-transform: uppercase;
           letter-spacing: 1px; color: #D4A500; margin: 0;
         }
-        .ac-contact-item p { font-size: 14px; margin: 8px 0 0; line-height: 1.6; }
+        .ac-contact-item p { font-size: 15px; margin: 8px 0 0; line-height: 1.6; }
         .ac-contact-item a { color: #D4A500; text-decoration: none; }
         .ac-contact-item a:hover { opacity: 0.8; }
 

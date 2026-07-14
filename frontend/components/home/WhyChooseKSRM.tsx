@@ -9,38 +9,48 @@ const EASE = [0.22, 1, 0.36, 1] as const
 interface Highlight {
   title: string
   desc: string
+  image: string
   icon: ReactNode
 }
 
+// Image-backed feature cards - each pairs a real campus photo with the point
+// it illustrates, so the section reads as a full, visual block rather than
+// flat icon tiles.
 const HIGHLIGHTS: Highlight[] = [
   {
     title: "UGC Autonomous",
     desc: "Affiliated to JNTUA with academic autonomy and a modern, industry-aligned curriculum.",
+    image: "/campus/main-building.jpg",
     icon: (<><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></>),
   },
   {
     title: "NAAC A+ Accredited",
     desc: "Among the region's top-graded institutions, with NBA Tier-1 accredited programs.",
+    image: "/campus/aerial-campus.jpg",
     icon: (<><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" /></>),
   },
   {
     title: "90% Placement Rate",
     desc: "200+ recruiting companies and a dedicated Training & Placement cell backing every student.",
+    image: "/campus/seminar-hall.jpg",
     icon: (<><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></>),
   },
   {
     title: "45+ Years of Legacy",
     desc: "Over four decades of engineering excellence and 15,000+ alumni across the globe.",
+    image: "/campus/founders-day.webp",
     icon: (<><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></>),
   },
   {
     title: "Modern Infrastructure",
     desc: "State-of-the-art laboratories, a central library, seminar halls and a 25-acre green campus.",
+    image: "/campus/central-library.jpg",
     icon: (<><path d="M3 21h18" /><path d="M5 21V7l8-4v18" /><path d="M19 21V11l-6-4" /></>),
   },
   {
     title: "Research & Innovation",
     desc: "Active R&D, funded projects, patents and a thriving innovation and entrepreneurship cell.",
+    image: "/campus/robotics-lab.jpg",
     icon: (<><path d="M9 18h6" /><path d="M10 22h4" /><path d="M15 2a7 7 0 0 0-4 12.7V17h2v-2.3A7 7 0 0 0 15 2Z" /></>),
   },
 ]
@@ -56,30 +66,40 @@ const cardVariants = {
 
 export default function WhyChooseKSRM() {
   return (
-    <section style={{ width: "100%", background: "#f7f8fa", padding: "44px 0", borderTop: "1px solid #eef0f3" }}>
+    <section style={{ width: "100%", background: "#0e1533", padding: "56px 0", borderTop: "1px solid #eef0f3" }}>
       <style>{`
-        .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+        .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
         .why-card {
-          background: #fff; border: 1px solid #eef0f3; border-radius: 14px;
-          padding: 26px 24px; transition: all 0.3s ease; height: 100%; box-sizing: border-box;
+          position: relative; height: 300px; border-radius: 16px; overflow: hidden;
+          display: flex; flex-direction: column; justify-content: flex-end;
+          box-shadow: 0 8px 30px rgba(0,0,0,0.25);
         }
-        .why-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(43,52,144,0.10); border-color: #D4A500; }
+        .why-card-img {
+          position: absolute; inset: 0; width: 100%; height: 100%;
+          object-fit: cover; transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+        }
+        .why-card:hover .why-card-img { transform: scale(1.07); }
+        .why-card-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(180deg, rgba(14,21,51,0.15) 0%, rgba(14,21,51,0.55) 45%, rgba(14,21,51,0.92) 100%);
+        }
+        .why-card-body { position: relative; padding: 24px; }
         .why-icon {
-          width: 48px; height: 48px; border-radius: 12px;
-          background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);
-          display: flex; align-items: center; justify-content: center; color: #FFE619; margin-bottom: 16px;
+          width: 46px; height: 46px; border-radius: 12px;
+          background: #FFE619; color: #1a1d4d;
+          display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
         }
         @media (max-width: 900px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } .why-card { height: 260px; } }
       `}</style>
 
       <Container>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
+          <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase" }}>
             Why KSRM
           </div>
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
-            Why Choose KSRM College of Engineering
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#ffffff", margin: "8px 0 0" }}>
+            Why Choose K.S.R.M. College of Engineering
           </h2>
         </div>
 
@@ -92,15 +112,20 @@ export default function WhyChooseKSRM() {
         >
           {HIGHLIGHTS.map((h) => (
             <motion.div key={h.title} className="why-card" variants={cardVariants}>
-              <div className="why-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  {h.icon}
-                </svg>
+              {/* eslint-disable-next-line @next/next/no-img-element -- static campus asset */}
+              <img className="why-card-img" src={h.image} alt={h.title} loading="lazy" />
+              <div className="why-card-overlay" />
+              <div className="why-card-body">
+                <div className="why-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {h.icon}
+                  </svg>
+                </div>
+                <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "21px", fontWeight: 700, color: "#ffffff", margin: "0 0 8px" }}>
+                  {h.title}
+                </h3>
+                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.85)", lineHeight: 1.6, margin: 0 }}>{h.desc}</p>
               </div>
-              <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "19px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>
-                {h.title}
-              </h3>
-              <p style={{ fontSize: "15px", color: "#666", lineHeight: 1.65, margin: 0 }}>{h.desc}</p>
             </motion.div>
           ))}
         </motion.div>

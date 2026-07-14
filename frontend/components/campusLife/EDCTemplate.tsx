@@ -39,7 +39,7 @@ export default function EDCTemplate() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -49,7 +49,7 @@ export default function EDCTemplate() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.7);
           margin-top: 24px;
           font-family: "DM Sans", sans-serif;
@@ -90,7 +90,7 @@ export default function EDCTemplate() {
           margin: 0 0 16px;
         }
         .edc-mv-card p {
-          font-size: 14px;
+          font-size: 15px;
           color: #555;
           line-height: 1.7;
           margin: 0;
@@ -126,13 +126,13 @@ export default function EDCTemplate() {
         }
         .edc-activity-card h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 700;
           color: #1a1a2e;
           margin: 0;
         }
         .edc-activity-card p {
-          font-size: 13px;
+          font-size: 14px;
           color: #555;
           line-height: 1.6;
           margin: 0;
@@ -154,12 +154,12 @@ export default function EDCTemplate() {
         }
         .edc-event-card h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           margin: 0;
         }
         .edc-event-card p {
-          font-size: 13px;
+          font-size: 14px;
           margin: 0;
           line-height: 1.6;
         }
@@ -179,13 +179,13 @@ export default function EDCTemplate() {
         }
         .edc-startup-card h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           color: #2B3490;
           margin: 0;
         }
         .edc-startup-card p {
-          font-size: 12px;
+          font-size: 13px;
           color: #555;
           margin: 0;
           line-height: 1.5;
@@ -214,12 +214,12 @@ export default function EDCTemplate() {
         }
         .edc-coordinator-info h3 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           margin: 0 0 4px;
         }
         .edc-coordinator-info p {
-          font-size: 13px;
+          font-size: 14px;
           margin: 0;
           opacity: 0.9;
         }
@@ -230,7 +230,7 @@ export default function EDCTemplate() {
         }
         .edc-contact-item h4 {
           font-family: "Rajdhani", sans-serif;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
@@ -238,7 +238,7 @@ export default function EDCTemplate() {
           margin: 0;
         }
         .edc-contact-item p {
-          font-size: 14px;
+          font-size: 15px;
           margin: 6px 0 0;
         }
         .edc-contact-item a {
@@ -294,7 +294,7 @@ export default function EDCTemplate() {
                   fontSize: 18,
                   lineHeight: 1.6,
                   margin: "16px 0 0",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   maxWidth: 700,
                 }}
               >

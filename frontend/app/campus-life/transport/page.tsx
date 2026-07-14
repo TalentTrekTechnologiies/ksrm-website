@@ -36,7 +36,7 @@ export default function TransportPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -44,29 +44,29 @@ export default function TransportPage() {
         .trn-hero { position: relative; background-image: url('/banners/transport.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .trn-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .trn-hero > * { position: relative; z-index: 2; }
-        .trn-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
-        .trn-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px; }
+        .trn-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
+        .trn-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px; }
         .trn-breadcrumb a { color: #D4A500; text-decoration: none; }
         .trn-breadcrumb span { color: #D4A500; }
         .trn-stats-bar { background: #2B3490; padding: 32px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 32px; }
         .trn-stat-item { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
         .trn-stat-icon { width: 48px; height: 48px; background: rgba(255,230,25,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .trn-stat-number { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; color: #D4A500; }
-        .trn-stat-label { font-size: 13px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
+        .trn-stat-label { font-size: 14px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
         .trn-table-wrapper { overflow-x: auto; margin-top: 40px; }
-        .trn-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        .trn-table thead th { background: #2B3490; color: #fff; padding: 14px; text-align: left; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .trn-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        .trn-table thead th { background: #2B3490; color: #fff; padding: 14px; text-align: left; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
         .trn-table tbody td { padding: 12px 14px; border-bottom: 1px solid #eef0f3; color: #555; }
         .trn-table tbody tr:nth-child(odd) { background: #f4f3ef; }
         .trn-table tbody tr:nth-child(even) { background: #ffffff; }
         .trn-route-no { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #2B3490; }
-        .trn-via { font-size: 12px; color: #666; }
+        .trn-via { font-size: 13px; color: #666; }
         .trn-rules { display: flex; flex-direction: column; gap: 12px; }
-        .trn-rule { background: #f4f3ef; border-left: 4px solid #2B3490; padding: 14px 16px; border-radius: 4px; font-size: 13px; color: #555; line-height: 1.6; }
+        .trn-rule { background: #f4f3ef; border-left: 4px solid #2B3490; padding: 14px 16px; border-radius: 4px; font-size: 14px; color: #555; line-height: 1.6; }
         .trn-contact-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); border-radius: 12px; padding: 40px; color: #fff; text-align: center; }
         .trn-contact-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-top: 32px; }
-        .trn-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
-        .trn-contact-item p { font-size: 14px; margin: 8px 0 0; line-height: 1.6; }
+        .trn-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
+        .trn-contact-item p { font-size: 15px; margin: 8px 0 0; line-height: 1.6; }
         .trn-contact-item a { color: #D4A500; text-decoration: none; }
         .trn-rules-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
         .trn-rules-image { position: relative; height: 240px; border-radius: 12px; overflow: hidden; }
@@ -80,7 +80,7 @@ export default function TransportPage() {
         <div className="responsive-container">
           <div className="trn-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Transport</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Safe & Reliable Campus Connectivity</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Safe & Reliable Campus Connectivity</p>
         </div>
       </section>
 

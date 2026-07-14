@@ -31,7 +31,7 @@ export default function ContactPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -39,20 +39,20 @@ export default function ContactPage() {
         .contact-hero { position: relative; background-image: url('/banners/contact.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .contact-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .contact-hero > * { position: relative; z-index: 2; }
-        .contact-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+        .contact-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
         .contact-breadcrumb a { color: #D4A500; text-decoration: none; }
         .contact-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 56px 0; align-items: start; }
         .contact-info-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 28px; margin-bottom: 20px; display: flex; gap: 20px; align-items: flex-start; }
         .contact-info-icon { flex-shrink: 0; width: 48px; height: 48px; background: #eef1ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #2B3490; }
-        .contact-info-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
-        .contact-info-content p { color: #666; font-size: 14px; margin: 0; line-height: 1.6; }
+        .contact-info-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; }
+        .contact-info-content p { color: #666; font-size: 15px; margin: 0; line-height: 1.6; }
         .contact-info-content a { color: #2B3490; text-decoration: none; font-weight: 600; }
         .contact-map { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(43,52,144,0.1); height: 400px; }
         .contact-map iframe { width: 100%; height: 100%; border: none; }
         .contact-departments-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 56px 0; }
         .contact-dept-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 28px; }
-        .contact-dept-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #2B3490; margin: 0 0 16px; }
-        .contact-dept-card p { color: #666; font-size: 14px; margin: 0 0 4px; }
+        .contact-dept-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; margin: 0 0 16px; }
+        .contact-dept-card p { color: #666; font-size: 15px; margin: 0 0 4px; }
         .contact-dept-card a { color: #2B3490; text-decoration: none; font-weight: 600; display: block; margin-bottom: 8px; }
         .contact-hours-banner { background: #D4A500; color: #1a1a2e; padding: 32px; border-radius: 12px; text-align: center; margin: 56px 0; }
         .contact-hours-banner h3 { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; margin: 0; }
@@ -65,7 +65,7 @@ export default function ContactPage() {
       <section className="contact-hero">
         <div className="responsive-container">
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Contact Us</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>We&apos;re here to help — reach out to us</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>We&apos;re here to help — reach out to us</p>
         </div>
       </section>
 

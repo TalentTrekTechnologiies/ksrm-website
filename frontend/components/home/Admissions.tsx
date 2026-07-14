@@ -167,7 +167,7 @@ export default function Admissions({
           color: #FFE619;
           padding: 8px 16px;
           border-radius: 20px;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 700;
           letter-spacing: 1.5px;
           text-transform: uppercase;
@@ -184,7 +184,7 @@ export default function Admissions({
         }
 
         .admissions-subtitle {
-          font-size: 15px;
+          font-size: 16px;
           color: #999;
           margin: 0;
         }
@@ -262,14 +262,14 @@ export default function Admissions({
           color: #ffffff;
           padding: 4px 10px;
           border-radius: 12px;
-          font-size: 13px;
+          font-size: 14px;
           display: inline-flex;
           align-items: center;
           white-space: nowrap;
         }
 
         .admissions-info {
-          font-size: 14px;
+          font-size: 15px;
           color: rgba(255, 255, 255, 0.85);
           margin-bottom: 12px;
           line-height: 1.4;
@@ -295,7 +295,7 @@ export default function Admissions({
           padding: 12px 28px;
           border-radius: 8px;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
           text-decoration: none;
           border: none;
@@ -340,7 +340,7 @@ export default function Admissions({
           max-width: 1140px;
           margin-left: auto;
           margin-right: auto;
-          font-size: 15px;
+          font-size: 16px;
           color: #666;
         }
 

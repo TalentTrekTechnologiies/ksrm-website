@@ -81,7 +81,7 @@ export default function CampusFacilitiesPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -89,27 +89,27 @@ export default function CampusFacilitiesPage() {
         .cf-hero { position: relative; background-image: url('/banners/campus-facilities.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .cf-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .cf-hero > * { position: relative; z-index: 2; }
-        .cf-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
-        .cf-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px; }
+        .cf-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
+        .cf-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px; }
         .cf-breadcrumb a { color: #D4A500; text-decoration: none; }
         .cf-breadcrumb span { color: #D4A500; }
         .cf-stats-bar { background: #2B3490; padding: 32px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 32px; margin-top: 40px; }
         .cf-stat-item { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
         .cf-stat-icon { width: 48px; height: 48px; background: rgba(255,230,25,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #D4A500; font-size: 20px; }
         .cf-stat-number { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; color: #D4A500; }
-        .cf-stat-label { font-size: 13px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
+        .cf-stat-label { font-size: 14px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
         .cf-filters { display: flex; gap: 12px; margin: 40px 0; flex-wrap: wrap; }
-        .cf-filter-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid #eef0f3; background: #fff; color: #555; font-size: 13px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
+        .cf-filter-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid #eef0f3; background: #fff; color: #555; font-size: 14px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
         .cf-filter-btn.active { background: #2B3490; color: #fff; border-color: #2B3490; }
         .cf-facility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
         .cf-facility-card { background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
         .cf-facility-icon { width: 48px; height: 48px; background: #eef1ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-        .cf-facility-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0; }
-        .cf-facility-card p { font-size: 13px; color: #555; line-height: 1.6; margin: 0; }
+        .cf-facility-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0; }
+        .cf-facility-card p { font-size: 14px; color: #555; line-height: 1.6; margin: 0; }
         .cf-category-badge { display: inline-block; background: #D4A500; color: #2B3490; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-top: 8px; }
         .cf-contact-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); border-radius: 12px; padding: 40px; color: #fff; margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
-        .cf-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
-        .cf-contact-item p { font-size: 14px; margin: 8px 0 0; line-height: 1.6; }
+        .cf-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
+        .cf-contact-item p { font-size: 15px; margin: 8px 0 0; line-height: 1.6; }
         .cf-contact-item a { color: #D4A500; text-decoration: none; }
 
         .cf-video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
@@ -124,7 +124,7 @@ export default function CampusFacilitiesPage() {
         <div className="responsive-container">
           <div className="cf-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Campus Facilities</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>A world-class campus built for academic and personal excellence</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>A world-class campus built for academic and personal excellence</p>
         </div>
       </section>
 

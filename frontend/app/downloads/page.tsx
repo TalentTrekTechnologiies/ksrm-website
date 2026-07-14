@@ -45,7 +45,7 @@ export default function DownloadsPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -58,10 +58,10 @@ export default function DownloadsPage() {
         .dl-filter-btn.active { background: #2B3490; color: #D4A500; border-color: #2B3490; }
         .dl-list { display: flex; flex-direction: column; gap: 16px; margin: 32px 0; }
         .dl-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 20px 24px; }
-        .dl-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
-        .dl-desc { font-size: 13px; color: #666; margin: 0; }
+        .dl-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+        .dl-desc { font-size: 14px; color: #666; margin: 0; }
         .dl-cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #2B3490; background: #eef1ff; padding: 4px 10px; border-radius: 6px; margin-bottom: 6px; display: inline-block; }
-        .dl-link { flex-shrink: 0; background: #2B3490; color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; }
+        .dl-link { flex-shrink: 0; background: #2B3490; color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 15px; }
         .dl-empty { text-align: center; padding: 64px 20px; color: #999; }
         @media (max-width: 640px) { .dl-row { flex-direction: column; align-items: flex-start; } }
       `}</style>
@@ -70,7 +70,7 @@ export default function DownloadsPage() {
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
             <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Downloads</h1>
-            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 600 }}>Syllabi, question papers, brochures, forms and other documents</p>
+            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Syllabi, question papers, brochures, forms and other documents</p>
           </div>
         </div>
       </section>

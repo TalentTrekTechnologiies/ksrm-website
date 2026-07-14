@@ -38,7 +38,7 @@ export default function LibraryPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -46,32 +46,32 @@ export default function LibraryPage() {
         .lib-hero { position: relative; background-image: url('/banners/library.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .lib-hero::before { content: ''; position: absolute; inset: 0; background-color: rgba(43,52,144,0.85); }
         .lib-hero > * { position: relative; z-index: 2; }
-        .lib-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
-        .lib-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px; }
+        .lib-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
+        .lib-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px; }
         .lib-breadcrumb a { color: #D4A500; text-decoration: none; }
         .lib-breadcrumb span { color: #D4A500; }
         .lib-stats-bar { background: #2B3490; padding: 32px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 32px; }
         .lib-stat-item { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
         .lib-stat-icon { width: 48px; height: 48px; background: rgba(255,230,25,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .lib-stat-number { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; color: #D4A500; }
-        .lib-stat-label { font-size: 13px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
+        .lib-stat-label { font-size: 14px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
         .lib-section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 40px; }
         .lib-section-card { background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 16px; }
         .lib-section-icon { width: 48px; height: 48px; background: #eef1ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .lib-section-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
-        .lib-section-card p { color: #555; font-size: 14px; line-height: 1.6; margin: 0; }
+        .lib-section-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #1a1a2e; margin: 0; }
+        .lib-section-card p { color: #555; font-size: 15px; line-height: 1.6; margin: 0; }
         .lib-eresources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
         .lib-eresource-card { background: #f4f3ef; border: 1px solid #eef0f3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .lib-eresource-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #2B3490; margin: 0; }
-        .lib-eresource-card p { color: #555; font-size: 13px; line-height: 1.6; margin: 0; }
-        .lib-eresource-link { display: inline-flex; align-items: center; gap: 6px; color: #2B3490; font-size: 12px; font-weight: 700; text-decoration: none; width: fit-content; }
+        .lib-eresource-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0; }
+        .lib-eresource-card p { color: #555; font-size: 14px; line-height: 1.6; margin: 0; }
+        .lib-eresource-link { display: inline-flex; align-items: center; gap: 6px; color: #2B3490; font-size: 13px; font-weight: 700; text-decoration: none; width: fit-content; }
         .lib-rules { margin-top: 40px; display: flex; flex-direction: column; gap: 12px; }
-        .lib-rule { background: #fff; border-left: 4px solid #2B3490; padding: 16px 20px; border-radius: 4px; font-size: 14px; color: #555; line-height: 1.6; }
+        .lib-rule { background: #fff; border-left: 4px solid #2B3490; padding: 16px 20px; border-radius: 4px; font-size: 15px; color: #555; line-height: 1.6; }
         .lib-contact-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); border-radius: 12px; padding: 40px; color: #fff; margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .lib-contact-item { display: flex; flex-direction: column; gap: 12px; }
         .lib-contact-item-icon { width: 48px; height: 48px; background: rgba(255,230,25,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; width: fit-content; }
-        .lib-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
-        .lib-contact-item p { font-size: 15px; margin: 0; line-height: 1.6; }
+        .lib-contact-item h4 { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4A500; margin: 0; }
+        .lib-contact-item p { font-size: 16px; margin: 0; line-height: 1.6; }
         .lib-contact-item a { color: #D4A500; text-decoration: none; }
         .lib-contact-librarian { border-right: 1px solid rgba(255,230,25,0.2); }
         @media (max-width: 900px) {
@@ -84,7 +84,7 @@ export default function LibraryPage() {
         <div className="responsive-container">
           <div className="lib-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Library</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Knowledge Hub of the Campus</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Knowledge Hub of the Campus</p>
         </div>
       </section>
 

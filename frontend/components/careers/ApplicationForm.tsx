@@ -157,22 +157,22 @@ export default function ApplicationForm({
         .af-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; color: #999; cursor: pointer; line-height: 1; }
         .af-close:hover { color: #2B3490; }
         .af-title { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
-        .af-subtitle { color: #666; font-size: 14px; margin: 0 0 28px; }
+        .af-subtitle { color: #666; font-size: 15px; margin: 0 0 28px; }
         .af-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 560px) { .af-grid { grid-template-columns: 1fr; } }
         .af-field { margin-bottom: 16px; }
-        .af-field label { display: block; font-size: 13px; font-weight: 600; color: #2B3490; margin-bottom: 6px; }
-        .af-field input, .af-field textarea { width: 100%; border: 1.5px solid #eef0f3; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: #1a1a2e; box-sizing: border-box; }
+        .af-field label { display: block; font-size: 14px; font-weight: 600; color: #2B3490; margin-bottom: 6px; }
+        .af-field input, .af-field textarea { width: 100%; border: 1.5px solid #eef0f3; border-radius: 8px; padding: 10px 12px; font-size: 15px; font-family: inherit; color: #1a1a2e; box-sizing: border-box; }
         .af-field input:focus, .af-field textarea:focus { outline: none; border-color: #2B3490; }
-        .af-field .af-error { color: #d32f2f; font-size: 12px; margin-top: 4px; }
+        .af-field .af-error { color: #d32f2f; font-size: 13px; margin-top: 4px; }
         .af-field input.af-invalid, .af-field textarea.af-invalid { border-color: #d32f2f; }
         .af-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin: 24px 0 12px; }
         .af-section-label:first-child { margin-top: 0; }
         .af-file-input { border: 1.5px dashed #eef0f3; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; }
         .af-file-input.af-invalid { border-color: #d32f2f; }
-        .af-submit { width: 100%; background: #D4A500; color: #1a1a2e; padding: 14px; border-radius: 8px; font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 16px; border: none; cursor: pointer; margin-top: 8px; }
+        .af-submit { width: 100%; background: #D4A500; color: #1a1a2e; padding: 14px; border-radius: 8px; font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 17px; border: none; cursor: pointer; margin-top: 8px; }
         .af-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-        .af-submit-error { background: #fdecea; color: #d32f2f; padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 16px; }
+        .af-submit-error { background: #fdecea; color: #d32f2f; padding: 12px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 16px; }
         .af-success { text-align: center; padding: 20px 0; }
         .af-success-icon { font-size: 48px; margin-bottom: 16px; }
       `}</style>

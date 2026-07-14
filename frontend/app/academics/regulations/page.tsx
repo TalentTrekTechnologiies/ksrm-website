@@ -118,7 +118,7 @@ export default function RegulationsPage() {
     <>
       <style>{`
         .responsive-container {
-          width: 100%; max-width: 1400px; margin: 0 auto;
+          width: 100%; max-width:  1720px; margin: 0 auto;
           padding-left: 40px; padding-right: 40px;
         }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
@@ -144,12 +144,12 @@ export default function RegulationsPage() {
         }
         .reg-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 12px; font-weight: 700; letter-spacing: 2px;
+          font-size: 13px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; color: #D4A500;
         }
         .reg-breadcrumb {
           display: flex; align-items: center; gap: 8px;
-          font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 24px;
+          font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 24px;
         }
         .reg-breadcrumb a { color: #D4A500; text-decoration: none; }
         .reg-breadcrumb span { color: #D4A500; }
@@ -166,19 +166,19 @@ export default function RegulationsPage() {
         .reg-code-badge {
           display: inline-block; background: #D4A500; color: #2B3490;
           padding: 6px 12px; border-radius: 6px; font-family: 'Rajdhani', sans-serif;
-          font-size: 12px; font-weight: 700; width: fit-content;
+          font-size: 13px; font-weight: 700; width: fit-content;
         }
-        .reg-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0; }
-        .reg-card-meta { display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #666; }
+        .reg-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #1a1a2e; margin: 0; }
+        .reg-card-meta { display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: #666; }
         .reg-card-meta strong { color: #2B3490; font-weight: 700; }
-        .reg-card-description { font-size: 14px; color: #555; line-height: 1.6; margin: 0; }
+        .reg-card-description { font-size: 15px; color: #555; line-height: 1.6; margin: 0; }
         .reg-keypoints { display: flex; flex-direction: column; gap: 8px; }
-        .reg-keypoint { font-size: 13px; color: #555; padding-left: 20px; position: relative; }
+        .reg-keypoint { font-size: 14px; color: #555; padding-left: 20px; position: relative; }
         .reg-keypoint::before { content: "✓"; position: absolute; left: 0; color: #2B3490; font-weight: 700; }
         .reg-download-btn {
           display: inline-flex; align-items: center; gap: 6px;
           background: #D4A500; color: #2B3490; padding: 8px 14px; border-radius: 6px;
-          font-size: 12px; font-weight: 700; font-family: 'Rajdhani', sans-serif;
+          font-size: 13px; font-weight: 700; font-family: 'Rajdhani', sans-serif;
           text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; width: fit-content;
         }
         .reg-download-btn:hover { background: #ffd700; transform: translateY(-2px); }
@@ -188,7 +188,7 @@ export default function RegulationsPage() {
         .reg-rule-header {
           background: #f4f3ef; border-left: 4px solid #2B3490; padding: 16px 20px; cursor: pointer;
           display: flex; align-items: center; justify-content: space-between;
-          font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #2B3490;
+          font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490;
           transition: all 0.2s; border-top: 1px solid #eef0f3; border-right: 1px solid #eef0f3; border-bottom: 1px solid #eef0f3; width: 100%;
         }
         .reg-rule-header:hover { background: #fffaed; }
@@ -196,10 +196,10 @@ export default function RegulationsPage() {
         .reg-rule-item.expanded .reg-rule-header .reg-chevron { transform: rotate(180deg); }
         .reg-rule-content { padding: 0 20px; background: #ffffff; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .reg-rule-item.expanded .reg-rule-content { max-height: 500px; padding: 20px; }
-        .reg-rule-content p { color: #555; font-size: 14px; line-height: 1.7; margin: 0; }
+        .reg-rule-content p { color: #555; font-size: 15px; line-height: 1.7; margin: 0; }
 
         .reg-note { background: #f4f3ef; border-left: 4px solid #2B3490; padding: 24px; border-radius: 8px; margin-top: 40px; }
-        .reg-note p { color: #555; font-size: 15px; line-height: 1.7; margin: 0; }
+        .reg-note p { color: #555; font-size: 16px; line-height: 1.7; margin: 0; }
 
         @media (max-width: 900px) { .reg-card-grid { grid-template-columns: 1fr; } }
       `}</style>
@@ -210,7 +210,7 @@ export default function RegulationsPage() {
             <div style={{ padding: "72px 0" }}>
               <div className="reg-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Regulations</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Academic Rules and Guidelines</p>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Academic Rules and Guidelines</p>
             </div>
           </div>
         </section>

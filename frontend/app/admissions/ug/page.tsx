@@ -13,7 +13,7 @@ export default function UGAdmissionsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width: 1400px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
@@ -38,7 +38,7 @@ export default function UGAdmissionsPage() {
           z-index: 1;
         }
         .ug-hero > * { position: relative; z-index: 2; }
-        .ug-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
+        .ug-breadcrumb { font-size: 15px; color: rgba(255,255,255,0.7); }
         .ug-breadcrumb a { color: #D4A500; text-decoration: none; }
         .ug-title {
           font-family: 'Rajdhani', sans-serif;
@@ -47,10 +47,10 @@ export default function UGAdmissionsPage() {
           color: #fff;
           margin: 8px 0 0;
         }
-        .ug-subtitle { font-size: 16px; color: rgba(255,255,255,0.85); margin-top: 12px; }
+        .ug-subtitle { font-size: 17px; color: rgba(255,255,255,0.85); margin-top: 12px; }
 
         .ug-content-section { padding: 72px 0; background: #ffffff; }
-        .ug-intro { font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 48px; max-width: 820px; }
+        .ug-intro { font-size: 17px; color: #555; line-height: 1.8; margin-bottom: 48px; max-width: 820px; }
         .ug-summary {
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           color: #fff;
@@ -68,14 +68,14 @@ export default function UGAdmissionsPage() {
           padding: 18px;
           text-align: left;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 700;
           text-transform: uppercase;
         }
         .ug-table tbody td {
           padding: 16px 18px;
           color: #555;
-          font-size: 15px;
+          font-size: 16px;
           border-bottom: 0.8px solid #eef0f3;
         }
         .ug-program-name { font-weight: 600; color: #555; }
@@ -84,7 +84,7 @@ export default function UGAdmissionsPage() {
           color: #2B3490;
           padding: 4px 10px;
           border-radius: 4px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 600;
           display: inline-block;
         }
@@ -92,7 +92,7 @@ export default function UGAdmissionsPage() {
           color: #1a1a2e;
           font-weight: 700;
           font-family: Arimo, Arial, sans-serif;
-          font-size: 15px;
+          font-size: 16px;
         }
         .ug-info-box {
           background: #f7f8fa;

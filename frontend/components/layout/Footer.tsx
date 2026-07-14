@@ -95,7 +95,7 @@ const colVariants = {
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: "18px", lineHeight: 1.2 }}>
-      <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "18px", fontWeight: 700, color: "#ffffff", marginBottom: "8px", letterSpacing: "0.6px", textTransform: "uppercase" }}>
+      <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "19px", fontWeight: 700, color: "#ffffff", marginBottom: "8px", letterSpacing: "0.6px", textTransform: "uppercase" }}>
         {children}
       </div>
       <div style={{ width: "24px", height: "2px", background: "#FFE619" }} />
@@ -167,7 +167,7 @@ export default function Footer() {
           display: grid;
           grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr 1fr 1.5fr;
           gap: 32px;
-          max-width: 1400px;
+          max-width: 1720px;
           margin: 0 auto;
           padding: 0 40px;
         }
@@ -175,7 +175,7 @@ export default function Footer() {
           display: flex;
           align-items: center;
           gap: 16px;
-          max-width: 1400px;
+          max-width: 1720px;
           margin: 0 auto;
           padding: 0 40px;
         }
@@ -237,7 +237,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: "0 0 14px" }}>
+          <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: "0 0 14px" }}>
             46+ years of engineering excellence in Kadapa, Andhra Pradesh.
           </p>
 
@@ -274,21 +274,21 @@ export default function Footer() {
 
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <MapPin size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
-            <span style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
+            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
               KSRM College of Engineering,<br />Kadapa, AP – 516003
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <Phone size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
-            <span style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
+            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
               +91 9000073434<br />08562 295972
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
             <Mail size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0 }} />
-            <a href="mailto:info@ksrmce.ac.in" style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
+            <a href="mailto:info@ksrmce.ac.in" style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
               info@ksrmce.ac.in
             </a>
           </div>
@@ -318,17 +318,17 @@ export default function Footer() {
         }}>
           {/* LEFT: Copyright + Kandula Trust */}
           <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <span style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
+            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
               © {currentYear} KSRM College of Engineering. All Rights Reserved.
             </span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
+            <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
               A unit of Sri Kandula Obul Reddy Charities
             </span>
           </div>
 
           {/* RIGHT: Powered by */}
           <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-            <span style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
+            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
               Powered by Talent Trek Technologies
             </span>
           </div>
