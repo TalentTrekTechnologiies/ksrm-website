@@ -196,15 +196,18 @@ export default function Navbar() {
         .navbar-desktop { scrollbar-width: none; -ms-overflow-style: none; }
         .navbar-desktop::-webkit-scrollbar { display: none; }
         .nav-scroll-arrow {
-          position: absolute; top: 0; height: 48px; width: 38px;
-          display: flex; align-items: center; justify-content: center;
-          background: #FFE619; color: #1a1d4d; border: none; cursor: pointer;
-          font-size: 20px; font-weight: 800; z-index: 20; line-height: 1;
-          box-shadow: 0 0 14px rgba(0,0,0,0.28);
+          position: absolute; top: 0; height: 48px; width: 46px;
+          display: flex; align-items: center;
+          background: transparent; color: #FFE619; border: none; cursor: pointer;
+          font-size: 28px; font-weight: 800; z-index: 20; line-height: 1;
+          transition: color 0.15s;
         }
-        .nav-scroll-arrow:hover { background: #ffd400; }
-        .nav-scroll-arrow.left { left: 0; }
-        .nav-scroll-arrow.right { right: 0; }
+        .nav-scroll-arrow:hover { color: #ffffff; }
+        /* navbar-blue fade (not a box) so the yellow arrow stays legible over items */
+        .nav-scroll-arrow.left { left: 0; justify-content: flex-start; padding-left: 4px;
+          background: linear-gradient(to right, #2B3490 60%, rgba(43,52,144,0)); }
+        .nav-scroll-arrow.right { right: 0; justify-content: flex-end; padding-right: 4px;
+          background: linear-gradient(to left, #2B3490 60%, rgba(43,52,144,0)); }
       `}</style>
 
       <div style={{
