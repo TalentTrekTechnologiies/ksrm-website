@@ -18,9 +18,14 @@ export class StatisticsService {
     private auditLog: AuditLogService,
   ) {}
 
-  async findAllPublic(scope: StatisticGroup) {
+  async findAllPublic(scope: StatisticGroup, departmentId?: number) {
     return this.prisma.siteStatistic.findMany({
-      where: { scope, isActive: true, deletedAt: null },
+      where: {
+        scope,
+        isActive: true,
+        deletedAt: null,
+        ...(scope === 'department' && { departmentId }),
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
@@ -29,9 +34,13 @@ export class StatisticsService {
   // admin UI can actually offer a restore action - excluded by default
   // since most callers (including reorder's own re-fetch) want the live
   // working set only.
-  async findAllAdmin(scope?: StatisticGroup, includeDeleted = false) {
+  async findAllAdmin(scope?: StatisticGroup, departmentId?: number, includeDeleted = false) {
     return this.prisma.siteStatistic.findMany({
-      where: { ...(scope && { scope }), ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(scope && { scope }),
+        ...(departmentId !== undefined && { departmentId }),
+        ...(!includeDeleted && { deletedAt: null }),
+      },
       orderBy: [{ scope: 'asc' }, { sortOrder: 'asc' }],
     });
   }
@@ -49,7 +58,13 @@ export class StatisticsService {
   async create(dto: CreateStatisticDto, admin: RequestAdmin, requestId?: string) {
     const sortOrder =
       dto.sortOrder ??
-      ((await this.prisma.siteStatistic.count({ where: { scope: dto.scope, deletedAt: null } })) as number);
+      ((await this.prisma.siteStatistic.count({
+        where: {
+          scope: dto.scope,
+          ...(dto.scope === 'department' && { departmentId: dto.departmentId }),
+          deletedAt: null,
+        },
+      })) as number);
 
     const created = await this.prisma.siteStatistic.create({
       data: { ...dto, sortOrder },
@@ -150,7 +165,12 @@ export class StatisticsService {
 
     const ids = dto.items.map((i) => i.id);
     const existingRows = await this.prisma.siteStatistic.findMany({
-      where: { id: { in: ids }, scope: dto.scope, deletedAt: null },
+      where: {
+        id: { in: ids },
+        scope: dto.scope,
+        ...(dto.scope === 'department' && { departmentId: dto.departmentId }),
+        deletedAt: null,
+      },
       select: { id: true },
     });
     if (existingRows.length !== ids.length) {

@@ -7,6 +7,7 @@ import {
 import { AccreditationBadgesService } from './accreditation-badges.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
+import { MediaLinkService } from '../../media/media-link.service';
 
 describe('AccreditationBadgesService', () => {
   let service: AccreditationBadgesService;
@@ -21,6 +22,7 @@ describe('AccreditationBadgesService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
+  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -36,12 +38,22 @@ describe('AccreditationBadgesService', () => {
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
+    mediaLink = {
+      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
+        mediaId === undefined || mediaId === null
+          ? Promise.resolve(undefined)
+          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
+      ),
+      syncUsage: jest.fn().mockResolvedValue(undefined),
+      untrackAll: jest.fn().mockResolvedValue(undefined),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AccreditationBadgesService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditLogService, useValue: auditLog },
+        { provide: MediaLinkService, useValue: mediaLink },
       ],
     }).compile();
 

@@ -97,7 +97,7 @@ export default function CoursesIntakePage() {
 
         .ci-hero {
           position: relative;
-          background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/classroom2.jpg');
+          background-image: url('/site-images/classroom2.jpg');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;
@@ -288,21 +288,13 @@ export default function CoursesIntakePage() {
         {/* HERO */}
         <section
           className="ci-hero"
-          style={{ backgroundImage: "url('/images/campus/04.jpg')", position: "relative" }}
+          style={{ backgroundImage: "url('/banners/courses-intake.png')", position: "relative" }}
         >
-          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(43, 52, 144, 0.85)" }} />
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="ci-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 className="ci-hero-title">Courses Offered & Intake</h1>
               <p className="ci-hero-tagline">AICTE approved programmes with strong industry alignment</p>
-              <div className="ci-breadcrumb">
-                <a href="/">Home</a>
-                <span>/</span>
-                <a href="/academics">Academics</a>
-                <span>/</span>
-                <span>Courses Offered & Intake</span>
-              </div>
             </div>
           </div>
         </section>

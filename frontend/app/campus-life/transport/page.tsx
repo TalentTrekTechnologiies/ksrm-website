@@ -1,4 +1,5 @@
-﻿const stats = [
+﻿import PageResources from "@/components/PageResources";
+const stats = [
   { icon: "🚌", value: "15", label: "Total Buses" },
   { icon: "📍", value: "8", label: "Routes" },
   { icon: "👥", value: "500+", label: "Students" },
@@ -40,7 +41,7 @@ export default function TransportPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .trn-hero { position: relative; background-image: url('/banners/transport-banner.webp'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
+        .trn-hero { position: relative; background-image: url('/banners/transport.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .trn-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .trn-hero > * { position: relative; z-index: 2; }
         .trn-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
@@ -80,7 +81,6 @@ export default function TransportPage() {
           <div className="trn-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Transport</h1>
           <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Safe & Reliable Campus Connectivity</p>
-          <div className="trn-breadcrumb"><a href="/">Home</a><span>/</span><a href="/campus-life">Campus Life</a><span>/</span><span>Transport</span></div>
         </div>
       </section>
 
@@ -142,7 +142,7 @@ export default function TransportPage() {
             </div>
             <div>
               <div className="trn-rules-image">
-                <img src="/gallery/Gallery _ KSRM College of Engineering_files/buses.jpg" alt="KSRM college bus fleet" />
+                <img src="/site-images/buses.jpg" alt="KSRM college bus fleet" />
               </div>
               <div style={{ marginTop: 16, padding: 16, background: "#f4f3ef", borderRadius: 8, borderLeft: "4px solid #2B3490" }}>
                 <p style={{ margin: 0, fontSize: 13, color: "#555", lineHeight: 1.6 }}>
@@ -202,6 +202,7 @@ export default function TransportPage() {
           </div>
         </div>
       </section>
+      <PageResources section="transport" />
     </main>
   );
 }

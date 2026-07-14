@@ -1,4 +1,4 @@
-import { IsBoolean, IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsString, IsNumber, IsOptional, IsInt } from 'class-validator';
 
 export class CreatePlacementDto {
   @IsString()
@@ -21,8 +21,16 @@ export class CreatePlacementDto {
   imageUrl?: string;
 
   @IsOptional()
+  @IsInt()
+  mediaId?: number;
+
+  @IsOptional()
   @IsString()
   companyLogoUrl?: string;
+
+  @IsOptional()
+  @IsInt()
+  companyLogoMediaId?: number;
 
   @IsOptional()
   @IsBoolean()

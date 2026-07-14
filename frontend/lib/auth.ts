@@ -69,3 +69,9 @@ export function clearSession(): void {
 export function isLoggedIn(): boolean {
   return getToken() !== null;
 }
+
+/** isSuperAdmin is a hard bypass, mirroring the backend's PermissionsGuard. */
+export function hasPermission(admin: StoredAdmin | null, permission: string): boolean {
+  if (!admin) return false;
+  return admin.isSuperAdmin || admin.permissions.includes(permission);
+}

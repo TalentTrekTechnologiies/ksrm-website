@@ -1,4 +1,6 @@
-﻿const stats = [
+import { mediaFile } from "@/lib/api-base";
+﻿import PageResources from "@/components/PageResources";
+const stats = [
   { value: "7,498+", label: "Alumni Members" },
   { value: "4", label: "Chapters (India + USA)" },
   { value: "40+", label: "Years of Association" },
@@ -24,17 +26,17 @@ const chapters = [
 ];
 
 const meets = [
-  { badge: "2022-23", label: "Alumni Meet 2022-23", href: "https://ksrmce.ac.in/alumni/KSRM ALUMNI MEET 2023.pdf" },
-  { badge: "2021-22", label: "Alumni Meet 2021-22", href: "https://ksrmce.ac.in/alumni/Alumni Report 11 june 2k22.pdf" },
-  { badge: "2019-20", label: "Alumni Meet 2019-20", href: "https://ksrmce.ac.in/alumni/KSRM ALUMNI MEET 2019.pdf" },
-  { badge: "2018-19", label: "Alumni Meet 2018-19", href: "https://ksrmce.ac.in/alumni/ALUMNI MEET 2018.pdf" },
-  { badge: "2017-18", label: "Alumni Meet 2017-18", href: "https://ksrmce.ac.in/alumni/KSRM ALUMNI MEET 2017.pdf" },
-  { badge: "2015-16 (Washington)", label: "Alumni Meet at Washington DC 2015-16", href: "https://ksrmce.ac.in/alumni/ALUMNI MEET1 2015.pdf" },
-  { badge: "2015-16", label: "Alumni Meet 2015-16", href: "https://ksrmce.ac.in/alumni/ALUMNI MEET 2015.pdf" },
-  { badge: "2014-15", label: "Alumni Meet 2014-15", href: "https://ksrmce.ac.in/alumni/ALUMNI MEET 2014.pdf" },
-  { badge: "2013-14", label: "Alumni Meet 2013-14", href: "https://ksrmce.ac.in/alumni/ALUMNI MEET 2013.pdf" },
-  { badge: "2012-13", label: "Alumni Meet 2012-13", href: "https://ksrmce.ac.in/alumni/ALUMNI MEET 2012.pdf" },
-  { badge: "All Years", label: "Alumni Meets — Past 5 Years Combined", href: "https://ksrmce.ac.in/alumni/Alumni-meet-all.pdf" },
+  { badge: "2022-23", label: "Alumni Meet 2022-23", href: mediaFile(175) },
+  { badge: "2021-22", label: "Alumni Meet 2021-22", href: mediaFile(176) },
+  { badge: "2019-20", label: "Alumni Meet 2019-20", href: mediaFile(177) },
+  { badge: "2018-19", label: "Alumni Meet 2018-19", href: mediaFile(178) },
+  { badge: "2017-18", label: "Alumni Meet 2017-18", href: mediaFile(179) },
+  { badge: "2015-16 (Washington)", label: "Alumni Meet at Washington DC 2015-16", href: mediaFile(180) },
+  { badge: "2015-16", label: "Alumni Meet 2015-16", href: mediaFile(181) },
+  { badge: "2014-15", label: "Alumni Meet 2014-15", href: mediaFile(182) },
+  { badge: "2013-14", label: "Alumni Meet 2013-14", href: mediaFile(186) },
+  { badge: "2012-13", label: "Alumni Meet 2012-13", href: mediaFile(194) },
+  { badge: "All Years", label: "Alumni Meets — Past 5 Years Combined", href: mediaFile(202) },
 ];
 
 const contributions = [
@@ -46,18 +48,18 @@ const contributions = [
 ];
 
 const activityReports = [
-  { title: "Awareness Program on Industry Needs in Placements", href: "https://ksrmce.ac.in/demo1/alumnidept/ActivityReportAlumni.pdf" },
-  { title: "Organise Alumni Meet 2K22", href: "https://ksrmce.ac.in/NAAC/Criteria-V-2021-22/AlumniActivityreports-2021-22/1-Organise Alumni Meet 2K22.pdf" },
-  { title: "Program on Innovative Solution for Startups", href: "https://ksrmce.ac.in/NAAC/Criteria-V-2021-22/AlumniActivityreports-2021-22/2-program on innovative solution for startups.pdf" },
-  { title: "Guest Lecture on behalf of Alumni Association", href: "https://ksrmce.ac.in/NAAC/Criteria-V-2021-22/AlumniActivityreports-2021-22/4-Guest lecture on behalf of Alumni Association.pdf" },
-  { title: "Organise World Water Day Celebrations", href: "https://ksrmce.ac.in/NAAC/Criteria-V-2021-22/AlumniActivityreports-2021-22/5-Organise World water day celebrations.pdf" },
-  { title: "Introduction to Solar PV Systems", href: "https://ksrmce.ac.in/NAAC/Criteria-V-2021-22/AlumniActivityreports-2021-22/6-introduction to solar PV Systems.pdf" },
-  { title: "Webinar on Industrial Automation and Control", href: "https://ksrmce.ac.in/alumni/Events/Webinar-on-industrial-automation.pdf" },
-  { title: "Guest Lecture on Missile Guidance and Controls", href: "https://ksrmce.ac.in/demo1/alumnidept/A One-Day Guest Lecturer on Missile Guidance and Controls on 01st April_0001.pdf" },
-  { title: "Webinar on Cloud Computing Primer", href: "https://ksrmce.ac.in/demo1/alumnidept/Cloud Computing Primer.pdf" },
-  { title: "Webinar on Trends in Information Technology", href: "https://ksrmce.ac.in/demo1/alumnidept/National Technology Day.pdf" },
-  { title: "Webinar on Power BI", href: "https://ksrmce.ac.in/demo1/alumnidept/Power Bi.pdf" },
-  { title: "Balancing Research and Teaching", href: "https://ksrmce.ac.in/demo1/alumnidept/Balancing Research and Teaching.pdf" },
+  { title: "Awareness Program on Industry Needs in Placements", href: mediaFile(205) },
+  { title: "Organise Alumni Meet 2K22", href: mediaFile(206) },
+  { title: "Program on Innovative Solution for Startups", href: mediaFile(207) },
+  { title: "Guest Lecture on behalf of Alumni Association", href: mediaFile(208) },
+  { title: "Organise World Water Day Celebrations", href: mediaFile(209) },
+  { title: "Introduction to Solar PV Systems", href: mediaFile(210) },
+  { title: "Webinar on Industrial Automation and Control", href: mediaFile(211) },
+  { title: "Guest Lecture on Missile Guidance and Controls", href: mediaFile(212) },
+  { title: "Webinar on Cloud Computing Primer", href: mediaFile(213) },
+  { title: "Webinar on Trends in Information Technology", href: mediaFile(214) },
+  { title: "Webinar on Power BI", href: mediaFile(215) },
+  { title: "Balancing Research and Teaching", href: mediaFile(216) },
 ];
 
 export default function AlumniPage() {
@@ -78,8 +80,9 @@ export default function AlumniPage() {
         .alumni-top-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 48px; }
       `}</style>
 
-      <section style={{ backgroundImage: "url('/banners/alumni banner.jpg')", backgroundSize: "cover", backgroundPosition: "center", padding: "80px 0", color: "white" }}>
-        <div className="responsive-container">
+      <section style={{ backgroundImage: "url('/banners/alumni.png')", backgroundSize: "cover", backgroundPosition: "center", padding: "80px 0", color: "white", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
+        <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>🎓 Alumni Association</div>
           <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>KSRM Alumni Association</h1>
           <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 16px" }}>Connecting 7,498+ Alumni Worldwide Since 1985</p>
@@ -220,12 +223,12 @@ export default function AlumniPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Top Alumni</h2>
           <div className="alumni-top-grid">
-            <a href="https://ksrmce.ac.in/Top-Alumni.pdf" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 32, textAlign: "center", textDecoration: "none", display: "block" }}>
+            <a href={mediaFile(217)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 32, textAlign: "center", textDecoration: "none", display: "block" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>🏆</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: "#D4A500", marginBottom: 16 }}>Top Alumni List</div>
               <div style={{ background: "#D4A500", color: "#2B3490", padding: "10px 24px", borderRadius: 6, fontWeight: 700, fontSize: 14, display: "inline-block", marginTop: 8 }}>Download PDF →</div>
             </a>
-            <a href="https://ksrmce.ac.in/top_alumini1.pdf" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 32, textAlign: "center", textDecoration: "none", display: "block" }}>
+            <a href={mediaFile(218)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 32, textAlign: "center", textDecoration: "none", display: "block" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>⭐</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: "#D4A500", marginBottom: 16 }}>Top Alumni List (Part 2)</div>
               <div style={{ background: "#D4A500", color: "#2B3490", padding: "10px 24px", borderRadius: 6, fontWeight: 700, fontSize: 14, display: "inline-block", marginTop: 8 }}>Download PDF →</div>
@@ -241,6 +244,7 @@ export default function AlumniPage() {
           </div>
         </div>
       </section>
+      <PageResources section="alumni" />
     </main>
   );
 }

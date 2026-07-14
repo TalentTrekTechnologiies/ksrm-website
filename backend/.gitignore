@@ -16,3 +16,8 @@ npm-debug.log*
 .env*
 !.env.example
 /generated/prisma
+
+# Media Library local storage (uploaded originals + generated variants) -
+# never committed, regenerable from a real storage backend in every
+# non-local environment.
+/storage

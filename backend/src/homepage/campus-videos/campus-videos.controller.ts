@@ -35,11 +35,28 @@ export class CampusVideosController {
     return this.sectionVisibility.wrap('campusVideos', items);
   }
 
+  // Department Videos section - deliberately NOT wrapped by the homepage
+  // 'campusVideos' section-visibility toggle (that toggle only governs the
+  // homepage's own Campus Videos block; department page visibility instead
+  // goes through DepartmentDisplaySetting).
+  @Get('campus-videos/department/:departmentId')
+  findAllPublicForDepartment(
+    @Param('departmentId', ParseIntPipe) departmentId: number,
+  ) {
+    return this.campusVideosService.findAllPublic(departmentId);
+  }
+
   @Get('admin/campus-videos')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('homepage.view')
-  findAllAdmin(@Query('includeDeleted') includeDeleted?: string) {
-    return this.campusVideosService.findAllAdmin(includeDeleted === 'true');
+  findAllAdmin(
+    @Query('departmentId') departmentId?: string,
+    @Query('includeDeleted') includeDeleted?: string,
+  ) {
+    return this.campusVideosService.findAllAdmin(
+      departmentId ? parseInt(departmentId) : undefined,
+      includeDeleted === 'true',
+    );
   }
 
   @Post('admin/campus-videos')

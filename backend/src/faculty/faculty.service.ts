@@ -5,27 +5,37 @@ import { CreateFacultyDto } from './dto/create-faculty.dto';
 import { UpdateFacultyDto } from './dto/update-faculty.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { MediaLinkService } from '../media/media-link.service';
+
+const MEDIA_MODULE = 'faculty';
+const MEDIA_FIELD = 'photoUrl';
 
 @Injectable()
 export class FacultyService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
-  async findAll(department?: string) {
-    const where = department
-      ? { department, isActive: true, deletedAt: null }
-      : { isActive: true, deletedAt: null };
+  async findAll(department?: string, departmentId?: number) {
     return this.prisma.faculty.findMany({
-      where,
+      where: {
+        isActive: true,
+        deletedAt: null,
+        ...(department && { department }),
+        ...(departmentId !== undefined && { departmentId }),
+      },
       orderBy: { name: 'asc' },
     });
   }
 
-  async findAllAdmin(includeDeleted = false) {
+  async findAllAdmin(includeDeleted = false, departmentId?: number) {
     return this.prisma.faculty.findMany({
-      where: { ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(!includeDeleted && { deletedAt: null }),
+        ...(departmentId !== undefined && { departmentId }),
+      },
       orderBy: { name: 'asc' },
     });
   }
@@ -65,9 +75,16 @@ export class FacultyService {
   }
 
   async create(createFacultyDto: CreateFacultyDto, admin: RequestAdmin, requestId?: string) {
+    const resolvedUrl = await this.mediaLink.prepareLink(createFacultyDto.mediaId, 'IMAGE');
+
     const newFaculty = await this.prisma.faculty.create({
-      data: createFacultyDto,
+      data: {
+        ...createFacultyDto,
+        photoUrl: resolvedUrl ?? createFacultyDto.photoUrl,
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, newFaculty.id, MEDIA_FIELD, createFacultyDto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -88,10 +105,18 @@ export class FacultyService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Faculty ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+
     const updated = await this.prisma.faculty.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { photoUrl: resolvedUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -114,6 +139,8 @@ export class FacultyService {
       where: { id },
       data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
     });
+
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -141,6 +168,10 @@ export class FacultyService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

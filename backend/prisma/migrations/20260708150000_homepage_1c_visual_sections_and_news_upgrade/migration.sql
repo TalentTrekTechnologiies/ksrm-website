@@ -75,7 +75,8 @@ VALUES
   ('homepage_departments', '/posters/departments/mech.svg', 'Mechanical Engineering', NULL, ARRAY[]::TEXT[], '/departments/mech', 'Explore', 3, true, CURRENT_TIMESTAMP),
   ('homepage_departments', '/posters/departments/civil.svg', 'Civil Engineering', NULL, ARRAY[]::TEXT[], '/departments/civil', 'Explore', 4, true, CURRENT_TIMESTAMP),
   ('homepage_departments', '/posters/departments/hs.svg', 'Humanities & Sciences', NULL, ARRAY[]::TEXT[], '/departments/hs', 'Explore', 5, true, CURRENT_TIMESTAMP),
-  ('homepage_departments', '/posters/departments/mba.svg', 'Management Studies', NULL, ARRAY[]::TEXT[], '/departments/mba', 'Explore', 6, true, CURRENT_TIMESTAMP);
+  ('homepage_departments', '/posters/departments/mba.svg', 'Management Studies', NULL, ARRAY[]::TEXT[], '/departments/mba', 'Explore', 6, true, CURRENT_TIMESTAMP),
+  ('homepage_departments', '/posters/departments/all%20departments.svg', 'All Departments', NULL, ARRAY[]::TEXT[], '/departments', 'Explore', 7, true, CURRENT_TIMESTAMP);
 
 -- ===== Seed: SiteSetting-backed section visibility flags (Sprint 1C's 6
 -- new sections only - see feedback_section_visibility memory for why 1A/1B

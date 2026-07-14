@@ -163,7 +163,6 @@ export default function Footer() {
   return (
     <footer style={{ width: "100%", background: "#1e2570", color: "#ffffff", paddingTop: "56px" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .footer-grid {
           display: grid;
           grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr 1fr 1.5fr;

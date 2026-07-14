@@ -53,6 +53,10 @@ export class CreateDepartmentDto {
   heroImageUrl?: string;
 
   @IsOptional()
+  @IsInt()
+  heroMediaId?: number;
+
+  @IsOptional()
   @IsString()
   vision?: string;
 

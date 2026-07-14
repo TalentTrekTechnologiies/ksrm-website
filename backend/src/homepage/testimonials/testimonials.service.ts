@@ -10,12 +10,17 @@ import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 import { ReorderTestimonialsDto } from './dto/reorder-testimonials.dto';
 import { assertVersionMatch } from '../optimistic-lock.util';
 import { RequestAdmin } from '../types';
+import { MediaLinkService } from '../../media/media-link.service';
+
+const MEDIA_MODULE = 'homepage_testimonials';
+const MEDIA_FIELD = 'photoUrl';
 
 @Injectable()
 export class TestimonialsService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAllPublic() {
@@ -57,9 +62,13 @@ export class TestimonialsService {
         where: { deletedAt: null },
       }));
 
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+
     const created = await this.prisma.testimonial.create({
-      data: { ...dto, sortOrder },
+      data: { ...dto, photoUrl: resolvedUrl ?? dto.photoUrl, sortOrder },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -85,10 +94,18 @@ export class TestimonialsService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Testimonial ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+
     const updated = await this.prisma.testimonial.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { photoUrl: resolvedUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -120,6 +137,8 @@ export class TestimonialsService {
       },
     });
 
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
+
     await this.auditLog.log({
       adminId: admin.id,
       adminName: admin.name,
@@ -146,6 +165,10 @@ export class TestimonialsService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

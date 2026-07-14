@@ -17,6 +17,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const router = useRouter()
   const isLoginPage = pathname === "/admin/login"
+  // The homepage Preview panel loads this route inside an <iframe> to get a
+  // real independent browsing context (so each public component's actual
+  // @media breakpoints fire correctly - see CmsPreviewPanel's doc comment).
+  // It only ever renders content already authenticated on the parent admin
+  // page, so it skips both the Sidebar/Navbar chrome and the auth redirect
+  // - a bare content frame, not a nested copy of the whole admin shell.
+  const isPreviewRoute = pathname?.startsWith("/admin/homepage/preview/") ?? false
+  const skipChrome = isLoginPage || isPreviewRoute
 
   const [authChecked, setAuthChecked] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -29,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // for this specific check, unlike the data-fetching effects elsewhere
     // in this admin panel, which can be (and are) restructured to set state
     // only after an async boundary.
-    if (isLoginPage) {
+    if (skipChrome) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setAuthChecked(true)
       return
@@ -39,9 +47,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return
     }
     setAuthChecked(true)
-  }, [isLoginPage, router])
+  }, [skipChrome, router])
 
-  if (isLoginPage) {
+  if (skipChrome) {
     return <>{children}</>
   }
 
@@ -73,9 +81,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       )}
 
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        {/* min-w-0 - without it, a flex item's default min-width is "auto"
+            (won't shrink below its content's intrinsic width), so a wide
+            table on a narrow viewport pushes the whole page into
+            horizontal scroll instead of scrolling just the table inside
+            its own overflow-x-auto wrapper. */}
+        <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
       </div>
     </div>
   )

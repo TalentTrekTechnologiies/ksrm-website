@@ -5,11 +5,16 @@ export default function DashboardCard({
   label,
   count,
   available,
+  displayValue,
 }: {
   widgetKey: string
   label: string
   count: number
   available: boolean
+  /** Overrides the default `count.toLocaleString()` render - for widgets
+   * where the raw number isn't the right unit to show at a glance (e.g.
+   * Storage Used, where the count is a byte count, not an item count). */
+  displayValue?: string
 }) {
   // widgetIcon() selects an existing component reference from a static,
   // module-level lookup map (lib/dashboard-icons.ts) - it never defines a
@@ -35,7 +40,7 @@ export default function DashboardCard({
             style={{ fontFamily: "var(--font-admin-heading)" }}
             className="mt-1.5 text-3xl font-bold text-slate-900"
           >
-            {count.toLocaleString()}
+            {displayValue ?? count.toLocaleString()}
           </p>
         </div>
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-admin-primary/10 text-admin-primary transition-colors group-hover:bg-admin-primary group-hover:text-white">

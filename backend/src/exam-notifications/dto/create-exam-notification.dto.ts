@@ -1,18 +1,35 @@
-import { IsString, IsOptional, IsDateString, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsBoolean, MaxLength } from 'class-validator';
 
+// Deliberately simple - this module publishes important links (Hall
+// Ticket, Results, Registration, Exam Schedule, Important Notice), it is
+// not a general notification engine. fileUrl/category/date are legacy
+// Phase 1 columns no longer written here - see the ExamNotification model
+// comment in schema.prisma.
 export class CreateExamNotificationDto {
   @IsString()
+  @MaxLength(200)
   title: string;
 
   @IsOptional()
   @IsString()
-  fileUrl?: string;
+  @MaxLength(500)
+  description?: string;
 
+  @IsOptional()
   @IsString()
-  category: string;
+  @MaxLength(60)
+  buttonText?: string;
+
+  @IsOptional()
+  @IsString()
+  buttonUrl?: string;
 
   @IsDateString()
-  date: string;
+  startDate: string;
+
+  @IsOptional()
+  @IsDateString()
+  endDate?: string;
 
   @IsOptional()
   @IsBoolean()

@@ -3,6 +3,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { HeroService } from './hero.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
+import { MediaLinkService } from '../../media/media-link.service';
 
 describe('HeroService', () => {
   let service: HeroService;
@@ -14,6 +15,7 @@ describe('HeroService', () => {
     };
   };
   let auditLog: { log: jest.Mock };
+  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
 
   const admin = { id: 1, name: 'Super Administrator', email: 'superadmin@ksrm.edu' };
 
@@ -26,12 +28,22 @@ describe('HeroService', () => {
       },
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
+    mediaLink = {
+      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
+        mediaId === undefined || mediaId === null
+          ? Promise.resolve(undefined)
+          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
+      ),
+      syncUsage: jest.fn().mockResolvedValue(undefined),
+      untrackAll: jest.fn().mockResolvedValue(undefined),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HeroService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditLogService, useValue: auditLog },
+        { provide: MediaLinkService, useValue: mediaLink },
       ],
     }).compile();
 
@@ -99,6 +111,66 @@ describe('HeroService', () => {
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'UPDATE', module: 'homepage_hero', requestId: 'req-2' }),
       );
+    });
+
+    describe('Media Library linking', () => {
+      it('on create, validates the media is a VIDEO, resolves its URL, and tracks usage', async () => {
+        prisma.homepageHero.findFirst.mockResolvedValue(null);
+        prisma.homepageHero.create.mockResolvedValue({ id: 1, version: 1 });
+
+        await service.create(
+          { heading: 'Hi', subtitle: 'Sub', videoUrl: '/fallback.mp4', mediaId: 9 } as any,
+          admin,
+          undefined,
+        );
+
+        expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'VIDEO');
+        expect(prisma.homepageHero.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({
+              videoUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              mediaId: 9,
+            }),
+          }),
+        );
+        expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_hero', 1, 'videoUrl', 9);
+      });
+
+      it('on update, re-resolves videoUrl and re-tracks when mediaId changes', async () => {
+        prisma.homepageHero.findFirst.mockResolvedValue({ id: 1, version: 1, videoUrl: '/old.mp4' });
+        prisma.homepageHero.update.mockResolvedValue({ id: 1, version: 2 });
+
+        await service.update({ mediaId: 9, version: 1 } as any, admin, undefined);
+
+        expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'VIDEO');
+        expect(prisma.homepageHero.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: expect.objectContaining({ videoUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+          }),
+        );
+        expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_hero', 1, 'videoUrl', 9);
+      });
+
+      it('on update, unlinks and untracks when mediaId is explicitly set to null, without touching videoUrl', async () => {
+        prisma.homepageHero.findFirst.mockResolvedValue({ id: 1, version: 1, videoUrl: '/existing.mp4', mediaId: 9 });
+        prisma.homepageHero.update.mockResolvedValue({ id: 1, version: 2 });
+
+        await service.update({ mediaId: null, version: 1 } as any, admin, undefined);
+
+        expect(mediaLink.prepareLink).toHaveBeenCalledWith(null, 'VIDEO');
+        expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_hero', 1, 'videoUrl', null);
+        expect(prisma.homepageHero.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.objectContaining({ mediaId: null }) }),
+        );
+        // prepareLink returns undefined for a null mediaId, so the spread's
+        // conditional `...(resolvedUrl !== undefined && {videoUrl})` adds
+        // nothing - videoUrl is absent from `data` entirely (not
+        // overwritten with anything), leaving the DB's existing value
+        // untouched, since this call didn't send a new videoUrl either.
+        expect(prisma.homepageHero.update).toHaveBeenCalledWith(
+          expect.objectContaining({ data: expect.not.objectContaining({ videoUrl: expect.anything() }) }),
+        );
+      });
     });
   });
 });

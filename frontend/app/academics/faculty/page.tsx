@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
 
 type FacultyMember = {
   name: string;
@@ -10,7 +11,7 @@ type FacultyMember = {
   photo?: string;
 };
 
-const facultyByDept: Record<string, FacultyMember[]> = {
+const FALLBACK_FACULTY_BY_DEPT: Record<string, FacultyMember[]> = {
   "Computer Science & Engineering": [
     { name: "Dr. V. Lokeswara Reddy", designation: "Professor & Head", qualification: "M.Tech., Ph.D.", specialization: "Software Engineering" },
     { name: "Dr. N. Amaranatha Reddy", designation: "Professor", qualification: "M.Tech., Ph.D.", specialization: "Data Science" },
@@ -70,8 +71,6 @@ const facultyByDept: Record<string, FacultyMember[]> = {
   ],
 };
 
-const TABS = Object.keys(facultyByDept);
-
 function initials(name: string) {
   return name.replace(/^(Dr\.|Sri\.|Smt\.)\s*/, "").split(" ").map((w) => w[0]).join("").toUpperCase();
 }
@@ -104,8 +103,40 @@ function BriefcaseIcon() {
 }
 
 export default function FacultyPage() {
-  const [activeTab, setActiveTab] = useState(TABS[0]);
-  const members = facultyByDept[activeTab];
+  const [facultyByDept, setFacultyByDept] = useState<Record<string, FacultyMember[]>>(FALLBACK_FACULTY_BY_DEPT);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [stats, setStats] = useState({ total: 88, phd: 26 });
+
+  useEffect(() => {
+    let cancelled = false
+    getFacultyPublic()
+      .then((items: Faculty[]) => {
+        if (cancelled || items.length === 0) return
+        const grouped: Record<string, FacultyMember[]> = {}
+        for (const f of items) {
+          const dept = f.department || "Other"
+          if (!grouped[dept]) grouped[dept] = []
+          grouped[dept].push({
+            name: f.name,
+            designation: f.designation,
+            qualification: f.qualification,
+            specialization: f.specialization ?? undefined,
+            photo: f.photoUrl ?? undefined,
+          })
+        }
+        setFacultyByDept(grouped)
+        setStats({
+          total: items.length,
+          phd: items.filter((f) => /ph\.?\s*d/i.test(f.qualification)).length,
+        })
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
+
+  const TABS = Object.keys(facultyByDept);
+  const currentTab = activeTab && TABS.includes(activeTab) ? activeTab : TABS[0];
+  const members = facultyByDept[currentTab] ?? [];
 
   return (
     <>
@@ -119,7 +150,7 @@ export default function FacultyPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .fac-hero {
-          position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/faculty2.jpg');
+          position: relative; background-image: url('/site-images/faculty2.jpg');
           background-size: cover; background-position: center;
           background-color: #2B3490; min-height: 320px; display: flex;
           align-items: flex-end; overflow: hidden; padding-bottom: 40px;
@@ -183,16 +214,12 @@ export default function FacultyPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
-        <section className="fac-hero" style={{ backgroundImage: "url('/images/campus/13.jpg')", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(43, 52, 144, 0.85)" }} />
+        <section className="fac-hero" style={{ backgroundImage: "url('/banners/academics-faculty.png')", position: "relative" }}>
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="fac-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Faculty</h1>
               <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Meet Our Experienced Educators</p>
-              <div className="fac-breadcrumb">
-                <a href="/">Home</a><span>/</span><a href="/academics">Academics</a><span>/</span><span>Faculty</span>
-              </div>
             </div>
           </div>
         </section>
@@ -212,12 +239,12 @@ export default function FacultyPage() {
             <div className="fac-stats-bar">
               <div className="fac-stat-item">
                 <div className="fac-stat-icon"><UsersIcon /></div>
-                <div className="fac-stat-number">88</div>
+                <div className="fac-stat-number">{stats.total}</div>
                 <div className="fac-stat-label">Total Faculty</div>
               </div>
               <div className="fac-stat-item">
                 <div className="fac-stat-icon"><AwardIcon /></div>
-                <div className="fac-stat-number">26</div>
+                <div className="fac-stat-number">{stats.phd}</div>
                 <div className="fac-stat-label">PhD Holders</div>
               </div>
               <div className="fac-stat-item">
@@ -238,7 +265,7 @@ export default function FacultyPage() {
               {TABS.map((tab) => (
                 <button
                   key={tab}
-                  className={`fac-tab ${activeTab === tab ? "active" : ""}`}
+                  className={`fac-tab ${currentTab === tab ? "active" : ""}`}
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab}
@@ -254,7 +281,7 @@ export default function FacultyPage() {
                     <div className="fac-photo">
                       {m.photo ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={m.photo} alt={m.name} />
+                        <img src={m.photo} alt={m.name} onError={(e) => { e.currentTarget.style.display = "none" }} />
                       ) : (
                         <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 32, fontWeight: 700, fontFamily: "'Rajdhani', sans-serif" }}>
                           {initials(m.name)}

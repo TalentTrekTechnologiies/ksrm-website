@@ -240,17 +240,13 @@ export default function AcademicCalendarPage() {
       <main style={{ background: "#ffffff" }}>
         <section
           className="ac-hero"
-          style={{ backgroundImage: "url('/images/campus/02.jpg')", position: "relative" }}
+          style={{ backgroundImage: "url('/banners/academic-calendar.png')", position: "relative" }}
         >
-          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(43, 52, 144, 0.85)" }} />
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="ac-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 className="ac-hero-title">Academic Calendar</h1>
               <p className="ac-hero-tagline">Stay on track with semester schedules, exam timetables and important academic dates</p>
-              <div className="ac-breadcrumb">
-                <a href="/">Home</a><span>/</span><a href="/academics">Academics</a><span>/</span><span>Academic Calendar</span>
-              </div>
               <div className="ac-year-badge">Current AY: 2025–2026</div>
               <a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" className="ac-cta-button">
                 <ExternalLinkIcon />View Exam Results

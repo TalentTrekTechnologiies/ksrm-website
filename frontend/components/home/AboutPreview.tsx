@@ -3,23 +3,45 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
+import { getSectionPublic, AboutContent } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
+
+async function fetchAbout(): Promise<AboutContent | null> {
+  const section = await getSectionPublic("about")
+  return section?.content ?? null
+}
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-const years = new Date().getFullYear() - 1980
+const FALLBACK_ABOUT: AboutContent = {
+  eyebrow: "OUR LEGACY",
+  title: "Four Decades of Engineering Excellence",
+  subtitle: null,
+  paragraphs: [
+    "Established in 1980 in memory of Late Sri Srinivasa Reddy, KSRM College of Engineering was born from the vision of Late Sri Kandula Obul Reddy to bring quality technical education to the Rayalaseema region of Andhra Pradesh.",
+    "Today, as a UGC Autonomous institution affiliated to JNTUA, we continue that legacy — shaping engineers, innovators, and leaders who carry our values into the world.",
+  ],
+  highlights: [],
+  statistics: [
+    { num: "1980", label: "Established" },
+    { num: "7+", label: "Departments" },
+    { num: "UGC", label: "Autonomous" },
+  ],
+  foundingYear: 1980,
+  image: { url: "/topview (1).jpg", alt: "KSRM Campus", caption: "Aerial View of KSRM College Campus" },
+  badgeLabel: "YEARS OF TRUST",
+  cta: { text: "Read Our Story →", href: "/about" },
+}
 
-const legacyStats = [
-  { num: "1980", label: "Established"  },
-  { num: "7+",   label: "Departments"  },
-  { num: "UGC",  label: "Autonomous"   },
-]
+export default function AboutPreview({ previewData }: { previewData?: AboutContent }) {
+  const liveAbout = useLiveData(fetchAbout, [], { skip: !!previewData })
+  const about = previewData ?? liveAbout ?? FALLBACK_ABOUT
 
-export default function AboutPreview() {
+  const years = new Date().getFullYear() - about.foundingYear
+
   return (
     <section className="about-section" style={{ width: "100%", background: "#ffffff", padding: "52px 0" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=DM+Sans:opsz,wght@9..40,400&display=swap');
-
         .about-section { box-sizing: border-box; }
 
         .about-grid {
@@ -58,37 +80,62 @@ export default function AboutPreview() {
           transition={{ duration: 0.75, ease: EASE }}
         >
           {/* EYEBROW */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-            <div style={{ width: "28px", height: "2px", background: "#FFE619", flexShrink: 0 }} />
-            <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
-              OUR LEGACY
-            </span>
-          </div>
+          {about.eyebrow && (
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+              <div style={{ width: "28px", height: "2px", background: "#FFE619", flexShrink: 0 }} />
+              <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
+                {about.eyebrow}
+              </span>
+            </div>
+          )}
 
           {/* HEADING */}
           <h2 className="about-heading" style={{
             fontFamily: "'Rajdhani', sans-serif",
             fontWeight: 700, lineHeight: 1.1,
-            margin: "0 0 24px",
+            color: "#1a1a2e",
+            margin: about.subtitle ? "0 0 8px" : "0 0 24px",
           }}>
-            <span style={{ color: "#1a1a2e" }}>Four Decades of </span>
-            <span style={{ color: "#2B3490" }}>Engineering Excellence</span>
+            {about.title}
           </h2>
+          {about.subtitle && (
+            <p style={{ color: "#2B3490", fontSize: "16px", fontWeight: 600, margin: "0 0 20px" }}>
+              {about.subtitle}
+            </p>
+          )}
 
           {/* PARAGRAPHS */}
-          <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.7, margin: "0 0 16px" }}>
-            Established in 1980 in memory of Late Sri Srinivasa Reddy, KSRM College of Engineering was born
-            from the vision of Late Sri Kandula Obul Reddy to bring quality technical education to the
-            Rayalaseema region of Andhra Pradesh.
-          </p>
-          <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.7, margin: "0 0 28px" }}>
-            Today, as a UGC Autonomous institution affiliated to JNTUA, we continue that legacy — shaping
-            engineers, innovators, and leaders who carry our values into the world.
-          </p>
+          {about.paragraphs.map((paragraph, i) => (
+            <p
+              key={i}
+              style={{
+                color: "#555",
+                fontSize: "15px",
+                lineHeight: 1.7,
+                margin: i === about.paragraphs.length - 1 ? "0 0 28px" : "0 0 16px",
+              }}
+            >
+              {paragraph}
+            </p>
+          ))}
+
+          {/* HIGHLIGHTS */}
+          {about.highlights && about.highlights.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
+              {about.highlights.map((h, i) => (
+                <div key={i}>
+                  <p style={{ margin: 0, fontSize: "14px", fontWeight: 700, color: "#1a1a2e" }}>{h.title}</p>
+                  {h.description && (
+                    <p style={{ margin: 0, fontSize: "13px", color: "#777" }}>{h.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* LEGACY STATS */}
           <div style={{ display: "flex", gap: "28px", marginBottom: "32px" }}>
-            {(Array.isArray(legacyStats) ? legacyStats : []).map((s) => (
+            {about.statistics.map((s) => (
               <div key={s.label}>
                 <div style={{
                   fontFamily: "'Rajdhani', sans-serif",
@@ -103,7 +150,7 @@ export default function AboutPreview() {
           </div>
 
           {/* CTA BUTTON */}
-          <Link href="/about" style={{
+          <Link href={about.cta.href} style={{
             display: "inline-block",
             padding: "12px 26px",
             background: "#2B3490",
@@ -114,7 +161,7 @@ export default function AboutPreview() {
             textDecoration: "none",
             transition: "background 0.2s ease",
           }}>
-            Read Our Story →
+            {about.cta.text}
           </Link>
         </motion.div>
 
@@ -129,8 +176,8 @@ export default function AboutPreview() {
         >
           <div style={{ position: "relative" }}>
             <img
-              src="/topview (1).jpg"
-              alt="KSRM Campus"
+              src={about.image.url}
+              alt={about.image.alt}
               style={{
                 width: "100%", height: "340px",
                 objectFit: "cover",
@@ -156,22 +203,24 @@ export default function AboutPreview() {
                 {years}+
               </div>
               <div style={{ fontSize: "11px", fontWeight: 600, marginTop: "5px", letterSpacing: "0.5px" }}>
-                YEARS OF TRUST
+                {about.badgeLabel ?? "YEARS OF TRUST"}
               </div>
             </div>
           </div>
 
           {/* IMAGE CAPTION */}
-          <p style={{
-            marginTop: "12px",
-            textAlign: "center",
-            fontSize: "16px",
-            fontWeight: 600,
-            color: "#2B3490",
-            letterSpacing: "0.4px",
-          }}>
-            Aerial View of KSRM College Campus
-          </p>
+          {about.image.caption && (
+            <p style={{
+              marginTop: "12px",
+              textAlign: "center",
+              fontSize: "16px",
+              fontWeight: 600,
+              color: "#2B3490",
+              letterSpacing: "0.4px",
+            }}>
+              {about.image.caption}
+            </p>
+          )}
         </motion.div>
 
       </div>

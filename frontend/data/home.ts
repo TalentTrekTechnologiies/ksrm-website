@@ -53,6 +53,7 @@ export const homeData = {
     { name: "Civil Engineering", code: "CIVIL", hod: "Dr. G. Chennakesava Reddy", link: "/departments/civil", svg: "/posters/departments/civil.svg" },
     { name: "Humanities & Sciences", code: "H&S", hod: "Dr. V. Ramachandra Reddy", link: "/departments/hs", svg: "/posters/departments/hs.svg" },
     { name: "Management Studies", code: "MBA", hod: "Department of MBA", link: "/departments/mba", svg: "/posters/departments/mba.svg" },
+    { name: "All Departments", code: "ALL", hod: "KSRM Departments", link: "/departments", svg: "/posters/departments/all%20departments.svg" },
   ],
   news: [
     { category: "Examinations", date: "2026-05-15", title: "KGCET 2K26 Results Announced", link: "/news", gradient: "linear-gradient(135deg, #2B3490, #1e2570)" },

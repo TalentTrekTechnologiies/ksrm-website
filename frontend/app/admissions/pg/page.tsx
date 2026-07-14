@@ -17,7 +17,7 @@ export default function PGAdmissionsPage() {
 
         .pg-hero {
           position: relative;
-          background-image: url('/banners/mba banner.avif');
+          background-image: url('/banners/pg-admissions.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -89,7 +89,6 @@ export default function PGAdmissionsPage() {
         <section className="pg-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="pg-breadcrumb"><a href="/admissions">Admissions</a> / PG Programs</div>
               <h1 className="pg-title">Postgraduate Programs</h1>
               <p className="pg-subtitle">M.Tech &amp; MBA Programs at KSRM</p>
             </div>

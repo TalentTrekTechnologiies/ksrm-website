@@ -29,7 +29,7 @@ export default function MoUsPage() {
 
         .mous-hero {
           position: relative;
-          background-image: url('/banners/startup banner.jpg');
+          background-image: url('/banners/mous.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -86,9 +86,6 @@ export default function MoUsPage() {
         <section className="mous-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="mous-breadcrumb">
-                <a href="/">Home</a> / <a href="/placements">Placements</a> / MoUs
-              </div>
               <h1 className="mous-title">MoUs</h1>
               <p className="mous-subtitle">Placements & Career Development</p>
             </div>

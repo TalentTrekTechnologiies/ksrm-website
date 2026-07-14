@@ -18,9 +18,11 @@ export class CampusVideosService {
     private auditLog: AuditLogService,
   ) {}
 
-  async findAllPublic() {
+  // departmentId omitted/null -> the global homepage collection (unchanged
+  // default behavior); a specific id -> that department's Videos section.
+  async findAllPublic(departmentId: number | null = null) {
     return this.prisma.campusVideo.findMany({
-      where: { isActive: true, deletedAt: null },
+      where: { departmentId, isActive: true, deletedAt: null },
       orderBy: { sortOrder: 'asc' },
     });
   }
@@ -29,9 +31,12 @@ export class CampusVideosService {
   // admin UI can actually offer a restore action - excluded by default
   // since most callers (including reorder's own re-fetch) want the live
   // working set only.
-  async findAllAdmin(includeDeleted = false) {
+  async findAllAdmin(departmentId?: number, includeDeleted = false) {
     return this.prisma.campusVideo.findMany({
-      where: { ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(departmentId !== undefined && { departmentId }),
+        ...(!includeDeleted && { deletedAt: null }),
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
@@ -54,7 +59,7 @@ export class CampusVideosService {
     const sortOrder =
       dto.sortOrder ??
       (await this.prisma.campusVideo.count({
-        where: { deletedAt: null },
+        where: { departmentId: dto.departmentId ?? null, deletedAt: null },
       }));
 
     const created = await this.prisma.campusVideo.create({

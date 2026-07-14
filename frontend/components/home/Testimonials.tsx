@@ -4,8 +4,18 @@ import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
 import { testimonialsData } from "@/data/home"
 import { Star } from "lucide-react"
+import { getTestimonialsPublic } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
+
+interface DisplayTestimonial {
+  name: string
+  degree: string
+  company: string
+  quote: string
+  rating: number
+}
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24 },
@@ -17,11 +27,39 @@ const containerVariants = {
   visible: { transition: { staggerChildren: 0.1 } },
 }
 
+const FALLBACK_TESTIMONIALS: DisplayTestimonial[] = Array.isArray(testimonialsData) ? testimonialsData : []
+
+interface TestimonialsState {
+  hidden: boolean
+  testimonials: DisplayTestimonial[]
+}
+
+async function fetchTestimonials(): Promise<TestimonialsState> {
+  const { visible, items } = await getTestimonialsPublic()
+  if (!visible) return { hidden: true, testimonials: FALLBACK_TESTIMONIALS }
+  if (items.length === 0) return { hidden: false, testimonials: FALLBACK_TESTIMONIALS }
+  return {
+    hidden: false,
+    testimonials: items.map((t) => ({
+      name: t.name,
+      degree: t.role,
+      company: t.company ?? "",
+      quote: t.quote,
+      rating: t.rating,
+    })),
+  }
+}
+
 export default function Testimonials() {
+  const live = useLiveData(fetchTestimonials, [])
+  const hidden = live?.hidden ?? false
+  const testimonials = live?.testimonials ?? FALLBACK_TESTIMONIALS
+
+  if (hidden) return null
+
   return (
     <section style={{ width: "100%", background: "#f7f8fa", padding: "56px 0" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .testimonials-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -70,7 +108,7 @@ export default function Testimonials() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {(Array.isArray(testimonialsData) ? testimonialsData : []).map((testimonial, i) => (
+          {testimonials.map((testimonial, i) => (
             <motion.div key={i} variants={cardVariants}>
               <div style={{
                 background: "#ffffff",
@@ -91,7 +129,7 @@ export default function Testimonials() {
                   fontSize: "15px", color: "#666", lineHeight: 1.7, marginBottom: "24px", fontStyle: "italic",
                   margin: "0 0 24px",
                 }}>
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
                 {/* AVATAR + NAME */}

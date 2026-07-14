@@ -11,17 +11,32 @@ import { UpdateDownloadDto } from './dto/update-download.dto';
 import { ReorderDownloadsDto } from './dto/reorder-downloads.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { MediaLinkService } from '../media/media-link.service';
+
+const MEDIA_MODULE = 'downloads';
+const MEDIA_FIELD = 'fileUrl';
 
 @Injectable()
 export class DownloadsService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
-  async findAllPublic(category?: DownloadCategory) {
+  async findAllPublic(
+    category?: DownloadCategory,
+    departmentId?: number,
+    pageSection?: string,
+  ) {
     return this.prisma.download.findMany({
-      where: { isActive: true, deletedAt: null, ...(category && { category }) },
+      where: {
+        isActive: true,
+        deletedAt: null,
+        ...(category && { category }),
+        ...(departmentId !== undefined && { departmentId }),
+        ...(pageSection && { pageSection }),
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
@@ -29,9 +44,13 @@ export class DownloadsService {
   // includeDeleted surfaces soft-deleted rows too (deletedAt set) so the
   // admin UI can offer a restore action - excluded by default since most
   // callers want the live working set only.
-  async findAllAdmin(includeDeleted = false) {
+  async findAllAdmin(includeDeleted = false, departmentId?: number, mediaId?: number) {
     return this.prisma.download.findMany({
-      where: { ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(!includeDeleted && { deletedAt: null }),
+        ...(departmentId !== undefined && { departmentId }),
+        ...(mediaId !== undefined && { mediaId }),
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
@@ -51,9 +70,13 @@ export class DownloadsService {
       dto.sortOrder ??
       ((await this.prisma.download.count({ where: { deletedAt: null } })) as number);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'DOCUMENT');
+
     const created = await this.prisma.download.create({
-      data: { ...dto, sortOrder },
+      data: { ...dto, fileUrl: resolvedUrl ?? dto.fileUrl, sortOrder },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -74,10 +97,18 @@ export class DownloadsService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Download ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'DOCUMENT');
+
     const updated = await this.prisma.download.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { fileUrl: resolvedUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -100,6 +131,8 @@ export class DownloadsService {
       where: { id },
       data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
     });
+
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -127,6 +160,10 @@ export class DownloadsService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

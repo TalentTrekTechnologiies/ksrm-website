@@ -1,9 +1,10 @@
 import { Metadata } from "next"
+import AdminsManager from "@/components/admin/AdminsManager"
 
 export const metadata: Metadata = {
   title: "Admins | K.S.R.M College of Engineering",
 }
 
-export default function SubPage() {
-  return <main><h1>Admins</h1><p>Content</p></main>
+export default function AdminsPage() {
+  return <AdminsManager />
 }

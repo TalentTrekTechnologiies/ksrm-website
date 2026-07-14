@@ -3,6 +3,8 @@
 import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
 import { campusVideosData } from "@/data/home"
+import { getCampusVideosPublic } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -16,15 +18,52 @@ const containerVariants = {
   visible: { transition: { staggerChildren: 0.1 } },
 }
 
-export default function CampusVideos() {
-  // Extract video ID from YouTube embed URL
-  const getVideoId = (url: string) => {
-    if (!url) return ''
-    const match = url.match(/embed\/([a-zA-Z0-9_-]+)/)
-    return match ? match[1] : ''
-  }
+interface DisplayVideo {
+  title: string
+  url: string
+  badge: string
+}
 
-  const videoBadges = ["Campus Tour", "Official", "College Tour"]
+const FALLBACK_BADGES = ["Campus Tour", "Official", "College Tour"]
+
+// Extract video ID from a YouTube embed URL.
+function getVideoId(url: string) {
+  if (!url) return ''
+  const match = url.match(/embed\/([a-zA-Z0-9_-]+)/)
+  return match ? match[1] : ''
+}
+
+const FALLBACK_VIDEOS: DisplayVideo[] = (Array.isArray(campusVideosData) ? campusVideosData : []).map((v, i) => ({
+  title: v.title,
+  url: v.url,
+  badge: FALLBACK_BADGES[i] || 'Video',
+}))
+
+interface CampusVideosState {
+  hidden: boolean
+  videos: DisplayVideo[]
+}
+
+async function fetchCampusVideos(): Promise<CampusVideosState> {
+  const { visible, items } = await getCampusVideosPublic()
+  if (!visible) return { hidden: true, videos: FALLBACK_VIDEOS }
+  if (items.length === 0) return { hidden: false, videos: FALLBACK_VIDEOS }
+  return {
+    hidden: false,
+    videos: items.map((v) => ({
+      title: v.title,
+      url: v.youtubeUrl,
+      badge: v.badgeLabel || 'Campus Video',
+    })),
+  }
+}
+
+export default function CampusVideos() {
+  const live = useLiveData(fetchCampusVideos, [])
+  const hidden = live?.hidden ?? false
+  const videos = live?.videos ?? FALLBACK_VIDEOS
+
+  if (hidden) return null
 
   return (
     <section style={{
@@ -34,7 +73,6 @@ export default function CampusVideos() {
       borderTop: "none"
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .videos-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -124,7 +162,7 @@ export default function CampusVideos() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {(Array.isArray(campusVideosData) ? campusVideosData : []).map((video, i) => {
+          {videos.map((video, i) => {
             const videoId = getVideoId(video?.url ?? '')
             const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : ''
 
@@ -145,7 +183,7 @@ export default function CampusVideos() {
                           (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${videoId}/default.jpg`
                         }}
                       />
-                      <div className="video-badge">{videoBadges[i] || 'Video'}</div>
+                      <div className="video-badge">{video.badge}</div>
                     </div>
                     <div className="video-title">{video?.title}</div>
                   </a>

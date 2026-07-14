@@ -1,4 +1,6 @@
-﻿const objectives = [
+﻿import PageResources from "@/components/PageResources";
+
+const objectives = [
   "To develop and introduce curriculum on Entrepreneurship Development at various levels including degree/diploma courses",
   "To organize Entrepreneurship Awareness Camps, Development Programmes and faculty development programmes",
   "To organize guest lectures, seminars for promotion of science and technology based entrepreneurship",
@@ -35,7 +37,7 @@ export default function EDCPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .edc-hero {
-          position: relative; background-image: url('/banners/edc banner.avif'); background-size: cover;
+          position: relative; background-image: url('/banners/edc.png'); background-size: cover;
           background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex;
           align-items: flex-end; padding-bottom: 40px; overflow: hidden;
         }
@@ -83,7 +85,6 @@ export default function EDCPage() {
       <section className="edc-hero">
         <div className="responsive-container">
           <div style={{ padding: "0 0 32px 0" }}>
-            <div className="breadcrumb"><a href="/">Home</a><span>/</span><span>EDC</span></div>
             <h1 className="edc-title">Entrepreneurship Development Cell (EDC)</h1>
             <p className="edc-subtitle">Developing Entrepreneurs Since August 2005</p>
           </div>
@@ -173,6 +174,8 @@ export default function EDCPage() {
           </table>
         </div>
       </section>
+
+      <PageResources section="edc" />
     </main>
   );
 }

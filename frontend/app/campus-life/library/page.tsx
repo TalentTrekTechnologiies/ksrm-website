@@ -1,4 +1,5 @@
-﻿const stats = [
+﻿import PageResources from "@/components/PageResources";
+const stats = [
   { icon: "📖", value: "45,000+", label: "Books" },
   { icon: "📚", value: "150+", label: "Journals" },
   { icon: "🖥️", value: "25+", label: "E-Resources" },
@@ -42,7 +43,7 @@ export default function LibraryPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .lib-hero { position: relative; background-image: url('/images/campus/12.jpg'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
+        .lib-hero { position: relative; background-image: url('/banners/library.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .lib-hero::before { content: ''; position: absolute; inset: 0; background-color: rgba(43,52,144,0.85); }
         .lib-hero > * { position: relative; z-index: 2; }
         .lib-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
@@ -84,7 +85,6 @@ export default function LibraryPage() {
           <div className="lib-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Library</h1>
           <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Knowledge Hub of the Campus</p>
-          <div className="lib-breadcrumb"><a href="/">Home</a><span>/</span><a href="/campus-life">Campus Life</a><span>/</span><span>Library</span></div>
         </div>
       </section>
 
@@ -197,6 +197,7 @@ export default function LibraryPage() {
           </div>
         </div>
       </section>
+      <PageResources section="library" />
     </main>
   );
 }

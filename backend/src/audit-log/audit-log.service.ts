@@ -1,11 +1,28 @@
 ﻿import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { getRequestIpAddress } from "../common/request-context";
 
 export interface AuditLogData {
   adminId: number;
   adminName: string;
   adminEmail: string;
-  action: "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "REORDER" | "PUBLISH" | "UNPUBLISH";
+  action:
+    | "CREATE"
+    | "UPDATE"
+    | "DELETE"
+    | "RESTORE"
+    | "REORDER"
+    | "PUBLISH"
+    | "UNPUBLISH"
+    // Media Library actions.
+    | "REPLACE"
+    | "ROLLBACK"
+    | "CROP"
+    // Admin Management actions.
+    | "RESET_PASSWORD"
+    | "ASSIGN_ROLES"
+    | "ENABLE"
+    | "DISABLE";
   module: string;
   targetId?: number;
   details?: object;
@@ -27,24 +44,121 @@ export class AuditLogService {
     return this.prisma.auditLog.create({
       data: {
         ...data,
+        ipAddress: data.ipAddress ?? getRequestIpAddress(),
         details: data.details ? JSON.stringify(data.details) : null,
       },
     });
   }
 
+  private buildWhere(filters?: {
+    module?: string;
+    adminId?: number;
+    action?: string;
+    search?: string;
+    from?: Date;
+    to?: Date;
+  }) {
+    return {
+      ...(filters?.module && { module: filters.module }),
+      ...(filters?.adminId && { adminId: filters.adminId }),
+      ...(filters?.action && { action: filters.action }),
+      ...(filters?.search && {
+        OR: [
+          { adminName: { contains: filters.search, mode: "insensitive" as const } },
+          { adminEmail: { contains: filters.search, mode: "insensitive" as const } },
+          { requestId: { contains: filters.search, mode: "insensitive" as const } },
+        ],
+      }),
+      ...((filters?.from || filters?.to) && {
+        createdAt: {
+          ...(filters.from && { gte: filters.from }),
+          ...(filters.to && { lte: filters.to }),
+        },
+      }),
+    };
+  }
+
   async getAll(filters?: {
     module?: string;
     adminId?: number;
-    limit?: number;
+    action?: string;
+    search?: string;
+    from?: Date;
+    to?: Date;
+    page?: number;
+    pageSize?: number;
   }) {
-    return this.prisma.auditLog.findMany({
-      where: {
-        ...(filters?.module && { module: filters.module }),
-        ...(filters?.adminId && { adminId: filters.adminId }),
-      },
+    const page = filters?.page ?? 1;
+    const pageSize = filters?.pageSize ?? 50;
+    const where = this.buildWhere(filters);
+
+    const [items, total] = await Promise.all([
+      this.prisma.auditLog.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      this.prisma.auditLog.count({ where }),
+    ]);
+
+    return { items, total, page, pageSize };
+  }
+
+  // Same filters as getAll but uncapped (up to a hard safety ceiling) and
+  // unpaginated - the CSV export's whole point is "give me everything that
+  // matches", not one page at a time.
+  async exportCsv(filters?: {
+    module?: string;
+    adminId?: number;
+    action?: string;
+    search?: string;
+    from?: Date;
+    to?: Date;
+  }): Promise<string> {
+    const where = this.buildWhere(filters);
+    const rows = await this.prisma.auditLog.findMany({
+      where,
       orderBy: { createdAt: "desc" },
-      take: filters?.limit || 100,
+      take: 10000,
     });
+
+    const header = [
+      "id",
+      "createdAt",
+      "action",
+      "module",
+      "targetId",
+      "adminId",
+      "adminName",
+      "adminEmail",
+      "ipAddress",
+      "requestId",
+    ];
+    const csvEscape = (value: unknown) => {
+      const str = value === null || value === undefined ? "" : String(value);
+      return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+    const lines = [header.join(",")];
+    for (const row of rows) {
+      lines.push(
+        [
+          row.id,
+          row.createdAt.toISOString(),
+          row.action,
+          row.module,
+          row.targetId ?? "",
+          row.adminId,
+          row.adminName,
+          row.adminEmail,
+          row.ipAddress ?? "",
+          row.requestId ?? "",
+        ]
+          .map(csvEscape)
+          .join(","),
+      );
+    }
+    return lines.join("\n");
   }
 
   async getByAdminId(adminId: number, limit = 50) {

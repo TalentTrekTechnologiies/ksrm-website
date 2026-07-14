@@ -41,6 +41,10 @@ export class CreateAccreditationBadgeDto {
 
   @IsOptional()
   @IsInt()
+  mediaId?: number;
+
+  @IsOptional()
+  @IsInt()
   @Min(0)
   sortOrder?: number;
 

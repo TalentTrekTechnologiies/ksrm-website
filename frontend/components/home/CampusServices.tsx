@@ -1,28 +1,45 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
-import { homeData } from "@/data/home"
+import { getQuickLinksPublic, QuickLink } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
 
-const EASE = [0.22, 1, 0.36, 1] as const
+const FALLBACK_SERVICES = [
+  { id: -1, poster: "/posters/admissions.svg", title: "Admissions", desc: "Apply & eligibility", link: "/admissions" },
+  { id: -2, poster: "/posters/examinations.svg", title: "Examinations", desc: "Results & timetables", link: "/examinations" },
+  { id: -3, poster: "/posters/placements.svg", title: "Placements", desc: "Careers & recruiters", link: "/placements" },
+  { id: -4, poster: "/posters/library.svg", title: "Library", desc: "E-resources & OPAC", link: "/campus-life/library" },
+  { id: -5, poster: "/posters/syllabus.svg", title: "Syllabus", desc: "Download by semester", link: "/academics" },
+  { id: -6, poster: "/posters/student-portal.svg", title: "Student Portal", desc: "Login portal", link: "/contact" },
+  { id: -7, poster: "/posters/alumni.svg", title: "Alumni", desc: "Network & events", link: "/alumni" },
+  { id: -8, poster: "/posters/research.svg", title: "Research", desc: "Publications & R&D", link: "/research" },
+]
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
+const FALLBACK_BY_TITLE = new Map(
+  FALLBACK_SERVICES.map((service) => [service.title.toLowerCase(), service]),
+)
+
+function normalizeService(service: QuickLink) {
+  const fallback = FALLBACK_BY_TITLE.get(service.title.trim().toLowerCase())
+
+  return {
+    id: service.id,
+    poster: service.imageUrl?.trim() || fallback?.poster || "/posters/admissions.svg",
+    title: service.title.trim() || fallback?.title || "Campus Service",
+    desc: service.description?.trim() || fallback?.desc || "",
+    link: service.linkUrl?.trim() || fallback?.link || "/",
+  }
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1, y: 0,
-    transition: { duration: 0.5, ease: EASE },
-  },
+async function fetchServices() {
+  const data = await getQuickLinksPublic("homepage_quick_links")
+  if (data.length === 0) return FALLBACK_SERVICES
+  return data.map(normalizeService)
 }
 
 export default function CampusServices() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const services = useLiveData(fetchServices, [], { initialValue: FALLBACK_SERVICES }) ?? FALLBACK_SERVICES
 
   return (
     <section
@@ -30,8 +47,6 @@ export default function CampusServices() {
       style={{ width: "100%", background: "#ffffff", padding: "52px 0", borderTop: "1px solid #f1f5f9" }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
         .services-section { box-sizing: border-box; }
 
         .services-grid {
@@ -72,15 +87,9 @@ export default function CampusServices() {
       </div>
 
       {/* CARDS GRID */}
-      <motion.div
-        className="services-grid"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        {(Array.isArray(homeData?.services) ? homeData.services : []).map((service) => (
-          <motion.div key={service.title} variants={cardVariants}>
+      <div className="services-grid">
+        {services.map((service) => (
+          <div key={service.id}>
             <Link href={service.link} style={{ textDecoration: "none", display: "block", height: "100%" }}>
               <div style={{
                 background: "#ffffff",
@@ -98,8 +107,8 @@ export default function CampusServices() {
                   overflow: "hidden",
                 }}>
                   <img
-                    src={service?.poster}
-                    alt={service?.label ?? "Service"}
+                    src={service.poster}
+                    alt={service.title ?? "Service"}
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none'
                     }}
@@ -135,9 +144,9 @@ export default function CampusServices() {
                 </div>
               </div>
             </Link>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
       </Container>
     </section>
   )

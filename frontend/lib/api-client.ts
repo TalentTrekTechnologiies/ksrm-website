@@ -1,9 +1,18 @@
 import { clearSession, getToken } from "./auth";
 
-// Falls back to the backend's documented default dev port (see
-// backend/.env.example) when NEXT_PUBLIC_API_URL isn't set at build time.
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:4000";
+const CONFIGURED_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+
+function getApiBaseUrl() {
+  if (CONFIGURED_API_BASE_URL) return CONFIGURED_API_BASE_URL;
+  if (typeof window === "undefined") return "http://localhost:4000";
+
+  const host = window.location.hostname;
+  if (host === "localhost" || host === "127.0.0.1") {
+    return "http://localhost:4000";
+  }
+
+  return "";
+}
 
 export class ApiError extends Error {
   constructor(
@@ -49,7 +58,7 @@ export async function apiFetch<T>(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${getApiBaseUrl()}${path}`, {
     ...options,
     headers,
   });
@@ -86,4 +95,15 @@ export function apiPost<T>(path: string, body?: unknown): Promise<T> {
     method: "POST",
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
+}
+
+export function apiPatch<T>(path: string, body?: unknown): Promise<T> {
+  return apiFetch<T>(path, {
+    method: "PATCH",
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+}
+
+export function apiDelete<T>(path: string): Promise<T> {
+  return apiFetch<T>(path, { method: "DELETE" });
 }

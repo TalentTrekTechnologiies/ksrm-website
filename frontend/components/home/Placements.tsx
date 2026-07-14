@@ -2,13 +2,58 @@
 
 import Container from "@/components/ui/Container"
 import { homeData } from "@/data/home"
+import { getStatisticsPublic, getRecruitersPublic, SiteStatistic } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
+
+const FALLBACK_STATS = [
+  { id: -1, number: 1200, suffix: "+", label: "Students Placed" },
+  { id: -2, number: 200, suffix: "+", label: "Recruiting Companies" },
+  { id: -3, number: 12, suffix: " LPA", label: "Highest Package" },
+  { id: -4, number: 90, suffix: "%", label: "Placement Rate" },
+]
+
+interface DisplayRecruiter {
+  logo: string
+  name: string
+}
+
+const INITIAL_STATS =
+  Array.isArray(homeData?.placements?.stats) && homeData.placements.stats.length > 0
+    ? homeData.placements.stats.map((s, i) => ({ id: -(i + 1), number: s.number, suffix: s.suffix, label: s.label }))
+    : FALLBACK_STATS
+
+const INITIAL_RECRUITERS: DisplayRecruiter[] = Array.isArray(homeData?.recruiters) ? homeData.recruiters : []
+
+async function fetchPlacementStats() {
+  const data = await getStatisticsPublic("homepage_placements")
+  if (data.length === 0) return INITIAL_STATS
+  return data.map((s: SiteStatistic) => ({ id: s.id, number: s.value, suffix: s.suffix ?? "", label: s.label }))
+}
+
+interface RecruitersState {
+  hidden: boolean
+  recruiters: DisplayRecruiter[]
+}
+
+// Placements.tsx previously read homeData.recruiters directly with no API
+// call at all - this was the one component in the Sprint 1C scope still
+// doing that, per the plan's explicit callout.
+async function fetchRecruiters(): Promise<RecruitersState> {
+  const { visible, items } = await getRecruitersPublic()
+  if (!visible) return { hidden: true, recruiters: INITIAL_RECRUITERS }
+  if (items.length === 0) return { hidden: false, recruiters: INITIAL_RECRUITERS }
+  return { hidden: false, recruiters: items.map((r) => ({ logo: r.logoUrl, name: r.name })) }
+}
 
 export default function Placements() {
+  const stats = useLiveData(fetchPlacementStats, [], { initialValue: INITIAL_STATS }) ?? INITIAL_STATS
+  const liveRecruiters = useLiveData(fetchRecruiters, [])
+  const recruitersHidden = liveRecruiters?.hidden ?? false
+  const recruiters = liveRecruiters?.recruiters ?? INITIAL_RECRUITERS
+
   return (
     <section style={{ width: "100%", background: "#f8f9fa", padding: "80px 0" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
         .placements-stats {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -55,7 +100,7 @@ export default function Placements() {
         .photo-track {
           display: flex;
           gap: 16px;
-          animation: scroll 30s linear infinite;
+          animation: scroll 15s linear infinite;
         }
 
         .photo-item {
@@ -129,7 +174,7 @@ export default function Placements() {
         .recruiter-track {
           display: flex;
           gap: 20px;
-          animation: scroll 25s linear infinite;
+          animation: scroll 12s linear infinite;
         }
 
         .recruiter-logo {
@@ -178,14 +223,14 @@ export default function Placements() {
             Where Talent Meets Opportunity
           </h2>
           <p style={{ fontSize: "16px", color: "#666", margin: 0 }}>
-            Join 1200+ graduates placed at India's top companies
+            Join 1200+ graduates placed at India&apos;s top companies
           </p>
         </div>
 
         {/* STATS */}
         <div className="placements-stats">
-          {(Array.isArray(homeData?.placements?.stats) ? homeData.placements.stats : []).map((stat) => (
-            <div key={stat.label} className="stat-box">
+          {stats.map((stat) => (
+            <div key={stat.id} className="stat-box">
               <div className="stat-number">
                 {stat.number}{stat.suffix}
               </div>
@@ -209,40 +254,42 @@ export default function Placements() {
         </div>
 
         {/* RECRUITER SECTION */}
-        <div className="recruiter-section">
-          <div className="recruiter-header">
-            <div className="recruiter-title">Recruited by <span style={{ color: "#FFE619" }}>200+ Top Companies</span></div>
-            <div className="recruiter-badge">
-              <span className="badge-value">90%</span>
-              <span className="badge-label">Placement Rate</span>
+        {!recruitersHidden && (
+          <div className="recruiter-section">
+            <div className="recruiter-header">
+              <div className="recruiter-title">Recruited by <span style={{ color: "#FFE619" }}>200+ Top Companies</span></div>
+              <div className="recruiter-badge">
+                <span className="badge-value">90%</span>
+                <span className="badge-label">Placement Rate</span>
+              </div>
             </div>
-          </div>
 
-          <div className="recruiter-carousel" style={{ overflow: "hidden" }}>
-            <div className="recruiter-track">
-              {(Array.isArray(homeData?.recruiters) ? [...homeData.recruiters, ...homeData.recruiters] : []).map((recruiter, i) => {
-                const logo = recruiter?.logo ?? recruiter ?? '';
-                const filename = logo.split('/').pop() || '';
-                const encodedPath = `/recruiters/${encodeURIComponent(filename)}`;
-                return (
-                  <div key={i} className="recruiter-logo">
-                    <img
-                      src={encodedPath}
-                      alt={recruiter?.name ?? ''}
-                      title={recruiter?.name ?? ''}
-                      style={{ filter: 'brightness(1.2) contrast(1.1)' }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                        const target = e.currentTarget;
-                        target.style.opacity = '0.3'
-                        target.style.filter = 'none'
-                      }}
-                    />
-                  </div>
-                );
-              })}
+            <div className="recruiter-carousel" style={{ overflow: "hidden" }}>
+              <div className="recruiter-track">
+                {[...recruiters, ...recruiters].map((recruiter, i) => {
+                  const logo = recruiter?.logo ?? '';
+                  const filename = logo.split('/').pop() || '';
+                  const encodedPath = `/recruiters/${encodeURIComponent(filename)}`;
+                  return (
+                    <div key={i} className="recruiter-logo">
+                      <img
+                        src={encodedPath}
+                        alt={recruiter?.name ?? ''}
+                        title={recruiter?.name ?? ''}
+                        style={{ filter: 'brightness(1.2) contrast(1.1)' }}
+                        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                          const target = e.currentTarget;
+                          target.style.opacity = '0.3'
+                          target.style.filter = 'none'
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </Container>
     </section>
   )

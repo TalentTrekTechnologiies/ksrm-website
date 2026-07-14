@@ -6,6 +6,10 @@ import { CreateHeroDto } from './dto/create-hero.dto';
 import { UpdateHeroDto } from './dto/update-hero.dto';
 import { assertVersionMatch } from '../optimistic-lock.util';
 import { RequestAdmin } from '../types';
+import { MediaLinkService } from '../../media/media-link.service';
+
+const MEDIA_MODULE = 'homepage_hero';
+const MEDIA_FIELD = 'videoUrl';
 
 // class-validator DTO arrays (HeroCaptionDto[]/HeroNewsTickerItemDto[]) are
 // structurally plain JSON at runtime but not typed as such - Prisma's
@@ -21,6 +25,7 @@ export class HeroService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   /** Public site: the single active, non-deleted hero, or null if none has been configured yet. */
@@ -52,13 +57,22 @@ export class HeroService {
       );
     }
 
+    // videoUrl stays the DTO's own value unless a mediaId is also given, in
+    // which case the Media Library's current URL for that asset wins - see
+    // the DTO's field comment for why (keeps Replace propagating here for
+    // free, without the admin having to re-save Hero afterward).
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'VIDEO');
+
     const created = await this.prisma.homepageHero.create({
       data: {
         ...dto,
+        videoUrl: resolvedUrl ?? dto.videoUrl,
         captions: toJsonInput(dto.captions),
         newsTicker: toJsonInput(dto.newsTicker),
       },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -91,15 +105,24 @@ export class HeroService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, 'Homepage hero');
 
+    // prepareLink returns undefined both when mediaId wasn't part of this
+    // request AND when it was explicitly nulled (unlink) - in the unlink
+    // case rest.videoUrl (whatever the admin typed, or unchanged) is what
+    // should land in the update, which the spread below already handles.
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'VIDEO');
+
     const updated = await this.prisma.homepageHero.update({
       where: { id: existing.id },
       data: {
         ...rest,
+        ...(resolvedUrl !== undefined && { videoUrl: resolvedUrl }),
         captions: toJsonInput(rest.captions),
         newsTicker: toJsonInput(rest.newsTicker),
         version: { increment: 1 },
       },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, updated.id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,

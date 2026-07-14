@@ -1,49 +1,41 @@
-﻿const calendarGroups = [
+﻿import ExamNotificationsList from "@/components/examinations/ExamNotificationsList";
+import { mediaFile } from "@/lib/api-base";
+import PageResources from "@/components/PageResources";
+
+const calendarGroups = [
   {
     year: "AY 2025-26",
     items: [
-      { title: "Academic Calendar – M.Tech I Semester AY 2025-26", date: "27-10-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar – I Year M.Tech (AY 2025-26).pdf" },
-      { title: "Academic Calendar – MBA I Year AY 2025-26", date: "30-08-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar for I Year MBA (2025 Admitted Batch) for the AY 2025-2026.pdf" },
-      { title: "Academic Calendar – B.Tech I Semester AY 2025-26", date: "30-08-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar -  I B.Tech. For AY 2025-2026.pdf" },
-      { title: "Academic Calendar – B.Tech VII & VIII Semester AY 2025-26", date: "17-07-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-B.Tech_IV_Year.pdf" },
-      { title: "Academic Calendar – B.Tech V & VI Semester AY 2025-26", date: "17-07-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-B.Tech_III_Year.pdf" },
-      { title: "Academic Calendar – B.Tech III & IV Semester AY 2025-26", date: "17-07-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-B.Tech_II_Year.pdf" },
-      { title: "Academic Calendar – B.Tech Honour and Minor Degree AY 2025-26", date: "17-07-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendars for 2025-2026-Honour-Minor.pdf" },
+      { title: "Academic Calendar – M.Tech I Semester AY 2025-26", date: "27-10-2025", href: mediaFile(183)},
+      { title: "Academic Calendar – MBA I Year AY 2025-26", date: "30-08-2025", href: mediaFile(184)},
+      { title: "Academic Calendar – B.Tech I Semester AY 2025-26", date: "30-08-2025", href: mediaFile(185)},
+      { title: "Academic Calendar – B.Tech VII & VIII Semester AY 2025-26", date: "17-07-2025", href: mediaFile(187)},
+      { title: "Academic Calendar – B.Tech V & VI Semester AY 2025-26", date: "17-07-2025", href: mediaFile(188)},
+      { title: "Academic Calendar – B.Tech III & IV Semester AY 2025-26", date: "17-07-2025", href: mediaFile(189)},
+      { title: "Academic Calendar – B.Tech Honour and Minor Degree AY 2025-26", date: "17-07-2025", href: mediaFile(190)},
     ],
   },
   {
     year: "AY 2024-25",
     items: [
-      { title: "Revised Academic Calendar – M.Tech II Semester 2024-25", date: "05-05-2025", href: "https://ksrmce.ac.in/demo1/academic-calenders/Revised Academic Calendar for M.Tech II Semester for 2024-25.pdf" },
-      { title: "Academic Calendar – M.Tech II, IV Semesters (R22PG) AY 2024-25", date: "20-12-2024", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar for M.Tech II, IV Semesters (R22PG) for AY 2024-25.pdf" },
-      { title: "Academic Calendar – B.Tech Even Semester Programs 2024-25", date: "20-12-2024", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calendar for B.Tech. II, IV Sems(R23UG) and VI, VIII Sems (R20UG) for AY 2024-25.pdf" },
-      { title: "Academic Calendar – B.Tech Odd Semester Programs 2024-25", date: "25-07-2024", href: "https://ksrmce.ac.in/demo1/academic-calenders/Academic Calender for BTech Programs.pdf" },
+      { title: "Revised Academic Calendar – M.Tech II Semester 2024-25", date: "05-05-2025", href: mediaFile(191)},
+      { title: "Academic Calendar – M.Tech II, IV Semesters (R22PG) AY 2024-25", date: "20-12-2024", href: mediaFile(192)},
+      { title: "Academic Calendar – B.Tech Even Semester Programs 2024-25", date: "20-12-2024", href: mediaFile(193)},
+      { title: "Academic Calendar – B.Tech Odd Semester Programs 2024-25", date: "25-07-2024", href: mediaFile(195)},
     ],
   },
 ];
 
-const notifications = [
-  { title: "Revaluation - MTech I Sem (R25PG) Regular & Supple Examinations, Feb-March 2026", date: "10-04-2026", isNew: true, href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/Revaluation Notification - M.Tech I Sem.jpg" },
-  { title: "B.Tech VIII Sem (R20UG) Regular & Supple End Examinations, April 2026", date: "10-04-2026", isNew: true, href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_VIII Sem R20.jpg" },
-  { title: "B.Tech VII Sem (R20UG) Supple (Advanced) End Examinations, April-May 2026", date: "10-04-2026", isNew: true, href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_VII Sem R20 Adv..jpg" },
-  { title: "B.Tech VI Sem (R23UG) Regular & Supple End Examinations, April-May 2026", date: "10-04-2026", isNew: true, href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_VI Sem R23.jpg" },
-  { title: "B.Tech IV Sem (R23UG) Regular & Supple End Examinations, April-May 2026", date: "10-04-2026", isNew: true, href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/Notification_IV Sem R23.jpg" },
-  { title: "B.Tech I Sem (R23, R20, R18) Supple End Examinations Dec/Jan 2025-26", date: "27-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/I Sem Reg. & Supple. Notification 2025.jpg" },
-  { title: "B.Tech III Sem (R23 UG) Reg & Supply Examinations Nov/Dec 2025", date: "08-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/III Sem R23 Notifications.jpg" },
-  { title: "B.Tech V Sem (R23 UG) Reg & Supply Examinations Nov/Dec 2025", date: "08-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/V Sem R23 Notifications.jpg" },
-  { title: "B.Tech VII Sem (R20 UG) Reg & Supply Examinations Nov/Dec 2025", date: "08-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/VII Sem  R20 Notifications.jpg" },
-  { title: "Revaluation notification - M.Tech. (R22PG) AY 2024-25", date: "30-08-2025", href: "https://ksrmce.ac.in/demo1/Examsection/Notifications/Revaluation notification - M.Tech. (R22PG) - AY 2024-25.jpg" },
-];
-
 const timetables = [
-  { title: "Timetable - B.Tech. VI Sem (R23UG) End Regular & Supple, April-May 2026", date: "10-04-2026", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_VI Sem  End Exams..jpg" },
-  { title: "Timetable - B.Tech. IV Sem (R23UG) End Regular & Supple, April-May 2026", date: "10-04-2026", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_IV Sem End Exams.jpg" },
-  { title: "Timetable - B.Tech. VI Sem (R23UG) II Mid Examinations, April 2026", date: "10-04-2026", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_VI Sem II-Mid.jpg" },
-  { title: "Timetable - B.Tech. IV Sem (R23UG) II Mid Examinations, April 2026", date: "10-04-2026", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/Time Table_IV Sem II-Mid.jpg" },
-  { title: "Timetable - B.Tech. I Sem (R23UG) Supple End Examinations, Dec-2025", date: "29-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/I Sem R23 Supply Time Table.jpg" },
-  { title: "Timetable - B.Tech. I Sem (R20UG) Supple End Examinations, Dec-2025", date: "29-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/I Sem R20 Supply Time Table.jpg" },
-  { title: "Timetable - B.Tech. VIII Sem (R18UG) Supple End Examinations, Dec-2025", date: "27-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/VIII Sem R18 Time Table.jpg" },
-  { title: "Timetable - B.Tech. VI Sem (R20UG) Supple End Examinations, Dec-2025", date: "27-11-2025", href: "https://ksrmce.ac.in/demo1/Examsection/TimeTable/VI Sem R20 Time Table.jpg" },
+  { title: "Timetable - B.Tech. VI Sem (R23UG) End Regular & Supple, April-May 2026", date: "10-04-2026", href: mediaFile(196)},
+  { title: "Timetable - B.Tech. IV Sem (R23UG) End Regular & Supple, April-May 2026", date: "10-04-2026", href: mediaFile(197)},
+  // NOTE: "B.Tech. VI Sem (R23UG) II Mid, April 2026" was removed - its file
+  // 404s on the old site itself (confirmed dead at source, nothing to re-host).
+  { title: "Timetable - B.Tech. IV Sem (R23UG) II Mid Examinations, April 2026", date: "10-04-2026", href: mediaFile(198)},
+  { title: "Timetable - B.Tech. I Sem (R23UG) Supple End Examinations, Dec-2025", date: "29-11-2025", href: mediaFile(199)},
+  { title: "Timetable - B.Tech. I Sem (R20UG) Supple End Examinations, Dec-2025", date: "29-11-2025", href: mediaFile(200)},
+  { title: "Timetable - B.Tech. VIII Sem (R18UG) Supple End Examinations, Dec-2025", date: "27-11-2025", href: mediaFile(201)},
+  { title: "Timetable - B.Tech. VI Sem (R20UG) Supple End Examinations, Dec-2025", date: "27-11-2025", href: mediaFile(203)},
 ];
 
 const quickLinks = [
@@ -51,7 +43,7 @@ const quickLinks = [
   { icon: "🔔", label: "Notifications", href: "#notifications" },
   { icon: "⏰", label: "Time Tables", href: "#timetables" },
   { icon: "📊", label: "Exam Results", href: "https://www.jemexam.com/ksrmresult/results_notifications.php", external: true },
-  { icon: "💳", label: "SBI Challan Form", href: "https://ksrmce.ac.in/SBI_CHALLAN_FORM.pdf", external: true },
+  { icon: "💳", label: "SBI Challan Form", href: mediaFile(204), external: true},
   { icon: "📞", label: "Contact Exam Cell", href: "#contact" },
 ];
 
@@ -73,7 +65,7 @@ export default function ExaminationsPage() {
         @media (max-width: 1024px) { .exam-results-grid { grid-template-columns: 1fr; gap: 24px; } }
       `}</style>
 
-      <section style={{ position: "relative", backgroundImage: "url('/banners/examinations banner.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+      <section style={{ position: "relative", backgroundImage: "url('/banners/examinations.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)", pointerEvents: "none" }} />
         <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
           <div className="responsive-container">
@@ -124,16 +116,7 @@ export default function ExaminationsPage() {
       <section id="notifications" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Latest Notifications</h2>
-          {notifications.map((n) => (
-            <div className="exam-list-row" key={n.title}>
-              <div style={{ minWidth: 90 }}>
-                {n.isNew && <div style={{ background: "#e63946", color: "white", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3, display: "inline-block", marginBottom: 8 }}>NEW</div>}
-                <div style={{ fontSize: 12, color: "#999" }}>{n.date}</div>
-              </div>
-              <div style={{ flex: 1 }}><div style={{ fontSize: 14, color: "#2B3490", fontWeight: 500, lineHeight: 1.5 }}>{n.title}</div></div>
-              <a href={n.href} target="_blank" rel="noopener noreferrer" style={{ color: "#2B3490", fontSize: 13, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", padding: "4px 12px", background: "#f4f3ef", borderRadius: 4 }}>View →</a>
-            </div>
-          ))}
+          <ExamNotificationsList />
         </div>
       </section>
 
@@ -166,7 +149,7 @@ export default function ExaminationsPage() {
               <div style={{ color: "#555", fontSize: 15, lineHeight: 1.7, margin: "12px 0 24px" }}>Pay tuition and exam fee via SBI Collect or download the SBI Challan Form for offline payment.</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <a href="https://www.onlinesbi.sbi/sbicollect/icollecthome.htm" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Pay Online (SBI Collect)</a>
-                <a href="https://ksrmce.ac.in/SBI_CHALLAN_FORM.pdf" style={{ background: "white", color: "#2B3490", border: "2px solid #2B3490", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Download Challan Form</a>
+                <a href={mediaFile(204)} style={{ background: "white", color: "#2B3490", border: "2px solid #2B3490", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Download Challan Form</a>
               </div>
             </div>
           </div>
@@ -191,6 +174,8 @@ export default function ExaminationsPage() {
           </div>
         </div>
       </section>
+
+      <PageResources section="examinations" docsTitle="Exam Documents & Timetables" />
     </main>
   );
 }

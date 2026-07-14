@@ -1,4 +1,6 @@
 ﻿import Link from "next/link";
+import PageResources from "@/components/PageResources";
+import AntiRaggingCommittee from "@/components/campus-life/AntiRaggingCommittee";
 
 export const metadata = {
   title: "Anti-Ragging | KSRM College of Engineering",
@@ -37,22 +39,6 @@ const punishments = [
   "Court-ordered community service and rehabilitation",
 ];
 
-const committee = [
-  { name: "Dr. [Principal Name]", designation: "Principal", role: "Chairman" },
-  {
-    name: "Dr. [Dean Name]",
-    designation: "Dean of Student Affairs",
-    role: "Convenor",
-  },
-  { name: "Mr. [Faculty Name]", designation: "Faculty Member", role: "Member" },
-  { name: "Ms. [Faculty Name]", designation: "Faculty Member", role: "Member" },
-  {
-    name: "[Senior Student Name]",
-    designation: "Senior Student Representative",
-    role: "Member",
-  },
-];
-
 const reportingSteps = [
   "Contact the Anti-Ragging Committee directly using helpline numbers",
   "Report to your class mentor or hostel warden immediately",
@@ -84,7 +70,7 @@ export default function AntiRaggingPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: "url('/banners/anti-ragging banner.jpg')",
+          backgroundImage: "url('/banners/anti-ragging.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           padding: "60px 40px",
@@ -360,56 +346,7 @@ export default function AntiRaggingPage() {
           >
             Anti-Ragging Committee Members
           </h2>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-              <thead>
-                <tr>
-                  {["Name", "Designation", "Role"].map((h) => (
-                    <th
-                      key={h}
-                      style={{
-                        background: "#2B3490",
-                        color: "#fff",
-                        padding: 14,
-                        textAlign: "left",
-                        fontFamily: "var(--font-rajdhani), sans-serif",
-                        fontWeight: 700,
-                        fontSize: 12,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {committee.map((member, i) => (
-                  <tr
-                    key={member.name}
-                    style={{ background: i % 2 === 0 ? "#f4f3ef" : "transparent" }}
-                  >
-                    <td style={{ padding: "12px 14px", borderBottom: "1px solid #eef0f3", color: "#555", fontWeight: 600 }}>
-                      {member.name}
-                    </td>
-                    <td style={{ padding: "12px 14px", borderBottom: "1px solid #eef0f3", color: "#555" }}>
-                      {member.designation}
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px 14px",
-                        borderBottom: "1px solid #eef0f3",
-                        color: "#2B3490",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {member.role}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <AntiRaggingCommittee />
         </div>
       </section>
 
@@ -525,6 +462,7 @@ export default function AntiRaggingPage() {
           </div>
         </div>
       </section>
+      <PageResources section="anti-ragging" />
     </main>
   );
 }

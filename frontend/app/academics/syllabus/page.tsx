@@ -89,7 +89,7 @@ export default function SyllabusPage() {
 
         .syl-hero {
           position: relative;
-          background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/campus.jpg');
+          background-image: url('/banners/syllabus.png');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;
@@ -165,9 +165,6 @@ export default function SyllabusPage() {
               <div className="syl-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Syllabus</h1>
               <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Regulation-wise syllabus for all programmes</p>
-              <div className="syl-breadcrumb">
-                <a href="/">Home</a><span>/</span><a href="/academics">Academics</a><span>/</span><span>Syllabus</span>
-              </div>
             </div>
           </div>
         </section>

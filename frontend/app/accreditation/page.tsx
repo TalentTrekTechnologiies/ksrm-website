@@ -24,7 +24,7 @@ export default function AccreditationPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .acc-hero {
-          position: relative; background-image: url('/banners/accreditations banner.jpg'); background-size: cover;
+          position: relative; background-image: url('/banners/accreditation.png'); background-size: cover;
           background-position: center; background-color: #2B3490; min-height: 280px; display: flex;
           align-items: flex-end; overflow: hidden; padding-bottom: 40px;
         }
@@ -48,9 +48,6 @@ export default function AccreditationPage() {
 
       <section className="acc-hero">
         <div className="responsive-container">
-          <div className="acc-breadcrumb" style={{ marginBottom: 16 }}>
-            <a href="/">Home</a><span>/</span><span>Accreditations</span>
-          </div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>
             Accreditations &amp; Rankings
           </h1>

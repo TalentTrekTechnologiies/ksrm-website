@@ -20,7 +20,7 @@ export default function UGAdmissionsPage() {
 
         .ug-hero {
           position: relative;
-          background-image: url('/banners/contact us banner.webp');
+          background-image: url('/banners/ug-admissions.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -107,9 +107,6 @@ export default function UGAdmissionsPage() {
         <section className="ug-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="ug-breadcrumb">
-                <a href="/admissions">Admissions</a> / UG Programs
-              </div>
               <h1 className="ug-title">Undergraduate Programs</h1>
               <p className="ug-subtitle">B.Tech Engineering Programs at KSRM</p>
             </div>

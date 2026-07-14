@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsInt,
   IsOptional,
   IsString,
   IsDateString,
@@ -21,6 +22,10 @@ export class CreateNewsDto {
   @IsOptional()
   @IsString()
   imageUrl?: string;
+
+  @IsOptional()
+  @IsInt()
+  mediaId?: number;
 
   @IsDateString()
   date: string;

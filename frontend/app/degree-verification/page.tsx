@@ -13,7 +13,7 @@ export default function DegreeVerificationPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .dv-hero { position: relative; background-image: url('/banners/examinations banner.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
+        .dv-hero { position: relative; background-image: url('/banners/degree-verification.png'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .dv-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); pointer-events: none; }
         .dv-hero > * { position: relative; z-index: 2; }
         .dv-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
@@ -34,7 +34,6 @@ export default function DegreeVerificationPage() {
 
       <section className="dv-hero">
         <div className="responsive-container">
-          <div className="dv-breadcrumb"><a href="/">Home</a><span>/</span><span>Degree Verification</span></div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Degree Verification</h1>
           <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Verify the authenticity of degrees issued by KSRM College of Engineering</p>
         </div>

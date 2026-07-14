@@ -4,13 +4,27 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  Res,
   UseGuards,
   Request,
   ForbiddenException,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type { Response } from "express";
 import { AuditLogService } from "./audit-log.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+
+function assertSuperAdmin(req): void {
+  if (!req.user.isSuperAdmin) {
+    throw new ForbiddenException("Only super admins can view audit logs");
+  }
+}
+
+function parseDate(value?: string): Date | undefined {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
 
 @ApiTags("audit-logs")
 @Controller("audit-logs")
@@ -22,19 +36,60 @@ export class AuditLogController {
   async getAll(
     @Query("module") module?: string,
     @Query("adminId") adminId?: string,
-    @Query("limit") limit?: string,
+    @Query("action") action?: string,
+    @Query("search") search?: string,
+    @Query("from") from?: string,
+    @Query("to") to?: string,
+    @Query("page") page?: string,
+    @Query("pageSize") pageSize?: string,
     @Request() req?,
   ) {
-    // Only super admin can view audit logs
-    if (!req.user.isSuperAdmin) {
-      throw new ForbiddenException("Only super admins can view audit logs");
-    }
+    assertSuperAdmin(req);
 
     return this.auditLogService.getAll({
       module,
       adminId: adminId ? parseInt(adminId) : undefined,
-      limit: limit ? parseInt(limit) : 100,
+      action,
+      search,
+      from: parseDate(from),
+      to: parseDate(to),
+      page: page ? parseInt(page) : undefined,
+      pageSize: pageSize ? parseInt(pageSize) : undefined,
     });
+  }
+
+  // Same filter set as getAll, but returns a CSV file instead of a paginated
+  // JSON page - the "Export" action in the admin UI just links straight to
+  // this route.
+  @Get("export")
+  @UseGuards(JwtAuthGuard)
+  async export(
+    @Query("module") module?: string,
+    @Query("adminId") adminId?: string,
+    @Query("action") action?: string,
+    @Query("search") search?: string,
+    @Query("from") from?: string,
+    @Query("to") to?: string,
+    @Request() req?,
+    @Res() res?: Response,
+  ) {
+    assertSuperAdmin(req);
+
+    const csv = await this.auditLogService.exportCsv({
+      module,
+      adminId: adminId ? parseInt(adminId) : undefined,
+      action,
+      search,
+      from: parseDate(from),
+      to: parseDate(to),
+    });
+
+    res!.setHeader("Content-Type", "text/csv");
+    res!.setHeader(
+      "Content-Disposition",
+      `attachment; filename="audit-logs-${new Date().toISOString().slice(0, 10)}.csv"`,
+    );
+    res!.send(csv);
   }
 
   @Get("admin/:adminId")
@@ -44,9 +99,7 @@ export class AuditLogController {
     @Query("limit") limit?: string,
     @Request() req?,
   ) {
-    if (!req.user.isSuperAdmin) {
-      throw new ForbiddenException("Only super admins can view audit logs");
-    }
+    assertSuperAdmin(req);
 
     return this.auditLogService.getByAdminId(
       adminId,
@@ -61,9 +114,7 @@ export class AuditLogController {
     @Query("limit") limit?: string,
     @Request() req?,
   ) {
-    if (!req.user.isSuperAdmin) {
-      throw new ForbiddenException("Only super admins can view audit logs");
-    }
+    assertSuperAdmin(req);
 
     return this.auditLogService.getByModule(
       module,

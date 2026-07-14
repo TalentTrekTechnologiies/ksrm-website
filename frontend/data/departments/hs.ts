@@ -61,7 +61,7 @@ export const hs: Department = {
     { name: "B.Tech Support Courses", level: "Undergraduate", intake: "All" }
   ],
   labs: [],
-  heroImage: "/banner.png"
+  heroImage: "/navbar%20images/Departmentss/Humanities%20and%20sciences.png"
 };
 
 export default hs;

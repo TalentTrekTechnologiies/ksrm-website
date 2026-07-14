@@ -1,6 +1,31 @@
-﻿import PlacementsSubnav from "@/components/PlacementsSubnav";
+﻿"use client";
+
+import { useEffect, useState } from "react";
+import PlacementsSubnav from "@/components/PlacementsSubnav";
+import { getRecruitersPublic, Recruiter } from "@/lib/homepage-api";
 
 export default function OurRecruitersPage() {
+  const [recruiters, setRecruiters] = useState<Recruiter[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    getRecruitersPublic()
+      .then(({ items }) => {
+        if (cancelled) return;
+        setRecruiters(items);
+      })
+      .catch(() => {
+        // Network/API failure - empty state (below) covers this too.
+      })
+      .finally(() => {
+        if (!cancelled) setLoaded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <>
       <style>{`
@@ -9,7 +34,7 @@ export default function OurRecruitersPage() {
 
         .recruiters-hero {
           position: relative;
-          background-image: url('/banners/startup banner.jpg');
+          background-image: url('/banners/recruiters.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -50,15 +75,15 @@ export default function OurRecruitersPage() {
         .coming-soon-box { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); color: #ffffff; padding: 60px 40px; border-radius: 12px; text-align: center; }
         .coming-soon-text { font-size: 18px; line-height: 1.8; margin: 0; }
         .coming-soon-icon { font-size: 48px; margin-bottom: 16px; }
+        .recruiters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-top: 40px; }
+        .recruiter-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; height: 110px; }
+        .recruiter-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
         <section className="recruiters-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="recruiters-breadcrumb">
-                <a href="/">Home</a> / <a href="/placements">Placements</a> / Our Recruiters
-              </div>
               <h1 className="recruiters-title">Our Recruiters</h1>
               <p className="recruiters-subtitle">Placements & Career Development</p>
             </div>
@@ -67,11 +92,33 @@ export default function OurRecruitersPage() {
         <PlacementsSubnav active="/placements/our-recruiters" />
         <section className="section">
           <div className="responsive-container">
-            <div className="coming-soon-box">
-              <div className="coming-soon-icon">📋</div>
-              <h2 className="heading" style={{ color: "#D4A500", marginBottom: 16 }}>Our Recruiters</h2>
-              <p className="coming-soon-text">Information about our industry partners and recruiters is coming soon. Check back for updates!</p>
-            </div>
+            {recruiters.length === 0 ? (
+              <div className="coming-soon-box">
+                <div className="coming-soon-icon">📋</div>
+                <h2 className="heading" style={{ color: "#D4A500", marginBottom: 16 }}>Our Recruiters</h2>
+                <p className="coming-soon-text">
+                  {loaded
+                    ? "Information about our industry partners and recruiters is coming soon. Check back for updates!"
+                    : "Loading recruiters..."}
+                </p>
+              </div>
+            ) : (
+              <>
+                <h2 className="heading">Recruited by Top Companies</h2>
+                <div className="recruiters-grid">
+                  {recruiters.map((r) => (
+                    <div className="recruiter-card" key={r.id}>
+                      <img
+                        src={r.logoUrl}
+                        alt={r.name}
+                        title={r.name}
+                        onError={(e) => { e.currentTarget.style.display = "none" }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </section>
       </main>

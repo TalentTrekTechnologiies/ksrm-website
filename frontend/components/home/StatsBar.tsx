@@ -53,8 +53,6 @@ export default function StatsBar() {
       style={{ width: "100%", background: "#ffffff", padding: "36px 0", borderBottom: "1px solid #f1f5f9" }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=DM+Sans:opsz,wght@9..40,300;9..40,400&display=swap');
-
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(6, 1fr);

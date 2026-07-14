@@ -2,18 +2,18 @@
 
 import { useState, useEffect, useRef } from "react"
 import Container from "@/components/ui/Container"
+import { getStatisticsPublic, SiteStatistic } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
 
-import { homeData } from "@/data/home"
-
-const stats = Array.isArray(homeData?.stats) ? homeData.stats : [
-  { number: 46, suffix: "+", label: "Years of Excellence" },
-  { number: 25, suffix: "", label: "Acres Campus Area" },
-  { number: 1200, suffix: "+", label: "Students Intake" },
-  { number: 150, suffix: "+", label: "Faculty Members" },
-  { number: 7, suffix: "", label: "Departments" },
-  { number: 90, suffix: "%", label: "Placement Rate" },
-  { number: 15000, suffix: "+", label: "Alumni Network" },
-  { number: 200, suffix: "+", label: "Companies Recruiting" },
+const FALLBACK_STATS = [
+  { id: -1, number: 46, suffix: "+", label: "Years of Excellence" },
+  { id: -2, number: 25, suffix: "", label: "Acres Campus Area" },
+  { id: -3, number: 1200, suffix: "+", label: "Students Intake" },
+  { id: -4, number: 150, suffix: "+", label: "Faculty Members" },
+  { id: -5, number: 7, suffix: "", label: "Departments" },
+  { id: -6, number: 90, suffix: "%", label: "Placement Rate" },
+  { id: -7, number: 15000, suffix: "+", label: "Alumni Network" },
+  { id: -8, number: 200, suffix: "+", label: "Companies Recruiting" },
 ]
 
 function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suffix: string; duration?: number }) {
@@ -57,7 +57,15 @@ function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suf
   )
 }
 
+async function fetchStats() {
+  const data = await getStatisticsPublic("homepage")
+  if (data.length === 0) return FALLBACK_STATS
+  return data.map((s: SiteStatistic) => ({ id: s.id, number: s.value, suffix: s.suffix ?? "", label: s.label }))
+}
+
 export default function CampusStats() {
+  const stats = useLiveData(fetchStats, [], { initialValue: FALLBACK_STATS }) ?? FALLBACK_STATS
+
   return (
     <section style={{
       width: "100%",
@@ -65,8 +73,6 @@ export default function CampusStats() {
       padding: "80px 0",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -109,7 +115,7 @@ export default function CampusStats() {
       <Container>
         <div className="stats-grid">
           {stats.map((stat) => (
-            <div key={stat.label} className="stat-card">
+            <div key={stat.id} className="stat-card">
               <AnimatedCounter target={stat.number} suffix={stat.suffix} />
               <div className="stat-label">{stat.label}</div>
             </div>

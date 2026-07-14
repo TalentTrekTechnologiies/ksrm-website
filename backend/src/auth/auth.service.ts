@@ -1,4 +1,4 @@
-﻿import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+﻿import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
@@ -30,6 +30,12 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
+
+    // Fire-and-forget: a slow/failed lastLoginAt write shouldn't ever block
+    // or fail an otherwise-successful login.
+    this.prisma.admin
+      .update({ where: { id: admin.id }, data: { lastLoginAt: new Date() } })
+      .catch(() => undefined);
 
     // Role-resolved permissions, not the legacy admin.permissions column -
     // see JwtStrategy.validate() for why. The frontend uses this response's
@@ -84,79 +90,5 @@ export class AuthService {
     );
 
     return { ...admin, permissions };
-  }
-
-  async registerAdmin(registerData: {
-    email: string;
-    password: string;
-    name: string;
-    permissions: string[];
-    department?: string;
-  }) {
-    const existing = await this.prisma.admin.findUnique({
-      where: { email: registerData.email },
-    });
-
-    if (existing) {
-      throw new BadRequestException('Email already exists');
-    }
-
-    const hashedPassword = await bcrypt.hash(registerData.password, 10);
-
-    return this.prisma.admin.create({
-      data: {
-        email: registerData.email,
-        password: hashedPassword,
-        name: registerData.name,
-        permissions: registerData.permissions,
-        department: registerData.department,
-        isSuperAdmin: false,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        permissions: true,
-        department: true,
-      },
-    });
-  }
-
-  async getAllAdmins() {
-    return this.prisma.admin.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        isSuperAdmin: true,
-        permissions: true,
-        department: true,
-        isActive: true,
-      },
-    });
-  }
-
-  async updateAdminPermissions(
-    adminId: number,
-    permissions: string[],
-  ) {
-    return this.prisma.admin.update({
-      where: { id: adminId },
-      data: { permissions },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        permissions: true,
-      },
-    });
-  }
-
-  async deactivateAdmin(adminId: number) {
-    return this.prisma.admin.update({
-      where: { id: adminId },
-      data: { isActive: false },
-      select: { id: true, name: true, email: true, isActive: true },
-    });
   }
 }

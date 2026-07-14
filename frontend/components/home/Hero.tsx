@@ -3,6 +3,25 @@
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useRef } from "react"
+import { getHeroPublic, HomepageHero, HeroNewsTickerItem } from "@/lib/homepage-api"
+import { getAnnouncementsPublic } from "@/lib/announcements-api"
+import { useLiveData } from "@/lib/use-live-data"
+
+const NEW_WINDOW_MS = 3 * 24 * 60 * 60 * 1000
+
+// The "Latest Updates" panel used to be a separately hand-curated list
+// (HomepageHero.newsTicker) - per explicit direction, it now sources from
+// the same Announcement engine as the header ticker, so publishing one
+// notice updates both instead of requiring duplicate entry in two places.
+async function fetchLatestUpdates(): Promise<HeroNewsTickerItem[]> {
+  const items = await getAnnouncementsPublic("HEADER_TICKER")
+  return items.map((item) => ({
+    isNew: Date.now() - new Date(item.createdAt).getTime() < NEW_WINDOW_MS,
+    date: new Date(item.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+    text: item.shortText || item.title,
+    href: item.linkUrl ?? undefined,
+  }))
+}
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -15,7 +34,24 @@ const fadeUp = {
   }),
 }
 
-const captions = [
+// Fallback content - shown immediately on first paint and kept if the CMS
+// hasn't been configured yet or the API is unreachable, so the homepage
+// never renders empty/broken while still becoming CMS-driven once a
+// HomepageHero row exists (see backend/src/homepage).
+const FALLBACK_ACCREDITATION = "NAAC A++ · NBA Tier-1 · UGC Autonomous"
+// Plain text, not HTML - the original design's forced <br/> line break is
+// approximated by the container's maxWidth causing a natural wrap instead,
+// so this field never needs dangerouslySetInnerHTML (admin-editable content
+// is never rendered as raw HTML anywhere in this feature).
+const FALLBACK_HEADING = "Ignite Your Potential, Engineer Your Future"
+const FALLBACK_SUBTITLE =
+  "KSRM College of Engineering, Kadapa — 45 years of engineering excellence."
+const FALLBACK_VIDEO_URL = "/videos/main-block.mp4"
+const FALLBACK_PANEL_LABEL = "Latest Updates"
+const FALLBACK_CTA_PRIMARY = { text: "Apply Now", href: "/admissions" }
+const FALLBACK_CTA_SECONDARY = { text: "Explore Campus", href: "/about" }
+
+const FALLBACK_CAPTIONS = [
   { label: "RESEARCH & INNOVATION", text: "State-of-the-art Laboratories" },
   { label: "CAMPUS LIFE",           text: "Vibrant Cultural Activities"   },
   { label: "EXCELLENCE",            text: "Sports & Achievements"         },
@@ -23,31 +59,47 @@ const captions = [
   { label: "LEARNING",              text: "Modern Digital Library"        },
 ]
 
-const newsItems = [
+const FALLBACK_NEWS_ITEMS: HomepageHero["newsTicker"] = [
   { isNew: true,  date: "May 28", text: "Sem-End Exams May-June 2026 Preponed"    },
   { isNew: true,  date: "May 20", text: "M.Tech II Sem Supplementary Results Out" },
   { isNew: false, date: "May 15", text: "Graduation Day 2K26 Forms Open"          },
   { isNew: false, date: "May 10", text: "KGCET-2K26 Results Announced"            },
 ]
 
-const heroSlides = [
-  { type: "video", src: "/videos/main-block.mp4" },
-  { type: "video", src: "/campus-video.mp4" },
-]
-
-export default function Hero() {
+export default function Hero({ previewData }: { previewData?: HomepageHero }) {
+  const liveHero = useLiveData(getHeroPublic, [], { skip: !!previewData })
+  const hero = previewData ?? liveHero
+  const liveNewsItems = useLiveData(fetchLatestUpdates, [])
   const [activeIndex, setActiveIndex] = useState(0)
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  // Caption rotation (every 3 seconds)
+  const accreditationLabel = hero?.accreditationLabel || FALLBACK_ACCREDITATION
+  const heading = hero?.heading || FALLBACK_HEADING
+  const subtitle = hero?.subtitle || FALLBACK_SUBTITLE
+  const videoUrl = hero?.videoUrl || FALLBACK_VIDEO_URL
+  const panelLabel = hero?.panelLabel || FALLBACK_PANEL_LABEL
+  const captions = hero?.captions?.length ? hero.captions : FALLBACK_CAPTIONS
+  const newsItems = liveNewsItems?.length ? liveNewsItems : FALLBACK_NEWS_ITEMS
+  const ctaPrimary =
+    hero?.ctaPrimaryText && hero?.ctaPrimaryHref
+      ? { text: hero.ctaPrimaryText, href: hero.ctaPrimaryHref }
+      : FALLBACK_CTA_PRIMARY
+  const ctaSecondary =
+    hero?.ctaSecondaryText && hero?.ctaSecondaryHref
+      ? { text: hero.ctaSecondaryText, href: hero.ctaSecondaryHref }
+      : FALLBACK_CTA_SECONDARY
+
+  // Caption rotation (every 3 seconds). If the caption list changes size
+  // (e.g. real CMS data replacing the fallback), `captions[activeIndex]`
+  // access below is optional-chained, and this interval's own modulo
+  // self-corrects any out-of-bounds index within one tick - no separate
+  // reset-on-change effect needed.
   useEffect(() => {
     const id = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % captions.length)
     }, 3000)
     return () => clearInterval(id)
-  }, [])
-
-
+  }, [captions])
 
   return (
     <section
@@ -61,8 +113,6 @@ export default function Hero() {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400&display=swap');
-
         @keyframes pulse-dot {
           0%   { box-shadow: 0 0 0 0 rgba(232,17,45,0.7); }
           70%  { box-shadow: 0 0 0 6px rgba(232,17,45,0); }
@@ -118,7 +168,7 @@ export default function Hero() {
         }
       `}</style>
 
-      {/* BACKGROUND LAYER — VIDEOS */}
+      {/* BACKGROUND LAYER — VIDEO */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
         <video
           ref={videoRef}
@@ -132,7 +182,7 @@ export default function Hero() {
             objectFit: "cover",
           }}
         >
-          <source src={heroSlides[0].src} type="video/mp4" />
+          <source src={videoUrl} type="video/mp4" />
         </video>
       </div>
 
@@ -175,7 +225,7 @@ export default function Hero() {
             variants={fadeUp} initial="hidden" animate="visible" custom={0.1}
             style={{ margin: "0 0 16px", fontSize: "11px", letterSpacing: "3px", color: "rgba(255,255,255,0.85)", fontFamily: "sans-serif", textTransform: "uppercase", fontWeight: 400 }}
           >
-            NAAC A++ · NBA Tier-1 · UGC Autonomous
+            {accreditationLabel}
           </motion.p>
 
           {/* MAIN HEADING */}
@@ -184,7 +234,7 @@ export default function Hero() {
             variants={fadeUp} initial="hidden" animate="visible" custom={0.2}
             style={{ margin: "0 0 18px", fontFamily: "'Rajdhani', sans-serif", fontSize: "46px", fontWeight: 700, color: "#ffffff", lineHeight: 1.05 }}
           >
-            Ignite Your Potential,<br />Engineer Your Future
+            {heading}
           </motion.h2>
 
           {/* SUBTITLE */}
@@ -193,7 +243,7 @@ export default function Hero() {
             variants={fadeUp} initial="hidden" animate="visible" custom={0.3}
             style={{ margin: "0 0 20px", fontFamily: "'DM Sans', sans-serif", fontSize: "18px", fontWeight: 300, color: "rgba(255,255,255,0.8)", maxWidth: "480px", lineHeight: 1.65 }}
           >
-            KSRM College of Engineering, Kadapa — 45 years of engineering excellence.
+            {subtitle}
           </motion.p>
 
           {/* ROTATING CAPTION */}
@@ -210,10 +260,10 @@ export default function Hero() {
                 transition={{ duration: 0.4, ease: EASE }}
               >
                 <div style={{ fontSize: "14px", fontWeight: 600, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase", marginBottom: "7px", fontFamily: "sans-serif" }}>
-                  {captions[activeIndex].label}
+                  {captions[activeIndex]?.label}
                 </div>
                 <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "26px", fontWeight: 600, color: "#ffffff" }}>
-                  {captions[activeIndex].text}
+                  {captions[activeIndex]?.text}
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -226,11 +276,11 @@ export default function Hero() {
             variants={fadeUp} initial="hidden" animate="visible" custom={0.4}
             style={{ display: "flex", gap: "14px", alignItems: "center" }}
           >
-            <Link href="/admissions" className="hero-btn touch-target btn btn-primary">
-              Apply Now
+            <Link href={ctaPrimary.href} className="hero-btn touch-target btn btn-primary">
+              {ctaPrimary.text}
             </Link>
-            <Link href="/about" className="hero-btn touch-target btn btn-secondary">
-              Explore Campus
+            <Link href={ctaSecondary.href} className="hero-btn touch-target btn btn-secondary">
+              {ctaSecondary.text}
             </Link>
           </motion.div>
         </div>
@@ -262,7 +312,7 @@ export default function Hero() {
           }}>
             <div className="pulse-dot" />
             <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "16px", fontWeight: 700, color: "#ffffff" }}>
-              Latest Updates
+              {panelLabel}
             </span>
           </div>
 
@@ -271,7 +321,7 @@ export default function Hero() {
             <div className="news-track">
               {/* Doubled for seamless loop */}
               {(Array.isArray(newsItems) ? [...newsItems, ...newsItems] : []).map((item, i) => (
-                <Link key={i} href="/news" className="news-item">
+                <Link key={i} href={item.href || "/news"} className="news-item">
                   {/* META ROW */}
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
                     {item.isNew && (

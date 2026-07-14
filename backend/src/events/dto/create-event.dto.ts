@@ -33,6 +33,10 @@ export class CreateEventDto {
   imageUrl?: string;
 
   @IsOptional()
+  @IsInt()
+  mediaId?: number;
+
+  @IsOptional()
   @IsString()
   category?: string;
 

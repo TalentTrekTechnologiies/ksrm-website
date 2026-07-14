@@ -1,29 +1,24 @@
-﻿import {
-  Controller,
-  Post,
-  Get,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  UseGuards,
-  Request,
-  ParseIntPipe,
-  ForbiddenException,
-} from '@nestjs/common';
+﻿import { Controller, Post, Get, Body, UseGuards, Request } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { RegisterAdminDto } from './dto/register.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { PermissionsGuard } from './permissions.guard';
-import { RequirePermission } from './permission.decorator';
 
+// Admin-account CRUD (create/list/edit/delete/restore/reset-password/
+// role-assignment) lives in AdminsModule (`/admins`), not here - this
+// controller is deliberately just the two routes every admin needs
+// regardless of what they're permitted to manage: log in, and read their
+// own profile.
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // Much tighter than the global limit - login is the brute-force surface.
+  // 10 attempts/minute per IP is generous for humans and useless for
+  // credential stuffing.
+  @Throttle({ default: { ttl: 60_000, limit: 10 } })
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
@@ -33,40 +28,5 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getProfile(@Request() req) {
     return this.authService.getProfile(req.user.id);
-  }
-
-  @Post('register')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('admins')
-  register(@Body() registerAdminDto: RegisterAdminDto, @Request() req) {
-    // Only super admin can register other admins
-    if (!req.user.isSuperAdmin) {
-      throw new ForbiddenException('Only super admins can register new admins');
-    }
-    return this.authService.registerAdmin(registerAdminDto);
-  }
-
-  @Get('admins')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('admins')
-  getAllAdmins() {
-    return this.authService.getAllAdmins();
-  }
-
-  @Patch('admins/:id/permissions')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('admins')
-  updateAdminPermissions(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() { permissions }: { permissions: string[] },
-  ) {
-    return this.authService.updateAdminPermissions(id, permissions);
-  }
-
-  @Delete('admins/:id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('admins')
-  deactivateAdmin(@Param('id', ParseIntPipe) id: number) {
-    return this.authService.deactivateAdmin(id);
   }
 }

@@ -5,12 +5,16 @@ import { CreatePlacementDto } from './dto/create-placement.dto';
 import { UpdatePlacementDto } from './dto/update-placement.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { MediaLinkService } from '../media/media-link.service';
+
+const MEDIA_MODULE = 'placements';
 
 @Injectable()
 export class PlacementsService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAll(year?: number) {
@@ -67,9 +71,23 @@ export class PlacementsService {
   }
 
   async create(dto: CreatePlacementDto, admin: RequestAdmin, requestId?: string) {
+    const [resolvedImageUrl, resolvedLogoUrl] = await Promise.all([
+      this.mediaLink.prepareLink(dto.mediaId, 'IMAGE'),
+      this.mediaLink.prepareLink(dto.companyLogoMediaId, 'IMAGE'),
+    ]);
+
     const created = await this.prisma.placement.create({
-      data: dto,
+      data: {
+        ...dto,
+        imageUrl: resolvedImageUrl ?? dto.imageUrl,
+        companyLogoUrl: resolvedLogoUrl ?? dto.companyLogoUrl,
+      },
     });
+
+    await Promise.all([
+      this.mediaLink.syncUsage(MEDIA_MODULE, created.id, 'imageUrl', dto.mediaId),
+      this.mediaLink.syncUsage(MEDIA_MODULE, created.id, 'companyLogoUrl', dto.companyLogoMediaId),
+    ]);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -90,10 +108,25 @@ export class PlacementsService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Placement ${id}`);
 
+    const [resolvedImageUrl, resolvedLogoUrl] = await Promise.all([
+      this.mediaLink.prepareLink(rest.mediaId, 'IMAGE'),
+      this.mediaLink.prepareLink(rest.companyLogoMediaId, 'IMAGE'),
+    ]);
+
     const updated = await this.prisma.placement.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedImageUrl !== undefined && { imageUrl: resolvedImageUrl }),
+        ...(resolvedLogoUrl !== undefined && { companyLogoUrl: resolvedLogoUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await Promise.all([
+      this.mediaLink.syncUsage(MEDIA_MODULE, id, 'imageUrl', rest.mediaId),
+      this.mediaLink.syncUsage(MEDIA_MODULE, id, 'companyLogoUrl', rest.companyLogoMediaId),
+    ]);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -116,6 +149,8 @@ export class PlacementsService {
       where: { id },
       data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
     });
+
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -143,6 +178,15 @@ export class PlacementsService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    await Promise.all([
+      restored.mediaId
+        ? this.mediaLink.syncUsage(MEDIA_MODULE, id, 'imageUrl', restored.mediaId)
+        : Promise.resolve(),
+      restored.companyLogoMediaId
+        ? this.mediaLink.syncUsage(MEDIA_MODULE, id, 'companyLogoUrl', restored.companyLogoMediaId)
+        : Promise.resolve(),
+    ]);
 
     await this.auditLog.log({
       adminId: admin.id,

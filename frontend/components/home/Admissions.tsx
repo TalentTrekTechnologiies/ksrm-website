@@ -1,8 +1,14 @@
 "use client"
 
-import Link from "next/link"
 import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
+import {
+  getSectionPublic,
+  getAdmissionProgramsPublic,
+  AdmissionsContent,
+  AdmissionProgram,
+} from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -11,12 +17,135 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+const FALLBACK_ADMISSIONS: AdmissionsContent = {
+  badge: "ADMISSIONS 2025-26",
+  heading: "Begin Your Engineering Journey",
+  subtitle: "EAPCET Code: KSRM | Kadapa, Andhra Pradesh",
+  helplinePhones: [
+    { display: "+91-9000073434", href: "tel:+919000073434" },
+    { display: "+91-8143731980", href: "tel:+918143731980" },
+  ],
+  helplineEmail: "ksrmcengg@yahoo.co.in",
 }
 
-export default function Admissions() {
+const FALLBACK_PROGRAMS: AdmissionProgram[] = [
+  {
+    id: -1,
+    section: "homepage_admission_programs",
+    icon: "B.Tech Programmes",
+    imageUrl: "/b-tech-banner.png",
+    mediaId: null,
+    title: "B.Tech Engineering",
+    description: "750+ Seats | 8 Branches | 4 Years",
+    tags: ["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"],
+    linkUrl: "/admissions/ug",
+    linkText: "View UG Courses",
+    sortOrder: 0,
+    isActive: true,
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: null,
+    deletedBy: null,
+    version: 1,
+  },
+  {
+    id: -2,
+    section: "homepage_admission_programs",
+    icon: "Diploma / Polytechnic",
+    imageUrl: "/diploma-banner.png",
+    mediaId: null,
+    title: "Diploma Programmes",
+    description: "Lateral Entry Available | 3 Years | EAPCET Eligible",
+    tags: ["Civil", "Mechanical", "ECE", "EEE", "CSE"],
+    linkUrl: "/admissions/diploma",
+    linkText: "View Diploma Courses",
+    sortOrder: 1,
+    isActive: true,
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: null,
+    deletedBy: null,
+    version: 1,
+  },
+]
+
+interface AdmissionsState {
+  admissions: AdmissionsContent
+  programs: AdmissionProgram[]
+}
+
+const PROGRAM_LINKS = [
+  {
+    match: ["b.tech", "btech", "undergraduate", "ug"],
+    href: "/admissions/ug",
+    text: "View UG Courses",
+  },
+  {
+    match: ["diploma", "polytechnic"],
+    href: "/admissions/diploma",
+    text: "View Diploma Courses",
+  },
+  {
+    match: ["m.tech", "mtech", "mba", "postgraduate", "pg"],
+    href: "/admissions/pg",
+    text: "View PG Courses",
+  },
+]
+
+function normalizeProgram(program: AdmissionProgram): AdmissionProgram {
+  const title = program.title.trim()
+  const normalizedTitle = title.toLowerCase()
+  const localRoute = PROGRAM_LINKS.find((route) =>
+    route.match.some((term) => normalizedTitle.includes(term)),
+  )
+
+  return {
+    ...program,
+    imageUrl: program.imageUrl?.trim() || "/b-tech-banner.png",
+    title: title || "Admission Programme",
+    description: program.description?.trim() || null,
+    tags: program.tags.filter((tag) => tag.trim()).map((tag) => tag.trim()),
+    linkUrl: localRoute?.href || program.linkUrl?.trim() || "/admissions",
+    linkText: localRoute?.text || program.linkText?.trim() || "Learn More",
+  }
+}
+
+function normalizeAdmissions(content: AdmissionsContent | null | undefined): AdmissionsContent {
+  if (!content) return FALLBACK_ADMISSIONS
+
+  return {
+    badge: content.badge?.trim() || FALLBACK_ADMISSIONS.badge,
+    heading: content.heading?.trim() || FALLBACK_ADMISSIONS.heading,
+    subtitle: content.subtitle?.trim() || FALLBACK_ADMISSIONS.subtitle,
+    helplinePhones: content.helplinePhones?.length ? content.helplinePhones : FALLBACK_ADMISSIONS.helplinePhones,
+    helplineEmail: content.helplineEmail?.trim() || FALLBACK_ADMISSIONS.helplineEmail,
+  }
+}
+
+function isExternalUrl(url: string) {
+  return /^https?:\/\//i.test(url)
+}
+
+async function fetchAdmissions(): Promise<AdmissionsState> {
+  const [section, programsList] = await Promise.all([
+    getSectionPublic("admissions"),
+    getAdmissionProgramsPublic(),
+  ])
+  return {
+    admissions: normalizeAdmissions(section?.content),
+    programs: programsList.length > 0 ? programsList.map(normalizeProgram) : FALLBACK_PROGRAMS,
+  }
+}
+
+export default function Admissions({
+  previewData,
+}: {
+  previewData?: { admissions?: AdmissionsContent; programs?: AdmissionProgram[] }
+}) {
+  const live = useLiveData(fetchAdmissions, [], { skip: !!previewData })
+  const admissions = previewData?.admissions ?? live?.admissions ?? FALLBACK_ADMISSIONS
+  const programs = previewData?.programs ?? live?.programs ?? FALLBACK_PROGRAMS
+
   return (
     <section
       style={{
@@ -27,8 +156,6 @@ export default function Admissions() {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
         .admissions-header {
           text-align: center;
           margin-bottom: 40px;
@@ -250,110 +377,57 @@ export default function Admissions() {
           viewport={{ once: true, amount: 0.2 }}
           variants={fadeUp}
         >
-          <div className="admissions-badge">ADMISSIONS 2025-26</div>
-          <h2 className="admissions-heading">Begin Your Engineering Journey</h2>
-          <p className="admissions-subtitle">EAPCET Code: KSRM | Kadapa, Andhra Pradesh</p>
+          <div className="admissions-badge">{admissions.badge}</div>
+          <h2 className="admissions-heading">{admissions.heading}</h2>
+          <p className="admissions-subtitle">{admissions.subtitle}</p>
         </motion.div>
 
         {/* CARDS GRID */}
-        <motion.div
-          className="admissions-grid"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-        >
-          {/* B.TECH CARD */}
-          <motion.div variants={cardVariants}>
-            <div className="admissions-card">
-              {/* IMAGE */}
-              <img
-                src="/b-tech-banner.png"
-                alt="B.Tech Programmes"
-                className="admissions-card-image"
-                onError={(e) => {
-                  const img = e.currentTarget as HTMLImageElement
-                  img.style.background = "#e5e5e5"
-                  img.style.opacity = "0.3"
-                }}
-              />
+        <div className="admissions-grid">
+          {programs.map((program) => (
+            <div key={program.id}>
+              <div className="admissions-card">
+                <img
+                  src={program.imageUrl}
+                  alt={program.title}
+                  className="admissions-card-image"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement
+                    img.style.background = "#e5e5e5"
+                    img.style.opacity = "0.3"
+                  }}
+                />
 
-              {/* INFO PANEL */}
-              <div className="admissions-card-panel">
-                <div>
-                  <div className="admissions-card-label">B.Tech Programmes</div>
-                  <h3 className="admissions-card-title">B.Tech Engineering</h3>
+                <div className="admissions-card-panel">
+                  <div>
+                    {program.icon && <div className="admissions-card-label">{program.icon}</div>}
+                    <h3 className="admissions-card-title">{program.title}</h3>
 
-                  {/* BRANCHES */}
-                  <div className="admissions-branches">
-                    {["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"].map((branch) => (
-                      <span key={branch} className="admissions-branch-pill">
-                        {branch}
-                      </span>
-                    ))}
+                    <div className="admissions-branches">
+                      {program.tags.map((branch) => (
+                        <span key={branch} className="admissions-branch-pill">
+                          {branch}
+                        </span>
+                      ))}
+                    </div>
+
+                    {program.description && <div className="admissions-info">{program.description}</div>}
                   </div>
 
-                  {/* INFO */}
-                  <div className="admissions-info">750+ Seats | 8 Branches | 4 Years</div>
+                  <a
+                    href={program.linkUrl}
+                    target={isExternalUrl(program.linkUrl) ? "_blank" : undefined}
+                    rel={isExternalUrl(program.linkUrl) ? "noopener noreferrer" : undefined}
+                    className="admissions-button"
+                    download={program.linkUrl.endsWith(".pdf") || undefined}
+                  >
+                    <span>{program.linkText ?? "Learn More"}</span>
+                  </a>
                 </div>
-
-                {/* BUTTON */}
-                <a href="/b-tech-banner.png" target="_blank" rel="noopener noreferrer" className="admissions-button">
-                  <span>View Brochure</span>
-                  <span>↗</span>
-                </a>
               </div>
             </div>
-          </motion.div>
-
-          {/* DIPLOMA CARD */}
-          <motion.div variants={cardVariants}>
-            <div className="admissions-card">
-              {/* IMAGE */}
-              <img
-                src="/diploma-banner.png"
-                alt="Diploma Programmes"
-                className="admissions-card-image"
-                onError={(e) => {
-                  const img = e.currentTarget as HTMLImageElement
-                  img.style.background = "#e5e5e5"
-                  img.style.opacity = "0.3"
-                }}
-              />
-
-              {/* INFO PANEL */}
-              <div className="admissions-card-panel">
-                <div>
-                  <div className="admissions-card-label">Diploma / Polytechnic</div>
-                  <h3 className="admissions-card-title">Diploma Programmes</h3>
-
-                  {/* BRANCHES */}
-                  <div className="admissions-branches">
-                    {["Civil", "Mechanical", "ECE", "EEE", "CSE"].map((branch) => (
-                      <span key={branch} className="admissions-branch-pill">
-                        {branch}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* INFO */}
-                  <div className="admissions-info">Lateral Entry Available | 3 Years | EAPCET Eligible</div>
-                </div>
-
-                {/* BUTTON */}
-                <a
-                  href="/Diploma-Brochure-KSRMCE (1).pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="admissions-button"
-                  download
-                >
-                  <span>📥 Download Brochure</span>
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
+          ))}
+        </div>
 
         {/* HELPLINE */}
         <motion.div
@@ -364,13 +438,15 @@ export default function Admissions() {
           variants={fadeUp}
         >
           📞 Admissions Helpline:{" "}
-          <a href="tel:+919000073434">+91-9000073434</a>
+          {admissions.helplinePhones.map((phone, i) => (
+            <span key={phone.href}>
+              <a href={phone.href}>{phone.display}</a>
+              {i < admissions.helplinePhones.length - 1 && " | "}
+            </span>
+          ))}
           {" | "}
-          <a href="tel:+918143731980">+91-8143731980</a>
-          {" | "}
-          ✉️
-          {" "}
-          <a href="mailto:ksrmcengg@yahoo.co.in">ksrmcengg@yahoo.co.in</a>
+          ✉️{" "}
+          <a href={`mailto:${admissions.helplineEmail}`}>{admissions.helplineEmail}</a>
         </motion.div>
       </Container>
     </section>

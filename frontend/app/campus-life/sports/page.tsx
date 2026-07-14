@@ -1,4 +1,5 @@
-﻿const facilities = [
+﻿import PageResources from "@/components/PageResources";
+const facilities = [
   { title: "Basketball Court", desc: "Full-size international basketball court with professional lighting and seating.", type: "Outdoor", cap: "500" },
   { title: "Tennis Courts", desc: "Four all-weather tennis courts with professional surface and lighting.", type: "Outdoor", cap: "200" },
   { title: "Football Ground", desc: "Full-size football pitch with natural grass, lighting, and spectator stand.", type: "Outdoor", cap: "1,000+" },
@@ -32,9 +33,9 @@ const achievements: Achievement[] = [
 const badgeColors: Record<AchievementBadge, string> = { state: "#3498db", national: "#e74c3c", university: "#27ae60" };
 
 const achievementImages = [
-  { src: "/gallery/Gallery _ KSRM College of Engineering_files/volleyball.jpg", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },
-  { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsg3.jpg", alt: "Indoor badminton court", caption: "Indoor games - Badminton facility" },
-  { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsground.jpg", alt: "Basketball court", caption: "Basketball court - Outdoor sports" },
+  { src: "/site-images/volleyball.jpg", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },
+  { src: "/site-images/sportsg3.jpg", alt: "Indoor badminton court", caption: "Indoor games - Badminton facility" },
+  { src: "/site-images/sportsground.jpg", alt: "Basketball court", caption: "Basketball court - Outdoor sports" },
 ];
 
 const upcomingEvents = [
@@ -52,7 +53,7 @@ export default function SportsPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .spo-hero { position: relative; background-image: url('/banners/sports banner.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
+        .spo-hero { position: relative; background-image: url('/banners/sports.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .spo-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .spo-hero > * { position: relative; z-index: 2; }
         .spo-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
@@ -94,7 +95,6 @@ export default function SportsPage() {
           <div className="spo-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Sports</h1>
           <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Excellence Through Athletic Pursuits</p>
-          <div className="spo-breadcrumb"><a href="/">Home</a><span>/</span><a href="/campus-life">Campus Life</a><span>/</span><span>Sports</span></div>
         </div>
       </section>
 
@@ -221,6 +221,7 @@ export default function SportsPage() {
           </div>
         </div>
       </section>
+      <PageResources section="sports" />
     </main>
   );
 }

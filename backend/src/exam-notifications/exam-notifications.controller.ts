@@ -1,4 +1,4 @@
-﻿import {
+import {
   Controller,
   Get,
   Post,
@@ -6,13 +6,14 @@
   Delete,
   Param,
   Body,
-  Query,
   ParseIntPipe,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ExamNotificationsService } from './exam-notifications.service';
 import { CreateExamNotificationDto } from './dto/create-exam-notification.dto';
+import { UpdateExamNotificationDto } from './dto/update-exam-notification.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
@@ -23,31 +24,53 @@ export class ExamNotificationsController {
   constructor(private readonly examNotificationsService: ExamNotificationsService) {}
 
   @Get()
-  findAll(@Query('category') category?: string) {
-    return this.examNotificationsService.findAll(category);
+  findAllPublic() {
+    return this.examNotificationsService.findAllPublic();
+  }
+
+  @Get('admin')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('exam_notifications.view')
+  findAllAdmin() {
+    return this.examNotificationsService.findAllAdmin();
   }
 
   @Post()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('exam')
-  create(@Body() createExamNotificationDto: CreateExamNotificationDto) {
-    return this.examNotificationsService.create(createExamNotificationDto);
+  @RequirePermission('exam_notifications.create')
+  create(@Body() dto: CreateExamNotificationDto, @Request() req) {
+    return this.examNotificationsService.create(dto, req.user, req.requestId);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('exam')
+  @RequirePermission('exam_notifications.update')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateExamNotificationDto: CreateExamNotificationDto,
+    @Body() dto: UpdateExamNotificationDto,
+    @Request() req,
   ) {
-    return this.examNotificationsService.update(id, updateExamNotificationDto);
+    return this.examNotificationsService.update(id, dto, req.user, req.requestId);
+  }
+
+  @Post(':id/publish')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('exam_notifications.update')
+  publish(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.examNotificationsService.setPublished(id, true, req.user, req.requestId);
+  }
+
+  @Post(':id/unpublish')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('exam_notifications.update')
+  unpublish(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.examNotificationsService.setPublished(id, false, req.user, req.requestId);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('exam')
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.examNotificationsService.delete(id);
+  @RequirePermission('exam_notifications.delete')
+  delete(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.examNotificationsService.delete(id, req.user, req.requestId);
   }
 }

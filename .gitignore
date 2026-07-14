@@ -23,3 +23,9 @@ Thumbs.db
 
 # Claude
 .claude/
+
+# Editor settings (per-developer)
+.vscode/
+
+# TypeScript incremental build info
+*.tsbuildinfo

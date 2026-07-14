@@ -10,12 +10,17 @@ import { UpdateAccreditationBadgeDto } from './dto/update-accreditation-badge.dt
 import { ReorderAccreditationBadgesDto } from './dto/reorder-accreditation-badges.dto';
 import { assertVersionMatch } from '../optimistic-lock.util';
 import { RequestAdmin } from '../types';
+import { MediaLinkService } from '../../media/media-link.service';
+
+const MEDIA_MODULE = 'homepage_accreditation_badges';
+const MEDIA_FIELD = 'imageUrl';
 
 @Injectable()
 export class AccreditationBadgesService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAllPublic() {
@@ -57,9 +62,13 @@ export class AccreditationBadgesService {
         where: { deletedAt: null },
       }));
 
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+
     const created = await this.prisma.accreditationBadge.create({
-      data: { ...dto, sortOrder },
+      data: { ...dto, imageUrl: resolvedUrl ?? dto.imageUrl, sortOrder },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -85,10 +94,18 @@ export class AccreditationBadgesService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Accreditation badge ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+
     const updated = await this.prisma.accreditationBadge.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { imageUrl: resolvedUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -120,6 +137,8 @@ export class AccreditationBadgesService {
       },
     });
 
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
+
     await this.auditLog.log({
       adminId: admin.id,
       adminName: admin.name,
@@ -148,6 +167,10 @@ export class AccreditationBadgesService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

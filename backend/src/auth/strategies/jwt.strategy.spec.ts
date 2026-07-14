@@ -34,6 +34,23 @@ describe('JwtStrategy', () => {
     );
   });
 
+  it('rejects a soft-deleted admin even if isActive is still true', async () => {
+    prisma.admin.findUnique.mockResolvedValue({
+      id: 3,
+      email: 'gone@ksrm.edu',
+      name: 'Gone',
+      isSuperAdmin: false,
+      permissions: [],
+      department: null,
+      isActive: true,
+      deletedAt: new Date(),
+    });
+
+    await expect(strategy.validate({ sub: 3, email: 'gone@ksrm.edu' })).rejects.toBeInstanceOf(
+      UnauthorizedException,
+    );
+  });
+
   // This is the regression test for the RBAC bug: req.user.permissions must
   // reflect the AdminRole -> Role -> RolePermission resolution, NOT the
   // legacy Admin.permissions column (which is never populated for
@@ -77,5 +94,6 @@ describe('JwtStrategy', () => {
     const result = await strategy.validate({ sub: 1, email: 'a@b.com' });
 
     expect(result).not.toHaveProperty('isActive');
+    expect(result).not.toHaveProperty('deletedAt');
   });
 });

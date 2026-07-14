@@ -15,8 +15,6 @@ export default function Recruiters() {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
         .recruiters-section { box-sizing: border-box; }
 
         .recruiters-header {

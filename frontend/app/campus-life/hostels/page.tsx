@@ -1,4 +1,5 @@
-﻿const hostels = [
+﻿import PageResources from "@/components/PageResources";
+const hostels = [
   { title: "Boys' Hostel", tag: "Male Students", desc: "Spacious, well-furnished accommodation with dedicated study areas and recreational facilities.", count: "200+ Students", options: "Single, Double, Triple sharing options" },
   { title: "Girls' Hostel", tag: "Female Students", desc: "Secure, comfortable living spaces with modern amenities and supervised environment.", count: "150+ Students", options: "Single, Double, Triple sharing options" },
 ];
@@ -27,7 +28,7 @@ export default function HostelsPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .hostels-hero { position: relative; background-image: url('/banners/hostel banner.jpg'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
+        .hostels-hero { position: relative; background-image: url('/banners/hostels.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; padding-bottom: 40px; overflow: hidden; }
         .hostels-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%); z-index: 1; }
         .hostels-hero > * { position: relative; z-index: 2; }
         .hostels-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 700; color: #fff; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.7); line-height: 1.08; }
@@ -116,6 +117,7 @@ export default function HostelsPage() {
           </div>
         </div>
       </section>
+      <PageResources section="hostels" />
     </main>
   );
 }

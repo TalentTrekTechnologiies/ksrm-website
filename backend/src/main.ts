@@ -1,5 +1,8 @@
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from './prisma/prisma.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { APP_VERSION } from './version';
@@ -17,6 +20,14 @@ function assertRequiredEnv() {
     process.exit(1);
   }
 }
+
+// Media.sizeBytes/MediaVariant.sizeBytes are BigInt (an Int32 tops out at
+// ~2.1GB, right at this module's 2GB video ceiling) - Node's default JSON
+// serializer throws on BigInt without this.
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+(BigInt.prototype as unknown as { toJSON: () => string }).toJSON = function () {
+  return this.toString();
+};
 
 async function bootstrap() {
   assertRequiredEnv();
@@ -45,5 +56,33 @@ async function bootstrap() {
   const port = configService.get<string>('PORT') ?? 4000;
   await app.listen(port);
   console.log(`🚀 Backend server running on http://localhost:${port}`);
+
+  await warnIfDefaultSuperAdminPassword(app);
+}
+
+/**
+ * Loud boot-time warning if any active super admin still uses the seeded
+ * default password - the single most likely way this deployment gets owned.
+ * Best-effort: never blocks startup (a fresh DB with no admins is fine).
+ */
+async function warnIfDefaultSuperAdminPassword(app: INestApplication) {
+  try {
+    const prisma = app.get(PrismaService, { strict: false });
+    const supers = await prisma.admin.findMany({
+      where: { isSuperAdmin: true, isActive: true, deletedAt: null },
+      select: { email: true, password: true },
+    });
+    for (const admin of supers) {
+      if (await bcrypt.compare('SuperAdmin@123', admin.password)) {
+        console.warn(
+          `\n⚠️  SECURITY WARNING: super admin "${admin.email}" still uses the ` +
+            `seeded default password. Change it before exposing this server ` +
+            `to the internet.\n`,
+        );
+      }
+    }
+  } catch {
+    // Non-fatal by design - this is a warning, not a gate.
+  }
 }
 void bootstrap();

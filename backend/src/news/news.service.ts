@@ -5,12 +5,17 @@ import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { MediaLinkService } from '../media/media-link.service';
+
+const MEDIA_MODULE = 'news';
+const MEDIA_FIELD = 'imageUrl';
 
 @Injectable()
 export class NewsService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAllPublic(category?: string) {
@@ -49,9 +54,17 @@ export class NewsService {
   }
 
   async create(dto: CreateNewsDto, admin: RequestAdmin, requestId?: string) {
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+
     const created = await this.prisma.news.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: {
+        ...dto,
+        imageUrl: resolvedUrl ?? dto.imageUrl,
+        date: new Date(dto.date),
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -77,14 +90,19 @@ export class NewsService {
     const { version, date, ...rest } = dto;
     assertVersionMatch(existing, version, `News article ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+
     const updated = await this.prisma.news.update({
       where: { id },
       data: {
         ...rest,
+        ...(resolvedUrl !== undefined && { imageUrl: resolvedUrl }),
         ...(date && { date: new Date(date) }),
         version: { increment: 1 },
       },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -116,6 +134,8 @@ export class NewsService {
       },
     });
 
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
+
     await this.auditLog.log({
       adminId: admin.id,
       adminName: admin.name,
@@ -142,6 +162,10 @@ export class NewsService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

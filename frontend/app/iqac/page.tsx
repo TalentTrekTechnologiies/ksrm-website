@@ -1,5 +1,8 @@
 ﻿"use client";
 
+import { mediaFile } from "@/lib/api-base";
+import PageResources from "@/components/PageResources";
+
 const missionFunctions = [
   "Development of quality benchmarks",
   "Creating learner-centric environment",
@@ -68,23 +71,23 @@ const composition = [
 const minutesYears = ["2022-23", "2021-22", "2020-21", "2019-20", "2018-19", "2017-18", "2016-17", "2015-16", "2014-15", "2013-14"];
 
 const aqarReports = [
-  { label: "2021-2022", href: "https://ksrmce.ac.in/IQAC/AQAR 2021-22.pdf" },
-  { label: "2020-2021", href: "https://ksrmce.ac.in/IQAC/AQAR 2020-21.pdf" },
-  { label: "2019-2020", href: "https://ksrmce.ac.in/IQAC/AQAR-2019-20.pdf" },
-  { label: "2018-2019", href: "https://ksrmce.ac.in/IQAC/AQAR-2018-19.pdf" },
-  { label: "2017-2018", href: "https://ksrmce.ac.in/IQAC/AQAR.2017-18.pdf" },
-  { label: "2016-2017", href: "https://ksrmce.ac.in/IQAC/AQAR-2016-17.pdf" },
-  { label: "2015-2016", href: "https://ksrmce.ac.in/IQAC/AQAR-2015-16.pdf" },
-  { label: "2014-2015", href: "https://ksrmce.ac.in/IQAC/AQAR-2014-15.pdf" },
-  { label: "2013-2014", href: "https://ksrmce.ac.in/IQAC/AQAR-2013-14.pdf" },
+  { label: "2021-2022", href: mediaFile(229) },
+  { label: "2020-2021", href: mediaFile(226) },
+  { label: "2019-2020", href: mediaFile(230) },
+  { label: "2018-2019", href: mediaFile(221) },
+  { label: "2017-2018", href: mediaFile(222) },
+  { label: "2016-2017", href: mediaFile(224) },
+  { label: "2015-2016", href: mediaFile(225) },
+  { label: "2014-2015", href: mediaFile(227) },
+  { label: "2013-2014", href: mediaFile(228) },
 ];
 
 const surveys = [
-  { label: "2023-2024", href: "https://ksrmce.ac.in/IQAC/Student_Satisfaction_Survey-AY2023-24.pdf" },
-  { label: "2021-2022", href: "https://ksrmce.ac.in/IQAC/2.7.1. Student Satisfaction Survey.pdf" },
-  { label: "2020-2021", href: "https://ksrmce.ac.in/IQAC/SSS-2020-21.pdf" },
-  { label: "2019-2020", href: "https://ksrmce.ac.in/SSS2019-20.pdf" },
-  { label: "2018-2019", href: "https://ksrmce.ac.in/Student_Survey_Analysis_2018-2019.pdf" },
+  { label: "2023-2024", href: mediaFile(220) },
+  { label: "2021-2022", href: mediaFile(223) },
+  { label: "2020-2021", href: mediaFile(232) },
+  { label: "2019-2020", href: mediaFile(219) },
+  { label: "2018-2019", href: mediaFile(231) },
 ];
 
 const feedbackForms = [
@@ -165,7 +168,7 @@ export default function IQACPage() {
       `}</style>
 
       {/* HERO */}
-      <section style={{ backgroundImage: "url('/banners/iqac banner.webp')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", position: "relative", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+      <section style={{ backgroundImage: "url('/banners/iqac.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", position: "relative", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)", pointerEvents: "none" }} />
         <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
           <div className="responsive-container">
@@ -390,6 +393,7 @@ export default function IQACPage() {
           </div>
         </div>
       </section>
+      <PageResources section="iqac" />
     </main>
   );
 }

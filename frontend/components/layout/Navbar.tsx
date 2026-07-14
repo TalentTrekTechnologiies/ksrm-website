@@ -1,5 +1,6 @@
 "use client"
 
+import { mediaFile } from "@/lib/api-base";
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -120,7 +121,7 @@ const navItems: NavItem[] = [
     href: "/contact",
     children: [
       { label: "Contact Us", href: "/contact" },
-      { label: "RTI Rules", href: "https://ksrmce.ac.in/NAAC/rtidoc.pdf" },
+      { label: "RTI Rules", href: mediaFile(174) },
     ],
   },
 ]

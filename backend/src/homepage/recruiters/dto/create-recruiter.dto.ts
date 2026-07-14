@@ -18,6 +18,10 @@ export class CreateRecruiterDto {
 
   @IsOptional()
   @IsInt()
+  mediaId?: number;
+
+  @IsOptional()
+  @IsInt()
   @Min(0)
   sortOrder?: number;
 

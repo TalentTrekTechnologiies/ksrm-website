@@ -1,5 +1,6 @@
 ﻿import type { ReactNode } from "react";
 import PlacementsSubnav from "@/components/PlacementsSubnav";
+import PageResources from "@/components/PageResources";
 
 const objectives = [
   { icon: "trending-up", text: "To enhance students' employability through industry-relevant skill development, certifications, and career readiness programs." },
@@ -35,7 +36,7 @@ export default function PlacementsOverviewPage() {
 
         .overview-hero {
           position: relative;
-          background-image: url('/banners/startup banner.jpg');
+          background-image: url('/banners/placements-training.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -204,6 +205,8 @@ export default function PlacementsOverviewPage() {
             </div>
           </div>
         </section>
+
+        <PageResources section="placements" />
       </main>
     </>
   );

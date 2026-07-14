@@ -3,6 +3,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
+import { MediaLinkService } from '../media/media-link.service';
 
 describe('NewsService', () => {
   let service: NewsService;
@@ -15,6 +16,7 @@ describe('NewsService', () => {
     };
   };
   let auditLog: { log: jest.Mock };
+  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -28,12 +30,22 @@ describe('NewsService', () => {
       },
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
+    mediaLink = {
+      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
+        mediaId === undefined || mediaId === null
+          ? Promise.resolve(undefined)
+          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
+      ),
+      syncUsage: jest.fn().mockResolvedValue(undefined),
+      untrackAll: jest.fn().mockResolvedValue(undefined),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NewsService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditLogService, useValue: auditLog },
+        { provide: MediaLinkService, useValue: mediaLink },
       ],
     }).compile();
 
@@ -108,6 +120,15 @@ describe('NewsService', () => {
       );
     });
 
+    it('untracks Media usage on soft-delete', async () => {
+      prisma.news.findFirst.mockResolvedValue({ id: 1, version: 1 });
+      prisma.news.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+
+      await service.softDelete(1, admin, undefined);
+
+      expect(mediaLink.untrackAll).toHaveBeenCalledWith('news', 1);
+    });
+
     it('404s restoring a row that is not actually deleted', async () => {
       prisma.news.findFirst.mockResolvedValue(null);
 
@@ -128,6 +149,61 @@ describe('NewsService', () => {
       });
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'RESTORE' }),
+      );
+    });
+
+    it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
+      prisma.news.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.news.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+
+      await service.restore(1, admin, undefined);
+
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith('news', 1, 'imageUrl', 9);
+    });
+
+    it('does not re-track on restore when the row has no mediaId', async () => {
+      prisma.news.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.news.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: null });
+
+      await service.restore(1, admin, undefined);
+
+      expect(mediaLink.syncUsage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Media Library linking', () => {
+    it('on create, resolves imageUrl from mediaId and tracks usage', async () => {
+      prisma.news.create.mockResolvedValue({ id: 5 });
+
+      await service.create(
+        {
+          title: 'Exam Notice',
+          content: 'Body',
+          category: 'Examinations',
+          imageUrl: '/fallback.jpg',
+          mediaId: 9,
+          date: '2026-07-09',
+        } as any,
+        admin,
+        undefined,
+      );
+
+      expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
+      expect(prisma.news.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+      });
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith('news', 5, 'imageUrl', 9);
+    });
+
+    it('on update with mediaId: null, unlinks without touching imageUrl', async () => {
+      prisma.news.findFirst.mockResolvedValue({ id: 1, version: 1, imageUrl: '/existing.jpg' });
+      prisma.news.update.mockResolvedValue({ id: 1, version: 2 });
+
+      await service.update(1, { mediaId: null, version: 1 } as any, admin, undefined);
+
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith('news', 1, 'imageUrl', null);
+      expect(prisma.news.update).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.not.objectContaining({ imageUrl: expect.anything() }) }),
       );
     });
   });

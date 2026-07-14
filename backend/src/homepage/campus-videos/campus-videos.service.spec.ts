@@ -49,13 +49,24 @@ describe('CampusVideosService', () => {
   });
 
   describe('findAllPublic', () => {
-    it('only returns active, non-deleted rows', async () => {
+    it('defaults to departmentId null - the global homepage collection', async () => {
       prisma.campusVideo.findMany.mockResolvedValue([{ id: 1 }]);
 
       await service.findAllPublic();
 
       expect(prisma.campusVideo.findMany).toHaveBeenCalledWith({
-        where: { isActive: true, deletedAt: null },
+        where: { departmentId: null, isActive: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      });
+    });
+
+    it('scopes to one department when an id is given', async () => {
+      prisma.campusVideo.findMany.mockResolvedValue([]);
+
+      await service.findAllPublic(3);
+
+      expect(prisma.campusVideo.findMany).toHaveBeenCalledWith({
+        where: { departmentId: 3, isActive: true, deletedAt: null },
         orderBy: { sortOrder: 'asc' },
       });
     });

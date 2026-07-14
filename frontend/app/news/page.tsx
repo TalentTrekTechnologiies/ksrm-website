@@ -1,20 +1,77 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { mediaFile } from "@/lib/api-base";
+import { useEffect, useState } from "react";
+import { getNewsPublic } from "@/lib/news-api";
 
 const filters = ["All", "Examinations", "Events", "Accreditation", "Rankings", "Placements"];
 
-const newsItems = [
-  { badge: "Examinations", badgeBg: "#eef1ff", badgeColor: "#2B3490", isNew: true, date: "2026-05-15", title: "KGCET 2K26 Results Announced", desc: "KGCET 2026 results have been announced. Students can check their results at the official portal.", href: "https://ksrmce.ac.in/KGCET2K26-Results.pdf" },
+interface NewsDisplay {
+  badge: string;
+  badgeBg: string;
+  badgeColor: string;
+  isNew: boolean;
+  date: string;
+  title: string;
+  desc: string;
+  href: string;
+}
+
+// Fixed palette matching the existing 5 named categories - unknown/future
+// categories fall back to a neutral gray rather than breaking the layout.
+const CATEGORY_STYLES: Record<string, { bg: string; color: string }> = {
+  Examinations: { bg: "#eef1ff", color: "#2B3490" },
+  Events: { bg: "#fff3e0", color: "#f57c00" },
+  Accreditation: { bg: "#e8f5e9", color: "#388e3c" },
+  Rankings: { bg: "#fce4ec", color: "#c2185b" },
+  Placements: { bg: "#e0f7fa", color: "#00838f" },
+};
+const DEFAULT_CATEGORY_STYLE = { bg: "#f0f0f0", color: "#666" };
+
+const FALLBACK_NEWS: NewsDisplay[] = [
+  { badge: "Examinations", badgeBg: "#eef1ff", badgeColor: "#2B3490", isNew: true, date: "2026-05-15", title: "KGCET 2K26 Results Announced", desc: "KGCET 2026 results have been announced. Students can check their results at the official portal.", href: mediaFile(173) },
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: true, date: "2026-04-01", title: "Graduation Day 2026 Applications Open", desc: "Applications for Graduation Day 2026 are now open. Students who have completed their degree can apply.", href: "#" },
-  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", date: "2025-08-15", title: "Freshers Orientation 2025-26", desc: "Welcome to the new batch of 2025-26. Orientation program details have been announced.", href: "#" },
-  { badge: "Accreditation", badgeBg: "#e8f5e9", badgeColor: "#388e3c", date: "2025-06-01", title: "NBA Accreditation Renewed", desc: "KSRM College of Engineering has successfully renewed NBA accreditation for multiple programmes.", href: "#" },
-  { badge: "Rankings", badgeBg: "#fce4ec", badgeColor: "#c2185b", date: "2025-03-01", title: "NIRF Ranking 2025 Submitted", desc: "KSRM College has submitted its NIRF ranking data for 2025.", href: "https://ksrmce.ac.in/nirf.php" },
-  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", date: "2024-12-10", title: "Industry-Academia Meet 2024", desc: "Annual Industry-Academia meet held with participation from 20+ companies.", href: "#" },
+  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2025-08-15", title: "Freshers Orientation 2025-26", desc: "Welcome to the new batch of 2025-26. Orientation program details have been announced.", href: "#" },
+  { badge: "Accreditation", badgeBg: "#e8f5e9", badgeColor: "#388e3c", isNew: false, date: "2025-06-01", title: "NBA Accreditation Renewed", desc: "KSRM College of Engineering has successfully renewed NBA accreditation for multiple programmes.", href: "#" },
+  { badge: "Rankings", badgeBg: "#fce4ec", badgeColor: "#c2185b", isNew: false, date: "2025-03-01", title: "NIRF Ranking 2025 Submitted", desc: "KSRM College has submitted its NIRF ranking data for 2025.", href: "https://ksrmce.ac.in/nirf.php" },
+  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2024-12-10", title: "Industry-Academia Meet 2024", desc: "Annual Industry-Academia meet held with participation from 20+ companies.", href: "#" },
 ];
 
 export default function NewsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [newsItems, setNewsItems] = useState<NewsDisplay[]>(FALLBACK_NEWS);
+
+  useEffect(() => {
+    let cancelled = false
+    // This full listing page always renders published articles regardless
+    // of the homepage teaser's visibility flag - that flag only controls
+    // whether the homepage's "Latest News" section shows, not this page.
+    getNewsPublic()
+      .then(({ items }) => {
+        if (cancelled || items.length === 0) return
+        setNewsItems(
+          items.map((n) => {
+            const style = CATEGORY_STYLES[n.category] ?? DEFAULT_CATEGORY_STYLE
+            return {
+              badge: n.category,
+              badgeBg: style.bg,
+              badgeColor: style.color,
+              isNew: n.isFeatured,
+              date: n.date.slice(0, 10),
+              title: n.title,
+              desc: n.content.length > 160 ? `${n.content.slice(0, 160)}…` : n.content,
+              href: "#",
+            }
+          }),
+        )
+      })
+      .catch(() => {
+        // Network/API failure - fallback news (already the initial state) stay.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const filteredNews = activeFilter === "All"
     ? newsItems
@@ -28,7 +85,7 @@ export default function NewsPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .news-hero { position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/seminar.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
+        .news-hero { position: relative; background-image: url('/banners/news.png'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .news-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); pointer-events: none; }
         .news-hero > * { position: relative; z-index: 2; }
         .news-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
@@ -52,7 +109,6 @@ export default function NewsPage() {
       <section className="news-hero">
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
-            <div className="news-breadcrumb"><a href="/">Home</a><span>/</span><span>News &amp; Events</span></div>
             <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>News &amp; Events</h1>
             <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 600 }}>Stay updated with the latest from KSRM</p>
           </div>

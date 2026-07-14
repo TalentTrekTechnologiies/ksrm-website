@@ -20,6 +20,8 @@ import { ReorderDownloadsDto } from './dto/reorder-downloads.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
+import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
+import { DepartmentScoped } from '../auth/department-scope.decorator';
 
 @ApiTags('downloads')
 @Controller('downloads')
@@ -27,20 +29,37 @@ export class DownloadsController {
   constructor(private readonly downloadsService: DownloadsService) {}
 
   @Get()
-  findAllPublic(@Query('category') category?: DownloadCategory) {
-    return this.downloadsService.findAllPublic(category);
+  findAllPublic(
+    @Query('category') category?: DownloadCategory,
+    @Query('departmentId') departmentId?: string,
+    @Query('pageSection') pageSection?: string,
+  ) {
+    return this.downloadsService.findAllPublic(
+      category,
+      departmentId ? parseInt(departmentId) : undefined,
+      pageSection,
+    );
   }
 
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('downloads.view')
-  findAllAdmin(@Query('includeDeleted') includeDeleted?: string) {
-    return this.downloadsService.findAllAdmin(includeDeleted === 'true');
+  findAllAdmin(
+    @Query('includeDeleted') includeDeleted?: string,
+    @Query('departmentId') departmentId?: string,
+    @Query('mediaId') mediaId?: string,
+  ) {
+    return this.downloadsService.findAllAdmin(
+      includeDeleted === 'true',
+      departmentId ? parseInt(departmentId) : undefined,
+      mediaId ? parseInt(mediaId) : undefined,
+    );
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('downloads.create')
+  @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreateDownloadDto, @Request() req) {
     return this.downloadsService.create(dto, req.user, req.requestId);
   }
@@ -53,8 +72,9 @@ export class DownloadsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('downloads.update')
+  @DepartmentScoped({ source: 'lookup', model: 'download' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDownloadDto,
@@ -64,15 +84,17 @@ export class DownloadsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('downloads.delete')
+  @DepartmentScoped({ source: 'lookup', model: 'download' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.downloadsService.softDelete(id, req.user, req.requestId);
   }
 
   @Post(':id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('downloads.restore')
+  @DepartmentScoped({ source: 'lookup', model: 'download' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.downloadsService.restore(id, req.user, req.requestId);
   }

@@ -10,12 +10,17 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ReorderEventsDto } from './dto/reorder-events.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { MediaLinkService } from '../media/media-link.service';
+
+const MEDIA_MODULE = 'events';
+const MEDIA_FIELD = 'imageUrl';
 
 @Injectable()
 export class EventsService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   // Upcoming events first - the public listing's whole purpose is "what's
@@ -49,13 +54,24 @@ export class EventsService {
   }
 
   async create(dto: CreateEventDto, admin: RequestAdmin, requestId?: string) {
+    const { eventDate, endDate, ...rest } = dto;
     const sortOrder =
       dto.sortOrder ??
       (await this.prisma.event.count({ where: { deletedAt: null } }));
 
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+
     const created = await this.prisma.event.create({
-      data: { ...dto, sortOrder },
+      data: {
+        ...rest,
+        imageUrl: resolvedUrl ?? rest.imageUrl,
+        eventDate: new Date(eventDate),
+        endDate: endDate ? new Date(endDate) : undefined,
+        sortOrder,
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -78,13 +94,23 @@ export class EventsService {
     requestId?: string,
   ) {
     const existing = await this.findActiveOrThrow(id);
-    const { version, ...rest } = dto;
+    const { version, eventDate, endDate, ...rest } = dto;
     assertVersionMatch(existing, version, `Event ${id}`);
+
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
 
     const updated = await this.prisma.event.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { imageUrl: resolvedUrl }),
+        ...(eventDate && { eventDate: new Date(eventDate) }),
+        ...(endDate && { endDate: new Date(endDate) }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -107,6 +133,8 @@ export class EventsService {
       where: { id },
       data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
     });
+
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -134,6 +162,10 @@ export class EventsService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

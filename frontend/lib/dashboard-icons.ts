@@ -3,9 +3,10 @@ import {
   Newspaper,
   Image as ImageIcon,
   Briefcase,
+  BriefcaseBusiness,
   CalendarClock,
-  Megaphone,
-  GraduationCap,
+  CalendarDays,
+  Radio,
   UserCog,
   Building2,
   FlaskConical,
@@ -16,7 +17,9 @@ import {
   Settings,
   ShieldCheck,
   ClipboardCheck,
+  ClipboardList,
   HardDrive,
+  Library,
   type LucideIcon,
 } from "lucide-react"
 
@@ -29,9 +32,7 @@ export const WIDGET_ICONS: Record<string, LucideIcon> = {
   gallery: ImageIcon,
   placements: Briefcase,
   exam_notifications: CalendarClock,
-  notifications: Megaphone,
   research: FlaskConical,
-  degree_verification: GraduationCap,
   downloads: FileArchive,
   committees: UsersRound,
   page_content: LayoutTemplate,
@@ -41,6 +42,11 @@ export const WIDGET_ICONS: Record<string, LucideIcon> = {
   roles: ShieldCheck,
   pending_approvals: ClipboardCheck,
   storage: HardDrive,
+  media: Library,
+  careers: BriefcaseBusiness,
+  career_applications: ClipboardList,
+  events: CalendarDays,
+  announcements: Radio,
 }
 
 export function widgetIcon(key: string): LucideIcon {

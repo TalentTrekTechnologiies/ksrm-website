@@ -8,6 +8,7 @@ import { DashboardOverviewResponseDto } from './dto/dashboard-overview.dto';
 import { RecentActivityResponseDto } from './dto/recent-activity.dto';
 import { PendingApprovalsResponseDto } from './dto/pending-approvals.dto';
 import { StorageResponseDto } from './dto/storage.dto';
+import { MediaStatsService } from '../media/media-stats.service';
 
 interface WidgetDefinition {
   key: string;
@@ -49,19 +50,9 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     count: (p) => p.examNotification.count(),
   },
   {
-    key: 'notifications',
-    label: 'Ticker Notices',
-    count: (p) => p.notification.count(),
-  },
-  {
     key: 'research',
     label: 'Research Records',
     count: (p) => p.research.count(),
-  },
-  {
-    key: 'degree_verification',
-    label: 'Degree Verification Records',
-    count: (p) => p.degreeVerification.count(),
   },
   { key: 'downloads', label: 'Downloads', count: (p) => p.download.count() },
   {
@@ -99,8 +90,23 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   },
   { key: 'admins', label: 'Admin Accounts', count: (p) => p.admin.count() },
   { key: 'roles', label: 'Roles', count: (p) => p.role.count() },
+  {
+    key: 'career_applications',
+    label: 'Job Applications',
+    count: (p) => p.careerApplication.count(),
+  },
   { key: 'careers', label: 'Job Openings', count: (p) => p.career.count() },
   { key: 'events', label: 'Events', count: (p) => p.event.count() },
+  {
+    key: 'announcements',
+    label: 'Announcements',
+    count: (p) => p.announcement.count({ where: { deletedAt: null } }),
+  },
+  {
+    key: 'media',
+    label: 'Media Library',
+    count: (p) => p.media.count({ where: { deletedAt: null } }),
+  },
 ];
 
 @Injectable()
@@ -110,6 +116,7 @@ export class DashboardService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly effectivePermissions: EffectivePermissionsService,
+    private readonly mediaStats: MediaStatsService,
   ) {}
 
   /**
@@ -231,17 +238,23 @@ export class DashboardService {
   }
 
   /**
-   * Always zero: no file upload/storage subsystem exists anywhere in this
-   * backend - every image/file field across every module is a plain URL
-   * string, confirmed in the original project handoff audit. See
-   * PROJECT_HANDOFF.md §9 (File Upload).
+   * Reports real usage from the Media Library (the first and only file
+   * upload/storage subsystem in this backend - added after the original
+   * project handoff audit that this method's note used to reference, see
+   * PROJECT_HANDOFF.md §9). `totalBytes` stays 0 - there's no configured
+   * storage quota/capacity concept anywhere, which is a separate,
+   * still-unbuilt feature from "does a storage subsystem exist at all".
    */
-  getStorage(): StorageResponseDto {
+  async getStorage(): Promise<StorageResponseDto> {
+    const stats = await this.mediaStats.getStats();
     return {
-      usedBytes: 0,
+      usedBytes: Number(stats.totalSizeBytes),
       totalBytes: 0,
-      breakdown: [],
-      note: 'No file upload/storage subsystem exists yet - see PROJECT_HANDOFF.md.',
+      breakdown: (Object.keys(stats.counts) as (keyof typeof stats.counts)[]).map((type) => ({
+        type,
+        count: stats.counts[type],
+      })),
+      note: 'Reflects the Media Library. totalBytes is 0 - no storage quota/capacity is configured anywhere yet.',
     };
   }
 }

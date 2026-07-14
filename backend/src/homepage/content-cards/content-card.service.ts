@@ -3,11 +3,15 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
 import { assertVersionMatch } from '../optimistic-lock.util';
 import { RequestAdmin } from '../types';
+import { MediaLinkService } from '../../media/media-link.service';
+
+const MEDIA_FIELD = 'imageUrl';
 
 export interface ContentCardInput {
   section: string;
   icon?: string;
   imageUrl: string;
+  mediaId?: number;
   title: string;
   description?: string;
   tags?: string[];
@@ -17,8 +21,12 @@ export interface ContentCardInput {
   isActive?: boolean;
 }
 
-export interface ContentCardUpdateInput extends Partial<ContentCardInput> {
+export interface ContentCardUpdateInput extends Partial<Omit<ContentCardInput, 'mediaId'>> {
   version: number;
+  // Widened beyond ContentCardInput's `number | undefined` so callers can
+  // send `mediaId: null` to explicitly unlink without touching imageUrl -
+  // same contract as every other module's mediaId field.
+  mediaId?: number | null;
 }
 
 export interface ReorderContentCardsInput {
@@ -41,6 +49,7 @@ export class ContentCardService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAllPublic(section: string) {
@@ -78,9 +87,13 @@ export class ContentCardService {
       dto.sortOrder ??
       ((await this.prisma.contentCard.count({ where: { section: dto.section, deletedAt: null } })) as number);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+
     const created = await this.prisma.contentCard.create({
-      data: { ...dto, sortOrder },
+      data: { ...dto, imageUrl: resolvedUrl ?? dto.imageUrl, sortOrder },
     });
+
+    await this.mediaLink.syncUsage(auditModule, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -108,10 +121,18 @@ export class ContentCardService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `${entityLabel} ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+
     const updated = await this.prisma.contentCard.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { imageUrl: resolvedUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(auditModule, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -134,6 +155,8 @@ export class ContentCardService {
       where: { id },
       data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
     });
+
+    await this.mediaLink.untrackAll(auditModule, id);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -161,6 +184,10 @@ export class ContentCardService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(auditModule, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

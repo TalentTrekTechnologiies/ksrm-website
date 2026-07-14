@@ -1,23 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class StorageResponseDto {
-  @ApiProperty({ example: 0 })
+  @ApiProperty({ example: 18874368, description: 'Total bytes used across all active Media Library files.' })
   usedBytes: number;
 
-  @ApiProperty({ example: 0 })
+  @ApiProperty({
+    example: 0,
+    description: 'Always 0 today - no storage quota/capacity is configured anywhere yet.',
+  })
   totalBytes: number;
 
   @ApiProperty({
     type: [Object],
-    example: [],
-    description:
-      'Always empty today - there is no file upload/storage subsystem anywhere in this backend (every "image"/"file" field across every module is a plain URL string with no server-side upload, storage backend, or size tracking - confirmed in the project handoff audit). This endpoint exists so the frontend is already wired to a real API and needs no changes once file storage is actually implemented.',
+    example: [{ type: 'IMAGE', count: 42 }],
+    description: 'Per-type (IMAGE/VIDEO/DOCUMENT) file counts from the Media Library.',
   })
   breakdown: unknown[];
 
   @ApiProperty({
-    example:
-      'No file upload/storage subsystem exists yet - see PROJECT_HANDOFF.md.',
+    example: 'Reflects the Media Library. totalBytes is 0 - no storage quota/capacity is configured anywhere yet.',
   })
   note: string;
 }

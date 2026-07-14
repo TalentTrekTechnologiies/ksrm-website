@@ -20,7 +20,7 @@ datasource db {
 // See backend/DATA_MODEL_DESIGN.md for the full design rationale, the
 // migration phase plan, and the list of items explicitly deferred out of
 // Phase 1 (§5.5: Notification -> TickerNotice rename; Research.type /
-// DegreeVerification.degree / AuditLog.action enum conversions;
+// AuditLog.action enum conversions;
 // AuditLog.adminId FK constraint; RBAC assignment to existing admins).
 // =============================================================================
 
@@ -39,6 +39,16 @@ enum ProgrammeLevel {
   PG
   PHD
   DIPLOMA
+}
+
+// Department CMS phase - DepartmentHighlight now serves both the "AI
+// Highlights" promo cards and Achievements (awards/rankings/accolades) via
+// this discriminator, instead of a near-duplicate second table - same
+// shape (title/description/sortOrder/isActive/soft-delete), different
+// section on the public page.
+enum DepartmentHighlightKind {
+  HIGHLIGHT
+  ACHIEVEMENT
 }
 
 /// Restricted to committees that actually exist on the current site today
@@ -95,25 +105,6 @@ enum SectionStatus {
 // EXISTING MODELS - untouched original fields, additive columns only
 // -----------------------------------------------------------------------------
 
-model Notification {
-  id        Int      @id @default(autoincrement())
-  text      String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // --- Phase 1 additive fields ---
-  // NOTE: approved to be renamed to `TickerNotice` in a later phase via an
-  // explicit `ALTER TABLE ... RENAME TO ...` migration (hand-written, not a
-  // naive Prisma schema diff, which would DROP+CREATE and destroy data).
-  // Left as `Notification` here on purpose - see DATA_MODEL_DESIGN.md §5.5.
-  startsAt  DateTime?
-  endsAt    DateTime?
-  sortOrder Int       @default(0)
-
-  @@index([isActive])
-}
-
 model News {
   id          Int      @id @default(autoincrement())
   title       String
@@ -135,6 +126,14 @@ model News {
   deletedAt     DateTime?
   deletedBy     Int?
   version       Int       @default(1)
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as HomepageHero.mediaId /
+  /// GalleryImage.mediaId). imageUrl stays authoritative for existing rows
+  /// and legacy manual-URL saves; when set, the server resolves this to the
+  /// Media Library's current URL for that asset on every read/write so
+  /// Replace propagates without a News re-save.
+  mediaId Int?
 
   categoryRef    Category? @relation("News_Category", fields: [categoryId], references: [id], onDelete: SetNull)
   authorAdmin    Admin?    @relation("News_Author", fields: [authorAdminId], references: [id], onDelete: SetNull)
@@ -168,6 +167,14 @@ model Faculty {
   deletedBy      Int?
   version        Int       @default(1)
 
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as HomepageHero.mediaId / GalleryImage
+  /// .mediaId / News.mediaId / Event.mediaId). photoUrl stays authoritative
+  /// for existing rows and legacy manual-URL saves; when set, the server
+  /// resolves this to the Media Library's current URL for that asset on
+  /// every read/write so Replace propagates without a Faculty re-save.
+  mediaId Int?
+
   departmentRef        Department?       @relation("Faculty_Department", fields: [departmentId], references: [id], onDelete: SetNull)
   hodOfDepartment      Department?       @relation("Department_Hod")
   deletedByAdmin       Admin?            @relation("Faculty_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
@@ -198,6 +205,13 @@ model Placement {
   deletedBy      Int?
   version        Int       @default(1)
 
+  /// Media Library references (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// imageUrl/companyLogoUrl stay authoritative for existing rows and
+  /// legacy manual-URL saves.
+  mediaId          Int?
+  companyLogoMediaId Int?
+
   departmentRef  Department? @relation("Placement_Department", fields: [departmentId], references: [id], onDelete: SetNull)
   deletedByAdmin Admin?      @relation("Placement_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -222,6 +236,19 @@ model GalleryImage {
   deletedBy    Int?
   version      Int       @default(1)
 
+  /// Optional page/section slug (e.g. "edc", "iic", "library") that routes
+  /// this image to a specific public page's gallery block, parallel to
+  /// Download.pageSection. Null = not tied to a page (still appears in the
+  /// general Gallery). Free string, driven by the admin UI's PAGE_SECTIONS.
+  pageSection  String?
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as HomepageHero.mediaId). imageUrl stays
+  /// authoritative for existing rows and legacy manual-URL saves; when set,
+  /// this is kept in sync with the Media Library's current URL for that
+  /// asset server-side, so Replace propagates with no re-save needed.
+  mediaId Int?
+
   categoryRef    Category?   @relation("GalleryImage_Category", fields: [categoryId], references: [id], onDelete: SetNull)
   departmentRef  Department? @relation("GalleryImage_Department", fields: [departmentId], references: [id], onDelete: SetNull)
   deletedByAdmin Admin?      @relation("GalleryImage_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
@@ -229,26 +256,6 @@ model GalleryImage {
   @@index([categoryId])
   @@index([departmentId])
   @@index([deletedAt])
-}
-
-model DegreeVerification {
-  id            Int      @id @default(autoincrement())
-  studentName   String
-  hallTicketNo  String   @unique
-  department    String
-  yearOfPassing Int
-  degree        String
-  isVerified    Boolean  @default(true)
-  createdAt     DateTime @default(now())
-
-  // --- Phase 1 additive fields ---
-  departmentId     Int?
-  cgpaOrPercentage Decimal? @db.Decimal(5, 2)
-  updatedAt        DateTime @default(now()) @updatedAt
-
-  departmentRef Department? @relation("DegreeVerification_Department", fields: [departmentId], references: [id], onDelete: SetNull)
-
-  @@index([departmentId])
 }
 
 model Admin {
@@ -271,7 +278,18 @@ model Admin {
   departmentId Int?
   lastLoginAt  DateTime?
 
-  departmentRef Department? @relation("Admin_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  // Admin Management module - soft-delete + optimistic locking, same
+  // pattern as every other CMS module. `isActive` (above) stays the
+  // separate enable/disable toggle (a disabled admin still exists and is
+  // restorable without going through delete/restore); deletedAt is for
+  // actually removing an admin account from the active roster.
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  departmentRef  Department? @relation("Admin_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?      @relation("Admin_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  deletedAdmins  Admin[]     @relation("Admin_DeletedBy")
 
   roles         AdminRole[]
   refreshTokens RefreshToken[]
@@ -319,7 +337,26 @@ model Admin {
   deletedCareers Career[] @relation("Career_DeletedBy")
   deletedEvents  Event[]  @relation("Event_DeletedBy")
 
+  // Media Library.
+  uploadedMedia           Media[]        @relation("Media_UploadedBy")
+  deletedMedia            Media[]        @relation("Media_DeletedBy")
+  mediaVersionsReplacedBy MediaVersion[] @relation("MediaVersion_ReplacedBy")
+
+  // Department CMS phase.
+  departmentDisplaySettingsUpdated DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_UpdatedBy")
+
+  // Careers Application Pipeline.
+  assignedCareerApplications    CareerApplication[]                @relation("CareerApplication_AssignedHr")
+  careerApplicationStatusChanges CareerApplicationStatusHistory[]  @relation("CareerApplicationStatusHistory_ChangedBy")
+
+  // Announcement Engine.
+  deletedAnnouncements Announcement[] @relation("Announcement_DeletedBy")
+
+  // In-App Notification Center (Premium UI Redesign).
+  notifications AdminNotification[] @relation("AdminNotification_Admin")
+
   @@index([departmentId])
+  @@index([deletedAt])
 }
 
 model Research {
@@ -344,6 +381,13 @@ model Research {
   doiOrLink    String?
   updatedAt    DateTime @default(now()) @updatedAt
 
+  /// Media Library reference for an optional attachment (paper/patent PDF)
+  /// - DOCUMENT type, resolved the same way as every other module's
+  /// mediaId column. attachmentUrl stays authoritative for legacy
+  /// manual-URL saves.
+  mediaId       Int?
+  attachmentUrl String?
+
   departmentRef Department? @relation("Research_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
   @@index([departmentId])
@@ -351,13 +395,31 @@ model Research {
 }
 
 model ExamNotification {
-  id        Int      @id @default(autoincrement())
-  title     String
-  fileUrl   String?
-  category  String
-  date      DateTime
-  isActive  Boolean  @default(true)
+  id       Int      @id @default(autoincrement())
+  title    String
+  // --- Legacy Phase 1 fields, no longer written by the current
+  // (deliberately simple - "publish an important link, not a notification
+  // engine") admin form. Kept rather than dropped, matching this schema's
+  // additive-only convention - see startDate/endDate/isPublished below for
+  // the fields that replaced date/category's role. Table had zero rows at
+  // migration time, so nothing needed backfilling.
+  fileUrl  String?
+  category String?
+  date     DateTime?
+  isActive Boolean  @default(true)
   createdAt DateTime @default(now())
+
+  // --- Admin Management rework ---
+  description String?
+  buttonText  String?
+  buttonUrl   String?
+  startDate   DateTime
+  endDate     DateTime?
+  // Separate from isActive: isPublished is the draft/live gate an editor
+  // toggles deliberately; isActive stays available as a quick
+  // enable/disable that doesn't lose the "published" state. Public display
+  // requires both, plus falling inside [startDate, endDate].
+  isPublished Boolean  @default(false)
 
   // --- Phase 1 additive fields ---
   // NOTE: also intentionally not given soft-delete columns - same reasoning
@@ -371,6 +433,8 @@ model ExamNotification {
 
   @@index([categoryId])
   @@index([departmentId])
+  @@index([isPublished])
+  @@index([isActive])
 }
 
 // Audit Log for tracking admin actions
@@ -450,6 +514,14 @@ model Department {
   deletedBy Int?
   version   Int       @default(1)
 
+  /// Media Library reference for heroImageUrl (plain Int, no Prisma
+  /// relation - same decoupled-by-design reasoning as the other modules'
+  /// mediaId columns). Only heroImageUrl is Media Picker-integrated this
+  /// pass, matching what the admin form actually exposes today;
+  /// aboutVideoUrl/ogImageUrl have no admin UI field yet so they're left on
+  /// their plain string columns.
+  heroMediaId Int?
+
   hod            Faculty? @relation("Department_Hod", fields: [hodId], references: [id], onDelete: SetNull)
   deletedByAdmin Admin?   @relation("Department_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -457,7 +529,6 @@ model Department {
   labs                Lab[]                 @relation("Lab_Department")
   researches          Research[]            @relation("Research_Department")
   placements          Placement[]           @relation("Placement_Department")
-  degreeVerifications DegreeVerification[]  @relation("DegreeVerification_Department")
   learningOutcomes    LearningOutcome[]     @relation("LearningOutcome_Department")
   programmes          DepartmentProgramme[] @relation("DepartmentProgramme_Department")
   highlights          DepartmentHighlight[] @relation("DepartmentHighlight_Department")
@@ -466,8 +537,45 @@ model Department {
   downloads           Download[]            @relation("Download_Department")
   admins              Admin[]               @relation("Admin_Department")
 
+  // Department CMS phase.
+  campusVideos    CampusVideo[]           @relation("CampusVideo_Department")
+  siteStatistics  SiteStatistic[]         @relation("SiteStatistic_Department")
+  contactChannels ContactChannel[]        @relation("ContactChannel_Department")
+  displaySettings DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_Department")
+
+  // Announcement Engine.
+  announcementPlacements AnnouncementPlacement[] @relation("AnnouncementPlacement_Department")
+
   @@index([isActive])
   @@index([deletedAt])
+}
+
+// Department CMS phase - the "scalable configuration" system: one row per
+// toggle (key/value), not one boolean column per toggle. Adding a new
+// display option later (e.g. "faculty.showLinkedIn") is an INSERT, never a
+// migration. Mirrors the same key/value-row pattern already proven for
+// homepage section visibility (SiteSetting group: 'homepage_visibility'),
+// just scoped by a real FK instead of a string-parsed group name since
+// every row here already belongs to exactly one department.
+//
+// `key` convention: "<section>.<option>", e.g. "faculty.showPhotos",
+// "hod.showMessage", "labs.showEquipment", "research.showVideos". Absence
+// of a row for a given key means "on" (default-visible) - only OFF states
+// need to be written, so a brand-new department starts with every section
+// fully visible without needing thousands of seeded rows.
+model DepartmentDisplaySetting {
+  id           Int      @id @default(autoincrement())
+  departmentId Int
+  key          String
+  value        Boolean  @default(true)
+  updatedAt    DateTime @updatedAt
+  updatedBy    Int?
+
+  department     Department @relation("DepartmentDisplaySetting_Department", fields: [departmentId], references: [id], onDelete: Cascade)
+  updatedByAdmin Admin?     @relation("DepartmentDisplaySetting_UpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([departmentId, key])
+  @@index([departmentId])
 }
 
 model LearningOutcome {
@@ -516,23 +624,31 @@ model DepartmentProgramme {
 }
 
 model DepartmentHighlight {
-  id           Int      @id @default(autoincrement())
+  id           Int                      @id @default(autoincrement())
   departmentId Int
+  kind         DepartmentHighlightKind  @default(HIGHLIGHT)
   title        String
   description  String
-  sortOrder    Int      @default(0)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  sortOrder    Int                      @default(0)
+  isActive     Boolean                  @default(true)
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
 
   deletedAt DateTime?
   deletedBy Int?
   version   Int       @default(1)
 
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as every other module's mediaId
+  /// column). Optional - highlight/achievement cards work text-only too.
+  mediaId  Int?
+  imageUrl String?
+
   department     Department @relation("DepartmentHighlight_Department", fields: [departmentId], references: [id], onDelete: Cascade)
   deletedByAdmin Admin?     @relation("DepartmentHighlight_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
   @@index([departmentId])
+  @@index([departmentId, kind])
   @@index([deletedAt])
 }
 
@@ -542,7 +658,15 @@ model Lab {
   name              String
   description       String
   imageUrl          String?
+  /// Media Library reference for imageUrl - see the other modules'
+  /// mediaId columns for the decoupled-by-design reasoning.
+  mediaId           Int?
   capacity          Int?
+  /// Equipment list - a real structured list (not a single text blob) so
+  /// admins can add/remove one piece of equipment at a time in the editor,
+  /// matching how Department.mission is already String[] rather than one
+  /// paragraph.
+  equipment         String[]
   inChargeFacultyId Int?
   sortOrder         Int      @default(0)
   isActive          Boolean  @default(true)
@@ -633,8 +757,242 @@ model Career {
 
   deletedByAdmin Admin? @relation("Career_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
+  applications CareerApplication[]
+
   @@index([isActive])
   @@index([deletedAt])
+}
+
+enum ApplicationStatus {
+  APPLIED
+  UNDER_REVIEW
+  SHORTLISTED
+  INTERVIEW_SCHEDULED
+  INTERVIEW_COMPLETED
+  SELECTED
+  REJECTED
+  JOINED
+}
+
+/// Careers Application Pipeline. Deliberately no soft-delete/version
+/// columns - this is a compliance-adjacent HR record, corrected by status
+/// transition (tracked in CareerApplicationStatusHistory), never deleted
+/// through the admin UI.
+model CareerApplication {
+  id       Int     @id @default(autoincrement())
+  careerId Int?
+
+  fullName          String
+  email             String
+  mobile            String
+  address           String?
+  dateOfBirth       DateTime?
+  qualification     String
+  specialization    String?
+  yearsOfExperience Float?
+  currentCompany    String?
+  currentCtc        String?
+  expectedCtc       String?
+  noticePeriod      String?
+  skills            String[]
+  linkedinUrl       String?
+  portfolioUrl      String?
+
+  /// Media Library reference (DOCUMENT type) - the resume is a Media
+  /// Library asset like every other file in this system, reusing its
+  /// validation/versioning/storage-tracking pipeline rather than a
+  /// separate resume storage mechanism. resumeUrl is the resolved URL at
+  /// submission time (kept for display without an extra Media lookup on
+  /// every list render - same denormalization pattern every mediaId field
+  /// in this schema already uses for its legacy-URL sibling column).
+  resumeMediaId Int
+  resumeUrl     String
+
+  coverLetter     String?
+  additionalNotes String?
+
+  source ApplicationSource @default(WEBSITE)
+  status ApplicationStatus @default(APPLIED)
+  notes  String?
+
+  assignedHrId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  career        Career?                          @relation(fields: [careerId], references: [id], onDelete: SetNull)
+  assignedHr    Admin?                            @relation("CareerApplication_AssignedHr", fields: [assignedHrId], references: [id], onDelete: SetNull)
+  statusHistory CareerApplicationStatusHistory[]
+
+  @@index([careerId])
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ApplicationSource {
+  WEBSITE
+  REFERRAL
+  MANUAL
+}
+
+/// The timeline: Applied -> Resume Reviewed -> Interview Scheduled ->
+/// Selected, etc. One append-only row per status transition.
+model CareerApplicationStatusHistory {
+  id               Int               @id @default(autoincrement())
+  applicationId    Int
+  status           ApplicationStatus
+  note             String?
+  changedByAdminId Int?
+  createdAt        DateTime          @default(now())
+
+  application    CareerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  changedByAdmin Admin?            @relation("CareerApplicationStatusHistory_ChangedBy", fields: [changedByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([applicationId])
+}
+
+enum AnnouncementPriority {
+  CRITICAL
+  HIGH
+  NORMAL
+  LOW
+}
+
+/// Free-text-adjacent classification of where an announcement originated -
+/// not a hard FK into News/Event/etc (an announcement can be pure MANUAL
+/// content with no source record at all). sourceModule/sourceRecordId
+/// below optionally point back at the originating row, same loose
+/// module+recordId pattern MediaUsage/AuditLog already use, so this model
+/// never needs to know the shape of News/Event/ExamNotification.
+enum AnnouncementSource {
+  NEWS
+  EXAM_NOTIFICATION
+  EVENT
+  PLACEMENT
+  ADMISSION
+  MANUAL
+  EMERGENCY
+}
+
+enum AnnouncementLocation {
+  HEADER_TICKER
+  HERO_BANNER
+  HOMEPAGE_SECTION
+  DEPARTMENT_PAGE
+  ADMISSIONS_PAGE
+  PLACEMENTS_PAGE
+  EXAM_NOTIFICATIONS_PAGE
+}
+
+/// The centralized Announcement Engine - one record, reusable across every
+/// display location via AnnouncementPlacement rows below, instead of a
+/// separate ticker/banner system per page. "Show in Header"/"Show in Hero"
+/// etc are not boolean columns here - they're the presence/absence of a
+/// placement row for that location, matching this project's established
+/// "one row per toggle" scalable-configuration pattern (see
+/// DepartmentDisplaySetting).
+model Announcement {
+  id          Int     @id @default(autoincrement())
+  title       String
+  /// Condensed text for ticker display - falls back to `title` when unset
+  /// (a homepage section card can afford a longer title; a scrolling
+  /// ticker strip usually can't).
+  shortText   String?
+  description String?
+  icon        String?
+  badge       String?
+
+  priority AnnouncementPriority @default(NORMAL)
+  /// Optional override color (hex) - absent means the priority's own
+  /// default color scheme applies (see the frontend's PRIORITY_COLORS map).
+  color    String?
+
+  source         AnnouncementSource @default(MANUAL)
+  sourceModule   String?
+  sourceRecordId Int?
+
+  linkUrl      String?
+  openInNewTab Boolean @default(false)
+
+  startDate   DateTime?
+  endDate     DateTime?
+  isPublished Boolean   @default(false)
+
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin?                   @relation("Announcement_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  placements     AnnouncementPlacement[]
+
+  @@index([isActive])
+  @@index([isPublished])
+  @@index([deletedAt])
+  @@index([startDate, endDate])
+}
+
+/// The reusability join: one row per (announcement, location[, department])
+/// combination. A single Announcement can have a HEADER_TICKER placement
+/// and a HOMEPAGE_SECTION placement simultaneously - two rows, one source
+/// of truth for the content itself (title/priority/dates/link all live on
+/// Announcement, never duplicated per placement).
+model AnnouncementPlacement {
+  id             Int                  @id @default(autoincrement())
+  announcementId Int
+  location       AnnouncementLocation
+  /// Only meaningful for DEPARTMENT_PAGE - null means "all departments".
+  departmentId   Int?
+  sortOrder      Int                  @default(0)
+
+  announcement Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  department   Department?  @relation("AnnouncementPlacement_Department", fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, location, departmentId])
+  @@index([location])
+  @@index([departmentId])
+}
+
+/// In-App Notification Center (Premium UI Redesign) - the admin-facing bell
+/// icon's real backing model, distinct from `Notification` (public-facing
+/// scrolling ticker notices, unrelated). One row per (recipient admin,
+/// event) - a "broadcast" event (e.g. a new career application, relevant to
+/// every admin with career_applications.view) is materialized as N rows at
+/// creation time (one per eligible admin) rather than a single shared row
+/// with a nullable adminId, so each admin's isRead/readAt is genuinely
+/// their own and never collides with another admin's read state. Correct
+/// and simple at this project's scale (a handful of admins, not the kind of
+/// fan-out volume that would need a separate read-state table).
+enum AdminNotificationType {
+  CAREER_APPLICATION_RECEIVED
+  ANNOUNCEMENT_PUBLISHED
+  ADMIN_CREATED
+  GENERAL
+}
+
+model AdminNotification {
+  id        Int                   @id @default(autoincrement())
+  adminId   Int
+  type      AdminNotificationType
+  title     String
+  message   String?
+  /// Admin-relative path the "View" action navigates to, e.g.
+  /// "/admin/careers/applications".
+  link      String?
+  isRead    Boolean               @default(false)
+  readAt    DateTime?
+  createdAt DateTime              @default(now())
+
+  admin Admin @relation("AdminNotification_Admin", fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId, isRead])
+  @@index([adminId, createdAt])
 }
 
 /// Sprint "tonight" build - a campus events calendar, distinct from
@@ -656,6 +1014,14 @@ model Event {
   deletedAt DateTime?
   deletedBy Int?
   version   Int       @default(1)
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as HomepageHero.mediaId /
+  /// GalleryImage.mediaId / News.mediaId). imageUrl stays authoritative for
+  /// existing rows and legacy manual-URL saves; when set, the server
+  /// resolves this to the Media Library's current URL for that asset on
+  /// every read/write so Replace propagates without an Events re-save.
+  mediaId Int?
 
   deletedByAdmin Admin? @relation("Event_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -689,6 +1055,13 @@ model Download {
   category     DownloadCategory
   departmentId Int?
   categoryId   Int?
+  /// Optional page/section slug (e.g. "edc", "iic", "iqac", "alumni",
+  /// "academics") that routes this document to a specific public page's
+  /// "Downloads & Resources" block. Null = not tied to a page section
+  /// (still appears in the general Downloads listing). Free string, driven
+  /// by a known list in the admin UI (PAGE_SECTIONS) so new sections are
+  /// added deliberately without a migration.
+  pageSection  String?
   fileUrl      String
   sortOrder    Int              @default(0)
   isActive     Boolean          @default(true)
@@ -699,6 +1072,14 @@ model Download {
   deletedAt DateTime?
   deletedBy Int?
   version   Int       @default(1)
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// fileUrl stays authoritative for existing rows and legacy manual-URL
+  /// saves; when set, the server resolves this to the Media Library's
+  /// current URL for that asset on every read/write so Replace propagates
+  /// without a Downloads re-save.
+  mediaId Int?
 
   department     Department? @relation("Download_Department", fields: [departmentId], references: [id], onDelete: SetNull)
   categoryRef    Category?   @relation("Download_Category", fields: [categoryId], references: [id], onDelete: SetNull)
@@ -791,6 +1172,12 @@ model SiteSetting {
   // accountability trail for who last changed a given setting.
   updatedBy Int?
 
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// Only meaningful when type is IMAGE_URL; `value` stays authoritative
+  /// for existing rows and legacy manual-URL saves.
+  mediaId Int?
+
   updatedByAdmin Admin? @relation("SiteSetting_UpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
 
   @@index([group])
@@ -829,11 +1216,21 @@ model SiteSetting {
 /// title/subtitle/image shape does - see DATA_MODEL_DESIGN.md's homepage
 /// research for the full content inventory this maps to.
 model HomepageHero {
-  id                 Int     @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   accreditationLabel String?
   heading            String
   subtitle           String
+  /// Legacy hand-typed path/URL - stays authoritative for existing rows
+  /// and as a fallback. New saves prefer mediaId; videoUrl is kept in sync
+  /// with the Media Library's resolved URL when mediaId is set, so any
+  /// code still reading videoUrl directly (or an old row with no mediaId)
+  /// keeps working unchanged during the transition.
   videoUrl           String
+  /// Media Library reference for the background video - plain Int, not a
+  /// Prisma relation FK (Media stays decoupled from its 15+ future
+  /// consumer tables the same way MediaUsage already is; referential
+  /// integrity here is enforced in HeroService, not the DB schema).
+  mediaId            Int?
   ctaPrimaryText     String?
   ctaPrimaryHref     String?
   ctaSecondaryText   String?
@@ -949,7 +1346,13 @@ model SiteStatistic {
   deletedBy Int?
   version   Int       @default(1)
 
-  deletedByAdmin Admin? @relation("SiteStatistic_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  /// Department CMS phase - optional so this table keeps serving global
+  /// homepage/page statistics (departmentId: null) as well as
+  /// per-department stat cards, one reusable model instead of two.
+  departmentId Int?
+
+  deletedByAdmin Admin?      @relation("SiteStatistic_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  departmentRef  Department? @relation("SiteStatistic_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
   @@index([scope])
   @@index([deletedAt])
@@ -976,10 +1379,18 @@ model ContactChannel {
   deletedBy Int?
   version   Int       @default(1)
 
-  deletedByAdmin Admin? @relation("ContactChannel_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  /// Department CMS phase - optional so this table keeps serving the
+  /// global office directory (Principal/Admissions/Exam/Placement/Main,
+  /// departmentId: null) as well as per-department contact info, one
+  /// reusable model instead of two.
+  departmentId Int?
+
+  deletedByAdmin Admin?      @relation("ContactChannel_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  departmentRef  Department? @relation("ContactChannel_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
   @@index([isActive])
   @@index([deletedAt])
+  @@index([departmentId])
 }
 
 model Testimonial {
@@ -1000,6 +1411,12 @@ model Testimonial {
   deletedAt DateTime?
   deletedBy Int?
   version   Int       @default(1)
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// photoUrl stays authoritative for existing rows and legacy manual-URL
+  /// saves.
+  mediaId Int?
 
   deletedByAdmin Admin? @relation("Testimonial_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -1024,10 +1441,17 @@ model CampusVideo {
   deletedBy Int?
   version   Int       @default(1)
 
-  deletedByAdmin Admin? @relation("CampusVideo_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  /// Department CMS phase - optional so this table keeps serving the
+  /// homepage's global Campus Videos section (departmentId: null) as well
+  /// as per-department Videos sections, one reusable model instead of two.
+  departmentId Int?
+
+  deletedByAdmin Admin?      @relation("CampusVideo_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  departmentRef  Department? @relation("CampusVideo_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
   @@index([isActive])
   @@index([deletedAt])
+  @@index([departmentId])
 }
 
 model AccreditationBadge {
@@ -1047,6 +1471,14 @@ model AccreditationBadge {
   deletedAt DateTime?
   deletedBy Int?
   version   Int       @default(1)
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// imageUrl stays authoritative for existing rows and legacy manual-URL
+  /// saves. Added after the Homepage Reliability audit found this was the
+  /// one homepage-image module never wired to the Media Library, so its
+  /// logos had no Replace/Version History support at all.
+  mediaId Int?
 
   deletedByAdmin Admin? @relation("AccreditationBadge_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -1069,6 +1501,12 @@ model Recruiter {
   deletedAt DateTime?
   deletedBy Int?
   version   Int       @default(1)
+
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// logoUrl stays authoritative for existing rows and legacy manual-URL
+  /// saves.
+  mediaId Int?
 
   deletedByAdmin Admin? @relation("Recruiter_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -1158,9 +1596,219 @@ model ContentCard {
   deletedBy Int?
   version   Int       @default(1)
 
+  /// Media Library reference (plain Int, no Prisma relation - same
+  /// decoupled-by-design reasoning as the other modules' mediaId columns).
+  /// imageUrl stays authoritative for existing rows and legacy manual-URL
+  /// saves. Shared across every ContentCard-backed section (Quick Links,
+  /// Admission Programs, Accreditation Badges, homepage Departments teaser)
+  /// via ContentCardService, so wiring it once here covers all of them.
+  mediaId Int?
+
   deletedByAdmin Admin? @relation("ContentCard_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
   @@index([section])
   @@index([isActive])
   @@index([deletedAt])
+}
+
+// -----------------------------------------------------------------------------
+// Media Library - centralized upload/asset management. See
+// backend/src/media/README.md for the full design writeup. Every module that
+// currently stores a hand-typed imageUrl/fileUrl string is expected to adopt
+// this by referencing Media.id instead, one module at a time in future
+// passes - nothing is migrated to use it yet.
+// -----------------------------------------------------------------------------
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+/// PENDING/PROCESSING exist for both the async image-variant pipeline (used
+/// this pass) and the future video-transcoding pipeline (not built yet, but
+/// won't need another migration when it lands).
+enum MediaProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+/// ORIGINAL/SOURCE is a re-encoded, EXIF-stripped rendition - the raw upload
+/// (Media.storageKey) is archival only and never served publicly. CROP rows
+/// are on-demand, admin-triggered (see MediaVariant.cropPreset below).
+enum MediaVariantSize {
+  ORIGINAL
+  HERO
+  LARGE
+  MEDIUM
+  SMALL
+  THUMBNAIL
+  CROP
+}
+
+enum MediaVariantFormat {
+  SOURCE
+  WEBP
+}
+
+/// Simple self-referencing tree, e.g. "Departments" -> "CSE". `path` is
+/// materialized (slash-joined ancestor names) so breadcrumbs/lookups don't
+/// need a recursive query. Deliberately NOT type-gated (an Image and a
+/// Video can share a folder) - see schema design notes.
+model MediaFolder {
+  id        Int      @id @default(autoincrement())
+  name      String
+  parentId  Int?
+  path      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   MediaFolder?  @relation("MediaFolder_Children", fields: [parentId], references: [id], onDelete: Cascade)
+  children MediaFolder[] @relation("MediaFolder_Children")
+  media    Media[]
+
+  @@unique([parentId, name])
+  @@index([path])
+}
+
+model Media {
+  id               Int       @id @default(autoincrement())
+  type             MediaType
+  originalFilename String
+  /// Adapter-relative key for the archival original (e.g.
+  /// "media/2026/07/<uuid>.jpg"). Never exposed as a public URL directly -
+  /// public access always goes through a MediaVariant via mediaId.
+  storageKey       String
+  mimeType         String
+  extension        String
+  /// BigInt: Int32 tops out at ~2.1GB, right at this module's 2GB video
+  /// ceiling. See backend/src/main.ts for the required BigInt JSON shim.
+  sizeBytes        BigInt
+  checksumSha256   String    @unique
+
+  width  Int?
+  height Int?
+
+  // --- reserved for the next-pass video transcoding pipeline; unused by
+  // anything this pass writes, kept here so that pass is additive ---
+  durationSeconds Float?
+  codec           String?
+  bitrateKbps     Int?
+
+  processingStatus MediaProcessingStatus @default(PENDING)
+  processingError  String?
+
+  title        String?
+  altText      String?
+  caption      String?
+  description  String?
+  copyright    String?
+  photographer String?
+
+  folderId Int?
+  category String?
+  /// Doubles as the SEO "Keywords" field the metadata panel exposes - kept
+  /// as one array rather than a second, functionally-duplicate column.
+  tags     String[]
+
+  uploadedByAdminId Int?
+
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  folder          MediaFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  uploadedByAdmin Admin?       @relation("Media_UploadedBy", fields: [uploadedByAdminId], references: [id], onDelete: SetNull)
+  deletedByAdmin  Admin?       @relation("Media_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  variants MediaVariant[]
+  usages   MediaUsage[]
+  versions MediaVersion[]
+
+  @@index([type])
+  @@index([isActive])
+  @@index([deletedAt])
+  @@index([folderId])
+  @@index([category])
+  @@index([processingStatus])
+}
+
+/// One row per (size, format) rendition. Images get up to 12 (6 sizes x
+/// SOURCE/WEBP) once processing completes; video/document get exactly one
+/// (ORIGINAL/SOURCE) this pass. CROP rows are added on demand, one per
+/// distinct cropPreset - re-cropping the same preset replaces its row
+/// rather than stacking duplicates (see the unique constraint).
+model MediaVariant {
+  id         Int                @id @default(autoincrement())
+  mediaId    Int
+  variant    MediaVariantSize
+  format     MediaVariantFormat
+  storageKey String
+  width      Int?
+  height     Int?
+  sizeBytes  BigInt
+  createdAt  DateTime           @default(now())
+
+  /// Set only on CROP rows - the preset key (e.g. "HERO_BANNER") and the
+  /// source-image pixel rectangle that was cropped, so it can be
+  /// re-adjusted later without starting over.
+  cropPreset  String?
+  sourceCropX Int?
+  sourceCropY Int?
+  sourceCropW Int?
+  sourceCropH Int?
+
+  media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([mediaId, variant, format, cropPreset])
+  @@index([mediaId])
+}
+
+/// Generic, decoupled usage-tracking pointer - deliberately NOT an FK into
+/// any consumer table (Media can't polymorphically reference 15 different
+/// content models). Same loose module/targetId string-keyed shape
+/// AuditLog already uses. Zero rows are ever written by this pass - every
+/// future module adopts tracking itself when it migrates off its string
+/// URL field.
+model MediaUsage {
+  id        Int      @id @default(autoincrement())
+  mediaId   Int
+  module    String
+  recordId  Int
+  field     String
+  createdAt DateTime @default(now())
+
+  media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([mediaId, module, recordId, field])
+  @@index([mediaId])
+  @@index([module, recordId])
+}
+
+/// Snapshot of Media's previous live state, written on every Replace
+/// (including a rollback itself, which is just another append - history
+/// is never rewritten).
+model MediaVersion {
+  id                Int      @id @default(autoincrement())
+  mediaId           Int
+  versionNumber     Int
+  storageKey        String
+  mimeType          String
+  sizeBytes         BigInt
+  checksumSha256    String
+  width             Int?
+  height            Int?
+  replacedByAdminId Int?
+  createdAt         DateTime @default(now())
+
+  media           Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  replacedByAdmin Admin? @relation("MediaVersion_ReplacedBy", fields: [replacedByAdminId], references: [id], onDelete: SetNull)
+
+  @@unique([mediaId, versionNumber])
+  @@index([mediaId])
 }

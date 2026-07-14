@@ -33,6 +33,8 @@ export interface FacultyMember {
   qualification: string;
   photo: string;
   specialization: string;
+  experience?: string;
+  email?: string;
 }
 export interface Programme {
   name: string;
@@ -43,6 +45,7 @@ export interface Lab {
   name: string;
   description: string;
   imageUrl: string;
+  equipment?: string[];
 }
 export interface Department {
   slug: string;

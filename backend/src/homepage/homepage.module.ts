@@ -25,9 +25,10 @@ import { RecruitersService } from './recruiters/recruiters.service';
 import { DepartmentsController } from './departments/departments.controller';
 import { DepartmentsService } from './departments/departments.service';
 import { SectionVisibilityModule } from './section-visibility/section-visibility.module';
+import { MediaModule } from '../media/media.module';
 
 @Module({
-  imports: [AuditLogModule, AuthModule, SectionVisibilityModule],
+  imports: [AuditLogModule, AuthModule, SectionVisibilityModule, MediaModule],
   controllers: [
     HomepageController,
     HeroController,

@@ -11,14 +11,17 @@ import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { MediaLinkService } from '../media/media-link.service';
 
 const AUDIT_MODULE = 'departments';
+const MEDIA_FIELD = 'heroImageUrl';
 
 @Injectable()
 export class DepartmentsService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAllPublic() {
@@ -49,6 +52,17 @@ export class DepartmentsService {
     return record;
   }
 
+  // Admin single-record fetch by id, regardless of isActive/deletedAt - the
+  // Department Workspace UI needs to open an inactive or soft-deleted
+  // department's profile tab, unlike findBySlug (public, active-only).
+  async findByIdAdmin(id: number) {
+    const record = await this.prisma.department.findUnique({ where: { id } });
+    if (!record) {
+      throw new NotFoundException(`Department ${id} not found`);
+    }
+    return record;
+  }
+
   private async findActiveOrThrow(id: number) {
     const record = await this.prisma.department.findFirst({
       where: { id, deletedAt: null },
@@ -60,15 +74,21 @@ export class DepartmentsService {
   }
 
   async create(dto: CreateDepartmentDto, admin: RequestAdmin, requestId?: string) {
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.heroMediaId, 'IMAGE');
+
     let created;
     try {
-      created = await this.prisma.department.create({ data: { ...dto } });
+      created = await this.prisma.department.create({
+        data: { ...dto, heroImageUrl: resolvedUrl ?? dto.heroImageUrl },
+      });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
         throw new ConflictException(`Department slug '${dto.slug}' is already in use`);
       }
       throw err;
     }
+
+    await this.mediaLink.syncUsage(AUDIT_MODULE, created.id, MEDIA_FIELD, dto.heroMediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -89,11 +109,17 @@ export class DepartmentsService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Department ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.heroMediaId, 'IMAGE');
+
     let updated;
     try {
       updated = await this.prisma.department.update({
         where: { id },
-        data: { ...rest, version: { increment: 1 } },
+        data: {
+          ...rest,
+          ...(resolvedUrl !== undefined && { heroImageUrl: resolvedUrl }),
+          version: { increment: 1 },
+        },
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
@@ -101,6 +127,8 @@ export class DepartmentsService {
       }
       throw err;
     }
+
+    await this.mediaLink.syncUsage(AUDIT_MODULE, id, MEDIA_FIELD, rest.heroMediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -123,6 +151,8 @@ export class DepartmentsService {
       where: { id },
       data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
     });
+
+    await this.mediaLink.untrackAll(AUDIT_MODULE, id);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -150,6 +180,10 @@ export class DepartmentsService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.heroMediaId) {
+      await this.mediaLink.syncUsage(AUDIT_MODULE, id, MEDIA_FIELD, restored.heroMediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

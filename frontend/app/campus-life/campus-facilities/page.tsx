@@ -41,39 +41,39 @@ const exploreSections = [
   {
     title: "🔬 Laboratories",
     images: [
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/lab.jpg", alt: "Robotics laboratory with ABB robotic arm" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/roboticslab.jpg", alt: "Robotic 3D printing lab" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/ab.jpg", alt: "Computer laboratory" },
+      { src: "/site-images/lab.jpg", alt: "Robotics laboratory with ABB robotic arm" },
+      { src: "/site-images/roboticslab.jpg", alt: "Robotic 3D printing lab" },
+      { src: "/site-images/ab.jpg", alt: "Computer laboratory" },
     ],
   },
   {
     title: "📚 Library",
     images: [
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/library.jpg", alt: "Central Library building" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/studentsinlib.jpg", alt: "Students reading in library" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/studentsinlib2.jpg", alt: "Students studying in library" },
+      { src: "/site-images/library.jpg", alt: "Central Library building" },
+      { src: "/site-images/studentsinlib.jpg", alt: "Students reading in library" },
+      { src: "/site-images/studentsinlib2.jpg", alt: "Students studying in library" },
     ],
   },
   {
     title: "🏆 Sports & Grounds",
     images: [
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/volleyball.jpg", alt: "Volleyball match" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsg3.jpg", alt: "Indoor badminton court" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsground.jpg", alt: "Basketball court" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/sportsground2.jpg", alt: "Sports ground aerial view" },
+      { src: "/site-images/volleyball.jpg", alt: "Volleyball match" },
+      { src: "/site-images/sportsg3.jpg", alt: "Indoor badminton court" },
+      { src: "/site-images/sportsground.jpg", alt: "Basketball court" },
+      { src: "/site-images/sportsground2.jpg", alt: "Sports ground aerial view" },
     ],
   },
   {
     title: "🎉 Events & Activities",
     images: [
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/fest.jpg", alt: "Award ceremony" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/fest2.jpg", alt: "Cultural fest performance" },
-      { src: "/gallery/Gallery _ KSRM College of Engineering_files/event.jpg", alt: "KGCET poster launch" },
+      { src: "/site-images/fest.jpg", alt: "Award ceremony" },
+      { src: "/site-images/fest2.jpg", alt: "Cultural fest performance" },
+      { src: "/site-images/event.jpg", alt: "KGCET poster launch" },
     ],
   },
   {
     title: "🚌 Transportation",
-    images: [{ src: "/gallery/Gallery _ KSRM College of Engineering_files/buses.jpg", alt: "KSRM college bus fleet" }],
+    images: [{ src: "/site-images/buses.jpg", alt: "KSRM college bus fleet" }],
   },
 ];
 
@@ -86,7 +86,7 @@ export default function CampusFacilitiesPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .cf-hero { position: relative; background-image: url('/banners/hostel-banner.jpg'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
+        .cf-hero { position: relative; background-image: url('/banners/campus-facilities.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .cf-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .cf-hero > * { position: relative; z-index: 2; }
         .cf-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
@@ -125,7 +125,6 @@ export default function CampusFacilitiesPage() {
           <div className="cf-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Campus Facilities</h1>
           <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>A world-class campus built for academic and personal excellence</p>
-          <div className="cf-breadcrumb"><a href="/">Home</a><span>/</span><a href="/campus-life">Campus Life</a><span>/</span><span>Campus Facilities</span></div>
         </div>
       </section>
 

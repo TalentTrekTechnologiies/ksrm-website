@@ -1,9 +1,10 @@
 import { Metadata } from "next"
+import NewsManager from "@/components/admin/homepage/NewsManager"
 
 export const metadata: Metadata = {
   title: "News | K.S.R.M College of Engineering",
 }
 
-export default function SubPage() {
-  return <main><h1>News</h1><p>Content</p></main>
+export default function NewsAdminPage() {
+  return <NewsManager />
 }

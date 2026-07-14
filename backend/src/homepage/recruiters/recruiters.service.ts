@@ -10,12 +10,17 @@ import { UpdateRecruiterDto } from './dto/update-recruiter.dto';
 import { ReorderRecruitersDto } from './dto/reorder-recruiters.dto';
 import { assertVersionMatch } from '../optimistic-lock.util';
 import { RequestAdmin } from '../types';
+import { MediaLinkService } from '../../media/media-link.service';
+
+const MEDIA_MODULE = 'homepage_recruiters';
+const MEDIA_FIELD = 'logoUrl';
 
 @Injectable()
 export class RecruitersService {
   constructor(
     private prisma: PrismaService,
     private auditLog: AuditLogService,
+    private mediaLink: MediaLinkService,
   ) {}
 
   async findAllPublic() {
@@ -57,9 +62,13 @@ export class RecruitersService {
         where: { deletedAt: null },
       }));
 
+    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+
     const created = await this.prisma.recruiter.create({
-      data: { ...dto, sortOrder },
+      data: { ...dto, logoUrl: resolvedUrl ?? dto.logoUrl, sortOrder },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -85,10 +94,18 @@ export class RecruitersService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Recruiter ${id}`);
 
+    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+
     const updated = await this.prisma.recruiter.update({
       where: { id },
-      data: { ...rest, version: { increment: 1 } },
+      data: {
+        ...rest,
+        ...(resolvedUrl !== undefined && { logoUrl: resolvedUrl }),
+        version: { increment: 1 },
+      },
     });
+
+    await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, rest.mediaId);
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -120,6 +137,8 @@ export class RecruitersService {
       },
     });
 
+    await this.mediaLink.untrackAll(MEDIA_MODULE, id);
+
     await this.auditLog.log({
       adminId: admin.id,
       adminName: admin.name,
@@ -146,6 +165,10 @@ export class RecruitersService {
       where: { id },
       data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
     });
+
+    if (restored.mediaId) {
+      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

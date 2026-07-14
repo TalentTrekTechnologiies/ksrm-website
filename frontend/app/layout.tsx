@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Rajdhani, DM_Sans, Inter } from "next/font/google"
 import "./globals.css"
 import ChromeGate from "@/components/layout/ChromeGate"
+import DynamicFavicon from "@/components/layout/DynamicFavicon"
 
 const rajdhani = Rajdhani({
   subsets: ["latin"],
@@ -110,6 +111,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${rajdhani.variable} ${dmSans.variable} ${inter.variable} antialiased`}>
+        <DynamicFavicon />
         <ChromeGate>{children}</ChromeGate>
       </body>
     </html>

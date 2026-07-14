@@ -3,13 +3,45 @@
 import Link from "next/link"
 import Container from "@/components/ui/Container"
 import { homeData } from "@/data/home"
+import { getDepartmentsPublic } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
+
+interface DisplayDept {
+  key: string
+  name: string
+  link: string
+  svg: string
+}
+
+const FALLBACK_DEPARTMENTS: DisplayDept[] = (Array.isArray(homeData?.departments) ? homeData.departments : []).map(
+  (d) => ({ key: d.code, name: d.name, link: d.link, svg: d.svg }),
+)
+
+interface DepartmentsState {
+  hidden: boolean
+  departments: DisplayDept[]
+}
+
+async function fetchDepartments(): Promise<DepartmentsState> {
+  const { visible, items } = await getDepartmentsPublic()
+  if (!visible) return { hidden: true, departments: FALLBACK_DEPARTMENTS }
+  if (items.length === 0) return { hidden: false, departments: FALLBACK_DEPARTMENTS }
+  return {
+    hidden: false,
+    departments: items.map((d) => ({ key: String(d.id), name: d.title, link: d.linkUrl, svg: d.imageUrl })),
+  }
+}
 
 export default function Departments() {
+  const live = useLiveData(fetchDepartments, [])
+  const hidden = live?.hidden ?? false
+  const departments = live?.departments ?? FALLBACK_DEPARTMENTS
+
+  if (hidden) return null
+
   return (
     <section style={{ width: "100%", background: "#ffffff", padding: "60px 0", borderTop: "1px solid #f1f5f9" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-
         .depts-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -126,12 +158,12 @@ export default function Departments() {
 
         {/* DEPARTMENTS GRID */}
         <div className="depts-grid">
-          {(Array.isArray(homeData?.departments) ? homeData.departments : []).map((dept) => (
-            <div key={dept.code}>
+          {departments.map((dept) => (
+            <div key={dept.key}>
               <Link href={dept.link} style={{ textDecoration: "none" }}>
                 <div className="dept-card">
                   <div className="dept-icon">
-                    <img src={dept?.svg} alt={dept?.code} />
+                    <img src={dept?.svg} alt={dept?.name} />
                   </div>
                   <div className="dept-content">
                     <div className="dept-name">{dept?.name}</div>

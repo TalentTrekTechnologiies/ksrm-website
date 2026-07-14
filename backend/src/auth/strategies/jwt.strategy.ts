@@ -38,11 +38,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         isSuperAdmin: true,
         permissions: true,
         department: true,
+        departmentId: true,
         isActive: true,
+        deletedAt: true,
       },
     });
 
-    if (!admin || !admin.isActive) {
+    if (!admin || !admin.isActive || admin.deletedAt) {
       throw new UnauthorizedException('Account is inactive or no longer exists');
     }
 
@@ -53,7 +55,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // reflects an admin's actual roles, not a stale/empty legacy column.
     const effectivePermissions = await this.effectivePermissions.getEffectivePermissions(admin);
 
-    const { isActive, permissions: _legacyPermissions, ...rest } = admin;
+    const { isActive, deletedAt, permissions: _legacyPermissions, ...rest } = admin;
     return { ...rest, permissions: Array.from(effectivePermissions) };
   }
 }

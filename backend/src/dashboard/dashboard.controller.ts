@@ -43,7 +43,7 @@ export class DashboardController {
 
   @Get('storage')
   @ApiOkResponse({ type: StorageResponseDto })
-  getStorage(): StorageResponseDto {
+  getStorage(): Promise<StorageResponseDto> {
     return this.dashboardService.getStorage();
   }
 }

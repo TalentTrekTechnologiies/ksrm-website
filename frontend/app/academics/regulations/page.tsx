@@ -126,7 +126,7 @@ export default function RegulationsPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .reg-hero {
-          position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/library.jpg');
+          position: relative; background-image: url('/site-images/library.jpg');
           background-size: cover; background-position: center;
           background-color: #2B3490; min-height: 320px; display: flex;
           align-items: flex-end; overflow: hidden; padding-bottom: 40px;
@@ -205,16 +205,12 @@ export default function RegulationsPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
-        <section className="reg-hero" style={{ backgroundImage: "url('/images/campus/06.jpg')", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(43, 52, 144, 0.85)" }} />
+        <section className="reg-hero" style={{ backgroundImage: "url('/banners/regulations.png')", position: "relative" }}>
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="reg-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Regulations</h1>
               <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 300, maxWidth: 700 }}>Academic Rules and Guidelines</p>
-              <div className="reg-breadcrumb">
-                <a href="/">Home</a><span>/</span><a href="/academics">Academics</a><span>/</span><span>Regulations</span>
-              </div>
             </div>
           </div>
         </section>

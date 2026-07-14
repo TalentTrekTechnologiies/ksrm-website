@@ -16,6 +16,13 @@ export class CreateCampusVideoDto {
   @IsPathOrUrl()
   youtubeUrl: string;
 
+  // Omitted/undefined -> the global homepage Campus Videos collection
+  // (unchanged default behavior). Set -> this video belongs to one
+  // department's Videos section instead.
+  @IsOptional()
+  @IsInt()
+  departmentId?: number;
+
   @IsOptional()
   @IsString()
   @MaxLength(40)

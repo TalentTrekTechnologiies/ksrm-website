@@ -1,5 +1,8 @@
 ﻿"use client";
 
+import { mediaFile } from "@/lib/api-base";
+import PageResources from "@/components/PageResources";
+
 const criteria = [
   { n: 1, title: "Curricular Aspects", text: "Curriculum design, academic flexibility and enrichment programmes" },
   { n: 2, title: "Teaching-Learning & Evaluation", text: "Student enrollment, teaching methods and evaluation reforms" },
@@ -14,8 +17,8 @@ const documents = [
   { name: "Self Study Report (SSR)", href: "https://ksrmce.ac.in/NAAC.php" },
   { name: "DVV Clarifications", href: "https://ksrmce.ac.in/DVV2.php" },
   { name: "AQAR 2023-24", href: "#" },
-  { name: "Institution Core Values", href: "https://ksrmce.ac.in/NAAC/Institution Core Values.pdf" },
-  { name: "Code of Professional Conduct", href: "https://ksrmce.ac.in/NAAC/Code of Professional Conduct.pdf" },
+  { name: "Institution Core Values", href: mediaFile(168) },
+  { name: "Code of Professional Conduct", href: mediaFile(169) },
 ];
 
 function DownloadIcon() {
@@ -44,7 +47,7 @@ export default function NAACPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .naac-hero {
-          position: relative; background-image: url('/banners/naac banner.webp'); background-size: cover;
+          position: relative; background-image: url('/banners/naac.png'); background-size: cover;
           background-position: center; background-color: #2B3490; min-height: 280px; display: flex;
           align-items: flex-end; padding-bottom: 40px; overflow: hidden;
         }
@@ -94,9 +97,6 @@ export default function NAACPage() {
 
       <section className="naac-hero">
         <div className="responsive-container">
-          <div className="naac-breadcrumb" style={{ marginBottom: 16 }}>
-            <a href="/">Home</a><span>/</span><span>NAAC</span>
-          </div>
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>
             NAAC
           </h1>
@@ -176,6 +176,7 @@ export default function NAACPage() {
           </div>
         </div>
       </section>
+      <PageResources section="naac" />
     </main>
   );
 }

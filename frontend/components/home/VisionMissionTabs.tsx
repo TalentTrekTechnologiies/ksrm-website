@@ -2,17 +2,19 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import Container from '@/components/ui/Container'
+import { getSectionPublic, VisionContent, MissionContent } from '@/lib/homepage-api'
+import { useLiveData } from '@/lib/use-live-data'
 
-const VisionMissionTabs = () => {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => { setMounted(true) }, [])
-  const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  }
+const FALLBACK_VISION: VisionContent = {
+  eyebrow: 'Who We Are',
+  heading: 'Our Vision & Mission',
+  label: 'Our Vision',
+  text: 'To evolve as center of repute for providing quality academic programs amalgamated with creative learning and research excellence to produce graduates with leadership qualities, ethical and human values to serve the nation.',
+}
 
-  const missions = [
+const FALLBACK_MISSION: MissionContent = {
+  label: 'Our Mission',
+  missions: [
     {
       code: 'M1',
       text: 'To provide high quality education with enriched curriculum blended with impactful teaching-learning practices.',
@@ -25,7 +27,46 @@ const VisionMissionTabs = () => {
       code: 'M3',
       text: 'To produce highly competent professional leaders for contributing to Socio-economic development of region and the nation.',
     },
-  ]
+  ],
+}
+
+interface VisionMissionState {
+  vision: VisionContent
+  mission: MissionContent
+}
+
+async function fetchVisionMission(): Promise<VisionMissionState> {
+  const [visionSection, missionSection] = await Promise.all([
+    getSectionPublic('vision'),
+    getSectionPublic('mission'),
+  ])
+  return {
+    vision: visionSection?.content ?? FALLBACK_VISION,
+    mission: missionSection?.content ?? FALLBACK_MISSION,
+  }
+}
+
+// previewData lets the admin Preview panel render this exact component with
+// draft (unpublished) content instead of fetching - see
+// app/admin/homepage/preview/[key]/page.tsx.
+export default function VisionMissionTabs({
+  previewData,
+}: {
+  previewData?: { vision?: VisionContent; mission?: MissionContent }
+}) {
+  const [mounted, setMounted] = useState(false)
+  const live = useLiveData(fetchVisionMission, [], { skip: !!previewData })
+  const vision = previewData?.vision ?? live?.vision ?? FALLBACK_VISION
+  const mission = previewData?.mission ?? live?.mission ?? FALLBACK_MISSION
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  }
 
   return (
     <>
@@ -40,7 +81,7 @@ const VisionMissionTabs = () => {
             margin: '0 0 8px',
           }}
         >
-          Who We Are
+          {vision.eyebrow ?? 'Who We Are'}
         </p>
         <h2
           style={{
@@ -52,7 +93,7 @@ const VisionMissionTabs = () => {
             paddingBottom: '0',
           }}
         >
-          Our Vision & Mission
+          {vision.heading}
         </h2>
       </section>
 
@@ -90,10 +131,10 @@ const VisionMissionTabs = () => {
               fontWeight: 700,
             }}
           >
-            Our Vision
+            {vision.label}
           </div>
           <div style={{ fontSize: '80px', color: 'rgba(212, 165, 0, 0.2)', lineHeight: '0.8', display: 'block', marginBottom: '8px' }}>
-            "
+            &ldquo;
           </div>
           <p
             style={{
@@ -104,7 +145,7 @@ const VisionMissionTabs = () => {
               margin: '0 0 32px',
             }}
           >
-            To evolve as center of repute for providing quality academic programs amalgamated with creative learning and research excellence to produce graduates with leadership qualities, ethical and human values to serve the nation.
+            {vision.text}
           </p>
           <div style={{ width: '60px', height: '3px', background: '#D4A500' }} />
         </motion.div>
@@ -132,10 +173,10 @@ const VisionMissionTabs = () => {
               fontWeight: 700,
             }}
           >
-            Our Mission
+            {mission.label}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {(Array.isArray(missions) ? missions : []).map((mission, idx) => (
+            {mission.missions.map((item, idx) => (
               <div key={idx} style={{ display: 'flex', gap: '16px' }}>
                 <div
                   style={{
@@ -152,7 +193,7 @@ const VisionMissionTabs = () => {
                     flexShrink: 0,
                   }}
                 >
-                  {mission.code}
+                  {item.code}
                 </div>
                 <p
                   style={{
@@ -163,7 +204,7 @@ const VisionMissionTabs = () => {
                     margin: '0',
                   }}
                 >
-                  {mission.text}
+                  {item.text}
                 </p>
               </div>
             ))}
@@ -173,5 +214,3 @@ const VisionMissionTabs = () => {
     </>
   )
 }
-
-export default VisionMissionTabs

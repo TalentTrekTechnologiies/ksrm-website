@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+﻿import PageResources from "@/components/PageResources";
+import Link from "next/link";
 
 export const metadata = {
   title: "Cultural Club | KSRM College of Engineering",
@@ -90,7 +91,7 @@ export default function CulturalClubPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: "url('/banners/cultural banner.jpg')",
+          backgroundImage: "url('/banners/cultural.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           padding: "60px 40px",
@@ -342,6 +343,7 @@ export default function CulturalClubPage() {
           </div>
         </div>
       </section>
+      <PageResources section="cultural" />
     </main>
   );
 }

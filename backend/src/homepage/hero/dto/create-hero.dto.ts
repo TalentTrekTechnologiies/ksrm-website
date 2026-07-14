@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsInt,
   IsOptional,
   IsString,
   MaxLength,
@@ -26,8 +27,21 @@ export class CreateHeroDto {
   @MaxLength(300)
   subtitle: string;
 
+  // Legacy hand-typed fallback - stays required so a raw URL always works
+  // without the Media Library. When mediaId is also set, the server
+  // resolves and overwrites this with the Media's current URL (so a later
+  // Replace propagates here automatically) - the value sent here is only
+  // load-bearing when mediaId is absent.
   @IsPathOrUrl()
   videoUrl: string;
+
+  // Media Library reference for the background video - optional so the
+  // legacy videoUrl-only flow keeps working unchanged. Pass `null`
+  // explicitly (on update) to unlink and fall back to manually editing
+  // videoUrl again.
+  @IsOptional()
+  @IsInt()
+  mediaId?: number;
 
   @IsOptional()
   @IsString()

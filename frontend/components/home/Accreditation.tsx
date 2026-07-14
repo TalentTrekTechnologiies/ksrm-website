@@ -5,6 +5,8 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
 import Container from "@/components/ui/Container"
+import { getAccreditationBadgesPublic } from "@/lib/homepage-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -21,12 +23,17 @@ interface Accred {
   image?: string
 }
 
-const accreditations: Accred[] = [
+const FALLBACK_ACCREDITATIONS: Accred[] = [
   { shortName: "NAAC", grade: "A++",        name: "NAAC Accredited", sub: "3.60 CGPA",              link: "/accreditation", linkText: "View Certificate", colorClass: "naac", image: "/naac.png"  },
   { shortName: "NBA",  grade: "Tier-1",     name: "NBA Accredited",  sub: "CE, ECE, CSE, EEE, ME",  link: "/accreditation", linkText: "View Programs",    colorClass: "nba",  image: "/nba.png"   },
   { shortName: "NIRF", grade: "Ranked",     name: "NIRF India",      sub: "Engineering Category",   link: "/accreditation", linkText: "View Ranking",     colorClass: "nirf", image: "/nirf.jpg"  },
   { shortName: "UGC",  grade: "Autonomous", name: "UGC Status",      sub: "Affiliated to JNTUA",    link: "/accreditation", linkText: "Learn More",        colorClass: "ugc",  image: "/ugc.webp"  },
 ]
+
+// Rotated by position for CMS-sourced badges - only matters as a fallback
+// when a badge has no image, which the backend DTO doesn't actually allow
+// (imageUrl is required), so this is effectively unreachable for real data.
+const COLOR_ROTATION: ColorClass[] = ["naac", "nba", "nirf", "ugc"]
 
 const gradients: Record<ColorClass, string> = {
   naac: "linear-gradient(135deg, #c8960c, #a8540c)",
@@ -45,8 +52,37 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
 }
 
+interface AccreditationState {
+  hidden: boolean
+  accreditations: Accred[]
+}
+
+async function fetchAccreditations(): Promise<AccreditationState> {
+  const { visible, items } = await getAccreditationBadgesPublic()
+  if (!visible) return { hidden: true, accreditations: FALLBACK_ACCREDITATIONS }
+  if (items.length === 0) return { hidden: false, accreditations: FALLBACK_ACCREDITATIONS }
+  return {
+    hidden: false,
+    accreditations: items.map((b, i) => ({
+      shortName: b.shortName,
+      grade: b.grade ?? "",
+      name: b.name,
+      sub: b.subtext ?? "",
+      link: b.linkUrl ?? "/accreditation",
+      linkText: b.linkText ?? "Learn More",
+      colorClass: COLOR_ROTATION[i % COLOR_ROTATION.length],
+      image: b.imageUrl,
+    })),
+  }
+}
+
 export default function Accreditation() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const live = useLiveData(fetchAccreditations, [])
+  const hidden = live?.hidden ?? false
+  const accreditations = live?.accreditations ?? FALLBACK_ACCREDITATIONS
+
+  if (hidden) return null
 
   return (
     <section
@@ -54,7 +90,6 @@ export default function Accreditation() {
       style={{ width: "100%", background: "#f7f8fa", padding: "56px 0" }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .accred-section { box-sizing: border-box; }
         .accred-grid {
           display: grid;

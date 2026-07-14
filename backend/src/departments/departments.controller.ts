@@ -18,6 +18,8 @@ import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
+import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
+import { DepartmentScoped } from '../auth/department-scope.decorator';
 
 // Real Department profile entity - not the homepage teaser cards at
 // ../homepage/departments. See departments.service.ts's doc comment.
@@ -38,6 +40,13 @@ export class DepartmentsController {
     return this.departmentsService.findAllAdmin(includeDeleted === 'true');
   }
 
+  @Get('admin/:id')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('departments.view')
+  findByIdAdmin(@Param('id', ParseIntPipe) id: number) {
+    return this.departmentsService.findByIdAdmin(id);
+  }
+
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.departmentsService.findBySlug(slug);
@@ -51,8 +60,9 @@ export class DepartmentsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('departments.update')
+  @DepartmentScoped({ source: 'self' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDepartmentDto,
@@ -62,15 +72,17 @@ export class DepartmentsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('departments.delete')
+  @DepartmentScoped({ source: 'self' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.departmentsService.softDelete(id, req.user, req.requestId);
   }
 
   @Post(':id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('departments.restore')
+  @DepartmentScoped({ source: 'self' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.departmentsService.restore(id, req.user, req.requestId);
   }

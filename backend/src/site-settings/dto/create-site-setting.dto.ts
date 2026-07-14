@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 import { SiteSettingType } from '@prisma/client';
 
 export class CreateSiteSettingDto {
@@ -8,6 +8,10 @@ export class CreateSiteSettingDto {
 
   @IsString()
   value: string;
+
+  @IsOptional()
+  @IsInt()
+  mediaId?: number;
 
   @IsEnum(SiteSettingType)
   type: SiteSettingType;

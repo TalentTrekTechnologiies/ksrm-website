@@ -9,7 +9,7 @@ export default function InternshipsPage() {
 
         .internships-hero {
           position: relative;
-          background-image: url('/banners/startup banner.jpg');
+          background-image: url('/banners/internships.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -57,9 +57,6 @@ export default function InternshipsPage() {
         <section className="internships-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="internships-breadcrumb">
-                <a href="/">Home</a> / <a href="/placements">Placements</a> / Internships
-              </div>
               <h1 className="internships-title">Internships</h1>
               <p className="internships-subtitle">Placements & Career Development</p>
             </div>

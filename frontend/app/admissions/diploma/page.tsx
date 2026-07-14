@@ -53,7 +53,7 @@ export default function DiplomaAdmissionsPage() {
 
         .dip-hero {
           position: relative;
-          background-image: url('/banners/contact us banner.webp');
+          background-image: url('/banners/ug-admissions.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -62,13 +62,6 @@ export default function DiplomaAdmissionsPage() {
           align-items: flex-end;
           padding-bottom: 40px;
           overflow: hidden;
-        }
-        .dip-hero::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
-          z-index: 1;
         }
         .dip-hero > * { position: relative; z-index: 2; }
         .dip-breadcrumb { font-size: 14px; color: rgba(255,255,255,0.7); }
@@ -147,7 +140,6 @@ export default function DiplomaAdmissionsPage() {
         <section className="dip-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="dip-breadcrumb"><a href="/admissions">Admissions</a> / Diploma Programs</div>
               <h1 className="dip-title">Diploma Programs</h1>
               <p className="dip-subtitle">Join Polytechnic, Build Your Career</p>
             </div>

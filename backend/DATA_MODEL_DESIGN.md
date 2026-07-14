@@ -48,7 +48,6 @@ erDiagram
     DEPARTMENT ||--o{ LAB : has
     DEPARTMENT ||--o{ RESEARCH : has
     DEPARTMENT ||--o{ PLACEMENT : has
-    DEPARTMENT ||--o{ DEGREE_VERIFICATION : has
     DEPARTMENT ||--o{ LEARNING_OUTCOME : has
     DEPARTMENT ||--o{ DEPARTMENT_PROGRAMME : has
     DEPARTMENT ||--o{ DEPARTMENT_HIGHLIGHT : has
@@ -243,11 +242,9 @@ Unchanged existing fields kept as-is (`title`, `content`, `category: String`, `i
 
 Unchanged existing fields kept as-is. New: `categoryId?` FK (`SetNull`), `departmentId?` FK (`SetNull`), `sortOrder Int @default(0)`, `deletedAt`/`deletedBy`/`version`.
 
-### 3.11 `Notification` — **rename to `TickerNotice` approved, execution deferred**
+### 3.11 `Notification` — **removed (2026-07-13)**
 
-Per your instruction, `Notification` → `TickerNotice` is the approved target name. **It is not executed in Phase 1.** A naive Prisma schema-diff rename is a `DROP TABLE` + `CREATE TABLE`, not an `ALTER TABLE ... RENAME`, and would destroy any existing data in that table. The rename will happen in its own later, hand-written migration that uses a real `RENAME TO`, once we're past the additive-only phase. The model stays named `Notification` in `schema.prisma` for now.
-
-Unchanged existing fields kept as-is. New: `startsAt?`, `endsAt?`, `sortOrder Int @default(0)`. **No soft-delete/version added** — not in your approved soft-delete scope list.
+Superseded by the full Announcement Engine (`Announcement`/`AnnouncementPlacement`, §3.x below) built during the Premium UI Redesign, which covers ticker/notice display with priority, scheduling, and multi-location placement. The legacy `Notification` model, its `notifications` backend module, and the admin "Ticker Notices" sidebar page (an unimplemented stub) were dropped outright rather than renamed to `TickerNotice` as originally planned — the rename target was never executed and is now moot. See migration `20260713010000_remove_legacy_notifications`.
 
 ### 3.12 `ExamNotification`
 
@@ -257,9 +254,9 @@ Unchanged existing fields kept as-is, including `category: String` and `date`. N
 
 Unchanged existing fields kept as-is, including `package: String` (**not converted to `Decimal` in Phase 1** — that's an existing-column type change, deferred to cutover per the "no destructive migrations" rule). New: `departmentId?` FK (`SetNull`), `companyLogoUrl?`, `isPublished Boolean @default(true)`, `updatedAt` (new), `deletedAt`/`deletedBy`/`version`.
 
-### 3.14 `DegreeVerification`
+### 3.14 `DegreeVerification` — **removed (2026-07-12)**
 
-Unchanged existing fields kept as-is, including `degree: String` (not yet an enum — deferred alongside `Research.type`, same reasoning). New: `departmentId?` FK (`SetNull`), `cgpaOrPercentage Decimal? @db.Decimal(5,2)`, `updatedAt` (new). **Not soft-deletable** — not in scope list (this is arguably a record that should never be deleted at all, soft or hard — worth revisiting).
+Historical note only — this section described Phase 1's additive changes to a model that no longer exists. The module (`DegreeVerification` Prisma model, `backend/src/degree-verification/`, the `degree_verification` permission, its dashboard widget, and its admin sidebar entry) was removed per an explicit product decision that it was never really used: the admin CRUD page was a bare stub, the public `/degree-verification` page never called this API at all (it bypasses the whole feature via an external portal at icredify.com — that public page and its external-link content are unrelated to this model and were kept). Confirmed zero rows in the table before removal. See migration `20260712020000_remove_degree_verification` and `PROJECT_STATUS.md` for the current state.
 
 ### 3.15 `Admin`
 
@@ -352,7 +349,7 @@ Exact fields as you specified: `id`, `key` **unique**, `value: String`, `type: S
 
 Everything below was considered and intentionally **not** done now, because each would touch an *existing* column/table in a way that isn't purely additive:
 
-1. **`Notification` → `TickerNotice` rename** — needs a hand-written `ALTER TABLE ... RENAME TO ...`, not a schema-diff-generated `DROP`+`CREATE`. (§3.11)
+1. ~~**`Notification` → `TickerNotice` rename**~~ — moot; `Notification` was removed outright rather than renamed. (§3.11)
 2. **`Research.type: String` → `ResearchType` enum** — changing an existing column's type. (§3.5)
 3. **`DegreeVerification.degree: String` → `DegreeType` enum** — same reasoning.
 4. **`AuditLog.action: String` → `AuditAction` enum** — same reasoning.

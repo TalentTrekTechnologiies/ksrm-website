@@ -1,5 +1,6 @@
 "use client"
 
+import { mediaFile } from "@/lib/api-base";
 import Link from "next/link"
 
 export default function About() {
@@ -46,19 +47,19 @@ export default function About() {
   ]
 
   const strategicDocs = [
-    { title: "Strategic Plan 2023-28", url: "https://ksrmce.ac.in/IQAC/StrategicPlan-2023-28.pdf", icon: "📊" },
-    { title: "Strategic Plan 2018-23", url: "https://ksrmce.ac.in/IQAC/StrategicPlan-2018-23.pdf", icon: "📊" },
-    { title: "Organizational Procedure Manual", url: "https://ksrmce.ac.in/NAAC/naac2020/cri6/Organizational%20Procedure%20manual1.pdf", icon: "📋" },
-    { title: "Student Hand Book", url: "https://ksrmce.ac.in/NAAC/naac2020/cri6/Student%20Hand%20book1.pdf", icon: "📚" },
-    { title: "Principal Hand Book", url: "https://ksrmce.ac.in/NAAC/naac2020/cri6/principals-handbook1.pdf", icon: "📖" },
+    { title: "Strategic Plan 2023-28", url: mediaFile(163), icon: "📊" },
+    { title: "Strategic Plan 2018-23", url: mediaFile(164), icon: "📊" },
+    { title: "Organizational Procedure Manual", url: mediaFile(165), icon: "📋" },
+    { title: "Student Hand Book", url: mediaFile(166), icon: "📚" },
+    { title: "Principal Hand Book", url: mediaFile(167), icon: "📖" },
   ]
 
   const policyDocs = [
-    { title: "Institution Core Values", url: "https://ksrmce.ac.in/NAAC/Institution%20Core%20Values.pdf", icon: "🎯" },
-    { title: "Code of Professional Conduct", url: "https://ksrmce.ac.in/NAAC/Code%20of%20Professional%20Conduct.pdf", icon: "📜" },
-    { title: "Code of Conduct Handbook", url: "https://ksrmce.ac.in/CodeofConduct.pdf", icon: "📘" },
-    { title: "Faculty Evaluation System", url: "https://ksrmce.ac.in/NAAC/FacultyEvaluationSystem.pdf", icon: "📈" },
-    { title: "Code of Ethics in Research and Innovation", url: "https://ksrmce.ac.in/NAAC/code%20of%20ethics%20in%20research%20and%20innovation.pdf", icon: "🔬" },
+    { title: "Institution Core Values", url: mediaFile(168), icon: "🎯" },
+    { title: "Code of Professional Conduct", url: mediaFile(169), icon: "📜" },
+    { title: "Code of Conduct Handbook", url: mediaFile(170), icon: "📘" },
+    { title: "Faculty Evaluation System", url: mediaFile(171), icon: "📈" },
+    { title: "Code of Ethics in Research and Innovation", url: mediaFile(172), icon: "🔬" },
   ]
 
   const jbosDocuments = [
@@ -82,7 +83,7 @@ export default function About() {
         h2 { color: #2B3490; font-size: 40.8px; font-weight: 700; margin-bottom: 48px; text-align: left; }
         h3 { color: #2B3490; font-size: 18px; font-weight: 700; }
 
-        .k-hero { position: relative; background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; overflow: hidden; }
+        .k-hero { position: relative; background-image: url('/site-images/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; overflow: hidden; }
         .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { }
@@ -159,7 +160,7 @@ export default function About() {
       `}</style>
 
       {/* HERO BANNER */}
-      <section className="k-hero" style={{ backgroundImage: "url('/banners/about banner.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <section className="k-hero" style={{ backgroundImage: "url('/banners/about.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="k-container">
           <div className="k-hero-content">
             <div className="k-hero-eyebrow">🏛️ ABOUT US</div>

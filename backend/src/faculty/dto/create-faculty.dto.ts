@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsInt, Min } from 'class-validator';
 
 export class CreateFacultyDto {
   @IsString()
@@ -12,6 +12,10 @@ export class CreateFacultyDto {
 
   @IsString()
   department: string;
+
+  @IsOptional()
+  @IsInt()
+  departmentId?: number;
 
   @IsOptional()
   @IsString()
@@ -30,6 +34,19 @@ export class CreateFacultyDto {
   photoUrl?: string;
 
   @IsOptional()
+  @IsInt()
+  mediaId?: number;
+
+  @IsOptional()
   @IsBoolean()
   isHod?: boolean;
+
+  @IsOptional()
+  @IsString()
+  welcomeMessage?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
 }

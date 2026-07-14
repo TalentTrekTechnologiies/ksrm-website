@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DashboardService } from './dashboard.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EffectivePermissionsService } from '../auth/effective-permissions.service';
+import { MediaStatsService } from '../media/media-stats.service';
 
 describe('DashboardService', () => {
   let service: DashboardService;
@@ -12,6 +13,7 @@ describe('DashboardService', () => {
   let effectivePermissions: {
     getEffectivePermissions: jest.Mock;
   };
+  let mediaStats: { getStats: jest.Mock };
 
   const countingModels = [
     'faculty',
@@ -22,7 +24,6 @@ describe('DashboardService', () => {
     'examNotification',
     'notification',
     'research',
-    'degreeVerification',
     'download',
     'committee',
     'pageBanner',
@@ -38,6 +39,7 @@ describe('DashboardService', () => {
     'siteSetting',
     'admin',
     'role',
+    'media',
   ];
 
   beforeEach(async () => {
@@ -49,12 +51,19 @@ describe('DashboardService', () => {
     effectivePermissions = {
       getEffectivePermissions: jest.fn().mockResolvedValue(new Set()),
     };
+    mediaStats = {
+      getStats: jest.fn().mockResolvedValue({
+        counts: { IMAGE: 0, VIDEO: 0, DOCUMENT: 0 },
+        totalSizeBytes: '0',
+      }),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DashboardService,
         { provide: PrismaService, useValue: prisma },
         { provide: EffectivePermissionsService, useValue: effectivePermissions },
+        { provide: MediaStatsService, useValue: mediaStats },
       ],
     }).compile();
 
@@ -64,11 +73,13 @@ describe('DashboardService', () => {
   describe('getOverview', () => {
     it('includes every widget for a super admin, regardless of permissions', async () => {
       const result = await service.getOverview({ id: 1, isSuperAdmin: true });
-      expect(result.widgets.length).toBe(18);
+      expect(result.widgets.length).toBe(19);
       expect(result.widgets.map((w) => w.key)).toContain('admins');
       expect(result.widgets.map((w) => w.key)).toContain('roles');
       expect(result.widgets.map((w) => w.key)).toContain('careers');
       expect(result.widgets.map((w) => w.key)).toContain('events');
+      expect(result.widgets.map((w) => w.key)).toContain('career_applications');
+      expect(result.widgets.map((w) => w.key)).toContain('announcements');
     });
 
     it('only includes widgets the admin has <key>.view permission for', async () => {
@@ -172,12 +183,22 @@ describe('DashboardService', () => {
   });
 
   describe('getStorage', () => {
-    it('always returns a zeroed, honestly-labeled result', () => {
-      const result = service.getStorage();
-      expect(result.usedBytes).toBe(0);
+    it('reports real Media Library usage, with an honestly-zeroed quota', async () => {
+      mediaStats.getStats.mockResolvedValue({
+        counts: { IMAGE: 5, VIDEO: 1, DOCUMENT: 2 },
+        totalSizeBytes: '18874368',
+      });
+
+      const result = await service.getStorage();
+
+      expect(result.usedBytes).toBe(18874368);
       expect(result.totalBytes).toBe(0);
-      expect(result.breakdown).toEqual([]);
-      expect(result.note).toMatch(/no file upload\/storage subsystem/i);
+      expect(result.breakdown).toEqual([
+        { type: 'IMAGE', count: 5 },
+        { type: 'VIDEO', count: 1 },
+        { type: 'DOCUMENT', count: 2 },
+      ]);
+      expect(result.note).toMatch(/media library/i);
     });
   });
 });

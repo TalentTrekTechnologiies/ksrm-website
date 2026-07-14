@@ -14,10 +14,12 @@ import {
   getStorageInfo,
 } from "@/lib/dashboard-api"
 import { ApiError } from "@/lib/api-client"
+import { formatBytes } from "@/lib/format-bytes"
 import DashboardCard from "./DashboardCard"
 import OverviewChart from "./OverviewChart"
 import RecentActivityFeed from "./RecentActivityFeed"
 import QuickActions from "./QuickActions"
+import CareerApplicationsWidgets from "./careers/CareerApplicationsWidgets"
 
 interface DashboardData {
   overview: DashboardOverview
@@ -178,11 +180,14 @@ export default function DashboardHome() {
           widgetKey="storage"
           label="Storage Used"
           count={data.storage.usedBytes}
+          displayValue={formatBytes(data.storage.usedBytes)}
           available={true}
         />
       </div>
 
       <QuickActions visibleKeys={visibleKeys} />
+
+      {visibleKeys.has("career_applications") && <CareerApplicationsWidgets />}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <OverviewChart widgets={data.overview.widgets} />

@@ -1,5 +1,7 @@
 ﻿"use client";
 
+import PageResources from "@/components/PageResources";
+
 const missions = [
   "Create a conducive environment for quality research and innovation",
   "Promote industry-academia collaboration and knowledge transfer",
@@ -122,12 +124,13 @@ export default function ResearchPage() {
       {/* HERO */}
       <section
         style={{
-          backgroundImage: "url('/banners/startup banner.jpg')", backgroundSize: "cover", backgroundPosition: "center",
+          backgroundImage: "url('/banners/research.png')", backgroundSize: "cover", backgroundPosition: "center",
           backgroundColor: "#2B3490", padding: "80px 0", color: "#fff", position: "relative", overflow: "hidden",
           minHeight: 320, display: "flex", alignItems: "flex-end",
         }}
       >
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", position: "relative", zIndex: 1 }}>
           <p style={{ fontSize: 14, letterSpacing: 2, textTransform: "uppercase", color: "#D4A500", fontWeight: 600, margin: "0 0 8px" }}>
             🔬 Research Excellence
           </p>
@@ -317,6 +320,8 @@ export default function ResearchPage() {
           </div>
         </div>
       </section>
+
+      <PageResources section="research" />
     </div>
   );
 }

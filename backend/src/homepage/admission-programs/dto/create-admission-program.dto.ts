@@ -29,6 +29,10 @@ export class CreateAdmissionProgramDto {
   @IsPathOrUrl()
   imageUrl: string;
 
+  @IsOptional()
+  @IsInt()
+  mediaId?: number;
+
   @IsString()
   @MaxLength(100)
   title: string;

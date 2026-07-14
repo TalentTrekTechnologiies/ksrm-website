@@ -54,7 +54,7 @@ export default function TrainingsPage() {
 
         .trainings-hero {
           position: relative;
-          background-image: url('/gallery/Gallery _ KSRM College of Engineering_files/seminar.jpg');
+          background-image: url('/site-images/seminar.jpg');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -117,9 +117,6 @@ export default function TrainingsPage() {
         <section className="trainings-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <div className="trainings-breadcrumb">
-                <a href="/">Home</a> / <a href="/placements">Placements</a> / Trainings
-              </div>
               <h1 className="trainings-title">Trainings</h1>
               <p className="trainings-subtitle">Placements & Career Development</p>
             </div>

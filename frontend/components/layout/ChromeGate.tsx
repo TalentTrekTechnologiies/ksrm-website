@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import BackToTop from "@/components/layout/BackToTop"
+import AnnouncementTicker from "@/components/layout/AnnouncementTicker"
 
 /**
  * The public marketing site's chrome (splash screen, top bar, header,
@@ -26,9 +27,21 @@ export default function ChromeGate({ children }: { children: React.ReactNode }) 
 
   return (
     <>
+      {/* Single shared Google Fonts stylesheet for every public section
+          (React hoists these to <head>). Individual components previously
+          each carried their own @import - 16 duplicate render-blocking
+          fetches per page - all removed in favour of this one. */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..600&display=swap"
+      />
       <IntroSplash />
       <TopBar />
       <Header />
+      <AnnouncementTicker location="HEADER_TICKER" compact />
       <Navbar />
       {children}
       <Footer />

@@ -1,4 +1,6 @@
-﻿const cards = [
+﻿import PageResources from "@/components/PageResources";
+
+const cards = [
   {
     href: "/admissions/ug",
     title: "UG Programs",
@@ -46,7 +48,7 @@ export default function AdmissionsPage() {
 
         .adm-hero {
           position: relative;
-          background-image: url('/banners/contact us banner.webp');
+          background-image: url('/banners/admissions.png');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;
@@ -142,6 +144,8 @@ export default function AdmissionsPage() {
             </div>
           </div>
         </section>
+
+        <PageResources section="admissions" />
       </main>
     </>
   );

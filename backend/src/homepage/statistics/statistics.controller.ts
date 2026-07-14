@@ -27,8 +27,14 @@ export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
   @Get('statistics')
-  findAllPublic(@Query('group') group: StatisticGroup) {
-    return this.statisticsService.findAllPublic(group);
+  findAllPublic(
+    @Query('group') group: StatisticGroup,
+    @Query('departmentId') departmentId?: string,
+  ) {
+    return this.statisticsService.findAllPublic(
+      group,
+      departmentId ? parseInt(departmentId) : undefined,
+    );
   }
 
   @Get('admin/statistics')
@@ -36,9 +42,14 @@ export class StatisticsController {
   @RequirePermission('homepage.view')
   findAllAdmin(
     @Query('group') group?: StatisticGroup,
+    @Query('departmentId') departmentId?: string,
     @Query('includeDeleted') includeDeleted?: string,
   ) {
-    return this.statisticsService.findAllAdmin(group, includeDeleted === 'true');
+    return this.statisticsService.findAllAdmin(
+      group,
+      departmentId ? parseInt(departmentId) : undefined,
+      includeDeleted === 'true',
+    );
   }
 
   @Post('admin/statistics')

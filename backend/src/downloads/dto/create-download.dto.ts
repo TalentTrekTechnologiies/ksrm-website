@@ -13,8 +13,23 @@ export class CreateDownloadDto {
   @IsEnum(DownloadCategory)
   category: DownloadCategory;
 
+  // Optional page/section slug (edc, iic, iqac, alumni, academics, ...) that
+  // surfaces this document on that page's "Downloads & Resources" block.
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  pageSection?: string;
+
   @IsString()
   fileUrl: string;
+
+  @IsOptional()
+  @IsInt()
+  mediaId?: number;
+
+  @IsOptional()
+  @IsInt()
+  departmentId?: number;
 
   @IsOptional()
   @IsInt()
