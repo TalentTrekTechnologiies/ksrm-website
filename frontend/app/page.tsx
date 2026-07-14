@@ -11,7 +11,6 @@ import Placements from "@/components/home/Placements"
 import Testimonials from "@/components/home/Testimonials"
 import CampusGallery from "@/components/home/CampusGallery"
 import CampusVideos from "@/components/home/CampusVideos"
-import Accreditation from "@/components/home/Accreditation"
 
 export default function Home() {
   return (
@@ -29,7 +28,6 @@ export default function Home() {
       <Testimonials />
       <CampusGallery />
       <CampusVideos />
-      <Accreditation />
     </main>
   )
 }
