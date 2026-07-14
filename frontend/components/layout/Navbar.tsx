@@ -1,7 +1,7 @@
 "use client"
 
 import { mediaFile } from "@/lib/api-base";
-import { useState } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -129,8 +129,54 @@ const navItems: NavItem[] = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hoveredDropdown, setHoveredDropdown] = useState<string | null>(null)
+  const [dropdownPos, setDropdownPos] = useState<{ left: number; top: number } | null>(null)
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null)
   const pathname = usePathname()
+
+  // Horizontal-scroll state for the desktop nav row: with 18 top-level
+  // items the row is wider than the viewport, so it scrolls sideways and
+  // shows yellow arrow affordances at whichever edge still has hidden items.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canLeft, setCanLeft] = useState(false)
+  const [canRight, setCanRight] = useState(false)
+
+  const updateArrows = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    setCanLeft(el.scrollLeft > 4)
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4)
+  }, [])
+
+  useEffect(() => {
+    updateArrows()
+    // Recompute once more after webfont layout settles (item widths shift).
+    const t = setTimeout(updateArrows, 400)
+    window.addEventListener("resize", updateArrows)
+    return () => { clearTimeout(t); window.removeEventListener("resize", updateArrows) }
+  }, [updateArrows, pathname])
+
+  const scrollByAmount = (dir: number) => {
+    scrollRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" })
+    setHoveredDropdown(null)
+  }
+
+  // Dropdowns render as position:fixed so they escape the scroll row's
+  // overflow clip; a short close timer bridges the gap between the trigger
+  // and the fixed menu so the pointer can travel between them.
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const cancelClose = () => { if (closeTimer.current) clearTimeout(closeTimer.current) }
+  const scheduleClose = () => {
+    cancelClose()
+    closeTimer.current = setTimeout(() => setHoveredDropdown(null), 140)
+  }
+
+  const openDropdown = (label: string, triggerEl: HTMLElement) => {
+    cancelClose()
+    const r = triggerEl.getBoundingClientRect()
+    const left = Math.max(8, Math.min(r.left, window.innerWidth - 252))
+    setDropdownPos({ left, top: r.bottom })
+    setHoveredDropdown(label)
+  }
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/")
 
@@ -144,9 +190,21 @@ export default function Navbar() {
     }}>
       <style>{`
         @media (max-width: 768px) {
-          .navbar-desktop { display: none !important; }
+          .navbar-desktop-wrap { display: none !important; }
           .navbar-hamburger { display: flex !important; }
         }
+        .navbar-desktop { scrollbar-width: none; -ms-overflow-style: none; }
+        .navbar-desktop::-webkit-scrollbar { display: none; }
+        .nav-scroll-arrow {
+          position: absolute; top: 0; height: 48px; width: 38px;
+          display: flex; align-items: center; justify-content: center;
+          background: #FFE619; color: #1a1d4d; border: none; cursor: pointer;
+          font-size: 20px; font-weight: 800; z-index: 20; line-height: 1;
+          box-shadow: 0 0 14px rgba(0,0,0,0.28);
+        }
+        .nav-scroll-arrow:hover { background: #ffd400; }
+        .nav-scroll-arrow.left { left: 0; }
+        .nav-scroll-arrow.right { right: 0; }
       `}</style>
 
       <div style={{
@@ -157,97 +215,116 @@ export default function Navbar() {
         padding: "0 20px",
         height: "48px",
       }}>
-        {/* Desktop Navigation */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 0,
-          flex: 1,
-          overflow: "visible",
-        }} className="navbar-desktop">
-          {navItems.map((item) => {
-            const active = isActive(item.href)
-            const hasChildren = item.children && item.children.length > 0
-            const isOpen = hoveredDropdown === item.label
+        {/* Desktop Navigation — horizontally scrollable row with yellow edge arrows */}
+        <div className="navbar-desktop-wrap" style={{ position: "relative", flex: 1, minWidth: 0 }}>
+          {canLeft && (
+            <button className="nav-scroll-arrow left" aria-label="Scroll navigation left" onClick={() => scrollByAmount(-1)}>‹</button>
+          )}
 
-            return (
-              <div
-                key={item.label}
-                style={{ position: "relative", display: "flex", alignItems: "center" }}
-                onMouseEnter={() => setHoveredDropdown(item.label)}
-                onMouseLeave={() => setHoveredDropdown(null)}
-              >
+          <div
+            ref={scrollRef}
+            onScroll={updateArrows}
+            className="navbar-desktop"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0,
+              overflowX: "auto",
+              overflowY: "hidden",
+              whiteSpace: "nowrap",
+              scrollBehavior: "smooth",
+            }}
+          >
+            {navItems.map((item) => {
+              const active = isActive(item.href)
+              const hasChildren = !!(item.children && item.children.length > 0)
+              const isOpen = hoveredDropdown === item.label
+
+              return (
+                <div
+                  key={item.label}
+                  style={{ display: "flex", alignItems: "center", flex: "0 0 auto" }}
+                  onMouseEnter={(e) => (hasChildren ? openDropdown(item.label, e.currentTarget) : (cancelClose(), setHoveredDropdown(null)))}
+                  onMouseLeave={scheduleClose}
+                >
+                  <Link
+                    href={item.href}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      padding: "0 12px",
+                      height: "48px",
+                      color: active || isOpen ? "#FFE619" : "rgba(255, 255, 255, 0.82)",
+                      textDecoration: "none",
+                      fontSize: "15px",
+                      fontWeight: 600,
+                      fontFamily: "'Rajdhani', sans-serif",
+                      whiteSpace: "nowrap",
+                      borderBottom: active ? "3px solid #FFE619" : "3px solid transparent",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    {item.label}
+                    {hasChildren && <span style={{ fontSize: "10px" }}>▾</span>}
+                  </Link>
+                </div>
+              )
+            })}
+          </div>
+
+          {canRight && (
+            <button className="nav-scroll-arrow right" aria-label="Scroll navigation right" onClick={() => scrollByAmount(1)}>›</button>
+          )}
+        </div>
+
+        {/* Dropdown menu — fixed-position so it escapes the scroll row's clip */}
+        {(() => {
+          const item = navItems.find((i) => i.label === hoveredDropdown && i.children && i.children.length)
+          if (!item || !dropdownPos) return null
+          return (
+            <div
+              style={{
+                position: "fixed",
+                left: dropdownPos.left,
+                top: dropdownPos.top,
+                background: "#fff",
+                minWidth: "240px",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                borderRadius: "0 0 8px 8px",
+                zIndex: 1100,
+                padding: "6px 0",
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onMouseEnter={cancelClose}
+              onMouseLeave={scheduleClose}
+            >
+              {item.children?.map((child) => (
                 <Link
-                  href={item.href}
+                  key={child.href}
+                  href={child.href}
+                  onClick={() => setHoveredDropdown(null)}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "5px",
-                    padding: "0 12px",
-                    height: "48px",
-                    color: active || isOpen ? "#FFE619" : "rgba(255, 255, 255, 0.82)",
-                    textDecoration: "none",
+                    display: "block",
+                    padding: "10px 18px",
+                    color: "#2B3490",
+                    fontFamily: "'Rajdhani', sans-serif",
                     fontSize: "15px",
                     fontWeight: 600,
-                    fontFamily: "'Rajdhani', sans-serif",
+                    textDecoration: "none",
                     whiteSpace: "nowrap",
-                    borderBottom: active ? "3px solid #FFE619" : "3px solid transparent",
-                    transition: "all 0.2s",
+                    transition: "background 0.2s",
                   }}
+                  onMouseEnter={(e) => { (e.target as HTMLAnchorElement).style.background = "#f2f4ff" }}
+                  onMouseLeave={(e) => { (e.target as HTMLAnchorElement).style.background = "transparent" }}
                 >
-                  {item.label}
-                  {hasChildren && <span style={{ fontSize: "10px" }}>▾</span>}
+                  {child.label}
                 </Link>
-
-                {hasChildren && isOpen && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "100%",
-                      left: 0,
-                      background: "#fff",
-                      minWidth: "240px",
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                      borderRadius: "0 0 8px 8px",
-                      zIndex: 1100,
-                      padding: "6px 0",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                    onMouseEnter={() => setHoveredDropdown(item.label)}
-                    onMouseLeave={() => setHoveredDropdown(null)}
-                  >
-                    {item.children?.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        style={{
-                          display: "block",
-                          padding: "10px 18px",
-                          color: "#2B3490",
-                          fontFamily: "'Rajdhani', sans-serif",
-                          fontSize: "15px",
-                          fontWeight: 600,
-                          textDecoration: "none",
-                          whiteSpace: "nowrap",
-                          transition: "background 0.2s",
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.target as HTMLAnchorElement).style.background = "#f2f4ff"
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.target as HTMLAnchorElement).style.background = "transparent"
-                        }}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
+              ))}
+            </div>
+          )
+        })()}
 
         {/* Mobile Hamburger */}
         <button
