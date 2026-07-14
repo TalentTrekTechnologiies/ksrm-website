@@ -55,10 +55,13 @@ export default function ApplicationForm({
   careerId,
   jobTitle,
   onClose,
+  asPage = false,
 }: {
   careerId?: number
   jobTitle?: string
-  onClose: () => void
+  onClose?: () => void
+  /** Render inline as a full page (no modal overlay / close button). */
+  asPage?: boolean
 }) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [resume, setResume] = useState<File | null>(null)
@@ -148,9 +151,7 @@ export default function ApplicationForm({
     }
   }
 
-  return (
-    <div className="af-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <style>{`
+  const styles = `
         .af-overlay { position: fixed; inset: 0; background: rgba(15,20,40,0.6); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 20px; }
         .af-modal { background: #fff; border-radius: 16px; max-width: 720px; width: 100%; padding: 40px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         @media (max-width: 640px) { .af-modal { padding: 24px 20px; border-radius: 12px; } }
@@ -168,36 +169,44 @@ export default function ApplicationForm({
         .af-field input.af-invalid, .af-field textarea.af-invalid { border-color: #d32f2f; }
         .af-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin: 24px 0 12px; }
         .af-section-label:first-child { margin-top: 0; }
-        .af-file-input { border: 1.5px dashed #eef0f3; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; }
+        .af-file-input { border: 1.5px dashed #eef0f3; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; display: block; }
         .af-file-input.af-invalid { border-color: #d32f2f; }
         .af-submit { width: 100%; background: #D4A500; color: #1a1a2e; padding: 14px; border-radius: 8px; font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 17px; border: none; cursor: pointer; margin-top: 8px; }
         .af-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .af-submit-error { background: #fdecea; color: #d32f2f; padding: 12px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 16px; }
         .af-success { text-align: center; padding: 20px 0; }
         .af-success-icon { font-size: 48px; margin-bottom: 16px; }
-      `}</style>
-      <div className="af-modal">
-        <button className="af-close" onClick={onClose} aria-label="Close">×</button>
+      `
 
-        {submitted ? (
-          <div className="af-success">
-            <div className="af-success-icon">✅</div>
-            <h2 className="af-title">Application Received</h2>
-            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7 }}>
-              Thank you for applying to KSRM College of Engineering{jobTitle ? ` for ${jobTitle}` : ""}. We have
-              received your application and our HR team will review it shortly. A confirmation email has been sent
-              to your inbox.
-            </p>
-            <button className="af-submit" style={{ marginTop: 16 }} onClick={onClose}>
-              Close
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <h2 className="af-title">Apply Now</h2>
-            <p className="af-subtitle">{jobTitle ? `Applying for: ${jobTitle}` : "General Application"}</p>
+  const body = submitted ? (
+    <div className="af-success">
+      <div className="af-success-icon">✅</div>
+      <h2 className="af-title">Application Received</h2>
+      <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7 }}>
+        Thank you for applying to KSRM College of Engineering{jobTitle ? ` for ${jobTitle}` : ""}. We have
+        received your application and our HR team will review it shortly. A confirmation email has been sent
+        to your inbox.
+      </p>
+      {asPage ? (
+        <a href="/careers" className="af-submit" style={{ marginTop: 16, display: "inline-block", textDecoration: "none", width: "auto", padding: "14px 34px" }}>
+          Back to Careers
+        </a>
+      ) : (
+        <button className="af-submit" style={{ marginTop: 16 }} onClick={onClose}>
+          Close
+        </button>
+      )}
+    </div>
+  ) : (
+    <form onSubmit={handleSubmit}>
+      {!asPage && (
+        <>
+          <h2 className="af-title">Apply Now</h2>
+          <p className="af-subtitle">{jobTitle ? `Applying for: ${jobTitle}` : "General Application"}</p>
+        </>
+      )}
 
-            {submitError && <p className="af-submit-error">{submitError}</p>}
+      {submitError && <p className="af-submit-error">{submitError}</p>}
 
             <div className="af-section-label">Personal Details</div>
             <div className="af-grid">
@@ -302,11 +311,27 @@ export default function ApplicationForm({
               <textarea rows={2} value={form.additionalNotes} onChange={(e) => setField("additionalNotes", e.target.value)} />
             </div>
 
-            <button type="submit" className="af-submit" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit Application"}
-            </button>
-          </form>
-        )}
+      <button type="submit" className="af-submit" disabled={submitting}>
+        {submitting ? "Submitting..." : "Submit Application"}
+      </button>
+    </form>
+  )
+
+  if (asPage) {
+    return (
+      <div>
+        <style>{styles}</style>
+        {body}
+      </div>
+    )
+  }
+
+  return (
+    <div className="af-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose?.() }}>
+      <style>{styles}</style>
+      <div className="af-modal">
+        <button className="af-close" onClick={onClose} aria-label="Close">×</button>
+        {body}
       </div>
     </div>
   )

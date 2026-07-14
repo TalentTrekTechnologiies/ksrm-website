@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getCareersPublic, Career } from "@/lib/careers-api";
-import ApplicationForm from "@/components/careers/ApplicationForm";
+
+function applyHref(o: { careerId: number | null; title: string; dept: string }) {
+  const q = new URLSearchParams();
+  if (o.careerId != null) q.set("careerId", String(o.careerId));
+  q.set("title", o.title);
+  if (o.dept && o.dept !== "—") q.set("dept", o.dept);
+  return `/careers/apply?${q.toString()}`;
+}
 
 const whyJoin = [
   { icon: "📖", title: "Excellence in Education", desc: "Join an institution recognized for academic excellence" },
@@ -27,7 +35,6 @@ const FALLBACK_OPENINGS: OpeningDisplay[] = [
 
 export default function CareersPage() {
   const [openings, setOpenings] = useState<OpeningDisplay[]>(FALLBACK_OPENINGS);
-  const [applyingTo, setApplyingTo] = useState<{ careerId?: number; title?: string } | null>(null);
 
   useEffect(() => {
     let cancelled = false
@@ -109,13 +116,13 @@ export default function CareersPage() {
                 <p style={{ color: "#666", fontSize: 13, margin: 0 }}><span style={{ fontWeight: 600, color: "#2B3490" }}>Type:</span> {o.type}</p>
                 <p style={{ color: "#666", fontSize: 13, margin: 0 }}><span style={{ fontWeight: 600, color: "#2B3490" }}>Location:</span> {o.location}</p>
               </div>
-              <button
+              <Link
+                href={applyHref(o)}
                 className="car-cta-button"
                 style={{ marginTop: 12, marginBottom: 0, fontSize: 14, padding: "12px 24px" }}
-                onClick={() => setApplyingTo({ careerId: o.careerId ?? undefined, title: o.title })}
               >
                 Apply Now
-              </button>
+              </Link>
             </div>
           ))}
         </div>
@@ -124,17 +131,9 @@ export default function CareersPage() {
       <section style={{ padding: "56px 0", background: "linear-gradient(135deg, #2B3490, #1e2570)", textAlign: "center" }}>
         <div className="responsive-container">
           <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>Ready to Join KSRM?</h2>
-          <button className="car-cta-button" onClick={() => setApplyingTo({})}>Submit a General Application</button>
+          <Link href="/careers/apply" className="car-cta-button">Submit a General Application</Link>
         </div>
       </section>
-
-      {applyingTo && (
-        <ApplicationForm
-          careerId={applyingTo.careerId}
-          jobTitle={applyingTo.title}
-          onClose={() => setApplyingTo(null)}
-        />
-      )}
     </main>
   );
 }
