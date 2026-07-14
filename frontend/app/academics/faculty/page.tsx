@@ -142,7 +142,7 @@ export default function FacultyPage() {
     <>
       <style>{`
         .responsive-container {
-          width: 100%; max-width:  1720px; margin: 0 auto;
+          width: 100%; max-width: 1760px; margin: 0 auto;
           padding-left: 40px; padding-right: 40px;
         }
         @media (max-width: 1024px) { .responsive-container { padding-left: 32px; padding-right: 32px; } }
@@ -206,7 +206,7 @@ export default function FacultyPage() {
         .fac-meta strong { color: #2B3490; }
         .fac-specialization { display: inline-block; background: #eef1ff; color: #2B3490; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
 
-        @media (max-width: 1200px) { .fac-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1760px) { .fac-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
           .fac-grid { grid-template-columns: 1fr; }
           .fac-stats-bar { grid-template-columns: repeat(2, 1fr); gap: 24px; padding: 24px 0; }

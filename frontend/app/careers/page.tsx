@@ -55,7 +55,7 @@ export default function CareersPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -72,7 +72,7 @@ export default function CareersPage() {
         .car-opening-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
         .car-opening-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
         .car-cta-button { display: inline-block; background: #D4A500; color: #1a1a2e; padding: 16px 40px; border-radius: 8px; font-weight: 700; text-decoration: none; font-family: 'Rajdhani', sans-serif; border: none; margin: 24px 0; }
-        @media (max-width: 1200px) { .car-whyjoin-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1760px) { .car-whyjoin-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       <section className="car-hero">

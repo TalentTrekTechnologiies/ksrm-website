@@ -99,7 +99,7 @@ export default function CulturalClubPage() {
           textAlign: "center",
         }}
       >
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto" }}>
           <h1
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -129,7 +129,7 @@ export default function CulturalClubPage() {
 
       {/* About */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <p
             style={{
               fontSize: 16,
@@ -152,7 +152,7 @@ export default function CulturalClubPage() {
 
       {/* Annual Events */}
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -227,7 +227,7 @@ export default function CulturalClubPage() {
 
       {/* Event Videos */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -263,7 +263,7 @@ export default function CulturalClubPage() {
 
       {/* Committee */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",

@@ -189,7 +189,7 @@ export default function ResearchTemplate() {
           color: #FFE619;
           transform: translateY(-2px);
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .res-stats-grid { grid-template-columns: repeat(2, 1fr); }
           .res-centers-grid { grid-template-columns: repeat(2, 1fr); }
         }

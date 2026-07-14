@@ -78,7 +78,7 @@ export default function About() {
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arimo, Arial, Helvetica, sans-serif; }
-        .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .k-container { max-width: 1760px; margin: 0 auto; padding: 0 24px; }
         .k-section { padding: 72px 0; }
         h2 { color: #2B3490; font-size: 40.8px; font-weight: 700; margin-bottom: 48px; text-align: left; }
         h3 { color: #2B3490; font-size: 19px; font-weight: 700; }

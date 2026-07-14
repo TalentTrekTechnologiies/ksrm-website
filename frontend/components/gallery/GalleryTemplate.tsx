@@ -152,7 +152,7 @@ export default function GalleryTemplate() {
           font-size: 14px;
           color: #999;
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .gal-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {

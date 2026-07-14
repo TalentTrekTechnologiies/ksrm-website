@@ -147,7 +147,7 @@ export default function CareersTemplate() {
           color: #FFE619;
           transform: translateY(-2px);
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .car-whyjoin-grid { grid-template-columns: 1fr; }
         }
       `}</style>

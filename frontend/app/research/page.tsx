@@ -130,7 +130,7 @@ export default function ResearchPage() {
         }}
       >
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px", position: "relative", zIndex: 1 }}>
           <p style={{ fontSize: 14, letterSpacing: 2, textTransform: "uppercase", color: "#D4A500", fontWeight: 600, margin: "0 0 8px" }}>
             🔬 Research Excellence
           </p>
@@ -150,7 +150,7 @@ export default function ResearchPage() {
 
       {/* STICKY TAB BAR */}
       <section style={{ padding: "40px 0", background: "#f4f3ef", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8 }}>
             {tabs.map((t) => (
               <button key={t.id} className="rdc-hero-btn" onClick={() => scrollTo(t.id)}>{t.label}</button>
@@ -161,7 +161,7 @@ export default function ResearchPage() {
 
       {/* ABOUT */}
       <section style={{ padding: "80px 0", background: "#fff" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }} id="about">
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }} id="about">
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
             About the Research &amp; Development Cell
           </h2>
@@ -192,7 +192,7 @@ export default function ResearchPage() {
 
       {/* INNOVATION HEADING */}
       <section style={{ padding: "80px 0", background: "#f4f3ef" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px" }}>
             🤖 Innovation &amp; Student Projects
           </h2>
@@ -201,7 +201,7 @@ export default function ResearchPage() {
 
       {/* CAMPUS INNOVATION VIDEO */}
       <section style={{ padding: "80px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px", textAlign: "center" }}>
             Campus Innovation Video
           </h2>
@@ -219,7 +219,7 @@ export default function ResearchPage() {
 
       {/* VISION & MISSION */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="vision">
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
             Vision &amp; Mission
           </h2>
@@ -243,7 +243,7 @@ export default function ResearchPage() {
 
       {/* ADVISORY COMMITTEE */}
       <section style={{ padding: "80px 0", background: "#fff", borderTop: "1px solid #e8e8e8" }} id="committee">
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px", display: "flex", alignItems: "center", gap: 12 }}>
             <UsersIcon />
             Advisory Committee
@@ -266,7 +266,7 @@ export default function ResearchPage() {
 
       {/* POLICIES */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="policies">
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
             📋 Policies &amp; Guidelines
           </h2>
@@ -305,7 +305,7 @@ export default function ResearchPage() {
 
       {/* CONTACT */}
       <section style={{ padding: "80px 0", background: "#fff", borderTop: "1px solid #e8e8e8" }} id="contact">
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", textAlign: "center" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px", textAlign: "center" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
             Contact RDC
           </h2>

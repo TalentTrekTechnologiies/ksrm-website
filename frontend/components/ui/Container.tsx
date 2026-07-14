@@ -9,7 +9,7 @@ export default function Container({ children, className }: ContainerProps) {
       className={className}
       style={{
         width: "100%",
-        maxWidth: "1720px",
+        maxWidth: "1760px",
         margin: "0 auto",
         paddingLeft: "3%",
         paddingRight: "3%",

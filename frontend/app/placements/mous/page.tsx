@@ -24,7 +24,7 @@ export default function MoUsPage() {
   return (
     <>
       <style>{`
-        .responsive-container { width: 100%; max-width:  1720px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+        .responsive-container { width: 100%; max-width: 1760px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
 
         .mous-hero {

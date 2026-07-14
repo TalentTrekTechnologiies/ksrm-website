@@ -86,7 +86,7 @@ export default function CoursesIntakePage() {
       <style>{`
         .responsive-container {
           width: 100%;
-          max-width:  1720px;
+          max-width: 1760px;
           margin: 0 auto;
           padding-left: 40px;
           padding-right: 40px;

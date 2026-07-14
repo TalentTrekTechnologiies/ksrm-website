@@ -93,7 +93,7 @@ export default function PageResources({
   return (
     <section style={{ width: "100%", background, padding: "56px 0" }}>
       <style>{`
-        .pr-container { width: 100%; max-width: 1720px; margin: 0 auto; padding: 0 40px; }
+        .pr-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .pr-container { padding: 0 20px; } }
         .pr-head { text-align: center; }
         .pr-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #2B3490; text-transform: uppercase; }

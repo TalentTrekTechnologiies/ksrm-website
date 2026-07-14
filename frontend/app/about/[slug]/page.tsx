@@ -48,7 +48,7 @@ export default function LeadershipDetail({ params }: { params: { slug: string } 
   if (!leader) {
     return (
       <main style={{ backgroundColor: "#F5EFE4", minHeight: "100vh", padding: "80px 24px", fontFamily: "Arimo, Arial, sans-serif" }}>
-        <div style={{ maxWidth: "1400px", margin: "0 auto", textAlign: "center" }}>
+        <div style={{ maxWidth: "1760px", margin: "0 auto", textAlign: "center" }}>
           <h1 style={{ color: "#2B3490", fontSize: "32px", marginBottom: "16px" }}>Profile Not Found</h1>
           <p style={{ color: "#666", marginBottom: "24px" }}>The leadership profile you're looking for doesn't exist.</p>
           <Link href="/about" style={{ color: "#2B3490", textDecoration: "underline", fontWeight: 600 }}>
@@ -63,7 +63,7 @@ export default function LeadershipDetail({ params }: { params: { slug: string } 
     <main style={{ backgroundColor: "#F5EFE4", fontFamily: "Arimo, Arial, Helvetica, sans-serif", color: "#1F2937" }}>
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        .k-container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .k-container { max-width: 1760px; margin: 0 auto; padding: 0 24px; }
         .k-hero { position: relative; background-image: url('/site-images/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 280px; padding: 0; display: flex; align-items: center; color: white; overflow: hidden; }
         .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .k-hero-content { position: relative; z-index: 2; }

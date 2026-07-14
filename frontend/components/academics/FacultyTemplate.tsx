@@ -205,7 +205,7 @@ export default function FacultyTemplate() {
           font-weight: 600;
           font-family: "Rajdhani", sans-serif;
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .fac-grid {
             grid-template-columns: repeat(2, 1fr);
           }

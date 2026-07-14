@@ -167,7 +167,7 @@ export default function Footer() {
           display: grid;
           grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr 1fr 1.5fr;
           gap: 32px;
-          max-width: 1720px;
+          max-width: 1760px;
           margin: 0 auto;
           padding: 0 40px;
         }
@@ -175,7 +175,7 @@ export default function Footer() {
           display: flex;
           align-items: center;
           gap: 16px;
-          max-width: 1720px;
+          max-width: 1760px;
           margin: 0 auto;
           padding: 0 40px;
         }
@@ -311,7 +311,7 @@ export default function Footer() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          maxWidth: "1400px",
+          maxWidth: "1760px",
           margin: "0 auto",
           padding: "0 40px",
           gap: "16px",

@@ -56,7 +56,7 @@ export default function StatsBar() {
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(6, 1fr);
-          max-width: 1720px;
+          max-width: 1760px;
           margin: 0 auto;
           padding: 0 32px;
         }

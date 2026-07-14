@@ -78,7 +78,7 @@ export default function AntiRaggingPage() {
           textAlign: "center",
         }}
       >
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto" }}>
           <h1
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -108,7 +108,7 @@ export default function AntiRaggingPage() {
 
       {/* Intro */}
       <section style={{ padding: "56px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <p
             style={{
               color: "#555",
@@ -129,7 +129,7 @@ export default function AntiRaggingPage() {
 
       {/* Policy warning box */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <div
             style={{
               background: "#e74c3c",
@@ -174,7 +174,7 @@ export default function AntiRaggingPage() {
 
       {/* Helplines */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -238,7 +238,7 @@ export default function AntiRaggingPage() {
 
       {/* What Constitutes / Punishments */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <div
             style={{
               display: "grid",
@@ -334,7 +334,7 @@ export default function AntiRaggingPage() {
 
       {/* Committee table */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -352,7 +352,7 @@ export default function AntiRaggingPage() {
 
       {/* How to Report */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -376,7 +376,7 @@ export default function AntiRaggingPage() {
 
       {/* Affidavits */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",

@@ -47,7 +47,7 @@ export function HeroBanner({
           position: relative;
           z-index: 2;
           width: 100%;
-          max-width: 1720px;
+          max-width: 1760px;
           margin: 0 auto;
           padding: 0 40px;
           color: white;

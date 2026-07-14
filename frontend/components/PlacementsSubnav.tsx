@@ -16,7 +16,7 @@ export default function PlacementsSubnav({ active }: { active: string }) {
     <div style={{ background: "#ffffff", borderBottom: "1px solid #eef0f3", padding: "24px 0" }}>
       <style>{`
         .placements-subnav-container {
-          max-width: 1720px;
+          max-width: 1760px;
           margin: 0 auto;
           padding: 0 16px;
           display: flex;

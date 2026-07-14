@@ -265,7 +265,7 @@ export default function ExaminationsTemplate() {
         .exam-contact-card a:hover {
           color: #FFE619;
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .portal-links-grid {
             grid-template-columns: repeat(3, 1fr);
           }

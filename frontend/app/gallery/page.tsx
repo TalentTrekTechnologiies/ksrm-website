@@ -147,7 +147,7 @@ export default function GalleryPage() {
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
-        .responsive-container { max-width:  1720px; margin: 0 auto; padding: 0 40px; }
+        .responsive-container { max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
@@ -170,7 +170,7 @@ export default function GalleryPage() {
         .gal-video-wrap { border-radius: 8px; overflow: hidden; }
         .gal-video-wrap video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
 
-        @media (max-width: 1200px) { .gal-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1760px) { .gal-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .gal-grid { grid-template-columns: 1fr; } }
       `}</style>
 

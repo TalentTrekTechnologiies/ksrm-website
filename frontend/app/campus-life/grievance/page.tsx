@@ -92,7 +92,7 @@ export default function GrievanceRedressalPage() {
           textAlign: "center",
         }}
       >
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto" }}>
           <h1
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -122,7 +122,7 @@ export default function GrievanceRedressalPage() {
 
       {/* Intro */}
       <section style={{ padding: "56px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <p
             style={{
               color: "#555",
@@ -143,7 +143,7 @@ export default function GrievanceRedressalPage() {
 
       {/* Policy statement */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <div
             style={{
               background: "#2B3490",
@@ -174,7 +174,7 @@ export default function GrievanceRedressalPage() {
 
       {/* Grievance Types */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -225,7 +225,7 @@ export default function GrievanceRedressalPage() {
 
       {/* Process */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <h2
             style={{
               fontFamily: "var(--font-rajdhani), sans-serif",
@@ -326,7 +326,7 @@ export default function GrievanceRedressalPage() {
 
       {/* Contact */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <div
             style={{
               background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)",

@@ -193,7 +193,7 @@ export default function Admissions({
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 28px;
-          max-width: 1140px;
+          max-width: 1760px;
           margin: 0 auto;
           align-items: stretch;
           padding: 0 16px;
@@ -337,7 +337,7 @@ export default function Admissions({
           border-radius: 12px;
           border: 1px solid #e5e7eb;
           margin-top: 36px;
-          max-width: 1140px;
+          max-width: 1760px;
           margin-left: auto;
           margin-right: auto;
           font-size: 16px;

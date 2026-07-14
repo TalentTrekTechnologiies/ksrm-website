@@ -167,7 +167,7 @@ export default function AlumniTemplate() {
           background: #2B3490;
           color: #FFE619;
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .alum-stats-grid { grid-template-columns: repeat(2, 1fr); }
           .alum-notable-grid { grid-template-columns: 1fr; }
         }

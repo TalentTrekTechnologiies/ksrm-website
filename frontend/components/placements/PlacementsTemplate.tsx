@@ -178,7 +178,7 @@ const statIcons = [Users, Award, TrendingUp, Briefcase]
           padding: 32px;
           margin: 48px 0;
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1760px) {
           .place-stats-grid { grid-template-columns: repeat(2, 1fr); }
           .place-programs-grid { grid-template-columns: repeat(2, 1fr); }
           .place-recruiters-grid { grid-template-columns: repeat(3, 1fr); }
