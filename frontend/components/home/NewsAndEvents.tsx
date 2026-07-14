@@ -1,14 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { ArrowRight, MapPin, Clock } from "lucide-react"
 import Container from "@/components/ui/Container"
 import { getLatestNewsForHomepage, NewsArticle } from "@/lib/news-api"
 import { getEventsPublic, EventItem } from "@/lib/events-api"
 import { useLiveData } from "@/lib/use-live-data"
-
-const EASE = [0.22, 1, 0.36, 1] as const
 
 interface NewsAndEventsState {
   newsVisible: boolean
@@ -18,40 +15,36 @@ interface NewsAndEventsState {
 
 async function fetchNewsAndEvents(): Promise<NewsAndEventsState> {
   const [newsResult, eventsData] = await Promise.all([
-    getLatestNewsForHomepage(4).catch(() => ({ visible: false, articles: [] as NewsArticle[] })),
+    getLatestNewsForHomepage(8).catch(() => ({ visible: false, articles: [] as NewsArticle[] })),
     getEventsPublic().catch(() => [] as EventItem[]),
   ])
   const now = Date.now()
   const upcoming = eventsData
     .filter((e) => new Date(e.eventDate).getTime() >= now)
     .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
-  const events = (upcoming.length ? upcoming : eventsData.slice().sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())).slice(0, 4)
+  const events = (upcoming.length ? upcoming : eventsData.slice().sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())).slice(0, 6)
   return { newsVisible: newsResult.visible, news: newsResult.articles, events }
 }
 
-function fmtNewsDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
-}
-function fmtEvent(iso: string) {
+// Compact date chip parts (e.g. 12 / JUL) shown at the left of each row.
+function dayMon(iso: string) {
   const d = new Date(iso)
   return {
     day: d.toLocaleDateString(undefined, { day: "2-digit" }),
     mon: d.toLocaleDateString(undefined, { month: "short" }).toUpperCase(),
-    time: d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }),
   }
 }
+function eventTime(iso: string) {
+  return new Date(iso).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })
+}
 
-const listVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } }
-const rowVariants = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } } }
-
-function ColHeader({ title, href, cta }: { title: string; href: string; cta: string }) {
+function DateChip({ iso }: { iso: string }) {
+  const c = dayMon(iso)
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
-      <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "22px", fontWeight: 700, color: "#1a1a2e", margin: 0 }}>{title}</h3>
-      <Link href={href} style={{ display: "inline-flex", alignItems: "center", gap: "5px", color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", fontSize: "16px", fontWeight: 700, textDecoration: "none" }}>
-        {cta} <ArrowRight size={15} />
-      </Link>
-    </div>
+    <span className="ne-chip">
+      <span className="ne-chip-day">{c.day}</span>
+      <span className="ne-chip-mon">{c.mon}</span>
+    </span>
   )
 }
 
@@ -63,27 +56,60 @@ export default function NewsAndEvents() {
   const showEvents = state.events.length > 0
   if (!showNews && !showEvents) return null
 
+  // Auto-scroll the news list only when there are enough items to overflow the
+  // fixed-height viewport; otherwise show them statically.
+  const newsScrolls = state.news.length >= 5
+  const newsItems = newsScrolls ? [...state.news, ...state.news] : state.news
+  const newsDuration = Math.max(18, state.news.length * 4)
+
   return (
     <section style={{ width: "100%", background: "#f7f8fa", padding: "44px 0", borderTop: "1px solid #eef0f3" }}>
       <style>{`
-        .ne-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 40px; }
-        .ne-news-row {
-          display: flex; gap: 14px; align-items: center; text-decoration: none;
-          padding: 12px; border-radius: 12px; transition: background 0.2s ease;
+        .ne-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px; }
+        .ne-box {
+          background: #fff; border: 1px solid #e6e8f0; border-radius: 14px;
+          overflow: hidden; box-shadow: 0 6px 24px rgba(43,52,144,0.06);
+          display: flex; flex-direction: column;
         }
-        .ne-news-row:hover { background: #fff; box-shadow: 0 8px 22px rgba(43,52,144,0.07); }
-        .ne-news-thumb { width: 84px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e9ebf2; }
-        .ne-ev-row {
-          display: flex; gap: 14px; align-items: center; text-decoration: none;
-          padding: 12px; border-radius: 12px; transition: background 0.2s ease;
+        .ne-box-head {
+          display: flex; align-items: center; justify-content: space-between;
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); padding: 14px 20px;
         }
-        .ne-ev-row:hover { background: #fff; box-shadow: 0 8px 22px rgba(43,52,144,0.07); }
-        .ne-ev-date {
-          width: 58px; height: 58px; flex-shrink: 0; border-radius: 12px;
-          background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); color: #fff;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
+        .ne-box-title {
+          font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #fff;
+          margin: 0; display: flex; align-items: center; gap: 10px;
         }
-        @media (max-width: 860px) { .ne-grid { grid-template-columns: 1fr; gap: 40px; } }
+        .ne-box-title::before { content: ''; width: 4px; height: 20px; background: #FFE619; border-radius: 2px; }
+        .ne-box-link {
+          color: #FFE619; font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700;
+          text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+        }
+        .ne-box-link:hover { color: #fff; }
+        .ne-viewport { height: 320px; overflow: hidden; position: relative; }
+        .ne-viewport.scrollable { overflow-y: auto; }
+        .ne-track { display: flex; flex-direction: column; }
+        .ne-track.anim { animation: neScroll var(--dur, 30s) linear infinite; }
+        .ne-viewport:hover .ne-track.anim { animation-play-state: paused; }
+        @keyframes neScroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+        .ne-item {
+          display: flex; gap: 14px; align-items: flex-start; padding: 13px 20px;
+          border-bottom: 1px solid #eef0f6; text-decoration: none; transition: background 0.15s;
+        }
+        .ne-item:hover { background: #f6f7fd; }
+        .ne-chip {
+          flex-shrink: 0; width: 54px; text-align: center;
+          background: #eef0fb; border-radius: 8px; padding: 7px 0; line-height: 1;
+        }
+        .ne-chip-day { display: block; font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #2B3490; }
+        .ne-chip-mon { display: block; font-size: 10px; font-weight: 700; color: #6b70a8; letter-spacing: 0.5px; margin-top: 3px; }
+        .ne-item-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #2B3490; }
+        .ne-item-title {
+          font-size: 15px; font-weight: 600; color: #1a1a2e; margin: 2px 0 0; line-height: 1.4;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .ne-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 5px; }
+        .ne-meta span { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; color: #777; }
+        @media (max-width: 860px) { .ne-grid { grid-template-columns: 1fr; gap: 24px; } }
       `}</style>
 
       <Container>
@@ -97,60 +123,53 @@ export default function NewsAndEvents() {
         </div>
 
         <div className="ne-grid">
-          {/* LATEST NEWS */}
+          {/* LATEST NEWS — MITS-style auto-scrolling box */}
           {showNews && (
-            <div>
-              <ColHeader title="Latest News" href="/news" cta="All News" />
-              <motion.div variants={listVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}>
-                {state.news.map((n) => (
-                  <motion.div key={n.id} variants={rowVariants}>
-                    <Link href="/news" className="ne-news-row">
-                      {n.imageUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
-                        <img src={n.imageUrl} alt={n.title} loading="lazy" className="ne-news-thumb" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
-                      ) : (
-                        <div className="ne-news-thumb" />
-                      )}
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
-                          <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", color: "#2B3490", background: "#e8eaf6", padding: "2px 8px", borderRadius: "20px" }}>{n.category}</span>
-                          <span style={{ fontSize: "11px", color: "#999" }}>{fmtNewsDate(n.date)}</span>
-                        </div>
-                        <p style={{ fontSize: "16px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.35, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{n.title}</p>
-                      </div>
+            <div className="ne-box">
+              <div className="ne-box-head">
+                <h3 className="ne-box-title">Latest News</h3>
+                <Link href="/news" className="ne-box-link">View All News <ArrowRight size={14} /></Link>
+              </div>
+              <div className="ne-viewport">
+                <div
+                  className={`ne-track ${newsScrolls ? "anim" : ""}`}
+                  style={{ ["--dur" as string]: `${newsDuration}s` } as React.CSSProperties}
+                >
+                  {newsItems.map((n, i) => (
+                    <Link key={`${n.id}-${i}`} href="/news" className="ne-item">
+                      <DateChip iso={n.date} />
+                      <span style={{ minWidth: 0 }}>
+                        <span className="ne-item-cat">{n.category}</span>
+                        <p className="ne-item-title">{n.title}</p>
+                      </span>
                     </Link>
-                  </motion.div>
-                ))}
-              </motion.div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
 
-          {/* UPCOMING EVENTS */}
+          {/* UPCOMING EVENTS — matching panel */}
           {showEvents && (
-            <div>
-              <ColHeader title="Upcoming Events" href="/events" cta="All Events" />
-              <motion.div variants={listVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}>
-                {state.events.map((e) => {
-                  const d = fmtEvent(e.eventDate)
-                  return (
-                    <motion.div key={e.id} variants={rowVariants}>
-                      <Link href="/events" className="ne-ev-row">
-                        <div className="ne-ev-date">
-                          <span style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "19px", fontWeight: 700, lineHeight: 1 }}>{d.day}</span>
-                          <span style={{ fontSize: "10px", fontWeight: 700, color: "#FFE619", letterSpacing: "0.5px" }}>{d.mon}</span>
-                        </div>
-                        <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: "16px", fontWeight: 600, color: "#1a1a2e", margin: "0 0 6px", lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{e.title}</p>
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "14px", color: "#777" }}><Clock size={12} /> {d.time}</span>
-                            {e.location && <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "14px", color: "#777" }}><MapPin size={12} /> {e.location}</span>}
-                          </div>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  )
-                })}
-              </motion.div>
+            <div className="ne-box">
+              <div className="ne-box-head">
+                <h3 className="ne-box-title">Upcoming Events</h3>
+                <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
+              </div>
+              <div className="ne-viewport scrollable">
+                {state.events.map((e) => (
+                  <Link key={e.id} href="/events" className="ne-item">
+                    <DateChip iso={e.eventDate} />
+                    <span style={{ minWidth: 0 }}>
+                      <p className="ne-item-title">{e.title}</p>
+                      <div className="ne-meta">
+                        <span><Clock size={12} /> {eventTime(e.eventDate)}</span>
+                        {e.location && <span><MapPin size={12} /> {e.location}</span>}
+                      </div>
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
         </div>

@@ -51,7 +51,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
           display: grid;
           grid-template-columns: 1.1fr 1fr;
           gap: 64px;
-          align-items: start;
+          align-items: stretch;
         }
 
         .about-heading { font-size: 36px; }
@@ -175,14 +175,14 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.75, ease: EASE, delay: 0.1 }}
-          style={{ position: "relative" }}
+          style={{ position: "relative", display: "flex", flexDirection: "column", height: "100%" }}
         >
-          <div style={{ position: "relative" }}>
+          <div style={{ position: "relative", flex: 1, minHeight: "340px" }}>
             <img
               src={about.image.url}
               alt={about.image.alt}
               style={{
-                width: "100%", height: "460px",
+                width: "100%", height: "100%",
                 objectFit: "cover",
                 borderRadius: "12px",
                 display: "block",
