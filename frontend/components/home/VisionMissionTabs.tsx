@@ -36,6 +36,14 @@ const FALLBACK_MISSION: MissionContent = {
 const INTRO =
   'Rooted in the ideals of our founders, K.S.R.M. College of Engineering pursues one clear purpose — to shape capable, ethical and innovative engineers who serve society and the nation. The vision and mission below guide every programme we design, every class we teach and every graduate we send into the world.'
 
+// Supporting (aspirational) copy that elaborates the official statements — kept
+// visually distinct so it never reads as part of the formal vision/mission.
+const VISION_SUPPORT =
+  'Guided by this vision, KSRMCE blends a rigorous, industry-aligned curriculum with hands-on research, innovation and value-based learning across a green, well-equipped campus — nurturing engineers who lead with competence, integrity and a genuine commitment to society.'
+
+const MISSION_LEAD =
+  'We translate that vision into everyday practice through three enduring commitments:'
+
 interface VisionMissionState {
   vision: VisionContent
   mission: MissionContent
@@ -80,7 +88,7 @@ export default function VisionMissionTabs({
         .vm-section {
           position: relative;
           width: 100%;
-          padding: 44px 0 52px;
+          padding: 38px 0 44px;
           background: url('/campus/aerial-campus.jpg') center center / cover no-repeat;
           overflow: hidden;
         }
@@ -95,12 +103,12 @@ export default function VisionMissionTabs({
           color: #FFE619; font-weight: 700; margin: 0 0 8px;
         }
         .vm-title {
-          font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff;
-          font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.1; margin: 0 0 12px;
+          font-family: 'Rajdhani', sans-serif; font-weight: 800; color: #fff;
+          font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.1; margin: 0 0 10px;
           text-shadow: 0 2px 18px rgba(0,0,0,0.35);
         }
         .vm-intro {
-          font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.9);
+          font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.88); font-weight: 400;
           margin: 0; text-shadow: 0 1px 10px rgba(0,0,0,0.3);
         }
         .vm-grid {
@@ -114,40 +122,41 @@ export default function VisionMissionTabs({
           border: 1px solid rgba(255,255,255,0.35);
           border-top: 3px solid #FFE619;
           border-radius: 18px;
-          padding: 28px 32px 32px;
+          padding: 24px 28px 26px;
           box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 18px 50px rgba(0,0,0,0.34);
           color: #fff;
           display: flex; flex-direction: column;
         }
         .vm-icon {
-          width: 52px; height: 52px; border-radius: 14px;
+          width: 46px; height: 46px; border-radius: 13px;
           background: linear-gradient(135deg, #FFE619 0%, #f5c400 100%);
           color: #1a1d4d; display: flex; align-items: center; justify-content: center;
-          margin-bottom: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+          margin-bottom: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.28);
         }
         .vm-kicker {
           font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
-          color: #FFE619; font-weight: 700; margin-bottom: 4px;
+          color: #FFE619; font-weight: 700; margin-bottom: 3px;
         }
         .vm-card-title {
-          font-family: 'Rajdhani', sans-serif; font-weight: 700; color: #fff;
-          font-size: 27px; line-height: 1; margin: 0 0 14px;
+          font-family: 'Rajdhani', sans-serif; font-weight: 800; color: #fff;
+          font-size: 23px; line-height: 1; margin: 0 0 10px;
         }
         .vm-quote {
-          font-family: Georgia, serif; font-size: 50px; line-height: 0.5;
-          color: rgba(255,230,25,0.45); display: block; margin-bottom: 4px;
+          font-family: Georgia, serif; font-size: 42px; line-height: 0.5;
+          color: rgba(255,230,25,0.45); display: block; margin-bottom: 2px;
         }
-        .vm-text { font-size: 16px; line-height: 1.75; color: rgba(255,255,255,0.95); margin: 0; font-style: italic; }
-        .vm-rule { width: 56px; height: 3px; background: #FFE619; margin-top: 18px; border-radius: 2px; }
-        .vm-missions { display: flex; flex-direction: column; gap: 15px; }
-        .vm-mission-row { display: flex; gap: 14px; align-items: flex-start; }
+        .vm-text { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.95); margin: 0; font-style: italic; font-weight: 400; }
+        .vm-support { font-size: 13.5px; line-height: 1.65; color: rgba(255,255,255,0.82); margin: 10px 0 6px; font-weight: 400; }
+        .vm-rule { width: 54px; height: 3px; background: #FFE619; margin-top: 12px; border-radius: 2px; }
+        .vm-missions { display: flex; flex-direction: column; gap: 12px; }
+        .vm-mission-row { display: flex; gap: 13px; align-items: flex-start; }
         .vm-mcode {
-          flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
-          background: #FFE619; color: #1a1d4d; font-weight: 800; font-size: 13px;
+          flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+          background: #FFE619; color: #1a1d4d; font-weight: 800; font-size: 12px;
           display: flex; align-items: center; justify-content: center;
           font-family: 'Rajdhani', sans-serif; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
         }
-        .vm-mtext { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.92); margin: 2px 0 0; }
+        .vm-mtext { font-size: 13.5px; line-height: 1.55; color: rgba(255,255,255,0.9); margin: 2px 0 0; font-weight: 400; }
         @media (max-width: 900px) {
           .vm-grid { grid-template-columns: 1fr; gap: 18px; }
           .vm-card { padding: 26px 24px; }
@@ -187,6 +196,7 @@ export default function VisionMissionTabs({
               <h3 className="vm-card-title">Vision</h3>
               <span className="vm-quote">&ldquo;</span>
               <p className="vm-text">{vision.text}</p>
+              <p className="vm-support">{VISION_SUPPORT}</p>
               <div className="vm-rule" />
             </motion.div>
 
@@ -208,6 +218,7 @@ export default function VisionMissionTabs({
               </div>
               <div className="vm-kicker">{mission.label}</div>
               <h3 className="vm-card-title">Mission</h3>
+              <p className="vm-support">{MISSION_LEAD}</p>
               <div className="vm-missions">
                 {mission.missions.map((item, idx) => (
                   <div key={idx} className="vm-mission-row">
