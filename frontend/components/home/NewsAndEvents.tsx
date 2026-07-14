@@ -46,16 +46,6 @@ function snippet(content: string | null | undefined) {
   return content.replace(/<[^>]+>/g, " ").replace(/[#*_>`]/g, "").replace(/\s+/g, " ").trim()
 }
 
-function DateChip({ iso }: { iso: string }) {
-  const c = dayMon(iso)
-  return (
-    <span className="ne-chip">
-      <span className="ne-chip-day">{c.day}</span>
-      <span className="ne-chip-mon">{c.mon}</span>
-    </span>
-  )
-}
-
 export default function NewsAndEvents() {
   const state = useLiveData(fetchNewsAndEvents, [])
 
@@ -69,6 +59,10 @@ export default function NewsAndEvents() {
   const newsScrolls = state.news.length >= 4
   const newsItems = newsScrolls ? [...state.news, ...state.news] : state.news
   const newsDuration = Math.max(24, state.news.length * 6)
+
+  const eventsScroll = state.events.length >= 4
+  const eventItems = eventsScroll ? [...state.events, ...state.events] : state.events
+  const eventsDuration = Math.max(24, state.events.length * 6)
 
   return (
     <section style={{ width: "100%", background: "#f7f8fa", padding: "44px 0", borderTop: "1px solid #eef0f3" }}>
@@ -108,6 +102,12 @@ export default function NewsAndEvents() {
           width: 128px; height: 90px; border-radius: 9px; object-fit: cover;
           flex-shrink: 0; background: #e9ebf2; display: block;
         }
+        .ne-thumb-date {
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);
+        }
+        .ne-thumb-date .ne-chip-day { color: #fff; font-size: 30px; }
+        .ne-thumb-date .ne-chip-mon { color: #FFE619; font-size: 13px; margin-top: 5px; }
         .ne-item-body { min-width: 0; display: flex; flex-direction: column; }
         .ne-item-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
         .ne-item-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #2B3490; background: #e8eaf6; padding: 2px 8px; border-radius: 20px; }
@@ -190,19 +190,41 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">Upcoming Events</h3>
                 <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport scrollable">
-                {state.events.map((e) => (
-                  <Link key={e.id} href="/events" className="ne-item">
-                    <DateChip iso={e.eventDate} />
-                    <span style={{ minWidth: 0 }}>
-                      <p className="ne-item-title">{e.title}</p>
-                      <div className="ne-meta">
-                        <span><Clock size={12} /> {eventTime(e.eventDate)}</span>
-                        {e.location && <span><MapPin size={12} /> {e.location}</span>}
-                      </div>
-                    </span>
-                  </Link>
-                ))}
+              <div className="ne-viewport">
+                <div
+                  className={`ne-track ${eventsScroll ? "anim" : ""}`}
+                  style={{ ["--dur" as string]: `${eventsDuration}s` } as React.CSSProperties}
+                >
+                  {eventItems.map((e, i) => {
+                    const desc = snippet(e.description)
+                    const c = dayMon(e.eventDate)
+                    return (
+                      <Link key={`${e.id}-${i}`} href="/events" className="ne-item">
+                        {e.imageUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
+                          <img src={e.imageUrl} alt="" loading="lazy" className="ne-thumb" onError={(ev) => (ev.currentTarget.style.visibility = "hidden")} />
+                        ) : (
+                          <span className="ne-thumb ne-thumb-date" aria-hidden>
+                            <span className="ne-chip-day">{c.day}</span>
+                            <span className="ne-chip-mon">{c.mon}</span>
+                          </span>
+                        )}
+                        <span className="ne-item-body">
+                          <span className="ne-item-meta">
+                            <span className="ne-item-cat">{e.category || "EVENT"}</span>
+                            <span className="ne-item-date">{fmtNewsDate(e.eventDate)}</span>
+                          </span>
+                          <p className="ne-item-title">{e.title}</p>
+                          {desc && <p className="ne-item-desc">{desc}</p>}
+                          <div className="ne-meta">
+                            <span><Clock size={12} /> {eventTime(e.eventDate)}</span>
+                            {e.location && <span><MapPin size={12} /> {e.location}</span>}
+                          </div>
+                        </span>
+                      </Link>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           )}
