@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
+import PageResources from "@/components/PageResources";
 
 const btechRegs = [
   { name: "R23UG (Current)", branches: "Computer Science & Engineering, CSE (AI & ML), CSE (Data Science), CSE (AI & ML Specialisation), Electronics & Communication Engineering, Electrical & Electronics Engineering, Civil Engineering, Mechanical Engineering" },
@@ -202,6 +203,8 @@ export default function SyllabusPage() {
             </div>
           </div>
         </section>
+
+      <PageResources section="syllabus" docsCategory="SYLLABUS" docsTitle="Syllabus Downloads" />
       </main>
     </>
   );

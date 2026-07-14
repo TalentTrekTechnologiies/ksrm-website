@@ -1,7 +1,7 @@
 "use client"
 
 import { FileText, Download as DownloadIcon } from "lucide-react"
-import { getDownloadsPublic, Download } from "@/lib/downloads-api"
+import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
 import { useLiveData } from "@/lib/use-live-data"
 
@@ -10,11 +10,17 @@ interface SectionData {
   images: GalleryImage[]
 }
 
-async function fetchSection(section: string): Promise<SectionData> {
-  const [docs, images] = await Promise.all([
+async function fetchSection(section: string, docsCategory?: DownloadCategory): Promise<SectionData> {
+  const [routed, byCategory, images] = await Promise.all([
     getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
+    // Category-driven inclusion (e.g. every SYLLABUS doc shows on the
+    // Syllabus page regardless of explicit page routing) - matches the
+    // natural admin mental model "I set the category, it shows there".
+    docsCategory ? getDownloadsPublic(docsCategory).catch(() => [] as Download[]) : Promise.resolve([] as Download[]),
     getGalleryPublic(undefined, undefined, section).catch(() => [] as GalleryImage[]),
   ])
+  const seen = new Set<number>()
+  const docs = [...routed, ...byCategory].filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)))
   return { docs, images }
 }
 
@@ -28,16 +34,19 @@ async function fetchSection(section: string): Promise<SectionData> {
  */
 export default function PageResources({
   section,
+  docsCategory,
   galleryTitle = "Gallery",
   docsTitle = "Downloads & Resources",
   background = "#f7f8fa",
 }: {
   section: string
+  /** Also include every download of this category (not just page-routed ones). */
+  docsCategory?: DownloadCategory
   galleryTitle?: string
   docsTitle?: string
   background?: string
 }) {
-  const data = useLiveData<SectionData>(() => fetchSection(section), [section])
+  const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
 
   if (!data) return null
   const { docs, images } = data

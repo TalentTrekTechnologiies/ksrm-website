@@ -1,7 +1,26 @@
 # KSRM College of Engineering — Project Status
 
-**Last updated:** 2026-07-12 (Centralized Announcement & Ticker Engine shipped)
+**Last updated:** 2026-07-14 (content population + page-routed media + production hardening sprint)
 **Purpose:** Living reference for what exists, what's missing, and what's next. Update this file whenever a module ships or a roadmap phase completes — don't let it go stale.
+
+---
+
+## 0. 2026-07-13/14 sprint (latest)
+
+**Shipped**
+- **Real content**: 142 teaching faculty scraped from ksrmce.ac.in (CSE/EEE/Civil/MECH/MBA/H&S) with photos; 72 PDFs/images re-hosted off the old site; homepage stats/quick-links/gallery/news/events seeded as backend data.
+- **Page-routed media**: `pageSection` on Downloads + Gallery; "Show on page" selector at Media Library upload time + per-file publish panel; `<PageResources>` block on 15 public pages. Category-driven inclusion too (SYLLABUS docs → Syllabus page, QUESTION_PAPER → Examinations) so setting a category alone is enough.
+- **Homepage**: Why Choose KSRM, merged News & Events, Campus Gallery sections; single clickable header ticker; all sections live-update via `useLiveData` polling (env-aware: 2s dev / 30s prod).
+- **Notification Center backend** (`/admin-notifications`): per-admin fan-out, wired to career applications / announcement publish / admin created. *(Frontend bell UI still pending.)*
+- **Production hardening**: helmet, @nestjs/throttler (600/min global, 10/min login, media exempt), env-driven media URLs in source (`lib/api-base.ts`), `backend/scripts/rebase-media-urls.js` for the ~159 DB rows storing dev-origin URLs, default-password boot warning, test data purged, fonts consolidated (16 @imports → 1), deploy weight cut 747MB → 361MB, Dockerfile + docker-compose.prod.yml + DEPLOYMENT.md.
+
+**Launch blockers remaining (see DEPLOYMENT.md §1a/1b)**
+1. Run `rebase-media-urls.js` against the production origin at first deploy. **Risk: High**
+2. Change the default super admin password. **Risk: High**
+3. Configure real SMTP (`EMAIL_PROVIDER=console` sends nothing). **Risk: Medium**
+4. Replace placeholder content: 4 sample news, 4 sample events, fictional testimonials, EDC/IIC demo docs, "K nagaraju" MBA record. **Risk: Medium (credibility)**
+5. ECE faculty roster is part-fabricated seed data (25 of 30 records are fake names; the real ecen.php roster needs scraping — agent run was interrupted). MCA & AI&DS have no faculty (no source page exists / shared CSE roster). **Risk: Medium**
+6. Human review of scraped faculty data (EEE HOD conflict: banner says Dr. M.S. Priyadarshini, tables say Dr. K. Amaresh). **Risk: Medium**
 
 ---
 

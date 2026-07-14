@@ -11,6 +11,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "iqac", label: "IQAC" },
   { value: "naac", label: "NAAC" },
   { value: "alumni", label: "Alumni" },
+  { value: "syllabus", label: "Syllabus" },
   { value: "examinations", label: "Examinations" },
   { value: "research", label: "Research" },
   { value: "library", label: "Library" },

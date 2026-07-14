@@ -1,0 +1,48 @@
+# Production stack: Postgres + backend API. The frontend is a static export
+# (frontend/out) deployed separately (Netlify or any static host/CDN).
+# Usage: docker compose -f docker-compose.prod.yml up -d --build
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ksrm_db
+      POSTGRES_USER: ksrm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ksrm -d ksrm_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://ksrm:${POSTGRES_PASSWORD}@db:5432/ksrm_db?schema=public
+      JWT_SECRET: ${JWT_SECRET:?set in .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:?frontend origin, e.g. https://www.ksrmce.ac.in}
+      MEDIA_BASE_URL: ${MEDIA_BASE_URL:?public backend origin, e.g. https://api.ksrmce.ac.in}
+      NODE_ENV: production
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-no-reply@ksrmce.ac.in}
+      HR_NOTIFICATION_EMAIL: ${HR_NOTIFICATION_EMAIL:-}
+    volumes:
+      # Persistent uploaded media - loses every upload on redeploy without this
+      - media:/app/storage/media
+    ports:
+      - "4000:4000"
+
+volumes:
+  pgdata:
+  media:

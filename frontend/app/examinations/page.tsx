@@ -175,7 +175,7 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-      <PageResources section="examinations" docsTitle="Exam Documents & Timetables" />
+      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="Exam Documents & Timetables" />
     </main>
   );
 }
