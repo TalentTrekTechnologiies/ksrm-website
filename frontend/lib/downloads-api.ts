@@ -31,6 +31,7 @@ export interface Download {
   description: string | null;
   category: DownloadCategory;
   pageSection: string | null;
+  groupLabel: string | null;
   fileUrl: string;
   /** Media Library reference, or null when using a manually-typed fileUrl
    * (legacy path, still supported). */
@@ -51,6 +52,7 @@ export interface DownloadInput {
   description?: string;
   category: DownloadCategory;
   pageSection?: string | null;
+  groupLabel?: string | null;
   fileUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing fileUrl. */

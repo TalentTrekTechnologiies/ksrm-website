@@ -78,10 +78,10 @@ export default function StatsBar() {
         }
         .stat-label {
           font-family: 'DM Sans', sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           color: #6B7280;
           letter-spacing: 0.5px;
-          font-weight: 400;
+          font-weight: 500;
           line-height: 1.4;
         }
 

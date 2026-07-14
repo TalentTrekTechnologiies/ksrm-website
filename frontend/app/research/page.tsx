@@ -214,6 +214,9 @@ export default function ResearchPage() {
         </div>
       </section>
 
+      {/* Admin-uploaded research videos / images / documents */}
+      <PageResources section="research" background="#ffffff" />
+
       {/* VISION & MISSION */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="vision">
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
@@ -321,7 +324,6 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      <PageResources section="research" />
     </div>
   );
 }

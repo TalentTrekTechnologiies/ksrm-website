@@ -40,7 +40,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
   const years = new Date().getFullYear() - about.foundingYear
 
   return (
-    <section className="about-section" style={{ width: "100%", background: "#ffffff", padding: "52px 0" }}>
+    <section className="about-section" style={{ width: "100%", background: "#ffffff", padding: "38px 0" }}>
       <style>{`
         .about-section { box-sizing: border-box; }
 
@@ -83,7 +83,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
           {about.eyebrow && (
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
               <div style={{ width: "28px", height: "2px", background: "#FFE619", flexShrink: 0 }} />
-              <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
+              <span style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
                 {about.eyebrow}
               </span>
             </div>
@@ -99,7 +99,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
             {about.title}
           </h2>
           {about.subtitle && (
-            <p style={{ color: "#2B3490", fontSize: "16px", fontWeight: 600, margin: "0 0 20px" }}>
+            <p style={{ color: "#2B3490", fontSize: "17px", fontWeight: 600, margin: "0 0 20px" }}>
               {about.subtitle}
             </p>
           )}
@@ -110,7 +110,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
               key={i}
               style={{
                 color: "#555",
-                fontSize: "15px",
+                fontSize: "16px",
                 lineHeight: 1.7,
                 margin: i === about.paragraphs.length - 1 ? "0 0 28px" : "0 0 16px",
               }}
@@ -124,9 +124,9 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
               {about.highlights.map((h, i) => (
                 <div key={i}>
-                  <p style={{ margin: 0, fontSize: "14px", fontWeight: 700, color: "#1a1a2e" }}>{h.title}</p>
+                  <p style={{ margin: 0, fontSize: "15px", fontWeight: 700, color: "#1a1a2e" }}>{h.title}</p>
                   {h.description && (
-                    <p style={{ margin: 0, fontSize: "13px", color: "#777" }}>{h.description}</p>
+                    <p style={{ margin: 0, fontSize: "14px", color: "#777" }}>{h.description}</p>
                   )}
                 </div>
               ))}
@@ -144,7 +144,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
                 }}>
                   {s.num}
                 </div>
-                <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{s.label}</div>
+                <div style={{ fontSize: "13px", color: "#888", marginTop: "4px" }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -156,7 +156,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
             background: "#2B3490",
             color: "#ffffff",
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "15px", fontWeight: 600,
+            fontSize: "16px", fontWeight: 600,
             borderRadius: "6px",
             textDecoration: "none",
             transition: "background 0.2s ease",
@@ -213,7 +213,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
             <p style={{
               marginTop: "12px",
               textAlign: "center",
-              fontSize: "16px",
+              fontSize: "17px",
               fontWeight: 600,
               color: "#2B3490",
               letterSpacing: "0.4px",

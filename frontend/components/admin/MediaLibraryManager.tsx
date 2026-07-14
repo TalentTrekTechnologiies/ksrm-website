@@ -85,16 +85,19 @@ function mediaFileUrl(id: number): string {
 }
 
 // Publishes a media file to a page section: images -> that page's Gallery,
-// documents -> that page's Downloads. Throws for videos (no page target).
-async function publishMediaToPage(media: Media, section: string): Promise<void> {
+// documents -> that page's Downloads (under an optional group heading).
+// Throws for videos (no page target).
+async function publishMediaToPage(media: Media, section: string, groupLabel?: string): Promise<void> {
   const title = media.title || media.originalFilename
   const url = mediaFileUrl(media.id)
   if (media.type === "IMAGE") {
     await createGalleryImage({ title, imageUrl: url, mediaId: media.id, pageSection: section })
-  } else if (media.type === "DOCUMENT") {
-    await createDownload({ title, category: "OTHER", fileUrl: url, mediaId: media.id, pageSection: section })
+  } else if (media.type === "VIDEO") {
+    // Videos ride the Gallery module too, tagged so PageResources renders a
+    // <video> player. Keep this category string in sync with PageResources.
+    await createGalleryImage({ title, imageUrl: url, mediaId: media.id, pageSection: section, category: "__video__" })
   } else {
-    throw new Error("Videos can't be published to a page section")
+    await createDownload({ title, category: "OTHER", fileUrl: url, mediaId: media.id, pageSection: section, groupLabel: groupLabel || null })
   }
 }
 
@@ -117,6 +120,8 @@ function MediaLibraryManagerInner() {
   // "Show on page" chosen before uploading: uploaded files are auto-published
   // to this page section (image -> Gallery, document -> Downloads).
   const [uploadSection, setUploadSection] = useState("")
+  // Optional grouping heading for uploaded documents (e.g. "AY 2025-26").
+  const [uploadGroup, setUploadGroup] = useState("")
   const [detailItem, setDetailItem] = useState<Media | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<{ item: Media; usages: MediaUsage[] } | null>(null)
   const [moveTargetIds, setMoveTargetIds] = useState<number[] | null>(null)
@@ -195,14 +200,14 @@ function MediaLibraryManagerInner() {
         let published = 0
         for (const m of uploaded) {
           try {
-            await publishMediaToPage(m, uploadSection)
+            await publishMediaToPage(m, uploadSection, uploadGroup)
             published++
           } catch {
             // one failure shouldn't abort the rest; surfaced below
           }
         }
         if (published < uploaded.length) {
-          setError(`Uploaded, but couldn't publish ${uploaded.length - published} file(s) to the page (videos can't be published).`)
+          setError(`Uploaded, but couldn't publish ${uploaded.length - published} file(s) to the page.`)
         }
       }
 
@@ -307,6 +312,17 @@ function MediaLibraryManagerInner() {
               ))}
             </select>
           </label>
+          {uploadSection && (
+            <input
+              type="text"
+              value={uploadGroup}
+              onChange={(e) => setUploadGroup(e.target.value)}
+              disabled={uploading}
+              placeholder="Group (e.g. AY 2025-26)"
+              title="Optional heading documents are grouped under on the page (e.g. AY 2025-26, B.Tech)."
+              className="max-w-[200px] rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-700"
+            />
+          )}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
@@ -652,8 +668,8 @@ function PagePublishPanel({ item }: { item: Media }) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
-  const publishable = item.type === "IMAGE" || item.type === "DOCUMENT"
-  const target = item.type === "IMAGE" ? "Gallery" : "Downloads & Resources"
+  const publishable = item.type === "IMAGE" || item.type === "DOCUMENT" || item.type === "VIDEO"
+  const target = item.type === "DOCUMENT" ? "Downloads & Resources" : item.type === "VIDEO" ? "Videos" : "Gallery"
 
   async function load() {
     try {
@@ -690,6 +706,8 @@ function PagePublishPanel({ item }: { item: Media }) {
       const title = item.title || item.originalFilename
       if (item.type === "IMAGE") {
         await createGalleryImage({ title, imageUrl: url, mediaId: item.id, pageSection: selected })
+      } else if (item.type === "VIDEO") {
+        await createGalleryImage({ title, imageUrl: url, mediaId: item.id, pageSection: selected, category: "__video__" })
       } else {
         await createDownload({ title, category: "OTHER", fileUrl: url, mediaId: item.id, pageSection: selected })
       }

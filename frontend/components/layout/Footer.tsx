@@ -243,7 +243,7 @@ export default function Footer() {
 
           {/* ACCREDITATIONS */}
           <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "16px" }}>
-            {["UGC Autonomous", "NAAC A++", "NBA Accredited", "AICTE Approved", "ISO 9001:2015 Certified"].map((a) => (
+            {["UGC Autonomous", "NAAC A+", "NBA Accredited", "AICTE Approved", "ISO 9001:2015 Certified"].map((a) => (
               <span key={a} style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.55)" }}>{a}</span>
             ))}
           </div>

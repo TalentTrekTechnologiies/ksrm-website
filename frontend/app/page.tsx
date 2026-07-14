@@ -17,8 +17,8 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <CampusStats />
       <VisionMissionTabs />
+      <CampusStats />
       <AboutPreview />
       <WhyChooseKSRM />
       <CampusServices />

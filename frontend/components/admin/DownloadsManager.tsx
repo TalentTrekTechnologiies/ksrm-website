@@ -33,6 +33,7 @@ interface FormState {
   description: string
   category: DownloadCategory
   pageSection: string
+  groupLabel: string
   fileUrl: string
   mediaId: number | null
   isActive: boolean
@@ -51,7 +52,7 @@ const CATEGORY_OPTIONS: { value: DownloadCategory; label: string }[] = [
 // PAGE_SECTIONS list so the admin can clear the routing.
 const PAGE_SECTION_OPTIONS = [{ value: "", label: "— None (general only) —" }, ...PAGE_SECTIONS]
 
-const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", fileUrl: "", mediaId: null, isActive: true }
+const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", fileUrl: "", mediaId: null, isActive: true }
 
 function DownloadsManagerInner() {
   const [loading, setLoading] = useState(true)
@@ -100,7 +101,7 @@ function DownloadsManagerInner() {
   function startEdit(item: Download) {
     setEditing(item)
     setCreating(false)
-    setForm({ title: item.title, description: item.description ?? "", category: item.category, pageSection: item.pageSection ?? "", fileUrl: item.fileUrl, mediaId: item.mediaId, isActive: item.isActive })
+    setForm({ title: item.title, description: item.description ?? "", category: item.category, pageSection: item.pageSection ?? "", groupLabel: item.groupLabel ?? "", fileUrl: item.fileUrl, mediaId: item.mediaId, isActive: item.isActive })
   }
 
   function cancelForm() {
@@ -112,7 +113,7 @@ function DownloadsManagerInner() {
     setSaving(true)
     setError(null)
     try {
-      const dto = { title: form.title, description: form.description || undefined, category: form.category, pageSection: form.pageSection || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
+      const dto = { title: form.title, description: form.description || undefined, category: form.category, pageSection: form.pageSection || null, groupLabel: form.groupLabel || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
       if (editing) {
         await updateDownload(editing.id, { ...dto, version: editing.version })
       } else {
@@ -235,6 +236,7 @@ function DownloadsManagerInner() {
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
           <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} required />
           <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={PAGE_SECTION_OPTIONS} />
+          <TextField label="Group heading (optional)" value={form.groupLabel} onChange={(v) => setForm({ ...form, groupLabel: v })} placeholder="AY 2025-26 · B.Tech · M.Tech · MBA" />
           <MediaField
             label="File"
             url={form.fileUrl}

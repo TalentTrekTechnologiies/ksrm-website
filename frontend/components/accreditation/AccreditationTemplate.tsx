@@ -180,17 +180,17 @@ export default function AccreditationTemplate() {
                 margin: "0 0 24px",
               }}
             >
-              NAAC A++ Accreditation
+              NAAC A+ Accreditation
             </motion.h2>
             <motion.div variants={fadeUp} className="acc-section-card">
               <h3>Highest Grade Recognition</h3>
               <p style={{ color: "#666", marginBottom: 16 }}>
-                KSRM College has been accredited with A++ grade by the National Assessment and Accreditation Council (NAAC), the highest rating in the framework. This recognition reflects our commitment to academic excellence, research, infrastructure development, and institutional governance.
+                KSRM College has been accredited with A+ grade by the National Assessment and Accreditation Council (NAAC), the highest rating in the framework. This recognition reflects our commitment to academic excellence, research, infrastructure development, and institutional governance.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <div>
                   <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}>Accreditation Grade</p>
-                  <p style={{ color: "#666", fontSize: 13, margin: 0 }}>A++ (Highest)</p>
+                  <p style={{ color: "#666", fontSize: 13, margin: 0 }}>A+ (Highest)</p>
                 </div>
                 <div>
                   <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}>Valid Until</p>

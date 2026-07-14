@@ -203,7 +203,7 @@ function AccreditationManagerInner() {
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit badge" : "New badge"}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Short name" value={form.shortName} onChange={(v) => setForm({ ...form, shortName: v })} required maxLength={20} placeholder="NAAC" />
-            <TextField label="Grade" value={form.grade} onChange={(v) => setForm({ ...form, grade: v })} maxLength={30} placeholder="A++" />
+            <TextField label="Grade" value={form.grade} onChange={(v) => setForm({ ...form, grade: v })} maxLength={30} placeholder="A+" />
             <TextField label="Full name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required maxLength={100} placeholder="NAAC Accredited" />
             <TextField label="Subtext" value={form.subtext} onChange={(v) => setForm({ ...form, subtext: v })} maxLength={150} placeholder="3.60 CGPA" />
             <TextField label="Link URL" value={form.linkUrl} onChange={(v) => setForm({ ...form, linkUrl: v })} placeholder="/accreditation" />

@@ -1062,6 +1062,10 @@ model Download {
   /// by a known list in the admin UI (PAGE_SECTIONS) so new sections are
   /// added deliberately without a migration.
   pageSection  String?
+  /// Optional free-text grouping heading a page renders documents under
+  /// (e.g. "AY 2025-26" on Examinations, "B.Tech" / "M.Tech" / "MBA" on
+  /// Syllabus). Null = ungrouped. PageResources groups by this verbatim.
+  groupLabel   String?
   fileUrl      String
   sortOrder    Int              @default(0)
   isActive     Boolean          @default(true)

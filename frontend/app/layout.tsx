@@ -28,33 +28,33 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "K.S.R.M College of Engineering | NAAC A++ | NBA Accredited",
-  description: "K.S.R.M College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A++ | NBA Tier-1 | UGC Autonomous | 7 Departments | 90% Placement Rate",
-  keywords: ["engineering college", "KSRM", "Kadapa", "NAAC A++", "NBA accredited", "engineering education"],
-  authors: [{ name: "K.S.R.M College of Engineering" }],
-  creator: "K.S.R.M College of Engineering",
-  publisher: "K.S.R.M College of Engineering",
+  title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
+  description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous | 7 Departments | 90% Placement Rate",
+  keywords: ["engineering college", "KSRM", "Kadapa", "NAAC A+", "NBA accredited", "engineering education"],
+  authors: [{ name: "K.S.R.M. College of Engineering" }],
+  creator: "K.S.R.M. College of Engineering",
+  publisher: "K.S.R.M. College of Engineering",
   robots: "index, follow",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://ksrmce.ac.in",
-    title: "K.S.R.M College of Engineering | NAAC A++ | NBA Accredited",
-    description: "K.S.R.M College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A++ | NBA Tier-1 | UGC Autonomous",
-    siteName: "K.S.R.M College of Engineering",
+    title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
+    description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous",
+    siteName: "K.S.R.M. College of Engineering",
     images: [
       {
         url: "https://ksrmce.ac.in/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "K.S.R.M College of Engineering Campus",
+        alt: "K.S.R.M. College of Engineering Campus",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "K.S.R.M College of Engineering | NAAC A++ | NBA Accredited",
-    description: "K.S.R.M College of Engineering, Kadapa — 45+ years of engineering excellence",
+    title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
+    description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence",
     images: ["https://ksrmce.ac.in/og-image.jpg"],
   },
   metadataBase: new URL("https://ksrmce.ac.in"),
@@ -73,11 +73,11 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    name: "K.S.R.M College of Engineering",
+    name: "K.S.R.M. College of Engineering",
     alternateName: "KSRMCE",
     url: "https://ksrmce.ac.in",
     logo: "https://ksrmce.ac.in/logo.png",
-    description: "K.S.R.M College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A++ | NBA Tier-1 | UGC Autonomous",
+    description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous",
     sameAs: [
       "https://www.facebook.com/ksrmce",
       "https://www.twitter.com/ksrmce",
@@ -85,7 +85,7 @@ export default function RootLayout({
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "K.S.R.M College of Engineering, Kadapa",
+      streetAddress: "K.S.R.M. College of Engineering, Kadapa",
       addressLocality: "Kadapa",
       addressRegion: "Andhra Pradesh",
       postalCode: "516003",

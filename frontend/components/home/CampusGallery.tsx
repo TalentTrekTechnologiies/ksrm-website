@@ -44,7 +44,7 @@ export default function CampusGallery() {
   const tiles = images.slice(0, 8)
 
   return (
-    <section style={{ width: "100%", background: "#ffffff", padding: "64px 0", borderTop: "1px solid #f1f5f9" }}>
+    <section style={{ width: "100%", background: "#ffffff", padding: "44px 0", borderTop: "1px solid #f1f5f9" }}>
       <style>{`
         .cg-grid {
           display: grid;
@@ -76,7 +76,7 @@ export default function CampusGallery() {
         .cg-tile:hover .cg-overlay { opacity: 1; }
         .cg-caption {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 15px; font-weight: 700; color: #fff;
+          font-size: 16px; font-weight: 700; color: #fff;
           letter-spacing: 0.3px;
         }
 
@@ -87,13 +87,13 @@ export default function CampusGallery() {
       <Container>
         {/* Centered header — consistent with the other homepage sections */}
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
+          <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
             Life at KSRM
           </div>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
             Campus Gallery
           </h2>
-          <p style={{ color: "#777", fontSize: "15px", margin: "8px auto 0", maxWidth: "560px" }}>
+          <p style={{ color: "#777", fontSize: "16px", margin: "8px auto 0", maxWidth: "560px" }}>
             A glimpse of our 25-acre campus — modern labs, a well-stocked library, vibrant events and sporting spirit.
           </p>
         </div>
@@ -130,7 +130,7 @@ export default function CampusGallery() {
               display: "inline-flex", alignItems: "center", gap: "8px",
               padding: "12px 26px", borderRadius: "8px",
               background: "#2B3490", color: "#ffffff",
-              fontFamily: "'Rajdhani', sans-serif", fontSize: "15px", fontWeight: 700,
+              fontFamily: "'Rajdhani', sans-serif", fontSize: "16px", fontWeight: 700,
               textDecoration: "none",
             }}
           >

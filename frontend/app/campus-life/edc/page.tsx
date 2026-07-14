@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Edc | K.S.R.M College of Engineering",
+  title: "Edc | K.S.R.M. College of Engineering",
 }
 
 export default function SubPage() {

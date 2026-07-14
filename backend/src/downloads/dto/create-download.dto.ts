@@ -20,6 +20,13 @@ export class CreateDownloadDto {
   @MaxLength(60)
   pageSection?: string;
 
+  // Optional grouping heading the page renders this document under
+  // (e.g. "AY 2025-26", "B.Tech").
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  groupLabel?: string;
+
   @IsString()
   fileUrl: string;
 

@@ -70,7 +70,7 @@ export default function CampusStats() {
     <section style={{
       width: "100%",
       background: "#2B3490",
-      padding: "80px 0",
+      padding: "48px 0",
     }}>
       <style>{`
         .stats-grid {
@@ -105,7 +105,7 @@ export default function CampusStats() {
         }
 
         .stat-label {
-          font-size: 14px;
+          font-size: 15px;
           color: #FFFFFF;
           font-weight: 500;
           line-height: 1.5;

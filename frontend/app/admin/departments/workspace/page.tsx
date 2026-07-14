@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import DepartmentWorkspace from "@/components/admin/departments/DepartmentWorkspace"
 
 export const metadata: Metadata = {
-  title: "Department Workspace | K.S.R.M College of Engineering",
+  title: "Department Workspace | K.S.R.M. College of Engineering",
 }
 
 export default function DepartmentWorkspacePage() {

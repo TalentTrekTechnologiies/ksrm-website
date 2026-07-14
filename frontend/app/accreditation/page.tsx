@@ -78,19 +78,19 @@ export default function AccreditationPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            NAAC A++ Accreditation
+            NAAC A+ Accreditation
           </h2>
           <div className="acc-section-card">
             <h3>Highest Grade Recognition</h3>
             <p style={{ color: "#666", marginBottom: 16 }}>
-              KSRM College has been accredited with A++ grade by the National Assessment and Accreditation Council
+              KSRM College has been accredited with A+ grade by the National Assessment and Accreditation Council
               (NAAC), the highest rating in the framework. This recognition reflects our commitment to academic
               excellence, research, infrastructure development, and institutional governance.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <div>
                 <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}>Accreditation Grade</p>
-                <p style={{ color: "#666", fontSize: 13, margin: 0 }}>A++ (Highest)</p>
+                <p style={{ color: "#666", fontSize: 13, margin: 0 }}>A+ (Highest)</p>
               </div>
               <div>
                 <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}>Valid Until</p>

@@ -195,7 +195,7 @@ function HeroEditorInner() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="space-y-6">
           <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
-            <TextField label="Accreditation label" value={form.accreditationLabel} onChange={(v) => setForm({ ...form, accreditationLabel: v })} placeholder="NAAC A++ · NBA Tier-1 · UGC Autonomous" />
+            <TextField label="Accreditation label" value={form.accreditationLabel} onChange={(v) => setForm({ ...form, accreditationLabel: v })} placeholder="NAAC A+ · NBA Tier-1 · UGC Autonomous" />
             <TextField label="Heading" value={form.heading} onChange={(v) => setForm({ ...form, heading: v })} required maxLength={200} />
             <TextAreaField label="Subtitle" value={form.subtitle} onChange={(v) => setForm({ ...form, subtitle: v })} required rows={2} maxLength={300} />
             <MediaField

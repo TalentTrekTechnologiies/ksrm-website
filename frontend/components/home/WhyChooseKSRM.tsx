@@ -19,7 +19,7 @@ const HIGHLIGHTS: Highlight[] = [
     icon: (<><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></>),
   },
   {
-    title: "NAAC A++ Accredited",
+    title: "NAAC A+ Accredited",
     desc: "Among the region's top-graded institutions, with NBA Tier-1 accredited programs.",
     icon: (<><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" /></>),
   },
@@ -56,7 +56,7 @@ const cardVariants = {
 
 export default function WhyChooseKSRM() {
   return (
-    <section style={{ width: "100%", background: "#f7f8fa", padding: "64px 0", borderTop: "1px solid #eef0f3" }}>
+    <section style={{ width: "100%", background: "#f7f8fa", padding: "44px 0", borderTop: "1px solid #eef0f3" }}>
       <style>{`
         .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
         .why-card {
@@ -75,7 +75,7 @@ export default function WhyChooseKSRM() {
 
       <Container>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
+          <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
             Why KSRM
           </div>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
@@ -100,7 +100,7 @@ export default function WhyChooseKSRM() {
               <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "19px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>
                 {h.title}
               </h3>
-              <p style={{ fontSize: "14px", color: "#666", lineHeight: 1.65, margin: 0 }}>{h.desc}</p>
+              <p style={{ fontSize: "15px", color: "#666", lineHeight: 1.65, margin: 0 }}>{h.desc}</p>
             </motion.div>
           ))}
         </motion.div>

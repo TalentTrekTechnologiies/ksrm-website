@@ -24,7 +24,7 @@ interface Accred {
 }
 
 const FALLBACK_ACCREDITATIONS: Accred[] = [
-  { shortName: "NAAC", grade: "A++",        name: "NAAC Accredited", sub: "3.60 CGPA",              link: "/accreditation", linkText: "View Certificate", colorClass: "naac", image: "/naac.png"  },
+  { shortName: "NAAC", grade: "A+",        name: "NAAC Accredited", sub: "3.60 CGPA",              link: "/accreditation", linkText: "View Certificate", colorClass: "naac", image: "/naac.png"  },
   { shortName: "NBA",  grade: "Tier-1",     name: "NBA Accredited",  sub: "CE, ECE, CSE, EEE, ME",  link: "/accreditation", linkText: "View Programs",    colorClass: "nba",  image: "/nba.png"   },
   { shortName: "NIRF", grade: "Ranked",     name: "NIRF India",      sub: "Engineering Category",   link: "/accreditation", linkText: "View Ranking",     colorClass: "nirf", image: "/nirf.jpg"  },
   { shortName: "UGC",  grade: "Autonomous", name: "UGC Status",      sub: "Affiliated to JNTUA",    link: "/accreditation", linkText: "Learn More",        colorClass: "ugc",  image: "/ugc.webp"  },
@@ -87,7 +87,7 @@ export default function Accreditation() {
   return (
     <section
       className="accred-section"
-      style={{ width: "100%", background: "#f7f8fa", padding: "56px 0" }}
+      style={{ width: "100%", background: "#f7f8fa", padding: "40px 0" }}
     >
       <style>{`
         .accred-section { box-sizing: border-box; }
@@ -112,13 +112,13 @@ export default function Accreditation() {
       <Container>
       {/* HEADER */}
       <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
+        <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
           RECOGNIZED FOR QUALITY
         </div>
         <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "32px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 6px" }}>
           Accreditations & Rankings
         </h2>
-        <p style={{ fontSize: "14px", color: "#888", margin: 0 }}>
+        <p style={{ fontSize: "15px", color: "#888", margin: 0 }}>
           Certified excellence you can trust.
         </p>
       </div>
@@ -190,7 +190,7 @@ export default function Accreditation() {
                   </div>
 
                   {/* NAME */}
-                  <div style={{ fontSize: "13px", color: "#555", fontWeight: 600, margin: "6px 0 4px" }}>
+                  <div style={{ fontSize: "14px", color: "#555", fontWeight: 600, margin: "6px 0 4px" }}>
                     {item?.name ?? ""}
                   </div>
 
@@ -203,7 +203,7 @@ export default function Accreditation() {
                   <div style={{
                     display: "flex", alignItems: "center", justifyContent: "center", gap: "4px",
                     marginTop: "14px",
-                    fontSize: "12px", fontWeight: 600, color: "#2B3490",
+                    fontSize: "13px", fontWeight: 600, color: "#2B3490",
                   }}>
                     {item?.linkText ?? "Learn More"} <ArrowRight size={13} strokeWidth={2} />
                   </div>

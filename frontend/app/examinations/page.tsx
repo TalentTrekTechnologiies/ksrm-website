@@ -113,6 +113,10 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
+      {/* Admin-uploaded exam documents (grouped by AY heading), right after
+          the hardcoded calendars so they read as one continuous list. */}
+      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="More Exam Documents" background="#ffffff" />
+
       <section id="notifications" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Latest Notifications</h2>
@@ -175,7 +179,6 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="Exam Documents & Timetables" />
     </main>
   );
 }

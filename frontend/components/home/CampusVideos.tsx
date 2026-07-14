@@ -114,7 +114,7 @@ export default function CampusVideos() {
         .video-title {
           color: #ffffff;
           font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           line-height: 1.3;
         }
@@ -148,7 +148,7 @@ export default function CampusVideos() {
             Campus Life in Action
           </h2>
           <p style={{
-            fontSize: "14px", color: "rgba(255,255,255,0.8)", margin: 0,
+            fontSize: "15px", color: "rgba(255,255,255,0.8)", margin: 0,
           }}>
             Watch our official videos and campus tours
           </p>
@@ -211,7 +211,7 @@ export default function CampusVideos() {
               background: "#d6001c",
               color: "#ffffff",
               fontFamily: "'Rajdhani', sans-serif",
-              fontSize: "14px", fontWeight: 600,
+              fontSize: "15px", fontWeight: 600,
               borderRadius: "8px",
               textDecoration: "none",
               transition: "background 0.2s, transform 0.2s",

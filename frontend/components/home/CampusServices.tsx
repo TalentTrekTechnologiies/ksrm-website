@@ -44,7 +44,7 @@ export default function CampusServices() {
   return (
     <section
       className="services-section"
-      style={{ width: "100%", background: "#ffffff", padding: "52px 0", borderTop: "1px solid #f1f5f9" }}
+      style={{ width: "100%", background: "#ffffff", padding: "38px 0", borderTop: "1px solid #f1f5f9" }}
     >
       <style>{`
         .services-section { box-sizing: border-box; }
@@ -72,7 +72,7 @@ export default function CampusServices() {
       {/* SECTION HEADER */}
       <div style={{ textAlign: "center" }}>
         <div style={{
-          fontSize: "12px", fontWeight: 700, letterSpacing: "2px",
+          fontSize: "13px", fontWeight: 700, letterSpacing: "2px",
           color: "#2B3490", textTransform: "uppercase",
         }}>
           QUICK ACCESS
@@ -128,7 +128,7 @@ export default function CampusServices() {
                 }}>
                   <div style={{
                     fontFamily: "'Rajdhani', sans-serif",
-                    fontSize: "17px",
+                    fontSize: "18px",
                     fontWeight: 700,
                     color: "#1a1a2e",
                     marginBottom: "6px",
@@ -136,7 +136,7 @@ export default function CampusServices() {
                     {service.title}
                   </div>
                   <div style={{
-                    fontSize: "13px",
+                    fontSize: "14px",
                     color: "#888",
                   }}>
                     {service.desc}

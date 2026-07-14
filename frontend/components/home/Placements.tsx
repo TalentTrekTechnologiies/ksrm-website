@@ -52,7 +52,7 @@ export default function Placements() {
   const recruiters = liveRecruiters?.recruiters ?? INITIAL_RECRUITERS
 
   return (
-    <section style={{ width: "100%", background: "#f8f9fa", padding: "80px 0" }}>
+    <section style={{ width: "100%", background: "#f8f9fa", padding: "48px 0" }}>
       <style>{`
         .placements-stats {
           display: grid;
@@ -78,7 +78,7 @@ export default function Placements() {
         }
 
         .stat-label {
-          font-size: 14px;
+          font-size: 15px;
           color: #ffffff;
           font-weight: 500;
         }
@@ -166,7 +166,7 @@ export default function Placements() {
         }
 
         .badge-label {
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 600;
           margin-top: 4px;
         }
@@ -216,13 +216,13 @@ export default function Placements() {
       <Container>
         {/* HEADING */}
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <p style={{ fontSize: "12px", letterSpacing: "3px", color: "#2B3490", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
+          <p style={{ fontSize: "13px", letterSpacing: "3px", color: "#2B3490", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
             TRAINING & PLACEMENTS
           </p>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "40px", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
             Where Talent Meets Opportunity
           </h2>
-          <p style={{ fontSize: "16px", color: "#666", margin: 0 }}>
+          <p style={{ fontSize: "17px", color: "#666", margin: 0 }}>
             Join 1200+ graduates placed at India&apos;s top companies
           </p>
         </div>

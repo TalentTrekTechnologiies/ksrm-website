@@ -48,7 +48,7 @@ function ColHeader({ title, href, cta }: { title: string; href: string; cta: str
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
       <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "22px", fontWeight: 700, color: "#1a1a2e", margin: 0 }}>{title}</h3>
-      <Link href={href} style={{ display: "inline-flex", alignItems: "center", gap: "5px", color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", fontSize: "14px", fontWeight: 700, textDecoration: "none" }}>
+      <Link href={href} style={{ display: "inline-flex", alignItems: "center", gap: "5px", color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", fontSize: "15px", fontWeight: 700, textDecoration: "none" }}>
         {cta} <ArrowRight size={15} />
       </Link>
     </div>
@@ -64,7 +64,7 @@ export default function NewsAndEvents() {
   if (!showNews && !showEvents) return null
 
   return (
-    <section style={{ width: "100%", background: "#f7f8fa", padding: "64px 0", borderTop: "1px solid #eef0f3" }}>
+    <section style={{ width: "100%", background: "#f7f8fa", padding: "44px 0", borderTop: "1px solid #eef0f3" }}>
       <style>{`
         .ne-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 40px; }
         .ne-news-row {
@@ -88,7 +88,7 @@ export default function NewsAndEvents() {
 
       <Container>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
+          <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
             Stay Updated
           </div>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
@@ -116,7 +116,7 @@ export default function NewsAndEvents() {
                           <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", color: "#2B3490", background: "#e8eaf6", padding: "2px 8px", borderRadius: "20px" }}>{n.category}</span>
                           <span style={{ fontSize: "11px", color: "#999" }}>{fmtNewsDate(n.date)}</span>
                         </div>
-                        <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.35, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{n.title}</p>
+                        <p style={{ fontSize: "15px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.35, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{n.title}</p>
                       </div>
                     </Link>
                   </motion.div>
@@ -140,10 +140,10 @@ export default function NewsAndEvents() {
                           <span style={{ fontSize: "10px", fontWeight: 700, color: "#FFE619", letterSpacing: "0.5px" }}>{d.mon}</span>
                         </div>
                         <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: "0 0 6px", lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{e.title}</p>
+                          <p style={{ fontSize: "15px", fontWeight: 600, color: "#1a1a2e", margin: "0 0 6px", lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{e.title}</p>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#777" }}><Clock size={12} /> {d.time}</span>
-                            {e.location && <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#777" }}><MapPin size={12} /> {e.location}</span>}
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "13px", color: "#777" }}><Clock size={12} /> {d.time}</span>
+                            {e.location && <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "13px", color: "#777" }}><MapPin size={12} /> {e.location}</span>}
                           </div>
                         </div>
                       </Link>
