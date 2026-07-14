@@ -9,7 +9,7 @@ const FALLBACK_STATS = [
   { id: -1, number: 1200, suffix: "+", label: "Students Placed" },
   { id: -2, number: 200, suffix: "+", label: "Recruiting Companies" },
   { id: -3, number: 12, suffix: " LPA", label: "Highest Package" },
-  { id: -4, number: 90, suffix: "%", label: "Placement Rate" },
+  { id: -4, number: 15000, suffix: "+", label: "Alumni Network" },
 ]
 
 interface DisplayRecruiter {
@@ -259,8 +259,8 @@ export default function Placements() {
             <div className="recruiter-header">
               <div className="recruiter-title">Recruited by <span style={{ color: "#FFE619" }}>200+ Top Companies</span></div>
               <div className="recruiter-badge">
-                <span className="badge-value">90%</span>
-                <span className="badge-label">Placement Rate</span>
+                <span className="badge-value">12 LPA</span>
+                <span className="badge-label">Highest Package</span>
               </div>
             </div>
 

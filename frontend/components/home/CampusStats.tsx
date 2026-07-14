@@ -11,7 +11,7 @@ const FALLBACK_STATS = [
   { id: -3, number: 1200, suffix: "+", label: "Students Intake" },
   { id: -4, number: 150, suffix: "+", label: "Faculty Members" },
   { id: -5, number: 7, suffix: "", label: "Departments" },
-  { id: -6, number: 90, suffix: "%", label: "Placement Rate" },
+  { id: -6, number: 12, suffix: " LPA", label: "Highest Package" },
   { id: -7, number: 15000, suffix: "+", label: "Alumni Network" },
   { id: -8, number: 200, suffix: "+", label: "Companies Recruiting" },
 ]

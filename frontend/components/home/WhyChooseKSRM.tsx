@@ -30,7 +30,7 @@ const HIGHLIGHTS: Highlight[] = [
     icon: (<><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" /></>),
   },
   {
-    title: "90% Placement Rate",
+    title: "1200+ Students Placed",
     desc: "200+ recruiting companies and a dedicated Training & Placement cell backing every student.",
     image: "/campus/seminar-hall.jpg",
     icon: (<><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></>),
