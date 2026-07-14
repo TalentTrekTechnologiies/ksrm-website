@@ -6,14 +6,14 @@ import { getQuickLinksPublic, QuickLink } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
 
 const FALLBACK_SERVICES = [
-  { id: -1, poster: "/posters/admissions.svg", title: "Admissions", desc: "Apply & eligibility", link: "/admissions" },
-  { id: -2, poster: "/posters/examinations.svg", title: "Examinations", desc: "Results & timetables", link: "/examinations" },
-  { id: -3, poster: "/posters/placements.svg", title: "Placements", desc: "Careers & recruiters", link: "/placements" },
-  { id: -4, poster: "/posters/library.svg", title: "Library", desc: "E-resources & OPAC", link: "/campus-life/library" },
-  { id: -5, poster: "/posters/syllabus.svg", title: "Syllabus", desc: "Download by semester", link: "/academics" },
-  { id: -6, poster: "/posters/student-portal.svg", title: "Student Portal", desc: "Login portal", link: "/contact" },
-  { id: -7, poster: "/posters/alumni.svg", title: "Alumni", desc: "Network & events", link: "/alumni" },
-  { id: -8, poster: "/posters/research.svg", title: "Research", desc: "Publications & R&D", link: "/research" },
+  { id: -1, poster: "/posters/admissions.jpg", title: "Admissions", desc: "Apply & eligibility", link: "/admissions" },
+  { id: -2, poster: "/posters/examinations.jpg", title: "Examinations", desc: "Results & timetables", link: "/examinations" },
+  { id: -3, poster: "/posters/placements.jpg", title: "Placements", desc: "Careers & recruiters", link: "/placements" },
+  { id: -4, poster: "/posters/library.jpg", title: "Library", desc: "E-resources & OPAC", link: "/campus-life/library" },
+  { id: -5, poster: "/posters/syllabus.jpg", title: "Syllabus", desc: "Download by semester", link: "/academics" },
+  { id: -6, poster: "/posters/student-portal.jpg", title: "Student Portal", desc: "Login portal", link: "/contact" },
+  { id: -7, poster: "/posters/alumni.jpg", title: "Alumni", desc: "Network & events", link: "/alumni" },
+  { id: -8, poster: "/posters/research.jpg", title: "Research", desc: "Publications & R&D", link: "/research" },
 ]
 
 const FALLBACK_BY_TITLE = new Map(
@@ -25,7 +25,7 @@ function normalizeService(service: QuickLink) {
 
   return {
     id: service.id,
-    poster: service.imageUrl?.trim() || fallback?.poster || "/posters/admissions.svg",
+    poster: service.imageUrl?.trim() || fallback?.poster || "/posters/admissions.jpg",
     title: service.title.trim() || fallback?.title || "Campus Service",
     desc: service.description?.trim() || fallback?.desc || "",
     link: service.linkUrl?.trim() || fallback?.link || "/",

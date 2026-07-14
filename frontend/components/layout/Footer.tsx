@@ -63,16 +63,16 @@ const diplomaPrograms = [
   { label: "Diploma in EEE",            href: "/admissions/diploma" },
   { label: "Diploma in ECE",            href: "/admissions/diploma" },
   { label: "Diploma in Computer Engg.", href: "/admissions/diploma" },
-  { label: "Degree Verification",       href: "/degree-verification" },
 ]
 
 const quickLinks = [
-  { label: "About",       href: "/about"       },
-  { label: "Admissions",  href: "/admissions"  },
-  { label: "Placements",  href: "/placements"  },
-  { label: "Research",    href: "/research"    },
-  { label: "Campus Life", href: "/campus-life" },
-  { label: "Alumni",      href: "/alumni"      },
+  { label: "About",               href: "/about"       },
+  { label: "Admissions",          href: "/admissions"  },
+  { label: "Placements",          href: "/placements"  },
+  { label: "Research",            href: "/research"    },
+  { label: "Campus Life",         href: "/campus-life" },
+  { label: "Alumni",              href: "/alumni"      },
+  { label: "Degree Verification", href: "/degree-verification" },
 ]
 
 const socials = [
