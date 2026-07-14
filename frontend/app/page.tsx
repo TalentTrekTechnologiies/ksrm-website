@@ -25,9 +25,9 @@ export default function Home() {
       <NewsAndEvents />
       <Admissions />
       <Placements />
-      <Testimonials />
       <CampusGallery />
       <CampusVideos />
+      <Testimonials />
     </main>
   )
 }
