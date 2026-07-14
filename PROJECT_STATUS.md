@@ -19,7 +19,7 @@
 2. Change the default super admin password. **Risk: High**
 3. Configure real SMTP (`EMAIL_PROVIDER=console` sends nothing). **Risk: Medium**
 4. Replace placeholder content: 4 sample news, 4 sample events, fictional testimonials, EDC/IIC demo docs, "K nagaraju" MBA record. **Risk: Medium (credibility)**
-5. ECE faculty roster is part-fabricated seed data (25 of 30 records are fake names; the real ecen.php roster needs scraping — agent run was interrupted). MCA & AI&DS have no faculty (no source page exists / shared CSE roster). **Risk: Medium**
+5. ~~ECE faculty roster is part-fabricated seed data.~~ **RESOLVED 2026-07-14** — replaced the 30 fabricated records with the real 39-member ecen.php roster (Dr. G. Hemalatha, Professor & HOD, + 38 faculty; 38/39 with real photos, only P. Subba Rayudu without). Applied to the DB directly, same as the other ~142 scraped faculty (faculty content is DB-resident, not seed-scripted — full reproducible-seeding is a Deployment-phase concern, not ECE-specific). MCA & AI&DS still have no faculty (no source page exists / shared CSE roster). **Risk: Low**
 6. Human review of scraped faculty data (EEE HOD conflict: banner says Dr. M.S. Priyadarshini, tables say Dr. K. Amaresh). **Risk: Medium**
 
 ---
