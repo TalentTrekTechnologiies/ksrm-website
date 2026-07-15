@@ -1,0 +1,27 @@
+# Normalise text to LF in the repo, regardless of contributors' core.autocrlf.
+* text=auto eol=lf
+
+# --- Binary assets: never line-ending convert -------------------------------
+# Git guesses "text vs binary" by sniffing for NUL bytes, and it guesses wrong
+# on small/uncompressed files: a 240-byte PDF in storage/media was flagged as
+# text ("LF will be replaced by CRLF"), which would have silently corrupted it
+# on a Windows checkout. Mark these explicitly instead of trusting the sniff.
+backend/storage/media/** -text
+
+*.pdf   -text
+*.png   -text
+*.jpg   -text
+*.jpeg  -text
+*.webp  -text
+*.gif   -text
+*.ico   -text
+*.mp4   -text
+*.woff  -text
+*.woff2 -text
+*.ttf   -text
+*.otf   -text
+*.zip   -text
+*.doc   -text
+*.docx  -text
+*.xls   -text
+*.xlsx  -text
