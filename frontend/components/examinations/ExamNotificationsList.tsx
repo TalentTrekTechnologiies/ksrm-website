@@ -35,6 +35,12 @@ export default function ExamNotificationsList() {
 
   return (
     <>
+      {/* Owned here rather than by the Examinations page: this component is the
+          only user of the row style, and the page's copy went away when its
+          hardcoded lists moved to the CMS. */}
+      <style>{`
+        .exam-list-row { display: flex; gap: 16px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+      `}</style>
       {items.map((n) => (
         <div className="exam-list-row" key={n.id}>
           <div style={{ minWidth: 90 }}>
