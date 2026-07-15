@@ -185,7 +185,7 @@ export default function CulturalClubPage() {
                   cursor: "pointer",
                 }}
               >
-                <div style={{ fontSize: 48, marginBottom: 12 }}>
+                <div style={{ fontSize: 24, marginBottom: 8, lineHeight: 1 }}>
                   {event.icon}
                 </div>
                 <h3

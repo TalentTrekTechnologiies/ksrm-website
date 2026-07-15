@@ -141,15 +141,19 @@ export default function ExaminationsPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Results &amp; Fee Payment</h2>
           <div className="exam-results-grid">
-            <a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #2B3490, #1a1d4d)", borderRadius: 12, padding: 40, color: "white", textDecoration: "none" }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
-              <div style={{ color: "#D4A500", fontSize: 22, fontWeight: 700, marginBottom: 12 }}>Exam Results</div>
+            <a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #2B3490, #1a1d4d)", borderRadius: 12, padding: 28, color: "white", textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 24, lineHeight: 1 }}>📊</span>
+                <span style={{ color: "#D4A500", fontSize: 22, fontWeight: 700 }}>Exam Results</span>
+              </div>
               <div style={{ color: "#ccc", fontSize: 15, lineHeight: 1.7, margin: "12px 0 24px" }}>Check B.Tech, M.Tech and MBA results on the KSRM results portal powered by JEM Exam.</div>
               <div style={{ background: "#D4A500", color: "#2B3490", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, display: "inline-block" }}>View Results →</div>
             </a>
-            <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 12, padding: 40 }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>💳</div>
-              <div style={{ color: "#2B3490", fontSize: 22, fontWeight: 700, marginBottom: 12 }}>Online Fee Payment</div>
+            <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 12, padding: 28 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 24, lineHeight: 1 }}>💳</span>
+                <span style={{ color: "#2B3490", fontSize: 22, fontWeight: 700 }}>Online Fee Payment</span>
+              </div>
               <div style={{ color: "#555", fontSize: 15, lineHeight: 1.7, margin: "12px 0 24px" }}>Pay tuition and exam fee via SBI Collect or download the SBI Challan Form for offline payment.</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <a href="https://www.onlinesbi.sbi/sbicollect/icollecthome.htm" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Pay Online (SBI Collect)</a>

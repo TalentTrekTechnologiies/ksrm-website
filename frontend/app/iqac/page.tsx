@@ -366,8 +366,10 @@ export default function IQACPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             {apexBodies.map((a) => (
               <a href={a.href} target="_blank" rel="noopener noreferrer" className="iqac-apex-card" key={a.label}>
-                <div style={{ fontSize: 48, marginBottom: 16, display: "block" }}>{a.icon}</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 20 }}>{a.label}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                  <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{a.icon}</span>
+                  <span style={{ fontSize: 20, fontWeight: 700, color: "#2B3490" }}>{a.label}</span>
+                </div>
                 <div className="iqac-apex-btn">View Details →</div>
               </a>
             ))}

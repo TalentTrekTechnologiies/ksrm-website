@@ -149,9 +149,11 @@ export default function AlumniPage() {
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Alumni Chapters</h2>
           <div className="alumni-chapters-grid">
             {chapters.map((c) => (
-              <div key={c.city} style={{ background: "#f9f9f9", border: "1px solid #e5e7eb", borderRadius: 12, padding: 28, textAlign: "center" }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>{c.icon}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 4 }}>{c.city}</div>
+              <div key={c.city} style={{ background: "#f9f9f9", border: "1px solid #e5e7eb", borderRadius: 12, padding: 20, textAlign: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 6 }}>
+                  <span style={{ fontSize: 20, lineHeight: 1 }}>{c.icon}</span>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: "#2B3490" }}>{c.city}</span>
+                </div>
                 <div style={{ fontSize: 14, color: "#666", fontWeight: 600, marginBottom: 8 }}>{c.contact}</div>
                 <div style={{ fontSize: 13, color: "#999", lineHeight: 1.6, marginBottom: 12 }}>{c.addr}</div>
                 <a href={`mailto:${c.email}`} style={{ fontSize: 13, color: "#2B3490", fontWeight: 600, textDecoration: "none" }}>{c.email}</a>
@@ -223,14 +225,18 @@ export default function AlumniPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Top Alumni</h2>
           <div className="alumni-top-grid">
-            <a href={mediaFile(217)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 32, textAlign: "center", textDecoration: "none", display: "block" }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>🏆</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#D4A500", marginBottom: 16 }}>Top Alumni List</div>
+            <a href={mediaFile(217)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 24, textAlign: "center", textDecoration: "none", display: "block" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14 }}>
+                <span style={{ fontSize: 22, lineHeight: 1 }}>🏆</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: "#D4A500" }}>Top Alumni List</span>
+              </div>
               <div style={{ background: "#D4A500", color: "#2B3490", padding: "10px 24px", borderRadius: 6, fontWeight: 700, fontSize: 14, display: "inline-block", marginTop: 8 }}>Download PDF →</div>
             </a>
-            <a href={mediaFile(218)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 32, textAlign: "center", textDecoration: "none", display: "block" }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>⭐</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#D4A500", marginBottom: 16 }}>Top Alumni List (Part 2)</div>
+            <a href={mediaFile(218)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 24, textAlign: "center", textDecoration: "none", display: "block" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14 }}>
+                <span style={{ fontSize: 22, lineHeight: 1 }}>⭐</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: "#D4A500" }}>Top Alumni List (Part 2)</span>
+              </div>
               <div style={{ background: "#D4A500", color: "#2B3490", padding: "10px 24px", borderRadius: 6, fontWeight: 700, fontSize: 14, display: "inline-block", marginTop: 8 }}>Download PDF →</div>
             </a>
           </div>
