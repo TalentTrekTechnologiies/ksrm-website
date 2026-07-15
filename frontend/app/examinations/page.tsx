@@ -55,10 +55,10 @@ export default function ExaminationsPage() {
         @media (max-width: 1024px) { .responsive-container { padding: 0 32px; } }
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
-        .exam-quick-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        @media (max-width: 1024px) { .exam-quick-links { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 640px) { .exam-quick-links { grid-template-columns: 1fr; gap: 16px; } }
-        .exam-link-card { background: #f4f3ef; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; text-align: center; text-decoration: none; display: block; }
+        .exam-quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); gap: 12px; }
+        @media (max-width: 640px) { .exam-quick-links { grid-template-columns: 1fr 1fr; gap: 10px; } }
+        .exam-link-card { background: #f4f3ef; border: 1px solid #e5e7eb; border-radius: 10px; padding: 13px 16px; text-decoration: none; display: flex; align-items: center; gap: 11px; transition: background 0.15s, border-color 0.15s; }
+        .exam-link-card:hover { background: #eef0fb; border-color: #2B3490; }
         .exam-doc-row { display: flex; align-items: center; gap: 16px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; margin-bottom: 8px; text-decoration: none; }
         .exam-list-row { display: flex; gap: 16px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
         .exam-results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
@@ -84,8 +84,8 @@ export default function ExaminationsPage() {
           <div className="exam-quick-links">
             {quickLinks.map((q) => (
               <a key={q.label} href={q.href} target={q.external ? "_blank" : undefined} rel={q.external ? "noopener noreferrer" : undefined} className="exam-link-card">
-                <div style={{ fontSize: 32, marginBottom: 12 }}>{q.icon}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#2B3490" }}>{q.label}</div>
+                <span style={{ fontSize: 20, lineHeight: 1, flexShrink: 0 }}>{q.icon}</span>
+                <span style={{ fontSize: 14.5, fontWeight: 700, color: "#2B3490", lineHeight: 1.25 }}>{q.label}</span>
               </a>
             ))}
           </div>
