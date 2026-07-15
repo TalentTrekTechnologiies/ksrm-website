@@ -2,8 +2,26 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MapPin, Phone, Mail, ArrowRight } from "lucide-react"
+import { getPublicSiteSettings } from "@/lib/site-settings-api"
+
+/**
+ * Site Settings override the built-in defaults below, but only when actually
+ * filled in - several of these settings ship empty, and a blank footer is worse
+ * than the correct hardcoded value. `s()` returns the setting or the fallback.
+ */
+function useSiteSettings() {
+  const [settings, setSettings] = useState<Record<string, string>>({})
+  useEffect(() => {
+    let cancelled = false
+    getPublicSiteSettings()
+      .then((v) => { if (!cancelled) setSettings(v) })
+      .catch(() => { /* defaults stay */ })
+    return () => { cancelled = true }
+  }, [])
+  return (key: string, fallback: string) => settings[key]?.trim() || fallback
+}
 
 type SvgIconProps = { size?: number; color?: string }
 
@@ -75,12 +93,8 @@ const quickLinks = [
   { label: "Degree Verification", href: "/degree-verification" },
 ]
 
-const socials = [
-  { Icon: IconFacebook,  href: "https://facebook.com/ksrmceofficial"     },
-  { Icon: IconTwitterX,  href: "https://twitter.com/ksrmceofficial"      },
-  { Icon: IconInstagram, href: "https://instagram.com/ksrmceofficial"    },
-  { Icon: IconYoutube,   href: "http://youtube.com/ksrmceofficialmedia"  },
-]
+// Social links now come from Site Settings (with these as fallbacks) - built
+// inside the component, see `socials` there.
 
 const containerVariants = {
   hidden: {},
@@ -160,6 +174,14 @@ function SocialBtn({ Icon, href }: { Icon: (props: SvgIconProps) => React.ReactE
 }
 
 export default function Footer() {
+  const s = useSiteSettings()
+  const socials = [
+    { Icon: IconFacebook, href: s("site.socialFacebook", "https://facebook.com/ksrmceofficial") },
+    { Icon: IconTwitterX, href: s("site.socialTwitter", "https://twitter.com/ksrmceofficial") },
+    { Icon: IconInstagram, href: s("site.socialInstagram", "https://instagram.com/ksrmceofficial") },
+    { Icon: IconYoutube, href: s("site.socialYoutube", "http://youtube.com/ksrmceofficialmedia") },
+  ]
+
   return (
     <footer style={{ width: "100%", background: "#1e2570", color: "#ffffff", paddingTop: "56px" }}>
       <style>{`
@@ -274,27 +296,30 @@ export default function Footer() {
 
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <MapPin size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
-            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
-              KSRM College of Engineering,<br />Kadapa, AP – 516003
+            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, whiteSpace: "pre-line" }}>
+              {s("site.contactAddress", "KSRM College of Engineering,\nKadapa, AP – 516003")}
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <Phone size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
-            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
-              +91 9000073434<br />08562 295972
+            <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, whiteSpace: "pre-line" }}>
+              {s("site.contactPhone", "+91 9000073434\n08562 295972")}
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
             <Mail size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0 }} />
-            <a href="mailto:info@ksrmce.ac.in" style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
-              info@ksrmce.ac.in
+            <a href={`mailto:${s("site.contactEmail", "info@ksrmce.ac.in")}`} style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
+              {s("site.contactEmail", "info@ksrmce.ac.in")}
             </a>
           </div>
 
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208"
+            src={s(
+              "site.googleMapsEmbedUrl",
+              "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208",
+            )}
             width="100%"
             height="150"
             style={{ border: "none", borderRadius: "8px", display: "block", opacity: 0.9 }}
@@ -319,7 +344,7 @@ export default function Footer() {
           {/* LEFT: Copyright + Kandula Trust */}
           <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
             <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
-              © {currentYear} KSRM College of Engineering. All Rights Reserved.
+              {s("site.footerCopyright", `© ${currentYear} KSRM College of Engineering. All Rights Reserved.`)}
             </span>
             <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
               A unit of Sri Kandula Obul Reddy Charities
