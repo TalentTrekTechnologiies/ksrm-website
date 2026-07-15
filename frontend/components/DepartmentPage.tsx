@@ -776,10 +776,12 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                       <p style={{ color: "#666", fontSize: 13, margin: "0 0 4px", textTransform: "uppercase", fontWeight: 600 }}>Level</p>
                       <p style={{ color: "#1a1a2e", fontSize: 15, fontWeight: 600, margin: 0 }}>{p.level}</p>
                     </div>
-                    <div>
-                      <p style={{ color: "#666", fontSize: 13, margin: "0 0 4px", textTransform: "uppercase", fontWeight: 600 }}>Intake</p>
-                      <p style={{ color: "#1a1a2e", fontSize: 15, fontWeight: 600, margin: 0 }}>{p.intake}</p>
-                    </div>
+                    {p.intake && (
+                      <div>
+                        <p style={{ color: "#666", fontSize: 13, margin: "0 0 4px", textTransform: "uppercase", fontWeight: 600 }}>Intake</p>
+                        <p style={{ color: "#1a1a2e", fontSize: 15, fontWeight: 600, margin: 0 }}>{p.intake}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

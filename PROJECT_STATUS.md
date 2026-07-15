@@ -19,7 +19,7 @@
 2. Change the default super admin password. **Risk: High**
 3. Configure real SMTP (`EMAIL_PROVIDER=console` sends nothing). **Risk: Medium**
 4. Replace placeholder content: 4 sample news, 4 sample events, fictional testimonials, EDC/IIC demo docs, "K nagaraju" MBA record. **Risk: Medium (credibility)**
-5. ~~ECE faculty roster is part-fabricated seed data.~~ **RESOLVED 2026-07-14** — replaced the 30 fabricated records with the real 39-member ecen.php roster (Dr. G. Hemalatha, Professor & HOD, + 38 faculty; 38/39 with real photos, only P. Subba Rayudu without). Applied to the DB directly, same as the other ~142 scraped faculty (faculty content is DB-resident, not seed-scripted — full reproducible-seeding is a Deployment-phase concern, not ECE-specific). MCA & AI&DS still have no faculty (no source page exists / shared CSE roster). **Risk: Low**
+5. ~~ECE faculty roster is part-fabricated seed data.~~ **RESOLVED 2026-07-14** — replaced the 30 fabricated records with the real 39-member ecen.php roster (Dr. G. Hemalatha, Professor & HOD, + 38 faculty; 38/39 with real photos, only P. Subba Rayudu without). Applied to the DB directly, same as the other ~142 scraped faculty (faculty content is DB-resident, not seed-scripted — full reproducible-seeding is a Deployment-phase concern, not ECE-specific). MCA still has no faculty. AI&DS is **not** a gap — AI&ML and Data Science are specialisations offered under CSE (confirmed by the client), so they share the CSE department/faculty; the standalone AI&DS department record was deactivated and `/departments/aids` now redirects to CSE. **Risk: Low**
 6. Human review of scraped faculty data (EEE HOD conflict: banner says Dr. M.S. Priyadarshini, tables say Dr. K. Amaresh). **Risk: Medium**
 
 ---
@@ -82,7 +82,7 @@ One reusable engine, not per-department code, matching every department by DB re
 
 **Public site:** `DepartmentPage.tsx` fetches Faculty/HOD/Programmes/Labs/Outcomes/Highlights from the CMS and layers Achievements/Research/Gallery/Videos/Downloads/Statistics/Contact as new sections, each gated by its Display Settings toggle and only rendered when data exists. Existing layout/styling untouched.
 
-**Data:** all 9 departments now exist as real DB records (CSE, ECE, EEE, Civil, Mechanical, MBA, HS, AI&DS, MCA) — only ECE existed before this session; AI&DS/MCA are empty placeholders pending real content.
+**Data:** 8 active department records (CSE, ECE, EEE, Civil, Mechanical, MBA, HS, MCA) — only ECE existed before this session. AI&ML and Data Science are **CSE specialisations, not a department** (listed as CSE programmes; the standalone AI&DS record is deactivated and its URL redirects to CSE). MCA remains an empty placeholder pending real content.
 
 ### Careers Application Pipeline (Roadmap Phase 1 — complete)
 

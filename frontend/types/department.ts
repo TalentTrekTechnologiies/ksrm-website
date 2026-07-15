@@ -39,7 +39,8 @@ export interface FacultyMember {
 export interface Programme {
   name: string;
   level: string;
-  intake: string;
+  /** Sanctioned intake. Optional - omitted when the figure isn't published. */
+  intake?: string;
 }
 export interface Lab {
   name: string;

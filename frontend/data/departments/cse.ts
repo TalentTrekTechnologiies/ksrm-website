@@ -79,8 +79,12 @@ export const cse: Department = {
     { name: "M. Ramesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/gouri.jpg", specialization: "Systems Analysis" },
     { name: "N. Santosh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/sujana.jpg", specialization: "DevOps" },
   ],
+  // AI & ML and Data Science are specialisations offered under CSE, not
+  // separate departments - they share this department's faculty and labs.
   programmes: [
     { name: "B.Tech - Computer Science & Engineering", level: "Undergraduate", intake: "120" },
+    { name: "B.Tech - CSE (Artificial Intelligence & Machine Learning)", level: "Undergraduate" },
+    { name: "B.Tech - CSE (Data Science)", level: "Undergraduate" },
     { name: "M.Tech - Computer Science & Engineering", level: "Postgraduate", intake: "18" }
   ],
   labs: [
