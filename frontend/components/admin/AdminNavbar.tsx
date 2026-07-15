@@ -1,10 +1,19 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Bell, LogOut, Menu, Search, User } from "lucide-react"
 import { clearSession, getStoredAdmin } from "@/lib/auth"
-import { getRecentActivity, RecentActivityItem } from "@/lib/dashboard-api"
+import {
+  AdminNotification,
+  getAdminNotifications,
+  getUnreadNotificationCount,
+  markAllNotificationsRead,
+  markNotificationRead,
+} from "@/lib/admin-notifications-api"
+
+// How often the bell re-checks the unread count while the admin has a tab open.
+const UNREAD_POLL_MS = 60_000
 
 function useClickOutside(ref: React.RefObject<HTMLElement | null>, onOutside: () => void) {
   useEffect(() => {
@@ -40,20 +49,62 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
 
   const [notifOpen, setNotifOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const [activity, setActivity] = useState<RecentActivityItem[] | null>(null)
+  const [notifications, setNotifications] = useState<AdminNotification[] | null>(null)
+  const [unread, setUnread] = useState(0)
 
   const notifRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
   useClickOutside(notifRef, () => setNotifOpen(false))
   useClickOutside(profileRef, () => setProfileOpen(false))
 
+  const refreshUnread = useCallback(() => {
+    getUnreadNotificationCount()
+      .then((r) => setUnread(r.count))
+      .catch(() => {
+        /* badge just stays as-is if the count call fails */
+      })
+  }, [])
+
+  // Poll the badge so a notification raised elsewhere shows up without a reload.
   useEffect(() => {
-    if (notifOpen && activity === null) {
-      getRecentActivity(5)
-        .then((res) => setActivity(res.items))
-        .catch(() => setActivity([]))
+    refreshUnread()
+    const t = setInterval(refreshUnread, UNREAD_POLL_MS)
+    return () => clearInterval(t)
+  }, [refreshUnread])
+
+  // Load the list each time the panel opens, so it is never stale.
+  useEffect(() => {
+    if (!notifOpen) return
+    getAdminNotifications({ limit: 8 })
+      .then(setNotifications)
+      .catch(() => setNotifications([]))
+  }, [notifOpen])
+
+  async function handleOpenNotification(n: AdminNotification) {
+    if (!n.isRead) {
+      setNotifications((prev) => prev?.map((x) => (x.id === n.id ? { ...x, isRead: true } : x)) ?? prev)
+      setUnread((c) => Math.max(0, c - 1))
+      try {
+        await markNotificationRead(n.id)
+      } catch {
+        refreshUnread() // reconcile if the write failed
+      }
     }
-  }, [notifOpen, activity])
+    if (n.link) {
+      setNotifOpen(false)
+      router.push(n.link)
+    }
+  }
+
+  async function handleMarkAllRead() {
+    setNotifications((prev) => prev?.map((x) => ({ ...x, isRead: true })) ?? prev)
+    setUnread(0)
+    try {
+      await markAllNotificationsRead()
+    } catch {
+      refreshUnread()
+    }
+  }
 
   function handleLogout() {
     clearSession()
@@ -93,34 +144,60 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
               setNotifOpen((v) => !v)
               setProfileOpen(false)
             }}
-            aria-label="Notifications"
+            aria-label={unread > 0 ? `Notifications (${unread} unread)` : "Notifications"}
             className="relative rounded-full p-2 text-slate-500 hover:bg-slate-100"
           >
             <Bell className="h-5 w-5" />
+            {unread > 0 && (
+              <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white">
+                {unread > 9 ? "9+" : unread}
+              </span>
+            )}
           </button>
 
           {notifOpen && (
             <div className="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-admin-border bg-white py-2 shadow-xl">
-              <p className="px-4 pb-2 text-sm font-semibold text-slate-700">Recent Activity</p>
-              {activity === null ? (
+              <div className="flex items-center justify-between gap-2 px-4 pb-2">
+                <p className="text-sm font-semibold text-slate-700">Notifications</p>
+                {unread > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleMarkAllRead}
+                    className="text-xs font-semibold text-admin-primary hover:underline"
+                  >
+                    Mark all read
+                  </button>
+                )}
+              </div>
+              {notifications === null ? (
                 <div className="space-y-2 px-4 py-2">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="h-4 animate-pulse rounded bg-slate-100" />
                   ))}
                 </div>
-              ) : activity.length === 0 ? (
-                <p className="px-4 py-3 text-sm text-slate-400">No recent activity.</p>
+              ) : notifications.length === 0 ? (
+                <p className="px-4 py-3 text-sm text-slate-400">You&apos;re all caught up.</p>
               ) : (
-                <ul>
-                  {activity.map((item) => (
-                    <li key={item.id} className="px-4 py-2 text-sm hover:bg-admin-bg">
-                      <p className="text-slate-700">
-                        <span className="font-medium">{item.adminName}</span>{" "}
-                        <span className="text-slate-500">
-                          {item.action.toLowerCase()}d {item.module}
+                <ul className="max-h-96 overflow-y-auto">
+                  {notifications.map((n) => (
+                    <li key={n.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenNotification(n)}
+                        className={`flex w-full gap-2 px-4 py-2.5 text-left text-sm hover:bg-admin-bg ${n.isRead ? "" : "bg-admin-primary/5"}`}
+                      >
+                        <span
+                          aria-hidden
+                          className={`mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full ${n.isRead ? "bg-transparent" : "bg-admin-primary"}`}
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className={`block truncate ${n.isRead ? "text-slate-600" : "font-semibold text-slate-800"}`}>
+                            {n.title}
+                          </span>
+                          {n.message && <span className="mt-0.5 block line-clamp-2 text-xs text-slate-500">{n.message}</span>}
+                          <span className="mt-0.5 block text-xs text-slate-400">{timeAgo(n.createdAt)}</span>
                         </span>
-                      </p>
-                      <p className="text-xs text-slate-400">{timeAgo(item.createdAt)}</p>
+                      </button>
                     </li>
                   ))}
                 </ul>
