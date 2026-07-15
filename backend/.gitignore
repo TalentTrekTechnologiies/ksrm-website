@@ -17,7 +17,17 @@ npm-debug.log*
 !.env.example
 /generated/prisma
 
-# Media Library local storage (uploaded originals + generated variants) -
-# never committed, regenerable from a real storage backend in every
-# non-local environment.
-/storage
+# Media Library local storage (uploaded originals + generated variants).
+#
+# TEMPORARY, DEMO ONLY: storage/media is committed so the Render free-tier
+# demo has its images/PDFs. Render's free plan has an ephemeral filesystem and
+# no persistent disk, and it deploys from git - so anything not committed is
+# gone on every restart/sleep. The Dockerfile bakes this directory into the
+# image.
+#
+# This is a deliberate trade, not the intended design: it puts ~287MB in git
+# history, and uploads made *at runtime* are still lost on restart. The real
+# fix is object storage (S3/R2) via StorageAdapter - see DEPLOYMENT.md. When
+# that lands (or when moving to AWS), re-ignore this directory.
+/storage/*
+!/storage/media

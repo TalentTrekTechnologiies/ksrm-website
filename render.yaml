@@ -1,0 +1,62 @@
+# Render blueprint for the KSRM backend (API + Postgres).
+# The frontend is NOT here - it is a static export deployed to Netlify
+# (see netlify.toml).
+#
+# Deploy: Render Dashboard -> New -> Blueprint -> point at this repo.
+#
+# After the first deploy you MUST:
+#   1. Set CORS_ORIGIN to the real Netlify URL and MEDIA_BASE_URL to this
+#      service's own URL (both are marked sync:false below, so Render will
+#      prompt for them).
+#   2. Run scripts/rebase-media-urls.js once, so the ~167 DB rows that store
+#      absolute http://localhost:4000/media/... URLs point at MEDIA_BASE_URL.
+#   3. Change the seeded super-admin password.
+#
+# FREE-TIER CAVEAT (media): Render's free plan has an ephemeral filesystem and
+# no persistent disk, and backend/storage is gitignored - so Media Library
+# uploads do NOT survive a restart/redeploy or a sleep/wake cycle. A `disk:`
+# block (below, commented) fixes this but requires a paid instance. See
+# DEPLOYMENT.md.
+
+services:
+  - type: web
+    name: ksrm-backend
+    runtime: docker
+    plan: free
+    region: singapore # closest Render region to Kadapa, AP
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /exam-notifications
+    autoDeploy: false
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ksrm-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true # Render generates a strong secret
+      # Set to the Netlify site URL, e.g. https://ksrm.netlify.app (no trailing slash)
+      - key: CORS_ORIGIN
+        sync: false
+      # Set to THIS service's public URL, e.g. https://ksrm-backend.onrender.com
+      - key: MEDIA_BASE_URL
+        sync: false
+      # "console" logs emails instead of sending. Switch to smtp/ses + creds
+      # before Careers applications need to actually notify anyone.
+      - key: EMAIL_PROVIDER
+        value: console
+
+    # Uncomment on a paid instance so uploaded media survives restarts.
+    # disk:
+    #   name: ksrm-media
+    #   mountPath: /app/storage
+    #   sizeGB: 10
+
+databases:
+  - name: ksrm-db
+    plan: free # NOTE: Render's free Postgres expires ~90 days after creation
+    region: singapore
