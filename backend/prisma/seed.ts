@@ -310,8 +310,9 @@ const SITE_SETTINGS_SEED: SiteSettingSeed[] = [
   { key: 'site.faviconUrl', value: '/favicon.ico', type: 'IMAGE_URL', group: 'branding', isPublic: true, description: 'Browser tab icon.' },
   { key: 'site.collegeMotto', value: 'Lighted to Lighten', type: 'STRING', group: 'branding', isPublic: true, description: 'College motto/tagline.' },
   // Theme
-  { key: 'site.themePrimaryColor', value: '#2B3490', type: 'STRING', group: 'theme', isPublic: true, description: 'Primary brand color (blue).' },
-  { key: 'site.themeAccentColor', value: '#D4A500', type: 'STRING', group: 'theme', isPublic: true, description: 'Accent brand color (gold).' },
+  // Removed: site.themePrimaryColor / site.themeAccentColor. The public
+  // palette is authored directly in the components, so these settings never
+  // affected anything - they were a control that silently did nothing.
   // Footer
   { key: 'site.footerCopyright', value: `© ${new Date().getFullYear()} K.S.R.M College of Engineering. All rights reserved.`, type: 'STRING', group: 'footer', isPublic: true, description: 'Copyright line shown in the site footer.' },
   // Contact Information (the single "official college contact" - distinct

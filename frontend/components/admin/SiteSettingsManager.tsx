@@ -241,8 +241,6 @@ function SiteSettingsManagerInner() {
             "site.logoUrl",
             "site.faviconUrl",
             "site.collegeMotto",
-            "site.themePrimaryColor",
-            "site.themeAccentColor",
             "site.footerCopyright",
           ])
         }
@@ -267,32 +265,10 @@ function SiteSettingsManagerInner() {
             accept={["IMAGE"]}
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Primary Theme Color</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={v("site.themePrimaryColor") || "#2B3490"}
-                onChange={(e) => setValue("site.themePrimaryColor", e.target.value)}
-                className="h-10 w-14 cursor-pointer rounded border border-admin-border"
-              />
-              <span className="font-mono text-sm text-slate-500">{v("site.themePrimaryColor")}</span>
-            </div>
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">Accent Theme Color</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={v("site.themeAccentColor") || "#D4A500"}
-                onChange={(e) => setValue("site.themeAccentColor", e.target.value)}
-                className="h-10 w-14 cursor-pointer rounded border border-admin-border"
-              />
-              <span className="font-mono text-sm text-slate-500">{v("site.themeAccentColor")}</span>
-            </div>
-          </div>
-        </div>
+        {/* The Primary/Accent theme colour pickers were removed: the public
+            site's palette is authored directly in the components, so those
+            settings never had any effect - a control that silently does
+            nothing is worse than no control. */}
         <TextField label="Footer Copyright" value={v("site.footerCopyright")} onChange={(val) => setValue("site.footerCopyright", val)} />
       </SectionCard>
 
