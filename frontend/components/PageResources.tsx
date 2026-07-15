@@ -115,10 +115,12 @@ export default function PageResources({
         /* Full-width stacked rows - matches the existing hardcoded document
            lists on Examinations / Syllabus (the "AY 2025-26" style) so
            uploaded docs read as the same list, not a separate widget. */
-        .pr-list { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; max-width: 900px; margin-left: auto; margin-right: auto; }
-        .pr-group-head { font-size: 19px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 26px 0 14px; }
+        /* Full container width so admin-uploaded docs line up with the
+           hand-built document rows on the same page (e.g. Academic Calendars). */
+        .pr-list { display: flex; flex-direction: column; gap: 8px; margin-top: 28px; }
+        .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
         .pr-list > div:first-child .pr-group-head { margin-top: 0; }
-        .pr-row { display: flex; align-items: center; gap: 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.2s ease; }
+        .pr-row { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.2s ease; }
         .pr-row:hover { border-color: #D4A500; box-shadow: 0 8px 20px rgba(43,52,144,0.08); }
         .pr-icon { width: 40px; height: 40px; border-radius: 6px; background: #eef1ff; color: #2B3490; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .pr-doc-title { display: block; font-size: 15px; font-weight: 600; color: #2B3490; line-height: 1.4; }
