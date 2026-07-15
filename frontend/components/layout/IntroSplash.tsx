@@ -48,7 +48,6 @@ export default function IntroSplash() {
           }}
         >
           <source src="/ksrm-logo.mp4" type="video/mp4" />
-          <source src="/ksrm-logo.mov" type="video/quicktime" />
         </video>
       </div>
     </div>

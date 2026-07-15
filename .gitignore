@@ -29,3 +29,16 @@ Thumbs.db
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Raw source assets - kept locally, never tracked.
+# These are the unoptimised originals that the files in frontend/public were
+# derived from. 385MB across 66 files, referenced by no source file. They were
+# purged from history because they made cloning painful for no benefit.
+assets-archive/
+
+# The 100.7MB QuickTime splash video. GitHub hard-rejects any file over 100MiB
+# (this one missed by 0.7MiB and blocked the entire push), and it was dead
+# weight regardless: it sat as a <source> fallback *after* ksrm-logo.mp4 (266KB)
+# in IntroSplash.tsx, and video/quicktime plays in no major browser but Safari -
+# which takes the mp4 first anyway. The mp4 is the real asset; keep using it.
+frontend/public/*.mov
