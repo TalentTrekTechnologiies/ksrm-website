@@ -1,0 +1,32 @@
+# Keep the build context small AND correct.
+#
+# node_modules MUST be excluded: the Dockerfile runs `npm ci` (installing
+# Linux-native builds of sharp/bcrypt/prisma) and then `COPY . .`. Without this
+# file that COPY would paste the host's node_modules - built for the developer's
+# OS - straight over the container's, and the native modules would fail to load
+# at runtime. It also stops hundreds of MB being uploaded to the build host.
+node_modules
+dist
+build
+coverage
+
+# Never ship secrets or local env into an image
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+*.log
+npm-debug.log*
+
+# Tests / tooling not needed at runtime
+test
+**/*.spec.ts
+.eslintrc*
+eslint.config.*
+.prettierrc*
+
+# NOTE: storage/media is deliberately NOT ignored - the Dockerfile bakes it into
+# the image so the Render free-tier demo keeps its images/PDFs across restarts
+# (see backend/.gitignore and DEPLOYMENT.md).
