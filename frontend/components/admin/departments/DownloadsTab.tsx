@@ -44,7 +44,7 @@ const CATEGORY_OPTIONS: { value: DownloadCategory; label: string }[] = [
 export default function DownloadsTab({ departmentId }: { departmentId: number }) {
   return (
     <DepartmentDragListManager<Download, FormState>
-      title="Downloads"
+      title="Documents"
       description="Drag to reorder. Syllabus, question papers, forms and other documents."
       departmentId={departmentId}
       emptyForm={emptyForm}

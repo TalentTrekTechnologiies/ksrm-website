@@ -57,7 +57,9 @@ const NAV_ITEMS: NavItem[] = [
   { widgetKey: "announcements", label: "Announcements", href: "/admin/announcements" },
   { widgetKey: "media", label: "Media Library", href: "/admin/media" },
   { widgetKey: "gallery", label: "Gallery", href: "/admin/gallery" },
-  { widgetKey: "downloads", label: "Downloads", href: "/admin/downloads" },
+  // Labelled "Documents" for admins - the model/route stay `downloads`, this is
+  // wording only (a visitor still clicks a "Download" button on the public site).
+  { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },
   { widgetKey: "news", label: "News", href: "/admin/news" },
   { widgetKey: "placements", label: "Placements", href: "/admin/placements" },
   { widgetKey: "careers", label: "Careers", href: "/admin/careers" },
@@ -334,7 +336,7 @@ export default function AdminSidebar({
                           href="/admin/downloads"
                           className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
                         >
-                          All Downloads (unassigned)
+                          All Documents (unassigned)
                         </Link>
                       </div>
                     </>

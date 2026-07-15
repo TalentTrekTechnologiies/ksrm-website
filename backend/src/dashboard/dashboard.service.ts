@@ -54,7 +54,8 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     label: 'Research Records',
     count: (p) => p.research.count(),
   },
-  { key: 'downloads', label: 'Downloads', count: (p) => p.download.count() },
+  // Admin-facing label only - the key/model stay `downloads`.
+  { key: 'downloads', label: 'Documents', count: (p) => p.download.count() },
   {
     key: 'committees',
     label: 'Committees',

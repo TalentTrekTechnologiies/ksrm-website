@@ -31,7 +31,7 @@ const TABS: { key: string; label: string; permission: string }[] = [
   { key: "research", label: "Research", permission: "research.view" },
   { key: "gallery", label: "Gallery", permission: "gallery.view" },
   { key: "videos", label: "Videos", permission: "homepage.view" },
-  { key: "downloads", label: "Downloads", permission: "downloads.view" },
+  { key: "downloads", label: "Documents", permission: "downloads.view" },
   { key: "contact", label: "Contact Information", permission: "contact.view" },
   { key: "statistics", label: "Statistics", permission: "homepage.view" },
   { key: "display-settings", label: "Display Settings", permission: "department_display_settings.view" },

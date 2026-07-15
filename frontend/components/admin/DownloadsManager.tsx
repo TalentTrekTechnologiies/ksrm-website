@@ -219,9 +219,12 @@ function DownloadsManagerInner() {
     <div className="space-y-6">
       <div>
         <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
-          Downloads
+          Documents
         </h1>
-        <p className="text-sm text-slate-500">Downloadable documents (syllabi, question papers, forms, etc).</p>
+        <p className="text-sm text-slate-500">
+          Documents published for download (calendars, timetables, results, syllabi, forms). Use
+          &ldquo;Show on page&rdquo; to route one to a section of the public site.
+        </p>
       </div>
 
       {error && (
