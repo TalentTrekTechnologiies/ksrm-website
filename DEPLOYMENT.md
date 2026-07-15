@@ -1,8 +1,73 @@
 # KSRM Website — Deployment Guide
 
 Two deployables:
-- **Backend** — NestJS + PostgreSQL + local media storage. Runs anywhere Docker runs (`docker-compose.prod.yml`).
-- **Frontend** — fully static Next.js export (`frontend/out`). Deploy to Netlify (config in `frontend/netlify.toml`) or any static host/CDN.
+- **Backend** — NestJS + PostgreSQL + local media storage. Runs anywhere Docker runs (`docker-compose.prod.yml`, or `render.yaml` for Render).
+- **Frontend** — fully static Next.js export (`frontend/out`). Deploy to Netlify (config in `netlify.toml` **at the repo root**) or any static host/CDN.
+
+---
+
+## 0. Demo deploy — Netlify (frontend) + Render free tier (backend)
+
+Config already in the repo: `netlify.toml` (root) and `render.yaml` (root).
+Do it in this order — the frontend bakes the API URL in at build time, so the
+backend must exist first.
+
+**1. Backend + database (Render)**
+1. Render → **New → Blueprint** → pick this repo. It reads `render.yaml` and
+   creates `ksrm-backend` (Docker) + `ksrm-db` (free Postgres).
+2. It will prompt for the two `sync:false` vars. `CORS_ORIGIN` isn't known yet —
+   put a placeholder, you'll fix it in step 3.
+   - `MEDIA_BASE_URL` = this service's URL, e.g. `https://ksrm-backend.onrender.com`
+3. Deploy. `prisma migrate deploy` runs automatically on boot (see Dockerfile `CMD`).
+4. **Seed the database once — from your machine, not the Render shell.** The
+   seed is `ts-node prisma/seed.ts`, and the runtime image is built with
+   `npm ci --omit=dev`, so ts-node isn't in it (there is also no `prisma.seed`
+   config, so `npx prisma db seed` won't work either). Instead, copy the
+   **External** connection string from the Render database page and run the
+   seed locally against it:
+   ```bash
+   cd backend
+   DATABASE_URL="<render-external-connection-string>" npm run seed
+   ```
+   (PowerShell: `$env:DATABASE_URL="..."; npm run seed`)
+
+**2. Frontend (Netlify)**
+1. Netlify → **Add new site → Import from Git** → pick this repo.
+   `netlify.toml` sets base=`frontend`, publish=`out`.
+2. Site settings → **Environment variables** → add
+   `NEXT_PUBLIC_API_URL = https://ksrm-backend.onrender.com` (no trailing slash).
+   **This is read at build time and inlined**, so set it *before* the first
+   build; changing it later needs a redeploy, not a restart.
+3. Deploy → note the site URL.
+
+**3. Point them at each other**
+1. Render → `ksrm-backend` → Environment → set `CORS_ORIGIN` to the real Netlify
+   URL (e.g. `https://ksrm.netlify.app`). Save (redeploys).
+2. **Rewrite the stored media URLs** — ~167 rows (132 faculty photos, 24
+   documents, 7 gallery, 4 news) hold absolute `http://localhost:4000/media/...`
+   snapshots and will 404 otherwise. Run it from your machine against the
+   database's **External** connection string (Render's free plan has no shell):
+   ```bash
+   cd backend
+   DATABASE_URL="<render-external-connection-string>" \
+     node scripts/rebase-media-urls.js --from http://localhost:4000 --to https://ksrm-backend.onrender.com --dry-run
+   # re-run without --dry-run once the counts look right
+   ```
+3. **Change the super-admin password** (the seeded one is public in this repo).
+
+### Free-tier caveats — read before demoing
+- **Media survives, new uploads do not.** Render free has an ephemeral
+  filesystem and no persistent disk, and it deploys from git — so
+  `backend/storage/media` is committed and baked into the image
+  (`COPY storage/media`). Existing images/PDFs work and survive restarts;
+  anything uploaded *at runtime* is lost on the next restart/sleep.
+  Fix properly with a paid disk (uncomment `disk:` in `render.yaml`) or object
+  storage (§5).
+- **Cold starts.** Free instances sleep after ~15 min idle; the next request
+  takes ~50s. Wake the API before showing anyone.
+- **Free Postgres expires ~90 days** after creation.
+- **Emails go nowhere.** `EMAIL_PROVIDER=console` only logs, so Careers
+  applications notify no one until SMTP/SES is configured.
 
 ---
 
