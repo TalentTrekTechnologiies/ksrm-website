@@ -2,41 +2,11 @@
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
 
-const calendarGroups = [
-  {
-    year: "AY 2025-26",
-    items: [
-      { title: "Academic Calendar – M.Tech I Semester AY 2025-26", date: "27-10-2025", href: mediaFile(183)},
-      { title: "Academic Calendar – MBA I Year AY 2025-26", date: "30-08-2025", href: mediaFile(184)},
-      { title: "Academic Calendar – B.Tech I Semester AY 2025-26", date: "30-08-2025", href: mediaFile(185)},
-      { title: "Academic Calendar – B.Tech VII & VIII Semester AY 2025-26", date: "17-07-2025", href: mediaFile(187)},
-      { title: "Academic Calendar – B.Tech V & VI Semester AY 2025-26", date: "17-07-2025", href: mediaFile(188)},
-      { title: "Academic Calendar – B.Tech III & IV Semester AY 2025-26", date: "17-07-2025", href: mediaFile(189)},
-      { title: "Academic Calendar – B.Tech Honour and Minor Degree AY 2025-26", date: "17-07-2025", href: mediaFile(190)},
-    ],
-  },
-  {
-    year: "AY 2024-25",
-    items: [
-      { title: "Revised Academic Calendar – M.Tech II Semester 2024-25", date: "05-05-2025", href: mediaFile(191)},
-      { title: "Academic Calendar – M.Tech II, IV Semesters (R22PG) AY 2024-25", date: "20-12-2024", href: mediaFile(192)},
-      { title: "Academic Calendar – B.Tech Even Semester Programs 2024-25", date: "20-12-2024", href: mediaFile(193)},
-      { title: "Academic Calendar – B.Tech Odd Semester Programs 2024-25", date: "25-07-2024", href: mediaFile(195)},
-    ],
-  },
-];
-
-const timetables = [
-  { title: "Timetable - B.Tech. VI Sem (R23UG) End Regular & Supple, April-May 2026", date: "10-04-2026", href: mediaFile(196)},
-  { title: "Timetable - B.Tech. IV Sem (R23UG) End Regular & Supple, April-May 2026", date: "10-04-2026", href: mediaFile(197)},
-  // NOTE: "B.Tech. VI Sem (R23UG) II Mid, April 2026" was removed - its file
-  // 404s on the old site itself (confirmed dead at source, nothing to re-host).
-  { title: "Timetable - B.Tech. IV Sem (R23UG) II Mid Examinations, April 2026", date: "10-04-2026", href: mediaFile(198)},
-  { title: "Timetable - B.Tech. I Sem (R23UG) Supple End Examinations, Dec-2025", date: "29-11-2025", href: mediaFile(199)},
-  { title: "Timetable - B.Tech. I Sem (R20UG) Supple End Examinations, Dec-2025", date: "29-11-2025", href: mediaFile(200)},
-  { title: "Timetable - B.Tech. VIII Sem (R18UG) Supple End Examinations, Dec-2025", date: "27-11-2025", href: mediaFile(201)},
-  { title: "Timetable - B.Tech. VI Sem (R20UG) Supple End Examinations, Dec-2025", date: "27-11-2025", href: mediaFile(203)},
-];
+// Academic Calendars and Time Tables used to be hardcoded here, which meant a
+// code change to publish a new academic year. They now live in the CMS as
+// Downloads routed to "Examinations → Academic Calendars" / "→ Time Tables"
+// (grouped by AY heading) and render via <PageResources>, so the team can add
+// AY 2026-27 and retire old entries from the admin.
 
 const quickLinks = [
   { icon: "📅", label: "Academic Calendars", href: "#calendars" },
@@ -59,8 +29,6 @@ export default function ExaminationsPage() {
         @media (max-width: 640px) { .exam-quick-links { grid-template-columns: 1fr 1fr; gap: 10px; } }
         .exam-link-card { background: #f4f3ef; border: 1px solid #e5e7eb; border-radius: 10px; padding: 13px 16px; text-decoration: none; display: flex; align-items: center; gap: 11px; transition: background 0.15s, border-color 0.15s; }
         .exam-link-card:hover { background: #eef0fb; border-color: #2B3490; }
-        .exam-doc-row { display: flex; align-items: center; gap: 16px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; margin-bottom: 8px; text-decoration: none; }
-        .exam-list-row { display: flex; gap: 16px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
         .exam-results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
         @media (max-width: 1024px) { .exam-results-grid { grid-template-columns: 1fr; gap: 24px; } }
       `}</style>
@@ -105,39 +73,17 @@ export default function ExaminationsPage() {
       <section id="calendars" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Academic Calendars</h2>
-          {calendarGroups.map((g) => (
-            <div key={g.year}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", borderLeft: "4px solid #D4A500", paddingLeft: 16, margin: "32px 0 16px" }}>{g.year}</div>
-              {g.items.map((item) => (
-                <a key={item.title} href={item.href} target="_blank" rel="noopener noreferrer" className="exam-doc-row">
-                  <div style={{ background: "#eef1ff", width: 40, height: 40, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>📅</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ color: "#2B3490", fontWeight: 600, fontSize: 14 }}>{item.title}</div>
-                    <div style={{ color: "#999", fontSize: 12, marginTop: 2 }}>{item.date}</div>
-                  </div>
-                  <div style={{ color: "white", background: "#2B3490", padding: "4px 12px", borderRadius: 4, fontSize: 12, fontWeight: 700 }}>Download →</div>
-                </a>
-              ))}
-            </div>
-          ))}
-          {/* Calendars uploaded from the admin (Show on page →
-              "Examinations → Academic Calendars"), appended to the same list. */}
-          <PageResources section="examinations.calendars" embedded />
+          {/* CMS-driven: Downloads routed to "Examinations → Academic Calendars",
+              grouped by their AY heading, newest first. */}
+          <PageResources section="examinations.calendars" embedded maxVisible={8} />
         </div>
       </section>
 
       <section id="timetables" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Exam Time Tables</h2>
-          {timetables.map((t) => (
-            <div className="exam-list-row" key={t.title}>
-              <div style={{ minWidth: 90, fontSize: 12, color: "#999" }}>{t.date}</div>
-              <div style={{ flex: 1 }}><div style={{ fontSize: 14, color: "#2B3490", fontWeight: 500, lineHeight: 1.5 }}>{t.title}</div></div>
-              <a href={t.href} target="_blank" rel="noopener noreferrer" style={{ color: "#2B3490", fontSize: 13, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", padding: "4px 12px", background: "white", borderRadius: 4 }}>View →</a>
-            </div>
-          ))}
-          {/* Time tables uploaded from the admin land here. */}
-          <PageResources section="examinations.timetables" embedded />
+          {/* CMS-driven: Downloads routed to "Examinations → Time Tables". */}
+          <PageResources section="examinations.timetables" embedded maxVisible={8} />
         </div>
       </section>
 
