@@ -71,8 +71,8 @@ export default function TransportPage() {
         .trn-rules-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
         .trn-rules-image { position: relative; height: 240px; border-radius: 12px; overflow: hidden; }
         .trn-rules-image img { width: 100%; height: 100%; object-fit: cover; }
-        .trn-towns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .trn-town-card { background: #fff; border: 2px solid #2B3490; border-radius: 8px; padding: 24px; text-align: center; }
+        .trn-towns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+        .trn-town-card { background: #fff; border: 1.5px solid #2B3490; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
         @media (max-width: 1024px) { .trn-rules-container { grid-template-columns: 1fr; gap: 32px; } }
       `}</style>
 
@@ -165,9 +165,8 @@ export default function TransportPage() {
           <div className="trn-towns-grid">
             {towns.map((t) => (
               <div className="trn-town-card" key={t}>
-                <div style={{ fontSize: 32, marginBottom: 12 }}>📍</div>
-                <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}>{t}</h3>
-                <p style={{ fontSize: 13, color: "#666", margin: 0 }}>Regular service to campus</p>
+                <span style={{ fontSize: 17, lineHeight: 1, flexShrink: 0 }}>📍</span>
+                <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#2B3490", margin: 0, lineHeight: 1.25 }}>{t}</h3>
               </div>
             ))}
           </div>
