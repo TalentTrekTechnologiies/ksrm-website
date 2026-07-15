@@ -37,7 +37,10 @@ export class DownloadsService {
         ...(departmentId !== undefined && { departmentId }),
         ...(pageSection && { pageSection }),
       },
-      orderBy: { sortOrder: 'asc' },
+      // sortOrder still lets an admin pin a document to the top; everything
+      // else (all sortOrder 0 by default) falls back to newest-first, so fresh
+      // uploads lead and older ones sink rather than the reverse.
+      orderBy: [{ sortOrder: 'asc' }, { publishedAt: 'desc' }, { id: 'desc' }],
     });
   }
 

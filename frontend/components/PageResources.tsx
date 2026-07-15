@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { FileText } from "lucide-react"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
@@ -98,7 +99,41 @@ const PR_STYLES = `
   .pr-doc-title { display: block; font-size: 15px; font-weight: 600; color: #2B3490; line-height: 1.4; }
   .pr-doc-desc { display: block; font-size: 13px; color: #999; margin-top: 2px; }
   .pr-pill { margin-left: auto; flex-shrink: 0; color: #fff; background: #2B3490; padding: 5px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .pr-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: none; border: 1.5px solid #2B3490; color: #2B3490; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .pr-more:hover { background: #2B3490; color: #fff; }
 `
+
+/**
+ * One grouped block of documents. Long lists (e.g. an AY with 100 uploads)
+ * collapse to the first `maxVisible` rows behind a "Show all" toggle, so a page
+ * cannot grow without bound as more documents are added over the years.
+ */
+function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: number }) {
+  const [expanded, setExpanded] = useState(false)
+  const overflowing = group.items.length > maxVisible
+  const items = expanded || !overflowing ? group.items : group.items.slice(0, maxVisible)
+
+  return (
+    <div>
+      {group.label && <div className="pr-group-head">{group.label}</div>}
+      {items.map((d) => (
+        <a key={d.id} href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="pr-row">
+          <span className="pr-icon"><FileText size={19} /></span>
+          <span style={{ minWidth: 0, flex: 1 }}>
+            <span className="pr-doc-title">{d.title}</span>
+            {d.description && <span className="pr-doc-desc">{d.description}</span>}
+          </span>
+          <span className="pr-pill">Download →</span>
+        </a>
+      ))}
+      {overflowing && (
+        <button type="button" className="pr-more" onClick={() => setExpanded((v) => !v)}>
+          {expanded ? "Show less" : `Show all ${group.items.length} documents ↓`}
+        </button>
+      )}
+    </div>
+  )
+}
 
 /**
  * Drop-in block for any public page that shows the gallery images and
@@ -116,6 +151,7 @@ export default function PageResources({
   docsTitle = "Downloads & Resources",
   background = "#f7f8fa",
   embedded = false,
+  maxVisible = 6,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -123,6 +159,8 @@ export default function PageResources({
   galleryTitle?: string
   docsTitle?: string
   background?: string
+  /** Rows shown per group before collapsing behind a "Show all" toggle. */
+  maxVisible?: number
   /**
    * Render only the document rows (no section wrapper, heading, gallery or
    * videos) so a page can append admin-uploaded docs straight into an existing
@@ -140,19 +178,7 @@ export default function PageResources({
     docs.length > 0 ? (
       <div className={`pr-list${embedded ? " pr-embedded" : ""}`}>
         {groupDocs(docs).map((grp) => (
-          <div key={grp.label ?? "__ungrouped__"}>
-            {grp.label && <div className="pr-group-head">{grp.label}</div>}
-            {grp.items.map((d) => (
-              <a key={d.id} href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="pr-row">
-                <span className="pr-icon"><FileText size={19} /></span>
-                <span style={{ minWidth: 0, flex: 1 }}>
-                  <span className="pr-doc-title">{d.title}</span>
-                  {d.description && <span className="pr-doc-desc">{d.description}</span>}
-                </span>
-                <span className="pr-pill">Download →</span>
-              </a>
-            ))}
-          </div>
+          <DocGroupBlock key={grp.label ?? "__ungrouped__"} group={grp} maxVisible={maxVisible} />
         ))}
       </div>
     ) : null
