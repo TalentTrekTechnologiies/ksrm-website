@@ -51,6 +51,12 @@ const IconYoutube = ({ size = 18, color = "currentColor" }: SvgIconProps) => (
   </svg>
 )
 
+const IconLinkedin = ({ size = 18, color = "currentColor" }: SvgIconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg">
+    <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+  </svg>
+)
+
 const EASE = [0.22, 1, 0.36, 1] as const
 
 const currentYear = new Date().getFullYear()
@@ -180,7 +186,10 @@ export default function Footer() {
     { Icon: IconTwitterX, href: s("site.socialTwitter", "https://twitter.com/ksrmceofficial") },
     { Icon: IconInstagram, href: s("site.socialInstagram", "https://instagram.com/ksrmceofficial") },
     { Icon: IconYoutube, href: s("site.socialYoutube", "http://youtube.com/ksrmceofficialmedia") },
-  ]
+    // No hardcoded LinkedIn default - render it only once a URL is set, rather
+    // than shipping an icon that links nowhere.
+    { Icon: IconLinkedin, href: s("site.socialLinkedin", "") },
+  ].filter((x) => x.href)
 
   return (
     <footer style={{ width: "100%", background: "#1e2570", color: "#ffffff", paddingTop: "56px" }}>

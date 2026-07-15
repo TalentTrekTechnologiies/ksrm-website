@@ -7,6 +7,8 @@ import { MapPin, Briefcase, Building2, CalendarDays, Clock } from "lucide-react"
 import { getCareersPublic, Career } from "@/lib/careers-api"
 import ApplicationForm from "@/components/careers/ApplicationForm"
 
+const HR_EMAIL_FALLBACK = "hr@ksrmce.ac.in"
+
 const WHY_JOIN = [
   "Recognised for academic excellence",
   "Active research & innovation culture",
@@ -32,6 +34,10 @@ function ApplyInner() {
 
   const [career, setCareer] = useState<Career | null>(null)
   const [loading, setLoading] = useState<boolean>(!!careerId)
+  // NB: `site.hrEmail` is deliberately isPublic:false - it routes HR
+  // notification emails, it is not a public display address - so this contact
+  // line stays a constant rather than reading that setting.
+  const hrEmail = HR_EMAIL_FALLBACK
 
   useEffect(() => {
     if (!careerId) return
@@ -176,7 +182,7 @@ function ApplyInner() {
                   ))}
                 </div>
                 <div className="jp-help">
-                  Questions about this role? Write to <a href="mailto:hr@ksrmce.ac.in">hr@ksrmce.ac.in</a>
+                  Questions about this role? Write to <a href={`mailto:${hrEmail}`}>{hrEmail}</a>
                 </div>
               </section>
             )}

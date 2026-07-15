@@ -1,8 +1,49 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Megaphone } from "lucide-react"
 import { getAnnouncementsPublic, Announcement, AnnouncementLocation, AnnouncementPriority } from "@/lib/announcements-api"
+import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
+
+// Defaults used until Site Settings load (and if the fetch fails), so the
+// ticker always renders with sane behaviour rather than nothing.
+const DEFAULTS = { speedSeconds: 35, maxVisible: 10, pauseOnHover: true }
+
+/** Site Settings that control this ticker (previously stored but never read). */
+function useTickerSettings(location: AnnouncementLocation) {
+  const [cfg, setCfg] = useState({ ...DEFAULTS, enabled: true })
+
+  useEffect(() => {
+    let cancelled = false
+    getPublicSiteSettings()
+      .then((v) => {
+        if (cancelled) return
+        const num = (key: string, fallback: number) => {
+          const n = Number(v[key])
+          return Number.isFinite(n) && n > 0 ? n : fallback
+        }
+        const bool = (key: string, fallback: boolean) =>
+          v[key] === undefined || v[key] === "" ? fallback : v[key] === "true"
+
+        setCfg({
+          speedSeconds: num("site.announcementTickerSpeedSeconds", DEFAULTS.speedSeconds),
+          maxVisible: num("site.announcementMaxVisible", DEFAULTS.maxVisible),
+          pauseOnHover: bool("site.announcementPauseOnHover", DEFAULTS.pauseOnHover),
+          enabled: bool(
+            location === "HEADER_TICKER"
+              ? "site.announcementHeaderTickerEnabled"
+              : "site.announcementHeroTickerEnabled",
+            true,
+          ),
+        })
+      })
+      .catch(() => { /* defaults stay */ })
+    return () => { cancelled = true }
+  }, [location])
+
+  return cfg
+}
 
 // Gradient (not flat) per priority - a subtle depth cue rather than a
 // solid color bar, applied to the ticker's background.
@@ -27,9 +68,13 @@ export default function AnnouncementTicker({
   departmentId?: number
   compact?: boolean
 }) {
-  const items = useLiveData(() => getAnnouncementsPublic(location, departmentId), [location, departmentId])
+  const all = useLiveData(() => getAnnouncementsPublic(location, departmentId), [location, departmentId])
+  const cfg = useTickerSettings(location)
 
-  if (items === null || items.length === 0) return null
+  if (!cfg.enabled) return null
+  if (all === null || all.length === 0) return null
+
+  const items = all.slice(0, cfg.maxVisible)
 
   const topPriority = items.reduce<AnnouncementPriority>((top, item) => {
     const order: AnnouncementPriority[] = ["CRITICAL", "HIGH", "NORMAL", "LOW"]
@@ -42,8 +87,8 @@ export default function AnnouncementTicker({
       className="relative flex items-stretch overflow-hidden text-white"
     >
       <style>{`
-        .ann-track { animation: ann-scroll 35s linear infinite; }
-        .ann-track-wrap:hover .ann-track { animation-play-state: paused; }
+        .ann-track { animation: ann-scroll ${cfg.speedSeconds}s linear infinite; }
+        ${cfg.pauseOnHover ? ".ann-track-wrap:hover .ann-track { animation-play-state: paused; }" : ""}
         @keyframes ann-scroll {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
