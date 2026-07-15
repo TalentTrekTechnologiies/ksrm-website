@@ -71,8 +71,10 @@ const PR_STYLES = `
   .pr-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
   @media (max-width: 768px) { .pr-container { padding: 0 20px; } }
   .pr-head { text-align: center; }
-  .pr-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #2B3490; text-transform: uppercase; }
-  .pr-title { font-family: 'Rajdhani', sans-serif; font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 8px 0 0; }
+  /* Matches the standard public section heading (Rajdhani, 800, brand blue)
+     used by every hand-built section, so admin-driven blocks read as part of
+     the page rather than a bolted-on widget. */
+  .pr-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem, 3vw, 2.6rem); font-weight: 800; color: #2B3490; margin: 0 0 40px; }
   .pr-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px; gap: 14px; margin-top: 28px; }
   @media (max-width: 1024px) { .pr-gallery { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 560px) { .pr-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; } }
@@ -201,7 +203,6 @@ export default function PageResources({
         {videos.length > 0 && (
           <>
             <div className="pr-head">
-              <div className="pr-eyebrow">Videos</div>
               <h2 className="pr-title">Videos</h2>
             </div>
             <div className="pr-videos">
@@ -221,7 +222,6 @@ export default function PageResources({
         {images.length > 0 && (
           <>
             <div className="pr-head" style={{ marginTop: videos.length > 0 ? "48px" : 0 }}>
-              <div className="pr-eyebrow">Gallery</div>
               <h2 className="pr-title">{galleryTitle}</h2>
             </div>
             <div className="pr-gallery">
@@ -241,7 +241,6 @@ export default function PageResources({
         {docsList && (
           <>
             <div className="pr-head" style={{ marginTop: images.length > 0 ? "48px" : 0 }}>
-              <div className="pr-eyebrow">Resources</div>
               <h2 className="pr-title">{docsTitle}</h2>
             </div>
             {docsList}

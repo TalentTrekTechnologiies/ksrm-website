@@ -92,7 +92,17 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-      <section id="calendars" style={{ padding: "80px 0", background: "#f4f3ef" }}>
+      {/* Notifications lead - they are the most time-sensitive thing a student
+          comes here for. Fee payment / SBI sits lower down. */}
+      <section id="notifications" style={{ padding: "80px 0", background: "#f4f3ef" }}>
+        <div className="responsive-container">
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Latest Notifications</h2>
+          <ExamNotificationsList />
+          <PageResources section="examinations.notifications" embedded />
+        </div>
+      </section>
+
+      <section id="calendars" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Academic Calendars</h2>
           {calendarGroups.map((g) => (
@@ -116,14 +126,6 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-      <section id="notifications" style={{ padding: "80px 0", background: "white" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Latest Notifications</h2>
-          <ExamNotificationsList />
-          <PageResources section="examinations.notifications" embedded />
-        </div>
-      </section>
-
       <section id="timetables" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Exam Time Tables</h2>
@@ -139,7 +141,13 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-      <section id="results" style={{ padding: "80px 0", background: "white" }}>
+      {/* Anything routed to Examinations generally (or any QUESTION_PAPER)
+          still gets a catch-all block, so nothing an admin uploads is lost. */}
+      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="More Exam Documents" background="#ffffff" />
+
+      {/* Results & fee payment (SBI) sits low - it is a utility link-out, not
+          what most visitors scan the page for. */}
+      <section id="results" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Results &amp; Fee Payment</h2>
           <div className="exam-results-grid">
@@ -169,11 +177,7 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-      {/* Anything routed to Examinations generally (or any QUESTION_PAPER)
-          still gets a catch-all block, so nothing an admin uploads is lost. */}
-      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="More Exam Documents" background="#ffffff" />
-
-      <section id="contact" style={{ padding: "80px 0", background: "#f4f3ef" }}>
+      <section id="contact" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Contact Examination Cell</h2>
           <div style={{ maxWidth: 600, margin: "0 auto", border: "2px solid #D4A500", borderRadius: 12, padding: 40 }}>
