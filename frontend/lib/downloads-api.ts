@@ -12,7 +12,14 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "naac", label: "NAAC" },
   { value: "alumni", label: "Alumni" },
   { value: "syllabus", label: "Syllabus" },
-  { value: "examinations", label: "Examinations" },
+  // Examinations is split into its page's sub-sections so an upload lands in
+  // the right list (e.g. a timetable under Time Tables, results under Exam
+  // Results) instead of the page's catch-all block.
+  { value: "examinations.calendars", label: "Examinations → Academic Calendars" },
+  { value: "examinations.notifications", label: "Examinations → Notifications" },
+  { value: "examinations.timetables", label: "Examinations → Time Tables" },
+  { value: "examinations.results", label: "Examinations → Exam Results" },
+  { value: "examinations", label: "Examinations → Other Documents" },
   { value: "research", label: "Research" },
   { value: "library", label: "Library" },
   { value: "sports", label: "Sports" },

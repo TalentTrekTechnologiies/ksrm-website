@@ -54,13 +54,51 @@ async function fetchSection(section: string, docsCategory?: DownloadCategory): P
     docsCategory ? getDownloadsPublic(docsCategory).catch(() => [] as Download[]) : Promise.resolve([] as Download[]),
     getGalleryPublic(undefined, undefined, section).catch(() => [] as GalleryImage[]),
   ])
+  // Explicit page routing wins over category inclusion: a doc the admin routed
+  // to a specific section (e.g. "examinations.results") must appear only there,
+  // not also in a broader block that happens to match its category.
+  const byCategoryUnrouted = byCategory.filter((d) => !d.pageSection || d.pageSection === section)
   const seen = new Set<number>()
-  const docs = [...routed, ...byCategory].filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)))
+  const docs = [...routed, ...byCategoryUnrouted].filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)))
   // Split video-tagged gallery records out so they render as <video> players.
   const videos = images.filter((g) => g.category === VIDEO_CATEGORY)
   const realImages = images.filter((g) => g.category !== VIDEO_CATEGORY)
   return { docs, images: realImages, videos }
 }
+
+const PR_STYLES = `
+  .pr-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
+  @media (max-width: 768px) { .pr-container { padding: 0 20px; } }
+  .pr-head { text-align: center; }
+  .pr-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #2B3490; text-transform: uppercase; }
+  .pr-title { font-family: 'Rajdhani', sans-serif; font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 8px 0 0; }
+  .pr-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px; gap: 14px; margin-top: 28px; }
+  @media (max-width: 1024px) { .pr-gallery { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .pr-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; } }
+  .pr-videos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 28px; }
+  @media (max-width: 760px) { .pr-videos { grid-template-columns: 1fr; } }
+  .pr-video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #eef0f3; }
+  .pr-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pr-video-cap { font-size: 14px; font-weight: 600; color: #444; margin-top: 8px; text-align: center; }
+  .pr-tile { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #eef0f3; }
+  .pr-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+  .pr-tile:hover img { transform: scale(1.06); }
+  .pr-cap { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity 0.3s ease; background: linear-gradient(180deg, rgba(14,21,51,0) 55%, rgba(14,21,51,0.78) 100%); }
+  .pr-tile:hover .pr-cap { opacity: 1; }
+  .pr-cap span { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
+  /* Full container width so admin-uploaded docs line up with the hand-built
+     document rows on the same page (e.g. Examinations' Academic Calendars). */
+  .pr-list { display: flex; flex-direction: column; gap: 8px; margin-top: 28px; }
+  .pr-list.pr-embedded { margin-top: 8px; }
+  .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
+  .pr-list > div:first-child .pr-group-head { margin-top: 0; }
+  .pr-row { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.2s ease; }
+  .pr-row:hover { border-color: #D4A500; box-shadow: 0 8px 20px rgba(43,52,144,0.08); }
+  .pr-icon { width: 40px; height: 40px; border-radius: 6px; background: #eef1ff; color: #2B3490; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pr-doc-title { display: block; font-size: 15px; font-weight: 600; color: #2B3490; line-height: 1.4; }
+  .pr-doc-desc { display: block; font-size: 13px; color: #999; margin-top: 2px; }
+  .pr-pill { margin-left: auto; flex-shrink: 0; color: #fff; background: #2B3490; padding: 5px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+`
 
 /**
  * Drop-in block for any public page that shows the gallery images and
@@ -69,6 +107,7 @@ async function fetchSection(section: string, docsCategory?: DownloadCategory): P
  * least one image or document exists, so adding it to a page is always safe.
  *
  * Usage: <PageResources section="edc" />
+ *        <PageResources section="examinations.timetables" embedded />
  */
 export default function PageResources({
   section,
@@ -76,6 +115,7 @@ export default function PageResources({
   galleryTitle = "Gallery",
   docsTitle = "Downloads & Resources",
   background = "#f7f8fa",
+  embedded = false,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -83,6 +123,12 @@ export default function PageResources({
   galleryTitle?: string
   docsTitle?: string
   background?: string
+  /**
+   * Render only the document rows (no section wrapper, heading, gallery or
+   * videos) so a page can append admin-uploaded docs straight into an existing
+   * list - e.g. Examinations → Time Tables.
+   */
+  embedded?: boolean
 }) {
   const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
 
@@ -90,43 +136,40 @@ export default function PageResources({
   const { docs, images, videos } = data
   if (docs.length === 0 && images.length === 0 && videos.length === 0) return null
 
+  const docsList =
+    docs.length > 0 ? (
+      <div className={`pr-list${embedded ? " pr-embedded" : ""}`}>
+        {groupDocs(docs).map((grp) => (
+          <div key={grp.label ?? "__ungrouped__"}>
+            {grp.label && <div className="pr-group-head">{grp.label}</div>}
+            {grp.items.map((d) => (
+              <a key={d.id} href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="pr-row">
+                <span className="pr-icon"><FileText size={19} /></span>
+                <span style={{ minWidth: 0, flex: 1 }}>
+                  <span className="pr-doc-title">{d.title}</span>
+                  {d.description && <span className="pr-doc-desc">{d.description}</span>}
+                </span>
+                <span className="pr-pill">Download →</span>
+              </a>
+            ))}
+          </div>
+        ))}
+      </div>
+    ) : null
+
+  if (embedded) {
+    if (!docsList) return null
+    return (
+      <>
+        <style>{PR_STYLES}</style>
+        {docsList}
+      </>
+    )
+  }
+
   return (
     <section style={{ width: "100%", background, padding: "56px 0" }}>
-      <style>{`
-        .pr-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
-        @media (max-width: 768px) { .pr-container { padding: 0 20px; } }
-        .pr-head { text-align: center; }
-        .pr-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #2B3490; text-transform: uppercase; }
-        .pr-title { font-family: 'Rajdhani', sans-serif; font-size: 30px; font-weight: 700; color: #1a1a2e; margin: 8px 0 0; }
-        .pr-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px; gap: 14px; margin-top: 28px; }
-        @media (max-width: 1024px) { .pr-gallery { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 560px) { .pr-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; } }
-        .pr-videos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 28px; }
-        @media (max-width: 760px) { .pr-videos { grid-template-columns: 1fr; } }
-        .pr-video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #eef0f3; }
-        .pr-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .pr-video-cap { font-size: 14px; font-weight: 600; color: #444; margin-top: 8px; text-align: center; }
-        .pr-tile { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #eef0f3; }
-        .pr-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
-        .pr-tile:hover img { transform: scale(1.06); }
-        .pr-cap { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity 0.3s ease; background: linear-gradient(180deg, rgba(14,21,51,0) 55%, rgba(14,21,51,0.78) 100%); }
-        .pr-tile:hover .pr-cap { opacity: 1; }
-        .pr-cap span { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
-        /* Full-width stacked rows - matches the existing hardcoded document
-           lists on Examinations / Syllabus (the "AY 2025-26" style) so
-           uploaded docs read as the same list, not a separate widget. */
-        /* Full container width so admin-uploaded docs line up with the
-           hand-built document rows on the same page (e.g. Academic Calendars). */
-        .pr-list { display: flex; flex-direction: column; gap: 8px; margin-top: 28px; }
-        .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
-        .pr-list > div:first-child .pr-group-head { margin-top: 0; }
-        .pr-row { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.2s ease; }
-        .pr-row:hover { border-color: #D4A500; box-shadow: 0 8px 20px rgba(43,52,144,0.08); }
-        .pr-icon { width: 40px; height: 40px; border-radius: 6px; background: #eef1ff; color: #2B3490; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .pr-doc-title { display: block; font-size: 15px; font-weight: 600; color: #2B3490; line-height: 1.4; }
-        .pr-doc-desc { display: block; font-size: 13px; color: #999; margin-top: 2px; }
-        .pr-pill { margin-left: auto; flex-shrink: 0; color: #fff; background: #2B3490; padding: 5px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; white-space: nowrap; }
-      `}</style>
+      <style>{PR_STYLES}</style>
       <div className="pr-container">
         {/* VIDEOS */}
         {videos.length > 0 && (
@@ -169,29 +212,13 @@ export default function PageResources({
 
         {/* DOWNLOADS - grouped by groupLabel (e.g. "AY 2025-26", "B.Tech")
             when set; ungrouped docs render last under no heading. */}
-        {docs.length > 0 && (
+        {docsList && (
           <>
             <div className="pr-head" style={{ marginTop: images.length > 0 ? "48px" : 0 }}>
               <div className="pr-eyebrow">Resources</div>
               <h2 className="pr-title">{docsTitle}</h2>
             </div>
-            <div className="pr-list">
-              {groupDocs(docs).map((grp) => (
-                <div key={grp.label ?? "__ungrouped__"}>
-                  {grp.label && <div className="pr-group-head">{grp.label}</div>}
-                  {grp.items.map((d) => (
-                    <a key={d.id} href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="pr-row">
-                      <span className="pr-icon"><FileText size={19} /></span>
-                      <span style={{ minWidth: 0, flex: 1 }}>
-                        <span className="pr-doc-title">{d.title}</span>
-                        {d.description && <span className="pr-doc-desc">{d.description}</span>}
-                      </span>
-                      <span className="pr-pill">Download →</span>
-                    </a>
-                  ))}
-                </div>
-              ))}
-            </div>
+            {docsList}
           </>
         )}
       </div>

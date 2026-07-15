@@ -110,17 +110,17 @@ export default function ExaminationsPage() {
               ))}
             </div>
           ))}
+          {/* Calendars uploaded from the admin (Show on page →
+              "Examinations → Academic Calendars"), appended to the same list. */}
+          <PageResources section="examinations.calendars" embedded />
         </div>
       </section>
-
-      {/* Admin-uploaded exam documents (grouped by AY heading), right after
-          the hardcoded calendars so they read as one continuous list. */}
-      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="More Exam Documents" background="#ffffff" />
 
       <section id="notifications" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Latest Notifications</h2>
           <ExamNotificationsList />
+          <PageResources section="examinations.notifications" embedded />
         </div>
       </section>
 
@@ -134,6 +134,8 @@ export default function ExaminationsPage() {
               <a href={t.href} target="_blank" rel="noopener noreferrer" style={{ color: "#2B3490", fontSize: 13, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", padding: "4px 12px", background: "white", borderRadius: 4 }}>View →</a>
             </div>
           ))}
+          {/* Time tables uploaded from the admin land here. */}
+          <PageResources section="examinations.timetables" embedded />
         </div>
       </section>
 
@@ -161,8 +163,15 @@ export default function ExaminationsPage() {
               </div>
             </div>
           </div>
+          {/* Result sheets uploaded from the admin (e.g. "Exam Results AY 2025-26")
+              land here, grouped by their AY heading. */}
+          <PageResources section="examinations.results" embedded />
         </div>
       </section>
+
+      {/* Anything routed to Examinations generally (or any QUESTION_PAPER)
+          still gets a catch-all block, so nothing an admin uploads is lost. */}
+      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="More Exam Documents" background="#ffffff" />
 
       <section id="contact" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
