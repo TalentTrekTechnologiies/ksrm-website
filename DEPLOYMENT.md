@@ -2,7 +2,11 @@
 
 Two deployables:
 - **Backend** — NestJS + PostgreSQL + local media storage. Runs anywhere Docker runs (`docker-compose.prod.yml`, or `render.yaml` for Render).
-- **Frontend** — fully static Next.js export (`frontend/out`). Deploy to Netlify (config in `netlify.toml` **at the repo root**) or any static host/CDN.
+- **Frontend** — fully static Next.js export (`frontend/out`). Deploy to Netlify
+  (config in **`frontend/netlify.toml`**) or any static host/CDN.
+  > Netlify resolves `netlify.toml` from inside the **base directory**, so the
+  > config must live in `frontend/`, not the repo root. A root-level
+  > `netlify.toml` is silently ignored — no warning, no build error.
 
 ---
 
@@ -33,12 +37,18 @@ backend must exist first.
 
 **2. Frontend (Netlify)**
 1. Netlify → **Add new site → Import from Git** → pick this repo.
-   `netlify.toml` sets base=`frontend`, publish=`out`.
-2. Site settings → **Environment variables** → add
-   `NEXT_PUBLIC_API_URL = https://ksrm-backend.onrender.com` (no trailing slash).
-   **This is read at build time and inlined**, so set it *before* the first
-   build; changing it later needs a redeploy, not a restart.
+2. Set **Base directory = `frontend`**. Netlify then reads
+   `frontend/netlify.toml`, which pins the build command, publish dir, Node
+   version and `NEXT_PUBLIC_API_URL`. Nothing else needs typing in the UI.
 3. Deploy → note the site URL.
+
+> **`NEXT_PUBLIC_API_URL` is inlined at build time**, not read at runtime.
+> If it is missing the build still *succeeds* and ships a broken site:
+> `api-client.ts` falls back to `""` so every API call hits the Netlify origin
+> and 404s, while `api-base.ts`/`media-api.ts` fall back to `localhost:4000` so
+> images and PDFs break. Nothing appears in the build log — the only symptom is
+> in the browser console. After changing it, use **Clear cache and deploy site**;
+> a plain redeploy can reuse the cached bundle.
 
 **3. Point them at each other**
 1. Render → `ksrm-backend` → Environment → set `CORS_ORIGIN` to the real Netlify

@@ -1,15 +1,54 @@
+# Frontend deploy config (Netlify).
+#
+# THIS is the file Netlify reads - not the repo root. When a base directory is
+# configured, Netlify resolves netlify.toml from inside that base directory, so
+# a root-level netlify.toml is silently ignored. That mistake shipped a broken
+# site once: the API URL was pinned in the root file, Netlify never opened it,
+# and the build inlined nothing (see NEXT_PUBLIC_API_URL below). Keep the config
+# here, in the base directory.
+#
+# The frontend is a fully static export (next.config.ts -> output: "export"),
+# so Netlify only serves files from out/ - no serverless functions, no Next
+# runtime.
+
 [build]
-command = "npm run build"
-publish = "out"
+  command = "npm run build"
+  publish = "out"
 
 [build.environment]
-NODE_VERSION = "20"
+  NODE_VERSION = "22"
 
-# Static export - no serverless functions required
-# The /out folder contains fully static HTML/CSS/JS
+  # Read at BUILD time and inlined into the static output. It is pinned here
+  # rather than left to the Netlify UI because forgetting it does not fail the
+  # build - it ships a broken site with a green checkmark, in two ways at once:
+  #   - lib/api-client.ts falls back to "" (relative), so every API call hits
+  #     this Netlify origin, which serves no API, and 404s. This is exactly what
+  #     happened: POST https://ksrmcol.netlify.app/auth/login -> 404.
+  #   - lib/api-base.ts, media-api.ts, audit-logs-api.ts and
+  #     career-applications-api.ts fall back to http://localhost:4000, so every
+  #     image and PDF resolves against the visitor's own machine.
+  # Neither appears in the build log. Changing it needs a REBUILD (with cache
+  # cleared), not a restart. No trailing slash.
+  NEXT_PUBLIC_API_URL = "https://ksrm-backend.onrender.com"
 
-# Redirect /404.html for SPA-like 404 handling
+# Serves the export's own 404.html for unmatched paths. Safe because Netlify
+# matches real static files first: the export emits actual .html per route
+# (/about -> about.html), so this only catches genuinely unknown URLs. Note the
+# status is 404 - an SPA-style "to = /index.html, status = 200" rewrite would
+# swallow real routes and serve the homepage for every typo instead.
 [[redirects]]
-from = "/*"
-to = "/404.html"
-status = 404
+  from   = "/*"
+  to     = "/404.html"
+  status = 404
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options        = "SAMEORIGIN"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
