@@ -4,11 +4,19 @@
 # so Netlify only serves files from frontend/out - there are no serverless
 # functions and no Next runtime here.
 #
-# IMPORTANT: NEXT_PUBLIC_API_URL is read at BUILD time and inlined into the
-# static output, so it must be set in Netlify's environment variables (Site
-# settings -> Environment variables) BEFORE building - changing it later
-# requires a rebuild, not just a restart. It must point at the public backend
-# origin, e.g. https://ksrm-backend.onrender.com (no trailing slash).
+# NEXT_PUBLIC_API_URL is read at BUILD time and inlined into the static output.
+# It is pinned here rather than left to the Netlify UI because forgetting it does
+# not fail the build - it silently ships a broken site, in two different ways:
+#   - lib/api-base.ts, media-api.ts, audit-logs-api.ts and
+#     career-applications-api.ts fall back to http://localhost:4000, so every
+#     image and document points at the visitor's own machine
+#   - lib/api-client.ts falls back to "" (relative), so every API call goes to
+#     this Netlify origin, which serves no API, and 404s
+# Neither shows up in the build log. Keeping it in version control means the
+# value that ships is reviewable in a diff.
+#
+# Changing it requires a REBUILD, not a restart - it is baked into the HTML/JS.
+# No trailing slash.
 
 [build]
   base    = "frontend"
@@ -16,7 +24,8 @@
   publish = "out"
 
 [build.environment]
-  NODE_VERSION = "22"
+  NODE_VERSION        = "22"
+  NEXT_PUBLIC_API_URL = "https://ksrm-backend.onrender.com"
 
 # No catch-all redirect on purpose: the export emits real .html files (Netlify
 # resolves /about -> /about.html itself) plus a 404.html. An SPA-style
