@@ -45,8 +45,22 @@ export function configureApp(
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
 
+  // An origin is scheme + host + port and never has a path, so a trailing slash
+  // is always a typo - but CORS matching is byte-exact, so "https://site.app/"
+  // silently rejects a browser sending "https://site.app" and every request from
+  // the real site fails. That cost us a live demo once. Normalise it here rather
+  // than depending on whoever fills in the dashboard field getting it right.
+  // Comma-separated values are supported so a preview/staging origin can be added
+  // without a code change.
+  const corsOrigin = (
+    configService.get<string>('CORS_ORIGIN') ?? 'http://localhost:3000'
+  )
+    .split(',')
+    .map((o) => o.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+
   app.enableCors({
-    origin: configService.get<string>('CORS_ORIGIN') ?? 'http://localhost:3000',
+    origin: corsOrigin.length === 1 ? corsOrigin[0] : corsOrigin,
     credentials: true,
   });
 }
