@@ -1,4 +1,5 @@
 import { apiGet } from "./api-client";
+import { API_BASE } from "./api-base";
 import { getToken } from "./auth";
 
 export interface AuditLogEntry {
@@ -33,8 +34,9 @@ export interface AuditLogQuery {
   pageSize?: number;
 }
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:4000";
+// Resolved centrally (api-base.ts) - a bare `|| "http://localhost:4000"` here
+// pointed production downloads at the visitor's own machine.
+const API_BASE_URL = API_BASE;
 
 function buildQuery(query: AuditLogQuery): string {
   const params = new URLSearchParams();

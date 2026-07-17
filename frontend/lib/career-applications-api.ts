@@ -1,4 +1,5 @@
 import { apiGet, apiPatch, apiPost } from "./api-client"
+import { API_BASE } from "./api-base"
 import { xhrUpload } from "./media-api"
 import { getToken } from "./auth"
 
@@ -191,8 +192,9 @@ function authedDownload(path: string, filename: string) {
   // Exports/resume downloads return a file body, not JSON - apiGet always
   // parses JSON, so this does its own fetch with the auth header, same
   // approach as downloadAuditLogsCsv in audit-logs-api.ts.
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:4000"
+  // Resolved centrally (api-base.ts) - a bare `|| "http://localhost:4000"` here
+  // pointed production résumé downloads at the visitor's own machine.
+  const API_BASE_URL = API_BASE
   const token = getToken()
   return fetch(`${API_BASE_URL}${path}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,

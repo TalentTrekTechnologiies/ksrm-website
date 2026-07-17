@@ -1,8 +1,10 @@
 import { getToken, clearSession } from "./auth"
 import { apiDelete, apiGet, apiPatch, apiPost, ApiError } from "./api-client"
+import { API_BASE } from "./api-base"
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:4000"
+// Resolved centrally (api-base.ts) - a bare `|| "http://localhost:4000"` here
+// pointed every production media URL at the visitor's own machine.
+const API_BASE_URL = API_BASE
 
 export type MediaType = "IMAGE" | "VIDEO" | "DOCUMENT"
 export type MediaProcessingStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED"

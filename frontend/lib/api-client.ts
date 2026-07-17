@@ -1,17 +1,12 @@
 import { clearSession, getToken } from "./auth";
+import { API_BASE } from "./api-base";
 
-const CONFIGURED_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
-
+// Single source of truth (see api-base.ts). This used to resolve its own base
+// and, on a deployed host with no NEXT_PUBLIC_API_URL, return "" - which made
+// every request relative, so it hit the static host and 404'd instead of
+// failing loudly. API_BASE can no longer produce an origin that isn't a backend.
 function getApiBaseUrl() {
-  if (CONFIGURED_API_BASE_URL) return CONFIGURED_API_BASE_URL;
-  if (typeof window === "undefined") return "http://localhost:4000";
-
-  const host = window.location.hostname;
-  if (host === "localhost" || host === "127.0.0.1") {
-    return "http://localhost:4000";
-  }
-
-  return "";
+  return API_BASE;
 }
 
 export class ApiError extends Error {

@@ -54,6 +54,7 @@ import { PAGE_SECTIONS, getDownloadsAdmin, createDownload, deleteDownload } from
 import { getGalleryAdmin, createGalleryImage, deleteGalleryImage } from "@/lib/gallery-api"
 import { formatBytes } from "@/lib/format-bytes"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
+import { mediaFile as mediaFileUrl } from "@/lib/api-base"
 
 const CROP_PRESETS = [
   { key: "HERO_BANNER", label: "Hero Banner" },
@@ -77,13 +78,11 @@ function originalUrl(media: Media): string | null {
   return o?.url ?? media.variants[0]?.url ?? null
 }
 
-// Deterministic servable URL for a media id - safe even right after upload
-// before variants exist (the backend re-resolves the URL from mediaId on save
-// anyway; this is just the required non-empty fallback the DTO validates).
-function mediaFileUrl(id: number): string {
-  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:4000"
-  return `${base}/media/file/${id}/ORIGINAL/SOURCE`
-}
+// mediaFileUrl (a deterministic servable URL for a media id, safe even right
+// after upload before variants exist) now comes from api-base - see the import
+// at the top. It used to be reimplemented here byte-for-byte, carrying its own
+// `|| "http://localhost:4000"`, so a production build with no
+// NEXT_PUBLIC_API_URL wrote localhost URLs straight into the database.
 
 // Publishes a media file to a page section: images -> that page's Gallery,
 // documents -> that page's Downloads (under an optional group heading).
