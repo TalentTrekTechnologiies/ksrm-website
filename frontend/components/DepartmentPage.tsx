@@ -14,6 +14,8 @@ import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api";
 import { getEffectiveDisplaySettings } from "@/lib/department-display-settings-api";
 import { getCampusVideosForDepartment, getStatisticsPublic, SiteStatistic, CampusVideo } from "@/lib/homepage-api";
+import { getPublicSiteSettings } from "@/lib/site-settings-api";
+import { useLiveData, DEFAULT_POLL_INTERVAL_MS } from "@/lib/use-live-data";
 
 const NAV_ITEMS = [
   { id: "about", label: "About" },
@@ -39,6 +41,21 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
   const [statistics, setStatistics] = useState<SiteStatistic[]>([]);
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});
   const [resolvedDepartmentId, setResolvedDepartmentId] = useState<number | null>(null);
+  // Global switch (Site Settings -> Department Pages), not per-department: one
+  // flip changes every department. Polled rather than fetched once, so flipping
+  // it in the admin updates already-open public pages on their own, with no
+  // refresh (same reasoning as the homepage's live sections). The fetcher never
+  // rejects, so a failed poll settles to {} - photo cards - instead of leaving
+  // the faculty section stuck on its skeleton forever.
+  const liveSettings = useLiveData<Record<string, string>>(
+    () => getPublicSiteSettings().catch(() => ({} as Record<string, string>)),
+    [],
+  );
+  // Gate the faculty section until the switch is known, so a static page (always
+  // built in one mode) never flashes the wrong mode. Server and client both
+  // start at null -> hydration-safe.
+  const settingsLoaded = liveSettings !== null;
+  const facultyShowPhotos = liveSettings?.["faculty_show_photos"] !== "false";
 
   useEffect(() => {
     let cancelled = false
@@ -176,8 +193,16 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
       if (visibilityRes.status === "fulfilled") setVisibility(visibilityRes.value)
     }
 
+    // Re-run the whole load on an interval, not just once on mount: an edit
+    // published in the admin (faculty, labs, outcomes, programmes, visibility)
+    // then shows up on an already-open page without a refresh. Same env-aware
+    // cadence as the homepage's live sections - 2s dev / 30s prod.
     load()
-    return () => { cancelled = true }
+    const interval = setInterval(load, DEFAULT_POLL_INTERVAL_MS)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
   }, [fallbackDepartment])
 
   // Absence of a key means "visible" by default - matches the backend
@@ -316,6 +341,88 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           border-radius: 16px;
           padding: 32px;
         }
+
+        .dept-career-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+        .dept-career-tag {
+          display: inline-flex;
+          align-items: center;
+          background: #f7f8fa;
+          border: 1px solid #eef0f3;
+          border-left: 3px solid #D4A500;
+          border-radius: 8px;
+          padding: 10px 16px;
+          font-size: 15px;
+          color: #1a1a2e;
+          font-weight: 600;
+        }
+        .dept-why-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 14px;
+        }
+        .dept-why-list li {
+          position: relative;
+          padding-left: 32px;
+          color: #555;
+          font-size: 16px;
+          line-height: 1.6;
+        }
+        .dept-why-list li::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 22px;
+          height: 22px;
+          background: #2B3490;
+          color: #fff;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          font-weight: 700;
+        }
+        .dept-closing-callout {
+          margin-top: 48px;
+          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          color: #fff;
+          border-radius: 16px;
+          padding: 32px 40px;
+          font-size: 18px;
+          line-height: 1.7;
+          font-weight: 500;
+        }
+
+        .dept-faculty-skeleton {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 24px;
+        }
+        .dept-faculty-sk {
+          height: 300px;
+          border-radius: 16px;
+          background: #eef0f3;
+          animation: deptSkPulse 1.4s ease-in-out infinite;
+        }
+        @keyframes deptSkPulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+        .dept-faculty-table-wrap { overflow-x: auto; border: 1px solid #eef0f3; border-radius: 12px; }
+        .dept-faculty-table { width: 100%; border-collapse: collapse; font-size: 15px; background: #fff; }
+        .dept-faculty-table thead th {
+          background: #2B3490; color: #fff; text-align: left; padding: 14px 16px;
+          font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px;
+          text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .dept-faculty-table tbody td { padding: 12px 16px; border-bottom: 1px solid #eef0f3; color: #555; vertical-align: top; }
+        .dept-faculty-table tbody tr:last-child td { border-bottom: none; }
+        .dept-faculty-table tbody tr:nth-child(even) { background: #f7f8fa; }
+        .dept-faculty-table .name { font-weight: 700; color: #1a1a2e; white-space: nowrap; }
+        .dept-faculty-table a { color: #2B3490; text-decoration: none; }
+        .dept-faculty-table a:hover { text-decoration: underline; }
 
         .dept-vision-quote {
           border-left: 4px solid #D4A500;
@@ -585,9 +692,13 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           <div className="responsive-container">
             <h2 className="dept-section-title">About the Department</h2>
             <div style={{ display: "grid", gridTemplateColumns: department.aboutVideo ? "1fr 1fr" : "1fr", gap: 48, alignItems: "start" }}>
-              <p style={{ color: "#555", fontSize: 17, lineHeight: 1.8, margin: 0, maxWidth: 900 }}>
-                {department.about}
-              </p>
+              <div style={{ maxWidth: 900 }}>
+                {(department.overview?.length ? department.overview : [department.about]).map((para, i) => (
+                  <p key={i} style={{ color: "#555", fontSize: 17, lineHeight: 1.8, margin: i === 0 ? 0 : "16px 0 0" }}>
+                    {para}
+                  </p>
+                ))}
+              </div>
               {department.aboutVideo && (
                 <video
                   width="100%"
@@ -603,6 +714,50 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 </video>
               )}
             </div>
+
+            {department.whyDepartment && department.whyDepartment.length > 0 && (
+              <div style={{ marginTop: 56, maxWidth: 900 }}>
+                <h3 className="dept-section-title-sm">Why {department.shortName} at KSRMCE?</h3>
+                {department.whyDepartment.map((para, i) => (
+                  <p key={i} style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: i === 0 ? 0 : "16px 0 0" }}>{para}</p>
+                ))}
+              </div>
+            )}
+
+            {department.specialty && department.specialty.length > 0 && (
+              <div style={{ marginTop: 48, maxWidth: 900 }}>
+                <h3 className="dept-section-title-sm">Our Specialty &ndash; Future &amp; Scope</h3>
+                {department.specialty.map((para, i) => (
+                  <p key={i} style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: i === 0 ? 0 : "16px 0 0" }}>{para}</p>
+                ))}
+              </div>
+            )}
+
+            {department.careerOpportunities && department.careerOpportunities.length > 0 && (
+              <div style={{ marginTop: 48 }}>
+                <h3 className="dept-section-title-sm">Career Opportunities</h3>
+                <div className="dept-career-grid">
+                  {department.careerOpportunities.map((c, i) => (
+                    <span className="dept-career-tag" key={i}>{c}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {department.whyChoose && department.whyChoose.length > 0 && (
+              <div style={{ marginTop: 48 }}>
+                <h3 className="dept-section-title-sm">Why Choose {department.shortName} at KSRMCE?</h3>
+                <ul className="dept-why-list">
+                  {department.whyChoose.map((w, i) => (
+                    <li key={i}>{w}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {department.closingStatement && (
+              <div className="dept-closing-callout">{department.closingStatement}</div>
+            )}
           </div>
         </section>
         )}
@@ -714,6 +869,17 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         <section id="faculty" style={{ padding: "72px 0", background: "#f7f8fa" }}>
           <div className="responsive-container">
             <h2 className="dept-section-title" style={{ marginBottom: 32 }}>Our Faculty</h2>
+            {/* Global switch (Site Settings): on = photo cards for every
+                department, off = a compact data list (no photos) everywhere.
+                Until the switch is known, show a neutral skeleton so a static
+                page never flashes the wrong mode. */}
+            {!settingsLoaded ? (
+              <div className="dept-faculty-skeleton" aria-hidden="true">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div className="dept-faculty-sk" key={i} />
+                ))}
+              </div>
+            ) : facultyShowPhotos ? (
             <div className="dept-faculty-grid">
               {department.faculty.map((f, i) => {
                 const initials = f.name
@@ -728,7 +894,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                   <div className={`dept-faculty-card ${isHod ? "hod" : ""}`} key={i}>
                     <div className="dept-faculty-photo">
                       {isHod && <div className="dept-faculty-hod-badge">HOD</div>}
-                      {isVisible("faculty.showPhotos") && f.photo ? (
+                      {f.photo ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={f.photo} alt={f.name} loading="lazy"
                           style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }} />
@@ -756,6 +922,38 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 );
               })}
             </div>
+            ) : (
+            <div className="dept-faculty-table-wrap">
+              <table className="dept-faculty-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: 48 }}>#</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    {isVisible("faculty.showQualification") && <th>Qualification</th>}
+                    <th>Specialization</th>
+                    {isVisible("faculty.showExperience") && <th>Experience</th>}
+                    {isVisible("faculty.showEmail") && <th>Email</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {department.faculty.map((f, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td className="name">{f.name}</td>
+                      <td>{f.designation}</td>
+                      {isVisible("faculty.showQualification") && <td>{f.qualification || "—"}</td>}
+                      <td>{f.specialization || "—"}</td>
+                      {isVisible("faculty.showExperience") && <td>{f.experience || "—"}</td>}
+                      {isVisible("faculty.showEmail") && (
+                        <td>{f.email ? <a href={`mailto:${f.email}`}>{f.email}</a> : "—"}</td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            )}
           </div>
         </section>
         )}

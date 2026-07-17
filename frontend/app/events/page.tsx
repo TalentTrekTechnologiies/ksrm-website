@@ -1,29 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { getEventsPublic, EventItem } from "@/lib/events-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    getEventsPublic()
-      .then((items) => {
-        if (cancelled) return;
-        setEvents(items);
-      })
-      .catch(() => {
-        // Network/API failure - empty state (below) covers this too.
-      })
-      .finally(() => {
-        if (!cancelled) setLoaded(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Polled, so an event published in the admin appears here without a refresh.
+  // The fetcher never rejects, so a failed request resolves to [] and still
+  // marks the page loaded - the empty state below covers it, same as before.
+  const data = useLiveData<EventItem[]>(
+    () => getEventsPublic().catch(() => [] as EventItem[]),
+    [],
+  );
+  const events = data ?? [];
+  const loaded = data !== null;
 
   return (
     <main style={{ background: "#ffffff" }}>

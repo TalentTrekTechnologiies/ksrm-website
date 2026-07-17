@@ -5,7 +5,8 @@ import { AlertTriangle, CheckCircle2, Mail, Send } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTableSkeleton from "@/components/admin/cms/CmsTableSkeleton"
 import MediaField from "@/components/admin/cms/MediaField"
-import { TextField, TextAreaField, ToggleField, PrimaryButton } from "@/components/admin/cms/CmsForm"
+import CmsDialog from "@/components/admin/cms/CmsDialog"
+import { TextField, TextAreaField, ToggleField, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import {
   getSiteSettings,
@@ -110,6 +111,11 @@ function SiteSettingsManagerInner() {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null)
   const [savingGroup, setSavingGroup] = useState<string | null>(null)
   const [savedGroup, setSavedGroup] = useState<string | null>(null)
+  // Faculty-photos switch auto-saves through a confirm dialog (no Save button):
+  // the intended new value is held here while the dialog is open, and only
+  // persisted on Confirm.
+  const [pendingFacultyPhotos, setPendingFacultyPhotos] = useState<boolean | null>(null)
+  const [savingFaculty, setSavingFaculty] = useState(false)
   const [testEmailAddress, setTestEmailAddress] = useState("")
   const [testEmailStatus, setTestEmailStatus] = useState<"idle" | "sending" | "sent" | "error">("idle")
 
@@ -184,6 +190,31 @@ function SiteSettingsManagerInner() {
       setError(err instanceof ApiError ? err.message : `Failed to save ${groupName}`)
     } finally {
       setSavingGroup(null)
+    }
+  }
+
+  // Persist the faculty-photos switch once the admin confirms in the dialog.
+  // Immediate save, no page refresh: on success `bool("faculty_show_photos")`
+  // reflects the new value straight away.
+  async function confirmFacultyPhotos() {
+    if (pendingFacultyPhotos === null) return
+    const row = byKey["faculty_show_photos"]
+    if (!row) {
+      setError("The 'faculty_show_photos' setting doesn't exist yet - apply the latest database migration, then reload this page.")
+      setPendingFacultyPhotos(null)
+      return
+    }
+    setSavingFaculty(true)
+    setError(null)
+    try {
+      await updateSiteSetting(row.id, { value: String(pendingFacultyPhotos) })
+      setSettings(await getSiteSettings())
+      setValue("faculty_show_photos", String(pendingFacultyPhotos))
+      setPendingFacultyPhotos(null)
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to update faculty display mode")
+    } finally {
+      setSavingFaculty(false)
     }
   }
 
@@ -372,6 +403,41 @@ function SiteSettingsManagerInner() {
           />
         </div>
       </SectionCard>
+
+      <SectionCard
+        title="Department Pages"
+        description="Global appearance controls applied to every department page at once. Changes save on confirm - no Save button."
+      >
+        <ToggleField
+          label="Show faculty photos (off shows a compact faculty list on all departments)"
+          checked={bool("faculty_show_photos")}
+          onChange={(next) => setPendingFacultyPhotos(next)}
+        />
+      </SectionCard>
+
+      <CmsDialog
+        open={pendingFacultyPhotos !== null}
+        onClose={() => { if (!savingFaculty) setPendingFacultyPhotos(null) }}
+        title="Faculty photos"
+        description="Applies to all department pages"
+        size="sm"
+        footer={
+          <>
+            <SecondaryButton onClick={() => setPendingFacultyPhotos(null)} disabled={savingFaculty}>
+              Cancel
+            </SecondaryButton>
+            <PrimaryButton onClick={confirmFacultyPhotos} disabled={savingFaculty}>
+              {savingFaculty ? "Saving..." : "Confirm"}
+            </PrimaryButton>
+          </>
+        }
+      >
+        <p className="text-sm text-slate-600">
+          {pendingFacultyPhotos
+            ? "Turn faculty photos ON for every department page? Each page will show faculty as photo cards."
+            : "Turn faculty photos OFF for every department page? Each page will show a compact faculty list (no photos)."}
+        </p>
+      </CmsDialog>
 
       <SectionCard title="Homepage Sections" description="Turn homepage sections on or off without deleting their content.">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">

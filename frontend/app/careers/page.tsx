@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getCareersPublic, Career } from "@/lib/careers-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 function applyHref(o: { careerId: number | null; title: string; dept: string }) {
   const q = new URLSearchParams();
@@ -34,30 +34,26 @@ const FALLBACK_OPENINGS: OpeningDisplay[] = [
 ];
 
 export default function CareersPage() {
-  const [openings, setOpenings] = useState<OpeningDisplay[]>(FALLBACK_OPENINGS);
-
-  useEffect(() => {
-    let cancelled = false
-    getCareersPublic()
-      .then((items: Career[]) => {
-        if (cancelled || items.length === 0) return
-        setOpenings(
-          items.map((o) => ({
-            careerId: o.id,
-            title: o.title,
-            dept: o.department ?? "—",
-            type: o.employmentType ?? "—",
-            location: o.location ?? "—",
-          })),
-        )
-      })
-      .catch(() => {
-        // Network/API failure - fallback openings (already the initial state) stay.
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  // Polled, so an opening published in the admin appears here without a
+  // refresh. On an empty list or a failed fetch the fallback openings stay -
+  // useLiveData keeps the last good value rather than blanking the page.
+  const openings =
+    useLiveData<OpeningDisplay[]>(
+      () =>
+        getCareersPublic().then((items: Career[]) =>
+          items.length === 0
+            ? FALLBACK_OPENINGS
+            : items.map((o) => ({
+                careerId: o.id,
+                title: o.title,
+                dept: o.department ?? "—",
+                type: o.employmentType ?? "—",
+                location: o.location ?? "—",
+              })),
+        ),
+      [],
+      { initialValue: FALLBACK_OPENINGS },
+    ) ?? FALLBACK_OPENINGS;
 
   return (
     <main style={{ background: "#ffffff" }}>

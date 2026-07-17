@@ -2,25 +2,27 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { MapPin, Phone, Mail, ArrowRight } from "lucide-react"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 /**
  * Site Settings override the built-in defaults below, but only when actually
  * filled in - several of these settings ship empty, and a blank footer is worse
  * than the correct hardcoded value. `s()` returns the setting or the fallback.
+ *
+ * Polled, so a Site Settings edit reaches an already-open page without a
+ * refresh. `initialValue: {}` keeps the defaults showing until the first
+ * response, and a failed poll keeps the last good values rather than blanking.
  */
 function useSiteSettings() {
-  const [settings, setSettings] = useState<Record<string, string>>({})
-  useEffect(() => {
-    let cancelled = false
-    getPublicSiteSettings()
-      .then((v) => { if (!cancelled) setSettings(v) })
-      .catch(() => { /* defaults stay */ })
-    return () => { cancelled = true }
-  }, [])
-  return (key: string, fallback: string) => settings[key]?.trim() || fallback
+  const settings = useLiveData<Record<string, string>>(
+    () => getPublicSiteSettings(),
+    [],
+    { initialValue: {} },
+  )
+  return (key: string, fallback: string) => settings?.[key]?.trim() || fallback
 }
 
 type SvgIconProps = { size?: number; color?: string }
@@ -69,6 +71,7 @@ const ugPrograms = [
   { label: "EEE",          href: "/departments/eee"   },
   { label: "Civil",        href: "/departments/civil" },
   { label: "Mechanical",   href: "/departments/mech"  },
+  { label: "BCA",          href: "/departments/cse"   },
 ]
 
 const pgPrograms = [
@@ -78,7 +81,6 @@ const pgPrograms = [
   { label: "M.Tech – Structural",       href: "/departments/civil" },
   { label: "M.Tech – Thermal",          href: "/departments/mech" },
   { label: "MBA",                       href: "/departments/mba"  },
-  { label: "MCA",                       href: "/departments/cse"  },
 ]
 
 const diplomaPrograms = [

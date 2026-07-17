@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 const FALLBACK_LOGO_URL = "/header.png"
 
@@ -11,24 +11,16 @@ export default function Header() {
   // Fallback shown immediately (and kept if the CMS hasn't set a custom
   // logo, or the API is unreachable) so the header never renders empty -
   // same pattern as Hero.tsx's FALLBACK_* constants.
-  const [logoUrl, setLogoUrl] = useState(FALLBACK_LOGO_URL)
-  const [collegeName, setCollegeName] = useState("KSRM College of Engineering")
-
-  useEffect(() => {
-    let cancelled = false
-    getPublicSiteSettings("branding")
-      .then((settings) => {
-        if (cancelled) return
-        if (settings["site.logoUrl"]) setLogoUrl(settings["site.logoUrl"])
-        if (settings["site.collegeName"]) setCollegeName(settings["site.collegeName"])
-      })
-      .catch(() => {
-        // Network/API failure - fallback logo (already rendering) stays.
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  //
+  // Polled so a branding change in Site Settings reaches an already-open page
+  // without a refresh; a failed poll keeps the last good value.
+  const settings = useLiveData<Record<string, string>>(
+    () => getPublicSiteSettings("branding"),
+    [],
+    { initialValue: {} },
+  )
+  const logoUrl = settings?.["site.logoUrl"] || FALLBACK_LOGO_URL
+  const collegeName = settings?.["site.collegeName"] || "KSRM College of Engineering"
 
   const isCustomLogo = logoUrl !== FALLBACK_LOGO_URL
 

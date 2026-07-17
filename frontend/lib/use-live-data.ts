@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react"
 // ~7 req/s *per visitor*, which would overwhelm modest hosting under real
 // traffic; at 30s content still feels live). Override either way with
 // NEXT_PUBLIC_POLL_INTERVAL_MS at build time.
-const DEFAULT_POLL_INTERVAL_MS = Number(
+export const DEFAULT_POLL_INTERVAL_MS = Number(
   process.env.NEXT_PUBLIC_POLL_INTERVAL_MS ??
     (process.env.NODE_ENV === "production" ? 30_000 : 2_000),
 )

@@ -1,30 +1,19 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import { getPlacementsPublic, Placement } from "@/lib/placements-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 export default function PlacementsRecordPage() {
-  const [records, setRecords] = useState<Placement[]>([]);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    getPlacementsPublic()
-      .then((items) => {
-        if (cancelled) return;
-        setRecords(items);
-      })
-      .catch(() => {
-        // Network/API failure - empty state (below) covers this too.
-      })
-      .finally(() => {
-        if (!cancelled) setLoaded(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Polled, so a placement record published in the admin appears here without a
+  // refresh. The fetcher never rejects, so a failed request resolves to [] and
+  // still marks the page loaded - the empty state below covers it, as before.
+  const data = useLiveData<Placement[]>(
+    () => getPlacementsPublic().catch(() => [] as Placement[]),
+    [],
+  );
+  const records = data ?? [];
+  const loaded = data !== null;
 
   return (
     <>

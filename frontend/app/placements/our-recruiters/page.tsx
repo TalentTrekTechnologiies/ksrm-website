@@ -1,30 +1,19 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import { getRecruitersPublic, Recruiter } from "@/lib/homepage-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 export default function OurRecruitersPage() {
-  const [recruiters, setRecruiters] = useState<Recruiter[]>([]);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    getRecruitersPublic()
-      .then(({ items }) => {
-        if (cancelled) return;
-        setRecruiters(items);
-      })
-      .catch(() => {
-        // Network/API failure - empty state (below) covers this too.
-      })
-      .finally(() => {
-        if (!cancelled) setLoaded(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Polled, so a recruiter published in the admin appears here without a
+  // refresh. The fetcher never rejects, so a failed request resolves to [] and
+  // still marks the page loaded - the empty state below covers it, as before.
+  const data = useLiveData<Recruiter[]>(
+    () => getRecruitersPublic().then(({ items }) => items).catch(() => [] as Recruiter[]),
+    [],
+  );
+  const recruiters = data ?? [];
+  const loaded = data !== null;
 
   return (
     <>

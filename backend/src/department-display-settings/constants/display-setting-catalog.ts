@@ -19,7 +19,11 @@ export const DEPARTMENT_DISPLAY_SETTINGS_CATALOG: DisplaySettingCatalogEntry[] =
   { key: 'hod.showMessage', section: 'HOD', label: "Show HOD's Message" },
   { key: 'hod.showContact', section: 'HOD', label: "Show HOD's Contact Email" },
   { key: 'faculty.showSection', section: 'Faculty', label: 'Show Faculty Section' },
-  { key: 'faculty.showPhotos', section: 'Faculty', label: 'Show Faculty Photos' },
+  // NOTE: faculty photos on/off is a GLOBAL switch (SiteSetting
+  // 'faculty_show_photos', edited under Site Settings -> Department Pages), not
+  // a per-department toggle - off renders a compact faculty list on every
+  // department page. Deliberately not listed here so admins aren't offered a
+  // dead per-department control that the public page no longer reads.
   { key: 'faculty.showQualification', section: 'Faculty', label: 'Show Faculty Qualification' },
   { key: 'faculty.showExperience', section: 'Faculty', label: 'Show Faculty Experience' },
   { key: 'faculty.showEmail', section: 'Faculty', label: 'Show Faculty Email' },

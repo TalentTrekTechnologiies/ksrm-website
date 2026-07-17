@@ -1,29 +1,21 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { getExamNotificationsPublic, ExamNotification } from "@/lib/exam-notifications-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 // Renders the CMS-managed exam notifications (Hall Ticket/Results/
 // Registration/Exam Schedule/Important Notice, etc.) inside the
 // Examinations page's existing "Latest Notifications" section - the public
 // site is a static export with no server runtime, so this fetches
-// client-side on mount rather than at build time.
+// client-side rather than at build time. Polled, so a notification published
+// in the admin appears without a refresh; the fetcher never rejects, so a
+// failed request resolves to [] and shows the empty state instead of hanging
+// on "Loading...".
 export default function ExamNotificationsList() {
-  const [items, setItems] = useState<ExamNotification[] | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    getExamNotificationsPublic()
-      .then((data) => {
-        if (!cancelled) setItems(data)
-      })
-      .catch(() => {
-        if (!cancelled) setItems([])
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const items = useLiveData<ExamNotification[]>(
+    () => getExamNotificationsPublic().catch(() => [] as ExamNotification[]),
+    [],
+  )
 
   if (items === null) {
     return <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "24px 0" }}>Loading notifications...</p>

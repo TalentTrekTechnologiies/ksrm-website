@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { getCommitteesPublic } from "@/lib/committees-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 interface CommitteeMemberDisplay {
   name: string;
@@ -18,25 +18,23 @@ const FALLBACK_COMMITTEE: CommitteeMemberDisplay[] = [
 ];
 
 export default function AntiRaggingCommittee() {
-  const [committee, setCommittee] = useState<CommitteeMemberDisplay[]>(FALLBACK_COMMITTEE);
-
-  useEffect(() => {
-    let cancelled = false
-    getCommitteesPublic("ANTI_RAGGING")
-      .then((committees) => {
-        if (cancelled) return
-        const members = committees
-          .flatMap((c) => c.members)
-          .filter((m) => m.isActive)
-          .sort((a, b) => a.sortOrder - b.sortOrder)
-        if (members.length === 0) return
-        setCommittee(members.map((m) => ({ name: m.name, designation: m.designation, role: m.role })))
-      })
-      .catch(() => {
-        // Network/API failure - fallback committee (already the initial state) stays.
-      })
-    return () => { cancelled = true }
-  }, [])
+  // Polled, so a committee change in the admin appears without a refresh. On an
+  // empty roster or a failed fetch the fallback committee stays - useLiveData
+  // keeps the last good value rather than blanking the section.
+  const committee =
+    useLiveData<CommitteeMemberDisplay[]>(
+      () =>
+        getCommitteesPublic("ANTI_RAGGING").then((committees) => {
+          const members = committees
+            .flatMap((c) => c.members)
+            .filter((m) => m.isActive)
+            .sort((a, b) => a.sortOrder - b.sortOrder)
+          if (members.length === 0) return FALLBACK_COMMITTEE
+          return members.map((m) => ({ name: m.name, designation: m.designation, role: m.role }))
+        }),
+      [],
+      { initialValue: FALLBACK_COMMITTEE },
+    ) ?? FALLBACK_COMMITTEE;
 
   return (
     <div style={{ overflowX: "auto" }}>

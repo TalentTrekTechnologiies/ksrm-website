@@ -1,8 +1,9 @@
 ﻿"use client";
 
 import { mediaFile } from "@/lib/api-base";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getNewsPublic } from "@/lib/news-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 const filters = ["All", "Examinations", "Events", "Accreditation", "Rankings", "Placements"];
 
@@ -39,39 +40,37 @@ const FALLBACK_NEWS: NewsDisplay[] = [
 
 export default function NewsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [newsItems, setNewsItems] = useState<NewsDisplay[]>(FALLBACK_NEWS);
 
-  useEffect(() => {
-    let cancelled = false
-    // This full listing page always renders published articles regardless
-    // of the homepage teaser's visibility flag - that flag only controls
-    // whether the homepage's "Latest News" section shows, not this page.
-    getNewsPublic()
-      .then(({ items }) => {
-        if (cancelled || items.length === 0) return
-        setNewsItems(
-          items.map((n) => {
-            const style = CATEGORY_STYLES[n.category] ?? DEFAULT_CATEGORY_STYLE
-            return {
-              badge: n.category,
-              badgeBg: style.bg,
-              badgeColor: style.color,
-              isNew: n.isFeatured,
-              date: n.date.slice(0, 10),
-              title: n.title,
-              desc: n.content.length > 160 ? `${n.content.slice(0, 160)}…` : n.content,
-              href: "#",
-            }
-          }),
-        )
-      })
-      .catch(() => {
-        // Network/API failure - fallback news (already the initial state) stay.
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  // Polled, so an article published in the admin appears here without a
+  // refresh. On an empty list or a failed fetch the fallback news stay -
+  // useLiveData keeps the last good value rather than blanking the page.
+  //
+  // This full listing page always renders published articles regardless
+  // of the homepage teaser's visibility flag - that flag only controls
+  // whether the homepage's "Latest News" section shows, not this page.
+  const newsItems =
+    useLiveData<NewsDisplay[]>(
+      () =>
+        getNewsPublic().then(({ items }) =>
+          items.length === 0
+            ? FALLBACK_NEWS
+            : items.map((n) => {
+                const style = CATEGORY_STYLES[n.category] ?? DEFAULT_CATEGORY_STYLE
+                return {
+                  badge: n.category,
+                  badgeBg: style.bg,
+                  badgeColor: style.color,
+                  isNew: n.isFeatured,
+                  date: n.date.slice(0, 10),
+                  title: n.title,
+                  desc: n.content.length > 160 ? `${n.content.slice(0, 160)}…` : n.content,
+                  href: "#",
+                }
+              }),
+        ),
+      [],
+      { initialValue: FALLBACK_NEWS },
+    ) ?? FALLBACK_NEWS;
 
   const filteredNews = activeFilter === "All"
     ? newsItems

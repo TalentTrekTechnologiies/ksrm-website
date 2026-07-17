@@ -1,7 +1,8 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getGalleryPublic } from "@/lib/gallery-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 interface GalleryImageDisplay {
   src: string;
@@ -116,29 +117,27 @@ const videos = [
 
 export default function GalleryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [images, setImages] = useState<GalleryImageDisplay[]>(FALLBACK_IMAGES);
 
-  useEffect(() => {
-    let cancelled = false
-    getGalleryPublic()
-      .then((items) => {
-        if (cancelled || items.length === 0) return
-        // Merge, don't replace - the legacy fallback set (including every
-        // /Filtered photo) stays visible until an admin actually replaces
-        // that content through the CMS. A handful of real DB rows
-        // previously wiped out the entire fallback set here since this
-        // used to be a straight setImages(cmsOnly) - see the bug report.
-        const cmsImages = items.map((i) => ({ src: i.imageUrl, alt: i.title, cat: i.category || "Campus" }))
-        const existingSrcs = new Set(cmsImages.map((i) => i.src))
-        setImages([...cmsImages, ...FALLBACK_IMAGES.filter((i) => !existingSrcs.has(i.src))])
-      })
-      .catch(() => {
-        // Network/API failure - fallback images (already the initial state) stay.
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  // Polled, so an image published in the admin appears here without a refresh.
+  // On an empty list or a failed fetch the fallback images stay - useLiveData
+  // keeps the last good value rather than blanking the page.
+  const images =
+    useLiveData<GalleryImageDisplay[]>(
+      () =>
+        getGalleryPublic().then((items) => {
+          if (items.length === 0) return FALLBACK_IMAGES
+          // Merge, don't replace - the legacy fallback set (including every
+          // /Filtered photo) stays visible until an admin actually replaces
+          // that content through the CMS. A handful of real DB rows
+          // previously wiped out the entire fallback set here since this
+          // used to be a straight setImages(cmsOnly) - see the bug report.
+          const cmsImages = items.map((i) => ({ src: i.imageUrl, alt: i.title, cat: i.category || "Campus" }))
+          const existingSrcs = new Set(cmsImages.map((i) => i.src))
+          return [...cmsImages, ...FALLBACK_IMAGES.filter((i) => !existingSrcs.has(i.src))]
+        }),
+      [],
+      { initialValue: FALLBACK_IMAGES },
+    ) ?? FALLBACK_IMAGES;
 
   const filteredImages = activeFilter === "All"
     ? images

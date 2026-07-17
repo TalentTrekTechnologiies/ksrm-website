@@ -1,7 +1,8 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 type FacultyMember = {
   name: string;
@@ -102,37 +103,50 @@ function BriefcaseIcon() {
   );
 }
 
-export default function FacultyPage() {
-  const [facultyByDept, setFacultyByDept] = useState<Record<string, FacultyMember[]>>(FALLBACK_FACULTY_BY_DEPT);
-  const [activeTab, setActiveTab] = useState<string | null>(null);
-  const [stats, setStats] = useState({ total: 88, phd: 26 });
+// Roster and the counts above it come from one fetch, so they travel together
+// and can never render out of step with each other.
+type FacultyPayload = { byDept: Record<string, FacultyMember[]>; stats: { total: number; phd: number } };
+const FALLBACK_PAYLOAD: FacultyPayload = {
+  byDept: FALLBACK_FACULTY_BY_DEPT,
+  stats: { total: 88, phd: 26 },
+};
 
-  useEffect(() => {
-    let cancelled = false
-    getFacultyPublic()
-      .then((items: Faculty[]) => {
-        if (cancelled || items.length === 0) return
-        const grouped: Record<string, FacultyMember[]> = {}
-        for (const f of items) {
-          const dept = f.department || "Other"
-          if (!grouped[dept]) grouped[dept] = []
-          grouped[dept].push({
-            name: f.name,
-            designation: f.designation,
-            qualification: f.qualification,
-            specialization: f.specialization ?? undefined,
-            photo: f.photoUrl ?? undefined,
-          })
-        }
-        setFacultyByDept(grouped)
-        setStats({
-          total: items.length,
-          phd: items.filter((f) => /ph\.?\s*d/i.test(f.qualification)).length,
-        })
-      })
-      .catch(() => {})
-    return () => { cancelled = true }
-  }, [])
+export default function FacultyPage() {
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  // Polled, so a faculty edit in the admin appears here without a refresh. On
+  // an empty roster or a failed fetch the fallback stays - useLiveData keeps
+  // the last good value rather than blanking the page.
+  const live =
+    useLiveData<FacultyPayload>(
+      () =>
+        getFacultyPublic().then((items: Faculty[]) => {
+          if (items.length === 0) return FALLBACK_PAYLOAD
+          const grouped: Record<string, FacultyMember[]> = {}
+          for (const f of items) {
+            const dept = f.department || "Other"
+            if (!grouped[dept]) grouped[dept] = []
+            grouped[dept].push({
+              name: f.name,
+              designation: f.designation,
+              qualification: f.qualification,
+              specialization: f.specialization ?? undefined,
+              photo: f.photoUrl ?? undefined,
+            })
+          }
+          return {
+            byDept: grouped,
+            stats: {
+              total: items.length,
+              phd: items.filter((f) => /ph\.?\s*d/i.test(f.qualification)).length,
+            },
+          }
+        }),
+      [],
+      { initialValue: FALLBACK_PAYLOAD },
+    ) ?? FALLBACK_PAYLOAD;
+  const facultyByDept = live.byDept;
+  const stats = live.stats;
 
   const TABS = Object.keys(facultyByDept);
   const currentTab = activeTab && TABS.includes(activeTab) ? activeTab : TABS[0];

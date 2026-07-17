@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 const CATEGORY_LABELS: Record<DownloadCategory, string> = {
   SYLLABUS: "Syllabus",
@@ -15,27 +16,17 @@ const CATEGORY_LABELS: Record<DownloadCategory, string> = {
 const FILTERS: ("All" | DownloadCategory)[] = ["All", "SYLLABUS", "QUESTION_PAPER", "BROCHURE", "AFFIDAVIT", "FORM", "OTHER"];
 
 export default function DownloadsPage() {
-  const [downloads, setDownloads] = useState<Download[]>([]);
-  const [loaded, setLoaded] = useState(false);
   const [activeFilter, setActiveFilter] = useState<"All" | DownloadCategory>("All");
 
-  useEffect(() => {
-    let cancelled = false;
-    getDownloadsPublic()
-      .then((items) => {
-        if (cancelled) return;
-        setDownloads(items);
-      })
-      .catch(() => {
-        // Network/API failure - empty state (below) covers this too.
-      })
-      .finally(() => {
-        if (!cancelled) setLoaded(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // Polled, so a file published in the admin appears here without a refresh.
+  // The fetcher never rejects, so a failed request resolves to [] and still
+  // marks the page loaded - the empty state below covers it, same as before.
+  const data = useLiveData<Download[]>(
+    () => getDownloadsPublic().catch(() => [] as Download[]),
+    [],
+  );
+  const downloads = data ?? [];
+  const loaded = data !== null;
 
   const filtered = useMemo(
     () => (activeFilter === "All" ? downloads : downloads.filter((d) => d.category === activeFilter)),
