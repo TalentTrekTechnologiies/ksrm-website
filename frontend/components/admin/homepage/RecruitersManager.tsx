@@ -17,6 +17,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getRecruitersAdmin,
   createRecruiter,
@@ -38,6 +39,7 @@ const emptyForm: FormState = { name: "", logoUrl: "", mediaId: null, isActive: t
 function RecruitersManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Recruiter[]>([])
   const [editing, setEditing] = useState<Recruiter | null>(null)
   const [creating, setCreating] = useState(false)
@@ -93,6 +95,7 @@ function RecruitersManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -104,6 +107,7 @@ function RecruitersManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save recruiter")
     } finally {
@@ -112,10 +116,11 @@ function RecruitersManagerInner() {
   }
 
   async function handleDelete(item: Recruiter) {
-    if (!confirm(`Delete "${item.name}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.name}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteRecruiter(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete recruiter")
     }
@@ -132,7 +137,7 @@ function RecruitersManagerInner() {
 
   async function handleBulkDelete() {
     if (selectedIds.size === 0) return
-    if (!confirm(`Delete ${selectedIds.size} recruiter logo(s)? You can restore them afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete ${selectedIds.size} recruiter logo(s)? You can restore them afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     setError(null)
     const results = await Promise.allSettled([...selectedIds].map((id) => deleteRecruiter(id)))
     const failed = results.filter((r) => r.status === "rejected").length

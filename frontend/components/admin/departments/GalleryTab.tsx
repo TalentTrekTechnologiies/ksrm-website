@@ -6,6 +6,7 @@ import CmsCardGrid from "@/components/admin/cms/CmsCardGrid"
 import MediaField from "@/components/admin/cms/MediaField"
 import { TextField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getGalleryAdmin,
   createGalleryImage,
@@ -27,6 +28,7 @@ const emptyForm: FormState = { title: "", imageUrl: "", mediaId: null, isActive:
 export default function GalleryTab({ departmentId }: { departmentId: number }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<GalleryImage[]>([])
   const [editing, setEditing] = useState<GalleryImage | null>(null)
   const [creating, setCreating] = useState(false)
@@ -79,6 +81,7 @@ export default function GalleryTab({ departmentId }: { departmentId: number }) {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -101,6 +104,7 @@ export default function GalleryTab({ departmentId }: { departmentId: number }) {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save gallery image")
     } finally {
@@ -109,10 +113,11 @@ export default function GalleryTab({ departmentId }: { departmentId: number }) {
   }
 
   async function handleDelete(item: GalleryImage) {
-    if (!confirm(`Delete "${item.title}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.title}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteGalleryImage(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete gallery image")
     }

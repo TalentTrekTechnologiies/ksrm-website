@@ -5,6 +5,7 @@ import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star } from "l
 import MediaField from "@/components/admin/cms/MediaField"
 import { TextField, TextAreaField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getFacultyAdmin,
   createFaculty,
@@ -52,6 +53,7 @@ const emptyForm: FormState = {
 export default function FacultyTab({ departmentId, departmentName }: { departmentId: number; departmentName: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Faculty[]>([])
   const [editing, setEditing] = useState<Faculty | null>(null)
   const [creating, setCreating] = useState(false)
@@ -115,6 +117,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -139,6 +142,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save faculty")
     } finally {
@@ -147,10 +151,11 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
   }
 
   async function handleDelete(item: Faculty) {
-    if (!confirm(`Delete "${item.name}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.name}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteFaculty(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete faculty")
     }

@@ -15,6 +15,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getFacultyAdmin,
   createFaculty,
@@ -51,6 +52,7 @@ const emptyForm: FormState = {
 function FacultyManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Faculty[]>([])
   const [editing, setEditing] = useState<Faculty | null>(null)
   const [creating, setCreating] = useState(false)
@@ -114,6 +116,7 @@ function FacultyManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -135,6 +138,7 @@ function FacultyManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save faculty")
     } finally {
@@ -143,10 +147,11 @@ function FacultyManagerInner() {
   }
 
   async function handleDelete(item: Faculty) {
-    if (!confirm(`Delete "${item.name}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.name}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteFaculty(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete faculty")
     }

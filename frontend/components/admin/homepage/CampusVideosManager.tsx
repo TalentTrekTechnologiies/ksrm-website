@@ -14,6 +14,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getCampusVideosAdmin,
   createCampusVideo,
@@ -40,6 +41,7 @@ function getVideoId(url: string) {
 function CampusVideosManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<CampusVideo[]>([])
   const [editing, setEditing] = useState<CampusVideo | null>(null)
   const [creating, setCreating] = useState(false)
@@ -93,6 +95,7 @@ function CampusVideosManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -109,6 +112,7 @@ function CampusVideosManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save campus video")
     } finally {
@@ -117,10 +121,11 @@ function CampusVideosManagerInner() {
   }
 
   async function handleDelete(item: CampusVideo) {
-    if (!confirm(`Delete "${item.title}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.title}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteCampusVideo(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete campus video")
     }

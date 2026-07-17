@@ -5,6 +5,7 @@ import { Loader2, Plus, AlertTriangle, Pencil, Trash2 } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
 import { TextField, TextAreaField, NumberField, SelectField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getResearchAdmin,
   createResearch,
@@ -46,6 +47,7 @@ const TYPE_OPTIONS = [
 export default function ResearchTab({ departmentId }: { departmentId: number }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<ResearchRecord[]>([])
   const [editing, setEditing] = useState<ResearchRecord | null>(null)
   const [creating, setCreating] = useState(false)
@@ -108,6 +110,7 @@ export default function ResearchTab({ departmentId }: { departmentId: number }) 
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -129,6 +132,7 @@ export default function ResearchTab({ departmentId }: { departmentId: number }) 
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save research record")
     } finally {
@@ -137,10 +141,11 @@ export default function ResearchTab({ departmentId }: { departmentId: number }) 
   }
 
   async function handleDelete(item: ResearchRecord) {
-    if (!confirm(`Delete "${item.title}"? This cannot be undone.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.title}"? This cannot be undone.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteResearch(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete research record")
     }

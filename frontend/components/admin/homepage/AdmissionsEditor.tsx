@@ -20,6 +20,7 @@ import {
 } from "@/components/admin/cms/CmsForm"
 import { useSectionEditor } from "@/lib/useSectionEditor"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   AdmissionsContent,
   HelplinePhone,
@@ -66,6 +67,7 @@ function ProgramsManager() {
   const [programs, setPrograms] = useState<AdmissionProgram[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [editing, setEditing] = useState<AdmissionProgram | null>(null)
   const [creating, setCreating] = useState(false)
   const [form, setForm] = useState<ProgramFormState>(emptyProgramForm)
@@ -124,6 +126,7 @@ function ProgramsManager() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -144,6 +147,7 @@ function ProgramsManager() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save program")
     } finally {
@@ -152,10 +156,11 @@ function ProgramsManager() {
   }
 
   async function handleDelete(program: AdmissionProgram) {
-    if (!confirm(`Delete "${program.title}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${program.title}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteAdmissionProgram(program.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete program")
     }

@@ -19,6 +19,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getDepartmentsAdmin,
   createDepartment,
@@ -59,6 +60,7 @@ const emptyForm: FormState = {
 function DepartmentsManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Department[]>([])
   const [editing, setEditing] = useState<Department | null>(null)
   const [creating, setCreating] = useState(false)
@@ -124,6 +126,7 @@ function DepartmentsManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -147,6 +150,7 @@ function DepartmentsManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save department")
     } finally {
@@ -155,10 +159,11 @@ function DepartmentsManagerInner() {
   }
 
   async function handleDelete(item: Department) {
-    if (!confirm(`Delete "${item.name}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.name}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteDepartment(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete department")
     }

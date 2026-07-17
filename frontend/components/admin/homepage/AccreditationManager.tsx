@@ -15,6 +15,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getAccreditationBadgesAdmin,
   createAccreditationBadge,
@@ -51,6 +52,7 @@ const emptyForm: FormState = {
 function AccreditationManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<AccreditationBadge[]>([])
   const [editing, setEditing] = useState<AccreditationBadge | null>(null)
   const [creating, setCreating] = useState(false)
@@ -114,6 +116,7 @@ function AccreditationManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -135,6 +138,7 @@ function AccreditationManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save accreditation badge")
     } finally {
@@ -143,10 +147,11 @@ function AccreditationManagerInner() {
   }
 
   async function handleDelete(item: AccreditationBadge) {
-    if (!confirm(`Delete "${item.name}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.name}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteAccreditationBadge(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete accreditation badge")
     }

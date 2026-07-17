@@ -14,6 +14,7 @@ import {
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { getRoles, getPermissions, createRole, updateRole, deleteRole, Role, Permission } from "@/lib/roles-api"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 
 interface FormState {
   name: string
@@ -37,6 +38,7 @@ function groupByModule(permissions: Permission[]): Map<string, Permission[]> {
 function RolesManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [roles, setRoles] = useState<Role[]>([])
   const [permissions, setPermissions] = useState<Permission[]>([])
   const [editing, setEditing] = useState<Role | null>(null)
@@ -96,6 +98,7 @@ function RolesManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -111,6 +114,7 @@ function RolesManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save role")
     } finally {
@@ -120,11 +124,12 @@ function RolesManagerInner() {
 
   async function handleDelete(role: Role) {
     if (role.isSystemRole) return
-    if (!confirm(`Delete role "${role.name}"? This cannot be undone.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete role "${role.name}"? This cannot be undone.`, confirmLabel: "Delete", destructive: true }))) return
     setError(null)
     try {
       await deleteRole(role.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete role")
     }

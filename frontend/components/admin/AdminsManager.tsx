@@ -18,6 +18,7 @@ import { ApiError } from "@/lib/api-client"
 import { getStoredAdmin } from "@/lib/auth"
 import { getRoles, Role } from "@/lib/roles-api"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getAdmins,
   createAdmin,
@@ -77,6 +78,7 @@ function AdminsManagerInner() {
   const currentAdmin = getStoredAdmin()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Admin[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -171,6 +173,7 @@ function AdminsManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -198,6 +201,7 @@ function AdminsManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save admin")
     } finally {
@@ -216,11 +220,12 @@ function AdminsManagerInner() {
   }
 
   async function handleDelete(admin: Admin) {
-    if (!confirm(`Delete admin "${admin.name}"? You can restore them afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete admin "${admin.name}"? You can restore them afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     setError(null)
     try {
       await deleteAdmin(admin.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete admin")
     }

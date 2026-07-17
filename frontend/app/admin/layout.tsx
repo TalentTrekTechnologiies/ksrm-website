@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import AdminSidebar from "@/components/admin/AdminSidebar"
 import AdminNavbar from "@/components/admin/AdminNavbar"
+import CmsConfirmProvider from "@/components/admin/cms/CmsConfirmProvider"
 import { isLoggedIn } from "@/lib/auth"
 
 /**
@@ -50,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [skipChrome, router])
 
   if (skipChrome) {
-    return <>{children}</>
+    return <CmsConfirmProvider>{children}</CmsConfirmProvider>
   }
 
   if (!authChecked) {
@@ -62,6 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
+    <CmsConfirmProvider>
     <div className="flex min-h-screen" style={{ background: "var(--color-admin-bg)" }}>
       {/* Desktop sidebar */}
       <div className="hidden md:block">
@@ -91,5 +93,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
       </div>
     </div>
+    </CmsConfirmProvider>
   )
 }

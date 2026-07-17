@@ -53,6 +53,7 @@ import { resolveUsageRoute } from "@/lib/media-usage-routes"
 import { PAGE_SECTIONS, getDownloadsAdmin, createDownload, deleteDownload } from "@/lib/downloads-api"
 import { getGalleryAdmin, createGalleryImage, deleteGalleryImage } from "@/lib/gallery-api"
 import { formatBytes } from "@/lib/format-bytes"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 
 const CROP_PRESETS = [
   { key: "HERO_BANNER", label: "Hero Banner" },
@@ -109,6 +110,7 @@ function MediaLibraryManagerInner() {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [search, setSearch] = useState("")
   const [typeFilter, setTypeFilter] = useState<MediaType | "">("")
   const [categoryFilter, setCategoryFilter] = useState("")
@@ -238,7 +240,7 @@ function MediaLibraryManagerInner() {
 
   async function handleBulkDelete() {
     if (selectedIds.size === 0) return
-    if (!confirm(`Delete ${selectedIds.size} item(s)? You can restore them afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete ${selectedIds.size} item(s)? You can restore them afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     const result = await bulkDeleteMedia([...selectedIds])
     const failed = result.results.filter((r) => !r.success).length
     if (failed > 0) setError(`${failed} of ${selectedIds.size} could not be deleted (still in use).`)
@@ -794,6 +796,9 @@ function MediaDetailsDrawer({
   onClose: () => void
   onChanged: (item: Media) => void
 }) {
+  // Its own hook call - this drawer is a sibling component, not nested inside
+  // MediaLibraryManagerInner, so it can't reach that one's `confirm`.
+  const { confirm, notifySaved } = useCmsConfirm()
   const [usages, setUsages] = useState<MediaUsage[]>([])
   const [versions, setVersions] = useState<MediaVersion[]>([])
   const [title, setTitle] = useState(item.title ?? "")
@@ -815,6 +820,7 @@ function MediaDetailsDrawer({
   }, [item.id])
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -829,6 +835,7 @@ function MediaDetailsDrawer({
         version: item.version,
       })
       onChanged(updated)
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save")
     } finally {

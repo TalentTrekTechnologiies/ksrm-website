@@ -16,6 +16,7 @@ import { CmsPriorityBadge } from "@/components/admin/cms/CmsStatusBadge"
 import CmsTableSkeleton from "@/components/admin/cms/CmsTableSkeleton"
 import { ApiError } from "@/lib/api-client"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getAnnouncementsAdmin,
   createAnnouncement,
@@ -73,6 +74,7 @@ function toDatetimeLocal(iso: string | null): string {
 function AnnouncementsManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Announcement[]>([])
   const [departments, setDepartments] = useState<Department[]>([])
   const [editing, setEditing] = useState<Announcement | null>(null)
@@ -168,6 +170,7 @@ function AnnouncementsManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     if (form.locations.size === 0) {
       setError("Select at least one display location.")
       return
@@ -197,6 +200,7 @@ function AnnouncementsManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save announcement")
     } finally {
@@ -215,10 +219,11 @@ function AnnouncementsManagerInner() {
   }
 
   async function handleDelete(item: Announcement) {
-    if (!confirm(`Delete "${item.title}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.title}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteAnnouncement(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete announcement")
     }

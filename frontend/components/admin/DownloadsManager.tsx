@@ -17,6 +17,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getDownloadsAdmin,
   createDownload,
@@ -57,6 +58,7 @@ const emptyForm: FormState = { title: "", description: "", category: "OTHER", pa
 function DownloadsManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Download[]>([])
   const [editing, setEditing] = useState<Download | null>(null)
   const [creating, setCreating] = useState(false)
@@ -110,6 +112,7 @@ function DownloadsManagerInner() {
   }
 
   async function handleSave() {
+    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
     setError(null)
     try {
@@ -121,6 +124,7 @@ function DownloadsManagerInner() {
       }
       cancelForm()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save download")
     } finally {
@@ -129,10 +133,11 @@ function DownloadsManagerInner() {
   }
 
   async function handleDelete(item: Download) {
-    if (!confirm(`Delete "${item.title}"? You can restore it afterwards.`)) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.title}"? You can restore it afterwards.`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteDownload(item.id)
       await refresh()
+      notifySaved("The item has been deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete download")
     }
