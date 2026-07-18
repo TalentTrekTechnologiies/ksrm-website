@@ -1,6 +1,9 @@
 ﻿"use client";
 
+import { useMemo, useState } from "react";
 import PageResources from "@/components/PageResources";
+import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 const missions = [
   "Create a conducive environment for quality research and innovation",
@@ -41,11 +44,14 @@ const additionalDocs = [
 
 const tabs = [
   { label: "📖 About RDC", id: "about" },
+  { label: "📚 Publications", id: "publications" },
   { label: "🎯 Vision & Mission", id: "vision" },
   { label: "👥 Advisory Committee", id: "committee" },
   { label: "📋 Policies & Guidelines", id: "policies" },
   { label: "📞 Contact", id: "contact" },
 ];
+
+const ALL_DEPARTMENTS = "All Departments";
 
 function DownloadIcon() {
   return (
@@ -90,6 +96,28 @@ export default function ResearchPage() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // No departmentId argument = every department's research, whereas a
+  // department page passes its own id and gets only its own. Research is
+  // entered per-department (the admin has no global "add research" screen), so
+  // without this the institution's own output appeared nowhere on its Research
+  // page. Polled like the rest of the public site, so a record published in a
+  // department's workspace shows up here without a refresh.
+  const records = useLiveData<ResearchRecord[]>(
+    () => getResearchPublic().catch(() => [] as ResearchRecord[]),
+    [],
+  );
+  const [deptFilter, setDeptFilter] = useState<string>(ALL_DEPARTMENTS);
+
+  const departments = useMemo(() => {
+    const names = new Set((records ?? []).map((r) => r.department).filter(Boolean));
+    return [ALL_DEPARTMENTS, ...Array.from(names).sort()];
+  }, [records]);
+
+  const visible = useMemo(() => {
+    const all = records ?? [];
+    return deptFilter === ALL_DEPARTMENTS ? all : all.filter((r) => r.department === deptFilter);
+  }, [records, deptFilter]);
+
   return (
     <div>
       <style>{`
@@ -118,6 +146,24 @@ export default function ResearchPage() {
           display: flex; align-items: center; gap: 12px; justify-content: center; color: #2B3490;
           text-decoration: none; font-weight: 600; font-size: 15px; padding: 8px 12px;
           background: rgba(255,230,25,0.1); border-radius: 4px;
+        }
+        .rdc-filter-btn {
+          padding: 8px 16px; border: 1px solid #ccc; border-radius: 20px; background: #fff;
+          color: #444; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s;
+        }
+        .rdc-filter-btn:hover { border-color: #2B3490; color: #2B3490; }
+        .rdc-pub-card {
+          background: #fff; border: 1px solid #ddd; border-left: 4px solid #D4A500;
+          border-radius: 8px; padding: 20px 22px; transition: box-shadow 0.2s;
+        }
+        .rdc-pub-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+        .rdc-pub-type {
+          background: #2B3490; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+          text-transform: uppercase; padding: 3px 9px; border-radius: 4px;
+        }
+        .rdc-pub-dept {
+          background: #eef1ff; color: #2B3490; font-size: 12px; font-weight: 700;
+          padding: 3px 9px; border-radius: 4px;
         }
       `}</style>
 
@@ -187,6 +233,83 @@ export default function ResearchPage() {
               papers undergo standard plagiarism checks, and necessary software is made available for all researchers.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* PUBLICATIONS - aggregated from every department's CMS records */}
+      <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="publications">
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>
+            📚 Research Publications
+          </h2>
+          <p style={{ color: "#666", fontSize: 15, margin: "0 0 28px" }}>
+            Publications, projects and patents from across all departments.
+          </p>
+
+          {records === null ? (
+            <p style={{ color: "#888", fontSize: 15 }}>Loading research records...</p>
+          ) : records.length === 0 ? (
+            <div style={{ background: "#fff", border: "1px solid #ddd", borderRadius: 8, padding: 28, color: "#666", fontSize: 15 }}>
+              No research records have been published yet. They appear here as departments add them.
+            </div>
+          ) : (
+            <>
+              {departments.length > 2 && (
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 24 }}>
+                  {departments.map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => setDeptFilter(d)}
+                      className="rdc-filter-btn"
+                      style={
+                        deptFilter === d
+                          ? { background: "#2B3490", color: "#D4A500", borderColor: "#2B3490" }
+                          : undefined
+                      }
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <p style={{ color: "#666", fontSize: 14, margin: "0 0 16px" }}>
+                Showing <strong style={{ color: "#2B3490" }}>{visible.length}</strong>{" "}
+                {visible.length === 1 ? "record" : "records"}
+                {deptFilter !== ALL_DEPARTMENTS ? ` in ${deptFilter}` : ""}
+              </p>
+
+              <div style={{ display: "grid", gap: 14 }}>
+                {visible.map((r) => (
+                  <article key={r.id} className="rdc-pub-card">
+                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                      <span className="rdc-pub-type">{r.type}</span>
+                      <span className="rdc-pub-dept">{r.department}</span>
+                      <span style={{ color: "#888", fontSize: 13, fontWeight: 600 }}>{r.year}</span>
+                    </div>
+                    <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1a1a2e", margin: "0 0 6px", lineHeight: 1.45 }}>
+                      {r.title}
+                    </h3>
+                    <p style={{ color: "#555", fontSize: 14, margin: "0 0 6px" }}>{r.authors}</p>
+                    {r.journal && (
+                      <p style={{ color: "#777", fontSize: 14, fontStyle: "italic", margin: "0 0 8px" }}>{r.journal}</p>
+                    )}
+                    {(r.doiOrLink || r.attachmentUrl) && (
+                      <a
+                        href={r.doiOrLink || r.attachmentUrl || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rdc-contact-link"
+                        style={{ justifyContent: "flex-start", display: "inline-flex", fontSize: 14 }}
+                      >
+                        {r.doiOrLink ? "View publication" : "Download attachment"}
+                      </a>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
