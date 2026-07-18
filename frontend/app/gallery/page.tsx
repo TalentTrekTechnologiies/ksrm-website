@@ -131,7 +131,13 @@ export default function GalleryPage() {
           // that content through the CMS. A handful of real DB rows
           // previously wiped out the entire fallback set here since this
           // used to be a straight setImages(cmsOnly) - see the bug report.
-          const cmsImages = items.map((i) => ({ src: i.imageUrl, alt: i.title, cat: i.category || "Campus" }))
+          // Videos published to a page are stored as Gallery rows tagged
+          // "__video__" (see PageResources) - they are not photos, and an
+          // <img> pointing at an .mp4 renders as a broken tile, with the
+          // sentinel also leaking into the category filter chips.
+          const cmsImages = items
+            .filter((i) => i.category !== "__video__")
+            .map((i) => ({ src: i.imageUrl, alt: i.title, cat: i.category || "Campus" }))
           const existingSrcs = new Set(cmsImages.map((i) => i.src))
           return [...cmsImages, ...FALLBACK_IMAGES.filter((i) => !existingSrcs.has(i.src))]
         }),

@@ -184,7 +184,13 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
       }
       if (researchRes.status === "fulfilled") setResearch(researchRes.value)
       if (galleryRes.status === "fulfilled" && galleryRes.value.length > 0) {
-        setDepartment((prev) => ({ ...prev, gallery: galleryRes.value.map((g) => g.imageUrl) }))
+        // Skip "__video__"-tagged rows: those are page-published videos stored
+        // in the Gallery table (see PageResources), not photos - rendering one
+        // through an <img> gives a broken tile.
+        setDepartment((prev) => ({
+          ...prev,
+          gallery: galleryRes.value.filter((g) => g.category !== "__video__").map((g) => g.imageUrl),
+        }))
       }
       if (videosRes.status === "fulfilled") setVideos(videosRes.value)
       if (downloadsRes.status === "fulfilled") setDownloads(downloadsRes.value)
