@@ -45,6 +45,7 @@ const additionalDocs = [
 const tabs = [
   { label: "📖 About RDC", id: "about" },
   { label: "📚 Publications", id: "publications" },
+  { label: "🎬 Videos & Documents", id: "resources" },
   { label: "🎯 Vision & Mission", id: "vision" },
   { label: "👥 Advisory Committee", id: "committee" },
   { label: "📋 Policies & Guidelines", id: "policies" },
@@ -337,8 +338,20 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      {/* Admin-uploaded research videos / images / documents */}
-      <PageResources section="research" background="#ffffff" />
+      {/* Videos, PDFs and images routed to the Research page from the Media
+          Library's "Show on page" - including uploads made inside a department,
+          since the public downloads/gallery filters only narrow by department
+          when a departmentId is passed, and this passes none. Self-hiding: the
+          whole block (anchor and heading included) renders nothing when no
+          media has been routed here yet. */}
+      <PageResources
+        section="research"
+        background="#ffffff"
+        anchorId="resources"
+        heading="🎬 Research Videos & Documents"
+        galleryTitle="Research Gallery"
+        docsTitle="Research Papers & Documents"
+      />
 
       {/* VISION & MISSION */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="vision">

@@ -154,6 +154,8 @@ export default function PageResources({
   background = "#f7f8fa",
   embedded = false,
   maxVisible = 6,
+  anchorId,
+  heading,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -161,6 +163,14 @@ export default function PageResources({
   galleryTitle?: string
   docsTitle?: string
   background?: string
+  /**
+   * Anchor + heading for pages that link to this block from a tab bar. Applied
+   * to the section element itself rather than wrapped by the caller, because
+   * this component renders nothing when the section is empty - a caller-side
+   * wrapper would leave a dangling heading above blank space.
+   */
+  anchorId?: string
+  heading?: string
   /** Rows shown per group before collapsing behind a "Show all" toggle. */
   maxVisible?: number
   /**
@@ -196,9 +206,22 @@ export default function PageResources({
   }
 
   return (
-    <section style={{ width: "100%", background, padding: "56px 0" }}>
+    <section id={anchorId} style={{ width: "100%", background, padding: "56px 0" }}>
       <style>{PR_STYLES}</style>
       <div className="pr-container">
+        {heading && (
+          <h2
+            style={{
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+              fontWeight: 700,
+              color: "#2B3490",
+              fontFamily: "'Rajdhani', sans-serif",
+              margin: "0 0 28px",
+            }}
+          >
+            {heading}
+          </h2>
+        )}
         {/* VIDEOS */}
         {videos.length > 0 && (
           <>
