@@ -69,12 +69,25 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         if (!match) return
         departmentId = match.id
         setResolvedDepartmentId(match.id)
+        // A department row seeded before its content was written stores its own
+        // name as the About text - treat that as "no real About yet". Anything
+        // else is prose an admin actually wrote in the CMS.
+        const cmsAbout =
+          match.about && match.about.trim() !== (match.name ?? "").trim()
+            ? match.about
+            : undefined
         setDepartment((prev) => ({
           ...prev,
           name: match.name || prev.name,
           shortName: match.shortName ?? prev.shortName,
           tagline: match.tagline ?? prev.tagline,
-          about: match.about || prev.about,
+          about: cmsAbout ?? prev.about,
+          // A CMS-written About must actually display: the About section
+          // renders the static `overview` paragraphs when present, so an
+          // admin's edit was silently invisible on departments (ECE) that ship
+          // one. Dropping overview here lets the render's `[department.about]`
+          // fallback take over; with no real CMS About, the static file wins.
+          ...(cmsAbout ? { overview: undefined } : {}),
           heroImage: match.heroImageUrl ?? prev.heroImage,
           aboutVideo: match.aboutVideoUrl ?? prev.aboutVideo,
           vision: match.vision ?? prev.vision,
