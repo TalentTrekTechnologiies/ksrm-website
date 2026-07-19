@@ -23,7 +23,7 @@ export default function PermissionGate({
     return (
       <div
         style={{ boxShadow: "var(--shadow-admin-card)" }}
-        className="flex flex-col items-center rounded-xl border border-admin-border bg-white p-10 text-center"
+        className="flex flex-col items-center rounded-2xl border border-admin-border bg-white p-10 text-center"
       >
         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
           <ShieldOff className="h-6 w-6" />

@@ -120,7 +120,7 @@ export default function DisplaySettingsTab({ departmentId }: { departmentId: num
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {sections.map(([section, sectionEntries]) => (
-          <div key={section} style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-4">
+          <div key={section} style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-4">
             <p className="mb-3 text-sm font-semibold text-slate-700">{section}</p>
             <div className="space-y-2.5">
               {sectionEntries.map((entry) => {

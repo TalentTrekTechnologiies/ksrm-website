@@ -96,7 +96,7 @@ function DepartmentWorkspaceInner() {
         <a href="/admin/departments" className="mb-2 flex w-fit items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-admin-primary">
           <ArrowLeft className="h-3.5 w-3.5" /> Departments
         </a>
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           {department.name}
         </h1>
         <p className="text-sm text-slate-500">

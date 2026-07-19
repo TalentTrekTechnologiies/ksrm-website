@@ -25,7 +25,7 @@ export default function SectionEditorHeader({
         / {title}
       </p>
       <div className="mt-1 flex flex-wrap items-center gap-3">
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           {title}
         </h1>
         {status && <CmsStatusBadge status={status} />}

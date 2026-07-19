@@ -168,7 +168,7 @@ export default function VideosTab({ departmentId }: { departmentId: number }) {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit video" : "New video"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
           <TextField label="YouTube embed URL" value={form.youtubeUrl} onChange={(v) => setForm({ ...form, youtubeUrl: v })} required placeholder="https://www.youtube.com/embed/..." />

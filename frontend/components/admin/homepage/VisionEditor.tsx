@@ -60,7 +60,7 @@ function VisionEditorInner() {
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-6">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-6">
           <TextField label="Eyebrow" value={form.eyebrow ?? ""} onChange={(v) => setForm({ ...form, eyebrow: v })} placeholder="Who We Are" maxLength={60} />
           <TextField label="Section heading" value={form.heading} onChange={(v) => setForm({ ...form, heading: v })} required maxLength={120} />
           <TextField label="Vision label" value={form.label} onChange={(v) => setForm({ ...form, label: v })} required maxLength={60} />

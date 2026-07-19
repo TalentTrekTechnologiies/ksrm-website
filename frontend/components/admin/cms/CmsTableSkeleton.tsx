@@ -34,7 +34,7 @@ export default function CmsTableSkeleton({
       )}
       <div
         style={{ boxShadow: "var(--shadow-admin-card)" }}
-        className="overflow-hidden rounded-xl border border-admin-border bg-white"
+        className="overflow-hidden rounded-2xl border border-admin-border bg-white"
       >
         <div className="border-b border-admin-border bg-admin-bg/60 px-4 py-3">
           <div className="h-3.5 w-full max-w-md animate-pulse rounded bg-slate-200" />

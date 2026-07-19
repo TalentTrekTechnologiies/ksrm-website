@@ -285,7 +285,7 @@ function AdminsManagerInner() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           Admin Accounts
         </h1>
         <p className="text-sm text-slate-500">
@@ -300,7 +300,7 @@ function AdminsManagerInner() {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit admin" : "New admin"}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
@@ -401,7 +401,7 @@ function AdminsManagerInner() {
         }
       />
 
-      <div className="overflow-hidden rounded-xl border border-admin-border bg-white">
+      <div className="overflow-hidden rounded-2xl border border-admin-border bg-white">
         <div className="overflow-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-admin-bg">

@@ -255,7 +255,7 @@ function CommitteesManagerInner() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           Committees
         </h1>
         <p className="text-sm text-slate-500">Committees and their membership rosters (Anti-Ragging, Grievance Redressal, etc).</p>
@@ -268,7 +268,7 @@ function CommitteesManagerInner() {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit committee" : "New committee"}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
@@ -286,7 +286,7 @@ function CommitteesManagerInner() {
       )}
 
       {managingMembersOf && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-slate-700">Members of &ldquo;{managingMembersOf.name}&rdquo;</p>
             <button type="button" onClick={() => setManagingMembersOf(null)} className="text-slate-400 hover:text-slate-700">

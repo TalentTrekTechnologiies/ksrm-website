@@ -40,7 +40,7 @@ function CardSkeleton() {
   return (
     <div
       style={{ boxShadow: "var(--shadow-admin-card)" }}
-      className="rounded-xl border border-admin-border bg-white p-5"
+      className="rounded-2xl border border-admin-border bg-white p-5"
     >
       <div className="flex items-start justify-between">
         <div className="space-y-2">
@@ -57,7 +57,7 @@ function PanelSkeleton() {
   return (
     <div
       style={{ boxShadow: "var(--shadow-admin-card)" }}
-      className="rounded-xl border border-admin-border bg-white p-5"
+      className="rounded-2xl border border-admin-border bg-white p-5"
     >
       <div className="mb-4 h-5 w-40 animate-pulse rounded bg-slate-100" />
       <div className="h-64 animate-pulse rounded-lg bg-slate-50" />
@@ -133,7 +133,7 @@ export default function DashboardHome() {
     return (
       <div
         style={{ boxShadow: "var(--shadow-admin-card)" }}
-        className="flex flex-col items-center rounded-xl border border-admin-border bg-white p-10 text-center"
+        className="flex flex-col items-center rounded-2xl border border-admin-border bg-white p-10 text-center"
       >
         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
           <AlertTriangle className="h-6 w-6" />

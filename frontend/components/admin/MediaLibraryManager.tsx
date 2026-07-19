@@ -290,7 +290,7 @@ function MediaLibraryManagerInner() {
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
             Media Library
           </h1>
           <p className="text-sm text-slate-500">
@@ -347,12 +347,12 @@ function MediaLibraryManagerInner() {
       {stats && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {(["IMAGE", "VIDEO", "DOCUMENT"] as MediaType[]).map((t) => (
-            <div key={t} style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-4">
+            <div key={t} style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-4">
               <div className="flex items-center gap-2 text-slate-400">{typeIcon(t)}<span className="text-xs font-semibold uppercase">{t}s</span></div>
               <p className="mt-1 text-2xl font-bold text-slate-900">{stats.counts[t]}</p>
             </div>
           ))}
-          <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-4">
+          <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-4">
             <p className="text-xs font-semibold uppercase text-slate-400">Storage Used</p>
             <p className="mt-1 text-2xl font-bold text-slate-900">{formatBytes(stats.totalSizeBytes)}</p>
           </div>
@@ -373,7 +373,7 @@ function MediaLibraryManagerInner() {
         }}
         className="grid grid-cols-1 gap-5 lg:grid-cols-[220px_1fr]"
       >
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="h-fit rounded-xl border border-admin-border bg-white p-3">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="h-fit rounded-2xl border border-admin-border bg-white p-3">
           <CmsFolderTree
             folders={folders}
             selectedFolderId={selectedFolderId}

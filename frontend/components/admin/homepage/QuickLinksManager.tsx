@@ -192,7 +192,7 @@ function QuickLinksManagerInner() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
             Quick Links
           </h1>
           <p className="text-sm text-slate-500">The Digital Campus Services grid. Drag to reorder.</p>
@@ -213,7 +213,7 @@ function QuickLinksManagerInner() {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit quick link" : "New quick link"}</p>
           <MediaField
             label="Image"
@@ -240,7 +240,7 @@ function QuickLinksManagerInner() {
         </div>
       )}
 
-      <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-5">
+      <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-5">
         <CmsDragList
           items={liveItems}
           onReorder={handleReorder}

@@ -63,7 +63,7 @@ function ApplicationsManagerInner() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
             Job Applications
           </h1>
           <p className="text-sm text-slate-500">{total} total applications</p>
@@ -124,7 +124,7 @@ function ApplicationsManagerInner() {
           No applications found.
         </p>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-admin-border bg-white">
+        <div className="overflow-hidden rounded-2xl border border-admin-border bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-admin-bg">

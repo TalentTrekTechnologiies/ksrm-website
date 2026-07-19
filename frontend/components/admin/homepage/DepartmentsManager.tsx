@@ -172,7 +172,7 @@ function DepartmentsManagerInner() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
             Departments
           </h1>
           <p className="text-sm text-slate-500">
@@ -189,7 +189,7 @@ function DepartmentsManagerInner() {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit department card" : "New department card"}</p>
           <TextField label="Department name" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={100} placeholder="Computer Science & Engineering" />
           <MediaField
@@ -260,7 +260,7 @@ function DepartmentsManagerInner() {
       />
 
       {deletedItems.length > 0 && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-5">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Recently deleted</p>
           <ul className="space-y-1.5">
             {deletedItems.map((item) => (

@@ -135,7 +135,7 @@ export default function ApplicationDetailModal({
             <p className="text-sm text-slate-400">Loading...</p>
           ) : (
             <>
-              <div className="rounded-xl border border-admin-border bg-white p-4">
+              <div className="rounded-2xl border border-admin-border bg-white p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <h3 className="text-base font-bold text-slate-900">{application.fullName}</h3>
@@ -193,7 +193,7 @@ export default function ApplicationDetailModal({
                 )}
               </div>
 
-              <div className="rounded-xl border border-admin-border bg-white p-4">
+              <div className="rounded-2xl border border-admin-border bg-white p-4">
                 <h3 className="mb-3 text-sm font-bold text-slate-900">Status</h3>
                 <div className="flex flex-wrap items-end gap-3">
                   <div className="min-w-[200px] flex-1">
@@ -234,7 +234,7 @@ export default function ApplicationDetailModal({
                 </div>
               </div>
 
-              <div className="rounded-xl border border-admin-border bg-white p-4">
+              <div className="rounded-2xl border border-admin-border bg-white p-4">
                 <h3 className="mb-3 text-sm font-bold text-slate-900">Assign HR</h3>
                 <SelectField
                   label="Assigned to"
@@ -248,7 +248,7 @@ export default function ApplicationDetailModal({
                 {assigningHr && <p className="mt-1 text-xs text-slate-400">Saving...</p>}
               </div>
 
-              <div className="rounded-xl border border-admin-border bg-white p-4">
+              <div className="rounded-2xl border border-admin-border bg-white p-4">
                 <h3 className="mb-3 text-sm font-bold text-slate-900">Notes</h3>
                 <TextAreaField label="Internal notes" value={notes} onChange={setNotes} rows={4} />
                 <div className="mt-3 flex justify-end">

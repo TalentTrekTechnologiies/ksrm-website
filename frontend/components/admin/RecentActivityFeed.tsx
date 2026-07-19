@@ -22,7 +22,7 @@ export default function RecentActivityFeed({ items }: { items: RecentActivityIte
   return (
     <div
       style={{ boxShadow: "var(--shadow-admin-card)" }}
-      className="rounded-xl border border-admin-border bg-white p-5"
+      className="rounded-2xl border border-admin-border bg-white p-5"
     >
       <p
         style={{ fontFamily: "var(--font-admin-heading)" }}

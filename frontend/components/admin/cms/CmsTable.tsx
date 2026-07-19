@@ -85,7 +85,7 @@ export default function CmsTable<T extends { id: number }>({
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-t border-admin-border transition-colors hover:bg-admin-bg/60">
+              <tr key={row.id} className="border-t border-admin-border transition-colors hover:bg-admin-primary/[0.04]">
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="px-5 py-3.5 text-slate-700">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -207,7 +207,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit faculty" : "New faculty"}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />

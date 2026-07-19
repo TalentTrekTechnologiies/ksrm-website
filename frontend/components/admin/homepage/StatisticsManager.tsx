@@ -180,7 +180,7 @@ function StatisticsManagerInner() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           Statistics
         </h1>
         <p className="text-sm text-slate-500">Drag to reorder. Changes apply to the public homepage immediately.</p>
@@ -193,7 +193,7 @@ function StatisticsManagerInner() {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit statistic" : "New statistic"}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <TextField label="Label" value={form.label} onChange={(v) => setForm({ ...form, label: v })} required />
@@ -216,7 +216,7 @@ function StatisticsManagerInner() {
         const deletedItems = groupItems.filter((i) => i.deletedAt !== null)
 
         return (
-          <div key={group.key} style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-5">
+          <div key={group.key} style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-5">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-700">{group.title}</p>
               <button

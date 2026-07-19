@@ -76,7 +76,7 @@ export default function ProfileTab({
         </p>
       )}
 
-      <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+      <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextField label="Name" value={form.name} onChange={(v) => { setForm({ ...form, name: v }); setSaved(false) }} required />
           <TextField label="Short name" value={form.shortName} onChange={(v) => { setForm({ ...form, shortName: v }); setSaved(false) }} />

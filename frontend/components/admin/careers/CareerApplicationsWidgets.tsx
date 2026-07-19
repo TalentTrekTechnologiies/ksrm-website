@@ -33,7 +33,7 @@ export default function CareerApplicationsWidgets() {
   if (!counts) return null
 
   return (
-    <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-5">
+    <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-bold text-slate-900">Job Applications</h2>
         <Link href="/admin/careers/applications" className="text-xs font-semibold text-admin-primary hover:underline">

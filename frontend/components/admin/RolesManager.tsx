@@ -164,7 +164,7 @@ function RolesManagerInner() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
             Roles &amp; Permissions
           </h1>
           <p className="text-sm text-slate-500">
@@ -187,7 +187,7 @@ function RolesManagerInner() {
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-5">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit role" : "New role"}</p>
           <TextField label="Role name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={2} />
@@ -245,7 +245,7 @@ function RolesManagerInner() {
           <div
             key={role.id}
             style={{ boxShadow: "var(--shadow-admin-card)" }}
-            className="space-y-2 rounded-xl border border-admin-border bg-white p-4"
+            className="space-y-2 rounded-2xl border border-admin-border bg-white p-4"
           >
             <div className="flex items-center justify-between">
               <p className="font-semibold text-slate-900">{role.name}</p>

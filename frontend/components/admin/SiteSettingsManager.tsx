@@ -74,7 +74,7 @@ function SectionCard({
   return (
     <div
       style={{ boxShadow: "var(--shadow-admin-card)" }}
-      className="space-y-5 rounded-xl border border-admin-border bg-white p-6"
+      className="space-y-5 rounded-2xl border border-admin-border bg-white p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -260,7 +260,7 @@ function SiteSettingsManagerInner() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           Site Settings
         </h1>
         <p className="text-sm text-slate-500">

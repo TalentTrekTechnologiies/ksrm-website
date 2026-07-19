@@ -33,7 +33,7 @@ export default function CmsToolbar({
   const hasSelection = selectedCount > 0
 
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-admin-border bg-white p-3">
+    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-admin-border bg-white p-3">
       {hasSelection ? (
         <div className="flex flex-1 flex-wrap items-center gap-3">
           <button
@@ -67,7 +67,7 @@ export default function CmsToolbar({
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full rounded-lg border border-admin-border bg-white py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-admin-primary focus:outline-none focus:ring-2 focus:ring-admin-primary/20"
+              className="w-full rounded-full border border-transparent bg-slate-100/90 py-2 pl-9 pr-3 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:border-admin-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-admin-primary/20"
             />
           </div>
           {filters}

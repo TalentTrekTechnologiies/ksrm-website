@@ -166,7 +166,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
           </button>
 
           {notifOpen && (
-            <div className="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-admin-border bg-white py-2 shadow-xl">
+            <div className="absolute right-0 z-20 mt-2 w-80 rounded-2xl border border-admin-border bg-white py-2 shadow-xl">
               <div className="flex items-center justify-between gap-2 px-4 pb-2">
                 <p className="text-sm font-semibold text-slate-700">Notifications</p>
                 {unread > 0 && (
@@ -236,7 +236,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
           </button>
 
           {profileOpen && (
-            <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-admin-border bg-white py-2 shadow-xl">
+            <div className="absolute right-0 z-20 mt-2 w-56 rounded-2xl border border-admin-border bg-white py-2 shadow-xl">
               <div className="border-b border-admin-border px-4 py-2.5">
                 <p className="truncate text-sm font-semibold text-slate-800">{admin?.name}</p>
                 <p className="truncate text-xs text-slate-400">{admin?.email}</p>

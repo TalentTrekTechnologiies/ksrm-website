@@ -86,7 +86,7 @@ function AboutEditorInner() {
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-5 rounded-xl border border-admin-border bg-white p-6">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-5 rounded-2xl border border-admin-border bg-white p-6">
           <Section title="Heading">
             <TextField label="Eyebrow" value={form.eyebrow ?? ""} onChange={(v) => setForm({ ...form, eyebrow: v })} maxLength={60} />
             <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={150} />

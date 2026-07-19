@@ -198,7 +198,7 @@ function ProgramsManager() {
   const deletedPrograms = programs.filter((p) => p.deletedAt !== null)
 
   return (
-    <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-xl border border-admin-border bg-white p-6">
+    <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p style={{ fontFamily: "var(--font-admin-heading)" }} className="text-lg font-bold text-slate-900">
@@ -339,7 +339,7 @@ function AdmissionsEditorInner() {
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-xl border border-admin-border bg-white p-6">
+        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-6">
           <TextField label="Badge" value={form.badge} onChange={(badge) => setForm({ ...form, badge })} required placeholder="ADMISSIONS 2025-26" />
           <TextField label="Heading" value={form.heading} onChange={(heading) => setForm({ ...form, heading })} required />
           <TextField label="Subtitle" value={form.subtitle} onChange={(subtitle) => setForm({ ...form, subtitle })} required />

@@ -243,7 +243,7 @@ export function ToggleField({
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed ${
-          checked ? "bg-admin-primary" : "bg-slate-300"
+          checked ? "bg-gradient-to-r from-admin-primary to-admin-primary-light shadow-sm shadow-admin-primary/30" : "bg-slate-300"
         }`}
       >
         <span
@@ -340,7 +340,7 @@ export function SecondaryButton({ onClick, disabled, children }: Omit<ButtonProp
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="rounded-xl border border-admin-border bg-white px-4 py-2.5 text-[15px] font-semibold text-slate-700 transition-all hover:bg-admin-bg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
+      className="rounded-2xl border border-admin-border bg-white px-4 py-2.5 text-[15px] font-semibold text-slate-700 transition-all hover:bg-admin-bg active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
     >
       {children}
     </button>

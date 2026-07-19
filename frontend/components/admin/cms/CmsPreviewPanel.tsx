@@ -53,7 +53,7 @@ export default function CmsPreviewPanel({
   const active = BREAKPOINTS[breakpoint]
 
   return (
-    <div className="rounded-xl border border-admin-border bg-white p-4">
+    <div className="rounded-2xl border border-admin-border bg-white p-4">
       <div className="mb-3 flex items-center gap-1.5">
         {(Object.keys(BREAKPOINTS) as Breakpoint[]).map((key) => {
           const { icon: Icon, label } = BREAKPOINTS[key]

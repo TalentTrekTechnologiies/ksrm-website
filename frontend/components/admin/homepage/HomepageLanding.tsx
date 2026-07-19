@@ -72,7 +72,7 @@ export default function HomepageLanding() {
               key={href}
               href={href}
               style={{ boxShadow: "var(--shadow-admin-card)" }}
-              className="group flex flex-col rounded-xl border border-admin-border bg-white p-5 transition-shadow hover:shadow-[var(--shadow-admin-card-hover)]"
+              className="group flex flex-col rounded-2xl border border-admin-border bg-white p-5 transition-shadow hover:shadow-[var(--shadow-admin-card-hover)]"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-admin-primary/10 text-admin-primary transition-colors group-hover:bg-admin-primary group-hover:text-white">
                 <Icon className="h-5 w-5" />
