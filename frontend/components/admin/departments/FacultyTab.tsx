@@ -248,7 +248,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
       ) : (
         <ul className="space-y-2">
           {liveItems.map((item) => (
-            <li key={item.id} className="flex items-center gap-3 rounded-lg border border-admin-border bg-white px-3 py-3">
+            <li key={item.id} className="flex items-center gap-3 rounded-xl border border-admin-border bg-white px-3 py-3">
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-slate-700">
                   {item.isHod && <Star className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400" />}

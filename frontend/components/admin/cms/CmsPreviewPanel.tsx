@@ -80,7 +80,7 @@ export default function CmsPreviewPanel({
           src={src}
           title="Live preview"
           style={{ width: active.width, height: active.height }}
-          className="max-w-full shrink-0 rounded-lg border border-admin-border bg-white shadow-sm"
+          className="max-w-full shrink-0 rounded-xl border border-admin-border bg-white shadow-sm"
         />
       </div>
     </div>

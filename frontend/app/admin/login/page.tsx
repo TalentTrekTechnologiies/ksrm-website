@@ -215,7 +215,7 @@ export default function AdminLoginPage() {
               </div>
 
               <div className="mt-5">
-                <h1 className="text-xl font-bold text-neutral-900">Welcome Back!</h1>
+                <h1 className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-xl font-bold text-transparent">Welcome Back!</h1>
                 <p className="mt-0.5 text-sm text-neutral-500">
                   Sign in to continue to KSRM CMS
                 </p>

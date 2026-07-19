@@ -38,7 +38,7 @@ export default function CmsImageField({
       <p className="text-sm font-semibold text-slate-700">{label}</p>
 
       <div className="flex items-center gap-4 rounded-lg border border-admin-border bg-admin-bg p-3">
-        <div className="flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-admin-border bg-white">
+        <div className="flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-admin-border bg-white">
           {value.url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -58,7 +58,7 @@ export default function CmsImageField({
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="mt-2 rounded-lg border border-admin-border bg-white px-3 py-1.5 text-xs font-semibold text-admin-primary hover:bg-admin-primary/5"
+            className="mt-2 rounded-xl border border-admin-border bg-white px-3 py-1.5 text-xs font-semibold text-admin-primary hover:bg-admin-primary/5"
           >
             Choose from Media Library
           </button>

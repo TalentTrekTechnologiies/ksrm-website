@@ -69,7 +69,7 @@ export default function CmsDynamicList<T>({
       ) : (
         <>
           {items.map((item, index) => (
-            <div key={index} className="rounded-lg border border-admin-border bg-white p-3.5">
+            <div key={index} className="rounded-xl border border-admin-border bg-white p-3.5">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   {itemLabel} {index + 1}

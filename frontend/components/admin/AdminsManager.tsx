@@ -518,7 +518,7 @@ function AdminsManagerInner() {
 
       {resetTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="w-full max-w-sm space-y-4 rounded-xl bg-white p-5">
+          <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="w-full max-w-sm space-y-4 rounded-2xl bg-white p-5">
             <p className="text-sm font-semibold text-slate-700">Reset password for {resetTarget.name}</p>
             <TextField label="New password" value={newPassword} onChange={setNewPassword} required helperText="Minimum 8 characters." />
             <FormActions>
@@ -533,7 +533,7 @@ function AdminsManagerInner() {
 
       {rolesTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="w-full max-w-sm space-y-4 rounded-xl bg-white p-5">
+          <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="w-full max-w-sm space-y-4 rounded-2xl bg-white p-5">
             <p className="text-sm font-semibold text-slate-700">Assign roles to {rolesTarget.name}</p>
             <div className="grid grid-cols-1 gap-2 rounded-lg border border-admin-border bg-admin-bg p-3">
               {roles.map((role) => (

@@ -316,7 +316,7 @@ function AnnouncementsManagerInner() {
                 type="datetime-local"
                 value={form.startDate}
                 onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                className="w-full rounded-lg border border-admin-border bg-white px-3.5 py-2.5 text-sm focus:border-admin-primary focus:outline-none"
+                className="w-full rounded-xl border border-admin-border bg-white px-3.5 py-2.5 text-sm focus:border-admin-primary focus:outline-none"
               />
             </div>
             <div>
@@ -325,7 +325,7 @@ function AnnouncementsManagerInner() {
                 type="datetime-local"
                 value={form.endDate}
                 onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                className="w-full rounded-lg border border-admin-border bg-white px-3.5 py-2.5 text-sm focus:border-admin-primary focus:outline-none"
+                className="w-full rounded-xl border border-admin-border bg-white px-3.5 py-2.5 text-sm focus:border-admin-primary focus:outline-none"
               />
             </div>
           </div>

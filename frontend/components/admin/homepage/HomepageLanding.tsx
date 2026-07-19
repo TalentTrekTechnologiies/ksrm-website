@@ -56,7 +56,7 @@ export default function HomepageLanding() {
         <div>
           <h1
             style={{ fontFamily: "var(--font-admin-heading)" }}
-            className="text-2xl font-bold text-slate-900"
+            className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent"
           >
             Homepage
           </h1>

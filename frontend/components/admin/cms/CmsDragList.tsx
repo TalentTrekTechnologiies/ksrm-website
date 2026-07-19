@@ -55,7 +55,7 @@ function SortableRow<T extends CmsDragListItem>({
     <li
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-3 rounded-lg border border-admin-border bg-white px-3 py-3"
+      className="flex items-center gap-3 rounded-xl border border-admin-border bg-white px-3 py-3"
     >
       <button
         type="button"

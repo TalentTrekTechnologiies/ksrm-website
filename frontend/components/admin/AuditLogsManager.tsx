@@ -64,7 +64,7 @@ function DetailsModal({ entry, onClose }: { entry: AuditLogEntry; onClose: () =>
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div
         style={{ boxShadow: "var(--shadow-admin-card)" }}
-        className="max-h-[85vh] w-full max-w-3xl space-y-4 overflow-auto rounded-xl bg-white p-5"
+        className="max-h-[85vh] w-full max-w-3xl space-y-4 overflow-auto rounded-2xl bg-white p-5"
       >
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-slate-700">Audit Log Entry #{entry.id}</p>
@@ -272,7 +272,7 @@ function AuditLogsManagerInner() {
               type="button"
               onClick={handleExport}
               disabled={exporting}
-              className="flex items-center gap-1.5 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg disabled:opacity-60"
+              className="flex items-center gap-1.5 rounded-xl border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg disabled:opacity-60"
             >
               <Download className="h-4 w-4" /> {exporting ? "Exporting..." : "Export CSV"}
             </button>

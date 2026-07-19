@@ -298,7 +298,7 @@ function MediaLibraryManagerInner() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <label data-tour="media-show-on-page" className="flex items-center gap-2 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-600">
+          <label data-tour="media-show-on-page" className="flex items-center gap-2 rounded-xl border border-admin-border bg-white px-3 py-2 text-sm text-slate-600">
             <span className="whitespace-nowrap font-semibold text-slate-600">Show on page:</span>
             <select
               value={uploadSection}
@@ -321,7 +321,7 @@ function MediaLibraryManagerInner() {
               disabled={uploading}
               placeholder="Group (e.g. AY 2025-26)"
               title="Optional heading documents are grouped under on the page (e.g. AY 2025-26, B.Tech)."
-              className="max-w-[200px] rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-700"
+              className="max-w-[200px] rounded-xl border border-admin-border bg-white px-3 py-2 text-sm text-slate-700"
             />
           )}
           <button
@@ -477,7 +477,7 @@ function MediaLibraryManagerInner() {
                   <div
                     key={item.id}
                     style={{ boxShadow: "var(--shadow-admin-card)" }}
-                    className={`relative flex flex-col overflow-hidden rounded-xl border bg-white ${
+                    className={`relative flex flex-col overflow-hidden rounded-2xl border bg-white ${
                       isSelected ? "border-admin-primary ring-2 ring-admin-primary/20" : "border-admin-border"
                     }`}
                   >
@@ -554,7 +554,7 @@ function MediaLibraryManagerInner() {
 
       {confirmDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-2xl">
+          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
             <h3 className="text-sm font-bold text-slate-900">Cannot delete - file is in use</h3>
             <p className="mt-1 text-xs text-slate-500">
               &ldquo;{confirmDelete.item.title || confirmDelete.item.originalFilename}&rdquo; is referenced in {confirmDelete.usages.length} place(s):
@@ -620,7 +620,7 @@ function MoveToFolderModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-xl bg-white p-5 shadow-2xl">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl">
         <h3 className="text-sm font-bold text-slate-900">
           Move {count} item{count === 1 ? "" : "s"} to folder
         </h3>

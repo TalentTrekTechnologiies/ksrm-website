@@ -71,13 +71,13 @@ function ApplicationsManagerInner() {
         <div className="flex gap-2">
           <button
             onClick={() => exportCareerApplicationsCsv({ search: search || undefined, status: statusFilter || undefined })}
-            className="flex items-center gap-1.5 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg"
+            className="flex items-center gap-1.5 rounded-xl border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg"
           >
             <Download className="h-4 w-4" /> CSV
           </button>
           <button
             onClick={() => exportCareerApplicationsExcel({ search: search || undefined, status: statusFilter || undefined })}
-            className="flex items-center gap-1.5 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg"
+            className="flex items-center gap-1.5 rounded-xl border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg"
           >
             <FileSpreadsheet className="h-4 w-4" /> Excel
           </button>
@@ -96,7 +96,7 @@ function ApplicationsManagerInner() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name, email, mobile..."
-            className="w-full rounded-lg border border-admin-border bg-white px-3.5 py-2 text-sm focus:border-admin-primary focus:outline-none"
+            className="w-full rounded-xl border border-admin-border bg-white px-3.5 py-2 text-sm focus:border-admin-primary focus:outline-none"
           />
           <button type="submit" className="rounded-lg bg-admin-primary px-4 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark">
             Search
@@ -108,7 +108,7 @@ function ApplicationsManagerInner() {
             setStatusFilter(e.target.value as ApplicationStatus | "")
             setPage(1)
           }}
-          className="rounded-lg border border-admin-border bg-white px-3.5 py-2 text-sm focus:border-admin-primary focus:outline-none"
+          className="rounded-xl border border-admin-border bg-white px-3.5 py-2 text-sm focus:border-admin-primary focus:outline-none"
         >
           <option value="">All statuses</option>
           {APPLICATION_STATUSES.map((s) => (

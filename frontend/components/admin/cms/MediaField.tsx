@@ -80,7 +80,7 @@ export default function MediaField({
         <button
           type="button"
           onClick={() => setPickerOpen(true)}
-          className="flex shrink-0 items-center gap-1.5 rounded-lg border border-admin-border bg-white px-3 py-1.5 text-xs font-semibold text-admin-primary hover:bg-admin-primary/5"
+          className="flex shrink-0 items-center gap-1.5 rounded-xl border border-admin-border bg-white px-3 py-1.5 text-xs font-semibold text-admin-primary hover:bg-admin-primary/5"
         >
           <FolderOpen className="h-3.5 w-3.5" /> Choose from Media Library
         </button>

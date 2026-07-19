@@ -173,7 +173,7 @@ function HeroEditorInner() {
     <div className="space-y-6">
       <div>
         <p className="text-xs font-medium text-slate-400">Homepage / Hero Banner</p>
-        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="mt-1 text-2xl font-bold text-slate-900">
+        <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="mt-1 bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           Hero Banner
         </h1>
         <p className="mt-1 text-sm text-slate-500">

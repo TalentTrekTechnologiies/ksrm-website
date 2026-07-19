@@ -220,7 +220,7 @@ export default function ResearchTab({ departmentId }: { departmentId: number }) 
       ) : (
         <ul className="space-y-2">
           {items.map((item) => (
-            <li key={item.id} className="flex items-center gap-3 rounded-lg border border-admin-border bg-white px-3 py-3">
+            <li key={item.id} className="flex items-center gap-3 rounded-xl border border-admin-border bg-white px-3 py-3">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-slate-700">{item.title}</p>
                 <p className="truncate text-xs text-slate-500">

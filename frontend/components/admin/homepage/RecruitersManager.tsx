@@ -188,7 +188,7 @@ function RecruitersManagerInner() {
       id: "logo",
       header: "Logo",
       cell: ({ row }) => (
-        <div className="flex h-10 w-16 items-center justify-center rounded-lg border border-admin-border bg-white p-1">
+        <div className="flex h-10 w-16 items-center justify-center rounded-xl border border-admin-border bg-white p-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={row.original.logoUrl} alt={row.original.name} className="h-full w-full object-contain" onError={(e) => { e.currentTarget.style.visibility = "hidden" }} />
         </div>
