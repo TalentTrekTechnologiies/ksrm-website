@@ -31,19 +31,19 @@ export default function DashboardCard({
   return (
     <div
       style={{ boxShadow: "var(--shadow-admin-card)" }}
-      className="group rounded-xl border border-admin-border bg-white p-5 transition-shadow hover:shadow-[var(--shadow-admin-card-hover)]"
+      className="group rounded-2xl border border-admin-border bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-admin-primary/25 hover:shadow-[var(--shadow-admin-card-hover)]"
     >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-500">{label}</p>
           <p
             style={{ fontFamily: "var(--font-admin-heading)" }}
-            className="mt-1.5 text-3xl font-bold text-slate-900"
+            className="mt-1.5 text-3xl font-bold tabular-nums text-slate-900"
           >
             {displayValue ?? count.toLocaleString()}
           </p>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-admin-primary/10 text-admin-primary transition-colors group-hover:bg-admin-primary group-hover:text-white">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-admin-primary to-admin-primary-light text-white shadow-md shadow-admin-primary/25 transition-transform group-hover:scale-105">
           {/* eslint-disable-next-line react-hooks/static-components -- see comment above `const Icon` */}
           <Icon className="h-5 w-5" />
         </div>

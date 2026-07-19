@@ -114,8 +114,8 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
 
   return (
     <header
-      style={{ background: "var(--color-admin-card)", borderColor: "var(--color-admin-border)" }}
-      className="flex h-16 items-center justify-between gap-4 border-b px-4 md:px-6"
+      style={{ borderColor: "var(--color-admin-border)" }}
+      className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-white/80 px-4 backdrop-blur-xl md:px-6"
     >
       <button
         type="button"
@@ -132,7 +132,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
           <input
             type="search"
             placeholder="Search..."
-            className="w-full rounded-lg border border-admin-border bg-admin-bg py-2 pl-9 pr-3 text-sm text-slate-700 placeholder:text-slate-400 focus:border-admin-primary focus:outline-none focus:ring-2 focus:ring-admin-primary/15"
+            className="w-full rounded-full border border-transparent bg-slate-100/90 py-2 pl-9 pr-3 text-sm text-slate-700 transition-colors placeholder:text-slate-400 focus:border-admin-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-admin-primary/15"
           />
         </div>
       </div>

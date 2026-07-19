@@ -100,10 +100,10 @@ function NavLink({
       onClick={onNavigate}
       data-tour={tourId}
       title={collapsed ? label : undefined}
-      className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+      className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
         active
-          ? "bg-admin-primary text-white"
-          : "text-slate-400 hover:bg-admin-sidebar-hover hover:text-white"
+          ? "bg-gradient-to-r from-admin-primary to-admin-primary-light text-white shadow-[0_4px_16px_rgba(30,58,138,0.45)]"
+          : "text-slate-400 hover:translate-x-0.5 hover:bg-admin-sidebar-hover hover:text-white"
       }`}
     >
       {active && (
@@ -175,7 +175,7 @@ export default function AdminSidebar({
 
   return (
     <nav
-      style={{ background: "var(--color-admin-sidebar)", boxShadow: "var(--shadow-admin-sidebar)" }}
+      style={{ background: "var(--gradient-admin-sidebar)", boxShadow: "var(--shadow-admin-sidebar)" }}
       className={`flex h-full flex-col gap-1 py-4 transition-all duration-200 ${
         collapsed ? "w-[76px] px-2" : "w-64 px-3"
       }`}
@@ -227,9 +227,9 @@ export default function AdminSidebar({
                 type="button"
                 data-tour="nav-homepage"
                 onClick={() => setHomepageExpanded((v) => !v)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                   isOnHomepageSection
-                    ? "bg-admin-primary text-white"
+                    ? "bg-gradient-to-r from-admin-primary to-admin-primary-light text-white shadow-[0_4px_16px_rgba(30,58,138,0.45)]"
                     : "text-slate-400 hover:bg-admin-sidebar-hover hover:text-white"
                 }`}
               >
@@ -280,9 +280,9 @@ export default function AdminSidebar({
                 type="button"
                 data-tour="nav-departments"
                 onClick={() => setDepartmentsExpanded((v) => !v)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                   isOnDepartmentsSection
-                    ? "bg-admin-primary text-white"
+                    ? "bg-gradient-to-r from-admin-primary to-admin-primary-light text-white shadow-[0_4px_16px_rgba(30,58,138,0.45)]"
                     : "text-slate-400 hover:bg-admin-sidebar-hover hover:text-white"
                 }`}
               >

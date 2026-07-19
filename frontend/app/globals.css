@@ -47,9 +47,15 @@
   --color-admin-sidebar-hover: #1E293B;
   --color-admin-gold:         #D4AF37;  /* Accent Gold */
   --color-admin-gold-light:   #F1E4B8;
-  --color-admin-bg:           #F8FAFC;  /* Page background */
+  --color-admin-bg:           #F3F5FB;  /* Page background - cool blue tint */
   --color-admin-card:         #FFFFFF;
   --color-admin-border:       #E2E8F0;
+
+  /* Modern-pass gradients (2026-07): flat fills read dated - the primary
+     surfaces (sidebar, primary buttons, active nav, stat-card icon tiles)
+     use these instead of solid colors. Same brand hues, richer treatment. */
+  --gradient-admin-primary: linear-gradient(135deg, #1E3A8A 0%, #3B5FCE 100%);
+  --gradient-admin-sidebar: linear-gradient(180deg, #0B1222 0%, #131E3A 100%);
 
   --font-admin-heading: var(--font-rajdhani), sans-serif;
   --font-admin-body:    var(--font-inter), sans-serif;
@@ -58,8 +64,8 @@
      tiers instead of every component picking its own ad-hoc box-shadow.
      card = resting state, card-hover = hover/interactive lift,
      dropdown = popovers/menus, modal = dialogs (highest, plus a scrim). */
-  --shadow-admin-card: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-admin-card-hover: 0 8px 24px rgba(15, 23, 42, 0.10);
+  --shadow-admin-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(30, 58, 138, 0.06);
+  --shadow-admin-card-hover: 0 12px 32px rgba(30, 58, 138, 0.12), 0 2px 8px rgba(15, 23, 42, 0.06);
   --shadow-admin-sidebar: 4px 0 24px rgba(15, 23, 42, 0.12);
   --shadow-admin-dropdown: 0 12px 32px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(15, 23, 42, 0.06);
   --shadow-admin-modal: 0 24px 64px rgba(15, 23, 42, 0.22), 0 4px 16px rgba(15, 23, 42, 0.08);

@@ -14,7 +14,15 @@ import {
   getStorageInfo,
 } from "@/lib/dashboard-api"
 import { ApiError } from "@/lib/api-client"
+import { getStoredAdmin } from "@/lib/auth"
 import { formatBytes } from "@/lib/format-bytes"
+
+function greeting(): string {
+  const h = new Date().getHours()
+  if (h < 12) return "Good morning"
+  if (h < 17) return "Good afternoon"
+  return "Good evening"
+}
 import DashboardCard from "./DashboardCard"
 import OverviewChart from "./OverviewChart"
 import RecentActivityFeed from "./RecentActivityFeed"
@@ -148,15 +156,29 @@ export default function DashboardHome() {
 
   return (
     <div className="space-y-6">
-      <div>
+      {/* Welcome banner - the first thing an admin sees after login, so it
+          carries the panel's visual identity: brand gradient, soft glow. */}
+      <div
+        style={{ background: "var(--gradient-admin-primary)" }}
+        className="relative overflow-hidden rounded-2xl px-6 py-6 text-white shadow-lg shadow-admin-primary/25 md:px-8"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-24 h-64 w-64 rounded-full bg-white/10 blur-2xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-28 right-24 h-56 w-56 rounded-full bg-admin-gold/20 blur-3xl"
+        />
         <h1
           style={{ fontFamily: "var(--font-admin-heading)" }}
-          className="text-2xl font-bold text-slate-900"
+          className="relative text-2xl font-bold md:text-[1.7rem]"
         >
-          Dashboard
+          {greeting()}, {getStoredAdmin()?.name?.split(" ")[0] ?? "Admin"} 👋
         </h1>
-        <p className="text-sm text-slate-500">
-          Last updated {new Date(data.overview.generatedAt).toLocaleString()}
+        <p className="relative mt-1 text-sm text-white/75">
+          Here&apos;s what&apos;s happening on the KSRM website · updated{" "}
+          {new Date(data.overview.generatedAt).toLocaleTimeString()}
         </p>
       </div>
 

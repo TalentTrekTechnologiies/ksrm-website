@@ -327,7 +327,7 @@ export function PrimaryButton({ onClick, disabled, loading, children, type = "bu
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className="rounded-xl bg-admin-primary px-4 py-2.5 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-admin-primary-dark active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
+      className="rounded-xl bg-gradient-to-br from-admin-primary to-admin-primary-light px-4 py-2.5 text-[15px] font-semibold text-white shadow-md shadow-admin-primary/25 transition-all hover:-translate-y-px hover:shadow-lg hover:shadow-admin-primary/30 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:hover:translate-y-0 disabled:active:scale-100"
     >
       {children}
     </button>

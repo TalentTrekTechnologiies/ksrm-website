@@ -1,5 +1,6 @@
 import { RecentActivityItem } from "@/lib/dashboard-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
+import { humanAction, humanActionLower, humanModule } from "@/lib/audit-humanize"
 
 const ACTION_STYLES: Record<string, string> = {
   CREATE: "bg-emerald-50 text-emerald-700",
@@ -44,17 +45,21 @@ export default function RecentActivityFeed({ items }: { items: RecentActivityIte
                   <Icon className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
+                  {/* Reads as a sentence - "Suresh edited News" - instead of
+                      name + raw module key + a CREATE/UPDATE code badge. */}
                   <p className="truncate text-slate-700">
                     <span className="font-medium">{item.adminName}</span>{" "}
-                    <span className="text-slate-500">{item.module}</span>
+                    <span className="text-slate-500">
+                      {humanActionLower(item.action)} {humanModule(item.module)}
+                    </span>
                   </p>
                 </div>
                 <span
-                  className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold ${
+                  className={`shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${
                     ACTION_STYLES[item.action] ?? "bg-slate-100 text-slate-600"
                   }`}
                 >
-                  {item.action}
+                  {humanAction(item.action)}
                 </span>
                 <span className="w-14 shrink-0 text-right text-xs text-slate-400">
                   {timeAgo(item.createdAt)}

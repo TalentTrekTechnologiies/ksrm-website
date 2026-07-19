@@ -8,23 +8,28 @@ import { TextField, SelectField } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { getStoredAdmin } from "@/lib/auth"
 import { getAuditLogs, downloadAuditLogsCsv, AuditLogEntry } from "@/lib/audit-logs-api"
+import { humanAction, humanModule } from "@/lib/audit-humanize"
 
+// Values stay the raw database verbs (the API filters on them); only the
+// labels an admin reads are plain language, via the shared humanizer.
 const ACTION_OPTIONS = [
-  { value: "", label: "All actions" },
-  { value: "CREATE", label: "Create" },
-  { value: "UPDATE", label: "Update" },
-  { value: "DELETE", label: "Delete" },
-  { value: "RESTORE", label: "Restore" },
-  { value: "REORDER", label: "Reorder" },
-  { value: "PUBLISH", label: "Publish" },
-  { value: "UNPUBLISH", label: "Unpublish" },
-  { value: "REPLACE", label: "Replace (Media)" },
-  { value: "ROLLBACK", label: "Rollback (Media)" },
-  { value: "CROP", label: "Crop (Media)" },
-  { value: "RESET_PASSWORD", label: "Reset Password" },
-  { value: "ASSIGN_ROLES", label: "Assign Roles" },
-  { value: "ENABLE", label: "Enable" },
-  { value: "DISABLE", label: "Disable" },
+  { value: "", label: "All changes" },
+  ...[
+    "CREATE",
+    "UPDATE",
+    "DELETE",
+    "RESTORE",
+    "REORDER",
+    "PUBLISH",
+    "UNPUBLISH",
+    "REPLACE",
+    "ROLLBACK",
+    "CROP",
+    "RESET_PASSWORD",
+    "ASSIGN_ROLES",
+    "ENABLE",
+    "DISABLE",
+  ].map((value) => ({ value, label: humanAction(value) })),
 ]
 
 const ACTION_COLORS: Record<string, string> = {
@@ -40,7 +45,11 @@ const ACTION_COLORS: Record<string, string> = {
 
 function ActionBadge({ action }: { action: string }) {
   const color = ACTION_COLORS[action] ?? "text-slate-600 bg-slate-100"
-  return <span className={`rounded px-1.5 py-0.5 text-[11px] font-semibold ${color}`}>{action}</span>
+  return (
+    <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${color}`}>
+      {humanAction(action)}
+    </span>
+  )
 }
 
 function DetailsModal({ entry, onClose }: { entry: AuditLogEntry; onClose: () => void }) {
@@ -75,7 +84,7 @@ function DetailsModal({ entry, onClose }: { entry: AuditLogEntry; onClose: () =>
           </div>
           <div>
             <p className="text-slate-400">Module</p>
-            <p className="font-medium text-slate-700">{entry.module}</p>
+            <p className="font-medium text-slate-700">{humanModule(entry.module)}</p>
           </div>
           <div>
             <p className="text-slate-400">User</p>
@@ -232,7 +241,7 @@ function AuditLogsManagerInner() {
         <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-2xl font-bold text-slate-900">
           Audit Logs
         </h1>
-        <p className="text-sm text-slate-500">Every CRUD action across the CMS, in one searchable trail.</p>
+        <p className="text-sm text-slate-500">A complete history of who changed what, and when.</p>
       </div>
 
       {error && (
@@ -303,7 +312,7 @@ function AuditLogsManagerInner() {
                   <td className="px-4 py-2.5">
                     <ActionBadge action={entry.action} />
                   </td>
-                  <td className="px-4 py-2.5 text-xs text-slate-600">{entry.module}</td>
+                  <td className="px-4 py-2.5 text-xs text-slate-600">{humanModule(entry.module)}</td>
                   <td className="px-4 py-2.5 text-xs text-slate-500">{entry.targetId ?? "—"}</td>
                   <td className="px-4 py-2.5 text-xs text-slate-500">{entry.ipAddress ?? "—"}</td>
                   <td className="px-4 py-2.5">
