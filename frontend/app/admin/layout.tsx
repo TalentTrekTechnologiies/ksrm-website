@@ -7,6 +7,8 @@ import AdminNavbar from "@/components/admin/AdminNavbar"
 import CmsConfirmProvider from "@/components/admin/cms/CmsConfirmProvider"
 import CmsIntroTour from "@/components/admin/cms/CmsIntroTour"
 import { isLoggedIn } from "@/lib/auth"
+import { getProfile } from "@/lib/auth-api"
+import { SESSION_EXPIRED_EVENT } from "@/lib/api-client"
 
 /**
  * Client-side auth guard + admin chrome for every /admin/** route except
@@ -39,6 +41,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // for this specific check, unlike the data-fetching effects elsewhere
     // in this admin panel, which can be (and are) restructured to set state
     // only after an async boundary.
+    //
+    // `pathname` is a dependency on purpose: this layout persists across
+    // client-side navigation, so a mount-only check meant that once past the
+    // gate you could keep clicking through admin pages after the session was
+    // cleared (expired token, logout in another tab). Now every navigation
+    // re-checks.
     if (skipChrome) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setAuthChecked(true)
@@ -49,7 +57,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return
     }
     setAuthChecked(true)
-  }, [skipChrome, router])
+  }, [skipChrome, router, pathname])
+
+  // The client gate above can only see that a token EXISTS - an expired or
+  // tampered token passes it, every page shell renders, and each data call
+  // quietly 401s. Asking the backend for the profile once per load settles
+  // validity server-side: a 401 makes api-client clear the session and fire
+  // SESSION_EXPIRED_EVENT, handled below. (Real security is the API's JWT
+  // guard either way - this is about not letting a dead session browse
+  // page shells.)
+  useEffect(() => {
+    if (skipChrome || !authChecked) return
+    getProfile().catch(() => {
+      // 401 is handled via the event; transient network errors shouldn't
+      // log a working admin out.
+    })
+  }, [skipChrome, authChecked])
+
+  // Bounce to login the moment ANY api call reports the session is gone -
+  // without waiting for the next navigation.
+  useEffect(() => {
+    const onExpired = () => {
+      if (pathname !== "/admin/login") router.replace("/admin/login")
+    }
+    window.addEventListener(SESSION_EXPIRED_EVENT, onExpired)
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired)
+  }, [router, pathname])
 
   if (skipChrome) {
     return <CmsConfirmProvider>{children}</CmsConfirmProvider>

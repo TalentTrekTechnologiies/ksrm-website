@@ -1,6 +1,10 @@
 import { clearSession, getToken } from "./auth";
 import { API_BASE } from "./api-base";
 
+/** Fired (browser only) whenever any API call comes back 401 - the stored
+ * session is already cleared by then; the admin layout redirects on it. */
+export const SESSION_EXPIRED_EVENT = "ksrm:session-expired";
+
 // Single source of truth (see api-base.ts). This used to resolve its own base
 // and, on a deployed host with no NEXT_PUBLIC_API_URL, return "" - which made
 // every request relative, so it hit the static host and 404'd instead of
@@ -61,9 +65,15 @@ export async function apiFetch<T>(
   if (response.status === 401) {
     // The stored token is missing/expired/invalid - there is no refresh
     // flow (RefreshToken exists only as schema today, per
-    // DATA_MODEL_DESIGN.md §3.17), so the only correct move is to clear
-    // the stale session and let the caller redirect to /admin/login.
+    // DATA_MODEL_DESIGN.md §3.17), so the only correct move is to clear the
+    // stale session and tell the admin shell to bounce to the login page.
+    // Broadcast rather than redirect from here: this client is also used by
+    // public pages, where a redirect to /admin/login would be wrong - only
+    // the admin layout listens and acts.
     clearSession();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+    }
   }
 
   if (!response.ok) {
