@@ -11,9 +11,29 @@ import { ReorderGalleryImagesDto } from './dto/reorder-gallery-images.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
 import { MediaLinkService } from '../media/media-link.service';
+import { MediaType } from '@prisma/client';
 
 const MEDIA_MODULE = 'gallery';
 const MEDIA_FIELD = 'imageUrl';
+
+/**
+ * Videos published to a page ride this module too, tagged with this category
+ * so the public PageResources block renders a <video> instead of an <img>
+ * (a Media file URL has no extension to sniff). Keep in sync with the same
+ * constant in the frontend's PageResources / MediaLibraryManager.
+ */
+const VIDEO_CATEGORY = '__video__';
+
+/**
+ * Which Media type a row's linked asset must be. Everything here is an image
+ * except the video-tagged rows above - without this, publishing a video to a
+ * page failed with "Media N is a video, not a image", because the mediaId was
+ * always asserted to be an IMAGE while the frontend was deliberately linking a
+ * VIDEO. Still strict per row rather than accepting any type on this module.
+ */
+function expectedMediaType(category?: string | null): MediaType {
+  return category === VIDEO_CATEGORY ? MediaType.VIDEO : MediaType.IMAGE;
+}
 
 @Injectable()
 export class GalleryService {
@@ -74,7 +94,10 @@ export class GalleryService {
     // imageUrl stays the DTO's own value unless a mediaId is also given, in
     // which case the Media Library's current URL for that asset wins - see
     // the DTO field comments for why (keeps Replace propagating for free).
-    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      dto.mediaId,
+      expectedMediaType(dto.category),
+    );
 
     const created = await this.prisma.galleryImage.create({
       data: {
@@ -116,7 +139,12 @@ export class GalleryService {
     const { version, date, ...rest } = dto;
     assertVersionMatch(existing, version, `Gallery image ${id}`);
 
-    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'IMAGE');
+    // Fall back to the stored category when the update doesn't restate it, so
+    // editing a video row's title doesn't re-check it as an image.
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      rest.mediaId,
+      expectedMediaType(rest.category ?? existing.category),
+    );
 
     const updated = await this.prisma.galleryImage.update({
       where: { id },
