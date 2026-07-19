@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Bell, LogOut, Menu, Search, User } from "lucide-react"
+import { Bell, HelpCircle, LogOut, Menu, Search, User } from "lucide-react"
 import { clearSession, getStoredAdmin } from "@/lib/auth"
+import { OPEN_TOUR_EVENT } from "@/components/admin/cms/CmsIntroTour"
 import {
   AdminNotification,
   getAdminNotifications,
@@ -137,6 +138,15 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
       </div>
 
       <div className="flex items-center gap-2 md:gap-3">
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event(OPEN_TOUR_EVENT))}
+          aria-label="Open the CMS tutorial"
+          title="How to use this CMS"
+          className="rounded-full p-2 text-slate-500 hover:bg-slate-100"
+        >
+          <HelpCircle className="h-5 w-5" />
+        </button>
         <div ref={notifRef} className="relative">
           <button
             type="button"

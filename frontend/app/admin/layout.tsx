@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation"
 import AdminSidebar from "@/components/admin/AdminSidebar"
 import AdminNavbar from "@/components/admin/AdminNavbar"
 import CmsConfirmProvider from "@/components/admin/cms/CmsConfirmProvider"
+import CmsIntroTour from "@/components/admin/cms/CmsIntroTour"
 import { isLoggedIn } from "@/lib/auth"
 
 /**
@@ -92,6 +93,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             its own overflow-x-auto wrapper. */}
         <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
       </div>
+      {/* First-login walkthrough; auto-opens once per admin, reopenable from
+          the navbar's ? button. Inside the auth-gated chrome only, so it never
+          shows on /admin/login or in the preview iframe. */}
+      <CmsIntroTour />
     </div>
     </CmsConfirmProvider>
   )
