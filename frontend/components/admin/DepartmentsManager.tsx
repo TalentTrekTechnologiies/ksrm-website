@@ -219,6 +219,7 @@ function DepartmentsManagerInner() {
           <div className="flex items-center gap-3">
             <Link
               href={`/admin/departments/workspace?id=${row.original.id}`}
+              data-tour="departments-manage"
               className="flex items-center gap-1 text-xs font-semibold text-admin-primary hover:underline"
             >
               <LayoutGrid className="h-3.5 w-3.5" /> Manage content

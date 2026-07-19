@@ -298,7 +298,7 @@ function MediaLibraryManagerInner() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <label className="flex items-center gap-2 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-600">
+          <label data-tour="media-show-on-page" className="flex items-center gap-2 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-600">
             <span className="whitespace-nowrap font-semibold text-slate-600">Show on page:</span>
             <select
               value={uploadSection}
@@ -326,6 +326,7 @@ function MediaLibraryManagerInner() {
           )}
           <button
             type="button"
+            data-tour="media-upload"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
             className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-4 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark disabled:opacity-50"

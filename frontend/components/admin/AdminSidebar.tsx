@@ -83,6 +83,7 @@ function NavLink({
   active,
   collapsed,
   onNavigate,
+  tourId,
 }: {
   href: string
   label: string
@@ -90,11 +91,14 @@ function NavLink({
   active: boolean
   collapsed: boolean
   onNavigate?: () => void
+  /** Anchor for the guided tour's spotlight (CmsIntroTour). */
+  tourId?: string
 }) {
   return (
     <Link
       href={href}
       onClick={onNavigate}
+      data-tour={tourId}
       title={collapsed ? label : undefined}
       className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
         active
@@ -200,6 +204,7 @@ export default function AdminSidebar({
           icon={LayoutDashboard}
           active={pathname === "/admin/dashboard"}
           collapsed={collapsed}
+          tourId="nav-dashboard"
         />
       </div>
 
@@ -213,12 +218,14 @@ export default function AdminSidebar({
                 icon={Globe}
                 active={isOnHomepageSection}
                 collapsed={collapsed}
+                tourId="nav-homepage"
               />
             </div>
           ) : (
             <div>
               <button
                 type="button"
+                data-tour="nav-homepage"
                 onClick={() => setHomepageExpanded((v) => !v)}
                 className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isOnHomepageSection
@@ -264,12 +271,14 @@ export default function AdminSidebar({
                 icon={Building2}
                 active={isOnDepartmentsSection}
                 collapsed={collapsed}
+                tourId="nav-departments"
               />
             </div>
           ) : (
             <div>
               <button
                 type="button"
+                data-tour="nav-departments"
                 onClick={() => setDepartmentsExpanded((v) => !v)}
                 className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isOnDepartmentsSection
@@ -366,6 +375,7 @@ export default function AdminSidebar({
               icon={widgetIcon(item.widgetKey)}
               active={pathname?.startsWith(item.href) ?? false}
               collapsed={collapsed}
+              tourId={`nav-${item.widgetKey}`}
             />
           ))}
         </div>

@@ -1,27 +1,22 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-import {
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Rocket,
-  LayoutDashboard,
-  Image as ImageIcon,
-  Building2,
-  Home,
-  Settings,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { getStoredAdmin } from "@/lib/auth"
 
 /**
- * First-login walkthrough for the admin CMS - the "how to use this app" intro
- * many apps show a new user. Deliberately a card carousel rather than a
- * DOM-spotlight tour: sidebar entries come and go with each admin's
- * permissions, so anchoring steps to page elements would break for exactly the
- * new, low-permission admins this is for.
+ * First-login walkthrough that spotlights the REAL interface - it darkens the
+ * screen, cuts a hole around the actual button/tab a step talks about
+ * ("Departments is here", "you upload here"), and walks the admin through the
+ * app page by page, navigating as it goes.
+ *
+ * Anchoring: steps point at `[data-tour="..."]` attributes placed on the live
+ * elements (sidebar links, the Media Library upload button, ...). If a step's
+ * element doesn't exist - the admin's permissions hide that module, the page
+ * is still loading, or the viewport is mobile where the sidebar is hidden -
+ * the step falls back to a centered card so the guidance is never lost, and
+ * the tour never breaks.
  *
  * Shows itself once per admin (localStorage flag keyed by admin id, so a
  * shared computer still greets each new account) and can be reopened any time
@@ -31,105 +26,129 @@ export const OPEN_TOUR_EVENT = "ksrm:open-tour"
 
 const seenKey = (adminId: number) => `ksrm_admin_tour_seen:${adminId}`
 
+/**
+ * TESTING MODE - the client asked for the tour to open on EVERY admin load
+ * while they evaluate it. Flip to false before deployment (they'll say when):
+ * it then auto-opens only once per admin account. The ? button in the top bar
+ * keeps working either way.
+ */
+const ALWAYS_SHOW_TOUR = true
+
 interface TourStep {
-  icon: React.ComponentType<{ className?: string }>
+  /** CSS selector of the element to spotlight; omit for a centered card. */
+  target?: string
+  /** Admin route to navigate to before locating the target. */
+  route?: string
+  /** Tooltip side relative to the spotlit element. */
+  placement?: "right" | "bottom"
   title: string
-  intro: string
-  points: string[]
+  body: string[]
 }
 
 const STEPS: TourStep[] = [
   {
-    icon: Rocket,
-    title: "Welcome to the KSRM CMS",
-    intro: "This panel manages the entire college website - no coding needed.",
-    points: [
-      "Everything you publish here appears on the public site automatically.",
-      "Open pages update on their own within about 30 seconds - visitors never need to refresh.",
-      "This tour takes about a minute. You can reopen it anytime from the ? button in the top bar.",
+    title: "Welcome to the KSRM CMS 👋",
+    body: [
+      "This one-minute tour points at the actual buttons you'll use - the highlighted spot is the thing being explained.",
+      "Nothing is changed or saved while touring. Use Next/Back or the arrow keys; Esc leaves the tour.",
     ],
   },
   {
-    icon: LayoutDashboard,
+    target: '[data-tour="nav-dashboard"]',
+    placement: "right",
     title: "Dashboard",
-    intro: "Your starting point every time you log in.",
-    points: [
-      "See recent activity - who changed what, and when.",
-      "Pending approvals and storage usage at a glance.",
-      "Use the sidebar on the left to reach every module you have access to.",
+    body: [
+      "Your home base - recent activity, pending approvals and storage, at a glance.",
+      "The sidebar on the left is how you reach every module in this tour.",
     ],
   },
   {
-    icon: ImageIcon,
-    title: "Media Library",
-    intro: "One place for every image, video and document. No module has its own upload.",
-    points: [
-      "Upload images (JPG/PNG/WebP), videos (MP4/WebM) and documents (PDF/DOC/XLSX/PPTX).",
-      "\"Show on page\" publishes a file straight to a public page: images join that page's gallery, videos become players, documents join its downloads list.",
-      "To publish something already uploaded, click its tile and use \"Show on page\" in the details panel.",
+    target: '[data-tour="nav-departments"]',
+    placement: "right",
+    title: "Departments live here",
+    body: [
+      "Everything on a department's public page is managed under this menu - expand it and each department is listed by name.",
+      "Let's open the department list.",
     ],
   },
   {
-    icon: Building2,
-    title: "Departments",
-    intro: "Each department has its own workspace with everything on its public page.",
-    points: [
-      "Profile, faculty, programmes, labs, outcomes (PEO/PO/PSO), research, gallery and videos - each in its own tab.",
-      "Research added here also appears on the site-wide Research page, automatically.",
-      "Display Settings let you hide any section of a department page without deleting its content.",
+    route: "/admin/departments",
+    target: '[data-tour="departments-manage"]',
+    placement: "bottom",
+    title: "Open a department → add its content",
+    body: [
+      "Click \"Manage content\" on any department to open its workspace.",
+      "Inside you'll find tabs for everything: Profile, Faculty (add faculty members there), Programmes, Labs, Outcomes, Research, Gallery and Display Settings.",
+      "Research added in a department also appears on the site-wide Research page automatically.",
     ],
   },
   {
-    icon: Home,
-    title: "Homepage & Content",
-    intro: "The homepage is fully editable - section by section.",
-    points: [
-      "Hero banner, statistics, news & events, testimonials, recruiters, campus videos and more.",
-      "Every homepage section can be switched off without losing its content.",
-      "News, Events, Careers and Announcements each have their own manager in the sidebar.",
+    route: "/admin/media",
+    target: '[data-tour="media-show-on-page"]',
+    placement: "bottom",
+    title: "Media Library - pick the page first…",
+    body: [
+      "Every image, video and document is uploaded in this one place.",
+      "Before uploading, choose a page here - the file is then published straight onto it: images join that page's gallery, videos become players, PDFs join its downloads.",
     ],
   },
   {
-    icon: Settings,
+    target: '[data-tour="media-upload"]',
+    placement: "bottom",
+    title: "…then upload here",
+    body: [
+      "Click Upload (or drag files anywhere onto the grid). JPG/PNG/WebP images, MP4/WebM videos, PDF and Office documents.",
+      "Already uploaded something? Click its tile and use \"Show on page\" in the details panel instead.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-homepage"]',
+    placement: "right",
+    title: "Homepage",
+    body: [
+      "Hero banner, statistics, news & events, testimonials, recruiters, campus videos - each homepage section has its own editor under this menu.",
+      "Any section can be switched off without deleting its content.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-site_settings"]',
+    placement: "right",
     title: "Site Settings",
-    intro: "Global controls that apply across the whole site at once.",
-    points: [
-      "Branding (logo, college name, favicon), contact details and social links.",
-      "Announcement ticker speed and visibility.",
-      "One switch turns faculty photos on or off across every department page at the same time.",
+    body: [
+      "Global controls: logo and branding, contact details, the announcement ticker - and one switch that turns faculty photos on/off across every department page at once.",
     ],
   },
   {
-    icon: ShieldCheck,
-    title: "You can't break anything",
-    intro: "The CMS is built so mistakes are hard to make and easy to undo.",
-    points: [
-      "Every change asks you to confirm first, then shows a \"Saved\" popup.",
-      "Deleted items can be restored - deletes are not permanent.",
-      "Every action is recorded in the Audit Log, so there is always a trail.",
-    ],
-  },
-  {
-    icon: Sparkles,
-    title: "You're ready!",
-    intro: "That's the whole idea - pick a module from the sidebar and start editing.",
-    points: [
-      "A good first step: open Media Library and upload a photo.",
-      "Changes go live on their own - publish and watch the public page.",
-      "Reopen this tour anytime from the ? button in the top bar.",
+    title: "You can't break anything ✅",
+    body: [
+      "Every change asks you to confirm first, then shows a \"Saved\" popup. Deletes are restorable, and the Audit Log records every action.",
+      "Changes appear on the public site by themselves - open pages update within about 30 seconds.",
+      "Reopen this tour anytime with the ? button in the top bar. Have a go - upload a photo!",
     ],
   },
 ]
 
+const TOOLTIP_WIDTH = 340
+const SPOT_PAD = 6
+
 export default function CmsIntroTour() {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
+  // Spotlight rect of the located element; null = centered-card fallback.
+  const [rect, setRect] = useState<DOMRect | null>(null)
+  // Distinguishes "still looking for the element" from "gave up".
+  const [locating, setLocating] = useState(false)
+  const targetElRef = useRef<Element | null>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+  const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number } | null>(null)
 
-  // Auto-open exactly once per admin account.
+  // Auto-open on every load while ALWAYS_SHOW_TOUR is on (testing mode);
+  // otherwise exactly once per admin account.
   useEffect(() => {
     const admin = getStoredAdmin()
     if (!admin) return
-    if (!window.localStorage.getItem(seenKey(admin.id))) {
+    if (ALWAYS_SHOW_TOUR || !window.localStorage.getItem(seenKey(admin.id))) {
       setStep(0)
       setOpen(true)
     }
@@ -153,6 +172,95 @@ export default function CmsIntroTour() {
     setOpen(false)
   }, [])
 
+  // Locate (and if needed navigate to) the current step's target.
+  useEffect(() => {
+    if (!open) return
+    const s = STEPS[step]
+    targetElRef.current = null
+    setRect(null)
+    setTooltipPos(null)
+
+    if (!s.target) {
+      setLocating(false)
+      return
+    }
+    setLocating(true)
+
+    if (s.route && window.location.pathname !== s.route) {
+      router.push(s.route)
+    }
+
+    // Poll rather than await the navigation: the element appearing in the DOM
+    // (with a real size) is the one signal that covers route change, data
+    // loading and permission-hidden modules alike.
+    let cancelled = false
+    const startedAt = Date.now()
+    const tick = () => {
+      if (cancelled) return
+      const el = document.querySelector(s.target!)
+      const r = el?.getBoundingClientRect()
+      if (el && r && r.width > 0 && r.height > 0) {
+        targetElRef.current = el
+        el.scrollIntoView({ block: "center", inline: "nearest" })
+        // Measure after the scroll has settled.
+        requestAnimationFrame(() => {
+          if (!cancelled) {
+            setRect(el.getBoundingClientRect())
+            setLocating(false)
+          }
+        })
+        return
+      }
+      if (Date.now() - startedAt > 5000) {
+        // Element never showed up (permissions / mobile) - centered fallback.
+        setLocating(false)
+        return
+      }
+      setTimeout(tick, 150)
+    }
+    tick()
+    return () => {
+      cancelled = true
+    }
+  }, [open, step, router])
+
+  // Keep the spotlight glued to the element through scrolls and resizes.
+  useEffect(() => {
+    if (!open || !rect) return
+    const remeasure = () => {
+      const el = targetElRef.current
+      if (el) setRect(el.getBoundingClientRect())
+    }
+    window.addEventListener("resize", remeasure)
+    window.addEventListener("scroll", remeasure, true)
+    return () => {
+      window.removeEventListener("resize", remeasure)
+      window.removeEventListener("scroll", remeasure, true)
+    }
+  }, [open, rect !== null]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Position the tooltip beside the spotlight once its own height is known.
+  useLayoutEffect(() => {
+    if (!rect || !tooltipRef.current) {
+      setTooltipPos(null)
+      return
+    }
+    const h = tooltipRef.current.offsetHeight
+    const placement = STEPS[step].placement ?? "bottom"
+    let top: number
+    let left: number
+    if (placement === "right") {
+      left = rect.right + SPOT_PAD + 14
+      top = rect.top + rect.height / 2 - h / 2
+    } else {
+      top = rect.bottom + SPOT_PAD + 14
+      left = rect.left + rect.width / 2 - TOOLTIP_WIDTH / 2
+    }
+    left = Math.min(Math.max(12, left), window.innerWidth - TOOLTIP_WIDTH - 12)
+    top = Math.min(Math.max(12, top), window.innerHeight - h - 12)
+    setTooltipPos({ top, left })
+  }, [rect, step])
+
   useEffect(() => {
     if (!open) return
     const onKeyDown = (e: KeyboardEvent) => {
@@ -161,105 +269,123 @@ export default function CmsIntroTour() {
       if (e.key === "ArrowLeft") setStep((s) => Math.max(s - 1, 0))
     }
     document.addEventListener("keydown", onKeyDown)
-    document.body.style.overflow = "hidden"
-    return () => {
-      document.removeEventListener("keydown", onKeyDown)
-      document.body.style.overflow = ""
-    }
+    return () => document.removeEventListener("keydown", onKeyDown)
   }, [open, dismiss])
 
   if (!open) return null
 
   const current = STEPS[step]
-  const Icon = current.icon
   const isLast = step === STEPS.length - 1
+  const spotlight = rect !== null
+  // While hunting for the element, show only the dimmed screen - flashing the
+  // centered card for 200ms before the spotlight lands looks broken.
+  const showCard = !locating
 
-  return (
+  const card = (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-[2px]"
-      role="dialog"
-      aria-modal="true"
-      aria-label="CMS introduction tutorial"
-      onClick={(e) => e.target === e.currentTarget && dismiss()}
+      ref={tooltipRef}
+      style={
+        spotlight && tooltipPos
+          ? { position: "fixed", top: tooltipPos.top, left: tooltipPos.left, width: TOOLTIP_WIDTH, visibility: "visible" }
+          : spotlight
+            ? { position: "fixed", top: 0, left: 0, width: TOOLTIP_WIDTH, visibility: "hidden" }
+            : { position: "relative", width: "100%", maxWidth: 420 }
+      }
+      className="rounded-2xl bg-white shadow-2xl"
     >
-      <div
-        style={{ boxShadow: "var(--shadow-admin-modal)" }}
-        className="flex w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white animate-[cms-tour-pop_0.18s_ease-out]"
-      >
-        <style>{`@keyframes cms-tour-pop { from { transform: scale(0.96) translateY(6px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }`}</style>
-
-        {/* Header band */}
-        <div className="relative bg-gradient-to-br from-admin-primary to-indigo-900 px-7 pb-8 pt-7 text-white">
-          <button
-            type="button"
-            onClick={dismiss}
-            aria-label="Close tutorial"
-            className="absolute right-3 top-3 rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-white/15">
-            <Icon className="h-6 w-6" />
-          </div>
-          <h2 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-xl font-bold">
-            {current.title}
-          </h2>
-          <p className="mt-1 text-sm text-white/80">{current.intro}</p>
-        </div>
-
-        {/* Body */}
-        <ul className="space-y-3 px-7 py-6">
-          {current.points.map((p, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-600">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-admin-primary" />
-              {p}
-            </li>
+      <div className="flex items-start justify-between gap-3 px-5 pt-4">
+        <h2 style={{ fontFamily: "var(--font-admin-heading)" }} className="text-base font-bold text-slate-900">
+          {current.title}
+        </h2>
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Close tutorial"
+          className="shrink-0 rounded-lg p-1 text-slate-400 hover:bg-admin-bg hover:text-slate-600"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="space-y-2 px-5 pb-4 pt-2">
+        {current.body.map((p, i) => (
+          <p key={i} className="text-sm leading-relaxed text-slate-600">
+            {p}
+          </p>
+        ))}
+      </div>
+      <div className="flex items-center justify-between border-t border-admin-border px-5 py-3">
+        <div className="flex items-center gap-1" aria-label={`Step ${step + 1} of ${STEPS.length}`}>
+          {STEPS.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setStep(i)}
+              aria-label={`Go to step ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all ${
+                i === step ? "w-4 bg-admin-primary" : "w-1.5 bg-slate-300 hover:bg-slate-400"
+              }`}
+            />
           ))}
-        </ul>
-
-        {/* Footer: dots + controls */}
-        <div className="flex items-center justify-between border-t border-admin-border px-7 py-4">
-          <div className="flex items-center gap-1.5" aria-label={`Step ${step + 1} of ${STEPS.length}`}>
-            {STEPS.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setStep(i)}
-                aria-label={`Go to step ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === step ? "w-5 bg-admin-primary" : "w-1.5 bg-slate-300 hover:bg-slate-400"
-                }`}
-              />
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            {step > 0 ? (
-              <button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                className="flex items-center gap-1 rounded-lg border border-admin-border px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-admin-bg"
-              >
-                <ChevronLeft className="h-4 w-4" /> Back
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={dismiss}
-                className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-400 hover:text-slate-600"
-              >
-                Skip
-              </button>
-            )}
+        </div>
+        <div className="flex items-center gap-1.5">
+          {step > 0 ? (
             <button
               type="button"
-              onClick={() => (isLast ? dismiss() : setStep(step + 1))}
-              className="flex items-center gap-1 rounded-lg bg-admin-primary px-4 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark"
+              onClick={() => setStep(step - 1)}
+              className="flex items-center gap-1 rounded-lg border border-admin-border px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-admin-bg"
             >
-              {isLast ? "Get started" : "Next"} {!isLast && <ChevronRight className="h-4 w-4" />}
+              <ChevronLeft className="h-3.5 w-3.5" /> Back
             </button>
-          </div>
+          ) : (
+            <button
+              type="button"
+              onClick={dismiss}
+              className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-400 hover:text-slate-600"
+            >
+              Skip
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => (isLast ? dismiss() : setStep(step + 1))}
+            className="flex items-center gap-1 rounded-lg bg-admin-primary px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-admin-primary-dark"
+          >
+            {isLast ? "Get started" : "Next"} {!isLast && <ChevronRight className="h-3.5 w-3.5" />}
+          </button>
         </div>
       </div>
+    </div>
+  )
+
+  return (
+    <div className="fixed inset-0 z-[70]" role="dialog" aria-modal="true" aria-label="CMS guided tour">
+      {/* Click-catcher: freezes the page under the tour so a stray click can't
+          edit anything mid-walkthrough. The dimming itself comes from the
+          spotlight's giant box-shadow so the hole stays crisp. */}
+      <div className="absolute inset-0" onClick={(e) => e.stopPropagation()} />
+
+      {spotlight ? (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed rounded-xl border-2 border-admin-gold transition-all duration-300 ease-out"
+          style={{
+            top: rect.top - SPOT_PAD,
+            left: rect.left - SPOT_PAD,
+            width: rect.width + SPOT_PAD * 2,
+            height: rect.height + SPOT_PAD * 2,
+            boxShadow: "0 0 0 9999px rgba(15, 23, 42, 0.62)",
+          }}
+        />
+      ) : (
+        <div aria-hidden className="absolute inset-0 bg-slate-900/60" />
+      )}
+
+      {showCard &&
+        (spotlight ? (
+          card
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center p-4">{card}</div>
+        ))}
     </div>
   )
 }
