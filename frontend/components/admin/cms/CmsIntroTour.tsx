@@ -41,6 +41,13 @@ interface TourStep {
   route?: string
   /** Tooltip side relative to the spotlit element. */
   placement?: "right" | "bottom"
+  /**
+   * Skip straight past this step when its target never appears - for
+   * permission-gated sidebar modules, where showing a card about a module the
+   * admin can't open is worse than silence. Core steps keep the centered-card
+   * fallback instead.
+   */
+  skipIfMissing?: boolean
   title: string
   body: string[]
 }
@@ -102,6 +109,95 @@ const STEPS: TourStep[] = [
     ],
   },
   {
+    target: '[data-tour="nav-gallery"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Gallery",
+    body: [
+      "All photos shown on the public Gallery page - add, categorise and reorder them here.",
+      "Images published to a specific page from the Media Library also appear in this list.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-downloads"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Documents",
+    body: [
+      "Every downloadable file on the site - syllabus, question papers, brochures, forms.",
+      "The category routes it: a SYLLABUS document automatically shows on the Syllabus page, QUESTION_PAPER on Examinations, and so on.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-announcements"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Announcements",
+    body: [
+      "The scrolling ticker across the top of the site starts here - write, publish and unpublish announcements.",
+      "Ticker speed and visibility are controlled in Site Settings.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-news"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "News",
+    body: [
+      "News articles - they appear in the homepage's Latest News section and on the News page.",
+      "Mark one as featured to badge it as new.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-events"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Events",
+    body: ["College events - shown with the news on the homepage and on the Events page."],
+  },
+  {
+    target: '[data-tour="nav-exam_notifications"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Exam Notifications",
+    body: [
+      "Hall tickets, results, registration and schedule notices - they appear under Latest Notifications on the public Examinations page.",
+      "Publish/unpublish per notice - nothing shows until you publish it.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-careers"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Careers - post job openings",
+    body: [
+      "Create job openings here (title, department, type, location) - they appear on the public Careers page with an Apply form.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-career_applications"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Job Applications",
+    body: [
+      "Every application submitted on the site lands here - review resumes, add notes, move candidates through statuses, and export to CSV/Excel.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-placements"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Placements",
+    body: ["Placement records and statistics - they feed the Placements Record page and the homepage placement figures."],
+  },
+  {
+    target: '[data-tour="nav-committees"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Committees",
+    body: ["Committee rosters (Anti-Ragging and others) - members you add here show on the matching public page."],
+  },
+  {
     target: '[data-tour="nav-homepage"]',
     placement: "right",
     title: "Homepage",
@@ -116,6 +212,16 @@ const STEPS: TourStep[] = [
     title: "Site Settings",
     body: [
       "Global controls: logo and branding, contact details, the announcement ticker - and one switch that turns faculty photos on/off across every department page at once.",
+    ],
+  },
+  {
+    target: '[data-tour="nav-admins"]',
+    placement: "right",
+    skipIfMissing: true,
+    title: "Admins & Roles",
+    body: [
+      "Super admins only: create admin accounts here, and control exactly which modules each one can see and edit under Roles & Permissions.",
+      "New admins get this same tour on their first login.",
     ],
   },
   {
@@ -142,6 +248,9 @@ export default function CmsIntroTour() {
   const targetElRef = useRef<Element | null>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
   const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number } | null>(null)
+  // Last direction of travel (1 = forward, -1 = back) so a skipIfMissing step
+  // auto-skips the way the admin was already going, not always forward.
+  const dirRef = useRef(1)
 
   // Auto-open on every load while ALWAYS_SHOW_TOUR is on (testing mode);
   // otherwise exactly once per admin account.
@@ -211,7 +320,17 @@ export default function CmsIntroTour() {
         })
         return
       }
-      if (Date.now() - startedAt > 5000) {
+      // Sidebar modules render (or are permission-filtered out) fast, so
+      // skippable steps give up quickly; core targets get the full budget to
+      // cover navigation plus data loading.
+      if (Date.now() - startedAt > (s.skipIfMissing ? 1500 : 5000)) {
+        if (s.skipIfMissing) {
+          const next = step + dirRef.current
+          if (next >= 0 && next < STEPS.length) {
+            setStep(next)
+            return
+          }
+        }
         // Element never showed up (permissions / mobile) - centered fallback.
         setLocating(false)
         return
@@ -265,8 +384,14 @@ export default function CmsIntroTour() {
     if (!open) return
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") dismiss()
-      if (e.key === "ArrowRight") setStep((s) => Math.min(s + 1, STEPS.length - 1))
-      if (e.key === "ArrowLeft") setStep((s) => Math.max(s - 1, 0))
+      if (e.key === "ArrowRight") {
+        dirRef.current = 1
+        setStep((s) => Math.min(s + 1, STEPS.length - 1))
+      }
+      if (e.key === "ArrowLeft") {
+        dirRef.current = -1
+        setStep((s) => Math.max(s - 1, 0))
+      }
     }
     document.addEventListener("keydown", onKeyDown)
     return () => document.removeEventListener("keydown", onKeyDown)
@@ -319,7 +444,10 @@ export default function CmsIntroTour() {
             <button
               key={i}
               type="button"
-              onClick={() => setStep(i)}
+              onClick={() => {
+                dirRef.current = i >= step ? 1 : -1
+                setStep(i)
+              }}
               aria-label={`Go to step ${i + 1}`}
               className={`h-1.5 rounded-full transition-all ${
                 i === step ? "w-4 bg-admin-primary" : "w-1.5 bg-slate-300 hover:bg-slate-400"
@@ -331,7 +459,10 @@ export default function CmsIntroTour() {
           {step > 0 ? (
             <button
               type="button"
-              onClick={() => setStep(step - 1)}
+              onClick={() => {
+                dirRef.current = -1
+                setStep(step - 1)
+              }}
               className="flex items-center gap-1 rounded-lg border border-admin-border px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-admin-bg"
             >
               <ChevronLeft className="h-3.5 w-3.5" /> Back
@@ -347,7 +478,11 @@ export default function CmsIntroTour() {
           )}
           <button
             type="button"
-            onClick={() => (isLast ? dismiss() : setStep(step + 1))}
+            onClick={() => {
+              dirRef.current = 1
+              if (isLast) dismiss()
+              else setStep(step + 1)
+            }}
             className="flex items-center gap-1 rounded-lg bg-admin-primary px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-admin-primary-dark"
           >
             {isLast ? "Get started" : "Next"} {!isLast && <ChevronRight className="h-3.5 w-3.5" />}
