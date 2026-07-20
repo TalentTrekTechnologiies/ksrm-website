@@ -3,7 +3,13 @@
 import { useMemo, useState } from "react";
 import PageResources from "@/components/PageResources";
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
+import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
 import { useLiveData } from "@/lib/use-live-data";
+
+// Videos published to a page are stored as Gallery rows tagged with this
+// category (same sentinel PageResources uses). Kept in one place so the
+// featured video and the full list below read from the same source.
+const VIDEO_CATEGORY = "__video__";
 
 const missions = [
   "Create a conducive environment for quality research and innovation",
@@ -108,6 +114,19 @@ export default function ResearchPage() {
     [],
   );
   const [deptFilter, setDeptFilter] = useState<string>(ALL_DEPARTMENTS);
+
+  // Research videos = videos routed to the Research page via the Media
+  // Library's "Show on page". Polled, so uploading one makes it appear and
+  // deleting one makes it disappear here without a refresh - which the static
+  // hard-coded clip never did.
+  const researchVideos = useLiveData<GalleryImage[]>(
+    () =>
+      getGalleryPublic(undefined, undefined, "research")
+        .then((rows) => rows.filter((g) => g.category === VIDEO_CATEGORY))
+        .catch(() => [] as GalleryImage[]),
+    [],
+  );
+  const featuredVideo = (researchVideos ?? [])[0] ?? null;
 
   const departments = useMemo(() => {
     const names = new Set((records ?? []).map((r) => r.department).filter(Boolean));
@@ -323,16 +342,27 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      {/* CAMPUS INNOVATION VIDEO */}
+      {/* FEATURED INNOVATION VIDEO - the first video uploaded to the Research
+          page (Media Library -> Show on page -> Research) when one exists, so
+          it reflects uploads and deletes; the static clip is only a fallback
+          for when none have been added. */}
       <section style={{ padding: "80px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px", textAlign: "center" }}>
-            Campus Innovation Video
+            {featuredVideo ? featuredVideo.title || "Innovation Video" : "Campus Innovation Video"}
           </h2>
           <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 720, margin: "0 auto" }}>
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-              <source src="/videos/3d-robo.mp4" type="video/mp4" />
+            <video
+              key={featuredVideo?.imageUrl ?? "fallback"}
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls={!!featuredVideo}
+              style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}
+            >
+              <source src={featuredVideo?.imageUrl ?? "/videos/3d-robo.mp4"} type="video/mp4" />
             </video>
           </div>
         </div>
