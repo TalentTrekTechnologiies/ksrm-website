@@ -61,6 +61,7 @@ const NAV_ITEMS: NavItem[] = [
   // wording only (a visitor still clicks a "Download" button on the public site).
   { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },
   { widgetKey: "news", label: "News", href: "/admin/news" },
+  { widgetKey: "research", label: "Research", href: "/admin/research" },
   { widgetKey: "placements", label: "Placements", href: "/admin/placements" },
   { widgetKey: "careers", label: "Careers", href: "/admin/careers" },
   { widgetKey: "career_applications", label: "Job Applications", href: "/admin/careers/applications" },
