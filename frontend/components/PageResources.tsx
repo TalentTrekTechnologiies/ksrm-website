@@ -156,6 +156,7 @@ export default function PageResources({
   maxVisible = 6,
   anchorId,
   heading,
+  hideVideos = false,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -179,11 +180,18 @@ export default function PageResources({
    * list - e.g. Examinations → Time Tables.
    */
   embedded?: boolean
+  /**
+   * Skip the video rows entirely - for a page that renders the same routed
+   * videos itself (the Research page shows them in one featured section), so
+   * they aren't listed twice.
+   */
+  hideVideos?: boolean
 }) {
   const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
 
   if (!data) return null
-  const { docs, images, videos } = data
+  const { docs, images } = data
+  const videos = hideVideos ? [] : data.videos
   if (docs.length === 0 && images.length === 0 && videos.length === 0) return null
 
   const docsList =

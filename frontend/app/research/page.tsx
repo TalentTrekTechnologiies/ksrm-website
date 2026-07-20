@@ -126,7 +126,6 @@ export default function ResearchPage() {
         .catch(() => [] as GalleryImage[]),
     [],
   );
-  const featuredVideo = (researchVideos ?? [])[0] ?? null;
 
   const departments = useMemo(() => {
     const names = new Set((records ?? []).map((r) => r.department).filter(Boolean));
@@ -342,45 +341,60 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      {/* FEATURED INNOVATION VIDEO - the first video uploaded to the Research
-          page (Media Library -> Show on page -> Research) when one exists, so
-          it reflects uploads and deletes; the static clip is only a fallback
-          for when none have been added. */}
-      <section style={{ padding: "80px 0", background: "#ffffff" }}>
+      {/* RESEARCH VIDEOS - every video routed to the Research page, all in one
+          place in the featured style. Polled, so uploads/deletes reflect. Falls
+          back to the static clip only when none have been added. The documents
+          list below intentionally omits videos (hideVideos) so they aren't
+          shown twice. */}
+      <section id="resources" style={{ padding: "80px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px", textAlign: "center" }}>
-            {featuredVideo ? featuredVideo.title || "Innovation Video" : "Campus Innovation Video"}
+            🎬 Research Videos
           </h2>
-          <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 720, margin: "0 auto" }}>
-            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <video
-              key={featuredVideo?.imageUrl ?? "fallback"}
-              autoPlay
-              loop
-              muted
-              playsInline
-              controls={!!featuredVideo}
-              style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}
+          {researchVideos && researchVideos.length > 0 ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: researchVideos.length === 1 ? "1fr" : "repeat(auto-fit, minmax(340px, 1fr))",
+                gap: 28,
+                maxWidth: researchVideos.length === 1 ? 720 : 1200,
+                margin: "0 auto",
+              }}
             >
-              <source src={featuredVideo?.imageUrl ?? "/videos/3d-robo.mp4"} type="video/mp4" />
-            </video>
-          </div>
+              {researchVideos.map((v) => (
+                <div key={v.imageUrl}>
+                  <div style={{ borderRadius: 8, overflow: "hidden", background: "#000" }}>
+                    {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                    <video controls loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+                      <source src={v.imageUrl} type="video/mp4" />
+                    </video>
+                  </div>
+                  {v.title && (
+                    <p style={{ textAlign: "center", marginTop: 12, fontWeight: 600, color: "#2B3490" }}>{v.title}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 720, margin: "0 auto" }}>
+              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+                <source src="/videos/3d-robo.mp4" type="video/mp4" />
+              </video>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Videos, PDFs and images routed to the Research page from the Media
-          Library's "Show on page" - including uploads made inside a department,
-          since the public downloads/gallery filters only narrow by department
-          when a departmentId is passed, and this passes none. Self-hiding: the
-          whole block (anchor and heading included) renders nothing when no
-          media has been routed here yet. */}
+      {/* Documents (and any images) routed to the Research page. Videos are
+          hidden here - they're all shown in the single section above. */}
       <PageResources
         section="research"
-        background="#ffffff"
-        anchorId="resources"
-        heading="🎬 Research Videos & Documents"
+        background="#f4f3ef"
+        heading="📄 Research Papers & Documents"
         galleryTitle="Research Gallery"
         docsTitle="Research Papers & Documents"
+        hideVideos
       />
 
       {/* VISION & MISSION */}
