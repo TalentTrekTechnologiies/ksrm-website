@@ -362,10 +362,23 @@ export default function ResearchPage() {
               }}
             >
               {researchVideos.map((v) => (
-                <div key={v.imageUrl}>
+                // Hide the whole tile if the video file can't load (e.g. the
+                // underlying media was deleted but this published row lingers),
+                // so a removed video never shows as a dead black box.
+                <div key={v.imageUrl} data-research-video>
                   <div style={{ borderRadius: 8, overflow: "hidden", background: "#000" }}>
                     {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                    <video controls loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
+                    <video
+                      controls
+                      loop
+                      muted
+                      playsInline
+                      onError={(e) => {
+                        const tile = (e.currentTarget.closest("[data-research-video]") as HTMLElement | null)
+                        if (tile) tile.style.display = "none"
+                      }}
+                      style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}
+                    >
                       <source src={v.imageUrl} type="video/mp4" />
                     </video>
                   </div>
