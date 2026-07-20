@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Bell, HelpCircle, LogOut, Menu, Search, User } from "lucide-react"
+import { Bell, HelpCircle, LogOut, Menu, User } from "lucide-react"
 import { clearSession, getStoredAdmin } from "@/lib/auth"
 import { OPEN_TOUR_EVENT } from "@/components/admin/cms/CmsIntroTour"
+import AdminQuickSearch from "@/components/admin/AdminQuickSearch"
 import {
   AdminNotification,
   getAdminNotifications,
@@ -127,14 +128,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
       </button>
 
       <div className="hidden max-w-md flex-1 md:block">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <input
-            type="search"
-            placeholder="Search..."
-            className="w-full rounded-full border border-transparent bg-slate-100/90 py-2 pl-9 pr-3 text-sm text-slate-700 transition-colors placeholder:text-slate-400 focus:border-admin-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-admin-primary/15"
-          />
-        </div>
+        <AdminQuickSearch />
       </div>
 
       <div className="flex items-center gap-2 md:gap-3">
