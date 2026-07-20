@@ -62,10 +62,11 @@ const PRIORITY_COLORS: Record<AnnouncementPriority, string> = {
 export default function AnnouncementTicker({
   location,
   departmentId,
-  compact = false,
 }: {
   location: AnnouncementLocation
   departmentId?: number
+  /** Accepted for call-site compatibility; the bar's height is now uniform
+   * regardless, so this no longer changes the vertical rhythm. */
   compact?: boolean
 }) {
   const all = useLiveData(() => getAnnouncementsPublic(location, departmentId), [location, departmentId])
@@ -84,7 +85,7 @@ export default function AnnouncementTicker({
   return (
     <div
       style={{ background: PRIORITY_COLORS[topPriority] }}
-      className="relative flex items-stretch overflow-hidden text-white"
+      className="relative flex min-h-[32px] items-stretch overflow-hidden text-white"
     >
       <style>{`
         .ann-track { animation: ann-scroll ${cfg.speedSeconds}s linear infinite; }
@@ -97,11 +98,16 @@ export default function AnnouncementTicker({
         .ann-item[href]:hover { background-color: rgba(255,255,255,0.16); }
         .ann-item[href]:hover .ann-item-text { text-decoration: underline; }
       `}</style>
-      <div className="ann-label flex shrink-0 items-center gap-2 bg-black/15 px-4 py-2 text-xs font-bold uppercase tracking-wide">
+      {/* Both halves share the same vertical padding (py-1) inside one
+          min-h bar, so the "Notices" chip and the scrolling text are always
+          the same height - previously the chip (py-2) and the track (py-1.5)
+          differed, making the bar look uneven. `compact` no longer changes
+          the vertical rhythm; the fixed bar height governs it uniformly. */}
+      <div className="ann-label flex shrink-0 items-center gap-2 bg-black/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wide">
         <Megaphone className="h-3.5 w-3.5" />
         <span>Notices</span>
       </div>
-      <div className={`ann-track-wrap flex-1 overflow-hidden ${compact ? "py-1.5" : "py-2"}`}>
+      <div className="ann-track-wrap flex flex-1 items-center overflow-hidden py-1">
         <div className="ann-track flex w-max items-center gap-8 whitespace-nowrap">
           {[...items, ...items].map((item, i) => {
             const content = (
