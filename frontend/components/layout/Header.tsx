@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
@@ -19,7 +20,15 @@ export default function Header() {
     [],
     { initialValue: {} },
   )
-  const logoUrl = settings?.["site.logoUrl"] || FALLBACK_LOGO_URL
+  // A configured logo whose FILE is missing (404) used to leave the header
+  // blank: the setting is non-empty, so the `||` fallback never fired, and the
+  // broken <img> rendered as nothing. A visitor with the old logo still cached
+  // saw it fine while a fresh device saw an empty header. Remember the URL that
+  // failed to load and fall back to the bundled logo; a later poll returning a
+  // different URL is tried again rather than being written off.
+  const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null)
+  const cmsLogoUrl = settings?.["site.logoUrl"] || ""
+  const logoUrl = cmsLogoUrl && cmsLogoUrl !== failedLogoUrl ? cmsLogoUrl : FALLBACK_LOGO_URL
   const collegeName = settings?.["site.collegeName"] || "KSRM College of Engineering"
 
   const isCustomLogo = logoUrl !== FALLBACK_LOGO_URL
@@ -36,6 +45,7 @@ export default function Header() {
           <img
             src={logoUrl}
             alt={collegeName}
+            onError={() => setFailedLogoUrl(logoUrl)}
             style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }}
           />
         ) : (
