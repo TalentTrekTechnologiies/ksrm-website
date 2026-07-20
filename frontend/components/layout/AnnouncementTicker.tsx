@@ -85,7 +85,7 @@ export default function AnnouncementTicker({
   return (
     <div
       style={{ background: PRIORITY_COLORS[topPriority] }}
-      className="relative flex min-h-[32px] items-stretch overflow-hidden text-white"
+      className="relative flex min-h-[27px] items-stretch overflow-hidden text-white"
     >
       <style>{`
         .ann-track { animation: ann-scroll ${cfg.speedSeconds}s linear infinite; }
@@ -103,11 +103,11 @@ export default function AnnouncementTicker({
           the same height - previously the chip (py-2) and the track (py-1.5)
           differed, making the bar look uneven. `compact` no longer changes
           the vertical rhythm; the fixed bar height governs it uniformly. */}
-      <div className="ann-label flex shrink-0 items-center gap-2 bg-black/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wide">
+      <div className="ann-label flex shrink-0 items-center gap-2 bg-black/15 px-3.5 py-0.5 text-xs font-bold uppercase tracking-wide">
         <Megaphone className="h-3.5 w-3.5" />
         <span>Notices</span>
       </div>
-      <div className="ann-track-wrap flex flex-1 items-center overflow-hidden py-1">
+      <div className="ann-track-wrap flex flex-1 items-center overflow-hidden py-0.5">
         <div className="ann-track flex w-max items-center gap-8 whitespace-nowrap">
           {[...items, ...items].map((item, i) => {
             const content = (
