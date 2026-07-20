@@ -11,6 +11,7 @@ import {
   ChevronsRight,
   ChevronDown,
   Globe,
+  Video,
   type LucideIcon,
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
@@ -379,6 +380,22 @@ export default function AdminSidebar({
               tourId={`nav-${item.widgetKey}`}
             />
           ))}
+        </div>
+      )}
+
+      {/* Videos has no dashboard widget key of its own (campus videos sit under
+          the homepage permission), so it's gated on that permission here
+          rather than filtered by the widget list above. */}
+      {hasPermission(admin, "homepage.view") && (
+        <div onClick={onNavigate}>
+          <NavLink
+            href="/admin/videos"
+            label="Videos"
+            icon={Video}
+            active={pathname?.startsWith("/admin/videos") ?? false}
+            collapsed={collapsed}
+            tourId="nav-videos"
+          />
         </div>
       )}
 
