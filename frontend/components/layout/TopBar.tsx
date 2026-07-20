@@ -31,15 +31,15 @@ export default function TopBar() {
   return (
     <div style={{ background: "#202a78", color: "#fff", width: "100%", overflow: "hidden" }}>
       <style>{`
-        .topbar-inner { width: 100%; margin: 0 auto; padding: 8px 5%; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-        .topbar-left { display: flex; gap: 18px; font-size: 14px; align-items: center; font-weight: 500; flex-shrink: 0; }
-        .topbar-center { font-size: 14px; font-weight: 600; text-align: center; flex: 1; }
+        .topbar-inner { width: 100%; margin: 0 auto; padding: 5px 5%; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .topbar-left { display: flex; gap: 18px; font-size: 13px; align-items: center; font-weight: 500; flex-shrink: 0; }
+        .topbar-center { font-size: 13px; font-weight: 600; text-align: center; flex: 1; }
         .topbar-right { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
         .topbar-social { color: #fff; display: flex; align-items: center; transition: color 0.2s; }
         .topbar-social:hover { color: #FFE619; }
 
         @media (max-width: 768px) {
-          .topbar-inner { padding: 6px 14px; justify-content: space-between; gap: 8px; }
+          .topbar-inner { padding: 4px 14px; justify-content: space-between; gap: 8px; }
           .topbar-left { font-size: 11px; gap: 10px; flex-direction: row; align-items: center; }
           .topbar-center { display: none; }
           .topbar-right { gap: 12px; }

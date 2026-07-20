@@ -85,7 +85,7 @@ export default function AnnouncementTicker({
   return (
     <div
       style={{ background: PRIORITY_COLORS[topPriority] }}
-      className="relative flex min-h-[27px] items-stretch overflow-hidden text-white"
+      className="relative flex min-h-[24px] items-stretch overflow-hidden text-white"
     >
       <style>{`
         .ann-track { animation: ann-scroll ${cfg.speedSeconds}s linear infinite; }
