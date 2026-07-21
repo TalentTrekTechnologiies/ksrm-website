@@ -274,7 +274,10 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
           <motion.div
             className="hero-buttons"
             variants={fadeUp} initial="hidden" animate="visible" custom={0.4}
-            style={{ display: "flex", gap: "14px", alignItems: "center" }}
+            // flexWrap so the two CTAs drop onto a second line instead of
+            // overflowing the hero's text column and running under the panel
+            // beside it; maxWidth keeps them inside that column.
+            style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center", maxWidth: "100%" }}
           >
             <Link href={ctaPrimary.href} className="hero-btn touch-target btn btn-primary">
               {ctaPrimary.text}

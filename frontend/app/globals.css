@@ -138,10 +138,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 13px 30px;
+  padding: 11px 24px;
   border-radius: 8px;
   font-family: var(--font-heading), sans-serif;
-  font-size: 16px;
+  font-size: 15px;
+  white-space: nowrap;
+  max-width: 100%;
   font-weight: 700;
   letter-spacing: 0.3px;
   text-decoration: none;
