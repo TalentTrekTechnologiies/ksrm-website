@@ -13,6 +13,9 @@ export interface DepartmentProgramme {
   deletedAt: string | null;
   deletedBy: number | null;
   version: number;
+  /** Present on the public endpoint - lets a college-wide list (e.g. the
+   * Diploma page) show which department a programme belongs to. */
+  department?: { name: string; shortName: string | null; slug: string };
 }
 
 export interface DepartmentProgrammeInput {
@@ -24,8 +27,20 @@ export interface DepartmentProgrammeInput {
   isActive?: boolean;
 }
 
-export function getDepartmentProgrammesPublic(departmentId: number): Promise<DepartmentProgramme[]> {
-  return apiGet<DepartmentProgramme[]>(`/department-programmes?departmentId=${departmentId}`);
+/**
+ * Both filters optional. Pass a departmentId for one department's programmes
+ * (department pages); pass just a level for a college-wide list - e.g.
+ * `{ level: "DIPLOMA" }` for every diploma branch on the Diploma page.
+ */
+export function getDepartmentProgrammesPublic(
+  departmentId?: number,
+  level?: ProgrammeLevel,
+): Promise<DepartmentProgramme[]> {
+  const params = new URLSearchParams();
+  if (departmentId !== undefined) params.set("departmentId", String(departmentId));
+  if (level) params.set("level", level);
+  const query = params.toString();
+  return apiGet<DepartmentProgramme[]>(`/department-programmes${query ? `?${query}` : ""}`);
 }
 
 export function getDepartmentProgrammesAdmin(

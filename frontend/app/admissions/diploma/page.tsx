@@ -1,4 +1,12 @@
-﻿const courses = [
+﻿"use client";
+
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
+import { useLiveData } from "@/lib/use-live-data";
+
+// Fallback shown until/unless diploma programmes are added in the CMS, so the
+// page is never empty. Any diploma programme added to a department (Departments
+// -> Programmes -> level "Diploma") replaces this list.
+const courses = [
   { code: "CE", name: "Civil Engineering", desc: "Infrastructure and construction technology" },
   { code: "EEE", name: "Electrical and Electronics Engineering", desc: "Power systems and electrical technology" },
   { code: "ME", name: "Mechanical Engineering", desc: "Manufacturing and mechanical systems" },
@@ -43,6 +51,23 @@ function CheckIcon() {
 }
 
 export default function DiplomaAdmissionsPage() {
+  // Every diploma programme across all departments, polled so one added in the
+  // CMS appears here without a refresh. The fetcher never rejects, so an API
+  // failure falls back to the built-in list rather than emptying the page.
+  const cmsDiplomas = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic(undefined, "DIPLOMA").catch(() => [] as DepartmentProgramme[]),
+    [],
+  );
+  // CMS wins once anything is entered; otherwise the built-in list stands in.
+  const diplomaCards =
+    cmsDiplomas && cmsDiplomas.length > 0
+      ? cmsDiplomas.map((p) => ({
+          code: p.department?.shortName || p.department?.name || "Diploma",
+          name: p.name,
+          desc: p.intake ? `Annual intake: ${p.intake} seats` : "",
+        }))
+      : courses;
+
   return (
     <>
       <style>{`
@@ -154,11 +179,11 @@ export default function DiplomaAdmissionsPage() {
             </p>
             <h2 className="dip-heading">Available Programs</h2>
             <div className="dip-courses-grid">
-              {courses.map((c) => (
-                <div className="dip-course-card" key={c.code}>
+              {diplomaCards.map((c, i) => (
+                <div className="dip-course-card" key={`${c.code}-${c.name}-${i}`}>
                   <div className="dip-course-code">{c.code}</div>
                   <h3 className="dip-course-name">{c.name}</h3>
-                  <p className="dip-course-desc">{c.desc}</p>
+                  {c.desc && <p className="dip-course-desc">{c.desc}</p>}
                 </div>
               ))}
             </div>

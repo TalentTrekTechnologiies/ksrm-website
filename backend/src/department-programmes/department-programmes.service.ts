@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ProgrammeLevel } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateDepartmentProgrammeDto } from './dto/create-department-programme.dto';
@@ -20,9 +21,19 @@ export class DepartmentProgrammesService {
     private auditLog: AuditLogService,
   ) {}
 
-  async findAllPublic(departmentId: number) {
+  // Both filters optional: no departmentId = every department's programmes
+  // (used by the college-wide Diploma listing), level narrows to UG/PG/PHD/
+  // DIPLOMA. Includes the department's name so a college-wide list can show
+  // which department each programme belongs to without a second round-trip.
+  async findAllPublic(departmentId?: number, level?: ProgrammeLevel) {
     return this.prisma.departmentProgramme.findMany({
-      where: { departmentId, isActive: true, deletedAt: null },
+      where: {
+        ...(departmentId !== undefined && { departmentId }),
+        ...(level && { level }),
+        isActive: true,
+        deletedAt: null,
+      },
+      include: { department: { select: { name: true, shortName: true, slug: true } } },
       orderBy: { sortOrder: 'asc' },
     });
   }

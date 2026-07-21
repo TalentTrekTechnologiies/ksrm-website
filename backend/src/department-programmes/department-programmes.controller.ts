@@ -12,6 +12,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ProgrammeLevel } from '@prisma/client';
 import { DepartmentProgrammesService } from './department-programmes.service';
 import { CreateDepartmentProgrammeDto } from './dto/create-department-programme.dto';
 import { UpdateDepartmentProgrammeDto } from './dto/update-department-programme.dto';
@@ -27,9 +28,20 @@ import { DepartmentScoped } from '../auth/department-scope.decorator';
 export class DepartmentProgrammesController {
   constructor(private readonly departmentProgrammesService: DepartmentProgrammesService) {}
 
+  // departmentId is optional so a page can ask for one department's programmes
+  // (a department page) OR every department's (the Diploma admissions page,
+  // which lists diploma branches college-wide). `level` narrows by
+  // UG/PG/PHD/DIPLOMA - previously a required departmentId made a
+  // college-wide list impossible without one request per department.
   @Get()
-  findAllPublic(@Query('departmentId', ParseIntPipe) departmentId: number) {
-    return this.departmentProgrammesService.findAllPublic(departmentId);
+  findAllPublic(
+    @Query('departmentId') departmentId?: string,
+    @Query('level') level?: ProgrammeLevel,
+  ) {
+    return this.departmentProgrammesService.findAllPublic(
+      departmentId ? parseInt(departmentId, 10) : undefined,
+      level,
+    );
   }
 
   @Get('admin')

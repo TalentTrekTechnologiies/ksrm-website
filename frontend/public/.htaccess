@@ -1,0 +1,56 @@
+# Apache/LiteSpeed config for the static export (Hostinger hPanel).
+#
+# Next's `output: "export"` emits FLAT files - /about -> about.html - and relies
+# on the host mapping extensionless URLs onto them. Netlify does that
+# automatically; Apache does not, so without the rewrite below every page except
+# the homepage 404s on Hostinger. This file lives in public/ so it is copied
+# into out/ on every build and ships with the upload.
+#
+# Netlify ignores .htaccess entirely, so keeping this here is safe for both
+# hosts - it is only read when Apache/LiteSpeed serves the site.
+
+# ---- Pretty URLs -> the exported .html files ----
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Never rewrite real files or directories (assets, _next, images, PDFs).
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # /about -> about.html (only when that .html actually exists).
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^([^.]+?)/?$ /$1.html [L]
+</IfModule>
+
+# Unknown URLs get the export's own 404 page.
+ErrorDocument 404 /404.html
+
+# ---- Caching ----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Hashed build assets are immutable - cache hard.
+  <FilesMatch "\.(js|css|woff2)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # HTML must revalidate, otherwise a deploy never reaches returning visitors.
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ---- Security headers ----
+# (The equivalents in netlify.toml are not being applied on Netlify; these do
+# take effect on Apache/LiteSpeed.)
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---- Compression ----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
