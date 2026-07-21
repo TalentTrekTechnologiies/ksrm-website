@@ -100,18 +100,13 @@ export default function CampusServices() {
                 height: "100%",
                 boxSizing: "border-box",
               }}>
-                {/* SVG POSTER - contain, not cover, and matching the
-                    department cards: cover cropped each poster by a different
-                    amount depending on its aspect ratio, so posters showed
-                    only partially and the two rows didn't match. */}
+                {/* Poster fills the card edge-to-edge (cover), matching the
+                    department cards. */}
                 <div style={{
                   padding: 0,
                   height: "150px",
                   overflow: "hidden",
-                  background: "#f8fafc",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  background: "#f1f5f9",
                 }}>
                   <img
                     src={service.poster}
@@ -122,23 +117,28 @@ export default function CampusServices() {
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "contain",
+                      objectFit: "cover",
                       display: "block",
                     }}
                   />
                 </div>
 
-                {/* WHITE TEXT SECTION */}
+                {/* Label strip - tinted with a gold rule, matching the
+                    department cards, so it isn't a blank white block. */}
                 <div style={{
-                  padding: "16px",
+                  padding: "14px 16px 16px",
                   textAlign: "center",
+                  flex: 1,
+                  background: "linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%)",
+                  borderTop: "3px solid #FFE619",
                 }}>
                   <div style={{
                     fontFamily: "'Rajdhani', sans-serif",
                     fontSize: "19px",
                     fontWeight: 700,
-                    color: "#1a1a2e",
+                    color: "#2B3490",
                     marginBottom: "6px",
+                    letterSpacing: "0.3px",
                   }}>
                     {service.title}
                   </div>

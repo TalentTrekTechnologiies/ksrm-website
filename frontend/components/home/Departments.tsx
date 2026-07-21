@@ -66,29 +66,27 @@ export default function Departments() {
           transform: translateY(-4px);
         }
 
-        /* contain, not cover: these are posters/artwork whose whole frame
-           matters. cover filled the 150px box by cropping, so each image lost
-           a different amount depending on its aspect ratio - which is why they
-           looked inconsistent and cut off. contain shows every image complete;
-           the neutral background fills whatever space is left over so the
-           cards still line up. */
+        /* cover (edge-to-edge, matching the Digital Services cards) - the
+           client preferred the filled look over contain's letterboxing. */
         .dept-icon {
           width: 100%;
           height: 150px;
           padding: 0;
           margin: 0;
           overflow: hidden;
-          background: #f8fafc;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: #f1f5f9;
         }
 
         .dept-icon img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           display: block;
+          transition: transform 0.4s ease;
+        }
+
+        .dept-card:hover .dept-icon img {
+          transform: scale(1.06);
         }
 
         .dept-code {
@@ -101,21 +99,28 @@ export default function Departments() {
           margin-bottom: 8px;
         }
 
+        /* The label strip under each poster was plain white and read as empty
+           space. A soft tint, a gold rule against the image and a brand-navy
+           title give it presence without competing with the poster. */
         .dept-content {
-          padding: 16px 18px;
+          padding: 14px 18px 16px;
           flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
+          text-align: center;
+          background: linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%);
+          border-top: 3px solid #FFE619;
         }
 
         .dept-name {
           font-family: 'Rajdhani', sans-serif;
           font-size: 18px;
           font-weight: 700;
-          color: #1a1a2e;
+          color: #2B3490;
           margin-bottom: 6px;
           line-height: 1.3;
+          letter-spacing: 0.3px;
         }
 
         .dept-hod {
