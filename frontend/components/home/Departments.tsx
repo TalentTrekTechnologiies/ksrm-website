@@ -66,18 +66,28 @@ export default function Departments() {
           transform: translateY(-4px);
         }
 
+        /* contain, not cover: these are posters/artwork whose whole frame
+           matters. cover filled the 150px box by cropping, so each image lost
+           a different amount depending on its aspect ratio - which is why they
+           looked inconsistent and cut off. contain shows every image complete;
+           the neutral background fills whatever space is left over so the
+           cards still line up. */
         .dept-icon {
           width: 100%;
           height: 150px;
           padding: 0;
           margin: 0;
           overflow: hidden;
+          background: #f8fafc;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .dept-icon img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           display: block;
         }
 

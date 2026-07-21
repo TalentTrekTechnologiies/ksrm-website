@@ -100,11 +100,18 @@ export default function CampusServices() {
                 height: "100%",
                 boxSizing: "border-box",
               }}>
-                {/* SVG POSTER */}
+                {/* SVG POSTER - contain, not cover, and matching the
+                    department cards: cover cropped each poster by a different
+                    amount depending on its aspect ratio, so posters showed
+                    only partially and the two rows didn't match. */}
                 <div style={{
                   padding: 0,
                   height: "150px",
                   overflow: "hidden",
+                  background: "#f8fafc",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}>
                   <img
                     src={service.poster}
@@ -115,7 +122,7 @@ export default function CampusServices() {
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "cover",
+                      objectFit: "contain",
                       display: "block",
                     }}
                   />
