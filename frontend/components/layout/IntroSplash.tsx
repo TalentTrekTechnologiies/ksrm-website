@@ -36,8 +36,8 @@ export default function IntroSplash() {
       <div
         style={{
           position: "relative",
-          width: "clamp(260px, 52vw, 520px)",
-          maxWidth: "90vw",
+          width: "clamp(300px, 68vw, 760px)",
+          maxWidth: "92vw",
         }}
       >
         <video
@@ -47,12 +47,16 @@ export default function IntroSplash() {
           style={{
             width: "100%",
             height: "auto",
-            maxHeight: "70vh",
+            maxHeight: "82vh",
             objectFit: "contain",
             display: "block",
           }}
         >
-          <source src="/ksrm-logo.mp4" type="video/mp4" />
+          {/* WebM (VP8/VP9 with alpha) carries the background-removed logo, so
+              the splash's cream backdrop shows through it. It replaced the old
+              ksrm-logo.mp4, which no longer exists - the code still pointed at
+              that deleted file, which left the splash blank. */}
+          <source src="/ksrm-logo.webm" type="video/webm" />
         </video>
       </div>
     </div>

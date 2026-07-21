@@ -125,3 +125,55 @@
     line-height: 1.2;
   }
 }
+/* ── Public-site buttons ──
+   The hero's CTAs (and any other link marked up this way) carry
+   `btn btn-primary` / `btn btn-secondary`, but those classes were never
+   defined anywhere - so "Apply Now" and "Explore Campus" rendered as plain
+   text links instead of buttons. Defined here, outside @layer base, so they
+   sit at normal cascade order and Hero's own responsive overrides
+   (.hero-btn, which sets width/padding on small screens with !important)
+   still win. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 30px;
+  border-radius: 8px;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+/* Gold on navy - the primary action. */
+.btn-primary {
+  background: #FFE619;
+  color: #2B3490;
+  box-shadow: 0 6px 18px rgba(255, 230, 25, 0.35);
+}
+.btn-primary:hover {
+  background: #ffed57;
+  box-shadow: 0 10px 26px rgba(255, 230, 25, 0.45);
+}
+
+/* Outlined, for use over the hero video where a filled second button would
+   compete with the primary. */
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(2px);
+}
+.btn-secondary:hover {
+  background: #ffffff;
+  color: #2B3490;
+  border-color: #ffffff;
+}
