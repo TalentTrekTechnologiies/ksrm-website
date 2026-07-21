@@ -3,19 +3,38 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 
+const SEEN_KEY = "ksrm_intro_seen"
+
 export default function IntroSplash() {
-  const [show, setShow] = useState(true)
+  // Starts hidden and is switched on after mount only if this tab hasn't seen
+  // it. Previously it rendered `true` on the server and blocked the whole site
+  // for 4.5s on EVERY page load and refresh - which reads as the site being
+  // stuck loading. Starting false also keeps the server and client markup
+  // identical, so there's no hydration mismatch.
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
-    // Show splash for 4.5 seconds
-    const timer = setTimeout(() => setShow(false), 4500)
+    if (sessionStorage.getItem(SEEN_KEY)) return
+    sessionStorage.setItem(SEEN_KEY, "1")
+    setShow(true)
+    // Shorter, too: 4.5s of a blocking overlay is a long time to withhold the
+    // site from someone who just wants to read it.
+    const timer = setTimeout(() => setShow(false), 2600)
     return () => clearTimeout(timer)
   }, [])
 
   if (!show) return null
 
   return (
+    // Clicking (or pressing a key) dismisses it - nobody should be held on a
+    // splash they've already seen enough of, and if the video ever fails to
+    // paint, the visitor isn't stuck staring at a blank screen.
     <div
+      onClick={() => setShow(false)}
+      role="button"
+      tabIndex={0}
+      aria-label="Skip intro"
+      onKeyDown={() => setShow(false)}
       style={{
         position: "fixed",
         inset: 0,
@@ -26,6 +45,7 @@ export default function IntroSplash() {
         justifyContent: "center",
         opacity: 1,
         pointerEvents: "auto",
+        cursor: "pointer",
       }}
     >
       {/* The wrapper sized itself with height:auto while the video asked for
