@@ -18,6 +18,10 @@ export default function IntroSplash() {
   // to one route keeps the animation without ever interrupting navigation, and
   // needs no "already seen" flag, so it isn't invisible on a refresh either.
   const [show, setShow] = useState(false)
+  // The clip only starts playing once enough of it is buffered. Until then the
+  // overlay would sit blank, which reads as a broken load - so the logo fades
+  // in on `canplaythrough` and a quiet spinner covers the wait.
+  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     if (!isHomepage) return
@@ -68,10 +72,42 @@ export default function IntroSplash() {
           maxWidth: "92vw",
         }}
       >
+        {/* Buffering indicator - shown only until the clip can play through,
+            so the overlay is never just a blank cream screen. */}
+        {!videoReady && (
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: "50%",
+                border: "3px solid rgba(43,52,144,0.18)",
+                borderTopColor: "#2B3490",
+                animation: "ksrm-intro-spin 0.8s linear infinite",
+                display: "block",
+              }}
+            />
+            <style>{`@keyframes ksrm-intro-spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        )}
         <video
           autoPlay
           muted
           playsInline
+          // Buffer the whole clip up front rather than the browser's default
+          // metadata-only fetch, which left playback starting late on a cold
+          // load - the "video hasn't loaded yet" gap.
+          preload="auto"
+          onCanPlayThrough={() => setVideoReady(true)}
           // Close on the clip's own `ended` event so the animation always
           // finishes, whatever its length - a hard-coded timer had to guess,
           // and guessed short. If the file can't load at all, don't sit on a
@@ -84,6 +120,8 @@ export default function IntroSplash() {
             maxHeight: "82vh",
             objectFit: "contain",
             display: "block",
+            opacity: videoReady ? 1 : 0,
+            transition: "opacity 0.35s ease",
           }}
         >
           {/* WebM (VP8/VP9 with alpha) carries the background-removed logo, so
