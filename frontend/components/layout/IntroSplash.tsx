@@ -17,9 +17,12 @@ export default function IntroSplash() {
     if (sessionStorage.getItem(SEEN_KEY)) return
     sessionStorage.setItem(SEEN_KEY, "1")
     setShow(true)
-    // Shorter, too: 4.5s of a blocking overlay is a long time to withhold the
-    // site from someone who just wants to read it.
-    const timer = setTimeout(() => setShow(false), 2600)
+    // Safety net only - the splash normally closes on the video's `ended`
+    // event, so the animation always plays to its natural end. A fixed timer
+    // alone cut it off: the clip runs ~4.1s and the timer fired at 2.6s.
+    // This just guarantees the overlay can never trap anyone if the video
+    // stalls or never fires `ended`.
+    const timer = setTimeout(() => setShow(false), 9000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -64,6 +67,12 @@ export default function IntroSplash() {
           autoPlay
           muted
           playsInline
+          // Close on the clip's own `ended` event so the animation always
+          // finishes, whatever its length - a hard-coded timer had to guess,
+          // and guessed short. If the file can't load at all, don't sit on a
+          // blank overlay waiting for the safety timeout.
+          onEnded={() => setShow(false)}
+          onError={() => setShow(false)}
           style={{
             width: "100%",
             height: "auto",

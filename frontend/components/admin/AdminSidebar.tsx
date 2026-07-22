@@ -11,6 +11,8 @@ import {
   ChevronsRight,
   ChevronDown,
   Globe,
+  GraduationCap,
+  ExternalLink,
   type LucideIcon,
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
@@ -18,6 +20,19 @@ import { getStoredAdmin, hasPermission } from "@/lib/auth"
 import { widgetIcon } from "@/lib/dashboard-icons"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 import { Building2 } from "lucide-react"
+
+/**
+ * Where the online exam module lives.
+ *
+ * The exam module is a separate application (its own React app and Java server),
+ * so this is an absolute URL rather than a CMS route. NEXT_PUBLIC_ values are
+ * inlined at BUILD time and frozen thereafter, so it must be set in whatever
+ * environment runs `next build` - not only at runtime on the server.
+ *
+ * Unset means the link is hidden entirely: an admin seeing no entry is far
+ * better than one clicking through to a dead address on exam morning.
+ */
+const EXAM_ADMIN_URL = process.env.NEXT_PUBLIC_EXAM_ADMIN_URL?.replace(/\/$/, "") ?? ""
 
 const HOMEPAGE_SUB_ITEMS = [
   { href: "/admin/homepage/hero", label: "Hero Banner" },
@@ -113,6 +128,46 @@ function NavLink({
       <Icon className="h-[18px] w-[18px] shrink-0" />
       {!collapsed && <span className="truncate">{label}</span>}
     </Link>
+  )
+}
+
+/**
+ * A sidebar entry pointing at a different application rather than a CMS route.
+ *
+ * Kept separate from NavLink for two reasons: it needs a plain anchor, since
+ * next/link is for in-app navigation and this URL belongs to another origin; and
+ * it opens in a new tab so an admin never loses the CMS - or, more importantly,
+ * never navigates away from an exam they are invigilating. It is never "active",
+ * because no CMS pathname can match it.
+ */
+function ExternalNavLink({
+  href,
+  label,
+  icon: Icon,
+  collapsed,
+}: {
+  href: string
+  label: string
+  icon: LucideIcon
+  collapsed: boolean
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={collapsed ? label : undefined}
+      className="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:translate-x-0.5 hover:bg-admin-sidebar-hover hover:text-white"
+    >
+      <Icon className="h-[18px] w-[18px] shrink-0" />
+      {!collapsed && (
+        <>
+          <span className="truncate">{label}</span>
+          {/* Signals up front that this leaves the CMS. */}
+          <ExternalLink className="ml-auto h-3.5 w-3.5 shrink-0 opacity-50" />
+        </>
+      )}
+    </a>
   )
 }
 
@@ -380,6 +435,25 @@ export default function AdminSidebar({
             />
           ))}
         </div>
+      )}
+
+      {/*
+          The online exam module. Deliberately outside the NAV_ITEMS list above:
+          that list is filtered by the dashboard's widget keys, which only exist
+          for modules living inside this CMS. This one is another application, so
+          it is always shown when configured rather than gated on a widget that
+          will never be reported.
+      */}
+      {EXAM_ADMIN_URL && (
+        <>
+          <div className={`my-2 border-t border-white/10 ${collapsed ? "mx-1" : ""}`} />
+          <ExternalNavLink
+            href={`${EXAM_ADMIN_URL}/admin/login`}
+            label="Online Examinations"
+            icon={GraduationCap}
+            collapsed={collapsed}
+          />
+        </>
       )}
 
       {admin?.isSuperAdmin && (

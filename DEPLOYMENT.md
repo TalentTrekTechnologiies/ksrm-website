@@ -131,8 +131,28 @@ Set build-time env (Netlify → Site settings → Environment):
 |---|---|
 | `NEXT_PUBLIC_API_URL` | `https://api.ksrmce.ac.in` (no trailing slash) |
 | `NEXT_PUBLIC_POLL_INTERVAL_MS` | optional; default is 30000 in production builds |
+| `NEXT_PUBLIC_EXAM_ADMIN_URL` | optional; origin of the online exam module, e.g. `https://exams.ksrmce.ac.in` |
 
 Then `npm run build` in `frontend/` → deploy `frontend/out`.
+
+### The online exam module
+
+`NEXT_PUBLIC_EXAM_ADMIN_URL` adds an **Online Examinations** entry to the admin
+sidebar, opening the exam platform in a new tab. Leave it unset and the entry
+does not appear at all — an admin seeing no link is better than one clicking
+through to a dead address on exam morning.
+
+The exam module is a **separate application** (its own React app and Spring Boot
+server with its own database); this is a link out to it, not a page in this CMS.
+Two consequences worth knowing:
+
+- It cannot run on static/shared hosting — it needs a VPS for the Java server.
+  See `deploy/HOSTINGER.md` in the exam repo.
+- Like every `NEXT_PUBLIC_` value it is **inlined at build time**, so on Netlify
+  or Render it must be set as a build variable, not only a runtime one.
+
+Nothing about the exam module is exposed on the public site: candidates reach it
+by the direct link their invigilator or hall ticket gives them.
 
 **Every media URL in source resolves through `NEXT_PUBLIC_API_URL`**
 (`frontend/lib/api-base.ts`) — nothing is hardcoded to localhost.
