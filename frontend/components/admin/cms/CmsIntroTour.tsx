@@ -27,12 +27,13 @@ export const OPEN_TOUR_EVENT = "ksrm:open-tour"
 const seenKey = (adminId: number) => `ksrm_admin_tour_seen:${adminId}`
 
 /**
- * TESTING MODE - the client asked for the tour to open on EVERY admin load
- * while they evaluate it. Flip to false before deployment (they'll say when):
- * it then auto-opens only once per admin account. The ? button in the top bar
- * keeps working either way.
+ * Auto-opens once per admin account - a new admin gets the walkthrough on
+ * their first login and never again, which is the point of it. The flag stays
+ * as a switch for re-testing the first-run experience without creating a new
+ * account; leave it false in normal use. The ? button in the top bar re-opens
+ * the tour on demand either way, so nothing is ever lost by dismissing it.
  */
-const ALWAYS_SHOW_TOUR = true
+const ALWAYS_SHOW_TOUR = false
 
 interface TourStep {
   /** CSS selector of the element to spotlight; omit for a centered card. */
