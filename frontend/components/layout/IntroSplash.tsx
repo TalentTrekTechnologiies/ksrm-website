@@ -6,17 +6,17 @@ import Image from "next/image"
 
 export default function IntroSplash() {
   const pathname = usePathname()
-  const isHomepage = pathname === "/"
 
   // Starts hidden and is switched on after mount, so the server and client
   // render identical markup (no hydration mismatch) and the page itself paints
   // immediately rather than behind an overlay.
   //
-  // Homepage only, every visit: it plays whenever someone lands on "/", but
-  // never while they browse between pages. Showing it on every page - the
-  // original behaviour - made the whole site feel stuck loading; restricting it
-  // to one route keeps the animation without ever interrupting navigation, and
-  // needs no "already seen" flag, so it isn't invisible on a refresh either.
+  // Plays only when the site is FIRST opened on "/" - not on every visit to
+  // the homepage. This component lives in the persistent root chrome, so it
+  // survives client-side navigation; keying the effect on the pathname meant
+  // clicking "Home" from another page replayed the whole 4s animation. Running
+  // it once on mount, against the landing route, gives the intended behaviour:
+  // an intro when someone arrives, and never an interruption while they browse.
   const [show, setShow] = useState(false)
   // The clip only starts playing once enough of it is buffered. Until then the
   // overlay would sit blank, which reads as a broken load - so the logo fades
@@ -24,7 +24,9 @@ export default function IntroSplash() {
   const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
-    if (!isHomepage) return
+    // Landing route only, read once on mount - deliberately NOT re-run when
+    // the pathname changes, so navigating back to "/" never replays it.
+    if (pathname !== "/") return
     setShow(true)
     // Safety net only - the splash normally closes on the video's `ended`
     // event, so the animation always plays to its natural end. A fixed timer
@@ -33,7 +35,8 @@ export default function IntroSplash() {
     // stalls or never fires `ended`.
     const timer = setTimeout(() => setShow(false), 9000)
     return () => clearTimeout(timer)
-  }, [isHomepage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (!show) return null
 
