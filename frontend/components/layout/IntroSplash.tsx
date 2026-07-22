@@ -1,21 +1,26 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import Image from "next/image"
 
-const SEEN_KEY = "ksrm_intro_seen"
-
 export default function IntroSplash() {
-  // Starts hidden and is switched on after mount only if this tab hasn't seen
-  // it. Previously it rendered `true` on the server and blocked the whole site
-  // for 4.5s on EVERY page load and refresh - which reads as the site being
-  // stuck loading. Starting false also keeps the server and client markup
-  // identical, so there's no hydration mismatch.
+  const pathname = usePathname()
+  const isHomepage = pathname === "/"
+
+  // Starts hidden and is switched on after mount, so the server and client
+  // render identical markup (no hydration mismatch) and the page itself paints
+  // immediately rather than behind an overlay.
+  //
+  // Homepage only, every visit: it plays whenever someone lands on "/", but
+  // never while they browse between pages. Showing it on every page - the
+  // original behaviour - made the whole site feel stuck loading; restricting it
+  // to one route keeps the animation without ever interrupting navigation, and
+  // needs no "already seen" flag, so it isn't invisible on a refresh either.
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    if (sessionStorage.getItem(SEEN_KEY)) return
-    sessionStorage.setItem(SEEN_KEY, "1")
+    if (!isHomepage) return
     setShow(true)
     // Safety net only - the splash normally closes on the video's `ended`
     // event, so the animation always plays to its natural end. A fixed timer
@@ -24,7 +29,7 @@ export default function IntroSplash() {
     // stalls or never fires `ended`.
     const timer = setTimeout(() => setShow(false), 9000)
     return () => clearTimeout(timer)
-  }, [])
+  }, [isHomepage])
 
   if (!show) return null
 
