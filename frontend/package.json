@@ -8,6 +8,7 @@
     "build:static": "NEXT_PUBLIC_API_URL= next build",
     "start": "next start",
     "export": "npm run build:static && next export",
+    "zip": "next build && tar -a -c -f ../ksrm-site.zip -C out .",
     "lint": "eslint"
   },
   "dependencies": {
