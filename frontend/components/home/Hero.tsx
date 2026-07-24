@@ -276,8 +276,11 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
             variants={fadeUp} initial="hidden" animate="visible" custom={0.4}
             // flexWrap so the two CTAs drop onto a second line instead of
             // overflowing the hero's text column and running under the panel
-            // beside it; maxWidth keeps them inside that column.
-            style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center", maxWidth: "100%" }}
+            // beside it; maxWidth keeps them inside that column. marginTop
+            // gives clear separation from the rotating caption above - now that
+            // these are real buttons (with padding) rather than plain links,
+            // they sat right against that text.
+            style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center", maxWidth: "100%", marginTop: "24px" }}
           >
             <Link href={ctaPrimary.href} className="hero-btn touch-target btn btn-primary">
               {ctaPrimary.text}
