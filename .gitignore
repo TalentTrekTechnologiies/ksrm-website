@@ -42,3 +42,6 @@ assets-archive/
 # in IntroSplash.tsx, and video/quicktime plays in no major browser but Safari -
 # which takes the mp4 first anyway. The mp4 is the real asset; keep using it.
 frontend/public/*.mov
+
+# Local Hostinger deploy artifact - large, never commit
+ksrm-site.zip
