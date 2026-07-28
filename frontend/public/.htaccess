@@ -24,6 +24,77 @@ Options -MultiViews
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # ============================================================
+  #  301 REDIRECTS from the OLD PHP site (the *.php pages that
+  #  Google has indexed) to their new equivalents. This is what
+  #  preserves the existing search rankings when this site
+  #  replaces the old ksrmce.ac.in - an indexed old URL 301s to
+  #  the right new page instead of 404ing. Runs BEFORE the
+  #  pretty-URL rules below. Ambiguous ones point at the closest
+  #  section - adjust if a better target exists.
+  # ============================================================
+  RewriteRule ^index\.php$ / [R=301,L]
+
+  # Departments
+  RewriteRule ^cen\.php$  /departments/civil [R=301,L]
+  RewriteRule ^csen\.php$ /departments/cse [R=301,L]
+  RewriteRule ^eeen\.php$ /departments/eee [R=301,L]
+  RewriteRule ^ecen\.php$ /departments/ece [R=301,L]
+  RewriteRule ^mech\.php$ /departments/mech [R=301,L]
+  RewriteRule ^hasn\.php$ /departments/hs [R=301,L]
+  RewriteRule ^MBA\.php$  /departments/mba [R=301,L]
+
+  # About & leadership (the . matches the space in the old filenames)
+  RewriteRule ^college\.php$ /about [R=301,L]
+  RewriteRule ^Correspondent.Maam\.php$ /about/correspondent [R=301,L]
+  RewriteRule ^director\.php$ /about/managing-director [R=301,L]
+  RewriteRule ^vice.chairman.sir\.php$ /about/chairman [R=301,L]
+  RewriteRule ^principal\.php$ /about/principal [R=301,L]
+  RewriteRule ^jbos\.php$ /about [R=301,L]
+
+  # Academics
+  RewriteRule ^academic\.php$ /academics/courses-intake [R=301,L]
+  RewriteRule ^admission\.php$ /admissions [R=301,L]
+  RewriteRule ^fee\.php$ /academics/fee-structure [R=301,L]
+  RewriteRule ^examportal\.php$ /academics/academic-calendar [R=301,L]
+  RewriteRule ^SyllabusAll\.php$ /academics/syllabus [R=301,L]
+  RewriteRule ^regulations\.php$ /academics/regulations [R=301,L]
+
+  # Quality / NAAC (no direct new page for NIRF/ARIIA/DVV -> closest)
+  RewriteRule ^iqac\.php$ /iqac [R=301,L]
+  RewriteRule ^NAAC\.php$ /naac [R=301,L]
+  RewriteRule ^DVV2\.php$ /naac [R=301,L]
+  RewriteRule ^nirf\.php$ /accreditation [R=301,L]
+  RewriteRule ^ARIIA\.php$ /accreditation [R=301,L]
+
+  # Training & Placements
+  RewriteRule ^tap\.php$ /placements/overview [R=301,L]
+  RewriteRule ^partners\.php$ /placements/our-recruiters [R=301,L]
+  RewriteRule ^pprecord\.php$ /placements/placements-record [R=301,L]
+  RewriteRule ^pptraining\.php$ /placements/trainings [R=301,L]
+  RewriteRule ^tapregistration\.php$ /placements [R=301,L]
+  RewriteRule ^ctap\.php$ /contact [R=301,L]
+
+  # Campus life
+  RewriteRule ^campusnew\.php$ /campus-life/campus-facilities [R=301,L]
+  RewriteRule ^edc\.php$ /campus-life/edc [R=301,L]
+  RewriteRule ^nss\.php$ /campus-life/nss [R=301,L]
+  RewriteRule ^startup\.php$ /campus-life/startup-cell [R=301,L]
+  RewriteRule ^libruf2\.php$ /campus-life/library [R=301,L]
+  RewriteRule ^hostel\.php$ /campus-life/hostels [R=301,L]
+  RewriteRule ^transport\.php$ /campus-life/transport [R=301,L]
+  RewriteRule ^sport\.php$ /campus-life/sports [R=301,L]
+  RewriteRule ^antiragging\.php$ /campus-life/anti-ragging [R=301,L]
+  RewriteRule ^grievancecell\.php$ /campus-life/grievance [R=301,L]
+  RewriteRule ^cultural\.php$ /campus-life/cultural [R=301,L]
+
+  # Other
+  RewriteRule ^alumniruf\.php$ /alumni [R=301,L]
+  RewriteRule ^enquiry\.php$ /contact [R=301,L]
+  RewriteRule ^kgcet\.php$ /admissions [R=301,L]
+  RewriteRule ^reports\.php$ /iqac [R=301,L]
+  RewriteRule ^feedback\.php$ /iqac [R=301,L]
+
   # 1. A real file (an asset, a PDF, the .html itself) is served as-is.
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
