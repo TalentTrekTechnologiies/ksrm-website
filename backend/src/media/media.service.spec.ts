@@ -38,11 +38,12 @@ describe('MediaService', () => {
     };
     mediaVariant: { findMany: jest.Mock };
     mediaVersion: { findFirst: jest.Mock; create: jest.Mock };
+    galleryImage: { updateMany: jest.Mock };
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
   let validation: { validate: jest.Mock };
-  let usageService: { getUsagesForMedia: jest.Mock; isReferenced: jest.Mock };
+  let usageService: { getUsagesForMedia: jest.Mock; isReferenced: jest.Mock; untrackAll: jest.Mock };
   let storage: { save: jest.Mock; delete: jest.Mock };
   let imageProcessing: { deleteVariantsForMedia: jest.Mock };
   let processingQueue: { enqueue: jest.Mock };
@@ -63,6 +64,7 @@ describe('MediaService', () => {
       },
       mediaVariant: { findMany: jest.fn().mockResolvedValue([]) },
       mediaVersion: { findFirst: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue({}) },
+      galleryImage: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
@@ -72,6 +74,7 @@ describe('MediaService', () => {
     usageService = {
       getUsagesForMedia: jest.fn().mockResolvedValue([]),
       isReferenced: jest.fn(),
+      untrackAll: jest.fn().mockResolvedValue(undefined),
     };
     storage = {
       save: jest.fn().mockResolvedValue({ storageKey: 'k', sizeBytes: 100 }),
@@ -252,9 +255,10 @@ describe('MediaService', () => {
       expect(prisma.media.update).toHaveBeenCalled();
     });
 
-    it('409s with the usage list when referenced and not forced', async () => {
+    it('409s with the usage list when referenced by a blocking module and not forced', async () => {
+      // faculty (unlike gallery) blocks deletion rather than cascading.
       usageService.getUsagesForMedia.mockResolvedValue([
-        { module: 'gallery', recordId: 5, field: 'imageUrl' },
+        { module: 'faculty', recordId: 5, field: 'photoUrl' },
       ]);
 
       await expect(service.softDelete(1, admin, undefined, false)).rejects.toBeInstanceOf(
@@ -265,7 +269,7 @@ describe('MediaService', () => {
 
     it('403s a forced delete from a non-super-admin when the media is still referenced', async () => {
       usageService.getUsagesForMedia.mockResolvedValue([
-        { module: 'gallery', recordId: 5, field: 'imageUrl' },
+        { module: 'faculty', recordId: 5, field: 'photoUrl' },
       ]);
 
       await expect(service.softDelete(1, admin, undefined, true)).rejects.toBeInstanceOf(
@@ -275,7 +279,7 @@ describe('MediaService', () => {
 
     it('allows a forced delete from a super admin even when referenced', async () => {
       usageService.getUsagesForMedia.mockResolvedValue([
-        { module: 'gallery', recordId: 5, field: 'imageUrl' },
+        { module: 'faculty', recordId: 5, field: 'photoUrl' },
       ]);
 
       await service.softDelete(1, superAdmin, undefined, true);
@@ -284,6 +288,27 @@ describe('MediaService', () => {
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'DELETE', details: expect.objectContaining({ forced: true }) }),
       );
+    });
+
+    it('cascades gallery usages: soft-deletes the display row and deletes the media without a 409, even unforced', async () => {
+      // A gallery row is just a "display this asset here" pointer, so deleting
+      // the media takes the row with it instead of being blocked.
+      usageService.getUsagesForMedia.mockResolvedValue([
+        { module: 'gallery', recordId: 42, field: 'imageUrl' },
+      ]);
+
+      await service.softDelete(1, admin, undefined, false);
+
+      // the display row is soft-deleted and its usage link dropped...
+      expect(prisma.galleryImage.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 42, deletedAt: null },
+          data: expect.objectContaining({ deletedBy: admin.id }),
+        }),
+      );
+      expect(usageService.untrackAll).toHaveBeenCalledWith('gallery', 42);
+      // ...and the media itself is deleted (no ConflictException thrown).
+      expect(prisma.media.update).toHaveBeenCalled();
     });
   });
 });

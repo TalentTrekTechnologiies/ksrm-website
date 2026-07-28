@@ -62,7 +62,8 @@ describe('FacultyService', () => {
 
       expect(prisma.faculty.findMany).toHaveBeenCalledWith({
         where: { isActive: true, deletedAt: null },
-        orderBy: { name: 'asc' },
+        // HOD leads the grid, then roster order, then alphabetical.
+        orderBy: [{ isHod: 'desc' }, { sortOrder: 'asc' }, { name: 'asc' }],
       });
     });
   });

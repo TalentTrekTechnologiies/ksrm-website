@@ -56,6 +56,7 @@ describe('DepartmentProgrammesService', () => {
 
       expect(prisma.departmentProgramme.findMany).toHaveBeenCalledWith({
         where: { departmentId: 3, isActive: true, deletedAt: null },
+        include: { department: { select: { name: true, shortName: true, slug: true } } },
         orderBy: { sortOrder: 'asc' },
       });
     });

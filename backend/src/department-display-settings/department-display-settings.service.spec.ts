@@ -44,17 +44,17 @@ describe('DepartmentDisplaySettingsService', () => {
       const result = await service.getEffectiveSettings(3);
 
       expect(Object.values(result).every((v) => v === true)).toBe(true);
-      expect(result['faculty.showPhotos']).toBe(true);
+      expect(result['faculty.showEmail']).toBe(true);
     });
 
     it('overrides a catalog key when a row explicitly sets it false', async () => {
       prisma.departmentDisplaySetting.findMany.mockResolvedValue([
-        { key: 'faculty.showPhotos', value: false },
+        { key: 'faculty.showEmail', value: false },
       ]);
 
       const result = await service.getEffectiveSettings(3);
 
-      expect(result['faculty.showPhotos']).toBe(false);
+      expect(result['faculty.showEmail']).toBe(false);
       expect(result['hod.showMessage']).toBe(true);
     });
   });
@@ -62,12 +62,12 @@ describe('DepartmentDisplaySettingsService', () => {
   describe('findAllAdmin', () => {
     it('flags isOverridden only for keys with a stored row', async () => {
       prisma.departmentDisplaySetting.findMany.mockResolvedValue([
-        { key: 'faculty.showPhotos', value: false },
+        { key: 'faculty.showEmail', value: false },
       ]);
 
       const result = await service.findAllAdmin(3);
 
-      const faculty = result.find((r) => r.key === 'faculty.showPhotos');
+      const faculty = result.find((r) => r.key === 'faculty.showEmail');
       const hod = result.find((r) => r.key === 'hod.showMessage');
       expect(faculty).toMatchObject({ value: false, isOverridden: true });
       expect(hod).toMatchObject({ value: true, isOverridden: false });
@@ -100,7 +100,7 @@ describe('DepartmentDisplaySettingsService', () => {
         {
           departmentId: 3,
           settings: [
-            { key: 'faculty.showPhotos', value: false },
+            { key: 'faculty.showEmail', value: false },
             { key: 'labs.showEquipment', value: true },
           ],
         },

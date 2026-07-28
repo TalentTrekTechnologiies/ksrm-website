@@ -3,6 +3,9 @@ import { BadRequestException, ConflictException, NotFoundException } from '@nest
 import { Prisma } from '@prisma/client';
 import { MediaFoldersService } from './media-folders.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+
+const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
 function p2002() {
   return new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
@@ -25,6 +28,7 @@ describe('MediaFoldersService', () => {
     media: { count: jest.Mock };
     $transaction: jest.Mock;
   };
+  let auditLog: { log: jest.Mock };
 
   beforeEach(async () => {
     prisma = {
@@ -39,9 +43,14 @@ describe('MediaFoldersService', () => {
       media: { count: jest.fn() },
       $transaction: jest.fn().mockResolvedValue(undefined),
     };
+    auditLog = { log: jest.fn().mockResolvedValue(undefined) };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MediaFoldersService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        MediaFoldersService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: AuditLogService, useValue: auditLog },
+      ],
     }).compile();
 
     service = module.get(MediaFoldersService);
@@ -82,6 +91,21 @@ describe('MediaFoldersService', () => {
 
       await expect(service.create({ name: 'Departments' })).rejects.toBeInstanceOf(
         BadRequestException,
+      );
+    });
+
+    it('writes an audit entry when an admin creates a folder', async () => {
+      prisma.mediaFolder.create.mockResolvedValue({ id: 7, name: 'Reports', path: 'reports' });
+
+      await service.create({ name: 'Reports' }, admin);
+
+      expect(auditLog.log).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'CREATE',
+          module: 'media_folders',
+          targetId: 7,
+          adminId: admin.id,
+        }),
       );
     });
   });
