@@ -24,15 +24,33 @@ import { Building2 } from "lucide-react"
 /**
  * Where the online exam module lives.
  *
- * The exam module is a separate application (its own React app and Java server),
- * so this is an absolute URL rather than a CMS route. NEXT_PUBLIC_ values are
- * inlined at BUILD time and frozen thereafter, so it must be set in whatever
- * environment runs `next build` - not only at runtime on the server.
+ * Read at RUNTIME from /site-config.json, deliberately NOT from
+ * NEXT_PUBLIC_EXAM_ADMIN_URL. This is a static export: any NEXT_PUBLIC_ value
+ * is inlined into the compiled bundle at build time and frozen there, so
+ * changing it would mean rebuilding and re-uploading the entire site just to
+ * edit one link. site-config.json instead lands as a plain file at the root of
+ * public_html, editable directly in hPanel's file manager - no rebuild, ever,
+ * just to point this at a different address.
  *
- * Unset means the link is hidden entirely: an admin seeing no entry is far
- * better than one clicking through to a dead address on exam morning.
+ * Unset (or the fetch failing) means the link stays hidden: an admin seeing no
+ * entry is far better than one clicking through to a dead address on exam
+ * morning.
  */
-const EXAM_ADMIN_URL = process.env.NEXT_PUBLIC_EXAM_ADMIN_URL?.replace(/\/$/, "") ?? ""
+function useExamAdminUrl(): string {
+  const [url, setUrl] = useState("")
+  useEffect(() => {
+    fetch("/site-config.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((cfg) => {
+        const value = cfg?.examAdminUrl?.replace(/\/$/, "") ?? ""
+        if (value) setUrl(value)
+      })
+      .catch(() => {
+        // No config file, or it's unreachable — link stays hidden, same as unset.
+      })
+  }, [])
+  return url
+}
 
 const HOMEPAGE_SUB_ITEMS = [
   { href: "/admin/homepage/hero", label: "Hero Banner" },
@@ -193,6 +211,7 @@ export default function AdminSidebar({
     false
   const [departmentsExpanded, setDepartmentsExpanded] = useState(isOnDepartmentsSection)
   const [departments, setDepartments] = useState<Department[] | null>(null)
+  const examAdminUrl = useExamAdminUrl()
 
   useEffect(() => {
     let cancelled = false
@@ -232,7 +251,7 @@ export default function AdminSidebar({
   return (
     <nav
       style={{ background: "var(--gradient-admin-sidebar)", boxShadow: "var(--shadow-admin-sidebar)" }}
-      className={`flex h-full flex-col gap-1 py-4 transition-all duration-200 ${
+      className={`flex min-h-full flex-col gap-1 py-4 transition-all duration-200 ${
         collapsed ? "w-[76px] px-2" : "w-64 px-3"
       }`}
     >
@@ -444,11 +463,11 @@ export default function AdminSidebar({
           it is always shown when configured rather than gated on a widget that
           will never be reported.
       */}
-      {EXAM_ADMIN_URL && (
+      {examAdminUrl && (
         <>
           <div className={`my-2 border-t border-white/10 ${collapsed ? "mx-1" : ""}`} />
           <ExternalNavLink
-            href={`${EXAM_ADMIN_URL}/admin/login`}
+            href={`${examAdminUrl}/admin/login`}
             label="Online Examinations"
             icon={GraduationCap}
             collapsed={collapsed}
