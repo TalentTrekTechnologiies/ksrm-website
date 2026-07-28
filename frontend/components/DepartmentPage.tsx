@@ -750,6 +750,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           .dept-pos-grid, .dept-mission-grid, .dept-faculty-grid {
             grid-template-columns: 1fr;
           }
+          /* Stack the About text + video so the video isn't squeezed to a
+             tiny half-width column on phones/tablets. !important overrides the
+             inline "1fr 1fr" set on the element. */
+          .dept-about-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
         }
       `}</style>
 
@@ -786,7 +790,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         <section id="about" style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
             <h2 className="dept-section-title">About the Department</h2>
-            <div style={{ display: "grid", gridTemplateColumns: department.aboutVideo ? "1fr 1fr" : "1fr", gap: 48, alignItems: "start" }}>
+            <div className="dept-about-grid" style={{ display: "grid", gridTemplateColumns: department.aboutVideo ? "1fr 1fr" : "1fr", gap: 48, alignItems: "start" }}>
               <div style={{ maxWidth: 900 }}>
                 {(department.overview?.length ? department.overview : [department.about]).map((para, i) => (
                   <p key={i} style={{ color: "#555", fontSize: 17, lineHeight: 1.8, margin: i === 0 ? 0 : "16px 0 0" }}>

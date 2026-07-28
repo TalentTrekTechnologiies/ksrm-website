@@ -104,6 +104,12 @@
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;   /* prevent horizontal scroll on all devices */
+    /* Stop mobile browsers (esp. iOS Safari on rotate, and some Android
+       webviews) from auto-inflating font sizes - the "text suddenly became
+       very big" effect. Fonts then render at the sizes we actually set. */
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {

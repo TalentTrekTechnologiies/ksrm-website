@@ -239,6 +239,14 @@ export default function Footer() {
             word-break: break-word;
           }
         }
+
+        /* Stack the copyright + "Powered by" bar on phones/tablets so the
+           right-hand text can't run off the edge of the screen. */
+        @media (max-width: 640px) {
+          .footer-bottom-inner { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 0 16px; }
+          .footer-bottom-inner > div { text-align: center; }
+          .footer-bottom-inner span { display: block; word-break: break-word; }
+        }
       `}</style>
 
       {/* MAIN GRID */}
@@ -343,7 +351,7 @@ export default function Footer() {
 
       {/* BOTTOM BAR */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: "44px", padding: "12px 0" }}>
-        <div style={{
+        <div className="footer-bottom-inner" style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -362,8 +370,10 @@ export default function Footer() {
             </span>
           </div>
 
-          {/* RIGHT: Powered by */}
-          <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+          {/* RIGHT: Powered by - no nowrap so it wraps instead of overflowing
+              the screen on mobile (space-between already right-aligns it on
+              desktop). */}
+          <div style={{ textAlign: "right" }}>
             <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
               Powered by Talent Trek Technologies
             </span>
