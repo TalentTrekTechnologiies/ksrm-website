@@ -30,6 +30,35 @@ const NAV_ITEMS = [
 
 const LEVEL_LABEL: Record<string, string> = { UG: "Undergraduate", PG: "Postgraduate", PHD: "Ph.D.", DIPLOMA: "Diploma" };
 
+// Department Downloads are grouped by category so a syllabus doesn't sit in the
+// same flat pile as brochures/forms - each category gets its own sub-heading,
+// in this order (unknown/empty categories fall under "Other Documents", last).
+const DOWNLOAD_CATEGORY_LABELS: Record<string, string> = {
+  SYLLABUS: "Syllabus",
+  QUESTION_PAPER: "Question Papers",
+  BROCHURE: "Brochures",
+  AFFIDAVIT: "Affidavits",
+  FORM: "Forms",
+  OTHER: "Other Documents",
+};
+const DOWNLOAD_CATEGORY_ORDER = ["SYLLABUS", "QUESTION_PAPER", "BROCHURE", "AFFIDAVIT", "FORM", "OTHER"];
+
+function groupDownloadsByCategory(downloads: Download[]): { category: string; items: Download[] }[] {
+  const byCat = new Map<string, Download[]>();
+  for (const d of downloads) {
+    const cat = d.category || "OTHER";
+    if (!byCat.has(cat)) byCat.set(cat, []);
+    byCat.get(cat)!.push(d);
+  }
+  return [...byCat.keys()]
+    .sort((a, b) => {
+      const ia = DOWNLOAD_CATEGORY_ORDER.indexOf(a);
+      const ib = DOWNLOAD_CATEGORY_ORDER.indexOf(b);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    })
+    .map((category) => ({ category, items: byCat.get(category)! }));
+}
+
 export default function DepartmentPage({ department: fallbackDepartment }: { department: Department }) {
   const [activeTab, setActiveTab] = useState("about");
   const [department, setDepartment] = useState<Department>(fallbackDepartment);
@@ -133,6 +162,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
             specialization: f.specialization ?? "",
             experience: f.experience ?? "",
             email: f.email ?? "",
+            phone: f.phone ?? "",
           })),
         }))
         const hod = facultyRes.value.find((f) => f.isHod)
@@ -359,6 +389,52 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           border: 1px solid #eef0f3;
           border-radius: 16px;
           padding: 32px;
+        }
+        .dept-download-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .dept-download-grid .dept-card {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center;
+          gap: 16px !important;
+          background: #fff;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          padding: 16px 20px;
+          transition: all 0.2s ease;
+        }
+        .dept-download-grid .dept-card:hover {
+          border-color: #D4A500;
+          box-shadow: 0 8px 20px rgba(43,52,144,0.08);
+        }
+        .dept-download-grid .dept-card h3 {
+          color: #2B3490 !important;
+          font-family: inherit !important;
+          font-size: 15px !important;
+          line-height: 1.4 !important;
+        }
+        .dept-download-grid .dept-card p {
+          color: #999 !important;
+          font-size: 13px !important;
+          margin-top: 2px !important;
+        }
+        .dept-download-grid .dept-card > span {
+          margin-left: auto;
+          flex-shrink: 0;
+          color: #fff !important;
+          background: #2B3490;
+          padding: 5px 14px;
+          border-radius: 4px;
+          font-size: 13px !important;
+          font-weight: 700 !important;
+          white-space: nowrap;
+        }
+        @media (max-width: 640px) {
+          .dept-download-grid .dept-card { align-items: flex-start; }
+          .dept-download-grid .dept-card > span { display: none; }
         }
 
         .dept-career-grid { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -936,6 +1012,11 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                           {f.email}
                         </a>
                       )}
+                      {f.phone && (
+                        <a href={`tel:${f.phone}`} className="dept-faculty-qual" style={{ display: "block", textDecoration: "none" }}>
+                          {f.phone}
+                        </a>
+                      )}
                     </div>
                   </div>
                 );
@@ -1196,24 +1277,31 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           <section style={{ padding: "72px 0", background: "#ffffff" }}>
             <div className="responsive-container">
               <h2 className="dept-section-title" style={{ marginBottom: 32 }}>Downloads</h2>
-              <div className="dept-programmes-grid">
-                {downloads.map((d) => (
-                  <a
-                    key={d.id}
-                    href={d.fileUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="dept-card"
-                    style={{ display: "flex", flexDirection: "column", gap: 6, textDecoration: "none" }}
-                  >
-                    <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
-                      {d.title}
-                    </h3>
-                    {d.description && <p style={{ color: "#666", fontSize: 14, margin: 0 }}>{d.description}</p>}
-                    <span style={{ color: "#2B3490", fontSize: 13, fontWeight: 600 }}>Download →</span>
-                  </a>
-                ))}
-              </div>
+              {groupDownloadsByCategory(downloads).map((group) => (
+                <div key={group.category} style={{ marginBottom: 36 }}>
+                  <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#2B3490", borderLeft: "4px solid #D4A500", paddingLeft: 14, margin: "0 0 20px" }}>
+                    {DOWNLOAD_CATEGORY_LABELS[group.category] ?? group.category}
+                  </h3>
+                  <div className="dept-download-grid">
+                    {group.items.map((d) => (
+                      <a
+                        key={d.id}
+                        href={d.fileUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="dept-card"
+                        style={{ display: "flex", flexDirection: "column", gap: 6, textDecoration: "none" }}
+                      >
+                        <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
+                          {d.title}
+                        </h3>
+                        {d.description && <p style={{ color: "#666", fontSize: 14, margin: 0 }}>{d.description}</p>}
+                        <span style={{ color: "#2B3490", fontSize: 13, fontWeight: 600 }}>Download →</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         )}
