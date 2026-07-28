@@ -346,6 +346,13 @@ const SITE_SETTINGS_SEED: SiteSettingSeed[] = [
   { key: 'site.seoDefaultDescription', value: 'KSRM College of Engineering, Kadapa — UGC Autonomous, NAAC A++ accredited, NBA Tier-1, affiliated to JNTUA.', type: 'STRING', group: 'seo', isPublic: true, description: 'Fallback meta description for pages that don\'t set their own.' },
   { key: 'site.seoKeywords', value: 'KSRM, engineering college, Kadapa, JNTUA, NAAC, NBA', type: 'STRING', group: 'seo', isPublic: true, description: 'Comma-separated fallback meta keywords.' },
   { key: 'site.seoOgImageUrl', value: '', type: 'IMAGE_URL', group: 'seo', isPublic: true, description: 'Default social-share preview image (Open Graph).' },
+  // Popup Notice - a dismissible poster modal shown on the homepage (e.g. to
+  // highlight an event / placement drive). CMS-driven so it can be turned on,
+  // swapped, and turned off per event with no code change.
+  { key: 'site.popupEnabled', value: 'false', type: 'BOOLEAN', group: 'popup', isPublic: true, description: 'Show the homepage popup notice. Turn on only while an event is running.' },
+  { key: 'site.popupImageUrl', value: '', type: 'IMAGE_URL', group: 'popup', isPublic: true, description: 'Poster image for the popup (upload via the Media Library). Nothing shows if this is empty.' },
+  { key: 'site.popupLinkUrl', value: '', type: 'URL', group: 'popup', isPublic: true, description: 'Optional link the poster opens when clicked (e.g. the placements page). Leave blank for no link.' },
+  { key: 'site.popupTitle', value: '', type: 'STRING', group: 'popup', isPublic: true, description: 'Short caption / image alt text for the popup (accessibility).' },
   // System
   { key: 'site.maintenanceMode', value: 'false', type: 'BOOLEAN', group: 'system', isPublic: true, description: 'When on, the public site should show a maintenance notice. (Display of the notice itself is a frontend concern - this is the flag.)' },
 ];

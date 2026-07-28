@@ -315,6 +315,40 @@ function SiteSettingsManagerInner() {
       </SectionCard>
 
       <SectionCard
+        title="Popup Notice"
+        description="A dismissible poster shown on the homepage - use it to highlight an event or placement drive. Turn it on only while the event is running; visitors see it once per visit."
+        onSave={() =>
+          saveGroup("popup", ["site.popupEnabled", "site.popupImageUrl", "site.popupLinkUrl", "site.popupTitle"])
+        }
+        saving={savingGroup === "popup"}
+        saved={savedGroup === "popup"}
+      >
+        <ToggleField
+          label="Show popup on the homepage"
+          checked={v("site.popupEnabled") === "true"}
+          onChange={(next) => setValue("site.popupEnabled", String(next))}
+        />
+        <MediaField
+          label="Poster image"
+          url={v("site.popupImageUrl")}
+          mediaId={mediaIds["site.popupImageUrl"] ?? null}
+          onChange={(url, mediaId) => setMediaValue("site.popupImageUrl", url, mediaId)}
+          accept={["IMAGE"]}
+        />
+        <TextField
+          label="Link when clicked (optional)"
+          value={v("site.popupLinkUrl")}
+          onChange={(val) => setValue("site.popupLinkUrl", val)}
+          placeholder="/placements  or  https://..."
+        />
+        <TextField
+          label="Caption / alt text (optional)"
+          value={v("site.popupTitle")}
+          onChange={(val) => setValue("site.popupTitle", val)}
+        />
+      </SectionCard>
+
+      <SectionCard
         title="Contact Information"
         description="The college's general contact details (shown in the footer and contact pages)."
         onSave={() =>
