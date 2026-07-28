@@ -1,4 +1,5 @@
-﻿import { notFound, redirect } from "next/navigation";
+﻿import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 import DepartmentPage from "@/components/DepartmentPage";
 import type { Department } from "@/types/department";
 import { civil } from "@/data/departments/civil";
@@ -58,6 +59,27 @@ const CSE_ALIASES = new Set(["aids", "ai-ds", "aiml", "ai-ml", "data-science", "
 
 export function generateStaticParams() {
   return [...Object.keys(departments), ...CSE_ALIASES].map((slug) => ({ slug }));
+}
+
+// Per-department SEO: without this every department page inherited the root
+// layout's generic homepage title/description. Now each gets a unique title +
+// description + canonical, which is what people actually search for ("KSRM CSE
+// department", etc.).
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const department = (departments as Record<string, typeof civil>)[slug];
+  if (!department) return {};
+  const description =
+    department.tagline ||
+    (department.about ? department.about.slice(0, 155) : `${department.name} at K.S.R.M. College of Engineering, Kadapa.`);
+  const title = `${department.name} | K.S.R.M. College of Engineering`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/departments/${slug}` },
+    openGraph: { title, description, url: `/departments/${slug}` },
+    twitter: { title, description },
+  };
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
