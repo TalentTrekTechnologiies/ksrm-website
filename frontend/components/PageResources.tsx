@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { FileText } from "lucide-react"
+import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
 import { useLiveData } from "@/lib/use-live-data"
@@ -95,12 +95,7 @@ const PR_STYLES = `
   .pr-list.pr-embedded { margin-top: 8px; }
   .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
   .pr-list > div:first-child .pr-group-head { margin-top: 0; }
-  .pr-row { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.2s ease; }
-  .pr-row:hover { border-color: #D4A500; box-shadow: 0 8px 20px rgba(43,52,144,0.08); }
-  .pr-icon { width: 40px; height: 40px; border-radius: 6px; background: #eef1ff; color: #2B3490; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .pr-doc-title { display: block; font-size: 15px; font-weight: 600; color: #2B3490; line-height: 1.4; }
-  .pr-doc-desc { display: block; font-size: 13px; color: #999; margin-top: 2px; }
-  .pr-pill { margin-left: auto; flex-shrink: 0; color: #fff; background: #2B3490; padding: 5px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  ${PUBLIC_DOCUMENT_LIST_STYLES}
   .pr-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: none; border: 1.5px solid #2B3490; color: #2B3490; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s; }
   .pr-more:hover { background: #2B3490; color: #fff; }
 `
@@ -118,16 +113,15 @@ function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: num
   return (
     <div>
       {group.label && <div className="pr-group-head">{group.label}</div>}
-      {items.map((d) => (
-        <a key={d.id} href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="pr-row">
-          <span className="pr-icon"><FileText size={19} /></span>
-          <span style={{ minWidth: 0, flex: 1 }}>
-            <span className="pr-doc-title">{d.title}</span>
-            {d.description && <span className="pr-doc-desc">{d.description}</span>}
-          </span>
-          <span className="pr-pill">Download →</span>
-        </a>
-      ))}
+      <PublicDocumentList
+        items={items.map((d) => ({
+          id: d.id,
+          title: d.title,
+          description: d.description,
+          href: d.fileUrl,
+          actionLabel: "Download",
+        }))}
+      />
       {overflowing && (
         <button type="button" className="pr-more" onClick={() => setExpanded((v) => !v)}>
           {expanded ? "Show less" : `Show all ${group.items.length} documents ↓`}
@@ -238,9 +232,20 @@ export default function PageResources({
             </div>
             <div className="pr-videos">
               {videos.map((v) => (
-                <div key={v.id}>
+                <div key={v.id} data-video-wrap>
                   <div className="pr-video">
-                    <video src={v.imageUrl} controls preload="metadata" />
+                    {/* Hide the whole tile if the source 404s (e.g. an orphaned
+                        __video__ row whose Media file was deleted) so the page
+                        never shows a broken black box. */}
+                    <video
+                      src={v.imageUrl}
+                      controls
+                      preload="metadata"
+                      onError={(e) => {
+                        const wrap = e.currentTarget.closest("[data-video-wrap]") as HTMLElement | null
+                        if (wrap) wrap.style.display = "none"
+                      }}
+                    />
                   </div>
                   {v.title && <div className="pr-video-cap">{v.title}</div>}
                 </div>

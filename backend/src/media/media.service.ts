@@ -557,12 +557,23 @@ export class MediaService {
     const existing = await this.findActiveOrThrow(id);
     const usages = await this.usageService.getUsagesForMedia(id);
 
-    if (usages.length > 0 && !force) {
+    // Gallery rows are just "display this asset on a page" pointers - when the
+    // asset itself is deleted the display must go with it, otherwise the public
+    // page renders a broken image / black video tile (the orphan bug: delete a
+    // video in the Media Library, the gallery row that shows it lingers and
+    // still renders). So gallery usages CASCADE - the display row is
+    // soft-deleted alongside the media - rather than blocking the delete. Every
+    // other module still blocks with a 409 so an in-use faculty photo or logo
+    // can't be silently broken.
+    const galleryUsages = usages.filter((u) => u.module === 'gallery');
+    const blocking = usages.filter((u) => u.module !== 'gallery');
+
+    if (blocking.length > 0 && !force) {
       throw new ConflictException({
         statusCode: 409,
         error: 'MediaInUse',
-        message: `Media ${id} is referenced in ${usages.length} place(s) and cannot be deleted.`,
-        usages: usages.map((u) => ({
+        message: `Media ${id} is referenced in ${blocking.length} place(s) and cannot be deleted.`,
+        usages: blocking.map((u) => ({
           module: u.module,
           recordId: u.recordId,
           field: u.field,
@@ -570,10 +581,24 @@ export class MediaService {
       });
     }
 
-    if (usages.length > 0 && force && !admin.isSuperAdmin) {
+    if (blocking.length > 0 && force && !admin.isSuperAdmin) {
       throw new ForbiddenException(
         'Only a super admin can delete media that is still in use.',
       );
+    }
+
+    // Cascade the gallery display rows (soft-delete + drop their usage links)
+    // so nothing on a public page keeps pointing at the now-deleted asset.
+    for (const gu of galleryUsages) {
+      await this.prisma.galleryImage.updateMany({
+        where: { id: gu.recordId, deletedAt: null },
+        data: {
+          deletedAt: new Date(),
+          deletedBy: admin.id,
+          version: { increment: 1 },
+        },
+      });
+      await this.usageService.untrackAll('gallery', gu.recordId);
     }
 
     const deleted = await this.prisma.media.update({
@@ -592,7 +617,11 @@ export class MediaService {
       action: 'DELETE',
       module: 'media',
       targetId: id,
-      details: { before: existing, forced: usages.length > 0 && force },
+      details: {
+        before: existing,
+        forced: blocking.length > 0 && force,
+        cascadedGalleryRows: galleryUsages.map((u) => u.recordId),
+      },
       requestId,
     });
 
