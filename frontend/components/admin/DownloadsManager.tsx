@@ -52,6 +52,9 @@ const CATEGORY_OPTIONS: { value: DownloadCategory; label: string }[] = [
 // "" = not tied to any page (general Downloads only). Prepended to the shared
 // PAGE_SECTIONS list so the admin can clear the routing.
 const PAGE_SECTION_OPTIONS = [{ value: "", label: "— None (general only) —" }, ...PAGE_SECTIONS]
+// value -> readable label, for the "Page" column and the page filter, so an
+// admin can see which page a document is on and narrow to just that page's docs.
+const SECTION_LABEL = new Map(PAGE_SECTIONS.map((s) => [s.value, s.label]))
 
 const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", fileUrl: "", mediaId: null, isActive: true }
 
@@ -65,6 +68,7 @@ function DownloadsManagerInner() {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState("")
+  const [pageFilter, setPageFilter] = useState("")
 
   async function refresh() {
     try {
@@ -154,9 +158,12 @@ function DownloadsManagerInner() {
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return items
-    return items.filter((i) => i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q))
-  }, [items, search])
+    return items.filter((i) => {
+      if (pageFilter && (i.pageSection ?? "") !== pageFilter) return false
+      if (!q) return true
+      return i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)
+    })
+  }, [items, search, pageFilter])
 
   const columns: ColumnDef<Download>[] = [
     {
@@ -170,6 +177,18 @@ function DownloadsManagerInner() {
       ),
     },
     { accessorKey: "category", header: "Category" },
+    {
+      id: "page",
+      header: "Page",
+      cell: ({ row }) =>
+        row.original.pageSection ? (
+          <span className="rounded px-1.5 py-0.5 text-[11px] font-semibold text-admin-primary bg-admin-primary/10">
+            {SECTION_LABEL.get(row.original.pageSection) ?? row.original.pageSection}
+          </span>
+        ) : (
+          <span className="text-[11px] text-slate-400">—</span>
+        ),
+    },
     {
       id: "file",
       header: "File",
@@ -270,13 +289,30 @@ function DownloadsManagerInner() {
         onSearchChange={setSearch}
         searchPlaceholder="Search downloads..."
         filters={
-          <button
-            type="button"
-            onClick={startCreate}
-            className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-3 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark"
-          >
-            <Plus className="h-4 w-4" /> Add download
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Filter by which page a document is routed to - so an admin can
+                jump straight to e.g. IQAC's documents and manage/delete them. */}
+            <select
+              value={pageFilter}
+              onChange={(e) => setPageFilter(e.target.value)}
+              aria-label="Filter by page"
+              className="rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-700"
+            >
+              <option value="">All pages</option>
+              {PAGE_SECTIONS.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={startCreate}
+              className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-3 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark"
+            >
+              <Plus className="h-4 w-4" /> Add download
+            </button>
+          </div>
         }
       />
 
