@@ -98,9 +98,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <CmsConfirmProvider>
-    <div className="flex min-h-screen" style={{ background: "var(--color-admin-bg)" }}>
-      {/* Desktop sidebar */}
-      <div className="hidden md:block">
+    {/* h-screen + overflow-hidden makes this a fixed app shell: the sidebar
+        and top navbar stay pinned to the viewport and only the <main> content
+        scrolls - previously the whole page (sidebar included) scrolled as one
+        unit, so the sidebar slid away while editing a long form. */}
+    <div className="flex h-screen overflow-hidden" style={{ background: "var(--color-admin-bg)" }}>
+      {/* Desktop sidebar - full viewport height, scrolls internally if the
+          nav list is taller than the screen. */}
+      <div className="hidden h-screen overflow-y-auto md:block">
         <AdminSidebar collapsed={collapsed} onToggleCollapse={() => setCollapsed((v) => !v)} />
       </div>
 
@@ -117,14 +122,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       )}
 
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+      <div className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
         <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
         {/* min-w-0 - without it, a flex item's default min-width is "auto"
             (won't shrink below its content's intrinsic width), so a wide
             table on a narrow viewport pushes the whole page into
             horizontal scroll instead of scrolling just the table inside
-            its own overflow-x-auto wrapper. */}
-        <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
+            its own overflow-x-auto wrapper.
+            overflow-y-auto - only this content area scrolls now; the navbar
+            above and the sidebar beside it stay fixed in the viewport. */}
+        <main className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </div>
       {/* First-login walkthrough; auto-opens once per admin, reopenable from
           the navbar's ? button. Inside the auth-gated chrome only, so it never
