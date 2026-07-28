@@ -163,7 +163,7 @@ export default function Departments() {
           <p style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase", margin: 0 }}>
             ACADEMICS
           </p>
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "36px", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(21px, 5.8vw, 36px)", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
             Our Departments
           </h2>
           <p style={{ fontSize: "16px", color: "#888", margin: 0 }}>

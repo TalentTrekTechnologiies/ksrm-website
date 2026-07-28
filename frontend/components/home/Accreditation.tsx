@@ -115,7 +115,7 @@ export default function Accreditation() {
         <div style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" as const }}>
           RECOGNIZED FOR QUALITY
         </div>
-        <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "32px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 6px" }}>
+        <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(19px, 5.1vw, 32px)", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 6px" }}>
           Accreditations & Rankings
         </h2>
         <p style={{ fontSize: "16px", color: "#888", margin: 0 }}>

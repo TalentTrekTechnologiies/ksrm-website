@@ -106,7 +106,7 @@ export default function NewsAndEvents() {
           display: flex; flex-direction: column; align-items: center; justify-content: center;
           background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%);
         }
-        .ne-thumb-date .ne-chip-day { color: #fff; font-size: 30px; }
+        .ne-thumb-date .ne-chip-day { color: #fff; font-size: clamp(17px, 4.8vw, 30px); }
         .ne-thumb-date .ne-chip-mon { color: #FFE619; font-size: 13px; margin-top: 5px; }
         .ne-item-body { min-width: 0; display: flex; flex-direction: column; }
         .ne-item-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
@@ -138,7 +138,7 @@ export default function NewsAndEvents() {
           <div style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
             Stay Updated
           </div>
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(20px, 5.4vw, 34px)", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
             News &amp; Events
           </h2>
         </div>

@@ -91,7 +91,7 @@ export default function Testimonials() {
           </div>
           <h2 style={{
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "36px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px",
+            fontSize: "clamp(21px, 5.8vw, 36px)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px",
           }}>
             What Our Students Say
           </h2>

@@ -90,7 +90,7 @@ export default function CampusGallery() {
           <div style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
             Life at KSRM
           </div>
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(20px, 5.4vw, 34px)", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
             Campus Gallery
           </h2>
           <p style={{ color: "#777", fontSize: "17px", margin: "8px auto 0", maxWidth: "560px" }}>

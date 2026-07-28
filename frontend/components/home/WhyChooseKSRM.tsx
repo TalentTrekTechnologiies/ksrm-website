@@ -98,7 +98,7 @@ export default function WhyChooseKSRM() {
           <div style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "2px", color: "#FFE619", textTransform: "uppercase" }}>
             Why KSRM
           </div>
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "34px", fontWeight: 700, color: "#ffffff", margin: "8px 0 0" }}>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(20px, 5.4vw, 34px)", fontWeight: 700, color: "#ffffff", margin: "8px 0 0" }}>
             Why Choose K.S.R.M. College of Engineering
           </h2>
         </div>

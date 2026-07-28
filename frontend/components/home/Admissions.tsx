@@ -176,7 +176,7 @@ export default function Admissions({
 
         .admissions-heading {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 40px;
+          font-size: clamp(23px, 6.4vw, 40px);
           font-weight: 700;
           color: #2B3490;
           margin: 0 0 8px;
@@ -399,7 +399,7 @@ export default function Admissions({
         }
 
         @media (max-width: 768px) {
-          .admissions-heading { font-size: 32px; }
+          .admissions-heading { font-size: clamp(19px, 5.1vw, 32px); }
           .admissions-card-image { height: 200px; }
           .admissions-card-panel { padding: 18px 20px; }
         }

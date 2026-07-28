@@ -79,7 +79,7 @@ export default function CampusServices() {
         </div>
         <h2 style={{
           fontFamily: "'Rajdhani', sans-serif",
-          fontSize: "32px", fontWeight: 700,
+          fontSize: "clamp(19px, 5.1vw, 32px)", fontWeight: 700,
           color: "#1a1a2e", margin: "8px 0 0",
         }}>
           Digital Campus Services

@@ -142,7 +142,7 @@ export default function VisionMissionTabs({
           font-size: 23px; line-height: 1; margin: 0 0 10px;
         }
         .vm-quote {
-          font-family: Georgia, serif; font-size: 42px; line-height: 0.5;
+          font-family: Georgia, serif; font-size: clamp(24px, 6.7vw, 42px); line-height: 0.5;
           color: rgba(255,230,25,0.45); display: block; margin-bottom: 2px;
         }
         .vm-text { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.95); margin: 0; font-style: italic; font-weight: 400; }

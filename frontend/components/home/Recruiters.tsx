@@ -30,7 +30,7 @@ export default function Recruiters() {
 
         .recruiters-header-title {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 32px;
+          font-size: clamp(19px, 5.1vw, 32px);
           font-weight: 700;
           color: #ffffff;
           margin: 0;
@@ -52,7 +52,7 @@ export default function Recruiters() {
         }
 
         .recruiters-badge-value {
-          font-size: 32px;
+          font-size: clamp(19px, 5.1vw, 32px);
           font-weight: 700;
           display: block;
           line-height: 1;

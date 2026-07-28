@@ -143,7 +143,7 @@ export default function CampusVideos() {
           </div>
           <h2 style={{
             fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "36px", fontWeight: 700, color: "#ffffff", margin: "0 0 8px",
+            fontSize: "clamp(21px, 5.8vw, 36px)", fontWeight: 700, color: "#ffffff", margin: "0 0 8px",
           }}>
             Campus Life in Action
           </h2>

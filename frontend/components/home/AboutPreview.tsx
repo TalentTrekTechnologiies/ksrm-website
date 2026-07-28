@@ -54,7 +54,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
           align-items: stretch;
         }
 
-        .about-heading { font-size: 36px; }
+        .about-heading { font-size: clamp(21px, 5.8vw, 36px); }
 
         @media (max-width: 1024px) {
           .about-section { padding: 40px 0 !important; }
@@ -142,7 +142,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
               <div key={s.label}>
                 <div style={{
                   fontFamily: "'Rajdhani', sans-serif",
-                  fontSize: "30px", fontWeight: 700,
+                  fontSize: "clamp(17px, 4.8vw, 30px)", fontWeight: 700,
                   color: "#2B3490", lineHeight: 1,
                 }}>
                   {s.num}
@@ -201,7 +201,7 @@ export default function AboutPreview({ previewData }: { previewData?: AboutConte
             }}>
               <div style={{
                 fontFamily: "'Rajdhani', sans-serif",
-                fontSize: "32px", fontWeight: 700, lineHeight: 1,
+                fontSize: "clamp(19px, 5.1vw, 32px)", fontWeight: 700, lineHeight: 1,
               }}>
                 {years}+
               </div>

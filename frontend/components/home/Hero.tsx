@@ -251,7 +251,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
           <motion.h2
             className="hero-heading"
             variants={fadeUp} initial="hidden" animate="visible" custom={0.2}
-            style={{ margin: "0 0 18px", fontFamily: "'Rajdhani', sans-serif", fontSize: "46px", fontWeight: 700, color: "#ffffff", lineHeight: 1.05 }}
+            style={{ margin: "0 0 18px", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(27px, 7.4vw, 46px)", fontWeight: 700, color: "#ffffff", lineHeight: 1.05 }}
           >
             {heading}
           </motion.h2>

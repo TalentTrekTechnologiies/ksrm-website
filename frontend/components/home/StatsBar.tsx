@@ -69,7 +69,7 @@ export default function StatsBar() {
         }
         .stat-number {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 44px;
+          font-size: clamp(26px, 7.0vw, 44px);
           font-weight: 700;
           color: #2B3490;
           line-height: 1;
@@ -88,13 +88,13 @@ export default function StatsBar() {
         /* medium — 3 cols */
         @media (max-width: 900px) {
           .stats-grid  { grid-template-columns: repeat(3, 1fr); row-gap: 32px; }
-          .stat-number { font-size: 36px; }
+          .stat-number { font-size: clamp(21px, 5.8vw, 36px); }
           .stat-item:not(:last-child) { border-right: none; }
         }
         /* mobile — 2 cols */
         @media (max-width: 580px) {
           .stats-grid  { grid-template-columns: repeat(2, 1fr); row-gap: 32px; padding: 0 20px; column-gap: 0; }
-          .stat-number { font-size: 30px; }
+          .stat-number { font-size: clamp(17px, 4.8vw, 30px); }
         }
       `}</style>
 

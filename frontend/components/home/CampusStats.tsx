@@ -97,7 +97,7 @@ export default function CampusStats() {
 
         .stat-number {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 52px;
+          font-size: clamp(30px, 8.3vw, 52px);
           font-weight: 700;
           color: #FFE619;
           line-height: 1;
