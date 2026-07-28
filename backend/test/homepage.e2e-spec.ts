@@ -762,11 +762,12 @@ describe('Homepage CMS (e2e, real ksrm_db)', () => {
 
       const history = await request(app.getHttpServer())
         .get('/audit-logs')
-        .query({ module: 'homepage_section_visibility', limit: 5 })
+        .query({ module: 'homepage_section_visibility', pageSize: 5 })
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
-      expect(history.body.length).toBeGreaterThan(0);
-      expect(history.body[0].action).toBe('UPDATE');
+      // /audit-logs returns a paginated envelope { items, total, page, pageSize }.
+      expect(history.body.items.length).toBeGreaterThan(0);
+      expect(history.body.items[0].action).toBe('UPDATE');
     });
   });
 });
