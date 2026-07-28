@@ -3,6 +3,7 @@ import { Rajdhani, DM_Sans, Inter } from "next/font/google"
 import "./globals.css"
 import ChromeGate from "@/components/layout/ChromeGate"
 import DynamicFavicon from "@/components/layout/DynamicFavicon"
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics"
 
 const rajdhani = Rajdhani({
   subsets: ["latin"],
@@ -58,6 +59,10 @@ export const metadata: Metadata = {
     images: ["https://ksrmce.ac.in/og-image.jpg"],
   },
   metadataBase: new URL("https://ksrmce.ac.in"),
+  // Google Search Console ownership verification. Set
+  // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION to the token Search Console gives you;
+  // when unset, no tag is emitted (harmless).
+  verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION },
 }
 
 export const viewport: Viewport = {
@@ -111,6 +116,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${rajdhani.variable} ${dmSans.variable} ${inter.variable} antialiased`}>
+        <GoogleAnalytics />
         <DynamicFavicon />
         <ChromeGate>{children}</ChromeGate>
       </body>
