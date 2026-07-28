@@ -93,6 +93,7 @@ const NAV_ITEMS: NavItem[] = [
   // Labelled "Documents" for admins - the model/route stay `downloads`, this is
   // wording only (a visitor still clicks a "Download" button on the public site).
   { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },
+  { widgetKey: "downloads", label: "Page Content", href: "/admin/page-content" },
   { widgetKey: "news", label: "News", href: "/admin/news" },
   { widgetKey: "research", label: "Research", href: "/admin/research" },
   { widgetKey: "placements", label: "Placements", href: "/admin/placements" },
