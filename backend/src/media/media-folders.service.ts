@@ -6,8 +6,12 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { RequestAdmin } from '../homepage/types';
 import { CreateMediaFolderDto } from './dto/create-media-folder.dto';
 import { UpdateMediaFolderDto } from './dto/update-media-folder.dto';
+
+const AUDIT_MODULE = 'media_folders';
 
 function slugify(name: string): string {
   return name
@@ -25,7 +29,10 @@ function slugify(name: string): string {
  */
 @Injectable()
 export class MediaFoldersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private auditLog: AuditLogService,
+  ) {}
 
   async findAll() {
     return this.prisma.mediaFolder.findMany({ orderBy: { path: 'asc' } });
@@ -37,16 +44,29 @@ export class MediaFoldersService {
     return folder;
   }
 
-  async create(dto: CreateMediaFolderDto) {
+  async create(dto: CreateMediaFolderDto, admin?: RequestAdmin, requestId?: string) {
     const parent = dto.parentId ? await this.findOrThrow(dto.parentId) : null;
     const path = parent
       ? `${parent.path}/${slugify(dto.name)}`
       : slugify(dto.name);
 
     try {
-      return await this.prisma.mediaFolder.create({
+      const created = await this.prisma.mediaFolder.create({
         data: { name: dto.name, parentId: dto.parentId ?? null, path },
       });
+      if (admin) {
+        await this.auditLog.log({
+          adminId: admin.id,
+          adminName: admin.name,
+          adminEmail: admin.email,
+          action: 'CREATE',
+          module: AUDIT_MODULE,
+          targetId: created.id,
+          details: { after: created },
+          requestId,
+        });
+      }
+      return created;
     } catch (err) {
       if (
         err instanceof Prisma.PrismaClientKnownRequestError &&
@@ -60,7 +80,7 @@ export class MediaFoldersService {
     }
   }
 
-  async update(id: number, dto: UpdateMediaFolderDto) {
+  async update(id: number, dto: UpdateMediaFolderDto, admin?: RequestAdmin, requestId?: string) {
     const existing = await this.findOrThrow(id);
 
     const nextName = dto.name ?? existing.name;
@@ -108,11 +128,24 @@ export class MediaFoldersService {
       await this.reparentDescendantPaths(oldPath, newPath);
     }
 
+    if (admin) {
+      await this.auditLog.log({
+        adminId: admin.id,
+        adminName: admin.name,
+        adminEmail: admin.email,
+        action: 'UPDATE',
+        module: AUDIT_MODULE,
+        targetId: id,
+        details: { before: existing, after: updated },
+        requestId,
+      });
+    }
+
     return updated;
   }
 
-  async delete(id: number) {
-    await this.findOrThrow(id);
+  async delete(id: number, admin?: RequestAdmin, requestId?: string) {
+    const existing = await this.findOrThrow(id);
 
     const [childCount, mediaCount] = await Promise.all([
       this.prisma.mediaFolder.count({ where: { parentId: id } }),
@@ -125,7 +158,22 @@ export class MediaFoldersService {
       );
     }
 
-    return this.prisma.mediaFolder.delete({ where: { id } });
+    const removed = await this.prisma.mediaFolder.delete({ where: { id } });
+
+    if (admin) {
+      await this.auditLog.log({
+        adminId: admin.id,
+        adminName: admin.name,
+        adminEmail: admin.email,
+        action: 'DELETE',
+        module: AUDIT_MODULE,
+        targetId: id,
+        details: { before: existing },
+        requestId,
+      });
+    }
+
+    return removed;
   }
 
   private async isDescendant(

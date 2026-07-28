@@ -49,6 +49,7 @@ const MODULE_LABELS: Record<string, string> = {
   contact_channels: "Contact Info",
   campus_videos: "Campus Videos",
   quick_links: "Quick Links",
+  media_folders: "Media Folders",
   accreditation_badges: "Accreditation Badges",
   admission_programs: "Admission Programs",
   section_visibility: "Section Visibility",

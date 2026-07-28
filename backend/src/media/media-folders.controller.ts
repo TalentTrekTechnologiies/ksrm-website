@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -31,8 +32,8 @@ export class MediaFoldersController {
 
   @Post()
   @RequirePermission('media.create')
-  create(@Body() dto: CreateMediaFolderDto) {
-    return this.foldersService.create(dto);
+  create(@Body() dto: CreateMediaFolderDto, @Request() req) {
+    return this.foldersService.create(dto, req.user, req.requestId);
   }
 
   @Patch(':id')
@@ -40,13 +41,14 @@ export class MediaFoldersController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateMediaFolderDto,
+    @Request() req,
   ) {
-    return this.foldersService.update(id, dto);
+    return this.foldersService.update(id, dto, req.user, req.requestId);
   }
 
   @Delete(':id')
   @RequirePermission('media.delete')
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.foldersService.delete(id);
+  delete(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.foldersService.delete(id, req.user, req.requestId);
   }
 }
