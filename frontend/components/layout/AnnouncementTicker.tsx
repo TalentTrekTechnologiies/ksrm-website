@@ -3,8 +3,33 @@
 import { useEffect, useState } from "react"
 import { Megaphone } from "lucide-react"
 import { getAnnouncementsPublic, Announcement, AnnouncementLocation, AnnouncementPriority } from "@/lib/announcements-api"
+import { getExamNotificationsPublic } from "@/lib/exam-notifications-api"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
+
+// Normalized ticker row - the ticker shows both Announcements and Exam
+// Notifications (on the site-wide header only), so both map to this shape.
+interface TickerItem {
+  id: string
+  badge?: string | null
+  text: string
+  linkUrl?: string | null
+  openInNewTab?: boolean
+  priority: AnnouncementPriority
+  when: number
+}
+
+function announcementToTicker(a: Announcement): TickerItem {
+  return {
+    id: `ann-${a.id}`,
+    badge: a.badge,
+    text: a.shortText || a.title,
+    linkUrl: a.linkUrl,
+    openInNewTab: a.openInNewTab,
+    priority: a.priority,
+    when: new Date(a.createdAt).getTime(),
+  }
+}
 
 // Defaults used until Site Settings load (and if the fetch fails), so the
 // ticker always renders with sane behaviour rather than nothing.
@@ -69,7 +94,23 @@ export default function AnnouncementTicker({
    * regardless, so this no longer changes the vertical rhythm. */
   compact?: boolean
 }) {
-  const all = useLiveData(() => getAnnouncementsPublic(location, departmentId), [location, departmentId])
+  // The site-wide header ticker also folds in Exam Notifications so they scroll
+  // alongside announcements; department tickers stay announcements-only.
+  const all = useLiveData<TickerItem[]>(async () => {
+    const announcements = (await getAnnouncementsPublic(location, departmentId).catch(() => []))
+      .map(announcementToTicker)
+    if (location !== "HEADER_TICKER") return announcements
+    const exams = (await getExamNotificationsPublic().catch(() => [])).map((n) => ({
+      id: `exam-${n.id}`,
+      badge: "Exam",
+      text: n.title,
+      linkUrl: n.buttonUrl,
+      openInNewTab: true,
+      priority: "NORMAL" as AnnouncementPriority,
+      when: new Date(n.startDate).getTime(),
+    }))
+    return [...announcements, ...exams].sort((a, b) => b.when - a.when)
+  }, [location, departmentId])
   const cfg = useTickerSettings(location)
 
   if (!cfg.enabled) return null
@@ -117,7 +158,7 @@ export default function AnnouncementTicker({
                     {item.badge}
                   </span>
                 )}
-                <span className="ann-item-text">{item.shortText || item.title}</span>
+                <span className="ann-item-text">{item.text}</span>
               </>
             )
             return (

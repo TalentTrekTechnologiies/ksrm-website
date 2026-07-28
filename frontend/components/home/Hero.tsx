@@ -5,21 +5,40 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useRef } from "react"
 import { getHeroPublic, HomepageHero, HeroNewsTickerItem } from "@/lib/homepage-api"
 import { getAnnouncementsPublic } from "@/lib/announcements-api"
+import { getExamNotificationsPublic } from "@/lib/exam-notifications-api"
 import { useLiveData } from "@/lib/use-live-data"
 
 const NEW_WINDOW_MS = 3 * 24 * 60 * 60 * 1000
 
 // The "Latest Updates" panel used to be a separately hand-curated list
 // (HomepageHero.newsTicker) - per explicit direction, it now sources from
-// the same Announcement engine as the header ticker, so publishing one
-// notice updates both instead of requiring duplicate entry in two places.
+// the same Announcement engine as the header ticker, AND from the Exam
+// Notifications module, so all three surfaces (header ticker, this panel, the
+// exam page) stay in sync: publishing a notice or an exam notification shows
+// it everywhere without duplicate entry.
 async function fetchLatestUpdates(): Promise<HeroNewsTickerItem[]> {
-  const items = await getAnnouncementsPublic("HEADER_TICKER")
-  return items.map((item) => ({
-    isNew: Date.now() - new Date(item.createdAt).getTime() < NEW_WINDOW_MS,
-    date: new Date(item.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-    text: item.shortText || item.title,
-    href: item.linkUrl ?? undefined,
+  const [announcements, exams] = await Promise.all([
+    getAnnouncementsPublic("HEADER_TICKER").catch(() => []),
+    getExamNotificationsPublic().catch(() => []),
+  ])
+  const merged = [
+    ...announcements.map((a) => ({
+      when: new Date(a.createdAt).getTime(),
+      text: a.shortText || a.title,
+      href: a.linkUrl ?? undefined,
+    })),
+    ...exams.map((n) => ({
+      when: new Date(n.startDate).getTime(),
+      text: n.title,
+      href: n.buttonUrl ?? undefined,
+    })),
+  ].sort((a, b) => b.when - a.when)
+
+  return merged.map((m) => ({
+    isNew: Date.now() - m.when < NEW_WINDOW_MS,
+    date: new Date(m.when).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+    text: m.text,
+    href: m.href,
   }))
 }
 
