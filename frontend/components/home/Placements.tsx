@@ -208,8 +208,18 @@ export default function Placements() {
 
         @media (max-width: 640px) {
           .placements-stats { grid-template-columns: 1fr; }
+          .stat-box { padding: 28px 20px; }
+          .stat-number { font-size: 40px; }
           .photo-item { width: 100%; height: 200px; }
-          .recruiter-header { flex-direction: column; }
+          /* Tighten the blue recruiter card so it isn't cramped, and center +
+             shrink its text/badge to fit a phone width. */
+          .recruiter-section { padding: 32px 0; }
+          .recruiter-header { flex-direction: column; padding: 24px 20px; gap: 14px; text-align: center; }
+          .recruiter-title { font-size: 22px; text-align: center; }
+          .recruiter-badge { padding: 14px 24px; }
+          .badge-value { font-size: 24px; }
+          .carousel-title { font-size: 22px; }
+          .recruiter-logo { width: 120px; height: 78px; }
         }
       `}</style>
 
@@ -219,10 +229,10 @@ export default function Placements() {
           <p style={{ fontSize: "14px", letterSpacing: "3px", color: "#2B3490", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
             TRAINING & PLACEMENTS
           </p>
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "40px", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.7rem, 6vw, 40px)", fontWeight: 700, color: "#1a1a2e", margin: "12px 0 8px" }}>
             Where Talent Meets Opportunity
           </h2>
-          <p style={{ fontSize: "18px", color: "#666", margin: 0 }}>
+          <p style={{ fontSize: "clamp(15px, 4vw, 18px)", color: "#666", margin: 0 }}>
             Join 1200+ graduates placed at India&apos;s top companies
           </p>
         </div>
