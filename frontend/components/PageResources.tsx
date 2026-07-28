@@ -59,8 +59,20 @@ async function fetchSection(section: string, docsCategory?: DownloadCategory): P
   // to a specific section (e.g. "examinations.results") must appear only there,
   // not also in a broader block that happens to match its category.
   const byCategoryUnrouted = byCategory.filter((d) => !d.pageSection || d.pageSection === section)
-  const seen = new Set<number>()
-  const docs = [...routed, ...byCategoryUnrouted].filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)))
+  // Dedupe by id (same row matched by both routing + category) AND by file URL,
+  // so if the same document was accidentally added twice - e.g. once in the
+  // global "Add Documents" and once in a department's Documents tab - it still
+  // shows only once on the public page.
+  const seenId = new Set<number>()
+  const seenFile = new Set<string>()
+  const docs = [...routed, ...byCategoryUnrouted].filter((d) => {
+    if (seenId.has(d.id)) return false
+    const fileKey = (d.fileUrl || "").trim().toLowerCase()
+    if (fileKey && seenFile.has(fileKey)) return false
+    seenId.add(d.id)
+    if (fileKey) seenFile.add(fileKey)
+    return true
+  })
   // Split video-tagged gallery records out so they render as <video> players.
   const videos = images.filter((g) => g.category === VIDEO_CATEGORY)
   const realImages = images.filter((g) => g.category !== VIDEO_CATEGORY)
