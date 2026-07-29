@@ -1,8 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
+
+/** Fired when the intro finishes (or is skipped), so later overlays can queue
+ *  behind it. Kept in this module because the splash owns the moment. */
+export const INTRO_DONE_EVENT = "ksrm:intro-done"
 
 export default function IntroSplash() {
   const pathname = usePathname()
@@ -37,6 +41,21 @@ export default function IntroSplash() {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Announce the end of the intro so the homepage popup can queue behind it.
+  // Only on the true->false transition (the splash actually finishing), plus
+  // immediately on mount when the intro isn't going to play at all - otherwise
+  // the initial show=false would fire "done" before the intro even starts.
+  const wasShown = useRef(false)
+  useEffect(() => {
+    if (show) {
+      wasShown.current = true
+      return
+    }
+    if (wasShown.current || pathname !== "/") {
+      window.dispatchEvent(new CustomEvent(INTRO_DONE_EVENT))
+    }
+  }, [show, pathname])
 
   if (!show) return null
 
