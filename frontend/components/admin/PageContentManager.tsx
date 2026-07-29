@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Plus, Trash2, FileText, Image as ImageIcon } from "lucide-react"
+import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import MediaField from "@/components/admin/cms/MediaField"
 import {
@@ -27,13 +27,14 @@ import {
   deleteGalleryImage,
   GalleryImage,
 } from "@/lib/gallery-api"
+import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 
 /**
- * "Pick a page → manage everything on it." One screen that gathers the
- * documents and images routed to a chosen public page (IQAC, NAAC, ...) so an
- * admin can add and delete a page's content in one place, instead of hunting
- * through the separate Documents and Gallery/Media managers. It's a focused
- * view over the same records those managers own - nothing new server-side.
+ * "Pick a place → manage everything on it." One screen listing every public
+ * page AND every department, so an admin can see and manage that destination's
+ * documents, images and videos together instead of hunting through the separate
+ * Documents / Gallery / Media managers. A focused view over the same Downloads
+ * and Gallery records those managers own - nothing new server-side.
  */
 
 const CATEGORY_OPTIONS = [
@@ -45,38 +46,68 @@ const CATEGORY_OPTIONS = [
   { value: "OTHER", label: "Other" },
 ]
 
-// Videos ride the gallery table under this category; excluded from the photo
-// grid here (they're managed with the Media Library's video tools).
+/** Gallery rows holding a video carry this marker category. */
 const VIDEO_CATEGORY = "__video__"
 
-const PAGE_OPTIONS = [{ value: "", label: "Select a page…" }, ...PAGE_SECTIONS]
+/**
+ * The dropdown mixes two different destinations, so each option is prefixed:
+ * "page:iqac" routes by pageSection, "dept:3" routes by departmentId.
+ */
+type Target = { kind: "page"; section: string } | { kind: "dept"; departmentId: number }
+
+function parseTarget(v: string): Target | null {
+  if (v.startsWith("page:")) return { kind: "page", section: v.slice(5) }
+  if (v.startsWith("dept:")) return { kind: "dept", departmentId: Number(v.slice(5)) }
+  return null
+}
+
+type AddKind = "doc" | "image" | "video" | null
 
 function PageContentInner() {
   const { confirm, notifySaved } = useCmsConfirm()
-  const [page, setPage] = useState("")
+  const [selection, setSelection] = useState("")
+  const [departments, setDepartments] = useState<Department[]>([])
   const [docs, setDocs] = useState<Download[]>([])
   const [images, setImages] = useState<GalleryImage[]>([])
+  const [videos, setVideos] = useState<GalleryImage[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [adding, setAdding] = useState<AddKind>(null)
 
-  const [addingDoc, setAddingDoc] = useState(false)
   const [docForm, setDocForm] = useState({ title: "", category: "OTHER" as DownloadCategory, fileUrl: "", mediaId: null as number | null })
-  const [addingImage, setAddingImage] = useState(false)
-  const [imgForm, setImgForm] = useState({ title: "", imageUrl: "", mediaId: null as number | null })
+  const [mediaForm, setMediaForm] = useState({ title: "", url: "", mediaId: null as number | null })
 
-  async function load(section: string) {
-    if (!section) {
+  useEffect(() => {
+    getDepartmentsAdmin()
+      .then((d) => setDepartments(d.filter((x) => x.isActive)))
+      .catch(() => setDepartments([]))
+  }, [])
+
+  const target = parseTarget(selection)
+
+  async function load(sel: string) {
+    const t = parseTarget(sel)
+    if (!t) {
       setDocs([])
       setImages([])
+      setVideos([])
       return
     }
     setLoading(true)
     setError(null)
     try {
-      const [allDocs, allImages] = await Promise.all([getDownloadsAdmin(false), getGalleryAdmin(false)])
-      setDocs(allDocs.filter((d) => d.pageSection === section))
-      setImages(allImages.filter((g) => g.pageSection === section && g.category !== VIDEO_CATEGORY))
+      const [allDocs, allGallery] = await Promise.all([
+        t.kind === "dept" ? getDownloadsAdmin(false, t.departmentId) : getDownloadsAdmin(false),
+        t.kind === "dept" ? getGalleryAdmin(false, t.departmentId) : getGalleryAdmin(false),
+      ])
+      // Department queries are already scoped server-side; page queries filter
+      // on the routed section here.
+      const docsFor = t.kind === "page" ? allDocs.filter((d) => d.pageSection === t.section) : allDocs
+      const galFor = t.kind === "page" ? allGallery.filter((g) => g.pageSection === t.section) : allGallery
+      setDocs(docsFor)
+      setImages(galFor.filter((g) => g.category !== VIDEO_CATEGORY))
+      setVideos(galFor.filter((g) => g.category === VIDEO_CATEGORY))
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to load this page's content")
     } finally {
@@ -85,23 +116,37 @@ function PageContentInner() {
   }
 
   useEffect(() => {
-    load(page)
-    setAddingDoc(false)
-    setAddingImage(false)
+    load(selection)
+    setAdding(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [selection])
+
+  /** Fields that route a new record to the chosen page or department. */
+  function routing() {
+    if (!target) return {}
+    return target.kind === "page"
+      ? { pageSection: target.section }
+      : { departmentId: target.departmentId }
+  }
 
   async function saveDoc() {
     if (!docForm.title || !docForm.fileUrl) return
-    if (!(await confirm({ title: "Add document", message: "Add this document to the page? It goes live straight away.", confirmLabel: "Add" }))) return
+    if (!(await confirm({ title: "Add document", message: "Add this document? It goes live straight away.", confirmLabel: "Add" }))) return
     setSaving(true)
     setError(null)
     try {
-      await createDownload({ title: docForm.title, category: docForm.category, fileUrl: docForm.fileUrl, mediaId: docForm.mediaId, pageSection: page, isActive: true })
-      setAddingDoc(false)
+      await createDownload({
+        title: docForm.title,
+        category: docForm.category,
+        fileUrl: docForm.fileUrl,
+        mediaId: docForm.mediaId,
+        isActive: true,
+        ...routing(),
+      })
+      setAdding(null)
       setDocForm({ title: "", category: "OTHER", fileUrl: "", mediaId: null })
-      await load(page)
-      notifySaved("Document added to the page.")
+      await load(selection)
+      notifySaved("Document added.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to add the document")
     } finally {
@@ -109,47 +154,70 @@ function PageContentInner() {
     }
   }
 
+  async function saveMedia(kind: "image" | "video") {
+    if (!mediaForm.url) return
+    if (!(await confirm({ title: kind === "video" ? "Add video" : "Add image", message: "Add this to the page?", confirmLabel: "Add" }))) return
+    setSaving(true)
+    setError(null)
+    try {
+      await createGalleryImage({
+        title: mediaForm.title || (kind === "video" ? "Video" : "Image"),
+        imageUrl: mediaForm.url,
+        mediaId: mediaForm.mediaId,
+        isActive: true,
+        ...(kind === "video" ? { category: VIDEO_CATEGORY } : {}),
+        ...routing(),
+      })
+      setAdding(null)
+      setMediaForm({ title: "", url: "", mediaId: null })
+      await load(selection)
+      notifySaved(kind === "video" ? "Video added." : "Image added.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to add")
+    } finally {
+      setSaving(false)
+    }
+  }
+
   async function removeDoc(d: Download) {
-    if (!(await confirm({ title: "Delete", message: `Delete "${d.title}" from this page? You can restore it from the Documents manager.`, confirmLabel: "Delete", destructive: true }))) return
+    if (!(await confirm({ title: "Delete", message: `Delete "${d.title}"?`, confirmLabel: "Delete", destructive: true }))) return
     try {
       await deleteDownload(d.id)
-      await load(page)
+      await load(selection)
       notifySaved("Document deleted.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to delete")
     }
   }
 
-  async function saveImage() {
-    if (!imgForm.imageUrl) return
-    if (!(await confirm({ title: "Add image", message: "Add this image to the page's gallery?", confirmLabel: "Add" }))) return
-    setSaving(true)
-    setError(null)
-    try {
-      await createGalleryImage({ title: imgForm.title || "Image", imageUrl: imgForm.imageUrl, mediaId: imgForm.mediaId, pageSection: page, isActive: true })
-      setAddingImage(false)
-      setImgForm({ title: "", imageUrl: "", mediaId: null })
-      await load(page)
-      notifySaved("Image added to the page.")
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Failed to add the image")
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  async function removeImage(g: GalleryImage) {
-    if (!(await confirm({ title: "Remove", message: `Remove "${g.title}" from this page?`, confirmLabel: "Remove", destructive: true }))) return
+  async function removeGallery(g: GalleryImage, what: string) {
+    if (!(await confirm({ title: "Remove", message: `Remove "${g.title}"?`, confirmLabel: "Remove", destructive: true }))) return
     try {
       await deleteGalleryImage(g.id)
-      await load(page)
-      notifySaved("Image removed.")
+      await load(selection)
+      notifySaved(`${what} removed.`)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to remove")
     }
   }
 
-  const pageLabel = PAGE_SECTIONS.find((s) => s.value === page)?.label ?? ""
+  const targetLabel = !target
+    ? ""
+    : target.kind === "page"
+      ? PAGE_SECTIONS.find((s) => s.value === target.section)?.label ?? target.section
+      : departments.find((d) => d.id === target.departmentId)?.name ?? "Department"
+
+  function AddButtons() {
+    if (adding) return null
+    const btn = "flex items-center gap-1.5 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-admin-bg"
+    return (
+      <div className="flex flex-wrap gap-2">
+        <button type="button" onClick={() => setAdding("doc")} className={btn}><FileText className="h-4 w-4" /> Add document</button>
+        <button type="button" onClick={() => setAdding("image")} className={btn}><ImageIcon className="h-4 w-4" /> Add image</button>
+        <button type="button" onClick={() => setAdding("video")} className={btn}><VideoIcon className="h-4 w-4" /> Add video</button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-5">
@@ -157,54 +225,89 @@ function PageContentInner() {
         <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           Page Content
         </h1>
-        <p className="text-sm text-slate-500">Pick a page, then add or delete all of its documents and images in one place.</p>
+        <p className="text-sm text-slate-500">Pick a page or a department, then add or delete its documents, images and videos in one place.</p>
       </div>
 
+      {/* Native select so pages and departments can sit under separate
+          optgroup headings - SelectField only renders a flat list. */}
       <div className="max-w-md">
-        <SelectField label="Which page?" value={page} onChange={setPage} options={PAGE_OPTIONS} />
+        <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Which page or department?</label>
+        <select
+          value={selection}
+          onChange={(e) => setSelection(e.target.value)}
+          className="w-full rounded-lg border border-admin-border bg-white px-3 py-2.5 text-sm text-slate-700"
+        >
+          <option value="">Select…</option>
+          <optgroup label="Pages">
+            {PAGE_SECTIONS.map((s) => (
+              <option key={s.value} value={`page:${s.value}`}>{s.label}</option>
+            ))}
+          </optgroup>
+          {departments.length > 0 && (
+            <optgroup label="Departments">
+              {departments.map((d) => (
+                <option key={d.id} value={`dept:${d.id}`}>{d.name}</option>
+              ))}
+            </optgroup>
+          )}
+        </select>
       </div>
 
-      {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700">{error}</p>
-      )}
+      {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700">{error}</p>}
 
-      {!page ? (
+      {!target ? (
         <p className="rounded-xl border border-dashed border-admin-border p-10 text-center text-sm text-slate-400">
-          Choose a page above to manage its content.
+          Choose a page or department above to manage its content.
         </p>
       ) : loading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-6 w-6 animate-spin text-admin-primary" />
-        </div>
+        <div className="flex items-center justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-admin-primary" /></div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-lg font-bold text-slate-900">{targetLabel}</h2>
+            <AddButtons />
+          </div>
+
+          {/* ADD FORMS */}
+          {adding === "doc" && (
+            <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
+              <p className="text-sm font-semibold text-slate-700">New document</p>
+              <TextField label="Title" value={docForm.title} onChange={(v) => setDocForm({ ...docForm, title: v })} required />
+              <SelectField label="Category" value={docForm.category} onChange={(v) => setDocForm({ ...docForm, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} />
+              <MediaField label="File" url={docForm.fileUrl} mediaId={docForm.mediaId} onChange={(url, mediaId) => setDocForm({ ...docForm, fileUrl: url, mediaId })} accept={["DOCUMENT"]} required />
+              <FormActions>
+                <SecondaryButton onClick={() => setAdding(null)}>Cancel</SecondaryButton>
+                <PrimaryButton onClick={saveDoc} disabled={saving || !docForm.title || !docForm.fileUrl}>{saving ? "Adding…" : "Add"}</PrimaryButton>
+              </FormActions>
+            </div>
+          )}
+
+          {(adding === "image" || adding === "video") && (
+            <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
+              <p className="text-sm font-semibold text-slate-700">{adding === "video" ? "New video" : "New image"}</p>
+              <TextField label="Caption / title" value={mediaForm.title} onChange={(v) => setMediaForm({ ...mediaForm, title: v })} />
+              <MediaField
+                label={adding === "video" ? "Video" : "Image"}
+                url={mediaForm.url}
+                mediaId={mediaForm.mediaId}
+                onChange={(url, mediaId) => setMediaForm({ ...mediaForm, url, mediaId })}
+                accept={adding === "video" ? ["VIDEO"] : ["IMAGE"]}
+                required
+              />
+              <FormActions>
+                <SecondaryButton onClick={() => setAdding(null)}>Cancel</SecondaryButton>
+                <PrimaryButton onClick={() => saveMedia(adding)} disabled={saving || !mediaForm.url}>{saving ? "Adding…" : "Add"}</PrimaryButton>
+              </FormActions>
+            </div>
+          )}
+
           {/* DOCUMENTS */}
           <section>
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900">
-                <FileText className="h-5 w-5 text-admin-primary" /> Documents on {pageLabel}
-              </h2>
-              {!addingDoc && (
-                <button type="button" onClick={() => setAddingDoc(true)} className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-3 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark">
-                  <Plus className="h-4 w-4" /> Add document
-                </button>
-              )}
-            </div>
-
-            {addingDoc && (
-              <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="mb-3 space-y-4 rounded-2xl border border-admin-border bg-white p-5">
-                <TextField label="Title" value={docForm.title} onChange={(v) => setDocForm({ ...docForm, title: v })} required />
-                <SelectField label="Category" value={docForm.category} onChange={(v) => setDocForm({ ...docForm, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} />
-                <MediaField label="File (PDF / document)" url={docForm.fileUrl} mediaId={docForm.mediaId} onChange={(url, mediaId) => setDocForm({ ...docForm, fileUrl: url, mediaId })} accept={["DOCUMENT"]} required />
-                <FormActions>
-                  <SecondaryButton onClick={() => setAddingDoc(false)}>Cancel</SecondaryButton>
-                  <PrimaryButton onClick={saveDoc} disabled={saving || !docForm.title || !docForm.fileUrl}>{saving ? "Adding…" : "Add"}</PrimaryButton>
-                </FormActions>
-              </div>
-            )}
-
+            <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+              <FileText className="h-4 w-4" /> Documents ({docs.length})
+            </h3>
             {docs.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-admin-border p-6 text-center text-sm text-slate-400">No documents on this page yet.</p>
+              <p className="rounded-xl border border-dashed border-admin-border p-5 text-center text-sm text-slate-400">No documents here yet.</p>
             ) : (
               <ul className="space-y-2">
                 {docs.map((d) => (
@@ -212,7 +315,7 @@ function PageContentInner() {
                     <FileText className="h-4 w-4 shrink-0 text-slate-400" />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-slate-700">{d.title}</p>
-                      <p className="truncate text-xs text-slate-500">{d.category}{!d.isActive && <span className="ml-2 font-semibold text-amber-600">Inactive</span>}</p>
+                      <p className="truncate text-xs text-slate-500">{d.category}</p>
                     </div>
                     <a href={d.fileUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-admin-primary hover:underline">Open</a>
                     <button type="button" onClick={() => removeDoc(d)} aria-label="Delete" className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600">
@@ -226,39 +329,44 @@ function PageContentInner() {
 
           {/* IMAGES */}
           <section>
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900">
-                <ImageIcon className="h-5 w-5 text-admin-primary" /> Images on {pageLabel}
-              </h2>
-              {!addingImage && (
-                <button type="button" onClick={() => setAddingImage(true)} className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-3 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark">
-                  <Plus className="h-4 w-4" /> Add image
-                </button>
-              )}
-            </div>
-
-            {addingImage && (
-              <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="mb-3 space-y-4 rounded-2xl border border-admin-border bg-white p-5">
-                <TextField label="Caption / title" value={imgForm.title} onChange={(v) => setImgForm({ ...imgForm, title: v })} />
-                <MediaField label="Image" url={imgForm.imageUrl} mediaId={imgForm.mediaId} onChange={(url, mediaId) => setImgForm({ ...imgForm, imageUrl: url, mediaId })} accept={["IMAGE"]} required />
-                <FormActions>
-                  <SecondaryButton onClick={() => setAddingImage(false)}>Cancel</SecondaryButton>
-                  <PrimaryButton onClick={saveImage} disabled={saving || !imgForm.imageUrl}>{saving ? "Adding…" : "Add"}</PrimaryButton>
-                </FormActions>
-              </div>
-            )}
-
+            <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+              <ImageIcon className="h-4 w-4" /> Images ({images.length})
+            </h3>
             {images.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-admin-border p-6 text-center text-sm text-slate-400">No images on this page yet.</p>
+              <p className="rounded-xl border border-dashed border-admin-border p-5 text-center text-sm text-slate-400">No images here yet.</p>
             ) : (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                 {images.map((g) => (
-                  <div key={g.id} className="group relative overflow-hidden rounded-xl border border-admin-border bg-white">
+                  <div key={g.id} className="overflow-hidden rounded-xl border border-admin-border bg-white">
                     {/* eslint-disable-next-line @next/next/no-img-element -- CMS image URL */}
-                    <img src={g.imageUrl} alt={g.title} className="h-32 w-full object-cover" loading="lazy" />
+                    <img src={g.imageUrl} alt={g.title} className="h-28 w-full object-cover" loading="lazy" />
                     <div className="flex items-center justify-between gap-2 px-2.5 py-2">
                       <p className="truncate text-xs font-medium text-slate-600">{g.title}</p>
-                      <button type="button" onClick={() => removeImage(g)} aria-label="Remove" className="shrink-0 rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600">
+                      <button type="button" onClick={() => removeGallery(g, "Image")} aria-label="Remove" className="shrink-0 rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600">
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* VIDEOS */}
+          <section>
+            <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+              <VideoIcon className="h-4 w-4" /> Videos ({videos.length})
+            </h3>
+            {videos.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-admin-border p-5 text-center text-sm text-slate-400">No videos here yet.</p>
+            ) : (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                {videos.map((g) => (
+                  <div key={g.id} className="overflow-hidden rounded-xl border border-admin-border bg-white">
+                    <video src={g.imageUrl} controls preload="metadata" className="h-32 w-full bg-black object-cover" />
+                    <div className="flex items-center justify-between gap-2 px-2.5 py-2">
+                      <p className="truncate text-xs font-medium text-slate-600">{g.title}</p>
+                      <button type="button" onClick={() => removeGallery(g, "Video")} aria-label="Remove" className="shrink-0 rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600">
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
