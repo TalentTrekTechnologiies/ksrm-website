@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿const btechFirstYear = [
   { branch: "Computer Science & Engineering", fee: "₹1,15,000", admission: "₹5,000", notes: "Per annum for 4 years" },
   { branch: "Electronics & Communication Engineering", fee: "₹1,15,000", admission: "₹5,000", notes: "—" },
@@ -276,6 +278,8 @@ export default function FeeStructurePage() {
             </div>
           </div>
         </section>
+      
+      <PageResources section="academics.fee-structure" />
       </main>
     </>
   );

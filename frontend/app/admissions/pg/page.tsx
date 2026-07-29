@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿const mtechPrograms = [
   { name: "Geotechnical Engineering", dept: "Civil Engineering", intake: 18 },
   { name: "Power Systems", dept: "Electrical & Electronics", intake: 18 },
@@ -151,6 +153,8 @@ export default function PGAdmissionsPage() {
             </p>
           </div>
         </section>
+      
+      <PageResources section="admissions.pg" />
       </main>
     </>
   );

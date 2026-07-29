@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿import PlacementsSubnav from "@/components/PlacementsSubnav";
 
 export default function InternshipsPage() {
@@ -78,6 +80,8 @@ export default function InternshipsPage() {
             </ul>
           </div>
         </section>
+      
+      <PageResources section="placements.internships" />
       </main>
     </>
   );

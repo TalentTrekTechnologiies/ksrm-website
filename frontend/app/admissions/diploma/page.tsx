@@ -2,6 +2,7 @@
 
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
+import PageResources from "@/components/PageResources";
 
 // Fallback shown until/unless diploma programmes are added in the CMS, so the
 // page is never empty. Any diploma programme added to a department (Departments
@@ -252,6 +253,8 @@ export default function DiplomaAdmissionsPage() {
             </div>
           </div>
         </section>
+      
+      <PageResources section="admissions.diploma" />
       </main>
     </>
   );

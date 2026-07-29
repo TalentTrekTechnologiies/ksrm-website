@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
+import PageResources from "@/components/PageResources";
 
 const regulations = [
   {
@@ -274,6 +275,8 @@ export default function RegulationsPage() {
             </div>
           </div>
         </section>
+      
+      <PageResources section="academics.regulations" />
       </main>
     </>
   );

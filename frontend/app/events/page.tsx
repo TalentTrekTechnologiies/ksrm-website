@@ -2,6 +2,7 @@
 
 import { getEventsPublic, EventItem } from "@/lib/events-api";
 import { useLiveData } from "@/lib/use-live-data";
+import PageResources from "@/components/PageResources";
 
 export default function EventsPage() {
   // Polled, so an event published in the admin appears here without a refresh.
@@ -82,6 +83,8 @@ export default function EventsPage() {
           )}
         </div>
       </section>
-    </main>
+    
+      <PageResources section="events" />
+      </main>
   );
 }

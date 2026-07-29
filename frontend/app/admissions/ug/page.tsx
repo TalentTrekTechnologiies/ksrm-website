@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿const ugPrograms = [
   { name: "Computer Science & Engineering", code: "CSE", intake: 240 },
   { name: "CSE (AI & Machine Learning)", code: "CSE-AIML", intake: 60 },
@@ -154,6 +156,8 @@ export default function UGAdmissionsPage() {
             </div>
           </div>
         </section>
+      
+      <PageResources section="admissions.ug" />
       </main>
     </>
   );

@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿import Link from "next/link";
 
 export const metadata = {
@@ -231,6 +233,8 @@ export default function StartupCellPage() {
           </div>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="startup-cell" />
+      </main>
   );
 }

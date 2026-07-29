@@ -30,6 +30,30 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "anti-ragging", label: "Anti-Ragging" },
   { value: "admissions", label: "Admissions" },
   { value: "placements", label: "Placements" },
+  // --- Pages wired up in the "every page manageable" pass. Each has a
+  // matching <PageResources section="..."/> on its public page, so anything
+  // uploaded here actually renders there.
+  { value: "about", label: "About Us" },
+  { value: "accreditation", label: "Accreditation" },
+  { value: "events", label: "Events" },
+  { value: "careers", label: "Careers" },
+  { value: "contact", label: "Contact Us" },
+  { value: "academics.calendar", label: "Academics → Academic Calendar" },
+  { value: "academics.courses-intake", label: "Academics → Courses & Intake" },
+  { value: "academics.fee-structure", label: "Academics → Fee Structure" },
+  { value: "academics.regulations", label: "Academics → Regulations" },
+  { value: "academics.faculty", label: "Academics → Faculty" },
+  { value: "admissions.ug", label: "Admissions → B.Tech (UG)" },
+  { value: "admissions.pg", label: "Admissions → PG" },
+  { value: "admissions.diploma", label: "Admissions → Diploma" },
+  { value: "campus-facilities", label: "Campus Facilities" },
+  { value: "grievance", label: "Grievance Redressal" },
+  { value: "startup-cell", label: "Startup Cell" },
+  { value: "placements.internships", label: "Placements → Internships" },
+  { value: "placements.mous", label: "Placements → MoUs" },
+  { value: "placements.recruiters", label: "Placements → Our Recruiters" },
+  { value: "placements.record", label: "Placements → Placement Record" },
+  { value: "placements.trainings", label: "Placements → Trainings" },
 ]
 
 export interface Download {

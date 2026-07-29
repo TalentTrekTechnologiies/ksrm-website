@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿const calendars2025 = [
   { title: "B.Tech I Semester (R23UG)", reg: "R23UG" },
   { title: "B.Tech III & IV Semester (R23UG)", reg: "R23UG" },
@@ -303,6 +305,8 @@ export default function AcademicCalendarPage() {
             </div>
           </div>
         </section>
+      
+      <PageResources section="academics.calendar" />
       </main>
     </>
   );

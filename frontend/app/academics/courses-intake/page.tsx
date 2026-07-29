@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿const btechRows = [
   { name: "Civil Engineering", code: "CE", intake: 60, nba: true },
   { name: "Computer Science & Engineering", code: "CSE", intake: 120, nba: true },
@@ -361,6 +363,8 @@ export default function CoursesIntakePage() {
             </div>
           </div>
         </section>
+      
+      <PageResources section="academics.courses-intake" />
       </main>
     </>
   );

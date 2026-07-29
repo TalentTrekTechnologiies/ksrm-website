@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getCareersPublic, Career } from "@/lib/careers-api";
 import { useLiveData } from "@/lib/use-live-data";
+import PageResources from "@/components/PageResources";
 
 function applyHref(o: { careerId: number | null; title: string; dept: string }) {
   const q = new URLSearchParams();
@@ -130,6 +131,8 @@ export default function CareersPage() {
           <Link href="/careers/apply" className="car-cta-button">Submit a General Application</Link>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="careers" />
+      </main>
   );
 }

@@ -1,4 +1,5 @@
 import PlacementsSubnav from "@/components/PlacementsSubnav";
+import PageResources from "@/components/PageResources";
 
 export default function TrainingsPage() {
   return (
@@ -86,6 +87,8 @@ export default function TrainingsPage() {
             </p>
           </div>
         </section>
+      
+      <PageResources section="placements.trainings" />
       </main>
     </>
   );

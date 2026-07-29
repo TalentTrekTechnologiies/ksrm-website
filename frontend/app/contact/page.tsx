@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿import type { ReactElement } from "react";
 
 const infoCards = [
@@ -130,6 +132,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="contact" />
+      </main>
   );
 }

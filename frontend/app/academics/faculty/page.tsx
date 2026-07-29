@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
 import { useLiveData } from "@/lib/use-live-data";
+import PageResources from "@/components/PageResources";
 
 type FacultyMember = {
   name: string;
@@ -316,6 +317,8 @@ export default function FacultyPage() {
             )}
           </div>
         </section>
+      
+      <PageResources section="academics.faculty" />
       </main>
     </>
   );

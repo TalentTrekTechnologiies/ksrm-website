@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿import PlacementsSubnav from "@/components/PlacementsSubnav";
 
 const partnerTable = [
@@ -138,6 +140,8 @@ export default function MoUsPage() {
             </p>
           </div>
         </section>
+      
+      <PageResources section="placements.mous" />
       </main>
     </>
   );

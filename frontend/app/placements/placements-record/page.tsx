@@ -3,6 +3,7 @@
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import { getPlacementsPublic, Placement } from "@/lib/placements-api";
 import { useLiveData } from "@/lib/use-live-data";
+import PageResources from "@/components/PageResources";
 
 export default function PlacementsRecordPage() {
   // Polled, so a placement record published in the admin appears here without a
@@ -120,6 +121,8 @@ export default function PlacementsRecordPage() {
             )}
           </div>
         </section>
+      
+      <PageResources section="placements.record" />
       </main>
     </>
   );

@@ -3,6 +3,7 @@
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import { getRecruitersPublic, Recruiter } from "@/lib/homepage-api";
 import { useLiveData } from "@/lib/use-live-data";
+import PageResources from "@/components/PageResources";
 
 export default function OurRecruitersPage() {
   // Polled, so a recruiter published in the admin appears here without a
@@ -110,6 +111,8 @@ export default function OurRecruitersPage() {
             )}
           </div>
         </section>
+      
+      <PageResources section="placements.recruiters" />
       </main>
     </>
   );

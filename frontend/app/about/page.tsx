@@ -2,6 +2,7 @@
 
 import { mediaFile } from "@/lib/api-base";
 import Link from "next/link"
+import PageResources from "@/components/PageResources";
 
 export default function About() {
   const leadershipData = [
@@ -357,6 +358,8 @@ export default function About() {
           </div>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="about" />
+      </main>
   )
 }

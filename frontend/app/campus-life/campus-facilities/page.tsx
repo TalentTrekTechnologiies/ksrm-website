@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿const tourVideos = [
   "/videos/main-block.mp4",
   "/videos/civil-block.mp4",
@@ -225,7 +227,9 @@ export default function CampusFacilitiesPage() {
           </div>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="campus-facilities" />
+      </main>
   );
 }
 

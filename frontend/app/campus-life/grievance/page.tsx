@@ -1,3 +1,5 @@
+import PageResources from "@/components/PageResources";
+
 ﻿import Link from "next/link";
 
 export const metadata = {
@@ -420,6 +422,8 @@ export default function GrievanceRedressalPage() {
           </div>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="grievance" />
+      </main>
   );
 }

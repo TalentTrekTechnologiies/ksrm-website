@@ -1,5 +1,7 @@
 ﻿"use client";
 
+
+import PageResources from "@/components/PageResources";
 const nbaPrograms = [
   "Computer Science & Engineering (B.Tech) - Valid until 2026",
   "Electronics & Communication Engineering (B.Tech) - Valid until 2025",
@@ -159,6 +161,8 @@ export default function AccreditationPage() {
           </p>
         </div>
       </section>
-    </main>
+    
+      <PageResources section="accreditation" />
+      </main>
   );
 }
