@@ -9,8 +9,9 @@ import { INTRO_DONE_EVENT } from "@/components/layout/IntroSplash"
  * A dismissible poster modal for the homepage, driven entirely by Site Settings
  * (site.popupEnabled / popupImageUrl / popupLinkUrl / popupTitle) so an admin
  * can run it for any event with no code change. Shown on every visit to the
- * homepage - deliberately not suppressed after the first view, so the notice
- * always greets visitors and they dismiss it each time. Appears only once the
+ * homepage, once per page load - deliberately not suppressed after the first
+ * view, so it greets a visitor whenever they open the site, but it does not
+ * reappear as they navigate around it. Appears only once the
  * intro logo has finished. Closes on the X, a click outside, or Esc.
  */
 export default function PopupNotice() {
@@ -18,6 +19,10 @@ export default function PopupNotice() {
   const [poster, setPoster] = useState<{ imageUrl: string; linkUrl: string; title: string } | null>(null)
   const [visible, setVisible] = useState(false)
 
+  // Read once on mount only - deliberately NOT re-run when the pathname
+  // changes. Keying this on pathname meant clicking Home in the nav re-showed
+  // the poster on every return to "/"; it should greet a visitor when they open
+  // the site, not on in-site navigation. (Same reasoning as IntroSplash.)
   useEffect(() => {
     if (pathname !== "/") return
     let cancelled = false
@@ -33,7 +38,8 @@ export default function PopupNotice() {
     return () => {
       cancelled = true
     }
-  }, [pathname])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Show only once the intro logo animation has finished, so the poster never
   // covers it. If the intro isn't playing (already seen this session) the event
