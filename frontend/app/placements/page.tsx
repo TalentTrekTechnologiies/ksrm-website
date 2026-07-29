@@ -1,9 +1,61 @@
-'use client'
+import type { Metadata } from "next";
+import Link from "next/link";
 
-export default function Page() {
+export const metadata: Metadata = {
+  title: "Placements | K.S.R.M. College of Engineering",
+  description: "Training & Placements at K.S.R.M. College of Engineering - recruiters, placement records, internships, MoUs and training programmes.",
+  alternates: { canonical: "/placements" },
+};
+
+/**
+ * Placements index. This route previously held a scraped HTML dump of a redirect
+ * response (from an old "recover pages from the deployed site" pass), so it
+ * rendered nothing but the surrounding chrome. It is a top-level nav item and
+ * an indexable URL in the sitemap, so it now lists its sections.
+ */
+const LINKS = [
+  { label: "Overview", href: "/placements/overview", blurb: "Placement statistics and highlights." },
+  { label: "Our Recruiters", href: "/placements/our-recruiters", blurb: "Companies that recruit from campus." },
+  { label: "Placement Record", href: "/placements/placements-record", blurb: "Year-wise placement records." },
+  { label: "Trainings", href: "/placements/trainings", blurb: "Pre-placement training programmes." },
+  { label: "Internships", href: "/placements/internships", blurb: "Internship opportunities and partners." },
+  { label: "MoUs", href: "/placements/mous", blurb: "Industry memoranda of understanding." },
+];
+
+export default function PlacementsIndexPage() {
   return (
-    <div dangerouslySetInnerHTML={{
-      __html: `<!DOCTYPE html><html id="__next_error__"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/0sur~ccmg786l.js"/><script src="/_next/static/chunks/0am~qrn.2~amr.js" async=""></script><script src="/_next/static/chunks/06ni6111_fqel.js" async=""></script><script src="/_next/static/chunks/0piol93jdjrdh.js" async=""></script><script src="/_next/static/chunks/0ofc--.ubvo_z.js" async=""></script><script src="/_next/static/chunks/turbopack-0kk9ynu9gg9t3.js" async=""></script><script src="/_next/static/chunks/05fi3fb~3qmkl.js" async=""></script><script src="/_next/static/chunks/0mtwemt.1oqqp.js" async=""></script><script src="/_next/static/chunks/02fqch~ni_1x3.js" async=""></script><script src="/_next/static/chunks/0jprs_fd_n1y2.js" async=""></script><link rel="preload" href="/_next/static/chunks/0u-l-.84zqgxg.css" as="style"/><link rel="preload" href="/_next/static/chunks/08r5p52~uyd_7.css" as="style"/><title>K.S.R.M. College of Engineering</title><meta name="description" content="K.S.R.M. College of Engineering, Kadapa — 40 years of engineering excellence. NAAC A+ | NBA Accredited | AICTE Approved"/><link rel="icon" href="/favicon.ico?favicon.0x3dzn~oxb6tn.ico" sizes="256x256" type="image/x-icon"/><script src="/_next/static/chunks/03~yq9q893hmn.js" noModule=""></script></head><body><div hidden=""><!--$--><!--/$--></div><script src="/_next/static/chunks/0sur~ccmg786l.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[76027,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n3:I[32035,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n4:I[91168,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\"]\n6:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"OutletBoundary\"]\n7:\"$Sreact.suspense\"\na:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"ViewportBoundary\"]\nc:I[64381,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"MetadataBoundary\"]\ne:I[75115,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"default\",1]\n:HL[\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"style\"]\n:HL[\"/_next/static/chunks/08r5p52~uyd_7.css\",\"style\"]\n:HL[\"/_next/static/media/3206eb66b875a5b3-s.p.0newl065t398d.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/a079e02bba5bf7ab-s.p.0.s85e2kacc1m.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/aae5f0be330e13db-s.p.09~kfcksvwt3b.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/d23f31b94ad01e54-s.p.091biwio0g5wn.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"placements\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"placements\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/08r5p52~uyd_7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"/_next/static/chunks/02fqch~ni_1x3.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-3\",{\"src\":\"/_next/static/chunks/0jprs_fd_n1y2.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"data-scroll-behavior\":\"smooth\",\"className\":\"font-sans arimo_bb082808-module__YDM0vq__variable\",\"children\":[\"$\",\"body\",null,{\"className\":\"rajdhani_ab1774d9-module__PVobqq__variable arimo_bb082808-module__YDM0vq__variable antialiased\",\"style\":{\"fontFamily\":\"var(--font-arimo), Arial, sans-serif\"},\"children\":[\"$\",\"$L2\",null,{\"children\":[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[\"$L5\",null,[\"$\",\"$L6\",null,{\"children\":[\"$\",\"$7\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@8\"}]}]]}],{},null,false,null]},null,false,\"$@9\"]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$La\",null,{\"children\":\"$Lb\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Lc\",null,{\"children\":[\"$\",\"$7\",null,{\"name\":\"Next.Metadata\",\"children\":\"$Ld\"}]}]}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$e\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0u-l-.84zqgxg.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/08r5p52~uyd_7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"LFdLmrYGQ7Zi0mhiVAN1_\"}\n"])</script><script>self.__next_f.push([1,"5:E{\"digest\":\"NEXT_REDIRECT;replace;/placements/overview;307;\"}\n"])</script><script>self.__next_f.push([1,"f:[]\n9:\"$Wf\"\n"])</script><script>self.__next_f.push([1,"b:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"10:I[12843,[\"/_next/static/chunks/05fi3fb~3qmkl.js\",\"/_next/static/chunks/0mtwemt.1oqqp.js\",\"/_next/static/chunks/02fqch~ni_1x3.js\",\"/_next/static/chunks/0jprs_fd_n1y2.js\"],\"IconMark\"]\n8:null\nd:[[\"$\",\"title\",\"0\",{\"children\":\"K.S.R.M. College of Engineering\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"K.S.R.M. College of Engineering, Kadapa — 40 years of engineering excellence. NAAC A+ | NBA Accredited | AICTE Approved\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.0x3dzn~oxb6tn.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"$L10\",\"3\",{}]]\n"])</script></body></html>`
-    }} />
-  )
+    <main style={{ background: "#ffffff" }}>
+      <style>{`
+        .hb-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
+        @media (max-width: 768px) { .hb-container { padding: 0 20px; } }
+        .hb-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); padding: 72px 0; }
+        .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .hb-card { display: block; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; text-decoration: none; background: #fff; transition: box-shadow .2s, transform .2s; }
+        .hb-card:hover { box-shadow: 0 10px 28px rgba(0,0,0,.08); transform: translateY(-2px); }
+      `}</style>
+
+      <section className="hb-hero">
+        <div className="hb-container">
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}>
+            Placements
+          </h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}>1200+ students placed, 200+ recruiting companies.</p>
+        </div>
+      </section>
+
+      <section style={{ padding: "64px 0" }}>
+        <div className="hb-container">
+          <div className="hb-grid">
+            {LINKS.map((l) => (
+              <Link key={l.href} href={l.href} className="hb-card">
+                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>{l.label}</h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}>{l.blurb}</p>
+                <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>Open →</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }
