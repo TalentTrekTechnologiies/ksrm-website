@@ -1,8 +1,8 @@
 # VPS Production Deployment — K.S.R.M. College of Engineering
 
 Going live on a VPS with the real domain (`ksrmce.ac.in`), replacing the old
-PHP site. Follow the sections in order. Commands assume Ubuntu 22.04+ and a
-non-root user with sudo.
+PHP site. Follow the sections in order. Written for a **Hostinger VPS running
+Ubuntu 22.04/24.04**, driven over SSH.
 
 Two things a VPS fixes that the free Render tier could not:
 uploaded media now lives on a real disk (it stops disappearing), and there is
@@ -22,6 +22,86 @@ no cold start.
 | Where uploads live | `/var/www/ksrm-media` ← **outside the repo, so `git pull` never touches it** |
 
 Point all three DNS A-records (`@`/`www`, `api`, `cms`) at the VPS IP before requesting SSL.
+
+---
+
+## 0b. Hostinger VPS — first login and the two gotchas
+
+**OS template.** In hPanel → VPS → *Operating System*, use plain **Ubuntu 22.04
+or 24.04**, not a template that ships a control panel (CyberPanel/Plesk/CloudPanel).
+Those bind their own Nginx/Apache to ports 80/443 and will fight the config in
+section 6. If the VPS was created with one, reinstall the OS as plain Ubuntu
+before going further — do it now, it wipes the disk.
+
+**Connect.** Hostinger gives you the IP and root password in hPanel → VPS →
+*Overview* / *SSH access*.
+
+```bash
+ssh root@YOUR_VPS_IP
+```
+
+**Create a non-root user** (do not run the app as root):
+
+```bash
+adduser ksrm
+usermod -aG sudo ksrm
+rsync --archive --chown=ksrm:ksrm ~/.ssh /home/ksrm   # if you use SSH keys
+su - ksrm
+```
+
+From here on, run everything as `ksrm`.
+
+### Gotcha 1 — Hostinger's own firewall
+
+Hostinger has a firewall **in hPanel**, separate from `ufw` on the server. If
+ports 80 and 443 are not open there, the site is unreachable no matter how
+correct Nginx is, and certbot will fail with a confusing timeout.
+
+hPanel → VPS → **Firewall** → allow **22 (SSH), 80 (HTTP), 443 (HTTPS)**.
+
+Then also configure `ufw` on the server (section 8). Both must allow the port.
+
+### Gotcha 2 — DNS lives where the domain is registered
+
+`ksrmce.ac.in` is an existing domain already serving the old site, so its DNS is
+almost certainly **not** at Hostinger. Change the A-records wherever the domain's
+nameservers actually point (check with `dig NS ksrmce.ac.in +short`).
+
+Create/point these at the VPS IP:
+
+| Record | Name | Value |
+|---|---|---|
+| A | `@` | VPS IP |
+| A | `www` | VPS IP |
+| A | `api` | VPS IP |
+| A | `cms` | VPS IP |
+
+**Do the cutover deliberately.** The moment `@` points at the VPS, visitors get
+the new site. Sensible order:
+
+1. Point **`api`** and **`cms`** first, and deploy/verify everything on those.
+2. Test the public site meanwhile via the VPS IP or a temporary subdomain.
+3. Only then switch **`@`** and **`www`**, once you are happy.
+
+Lower the TTL on the old records to ~300s a day beforehand if you can, so the
+switch propagates quickly and can be reverted fast.
+
+Check propagation before requesting SSL:
+
+```bash
+dig +short ksrmce.ac.in api.ksrmce.ac.in cms.ksrmce.ac.in
+```
+
+### Sizing note
+
+Hostinger's smaller VPS plans (1 vCPU / 4 GB) run this fine, but `npm run build`
+on the frontend is memory-hungry. If the build is killed, add swap:
+
+```bash
+sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
 
 ---
 
