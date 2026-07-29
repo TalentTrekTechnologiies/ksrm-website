@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import MediaField from "@/components/admin/cms/MediaField"
@@ -65,6 +66,8 @@ type AddKind = "doc" | "image" | "video" | null
 
 function PageContentInner() {
   const { confirm, notifySaved } = useCmsConfirm()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [selection, setSelection] = useState("")
   const [departments, setDepartments] = useState<Department[]>([])
   const [docs, setDocs] = useState<Download[]>([])
@@ -83,6 +86,14 @@ function PageContentInner() {
       .then((d) => setDepartments(d.filter((x) => x.isActive)))
       .catch(() => setDepartments([]))
   }, [])
+
+  // Preselect from the sidebar link (/admin/page-content?section=iqac), so
+  // clicking a page in the nav opens straight into that page's content.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const section = new URLSearchParams(window.location.search).get("section")
+    if (section) setSelection(`page:${section}`)
+  }, [pathname, searchParams])
 
   const target = parseTarget(selection)
 

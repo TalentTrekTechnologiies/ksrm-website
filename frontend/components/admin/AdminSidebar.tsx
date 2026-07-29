@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
 import { getStoredAdmin, hasPermission } from "@/lib/auth"
+import { PAGE_SECTIONS } from "@/lib/downloads-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 import { Building2 } from "lucide-react"
@@ -93,7 +94,6 @@ const NAV_ITEMS: NavItem[] = [
   // Labelled "Documents" for admins - the model/route stay `downloads`, this is
   // wording only (a visitor still clicks a "Download" button on the public site).
   { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },
-  { widgetKey: "downloads", label: "Page Content", href: "/admin/page-content" },
   { widgetKey: "news", label: "News", href: "/admin/news" },
   { widgetKey: "research", label: "Research", href: "/admin/research" },
   { widgetKey: "placements", label: "Placements", href: "/admin/placements" },
@@ -212,6 +212,8 @@ export default function AdminSidebar({
     false
   const [departmentsExpanded, setDepartmentsExpanded] = useState(isOnDepartmentsSection)
   const [departments, setDepartments] = useState<Department[] | null>(null)
+  const isOnPageContentSection = pathname?.startsWith("/admin/page-content") ?? false
+  const [pageContentExpanded, setPageContentExpanded] = useState(isOnPageContentSection)
   const examAdminUrl = useExamAdminUrl()
 
   useEffect(() => {
@@ -432,6 +434,55 @@ export default function AdminSidebar({
           )}
         </>
       )}
+
+      {/* Page Content - an expandable list of every public page (IQAC, IIC,
+          NAAC, ...), mirroring the Departments dropdown above. Picking one
+          opens that page's existing uploads plus its add document/image/video
+          options. */}
+      {hasPermission(admin, "downloads.view") && (
+        collapsed ? (
+          <div onClick={onNavigate}>
+            <NavLink
+              href="/admin/page-content"
+              label="Page Content"
+              icon={Globe}
+              active={isOnPageContentSection}
+              collapsed={collapsed}
+            />
+          </div>
+        ) : (
+          <div>
+            <button
+              type="button"
+              onClick={() => setPageContentExpanded((v) => !v)}
+              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+                isOnPageContentSection
+                  ? "bg-gradient-to-r from-admin-primary to-admin-primary-light text-white shadow-[0_4px_16px_rgba(30,58,138,0.45)]"
+                  : "text-slate-400 hover:bg-admin-sidebar-hover hover:text-white"
+              }`}
+            >
+              <Globe className="h-[18px] w-[18px] shrink-0" />
+              <span className="flex-1 truncate text-left">Page Content</span>
+              <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${pageContentExpanded ? "rotate-180" : ""}`} />
+            </button>
+            {pageContentExpanded && (
+              <div className="mt-1 max-h-72 space-y-1 overflow-y-auto pl-8">
+                {PAGE_SECTIONS.map((s) => (
+                  <Link
+                    key={s.value}
+                    href={`/admin/page-content?section=${encodeURIComponent(s.value)}`}
+                    onClick={onNavigate}
+                    className="block truncate rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors hover:bg-admin-sidebar-hover hover:text-white"
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      )}
+
 
       <div className={`my-2 border-t border-white/10 ${collapsed ? "mx-1" : ""}`} />
 
