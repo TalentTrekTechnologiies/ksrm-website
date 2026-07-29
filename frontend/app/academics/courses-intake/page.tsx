@@ -1,6 +1,10 @@
-import PageResources from "@/components/PageResources";
+"use client";
 
-﻿const btechRows = [
+import PageResources from "@/components/PageResources";
+import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
+import { useLiveData } from "@/lib/use-live-data";
+
+const btechRows = [
   { name: "Civil Engineering", code: "CE", intake: 60, nba: true },
   { name: "Computer Science & Engineering", code: "CSE", intake: 120, nba: true },
   { name: "CSE (Artificial Intelligence & Machine Learning)", code: "CSE-AIML", intake: 60, nba: false },
@@ -35,6 +39,38 @@ function AwardIcon() {
       <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
       <circle cx="12" cy="8" r="6" />
     </svg>
+  );
+}
+
+/** Renders a CMS-managed intake table. Free-form columns, so adding a branch or
+ *  revising an intake is an admin edit rather than a code change. */
+function CmsCourseTable({ table }: { table: PageTable }) {
+  return (
+    <div>
+      <h3 className="ci-programme-title">{table.title}</h3>
+      {table.footnote && <p style={{ fontSize: 13, color: "#666", margin: "4px 0 8px" }}>{table.footnote}</p>}
+      <div className="ci-table-wrapper">
+        <table className="ci-table">
+          <thead>
+            <tr>{table.columns.map((c, i) => <th key={i}>{c}</th>)}</tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row, ri) => (
+              <tr key={ri}>
+                {row.map((cell, ci) => (
+                  <td key={ci} className={ci === 0 ? "ci-branch-name" : ci === 2 ? "ci-intake-number" : undefined}>
+                    {ci === 1 ? <span className="ci-code-badge">{cell}</span>
+                      : ci === 3 && cell === "NBA" ? <span className="ci-nba-badge">NBA</span>
+                      : ci === 3 ? <span style={{ color: "#999" }}>{cell}</span>
+                      : cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 
@@ -83,6 +119,13 @@ function CourseTable({
 }
 
 export default function CoursesIntakePage() {
+  // Intake tables come from the CMS; the built-in tables below stay as a
+  // fallback so the page never renders empty.
+  const cmsTables = useLiveData<PageTable[]>(
+    () => getPageTablesPublic("academics.courses-intake").catch(() => [] as PageTable[]),
+    [],
+  );
+
   return (
     <>
       <style>{`
@@ -338,9 +381,15 @@ export default function CoursesIntakePage() {
         {/* TABLES */}
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            <CourseTable title="B.Tech (4 Years)" regulation="R23UG" totalIntake={600} rows={btechRows} />
-            <CourseTable title="M.Tech (2 Years)" regulation="R22PG" totalIntake={54} rows={mtechRows} />
-            <CourseTable title="MBA (2 Years)" regulation="R25" totalIntake={60} rows={mbaRows} />
+            {cmsTables && cmsTables.length > 0 ? (
+              cmsTables.map((t) => <CmsCourseTable key={t.id} table={t} />)
+            ) : (
+              <>
+                <CourseTable title="B.Tech (4 Years)" regulation="R23UG" totalIntake={600} rows={btechRows} />
+                <CourseTable title="M.Tech (2 Years)" regulation="R22PG" totalIntake={54} rows={mtechRows} />
+                <CourseTable title="MBA (2 Years)" regulation="R25" totalIntake={60} rows={mbaRows} />
+              </>
+            )}
           </div>
         </section>
 
