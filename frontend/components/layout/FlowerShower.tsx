@@ -18,15 +18,32 @@
 const WIDTH_PCT = 11
 
 // Staggered so petals don't fall in lockstep. left is a % within the strip.
+// Denser and quicker than the first pass, per direction.
 const PETALS = [
-  { left: 8, delay: 0, duration: 5.5, size: 13, drift: 6 },
-  { left: 28, delay: 1.4, duration: 6.5, size: 10, drift: -8 },
-  { left: 48, delay: 0.7, duration: 5.0, size: 12, drift: 5 },
-  { left: 68, delay: 2.2, duration: 7.0, size: 9, drift: -6 },
-  { left: 86, delay: 1.0, duration: 6.0, size: 12, drift: 7 },
-  { left: 18, delay: 3.1, duration: 6.8, size: 10, drift: -5 },
-  { left: 58, delay: 3.8, duration: 5.8, size: 11, drift: 8 },
-  { left: 78, delay: 2.7, duration: 6.2, size: 9, drift: -7 },
+  { left: 3, delay: 1.2, duration: 2.9, size: 11, drift: 8 },
+  { left: 7, delay: 1.3, duration: 2.0, size: 12, drift: 8 },
+  { left: 12, delay: 1.7, duration: 1.9, size: 10, drift: -6 },
+  { left: 13, delay: 1.8, duration: 2.6, size: 8, drift: 7 },
+  { left: 22, delay: 1.4, duration: 2.5, size: 9, drift: -9 },
+  { left: 25, delay: 0.1, duration: 1.8, size: 9, drift: -9 },
+  { left: 29, delay: 0.7, duration: 2.5, size: 9, drift: 9 },
+  { left: 30, delay: 0.6, duration: 1.8, size: 8, drift: 8 },
+  { left: 37, delay: 0.9, duration: 2.5, size: 14, drift: -7 },
+  { left: 41, delay: 0.7, duration: 2.1, size: 10, drift: -9 },
+  { left: 41, delay: 1.7, duration: 2.3, size: 14, drift: 5 },
+  { left: 47, delay: 2.1, duration: 2.8, size: 8, drift: -5 },
+  { left: 50, delay: 2.0, duration: 2.4, size: 13, drift: 7 },
+  { left: 56, delay: 1.2, duration: 2.0, size: 13, drift: 5 },
+  { left: 59, delay: 0.7, duration: 1.8, size: 11, drift: -7 },
+  { left: 62, delay: 1.6, duration: 1.8, size: 11, drift: 8 },
+  { left: 66, delay: 1.2, duration: 2.3, size: 9, drift: -6 },
+  { left: 72, delay: 0.8, duration: 2.3, size: 9, drift: -9 },
+  { left: 75, delay: 2.1, duration: 2.8, size: 10, drift: -9 },
+  { left: 79, delay: 0.9, duration: 2.8, size: 13, drift: -7 },
+  { left: 82, delay: 0.3, duration: 2.3, size: 8, drift: 6 },
+  { left: 91, delay: 0.8, duration: 1.9, size: 9, drift: -5 },
+  { left: 90, delay: 0.8, duration: 2.5, size: 9, drift: 8 },
+  { left: 96, delay: 0.3, duration: 2.3, size: 13, drift: -6 },
 ]
 
 export default function FlowerShower() {
