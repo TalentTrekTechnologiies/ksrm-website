@@ -28,7 +28,9 @@ export default function PlacementsIndexPage() {
       <style>{`
         .hb-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .hb-container { padding: 0 20px; } }
-        .hb-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); padding: 72px 0; }
+        .hb-hero { position: relative; background-image: url('/banners/placements-training.png'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
+        .hb-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,26,74,0.72) 0%, rgba(20,26,74,0.86) 100%); }
+        .hb-hero > * { position: relative; z-index: 2; }
         .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .hb-card { display: block; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; text-decoration: none; background: #fff; transition: box-shadow .2s, transform .2s; }
         .hb-card:hover { box-shadow: 0 10px 28px rgba(0,0,0,.08); transform: translateY(-2px); }

@@ -32,7 +32,9 @@ export default function DepartmentsIndexPage() {
       <style>{`
         .dh-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .dh-container { padding: 0 20px; } }
-        .dh-hero { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); padding: 72px 0; }
+        .dh-hero { position: relative; background-image: url('/site-images/blocktop.jpg'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
+        .dh-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,26,74,0.72) 0%, rgba(20,26,74,0.86) 100%); }
+        .dh-hero > * { position: relative; z-index: 2; }
         .dh-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .dh-card { display: block; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; text-decoration: none; transition: box-shadow .2s, transform .2s; background: #fff; }
         .dh-card:hover { box-shadow: 0 10px 28px rgba(0,0,0,.08); transform: translateY(-2px); }
