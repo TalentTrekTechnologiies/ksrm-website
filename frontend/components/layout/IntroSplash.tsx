@@ -47,12 +47,18 @@ export default function IntroSplash() {
   // immediately on mount when the intro isn't going to play at all - otherwise
   // the initial show=false would fire "done" before the intro even starts.
   const wasShown = useRef(false)
+  const announced = useRef(false)
   useEffect(() => {
     if (show) {
       wasShown.current = true
       return
     }
+    // At most once per page load. The effect also runs on route changes, and
+    // re-announcing there made anything listening (the popup notice) reopen on
+    // every nav click.
+    if (announced.current) return
     if (wasShown.current || pathname !== "/") {
+      announced.current = true
       window.dispatchEvent(new CustomEvent(INTRO_DONE_EVENT))
     }
   }, [show, pathname])

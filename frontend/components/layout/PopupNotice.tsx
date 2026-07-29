@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { INTRO_DONE_EVENT } from "@/components/layout/IntroSplash"
@@ -42,11 +42,16 @@ export default function PopupNotice() {
   }, [])
 
   // Show only once the intro logo animation has finished, so the poster never
-  // covers it. If the intro isn't playing (already seen this session) the event
-  // fires immediately on mount, so there is no wait.
+  // covers it. Guarded by a ref because the intro re-broadcasts on route
+  // changes: without this, every nav click re-opened the poster.
+  const revealedOnce = useRef(false)
   useEffect(() => {
     if (!poster) return
-    const reveal = () => setVisible(true)
+    const reveal = () => {
+      if (revealedOnce.current) return
+      revealedOnce.current = true
+      setVisible(true)
+    }
     window.addEventListener(INTRO_DONE_EVENT, reveal)
     // Fallback: if the intro never reports (e.g. it errored), show anyway.
     const t = setTimeout(reveal, 9500)
