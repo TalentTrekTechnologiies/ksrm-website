@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
+import FlowerShower from "@/components/layout/FlowerShower"
 
 const FALLBACK_LOGO_URL = "/header.png"
 
@@ -34,7 +35,7 @@ export default function Header() {
   const isCustomLogo = logoUrl !== FALLBACK_LOGO_URL
 
   return (
-    <header style={{ width: "100%", background: "#fff" }}>
+    <header style={{ width: "100%", background: "#fff", position: "relative" }}>
       <Link href="/">
         {isCustomLogo ? (
           // A Media Library URL is dynamic/remote, not a build-time-known
@@ -64,6 +65,8 @@ export default function Header() {
           />
         )}
       </Link>
+      {/* Petals over the founder's portrait at the right edge of the banner. */}
+      <FlowerShower />
     </header>
   )
 }
