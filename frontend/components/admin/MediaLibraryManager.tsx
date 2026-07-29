@@ -62,6 +62,27 @@ const CROP_PRESETS = [
   { key: "FACULTY_PORTRAIT", label: "Faculty Portrait" },
 ]
 
+/** Where a media file ended up: which module, and which public page. */
+interface UsageBadge {
+  kind: "Gallery" | "Video" | "Document"
+  where: string | null
+}
+
+/** "Today" / "Yesterday" / "12 Mar 2026" - the heading a tile is filed under. */
+function uploadDayLabel(iso: string): string {
+  const d = new Date(iso)
+  const today = new Date()
+  const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+  const days = Math.round((startOf(today) - startOf(d)) / 86_400_000)
+  if (days <= 0) return "Today"
+  if (days === 1) return "Yesterday"
+  return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })
+}
+
+function uploadTimeLabel(iso: string): string {
+  return new Date(iso).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
+}
+
 function typeIcon(type: MediaType) {
   if (type === "IMAGE") return <ImageIcon className="h-4 w-4" />
   if (type === "VIDEO") return <Video className="h-4 w-4" />
@@ -126,8 +147,23 @@ function MediaLibraryManagerInner() {
   const [detailItem, setDetailItem] = useState<Media | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<{ item: Media; usages: MediaUsage[] } | null>(null)
   const [moveTargetIds, setMoveTargetIds] = useState<number[] | null>(null)
+  // mediaId -> where that file is currently used (Gallery / Video / Document,
+  // plus the page it was published to), so each tile shows its destination.
+  const [usageMap, setUsageMap] = useState<Map<number, UsageBadge[]>>(new Map())
   const pageSize = 24
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Tiles filed under the day they were uploaded, newest day first. The API
+  // already returns newest-first, so insertion order gives the right sequence.
+  const groupedByDay = useMemo(() => {
+    const groups = new Map<string, Media[]>()
+    for (const m of items) {
+      const day = uploadDayLabel(m.createdAt)
+      if (!groups.has(day)) groups.set(day, [])
+      groups.get(day)!.push(m)
+    }
+    return [...groups.entries()]
+  }, [items])
 
   async function refresh() {
     setLoading(true)
@@ -161,8 +197,41 @@ function MediaLibraryManagerInner() {
     }
   }
 
+  /**
+   * Builds "where is this file used" for every tile in one pass: the Gallery
+   * and Downloads lists are fetched once and indexed by mediaId, rather than
+   * calling /media/:id/usages per card (which would be a request per tile).
+   */
+  async function refreshUsage() {
+    try {
+      const [gals, dls] = await Promise.all([
+        getGalleryAdmin(false).catch(() => []),
+        getDownloadsAdmin(false).catch(() => []),
+      ])
+      const map = new Map<number, UsageBadge[]>()
+      const add = (mediaId: number | null, badge: UsageBadge) => {
+        if (mediaId == null) return
+        if (!map.has(mediaId)) map.set(mediaId, [])
+        map.get(mediaId)!.push(badge)
+      }
+      for (const g of gals) {
+        add(g.mediaId, {
+          kind: g.category === "__video__" ? "Video" : "Gallery",
+          where: g.pageSection ? sectionLabel(g.pageSection) : null,
+        })
+      }
+      for (const d of dls) {
+        add(d.mediaId, { kind: "Document", where: d.pageSection ? sectionLabel(d.pageSection) : null })
+      }
+      setUsageMap(map)
+    } catch {
+      // Non-critical - tiles simply show no usage badges.
+    }
+  }
+
   useEffect(() => {
     refresh()
+    refreshUsage()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, typeFilter, categoryFilter, selectedFolderId, page])
 
@@ -467,8 +536,16 @@ function MediaLibraryManagerInner() {
               <p className="text-xs text-slate-400">Drag and drop files here, or use the Upload button.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {items.map((item) => {
+            <div className="space-y-6">
+              {groupedByDay.map(([day, dayItems]) => (
+              <div key={day}>
+                {/* Files are filed under the day they were uploaded, so a batch
+                    is easy to find again by when it was added. */}
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  {day} <span className="ml-1 font-normal normal-case text-slate-300">({dayItems.length})</span>
+                </p>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              {dayItems.map((item) => {
                 const isSelected = selectedIds.has(item.id)
                 const isDeleted = item.deletedAt !== null
                 const isProcessing = item.processingStatus === "PENDING" || item.processingStatus === "PROCESSING"
@@ -513,7 +590,25 @@ function MediaLibraryManagerInner() {
 
                     <div className="p-2">
                       <p className="truncate text-xs font-semibold text-slate-700">{item.title || item.originalFilename}</p>
-                      <p className="text-[10px] text-slate-400">{formatBytes(item.sizeBytes)}</p>
+                      <p className="text-[10px] text-slate-400">
+                        {formatBytes(item.sizeBytes)} · {uploadTimeLabel(item.createdAt)}
+                      </p>
+                      {/* Where this file actually ended up on the public site. */}
+                      {(usageMap.get(item.id) ?? []).length > 0 ? (
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {(usageMap.get(item.id) ?? []).slice(0, 3).map((u, i) => (
+                            <span
+                              key={i}
+                              title={u.where ? `${u.kind} — ${u.where}` : u.kind}
+                              className="max-w-full truncate rounded bg-admin-primary/10 px-1.5 py-0.5 text-[9px] font-semibold text-admin-primary"
+                            >
+                              {u.kind}{u.where ? ` · ${u.where}` : ""}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="mt-1 text-[9px] text-slate-300">Not used yet</p>
+                      )}
                     </div>
 
                     <div className="flex items-center justify-end gap-1 border-t border-admin-border px-1.5 py-1">
@@ -535,6 +630,9 @@ function MediaLibraryManagerInner() {
                   </div>
                 )
               })}
+                </div>
+              </div>
+              ))}
             </div>
           )}
 
