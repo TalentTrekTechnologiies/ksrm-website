@@ -1822,3 +1822,32 @@ model MediaVersion {
   @@unique([mediaId, versionNumber])
   @@index([mediaId])
 }
+
+/// An editable table of text on a public page - fee structures, courses &
+/// intake, admissions details. These were hardcoded arrays in the page files,
+/// so a yearly fee revision needed a code change. Columns/rows are free-form
+/// (String[] / Json) rather than a fixed shape, because the tables differ per
+/// page and new ones must not need a migration. A page renders its CMS table
+/// when one exists and falls back to its built-in list otherwise.
+model PageTable {
+  id          Int      @id @default(autoincrement())
+  /// Stable identifier the page looks itself up by, e.g. "fee.btech-first-year".
+  key         String   @unique
+  /// PAGE_SECTIONS value this table belongs to, e.g. "academics.fee-structure".
+  pageSection String
+  title       String
+  /// Column headings, in order.
+  columns     String[]
+  /// Row cells: an array of string arrays, aligned to `columns`.
+  rows        Json
+  /// Optional note rendered under the table (e.g. "Fees revised annually").
+  footnote    String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  version     Int      @default(1)
+
+  @@index([pageSection])
+  @@index([isActive])
+}

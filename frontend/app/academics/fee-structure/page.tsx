@@ -1,4 +1,8 @@
+"use client";
+
 import PageResources from "@/components/PageResources";
+import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 ﻿const btechFirstYear = [
   { branch: "Computer Science & Engineering", fee: "₹1,15,000", admission: "₹5,000", notes: "Per annum for 4 years" },
@@ -66,6 +70,35 @@ function MailIcon() {
   );
 }
 
+/** Renders a CMS-managed table. Columns and rows are free-form, so a fee
+ *  revision is an admin edit rather than a code change. */
+function CmsTable({ table, first }: { table: PageTable; first?: boolean }) {
+  return (
+    <div>
+      <h3 className="fee-programme-title" style={first ? { marginTop: 0 } : undefined}>{table.title}</h3>
+      <div className="fee-table-wrapper">
+        <table className="fee-table">
+          <thead>
+            <tr>{table.columns.map((c, i) => <th key={i}>{c}</th>)}</tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row, ri) => (
+              <tr key={ri}>
+                {row.map((cell, ci) => (
+                  <td key={ci} style={ci === 0 ? { fontWeight: 600 } : ci === row.length - 1 ? { fontSize: 13, color: "#666" } : undefined}>
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {table.footnote && <p style={{ fontSize: 13, color: "#666", marginTop: 8 }}>{table.footnote}</p>}
+      </div>
+    </div>
+  );
+}
+
 function FeeTable({
   title,
   rows,
@@ -100,6 +133,13 @@ function FeeTable({
 }
 
 export default function FeeStructurePage() {
+  // Fee tables come from the CMS so a yearly revision needs no code change;
+  // the hardcoded tables below remain as a fallback if none are configured.
+  const cmsTables = useLiveData<PageTable[]>(
+    () => getPageTablesPublic("academics.fee-structure").catch(() => [] as PageTable[]),
+    [],
+  );
+
   return (
     <>
       <style>{`
@@ -231,10 +271,16 @@ export default function FeeStructurePage() {
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
               Fee Structure by Programme
             </h2>
-            <FeeTable title="B.Tech (First Year)" rows={btechFirstYear} first />
-            <FeeTable title="B.Tech (Specializations)" rows={btechSpecializations} />
-            <FeeTable title="M.Tech (2-Year)" rows={mtech} />
-            <FeeTable title="MBA (2-Year)" rows={mba} />
+            {cmsTables && cmsTables.length > 0 ? (
+              cmsTables.map((t, i) => <CmsTable key={t.id} table={t} first={i === 0} />)
+            ) : (
+              <>
+                <FeeTable title="B.Tech (First Year)" rows={btechFirstYear} first />
+                <FeeTable title="B.Tech (Specializations)" rows={btechSpecializations} />
+                <FeeTable title="M.Tech (2-Year)" rows={mtech} />
+                <FeeTable title="MBA (2-Year)" rows={mba} />
+              </>
+            )}
           </div>
         </section>
 

@@ -29,6 +29,7 @@ import { DepartmentProgrammesModule } from './department-programmes/department-p
 import { DepartmentHighlightsModule } from './department-highlights/department-highlights.module';
 import { ContactChannelsModule } from './contact-channels/contact-channels.module';
 import { ResearchModule } from './research/research.module';
+import { PageTablesModule } from './page-tables/page-tables.module';
 import { DepartmentDisplaySettingsModule } from './department-display-settings/department-display-settings.module';
 import { MailerModule } from './mailer/mailer.module';
 import { CareerApplicationsModule } from './career-applications/career-applications.module';
@@ -72,6 +73,7 @@ import { AdminNotificationsModule } from './admin-notifications/admin-notificati
     DepartmentHighlightsModule,
     ContactChannelsModule,
     ResearchModule,
+    PageTablesModule,
     DepartmentDisplaySettingsModule,
     MailerModule,
     CareerApplicationsModule,
