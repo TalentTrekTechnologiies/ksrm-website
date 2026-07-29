@@ -6,8 +6,8 @@ import { getExamNotificationsPublic, ExamNotification } from "@/lib/exam-notific
 import { useLiveData } from "@/lib/use-live-data"
 
 type ExamNoticeItem =
-  | { kind: "exam"; id: number; date: string; title: string; description: string | null; linkUrl: string | null; buttonText: string }
-  | { kind: "announcement"; id: number; date: string; title: string; description: string | null; linkUrl: string | null; buttonText: string }
+  | { kind: "exam"; id: number; date: string; title: string; description: string | null; linkUrl: string | null; buttonText: string; academicYear: string | null }
+  | { kind: "announcement"; id: number; date: string; title: string; description: string | null; linkUrl: string | null; buttonText: string; academicYear: string | null }
 
 function fromExamNotification(n: ExamNotification): ExamNoticeItem {
   return {
@@ -18,6 +18,7 @@ function fromExamNotification(n: ExamNotification): ExamNoticeItem {
     description: n.description,
     linkUrl: n.buttonUrl,
     buttonText: n.buttonText || "View",
+    academicYear: n.academicYear,
   }
 }
 
@@ -30,6 +31,7 @@ function fromAnnouncement(n: Announcement): ExamNoticeItem {
     description: n.description,
     linkUrl: n.linkUrl,
     buttonText: "View",
+    academicYear: null,
   }
 }
 
@@ -60,16 +62,66 @@ export default function ExamNotificationsList() {
     return <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "24px 0" }}>No active notifications right now.</p>
   }
 
+  // Group by academic year, newest first, so the current year sits on top and
+  // previous years collect underneath. Items with no year (e.g. announcements)
+  // fall into a trailing ungrouped block.
+  const byYear = new Map<string, ExamNoticeItem[]>()
+  const ungrouped: ExamNoticeItem[] = []
+  for (const n of items) {
+    const y = n.academicYear?.trim()
+    if (!y) {
+      ungrouped.push(n)
+      continue
+    }
+    if (!byYear.has(y)) byYear.set(y, [])
+    byYear.get(y)!.push(n)
+  }
+  // Descending by the first number in the label ("AY 2026-27" -> 2026), so a
+  // new year automatically lands above the previous ones.
+  const years = [...byYear.keys()].sort((a, b) => {
+    const na = Number(a.match(/\d{4}/)?.[0] ?? 0)
+    const nb = Number(b.match(/\d{4}/)?.[0] ?? 0)
+    return nb - na
+  })
+
+  const toRows = (list: ExamNoticeItem[]) =>
+    list.map((n) => ({
+      id: `${n.kind}-${n.id}`,
+      title: n.title,
+      description: n.description,
+      meta: new Date(n.date).toLocaleDateString(),
+      href: n.linkUrl,
+      actionLabel: n.buttonText,
+    }))
+
+  // No academic years set at all - render the flat list exactly as before.
+  if (years.length === 0) return <PublicDocumentList items={toRows(items)} />
+
   return (
-    <PublicDocumentList
-      items={items.map((n) => ({
-        id: `${n.kind}-${n.id}`,
-        title: n.title,
-        description: n.description,
-        meta: new Date(n.date).toLocaleDateString(),
-        href: n.linkUrl,
-        actionLabel: n.buttonText,
-      }))}
-    />
+    <div>
+      {years.map((y) => (
+        <div key={y} style={{ marginBottom: 28 }}>
+          <h3
+            style={{
+              fontFamily: "'Rajdhani', sans-serif",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#2B3490",
+              borderLeft: "4px solid #D4A500",
+              paddingLeft: 14,
+              margin: "0 0 14px",
+            }}
+          >
+            {y}
+          </h3>
+          <PublicDocumentList items={toRows(byYear.get(y)!)} />
+        </div>
+      ))}
+      {ungrouped.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <PublicDocumentList items={toRows(ungrouped)} />
+        </div>
+      )}
+    </div>
   )
 }

@@ -163,6 +163,11 @@ export function NumberField({
           type="number"
           value={Number.isNaN(value) ? "" : value}
           onChange={(e) => onChange(e.target.valueAsNumber)}
+          // A focused number input changes its value on mouse-wheel scroll, so
+          // scrolling the page with the cursor over the field silently counts
+          // it up/down (a stat typed as 32 ended up saved as -8 this way).
+          // Blur on wheel so the scroll just scrolls the page.
+          onWheel={(e) => e.currentTarget.blur()}
           placeholder=" "
           disabled={disabled}
           className={`${floatingInputClass} ${floatingBorderClass(error)}`}

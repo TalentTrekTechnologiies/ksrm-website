@@ -24,6 +24,13 @@ export class CreateExamNotificationDto {
   @IsString()
   buttonUrl?: string;
 
+  // Academic year label, e.g. "AY 2026-27". Free text so rolling to a new year
+  // is just a typed value - the public list groups by it, newest first.
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  academicYear?: string;
+
   @IsDateString()
   startDate: string;
 

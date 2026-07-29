@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Loader2, Plus, AlertTriangle } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
+import MediaField from "@/components/admin/cms/MediaField"
 import {
   TextField,
   TextAreaField,
@@ -29,6 +30,11 @@ interface FormState {
   description: string
   buttonText: string
   buttonUrl: string
+  academicYear: string
+  /** Media Library id of the picked file. Local only - ExamNotification stores
+   * just the URL (no mediaId column), so this drives the picker's preview and
+   * is not persisted. */
+  mediaId: number | null
   startDate: string
   endDate: string
   isActive: boolean
@@ -38,11 +44,26 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10)
 }
 
+/**
+ * Current academic year label, e.g. "AY 2026-27". The academic year is taken to
+ * start in June, so Jan-May still belongs to the year that began the previous
+ * June. New notifications default to this, and it rolls over on its own - so
+ * next year's uploads land under "AY 2027-28" and this year's collect below it
+ * on the public page.
+ */
+function currentAcademicYear() {
+  const now = new Date()
+  const startYear = now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1
+  return `AY ${startYear}-${String((startYear + 1) % 100).padStart(2, "0")}`
+}
+
 const emptyForm: FormState = {
   title: "",
   description: "",
   buttonText: "",
   buttonUrl: "",
+  academicYear: currentAcademicYear(),
+  mediaId: null,
   startDate: todayIso(),
   endDate: "",
   isActive: true,
@@ -122,6 +143,8 @@ function ExamNotificationsManagerInner() {
       description: item.description ?? "",
       buttonText: item.buttonText ?? "",
       buttonUrl: item.buttonUrl ?? "",
+      academicYear: item.academicYear ?? currentAcademicYear(),
+      mediaId: null,
       startDate: item.startDate.slice(0, 10),
       endDate: item.endDate ? item.endDate.slice(0, 10) : "",
       isActive: item.isActive,
@@ -143,6 +166,7 @@ function ExamNotificationsManagerInner() {
         description: form.description || undefined,
         buttonText: form.buttonText || undefined,
         buttonUrl: form.buttonUrl || undefined,
+        academicYear: form.academicYear || undefined,
         startDate: form.startDate,
         endDate: form.endDate || undefined,
         isActive: form.isActive,
@@ -228,8 +252,30 @@ function ExamNotificationsManagerInner() {
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={2} maxLength={500} />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Button text" value={form.buttonText} onChange={(v) => setForm({ ...form, buttonText: v })} placeholder="Download Hall Ticket" />
-            <TextField label="Button URL" value={form.buttonUrl} onChange={(v) => setForm({ ...form, buttonUrl: v })} placeholder="/downloads/hall-ticket.pdf" />
+            <TextField
+              label="Academic year"
+              value={form.academicYear}
+              onChange={(v) => setForm({ ...form, academicYear: v })}
+              placeholder="AY 2026-27"
+              helperText="Groups this notification on the public page. Defaults to the current year; change it to start a new one."
+            />
           </div>
+          {/* Two equally-valid paths here: upload/pick a file (drag & drop in
+              the picker) for hall tickets/timetables, OR paste an external link
+              for results hosted on the university portal - hence the explicit
+              "or paste a link" wording and the external-URL placeholder. */}
+          <MediaField
+            label="File or link (hall ticket / timetable / results)"
+            url={form.buttonUrl}
+            mediaId={form.mediaId}
+            onChange={(url, mediaId) => setForm({ ...form, buttonUrl: url, mediaId })}
+            accept={["DOCUMENT"]}
+            urlPlaceholder="https://results.jntua.ac.in/... or /downloads/hall-ticket.pdf"
+          />
+          <p className="-mt-2 text-xs text-slate-500">
+            Upload a file above (drag &amp; drop works), or open{" "}
+            <span className="font-medium">&ldquo;Or paste a URL directly&rdquo;</span> to link an external results page.
+          </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Start date" value={form.startDate} onChange={(v) => setForm({ ...form, startDate: v })} required placeholder="YYYY-MM-DD" />
             <TextField label="End date (optional)" value={form.endDate} onChange={(v) => setForm({ ...form, endDate: v })} placeholder="YYYY-MM-DD" />

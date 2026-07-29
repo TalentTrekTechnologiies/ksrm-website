@@ -6,6 +6,8 @@ export interface ExamNotification {
   description: string | null;
   buttonText: string | null;
   buttonUrl: string | null;
+  /** Academic year label, e.g. "AY 2026-27". The public list groups by this. */
+  academicYear: string | null;
   startDate: string;
   endDate: string | null;
   isPublished: boolean;
@@ -19,6 +21,7 @@ export interface ExamNotificationInput {
   description?: string;
   buttonText?: string;
   buttonUrl?: string;
+  academicYear?: string;
   startDate: string;
   endDate?: string;
   isActive?: boolean;

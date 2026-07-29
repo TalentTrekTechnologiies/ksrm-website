@@ -427,6 +427,11 @@ model ExamNotification {
   // as Research (not in the approved soft-delete scope list).
   categoryId   Int?
   departmentId Int?
+  // Academic year this notification belongs to, e.g. "AY 2026-27". Free text
+  // (not an enum) so a new year needs no migration. The public list groups by
+  // this, newest year first, so the current year's notifications sit on top and
+  // previous years collect underneath. Null = ungrouped (shown last).
+  academicYear String?
   updatedAt    DateTime @default(now()) @updatedAt
 
   categoryRef   Category?   @relation("ExamNotification_Category", fields: [categoryId], references: [id], onDelete: SetNull)
