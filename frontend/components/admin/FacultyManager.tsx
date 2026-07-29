@@ -31,7 +31,9 @@ interface FormState {
   qualification: string
   department: string
   specialization: string
+  experience: string
   email: string
+  phone: string
   photoUrl: string
   mediaId: number | null
   isHod: boolean
@@ -43,7 +45,9 @@ const emptyForm: FormState = {
   qualification: "",
   department: "",
   specialization: "",
+  experience: "",
   email: "",
+  phone: "",
   photoUrl: "",
   mediaId: null,
   isHod: false,
@@ -103,7 +107,9 @@ function FacultyManagerInner() {
       qualification: item.qualification,
       department: item.department,
       specialization: item.specialization ?? "",
+      experience: item.experience ?? "",
       email: item.email ?? "",
+      phone: item.phone ?? "",
       photoUrl: item.photoUrl ?? "",
       mediaId: item.mediaId,
       isHod: item.isHod,
@@ -126,7 +132,9 @@ function FacultyManagerInner() {
         qualification: form.qualification,
         department: form.department,
         specialization: form.specialization || undefined,
+        experience: form.experience || undefined,
         email: form.email || undefined,
+        phone: form.phone || undefined,
         photoUrl: form.photoUrl || undefined,
         mediaId: form.mediaId,
         isHod: form.isHod,
@@ -248,7 +256,9 @@ function FacultyManagerInner() {
             <TextField label="Qualification" value={form.qualification} onChange={(v) => setForm({ ...form, qualification: v })} required />
             <TextField label="Department" value={form.department} onChange={(v) => setForm({ ...form, department: v })} required />
             <TextField label="Specialization" value={form.specialization} onChange={(v) => setForm({ ...form, specialization: v })} />
+            <TextField label="Experience" value={form.experience} onChange={(v) => setForm({ ...form, experience: v })} />
             <TextField label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+            <TextField label="Phone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
           </div>
           <MediaField
             label="Photo"

@@ -153,6 +153,7 @@ model Faculty {
   specialization String?
   experience     String?
   email          String?
+  phone          String?
   photoUrl       String?
   isHod          Boolean  @default(false)
   isActive       Boolean  @default(true)

@@ -45,3 +45,4 @@ frontend/public/*.mov
 
 # Local Hostinger deploy artifact - large, never commit
 ksrm-site.zip
+ksrm-site-updated.zip

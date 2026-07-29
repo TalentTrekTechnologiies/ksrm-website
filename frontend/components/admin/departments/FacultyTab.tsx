@@ -22,6 +22,7 @@ interface FormState {
   specialization: string
   experience: string
   email: string
+  phone: string
   photoUrl: string
   mediaId: number | null
   isHod: boolean
@@ -35,6 +36,7 @@ const emptyForm: FormState = {
   specialization: "",
   experience: "",
   email: "",
+  phone: "",
   photoUrl: "",
   mediaId: null,
   isHod: false,
@@ -104,6 +106,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
       specialization: item.specialization ?? "",
       experience: item.experience ?? "",
       email: item.email ?? "",
+      phone: item.phone ?? "",
       photoUrl: item.photoUrl ?? "",
       mediaId: item.mediaId,
       isHod: item.isHod,
@@ -130,6 +133,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
         specialization: form.specialization || undefined,
         experience: form.experience || undefined,
         email: form.email || undefined,
+        phone: form.phone || undefined,
         photoUrl: form.photoUrl || undefined,
         mediaId: form.mediaId,
         isHod: form.isHod,
@@ -216,6 +220,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
             <TextField label="Specialization" value={form.specialization} onChange={(v) => setForm({ ...form, specialization: v })} />
             <TextField label="Experience" value={form.experience} onChange={(v) => setForm({ ...form, experience: v })} />
             <TextField label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+            <TextField label="Phone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
           </div>
           <MediaField
             label="Photo"

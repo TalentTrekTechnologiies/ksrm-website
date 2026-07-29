@@ -35,6 +35,7 @@ export interface FacultyMember {
   specialization: string;
   experience?: string;
   email?: string;
+  phone?: string;
 }
 export interface Programme {
   name: string;

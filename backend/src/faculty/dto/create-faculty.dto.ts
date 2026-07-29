@@ -31,6 +31,10 @@ export class CreateFacultyDto {
 
   @IsOptional()
   @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
   photoUrl?: string;
 
   @IsOptional()

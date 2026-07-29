@@ -254,7 +254,7 @@ function AnnouncementsManagerInner() {
             Announcements
           </h1>
           <p className="text-sm text-slate-500">
-            One centralized engine for every ticker/banner across the site - reusable across locations.
+            One centralized engine for notices. Select Header Ticker and Exam Notifications Page to show the same item in the header, homepage latest updates, and exam notifications.
           </p>
         </div>
         {!isFormOpen && (
@@ -332,6 +332,9 @@ function AnnouncementsManagerInner() {
 
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-700">Display locations *</label>
+            <p className="mb-2 text-xs text-slate-500">
+              Header Ticker also feeds the homepage Latest Updates panel. Add Exam Notifications Page when the same notice should appear on the Examinations page too.
+            </p>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {ANNOUNCEMENT_LOCATIONS.map((loc) => (
                 <label key={loc.value} className="flex items-center gap-2 rounded-lg border border-admin-border px-3 py-2 text-sm">

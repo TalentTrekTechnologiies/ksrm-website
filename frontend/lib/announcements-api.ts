@@ -20,12 +20,7 @@ export type AnnouncementLocation =
 
 export const ANNOUNCEMENT_LOCATIONS: { value: AnnouncementLocation; label: string }[] = [
   { value: "HEADER_TICKER", label: "Header Ticker" },
-  { value: "HERO_BANNER", label: "Hero Banner (unused)" },
-  { value: "HOMEPAGE_SECTION", label: "Homepage Section (unused)" },
-  { value: "DEPARTMENT_PAGE", label: "Department Page (unused)" },
-  { value: "ADMISSIONS_PAGE", label: "Admissions Page (unused)" },
-  { value: "PLACEMENTS_PAGE", label: "Placements Page (unused)" },
-  { value: "EXAM_NOTIFICATIONS_PAGE", label: "Exam Notifications Page (unused)" },
+  { value: "EXAM_NOTIFICATIONS_PAGE", label: "Exam Notifications Page" },
 ]
 
 export const ANNOUNCEMENT_PRIORITIES: { value: AnnouncementPriority; label: string }[] = [

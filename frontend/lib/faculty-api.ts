@@ -9,6 +9,7 @@ export interface Faculty {
   specialization: string | null;
   experience: string | null;
   email: string | null;
+  phone: string | null;
   photoUrl: string | null;
   /** Media Library reference, or null when using a manually-typed photoUrl
    * (legacy path, still supported). */
@@ -34,6 +35,7 @@ export interface FacultyInput {
   specialization?: string;
   experience?: string;
   email?: string;
+  phone?: string;
   photoUrl?: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing photoUrl. */
