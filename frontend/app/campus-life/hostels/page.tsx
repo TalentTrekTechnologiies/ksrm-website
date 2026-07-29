@@ -41,7 +41,7 @@ export default function HostelsPage() {
         .hostel-card p { font-size: 15px; line-height: 1.6; margin: 8px 0; opacity: 0.9; }
         .facilities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px; }
         .facility-card { background: #fff; border: 1px solid #eef0f3; border-radius: 8px; padding: 20px; text-align: center; }
-        .facility-icon { font-size: 32px; margin-bottom: 12px; }
+        .facility-icon { font-size: clamp(19px, 5.1vw, 32px); margin-bottom: 12px; }
         .facility-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
         .facility-card p { font-size: 14px; color: #666; line-height: 1.5; margin: 0; }
         @media (max-width: 768px) { .hostels-grid { grid-template-columns: 1fr; } .facilities-grid { grid-template-columns: 1fr; } }

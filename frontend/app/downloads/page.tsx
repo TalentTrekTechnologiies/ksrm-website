@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import PublicDocumentList from "@/components/PublicDocumentList";
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
 
@@ -47,14 +48,7 @@ export default function DownloadsPage() {
         .dl-filters { display: flex; gap: 12px; margin: 32px 0; flex-wrap: wrap; }
         .dl-filter-btn { background: #f7f8fa; border: 1px solid #eef0f3; color: #2B3490; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
         .dl-filter-btn.active { background: #2B3490; color: #D4A500; border-color: #2B3490; }
-        .dl-list { display: flex; flex-direction: column; gap: 16px; margin: 32px 0; }
-        .dl-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 20px 24px; }
-        .dl-title { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
-        .dl-desc { font-size: 14px; color: #666; margin: 0; }
-        .dl-cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #2B3490; background: #eef1ff; padding: 4px 10px; border-radius: 6px; margin-bottom: 6px; display: inline-block; }
-        .dl-link { flex-shrink: 0; background: #2B3490; color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 15px; }
         .dl-empty { text-align: center; padding: 64px 20px; color: #999; }
-        @media (max-width: 640px) { .dl-row { flex-direction: column; align-items: flex-start; } }
       `}</style>
 
       <section className="dl-hero">
@@ -81,18 +75,16 @@ export default function DownloadsPage() {
               {loaded ? "No documents available in this category yet." : "Loading downloads..."}
             </div>
           ) : (
-            <div className="dl-list">
-              {filtered.map((d) => (
-                <div className="dl-row" key={d.id}>
-                  <div>
-                    <span className="dl-cat">{CATEGORY_LABELS[d.category]}</span>
-                    <h3 className="dl-title">{d.title}</h3>
-                    {d.description && <p className="dl-desc">{d.description}</p>}
-                  </div>
-                  <a href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="dl-link">Download</a>
-                </div>
-              ))}
-            </div>
+            <PublicDocumentList
+              items={filtered.map((d) => ({
+                id: d.id,
+                title: d.title,
+                description: d.description,
+                meta: CATEGORY_LABELS[d.category],
+                href: d.fileUrl,
+                actionLabel: "Download",
+              }))}
+            />
           )}
         </div>
       </section>

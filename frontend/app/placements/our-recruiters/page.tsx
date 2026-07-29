@@ -63,7 +63,7 @@ export default function OurRecruitersPage() {
         .heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; text-align: center; }
         .coming-soon-box { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); color: #ffffff; padding: 60px 40px; border-radius: 12px; text-align: center; }
         .coming-soon-text { font-size: 19px; line-height: 1.8; margin: 0; }
-        .coming-soon-icon { font-size: 48px; margin-bottom: 16px; }
+        .coming-soon-icon { font-size: clamp(29px, 7.7vw, 48px); margin-bottom: 16px; }
         .recruiters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-top: 40px; }
         .recruiter-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; height: 110px; }
         .recruiter-card img { max-width: 100%; max-height: 100%; object-fit: contain; }

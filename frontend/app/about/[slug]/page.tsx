@@ -49,7 +49,7 @@ export default function LeadershipDetail({ params }: { params: { slug: string } 
     return (
       <main style={{ backgroundColor: "#F5EFE4", minHeight: "100vh", padding: "80px 24px", fontFamily: "Arimo, Arial, sans-serif" }}>
         <div style={{ maxWidth: "1760px", margin: "0 auto", textAlign: "center" }}>
-          <h1 style={{ color: "#2B3490", fontSize: "32px", marginBottom: "16px" }}>Profile Not Found</h1>
+          <h1 style={{ color: "#2B3490", fontSize: "clamp(19px, 5.1vw, 32px)", marginBottom: "16px" }}>Profile Not Found</h1>
           <p style={{ color: "#666", marginBottom: "24px" }}>The leadership profile you're looking for doesn't exist.</p>
           <Link href="/about" style={{ color: "#2B3490", textDecoration: "underline", fontWeight: 600 }}>
             ← Back to Leadership
@@ -68,20 +68,20 @@ export default function LeadershipDetail({ params }: { params: { slug: string } 
         .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 80px 0; }
-        .k-hero-title { font-size: 72px; font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+        .k-hero-title { font-size: clamp(43px, 11.5vw, 72px); font-weight: 700; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
         .k-back-btn { color: #D4A500; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; width: fit-content; }
         .k-back-btn:hover { color: #FFD700; }
         .k-section { padding: 60px 0; }
         .k-profile-header { display: grid; grid-template-columns: 400px 1fr; gap: 48px; padding: 0; align-items: stretch; }
         .k-profile-photo { width: 100%; object-fit: cover; border: 8px solid #2B3490; border-radius: 8px; box-shadow: 0 4px 12px rgba(43, 52, 144, 0.15); }
         .k-profile-info { padding: 0; display: flex; flex-direction: column; justify-content: flex-start; }
-        .k-profile-name { color: #2B3490; font-size: 42px; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
+        .k-profile-name { color: #2B3490; font-size: clamp(25px, 6.7vw, 42px); font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
         .k-profile-role { color: #D4A500; font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #D4A500; width: fit-content; }
-        .k-quote-icon { font-size: 48px; color: #FFE619; opacity: 0.6; margin-bottom: 16px; }
+        .k-quote-icon { font-size: clamp(29px, 7.7vw, 48px); color: #FFE619; opacity: 0.6; margin-bottom: 16px; }
         .k-profile-bio { color: #555; font-size: 16px; line-height: 1.8; margin-bottom: 24px; }
         @media (max-width: 768px) {
           .k-hero { min-height: 280px; }
-          .k-hero-title { font-size: 48px; }
+          .k-hero-title { font-size: clamp(29px, 7.7vw, 48px); }
           .k-profile-header { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
           .k-profile-photo { height: 320px; }
           .k-profile-name { font-size: 28px; }

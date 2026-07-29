@@ -46,7 +46,7 @@ export default function IICPage() {
 
         .iic-activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
         .iic-activity-card { background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%); padding: 36px; border-radius: 12px; text-align: center; color: #fff; box-shadow: 0 8px 24px rgba(43,52,144,0.15); }
-        .iic-activity-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+        .iic-activity-icon { font-size: clamp(19px, 5.1vw, 32px); margin-bottom: 16px; display: block; }
         .iic-activity-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #D4A500; margin: 0 0 12px; }
         .iic-activity-description { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.6; margin: 0; }
 

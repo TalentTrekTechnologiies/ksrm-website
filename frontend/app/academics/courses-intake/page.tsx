@@ -188,7 +188,7 @@ export default function CoursesIntakePage() {
         .ci-eapcet-label { font-size: 15px; opacity: 0.9; }
         .ci-eapcet-code {
           font-family: 'Rajdhani', sans-serif;
-          font-size: 48px;
+          font-size: clamp(29px, 7.7vw, 48px);
           font-weight: 700;
           color: #D4A500;
           margin: 12px 0 0;

@@ -63,7 +63,7 @@ export default function PlacementsRecordPage() {
         .heading { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #2B3490; margin: 0 0 24px; text-align: center; }
         .coming-soon-box { background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); color: #ffffff; padding: 60px 40px; border-radius: 12px; text-align: center; }
         .coming-soon-text { font-size: 19px; line-height: 1.8; margin: 0; }
-        .coming-soon-icon { font-size: 48px; margin-bottom: 16px; }
+        .coming-soon-icon { font-size: clamp(29px, 7.7vw, 48px); margin-bottom: 16px; }
         .record-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; margin-top: 40px; }
         .record-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 24px; text-align: center; }
         .record-photo { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, #2B3490 0%, #1a1d4d 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; }

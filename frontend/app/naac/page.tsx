@@ -62,7 +62,7 @@ export default function NAACPage() {
           background: #f7f8fa; border: 2px solid #D4A500; border-radius: 12px; padding: 40px; text-align: center;
           margin: 48px auto; max-width: 500px;
         }
-        .naac-grade { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; color: #D4A500; margin-bottom: 12px; }
+        .naac-grade { font-family: 'Rajdhani', sans-serif; font-size: clamp(29px, 7.7vw, 48px); font-weight: 700; color: #D4A500; margin-bottom: 12px; }
         .naac-badge-detail { font-size: 17px; color: #555; margin: 8px 0; }
         .naac-criteria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; }
         .naac-criteria-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 28px; transition: all 0.2s; }

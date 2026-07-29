@@ -199,8 +199,8 @@ export default function GalleryPage() {
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
           <div className="gal-grid">
-            {filteredImages.map((img) => (
-              <div className="gal-card" key={img.src}>
+            {filteredImages.map((img, index) => (
+              <div className="gal-card" key={`${img.src}-${index}`}>
                 <div className="gal-card-image"><img src={img.src} alt={img.alt} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} /></div>
                 <div className="gal-card-content">
                   <h3 className="gal-card-title">{img.alt}</h3>

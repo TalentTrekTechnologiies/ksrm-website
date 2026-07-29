@@ -94,7 +94,7 @@ export default function About() {
         .k-stats { background: white; border-top: 2px solid #D4A500; padding: 40px 0; }
         .k-stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; text-align: center; }
         .k-stat-item { }
-        .k-stat-number { color: #2B3490; font-size: 32px; font-weight: 700; font-family: Rajdhani; margin-bottom: 8px; }
+        .k-stat-number { color: #2B3490; font-size: clamp(19px, 5.1vw, 32px); font-weight: 700; font-family: Rajdhani; margin-bottom: 8px; }
         .k-stat-label { color: #666; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
         .k-vision-mission { background: white; }

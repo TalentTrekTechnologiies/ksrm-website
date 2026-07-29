@@ -23,7 +23,7 @@ export default function DegreeVerificationPage() {
         .dv-cta-button { display: inline-block; background: #D4A500; color: #1a1a2e; padding: 20px 48px; border-radius: 8px; font-weight: 700; text-decoration: none; font-family: 'Rajdhani', sans-serif; font-size: 17px; }
         .dv-steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
         .dv-step-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 40px 28px; text-align: center; }
-        .dv-step-number { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; color: #D4A500; margin-bottom: 20px; }
+        .dv-step-number { font-family: 'Rajdhani', sans-serif; font-size: clamp(29px, 7.7vw, 48px); font-weight: 700; color: #D4A500; margin-bottom: 20px; }
         .dv-step-card h3 { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #2B3490; margin: 0 0 12px; }
         .dv-step-card p { color: #666; font-size: 15px; line-height: 1.6; margin: 0; }
         .dv-contact-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; padding: 32px; margin: 0 auto; max-width: 600px; }

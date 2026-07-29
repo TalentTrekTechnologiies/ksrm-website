@@ -49,7 +49,7 @@ export default function NSSPage() {
 
         .nss-aims-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         .nss-aim-card { background: #fff; padding: 28px; border-radius: 8px; border-left: 4px solid #D4A500; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
-        .nss-aim-number { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; color: #D4A500; margin: 0 0 8px; }
+        .nss-aim-number { font-family: 'Rajdhani', sans-serif; font-size: clamp(19px, 5.1vw, 32px); font-weight: 700; color: #D4A500; margin: 0 0 8px; }
         .nss-aim-text { font-size: 16px; color: #555; line-height: 1.7; margin: 0; }
 
         .nss-symbol-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
