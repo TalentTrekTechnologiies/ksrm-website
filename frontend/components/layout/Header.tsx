@@ -33,6 +33,8 @@ export default function Header() {
   const collegeName = settings?.["site.collegeName"] || "K.S.R.M. College of Engineering"
 
   const isCustomLogo = logoUrl !== FALLBACK_LOGO_URL
+  // Defaults to on when the setting hasn't been created yet.
+  const showFlowers = (settings?.["site.headerFlowerShower"] ?? "true") !== "false"
 
   return (
     <header style={{ width: "100%", background: "#fff", position: "relative" }}>
@@ -65,8 +67,13 @@ export default function Header() {
           />
         )}
       </Link>
-      {/* Petals over the founder's portrait at the right edge of the banner. */}
-      <FlowerShower />
+      {/* Petals over the founder's portrait at the right edge of the banner.
+          Only for the built-in banner: the overlay is positioned against that
+          image's known layout (the portrait occupies its right ~11%), so a
+          custom banner uploaded through the CMS would have petals falling over
+          whatever happens to sit there. It can also be switched off entirely in
+          Site Settings. */}
+      {!isCustomLogo && showFlowers && <FlowerShower />}
     </header>
   )
 }

@@ -284,6 +284,7 @@ function SiteSettingsManagerInner() {
             "site.faviconUrl",
             "site.collegeMotto",
             "site.footerCopyright",
+            "site.headerFlowerShower",
           ])
         }
         saving={savingGroup === "branding"}
@@ -312,6 +313,11 @@ function SiteSettingsManagerInner() {
             settings never had any effect - a control that silently does
             nothing is worse than no control. */}
         <TextField label="Footer Copyright" value={v("site.footerCopyright")} onChange={(val) => setValue("site.footerCopyright", val)} />
+        <ToggleField
+          label="Flower shower over the founder's portrait (built-in header banner only)"
+          checked={v("site.headerFlowerShower") !== "false"}
+          onChange={(next) => setValue("site.headerFlowerShower", String(next))}
+        />
       </SectionCard>
 
       <SectionCard
