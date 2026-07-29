@@ -33,12 +33,24 @@ interface FormState {
   category: string
   pageSection: string
   isActive: boolean
+  /** Image or video. Videos are stored as gallery rows tagged with
+   * VIDEO_CATEGORY - this is the admin-facing switch for that marker so nobody
+   * has to type "__video__" by hand. */
+  isVideo: boolean
 }
+
+/**
+ * Gallery rows holding a video are tagged with this category (a Media file URL
+ * has no extension to sniff, so the tag is how the public side knows to render
+ * a <video> instead of an <img>). Must stay in sync with the same constant in
+ * the backend's gallery.service.ts and the public PageResources.
+ */
+const VIDEO_CATEGORY = "__video__"
 
 // "" = not tied to any page (general Gallery only).
 const PAGE_SECTION_OPTIONS = [{ value: "", label: "— None (general gallery) —" }, ...PAGE_SECTIONS]
 
-const emptyForm: FormState = { title: "", imageUrl: "", mediaId: null, category: "", pageSection: "", isActive: true }
+const emptyForm: FormState = { title: "", imageUrl: "", mediaId: null, category: "", pageSection: "", isActive: true, isVideo: false }
 
 function GalleryManagerInner() {
   const [loading, setLoading] = useState(true)
@@ -92,9 +104,13 @@ function GalleryManagerInner() {
       title: item.title,
       imageUrl: item.imageUrl,
       mediaId: item.mediaId,
-      category: item.category ?? "",
+      // A video row carries VIDEO_CATEGORY as its category - surface that as the
+      // Video switch rather than showing the internal marker in the free-text
+      // Category box.
+      category: item.category === VIDEO_CATEGORY ? "" : item.category ?? "",
       pageSection: item.pageSection ?? "",
       isActive: item.isActive,
+      isVideo: item.category === VIDEO_CATEGORY,
     })
   }
 
@@ -112,7 +128,9 @@ function GalleryManagerInner() {
         title: form.title,
         imageUrl: form.imageUrl,
         mediaId: form.mediaId,
-        category: form.category || undefined,
+        // Videos must carry the marker category so the public side renders a
+        // <video>; images keep whatever the admin typed.
+        category: form.isVideo ? VIDEO_CATEGORY : form.category || undefined,
         pageSection: form.pageSection || null,
         isActive: form.isActive,
       }
@@ -187,18 +205,50 @@ function GalleryManagerInner() {
 
       {isFormOpen && (
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
-          <p className="text-sm font-semibold text-slate-700">{editing ? "Edit image" : "New image"}</p>
+          <p className="text-sm font-semibold text-slate-700">
+            {editing ? (form.isVideo ? "Edit video" : "Edit image") : form.isVideo ? "New video" : "New image"}
+          </p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={150} />
+          {/* Image / Video switch. Flipping it clears the picked file, because
+              the two accept different Media types and a leftover image URL on a
+              video row would fail the backend's type check on save. */}
+          <div className="flex gap-2">
+            {[
+              { label: "Image", video: false },
+              { label: "Video", video: true },
+            ].map((opt) => (
+              <button
+                key={opt.label}
+                type="button"
+                onClick={() =>
+                  setForm((f) =>
+                    f.isVideo === opt.video ? f : { ...f, isVideo: opt.video, imageUrl: "", mediaId: null },
+                  )
+                }
+                className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+                  form.isVideo === opt.video
+                    ? "bg-admin-primary text-white"
+                    : "border border-admin-border bg-white text-slate-600 hover:bg-admin-bg"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
           <MediaField
-            label="Image"
+            label={form.isVideo ? "Video" : "Image"}
             url={form.imageUrl}
             mediaId={form.mediaId}
             onChange={(url, mediaId) => setForm({ ...form, imageUrl: url, mediaId })}
-            accept={["IMAGE"]}
+            accept={form.isVideo ? ["VIDEO"] : ["IMAGE"]}
             required
-            urlPlaceholder="/gallery/campus/1.jpg"
+            urlPlaceholder={form.isVideo ? "/videos/campus-tour.mp4" : "/gallery/campus/1.jpg"}
           />
-          <TextField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} placeholder="Campus, Events, Sports..." />
+          {/* Videos are grouped by the marker category, so a free-text category
+              would be overwritten - only offer it for images. */}
+          {!form.isVideo && (
+            <TextField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} placeholder="Campus, Events, Sports..." />
+          )}
           <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={PAGE_SECTION_OPTIONS} />
           <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
           <FormActions>
@@ -220,7 +270,7 @@ function GalleryManagerInner() {
             onClick={startCreate}
             className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-3 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark"
           >
-            <Plus className="h-4 w-4" /> Add image
+            <Plus className="h-4 w-4" /> Add image or video
           </button>
         }
       />
@@ -234,12 +284,22 @@ function GalleryManagerInner() {
         renderCard={(item) => (
           <div>
             <div className="h-32 w-full overflow-hidden bg-slate-100">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.imageUrl} alt={item.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.style.visibility = "hidden" }} />
+              {/* A video row's URL has no image to render - show a real player
+                  preview instead of a broken <img>. */}
+              {item.category === VIDEO_CATEGORY ? (
+                <video src={item.imageUrl} className="h-full w-full object-cover" preload="metadata" muted />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.imageUrl} alt={item.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.style.visibility = "hidden" }} />
+              )}
             </div>
             <div className="p-3">
               <p className="truncate text-sm font-semibold text-slate-900">{item.title}</p>
-              {item.category && <p className="text-xs text-slate-500">{item.category}</p>}
+              {item.category === VIDEO_CATEGORY ? (
+                <p className="text-xs font-semibold text-admin-primary">Video</p>
+              ) : (
+                item.category && <p className="text-xs text-slate-500">{item.category}</p>
+              )}
             </div>
           </div>
         )}

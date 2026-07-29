@@ -6,6 +6,8 @@ import { useLiveData } from "@/lib/use-live-data";
 
 interface GalleryImageDisplay {
   src: string;
+  /** Video tiles render a <video> player instead of an <img>. */
+  isVideo?: boolean;
   alt: string;
   cat: string;
 }
@@ -106,7 +108,9 @@ const FALLBACK_IMAGES: GalleryImageDisplay[] = [
   { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM (1).jpeg", alt: "Campus gathering", cat: "Campus" },
 ];
 
-const filters = ["All", "Campus", "Labs", "Sports", "Library", "Events", "Transport"];
+const filters = ["All", "Campus", "Labs", "Sports", "Library", "Events", "Transport", "Videos"];
+// Gallery rows tagged with this category hold a video, not a photo.
+const VIDEO_CATEGORY = "__video__";
 
 const videos = [
   "/videos/flash-mob.mp4",
@@ -131,13 +135,15 @@ export default function GalleryPage() {
           // that content through the CMS. A handful of real DB rows
           // previously wiped out the entire fallback set here since this
           // used to be a straight setImages(cmsOnly) - see the bug report.
-          // Videos published to a page are stored as Gallery rows tagged
-          // "__video__" (see PageResources) - they are not photos, and an
-          // <img> pointing at an .mp4 renders as a broken tile, with the
-          // sentinel also leaking into the category filter chips.
-          const cmsImages = items
-            .filter((i) => i.category !== "__video__")
-            .map((i) => ({ src: i.imageUrl, alt: i.title, cat: i.category || "Campus" }))
+          // Videos are stored as Gallery rows tagged "__video__" (a Media URL
+          // has no extension to sniff). They render as <video> tiles under a
+          // "Videos" filter rather than being dropped - the raw sentinel is
+          // never shown as a category label.
+          const cmsImages = items.map((i) =>
+            i.category === VIDEO_CATEGORY
+              ? { src: i.imageUrl, alt: i.title, cat: "Videos", isVideo: true }
+              : { src: i.imageUrl, alt: i.title, cat: i.category || "Campus" },
+          )
           const existingSrcs = new Set(cmsImages.map((i) => i.src))
           return [...cmsImages, ...FALLBACK_IMAGES.filter((i) => !existingSrcs.has(i.src))]
         }),
@@ -168,7 +174,8 @@ export default function GalleryPage() {
         .gal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; }
         .gal-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; }
         .gal-card-image { width: 100%; height: 200px; }
-        .gal-card-image img { width: 100%; height: 200px; object-fit: cover; }
+        .gal-card-image img,
+        .gal-card-image video { width: 100%; height: 200px; object-fit: cover; display: block; background: #000; }
         .gal-card-content { padding: 16px; }
         .gal-card-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
         .gal-video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
@@ -201,7 +208,13 @@ export default function GalleryPage() {
           <div className="gal-grid">
             {filteredImages.map((img, index) => (
               <div className="gal-card" key={`${img.src}-${index}`}>
-                <div className="gal-card-image"><img src={img.src} alt={img.alt} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} /></div>
+                <div className="gal-card-image">
+                  {img.isVideo ? (
+                    <video src={img.src} controls preload="metadata" onError={(e) => { e.currentTarget.style.display = "none" }} />
+                  ) : (
+                    <img src={img.src} alt={img.alt} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} />
+                  )}
+                </div>
                 <div className="gal-card-content">
                   <h3 className="gal-card-title">{img.alt}</h3>
                   <span style={{ color: "#2B3490", fontWeight: 600, fontSize: 13 }}>{img.cat}</span>
