@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import MediaField from "@/components/admin/cms/MediaField"
+import PageTableEditor from "@/components/admin/PageTableEditor"
 import {
   TextField,
   SelectField,
@@ -311,6 +312,10 @@ function PageContentInner() {
               </FormActions>
             </div>
           )}
+
+          {/* TEXT TABLES - fee structures, intake tables, etc. Only for page
+              targets: tables are keyed by pageSection, not by department. */}
+          {target.kind === "page" && <PageTableEditor pageSection={target.section} />}
 
           {/* DOCUMENTS */}
           <section>
