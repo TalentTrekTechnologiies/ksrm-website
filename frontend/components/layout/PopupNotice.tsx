@@ -8,10 +8,10 @@ import { INTRO_DONE_EVENT } from "@/components/layout/IntroSplash"
 /**
  * A dismissible poster modal for the homepage, driven entirely by Site Settings
  * (site.popupEnabled / popupImageUrl / popupLinkUrl / popupTitle) so an admin
- * can run it for any event with no code change. Shows once per browser session,
- * keyed on the image URL so swapping the poster re-shows it to returning
- * visitors. Homepage only, mirroring IntroSplash. Closes on the X, a click
- * outside, or Esc.
+ * can run it for any event with no code change. Shown on every visit to the
+ * homepage - deliberately not suppressed after the first view, so the notice
+ * always greets visitors and they dismiss it each time. Appears only once the
+ * intro logo has finished. Closes on the X, a click outside, or Esc.
  */
 export default function PopupNotice() {
   const pathname = usePathname()
@@ -27,13 +27,6 @@ export default function PopupNotice() {
         const enabled = s["site.popupEnabled"] === "true"
         const imageUrl = s["site.popupImageUrl"] || ""
         if (!enabled || !imageUrl) return
-        // Once per session, keyed on the image so a new poster re-shows.
-        const seenKey = `ksrm:popup-seen:${imageUrl}`
-        try {
-          if (sessionStorage.getItem(seenKey)) return
-        } catch {
-          /* private mode / storage blocked - just show it */
-        }
         setPoster({ imageUrl, linkUrl: s["site.popupLinkUrl"] || "", title: s["site.popupTitle"] || "" })
       })
       .catch(() => {})
@@ -58,13 +51,6 @@ export default function PopupNotice() {
   }, [poster])
 
   function close() {
-    if (poster) {
-      try {
-        sessionStorage.setItem(`ksrm:popup-seen:${poster.imageUrl}`, "1")
-      } catch {
-        /* ignore */
-      }
-    }
     setVisible(false)
   }
 
