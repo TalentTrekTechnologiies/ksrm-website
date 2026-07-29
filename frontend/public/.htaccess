@@ -88,6 +88,19 @@ Options -MultiViews
   RewriteRule ^grievancecell\.php$ /campus-life/grievance [R=301,L]
   RewriteRule ^cultural\.php$ /campus-life/cultural [R=301,L]
 
+  # Old-site pages still linked to from the new site's own content (IQAC's
+  # feedback forms, governing body, etc). Without these they 404 the moment the
+  # new site replaces the old one, because the linked .php files stop existing.
+  RewriteRule ^AlumniFeedback\.php$ /iqac [R=301,L]
+  RewriteRule ^StudentFeedback\.php$ /iqac [R=301,L]
+  RewriteRule ^ParentFeedback\.php$ /iqac [R=301,L]
+  RewriteRule ^TeacherFeedback\.php$ /iqac [R=301,L]
+  RewriteRule ^EmployerFeedback\.php$ /iqac [R=301,L]
+  RewriteRule ^gbody\.php$ /about [R=301,L]
+  RewriteRule ^academiccouncil\.php$ /about [R=301,L]
+  RewriteRule ^financial\.php$ /about [R=301,L]
+  RewriteRule ^alumniregistration\.php$ /alumni [R=301,L]
+
   # Other
   RewriteRule ^alumniruf\.php$ /alumni [R=301,L]
   RewriteRule ^enquiry\.php$ /contact [R=301,L]
