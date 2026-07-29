@@ -100,7 +100,7 @@ export default function PGAdmissionsPage() {
         <section className="pg-content-section">
           <div className="responsive-container">
             <p className="pg-intro">
-              KSRM College offers specialized postgraduate programs including M.Tech in five engineering
+              K.S.R.M. College offers specialized postgraduate programs including M.Tech in five engineering
               specializations and an MBA program. Our PG programs focus on research, innovation, and
               industry-relevant skills.
             </p>

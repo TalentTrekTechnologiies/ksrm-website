@@ -34,7 +34,7 @@ export default function About() {
       name: "Smt. K. Rajeswari",
       role: "Secretary cum Correspondent",
       href: "/about/correspondent",
-      bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
+      bio: "Hon'ble Secretary cum Correspondent of K.S.R.M. College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
     },
     {
       photo: "/images/leadership/chairman.webp",
@@ -352,7 +352,7 @@ export default function About() {
         <div className="k-container">
           <h2 style={{ textAlign: "center" }}>Get In Touch</h2>
           <div style={{ textAlign: "center", marginBottom: "32px" }} className="k-contact-subtitle">
-            EAPCET Code: KSRM | Affiliated to JNTUA | UGC Autonomous
+            EAPCET Code: K.S.R.M. | Affiliated to JNTUA | UGC Autonomous
           </div>
           <div className="k-contact-grid">
             <div className="k-contact-box k-contact-find">

@@ -13,7 +13,7 @@ interface GalleryImageDisplay {
 }
 
 const FALLBACK_IMAGES: GalleryImageDisplay[] = [
-  { src: "/site-images/topview.jpg", alt: "KSRM College aerial campus view", cat: "Campus" },
+  { src: "/site-images/topview.jpg", alt: "K.S.R.M. College aerial campus view", cat: "Campus" },
   { src: "/site-images/blocktop.jpg", alt: "Main block aerial view", cat: "Campus" },
   { src: "/site-images/block.jpg", alt: "Main administrative block", cat: "Campus" },
   { src: "/site-images/19.jpg", alt: "Solar powered campus", cat: "Campus" },
@@ -59,7 +59,7 @@ const FALLBACK_IMAGES: GalleryImageDisplay[] = [
   { src: "/site-images/KSR00140.webp", alt: "Event scene with students", cat: "Events" },
   { src: "/site-images/KSR00163.webp", alt: "Large campus event gathering", cat: "Events" },
   { src: "/site-images/KSR09989.webp", alt: "Campus activity highlight", cat: "Events" },
-  { src: "/site-images/buses.jpg", alt: "KSRM college bus fleet", cat: "Transport" },
+  { src: "/site-images/buses.jpg", alt: "K.S.R.M. college bus fleet", cat: "Transport" },
   { src: "/site-images/KSR00001.webp", alt: "Inauguration ceremony with golden statue dedication", cat: "Events" },
   { src: "/site-images/KSR00007.webp", alt: "Campus event with faculty and staff", cat: "Events" },
   { src: "/site-images/KSR00014.webp", alt: "College event and gathering", cat: "Events" },
@@ -189,7 +189,7 @@ export default function GalleryPage() {
       <section className="gal-hero">
         <div className="responsive-container">
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Campus Gallery</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Explore life at KSRM College of Engineering</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Explore life at K.S.R.M. College of Engineering</p>
         </div>
       </section>
 

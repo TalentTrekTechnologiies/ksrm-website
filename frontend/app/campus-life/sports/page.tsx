@@ -102,7 +102,7 @@ export default function SportsPage() {
         <div className="responsive-container">
           <div style={{ maxWidth: 820 }}>
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              Sports at KSRM College of Engineering is an integral part of campus life, promoting physical fitness,
+              Sports at K.S.R.M. College of Engineering is an integral part of campus life, promoting physical fitness,
               team spirit, and competitive excellence. With modern facilities and dedicated coaching staff, our
               college encourages students to participate in both indoor and outdoor sports, fostering holistic
               development.

@@ -35,7 +35,7 @@ export default function DegreeVerificationPage() {
       <section className="dv-hero">
         <div className="responsive-container">
           <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Degree Verification</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Verify the authenticity of degrees issued by KSRM College of Engineering</p>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Verify the authenticity of degrees issued by K.S.R.M. College of Engineering</p>
         </div>
       </section>
 
@@ -43,7 +43,7 @@ export default function DegreeVerificationPage() {
         <div className="responsive-container">
           <div className="dv-about">
             <p>
-              KSRM College of Engineering provides online degree verification services through iCredify platform.
+              K.S.R.M. College of Engineering provides online degree verification services through iCredify platform.
               Employers and institutions can verify the authenticity of degrees and certificates issued by our
               college.
             </p>

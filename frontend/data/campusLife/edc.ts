@@ -39,7 +39,7 @@ export const edc: EDCData = {
   pageTitle: "EDC (Entrepreneurship Development Cell)",
   subtitle: "Nurturing Future Entrepreneurs",
   intro:
-    "The Entrepreneurship Development Cell (EDC) at KSRM College of Engineering is dedicated to fostering an entrepreneurial mindset among students. We provide mentorship, resources, and a supportive ecosystem for aspiring entrepreneurs to transform their innovative ideas into viable business ventures.",
+    "The Entrepreneurship Development Cell (EDC) at K.S.R.M. College of Engineering is dedicated to fostering an entrepreneurial mindset among students. We provide mentorship, resources, and a supportive ecosystem for aspiring entrepreneurs to transform their innovative ideas into viable business ventures.",
   vision:
     "To create a vibrant entrepreneurial ecosystem within the college that nurtures innovation, fosters startups, and produces competent, ethical entrepreneurs ready to solve real-world problems.",
   mission:

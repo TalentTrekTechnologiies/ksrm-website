@@ -5,7 +5,7 @@ export const iicInfo = {
   subtitle: "Fostering Innovation & Entrepreneurship",
 }
 
-export const iicAbout = `The Institution's Innovation Council (IIC) at KSRM College of Engineering is established under the aegis of the Ministry of Education's Innovation Cell (MIC), Government of India. The IIC aims to foster a culture of innovation and entrepreneurship among students and faculty, encouraging them to work on new ideas, prototypes, and startups. It serves as a platform to promote innovation activities, organize workshops, and connect students with the startup ecosystem.`
+export const iicAbout = `The Institution's Innovation Council (IIC) at K.S.R.M. College of Engineering is established under the aegis of the Ministry of Education's Innovation Cell (MIC), Government of India. The IIC aims to foster a culture of innovation and entrepreneurship among students and faculty, encouraging them to work on new ideas, prototypes, and startups. It serves as a platform to promote innovation activities, organize workshops, and connect students with the startup ecosystem.`
 
 export const iicObjectives = [
   "To create a vibrant local innovation ecosystem",

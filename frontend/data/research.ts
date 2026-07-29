@@ -139,7 +139,7 @@ export const research: ResearchData = {
     },
     {
       name: "Startup & Innovation Policy",
-      fileName: "Startup-Policy-KSRM-BICF.doc",
+      fileName: "Startup-Policy-K.S.R.M.-BICF.doc",
       description: "Policy framework for startup development and innovation initiatives",
       icon: "🚀",
     },

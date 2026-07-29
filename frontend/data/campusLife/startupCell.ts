@@ -42,7 +42,7 @@ export const startupCell: StartupCellData = {
   pageTitle: "Startup Cell",
   subtitle: "From Idea to Impact",
   intro:
-    "The Startup Cell at KSRM College of Engineering is a dedicated initiative to support student entrepreneurs in transforming their ideas into commercially viable startups. We provide comprehensive support including incubation facilities, mentorship, funding assistance, and market access.",
+    "The Startup Cell at K.S.R.M. College of Engineering is a dedicated initiative to support student entrepreneurs in transforming their ideas into commercially viable startups. We provide comprehensive support including incubation facilities, mentorship, funding assistance, and market access.",
   about:
     "The Startup Cell functions as a bridge between innovative student ideas and real-world market opportunities. We work with a network of experienced mentors, investors, and industry experts to provide holistic support for early-stage startups. Our focus is on creating sustainable businesses with positive social and environmental impact.",
   stats: {

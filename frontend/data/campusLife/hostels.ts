@@ -40,7 +40,7 @@ export const hostels: HostelsData = {
   pageTitle: "Hostels",
   subtitle: "Comfortable Living on Campus",
   intro:
-    "KSRM College of Engineering provides well-maintained hostel facilities for both boys and girls, offering a home away from home. Our hostels are equipped with modern amenities, 24/7 security, and dedicated wardens ensuring a safe and conducive environment for academic excellence.",
+    "K.S.R.M. College of Engineering provides well-maintained hostel facilities for both boys and girls, offering a home away from home. Our hostels are equipped with modern amenities, 24/7 security, and dedicated wardens ensuring a safe and conducive environment for academic excellence.",
   hostels: [
     {
       name: "Boys Hostel",

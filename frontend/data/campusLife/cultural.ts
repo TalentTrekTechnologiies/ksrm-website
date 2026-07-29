@@ -40,11 +40,11 @@ export const cultural: CulturalData = {
   pageTitle: "Cultural Club",
   subtitle: "Celebrating creativity, talent and the spirit of togetherness",
   intro:
-    "The Cultural Club at KSRM College of Engineering organises a vibrant range of cultural activities, events and festivals that bring out the artistic talents of students and foster a sense of unity and college pride.",
+    "The Cultural Club at K.S.R.M. College of Engineering organises a vibrant range of cultural activities, events and festivals that bring out the artistic talents of students and foster a sense of unity and college pride.",
   annualFest: {
     name: "KALAKRITI",
     description:
-      "KALAKRITI is the annual cultural festival of KSRM College of Engineering, celebrating music, dance, drama, fine arts and literary events. Students from across the Rayalaseema region participate in this flagship event.",
+      "KALAKRITI is the annual cultural festival of K.S.R.M. College of Engineering, celebrating music, dance, drama, fine arts and literary events. Students from across the Rayalaseema region participate in this flagship event.",
     month: "February",
     highlights: [
       "Music & Dance Competitions",

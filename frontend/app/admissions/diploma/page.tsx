@@ -175,7 +175,7 @@ export default function DiplomaAdmissionsPage() {
         <section className="dip-section">
           <div className="responsive-container">
             <p className="dip-intro">
-              KSRM offers industry-oriented diploma programs designed to prepare students for practical
+              K.S.R.M. offers industry-oriented diploma programs designed to prepare students for practical
               engineering roles. Our 3-year programs combine theoretical knowledge with hands-on training.
             </p>
             <h2 className="dip-heading">Available Programs</h2>

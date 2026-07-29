@@ -36,7 +36,7 @@ export const library: LibraryData = {
   pageTitle: "Library",
   subtitle: "Knowledge Hub of the Campus",
   intro:
-    "The Central Library of KSRM College of Engineering is a state-of-the-art facility designed to support academic excellence and research. With an extensive collection of books, journals, and digital resources, our library serves as the knowledge hub of the campus. Our dedicated staff is committed to providing excellent service and fostering a conducive learning environment.",
+    "The Central Library of K.S.R.M. College of Engineering is a state-of-the-art facility designed to support academic excellence and research. With an extensive collection of books, journals, and digital resources, our library serves as the knowledge hub of the campus. Our dedicated staff is committed to providing excellent service and fostering a conducive learning environment.",
   stats: {
     totalBooks: "45,000+",
     journals: "150+",

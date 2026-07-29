@@ -300,7 +300,7 @@ export default function AlumniTemplate() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
                 <div>
                   <p style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8 }}>
-                    The KSRM Alumni Association connects graduates across the globe. Our mission is to foster lifelong relationships, facilitate knowledge sharing, and support institutional development. Through networking events, mentorship programs, and scholarship initiatives, we strengthen the bond between KSRM and its alumni community.
+                    The K.S.R.M. Alumni Association connects graduates across the globe. Our mission is to foster lifelong relationships, facilitate knowledge sharing, and support institutional development. Through networking events, mentorship programs, and scholarship initiatives, we strengthen the bond between K.S.R.M. and its alumni community.
                   </p>
                 </div>
                 <div>
@@ -321,7 +321,7 @@ export default function AlumniTemplate() {
         <Container>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>
-              Join the KSRM Alumni Network
+              Join the K.S.R.M. Alumni Network
             </h2>
             <button className="alum-cta-button">Register as Alumni</button>
           </motion.div>

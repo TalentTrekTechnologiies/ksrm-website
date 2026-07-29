@@ -18,7 +18,7 @@ export const naac: NAACData = {
   pageTitle: "NAAC",
   subtitle: "National Assessment and Accreditation Council",
   about:
-    "KSRM College of Engineering has been accredited by the National Assessment and Accreditation Council (NAAC). NAAC accreditation is a mark of quality assurance recognizing the institution's commitment to providing quality higher education.",
+    "K.S.R.M. College of Engineering has been accredited by the National Assessment and Accreditation Council (NAAC). NAAC accreditation is a mark of quality assurance recognizing the institution's commitment to providing quality higher education.",
   accreditationStatus: {
     grade: "B++",
     cgpa: "2.88",

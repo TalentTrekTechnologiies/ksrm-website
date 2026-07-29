@@ -4,7 +4,7 @@ export const homeData = {
     fallbackImage: "/gallery/campus/topview.jpg",
     badge: "NAAC A++ · NBA Tier-1 · UGC Autonomous",
     heading: "Ignite Your Potential, Engineer Your Future",
-    subtext: "KSRM College of Engineering, Kadapa — 45 years of engineering excellence.",
+    subtext: "K.S.R.M. College of Engineering, Kadapa — 45 years of engineering excellence.",
     labels: ["RESEARCH & INNOVATION", "State-of-the-art Laboratories"],
     buttons: [
       { text: "Apply Now", href: "/admissions", variant: "primary" },
@@ -53,7 +53,7 @@ export const homeData = {
     { name: "Civil Engineering", code: "CIVIL", hod: "Dr. G. Chennakesava Reddy", link: "/departments/civil", svg: "/departments/civil.jpg" },
     { name: "Humanities & Sciences", code: "H&S", hod: "Dr. V. Ramachandra Reddy", link: "/departments/hs", svg: "/departments/hs.jpg" },
     { name: "Management Studies", code: "MBA", hod: "Department of MBA", link: "/departments/mba", svg: "/departments/mba.jpg" },
-    { name: "All Departments", code: "ALL", hod: "KSRM Departments", link: "/departments", svg: "/campus/aerial-campus.jpg" },
+    { name: "All Departments", code: "ALL", hod: "K.S.R.M. Departments", link: "/departments", svg: "/campus/aerial-campus.jpg" },
   ],
   news: [
     { category: "Examinations", date: "2026-05-15", title: "KGCET 2K26 Results Announced", link: "/news", gradient: "linear-gradient(135deg, #2B3490, #1e2570)" },

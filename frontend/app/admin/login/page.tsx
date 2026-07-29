@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
-      {/* Real KSRM campus entrance photo as the full-screen background - unchanged */}
+      {/* Real K.S.R.M. campus entrance photo as the full-screen background - unchanged */}
       <Image
         src="/Filtered/campus entrance.jpeg"
         alt=""
@@ -120,7 +120,7 @@ export default function AdminLoginPage() {
                 <div className="mb-4 h-20 w-20 overflow-hidden rounded-full bg-admin-sidebar shadow-lg">
                   <Image
                     src="/logo.png"
-                    alt="KSRM College of Engineering"
+                    alt="K.S.R.M. College of Engineering"
                     width={80}
                     height={80}
                     className="mix-blend-screen"
@@ -130,7 +130,7 @@ export default function AdminLoginPage() {
                   style={{ fontFamily: "var(--font-admin-heading)" }}
                   className="text-2xl font-bold text-white drop-shadow-md"
                 >
-                  KSRM COLLEGE OF ENGINEERING
+                  K.S.R.M. COLLEGE OF ENGINEERING
                 </p>
                 <p className="mt-2 text-xs font-semibold tracking-[0.25em] text-admin-gold">
                   &mdash; ADMINISTRATOR PORTAL &mdash;
@@ -197,7 +197,7 @@ export default function AdminLoginPage() {
                 <div className="mb-3 h-14 w-14 overflow-hidden rounded-full bg-admin-sidebar shadow-md">
                   <Image
                     src="/logo.png"
-                    alt="KSRM College of Engineering"
+                    alt="K.S.R.M. College of Engineering"
                     width={56}
                     height={56}
                     className="mix-blend-screen"
@@ -207,7 +207,7 @@ export default function AdminLoginPage() {
                   style={{ fontFamily: "var(--font-admin-heading)" }}
                   className="text-base font-bold leading-tight text-admin-primary"
                 >
-                  KSRM COLLEGE OF ENGINEERING
+                  K.S.R.M. COLLEGE OF ENGINEERING
                 </p>
                 <p className="mt-1 text-[10px] font-semibold tracking-[0.2em] text-admin-gold">
                   &mdash; ADMINISTRATOR PORTAL &mdash;
@@ -217,7 +217,7 @@ export default function AdminLoginPage() {
               <div className="mt-5">
                 <h1 className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-xl font-bold text-transparent">Welcome Back!</h1>
                 <p className="mt-0.5 text-sm text-neutral-500">
-                  Sign in to continue to KSRM CMS
+                  Sign in to continue to K.S.R.M. CMS
                 </p>
               </div>
 
@@ -330,7 +330,7 @@ export default function AdminLoginPage() {
               </div>
 
               <p className="text-center text-xs text-neutral-400">
-                &copy; {new Date().getFullYear()} KSRM College of Engineering. All rights reserved.
+                &copy; {new Date().getFullYear()} K.S.R.M. College of Engineering. All rights reserved.
               </p>
             </motion.div>
           )}

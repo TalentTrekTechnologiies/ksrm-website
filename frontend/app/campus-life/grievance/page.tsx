@@ -3,9 +3,9 @@ import PageResources from "@/components/PageResources";
 ﻿import Link from "next/link";
 
 export const metadata = {
-  title: "Grievance Redressal | KSRM College of Engineering",
+  title: "Grievance Redressal | K.S.R.M. College of Engineering",
   description:
-    "KSRM College of Engineering grievance redressal system with fair, transparent and timely resolution for student complaints.",
+    "K.S.R.M. College of Engineering grievance redressal system with fair, transparent and timely resolution for student complaints.",
 };
 
 const grievanceTypes = [
@@ -134,7 +134,7 @@ export default function GrievanceRedressalPage() {
               maxWidth: 820,
             }}
           >
-            KSRM College of Engineering has established a comprehensive
+            K.S.R.M. College of Engineering has established a comprehensive
             grievance redressal system to address student concerns and
             complaints. We believe in fair, transparent, and timely
             resolution of all grievances while maintaining confidentiality

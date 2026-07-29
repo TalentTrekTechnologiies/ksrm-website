@@ -29,7 +29,7 @@ export default function Header() {
   const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null)
   const cmsLogoUrl = settings?.["site.logoUrl"] || ""
   const logoUrl = cmsLogoUrl && cmsLogoUrl !== failedLogoUrl ? cmsLogoUrl : FALLBACK_LOGO_URL
-  const collegeName = settings?.["site.collegeName"] || "KSRM College of Engineering"
+  const collegeName = settings?.["site.collegeName"] || "K.S.R.M. College of Engineering"
 
   const isCustomLogo = logoUrl !== FALLBACK_LOGO_URL
 

@@ -47,7 +47,7 @@ export const placementPosters = [
 
 // Placement Partners
 export const placementPartnersImage = '/placements/partners.jpg'
-export const placementPartnersNote = '200+ top companies recruit from KSRM College of Engineering'
+export const placementPartnersNote = '200+ top companies recruit from K.S.R.M. College of Engineering'
 
 // Past Years Placement Records
 export const pastPlacementRecords = [

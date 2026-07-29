@@ -38,7 +38,7 @@ export const coursesData: CoursesData = {
   banner: "/banners/academic.png",
   intro:
     "KSRMCE offers a wide range of UG and PG programmes approved by AICTE and affiliated to JNTUA. Our programmes are designed to develop technically proficient and ethically sound professionals.",
-  eapcetCode: "KSRM",
+  eapcetCode: "K.S.R.M.",
 
   ugProgrammes: [
     {

@@ -28,7 +28,7 @@ export const campusFacilities: CampusFacilitiesData = {
   pageTitle: "Campus Facilities",
   subtitle: "A world-class campus built for academic and personal excellence",
   intro:
-    "Spread across a lush green campus in Kadapa, KSRM College of Engineering provides state-of-the-art infrastructure and facilities to support the overall development of students. Our modern campus features academic buildings, residential facilities, recreation areas, and essential amenities.",
+    "Spread across a lush green campus in Kadapa, K.S.R.M. College of Engineering provides state-of-the-art infrastructure and facilities to support the overall development of students. Our modern campus features academic buildings, residential facilities, recreation areas, and essential amenities.",
   stats: {
     campusArea: "25 Acres",
     buildings: 12,

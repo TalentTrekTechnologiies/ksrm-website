@@ -28,7 +28,7 @@ export const academicCalendar: AcademicCalendarData = {
   pageTitle: "Academic Calendar",
   subtitle: "Stay on track with semester schedules, exam timetables and important academic dates",
   intro:
-    "KSRM College of Engineering follows the academic calendar prescribed by JNTUA (Jawaharlal Nehru Technological University Anantapur). The calendar includes important dates for semester classes, examinations, and academic activities. Download regulation-wise academic calendars below.",
+    "K.S.R.M. College of Engineering follows the academic calendar prescribed by JNTUA (Jawaharlal Nehru Technological University Anantapur). The calendar includes important dates for semester classes, examinations, and academic activities. Download regulation-wise academic calendars below.",
   currentAY: "2025–2026",
   calendars: [
     {

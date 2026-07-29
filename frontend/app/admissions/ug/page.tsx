@@ -118,7 +118,7 @@ export default function UGAdmissionsPage() {
         <section className="ug-content-section">
           <div className="responsive-container">
             <p className="ug-intro">
-              KSRM College offers eight B.Tech undergraduate programs with a total intake of 810 seats.
+              K.S.R.M. College offers eight B.Tech undergraduate programs with a total intake of 810 seats.
               Each program is designed to provide quality technical education with hands-on learning and
               industry collaboration.
             </p>
@@ -147,10 +147,10 @@ export default function UGAdmissionsPage() {
 
             <div className="ug-info-box">
               <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>
-                Admission Code: KSRM
+                Admission Code: K.S.R.M.
               </h4>
               <p style={{ color: "#555", fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                Use the code KSRM when applying through EAPCET. Admissions are merit-based and follow the norms
+                Use the code K.S.R.M. when applying through EAPCET. Admissions are merit-based and follow the norms
                 set by JNTUA and the Government of Andhra Pradesh for engineering programs.
               </p>
             </div>

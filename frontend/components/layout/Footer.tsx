@@ -266,11 +266,11 @@ export default function Footer() {
               display: "flex", alignItems: "center", justifyContent: "center",
               flexShrink: 0,
             }}>
-              <img src="/logo.png" alt="KSRM Logo" style={{ width: "48px", height: "48px", objectFit: "contain" }} />
+              <img src="/logo.png" alt="K.S.R.M. Logo" style={{ width: "48px", height: "48px", objectFit: "contain" }} />
             </div>
             <div>
               <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "23px", fontWeight: 700, color: "#ffffff", lineHeight: 1 }}>
-                KSRM
+                K.S.R.M.
               </div>
               <div style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.6)", marginTop: "2px" }}>
                 College of Engineering
@@ -316,7 +316,7 @@ export default function Footer() {
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <MapPin size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
             <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, whiteSpace: "pre-line" }}>
-              {s("site.contactAddress", "KSRM College of Engineering,\nKadapa, AP – 516003")}
+              {s("site.contactAddress", "K.S.R.M. College of Engineering,\nKadapa, AP – 516003")}
             </span>
           </div>
 
@@ -363,7 +363,7 @@ export default function Footer() {
           {/* LEFT: Copyright + Kandula Trust */}
           <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
             <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
-              {s("site.footerCopyright", `© ${currentYear} KSRM College of Engineering. All Rights Reserved.`)}
+              {s("site.footerCopyright", `© ${currentYear} K.S.R.M. College of Engineering. All Rights Reserved.`)}
             </span>
             <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
               A unit of Sri Kandula Obul Reddy Charities

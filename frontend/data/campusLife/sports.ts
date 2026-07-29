@@ -37,7 +37,7 @@ export const sports: SportsData = {
   pageTitle: "Sports",
   subtitle: "Excellence Through Athletic Pursuits",
   intro:
-    "Sports at KSRM College of Engineering is an integral part of campus life, promoting physical fitness, team spirit, and competitive excellence. With modern facilities and dedicated coaching staff, our college encourages students to participate in both indoor and outdoor sports, fostering holistic development.",
+    "Sports at K.S.R.M. College of Engineering is an integral part of campus life, promoting physical fitness, team spirit, and competitive excellence. With modern facilities and dedicated coaching staff, our college encourages students to participate in both indoor and outdoor sports, fostering holistic development.",
   facilities: [
     {
       name: "Basketball Court",

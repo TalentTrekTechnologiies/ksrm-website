@@ -21,7 +21,7 @@ export const syllabus: SyllabusData = {
   pageTitle: "Syllabus",
   subtitle: "Regulation-wise syllabus for all programmes",
   intro:
-    "KSRM College of Engineering follows the academic syllabus prescribed by Jawaharlal Nehru Technological University Anantapur (JNTUA). Detailed regulation-wise syllabi are available for download below for all B.Tech, M.Tech and MBA programmes. The syllabi are designed to meet NBA accreditation standards and equip students with industry-relevant knowledge and skills.",
+    "K.S.R.M. College of Engineering follows the academic syllabus prescribed by Jawaharlal Nehru Technological University Anantapur (JNTUA). Detailed regulation-wise syllabi are available for download below for all B.Tech, M.Tech and MBA programmes. The syllabi are designed to meet NBA accreditation standards and equip students with industry-relevant knowledge and skills.",
   programmes: [
     {
       name: "B.Tech",

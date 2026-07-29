@@ -199,7 +199,7 @@ export default function ApplicationForm({
       <div className="af-success-icon">✅</div>
       <h2 className="af-title">Application Received</h2>
       <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7 }}>
-        Thank you for applying to KSRM College of Engineering{jobTitle ? ` for ${jobTitle}` : ""}. We have
+        Thank you for applying to K.S.R.M. College of Engineering{jobTitle ? ` for ${jobTitle}` : ""}. We have
         received your application and our HR team will review it shortly. A confirmation email has been sent
         to your inbox.
       </p>

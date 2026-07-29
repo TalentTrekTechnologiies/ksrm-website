@@ -55,7 +55,7 @@ interface TourStep {
 
 const STEPS: TourStep[] = [
   {
-    title: "Welcome to the KSRM CMS 👋",
+    title: "Welcome to the K.S.R.M. CMS 👋",
     body: [
       "This one-minute tour points at the actual buttons you'll use - the highlighted spot is the thing being explained.",
       "Nothing is changed or saved while touring. Use Next/Back or the arrow keys; Esc leaves the tour.",

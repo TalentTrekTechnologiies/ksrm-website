@@ -173,7 +173,7 @@ export default function SyllabusPage() {
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              KSRM College of Engineering follows the academic syllabus prescribed by Jawaharlal Nehru Technological
+              K.S.R.M. College of Engineering follows the academic syllabus prescribed by Jawaharlal Nehru Technological
               University Anantapur (JNTUA). Detailed regulation-wise syllabi are available for download below for
               all B.Tech, M.Tech and MBA programmes. The syllabi are designed to meet NBA accreditation standards
               and equip students with industry-relevant knowledge and skills.

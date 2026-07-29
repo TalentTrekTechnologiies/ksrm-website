@@ -88,7 +88,7 @@ export default function CampusGallery() {
         {/* Centered header — consistent with the other homepage sections */}
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "2px", color: "#2B3490", textTransform: "uppercase" }}>
-            Life at KSRM
+            Life at K.S.R.M.
           </div>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(20px, 5.4vw, 34px)", fontWeight: 700, color: "#1a1a2e", margin: "8px 0 0" }}>
             Campus Gallery

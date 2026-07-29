@@ -110,7 +110,7 @@ export default function NAACPage() {
         <div className="responsive-container">
           <div style={{ maxWidth: 820, margin: "0 auto" }}>
             <p style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8, margin: 0, textAlign: "center" }}>
-              KSRM College of Engineering has been accredited by the National Assessment and Accreditation Council
+              K.S.R.M. College of Engineering has been accredited by the National Assessment and Accreditation Council
               (NAAC). NAAC accreditation is a mark of quality assurance recognizing the institution&apos;s
               commitment to providing quality higher education.
             </p>

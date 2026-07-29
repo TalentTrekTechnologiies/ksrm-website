@@ -64,7 +64,7 @@ const FALLBACK_ACCREDITATION = "NAAC A+ · NBA Tier-1 · UGC Autonomous"
 // is never rendered as raw HTML anywhere in this feature).
 const FALLBACK_HEADING = "Ignite Your Potential, Engineer Your Future"
 const FALLBACK_SUBTITLE =
-  "KSRM College of Engineering, Kadapa — 45 years of engineering excellence."
+  "K.S.R.M. College of Engineering, Kadapa — 45 years of engineering excellence."
 const FALLBACK_VIDEO_URL = "/videos/main-block.mp4"
 const FALLBACK_PANEL_LABEL = "Latest Updates"
 const FALLBACK_CTA_PRIMARY = { text: "Apply Now", href: "/admissions" }

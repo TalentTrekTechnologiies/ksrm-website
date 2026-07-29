@@ -30,7 +30,7 @@ export const faculty: FacultyData = {
   pageTitle: "Faculty",
   subtitle: "Meet Our Experienced Educators",
   intro:
-    "KSRM College of Engineering is served by a dedicated team of experienced faculty members with strong academic credentials and industry exposure. Our faculty are committed to imparting quality education, conducting research, and mentoring the next generation of engineers.",
+    "K.S.R.M. College of Engineering is served by a dedicated team of experienced faculty members with strong academic credentials and industry exposure. Our faculty are committed to imparting quality education, conducting research, and mentoring the next generation of engineers.",
   departments: [
     {
         "name": "Computer Science & Engineering",

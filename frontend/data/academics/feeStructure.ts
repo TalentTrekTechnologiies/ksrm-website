@@ -37,7 +37,7 @@ export const feeStructure: FeeStructureData = {
   pageTitle: "Fee Structure",
   subtitle: "Transparent and Affordable Education",
   intro:
-    "KSRM College of Engineering is committed to providing quality education at competitive and affordable fee rates. Our transparent fee structure ensures that deserving students are not held back by financial constraints. Various scholarships and fee waivers are available to meritorious and economically disadvantaged students.",
+    "K.S.R.M. College of Engineering is committed to providing quality education at competitive and affordable fee rates. Our transparent fee structure ensures that deserving students are not held back by financial constraints. Various scholarships and fee waivers are available to meritorious and economically disadvantaged students.",
   notice:
     "Fees are subject to revision by APSCHE (Andhra Pradesh State Council for Higher Education) and the University. All fees mentioned are annual fees unless stated otherwise. The college reserves the right to modify the fee structure as per directives from the government and regulatory bodies.",
   categories: [

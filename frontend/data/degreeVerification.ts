@@ -10,9 +10,9 @@ export interface DegreeVerificationData {
 export const degreeVerification: DegreeVerificationData = {
   pageTitle: "Degree Verification",
   subtitle:
-    "Verify the authenticity of degrees issued by KSRM College of Engineering",
+    "Verify the authenticity of degrees issued by K.S.R.M. College of Engineering",
   about:
-    "KSRM College of Engineering provides online degree verification services through iCredify platform. Employers and institutions can verify the authenticity of degrees and certificates issued by our college.",
+    "K.S.R.M. College of Engineering provides online degree verification services through iCredify platform. Employers and institutions can verify the authenticity of degrees and certificates issued by our college.",
   verificationLink: "http://icredify.com/degreeverify/ksrm",
   steps: [
     {

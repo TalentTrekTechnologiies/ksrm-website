@@ -102,7 +102,7 @@ export default function ExaminationsPage() {
                 <span style={{ fontSize: 24, lineHeight: 1 }}>📊</span>
                 <span style={{ color: "#D4A500", fontSize: 22, fontWeight: 700 }}>Exam Results</span>
               </div>
-              <div style={{ color: "#ccc", fontSize: 15, lineHeight: 1.7, margin: "12px 0 24px" }}>Check B.Tech, M.Tech and MBA results on the KSRM results portal powered by JEM Exam.</div>
+              <div style={{ color: "#ccc", fontSize: 15, lineHeight: 1.7, margin: "12px 0 24px" }}>Check B.Tech, M.Tech and MBA results on the K.S.R.M. results portal powered by JEM Exam.</div>
               <div style={{ background: "#D4A500", color: "#2B3490", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, display: "inline-block" }}>View Results →</div>
             </a>
             <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 12, padding: 28 }}>

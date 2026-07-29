@@ -503,7 +503,7 @@ export default function ResearchPage() {
             Contact RDC
           </h2>
           <div style={{ background: "#eef1ff", borderRadius: 8, padding: "16px 24px", marginBottom: 24, fontSize: 14, color: "#2B3490", fontWeight: 600, display: "inline-block" }}>
-            📍 KSRM College of Engineering, Cuddapah – 516003, Andhra Pradesh
+            📍 K.S.R.M. College of Engineering, Cuddapah – 516003, Andhra Pradesh
           </div>
           <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 8, padding: 32, maxWidth: 600, margin: "0 auto" }}>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}>Dr. M. Venkatanarayana</h3>

@@ -127,7 +127,7 @@ export default function AdmissionsPage() {
         <section className="adm-intro-section">
           <div className="responsive-container">
             <p className="adm-intro-text">
-              KSRM College of Engineering offers quality technical education through multiple academic pathways.
+              K.S.R.M. College of Engineering offers quality technical education through multiple academic pathways.
               Explore our undergraduate, postgraduate, and diploma programs designed to shape future engineers
               and innovators.
             </p>

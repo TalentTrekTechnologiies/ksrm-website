@@ -242,7 +242,7 @@ export default function FacultyPage() {
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              KSRM College of Engineering is served by a dedicated team of experienced faculty members with strong
+              K.S.R.M. College of Engineering is served by a dedicated team of experienced faculty members with strong
               academic credentials and industry exposure. Our faculty are committed to imparting quality education,
               conducting research, and mentoring the next generation of engineers.
             </p>

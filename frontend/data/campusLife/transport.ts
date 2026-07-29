@@ -32,7 +32,7 @@ export const transport: TransportData = {
   pageTitle: "Transport",
   subtitle: "Safe & Reliable Campus Connectivity",
   intro:
-    "KSRM College of Engineering operates a comprehensive transport system with a modern fleet of buses covering major routes in and around Kadapa. Our transport facility ensures safe, comfortable, and timely commute for students and staff from various areas.",
+    "K.S.R.M. College of Engineering operates a comprehensive transport system with a modern fleet of buses covering major routes in and around Kadapa. Our transport facility ensures safe, comfortable, and timely commute for students and staff from various areas.",
   stats: {
     totalBuses: "15",
     routesCovered: "8",

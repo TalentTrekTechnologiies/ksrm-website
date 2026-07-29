@@ -260,7 +260,7 @@ export default function AcademicCalendarPage() {
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              KSRM College of Engineering follows the academic calendar prescribed by JNTUA (Jawaharlal Nehru
+              K.S.R.M. College of Engineering follows the academic calendar prescribed by JNTUA (Jawaharlal Nehru
               Technological University Anantapur). The calendar includes important dates for semester classes,
               examinations, and academic activities. Download regulation-wise academic calendars below.
             </p>

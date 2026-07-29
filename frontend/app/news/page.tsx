@@ -33,7 +33,7 @@ const FALLBACK_NEWS: NewsDisplay[] = [
   { badge: "Examinations", badgeBg: "#eef1ff", badgeColor: "#2B3490", isNew: true, date: "2026-05-15", title: "KGCET 2K26 Results Announced", desc: "KGCET 2026 results have been announced. Students can check their results at the official portal.", href: mediaFile(173) },
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: true, date: "2026-04-01", title: "Graduation Day 2026 Applications Open", desc: "Applications for Graduation Day 2026 are now open. Students who have completed their degree can apply.", href: "#" },
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2025-08-15", title: "Freshers Orientation 2025-26", desc: "Welcome to the new batch of 2025-26. Orientation program details have been announced.", href: "#" },
-  { badge: "Accreditation", badgeBg: "#e8f5e9", badgeColor: "#388e3c", isNew: false, date: "2025-06-01", title: "NBA Accreditation Renewed", desc: "KSRM College of Engineering has successfully renewed NBA accreditation for multiple programmes.", href: "#" },
+  { badge: "Accreditation", badgeBg: "#e8f5e9", badgeColor: "#388e3c", isNew: false, date: "2025-06-01", title: "NBA Accreditation Renewed", desc: "K.S.R.M. College of Engineering has successfully renewed NBA accreditation for multiple programmes.", href: "#" },
   { badge: "Rankings", badgeBg: "#fce4ec", badgeColor: "#c2185b", isNew: false, date: "2025-03-01", title: "NIRF Ranking 2025 Submitted", desc: "KSRM College has submitted its NIRF ranking data for 2025.", href: "https://ksrmce.ac.in/nirf.php" },
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2024-12-10", title: "Industry-Academia Meet 2024", desc: "Annual Industry-Academia meet held with participation from 20+ companies.", href: "#" },
 ];
@@ -109,7 +109,7 @@ export default function NewsPage() {
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
             <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>News &amp; Events</h1>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Stay updated with the latest from KSRM</p>
+            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Stay updated with the latest from K.S.R.M.</p>
           </div>
         </div>
       </section>

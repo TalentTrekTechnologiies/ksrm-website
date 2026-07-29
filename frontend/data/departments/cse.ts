@@ -5,7 +5,7 @@ export const cse: Department = {
   name: "Computer Science & Engineering",
   shortName: "CSE",
   tagline: "Transforming Minds, Engineering Tomorrow's Digital Revolution",
-  about: "The Department of Computer Science & Engineering at KSRM College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Computer Science & Engineering.",
+  about: "The Department of Computer Science & Engineering at K.S.R.M. College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Computer Science & Engineering.",
   aboutVideo: "/videos/main-block.mp4",
   vision: "To be a leading center of excellence in Computer Science & Engineering education and research, producing competent engineers who contribute to technological advancement and societal development.",
   mission: [

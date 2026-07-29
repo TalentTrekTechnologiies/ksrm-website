@@ -3,9 +3,9 @@ import PageResources from "@/components/PageResources";
 import AntiRaggingCommittee from "@/components/campus-life/AntiRaggingCommittee";
 
 export const metadata = {
-  title: "Anti-Ragging | KSRM College of Engineering",
+  title: "Anti-Ragging | K.S.R.M. College of Engineering",
   description:
-    "KSRM College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
+    "K.S.R.M. College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
 };
 
 const helplines = [
@@ -118,7 +118,7 @@ export default function AntiRaggingPage() {
               maxWidth: 820,
             }}
           >
-            KSRM College of Engineering has implemented a strict
+            K.S.R.M. College of Engineering has implemented a strict
             zero-tolerance anti-ragging policy. The college is committed to
             creating a safe, inclusive, and harassment-free environment for
             all students. Ragging in any form is strictly prohibited and
@@ -161,7 +161,7 @@ export default function AntiRaggingPage() {
             </div>
             <div>
               Ragging is a serious criminal offense under the Ragging
-              Prohibition Act and various state laws. KSRM College of
+              Prohibition Act and various state laws. K.S.R.M. College of
               Engineering strictly prohibits ragging of any kind. Students
               found indulging in ragging shall be subject to immediate
               expulsion and legal proceedings. All staff members are

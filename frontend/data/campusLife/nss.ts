@@ -36,7 +36,7 @@ export const nss: NSSData = {
   pageTitle: "NSS (National Service Scheme)",
   subtitle: "Service Beyond Self",
   intro:
-    "The National Service Scheme (NSS) at KSRM College of Engineering is dedicated to fostering a spirit of public service and social responsibility among students. Our NSS unit works in close collaboration with local communities, organizing various social welfare programmes and environmental initiatives.",
+    "The National Service Scheme (NSS) at K.S.R.M. College of Engineering is dedicated to fostering a spirit of public service and social responsibility among students. Our NSS unit works in close collaboration with local communities, organizing various social welfare programmes and environmental initiatives.",
   aboutNSS:
     "The National Service Scheme is a flagship programme of the Government of India aimed at developing character, discipline, and secular outlook among students. NSS volunteers engage in community service and social development activities, promoting a sense of patriotism and social consciousness. Through structured programmes and grassroots involvement, NSS instills values of social responsibility and commitment to nation-building.",
   stats: {

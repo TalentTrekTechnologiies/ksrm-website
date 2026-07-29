@@ -28,7 +28,7 @@ export const regulations: RegulationsData = {
   pageTitle: "Regulations",
   subtitle: "Academic Rules and Guidelines",
   intro:
-    "KSRM College of Engineering follows comprehensive regulations for all academic programmes as prescribed by JNTUA (Jawaharlal Nehru Technological University Ananthapuramu). These regulations govern admission, curriculum, assessment, and graduation requirements. Students are expected to adhere to all regulations outlined in this section.",
+    "K.S.R.M. College of Engineering follows comprehensive regulations for all academic programmes as prescribed by JNTUA (Jawaharlal Nehru Technological University Ananthapuramu). These regulations govern admission, curriculum, assessment, and graduation requirements. Students are expected to adhere to all regulations outlined in this section.",
   regulationSets: [
     {
       code: "R20",

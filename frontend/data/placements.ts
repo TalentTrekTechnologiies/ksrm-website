@@ -25,7 +25,7 @@ export const placements: PlacementData = {
   pageTitle: "Training & Placements",
   subtitle: "Bridging the gap between academia and industry",
   about:
-    "The Training and Placement Cell (TAP Cell) at KSRM College of Engineering is dedicated to preparing students for successful careers through skill development, training programs, and industry connections. The cell maintains strong ties with leading companies across India.",
+    "The Training and Placement Cell (TAP Cell) at K.S.R.M. College of Engineering is dedicated to preparing students for successful careers through skill development, training programs, and industry connections. The cell maintains strong ties with leading companies across India.",
   stats: {
     studentsPlaced: "500+",
     companiesVisited: "80+",

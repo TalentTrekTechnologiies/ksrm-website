@@ -23,7 +23,7 @@ export const examinations: ExaminationsData = {
   pageTitle: "Examinations",
   subtitle: "Examination schedules, notifications and results",
   about:
-    "The Examination Section at KSRM College of Engineering manages all aspects of academic examinations including scheduling, notifications, results and revaluations.",
+    "The Examination Section at K.S.R.M. College of Engineering manages all aspects of academic examinations including scheduling, notifications, results and revaluations.",
   examPortalLink: "https://ksrmce.ac.in/examportal.php",
   sbiCollectLink: "https://www.onlinesbi.sbi/sbicollect/icollecthome.htm",
   challanFormLink: "https://ksrmce.ac.in/SBI_CHALLAN_FORM.pdf",
@@ -138,6 +138,6 @@ export const examinations: ExaminationsData = {
     section: "Examination Section",
     phone: "08562 295972",
     email: "principal@ksrmce.ac.in",
-    location: "Administrative Block, KSRM College of Engineering",
+    location: "Administrative Block, K.S.R.M. College of Engineering",
   },
 }

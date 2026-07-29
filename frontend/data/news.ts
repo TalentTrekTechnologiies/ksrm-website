@@ -17,7 +17,7 @@ export interface NewsData {
 
 export const news: NewsData = {
   pageTitle: "News & Events",
-  subtitle: "Stay updated with the latest from KSRM",
+  subtitle: "Stay updated with the latest from K.S.R.M.",
   news: [
     {
       id: 1,
@@ -55,7 +55,7 @@ export const news: NewsData = {
       date: "2025-06-01",
       category: "Accreditation",
       description:
-        "KSRM College of Engineering has successfully renewed NBA accreditation for multiple programmes.",
+        "K.S.R.M. College of Engineering has successfully renewed NBA accreditation for multiple programmes.",
       link: "#",
       isNew: false,
     },
@@ -64,7 +64,7 @@ export const news: NewsData = {
       title: "NIRF Ranking 2025 Submitted",
       date: "2025-03-01",
       category: "Rankings",
-      description: "KSRM College has submitted its NIRF ranking data for 2025.",
+      description: "K.S.R.M. College has submitted its NIRF ranking data for 2025.",
       link: "https://ksrmce.ac.in/nirf.php",
       isNew: false,
     },

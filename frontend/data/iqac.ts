@@ -14,7 +14,7 @@ export const iqac: IQACData = {
   pageTitle: "IQAC",
   subtitle: "Internal Quality Assurance Cell — Committed to Excellence",
   about:
-    "The Internal Quality Assurance Cell (IQAC) at KSRM College of Engineering was established as per UGC/NAAC guidelines to develop and ensure quality benchmarks for institutional processes and academic outcomes. IQAC strives for continuous improvement in education quality and institutional performance.",
+    "The Internal Quality Assurance Cell (IQAC) at K.S.R.M. College of Engineering was established as per UGC/NAAC guidelines to develop and ensure quality benchmarks for institutional processes and academic outcomes. IQAC strives for continuous improvement in education quality and institutional performance.",
   vision:
     "To be a catalyst for quality enhancement initiatives and nurture a culture of excellence across all academic and administrative functions.",
   objectives: [

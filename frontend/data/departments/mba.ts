@@ -5,7 +5,7 @@ export const mba: Department = {
   name: "Management Studies",
   shortName: "MBA",
   tagline: "Developing Leaders, Creating Opportunities",
-  about: "The Department of Management Studies at KSRM College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Management Studies.",
+  about: "The Department of Management Studies at K.S.R.M. College of Engineering is committed to delivering excellence in technical education and research. With state-of-the-art facilities, experienced faculty, and industry partnerships, we prepare students for successful careers in the dynamic field of Management Studies.",
   vision: "To be a leading center of excellence in Management Studies education and research, producing competent engineers who contribute to technological advancement and societal development.",
   mission: [
     "To provide quality education with industry-relevant curriculum and innovative teaching methods.",

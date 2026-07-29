@@ -173,7 +173,7 @@ export default function CareersTemplate() {
                   margin: 0,
                 }}
               >
-                Careers at KSRM
+                Careers at K.S.R.M.
               </motion.h1>
               <motion.p
                 variants={fadeUp}
@@ -207,7 +207,7 @@ export default function CareersTemplate() {
                 margin: "0 0 24px",
               }}
             >
-              Why Join KSRM?
+              Why Join K.S.R.M.?
             </motion.h2>
             <motion.div variants={stagger} className="car-whyjoin-grid">
               {whyJoin.map((item, idx) => {
@@ -273,7 +273,7 @@ export default function CareersTemplate() {
         <Container>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>
-              Ready to Join KSRM?
+              Ready to Join K.S.R.M.?
             </h2>
             <a href="mailto:hr@ksrmce.ac.in" className="car-cta-button">
               Contact HR Department

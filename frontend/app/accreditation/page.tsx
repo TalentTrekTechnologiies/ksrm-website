@@ -85,7 +85,7 @@ export default function AccreditationPage() {
           <div className="acc-section-card">
             <h3>Highest Grade Recognition</h3>
             <p style={{ color: "#666", marginBottom: 16 }}>
-              KSRM College has been accredited with A+ grade by the National Assessment and Accreditation Council
+              K.S.R.M. College has been accredited with A+ grade by the National Assessment and Accreditation Council
               (NAAC), the highest rating in the framework. This recognition reflects our commitment to academic
               excellence, research, infrastructure development, and institutional governance.
             </p>
@@ -111,7 +111,7 @@ export default function AccreditationPage() {
           <div className="acc-section-card">
             <h3>National Institutional Ranking Framework</h3>
             <p style={{ color: "#666", marginBottom: 20 }}>
-              KSRM College is consistently ranked in the NIRF by the Ministry of Education, demonstrating our
+              K.S.R.M. College is consistently ranked in the NIRF by the Ministry of Education, demonstrating our
               commitment to academic excellence and institutional development.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>

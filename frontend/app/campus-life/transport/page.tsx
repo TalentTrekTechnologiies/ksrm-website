@@ -88,7 +88,7 @@ export default function TransportPage() {
         <div className="responsive-container">
           <div style={{ maxWidth: 820 }}>
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              KSRM College of Engineering operates a comprehensive transport system with a modern fleet of buses
+              K.S.R.M. College of Engineering operates a comprehensive transport system with a modern fleet of buses
               covering major routes in and around Kadapa. Our transport facility ensures safe, comfortable, and
               timely commute for students and staff from various areas.
             </p>
@@ -142,11 +142,11 @@ export default function TransportPage() {
             </div>
             <div>
               <div className="trn-rules-image">
-                <img src="/site-images/buses.jpg" alt="KSRM college bus fleet" />
+                <img src="/site-images/buses.jpg" alt="K.S.R.M. college bus fleet" />
               </div>
               <div style={{ marginTop: 16, padding: 16, background: "#f4f3ef", borderRadius: 8, borderLeft: "4px solid #2B3490" }}>
                 <p style={{ margin: 0, fontSize: 13, color: "#555", lineHeight: 1.6 }}>
-                  <strong style={{ color: "#2B3490" }}>Modern Fleet:</strong> KSRM operates 15 buses covering 8 major
+                  <strong style={{ color: "#2B3490" }}>Modern Fleet:</strong> K.S.R.M. operates 15 buses covering 8 major
                   routes including Kadapa, Tirupati, and surrounding areas. All buses are equipped with GPS tracking
                   and air-conditioning for student safety and comfort.
                 </p>

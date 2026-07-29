@@ -178,7 +178,7 @@ export default function IQACPage() {
             <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>
               Internal Quality Assurance Cell
             </h1>
-            <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 24px" }}>IQAC — KSRM College of Engineering</p>
+            <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 24px" }}>IQAC — K.S.R.M. College of Engineering</p>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}>
               IQAC was established on 18-01-2012 following NAAC norms. It consists of representatives of all
               stakeholders, committed to institutional quality enhancement through internalization of quality
@@ -247,7 +247,7 @@ export default function IQACPage() {
           <div style={{ background: "linear-gradient(135deg, #2B3490, #1a1d4d)", borderRadius: 12, padding: 40, color: "white" }}>
             <h3 style={{ color: "#D4A500", fontSize: 22, fontWeight: 700, marginBottom: 16 }}>Quality Policy</h3>
             <p style={{ fontSize: 16, marginBottom: 20, lineHeight: 1.8 }}>
-              KSRM is committed to achieve excellence in Teaching, Research and Consultancy
+              K.S.R.M. is committed to achieve excellence in Teaching, Research and Consultancy
             </p>
             <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {qualityPolicy.map((q) => (

@@ -358,7 +358,7 @@ export default function CoursesIntakePage() {
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              KSRM College of Engineering offers AICTE approved undergraduate, postgraduate and management
+              K.S.R.M. College of Engineering offers AICTE approved undergraduate, postgraduate and management
               programmes affiliated to Jawaharlal Nehru Technological University Anantapur (JNTUA). The college
               holds UGC Autonomous status and is recognized for excellence in engineering education.
             </p>
@@ -369,7 +369,7 @@ export default function CoursesIntakePage() {
                   <path d="M12 7v14" />
                   <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
                 </svg>
-                KSRM
+                K.S.R.M.
               </div>
               <p style={{ margin: "8px 0 0", opacity: 0.9 }}>
                 Use this code during EAPCET/ICET/PGECET counselling

@@ -177,7 +177,7 @@ export default function DashboardHome() {
           {greeting()}, {getStoredAdmin()?.name?.split(" ")[0] ?? "Admin"} 👋
         </h1>
         <p className="relative mt-1 text-sm text-white/75">
-          Here&apos;s what&apos;s happening on the KSRM website · updated{" "}
+          Here&apos;s what&apos;s happening on the K.S.R.M. website · updated{" "}
           {new Date(data.overview.generatedAt).toLocaleTimeString()}
         </p>
       </div>

@@ -260,7 +260,7 @@ export default function AdminSidebar({
     >
       <div className={`mb-3 flex items-center gap-2.5 px-2 ${collapsed ? "justify-center" : ""}`}>
         <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
-          <Image src="/logo.png" alt="KSRM" width={36} height={36} className="object-cover" />
+          <Image src="/logo.png" alt="K.S.R.M." width={36} height={36} className="object-cover" />
         </div>
         {!collapsed && (
           <div className="min-w-0">
@@ -268,7 +268,7 @@ export default function AdminSidebar({
               style={{ fontFamily: "var(--font-admin-heading)" }}
               className="truncate text-sm font-bold text-white"
             >
-              KSRM CMS
+              K.S.R.M. CMS
             </p>
             {admin && <p className="truncate text-xs text-slate-400">{admin.name}</p>}
           </div>

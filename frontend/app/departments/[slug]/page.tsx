@@ -63,7 +63,7 @@ export function generateStaticParams() {
 
 // Per-department SEO: without this every department page inherited the root
 // layout's generic homepage title/description. Now each gets a unique title +
-// description + canonical, which is what people actually search for ("KSRM CSE
+// description + canonical, which is what people actually search for ("K.S.R.M. CSE
 // department", etc.).
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

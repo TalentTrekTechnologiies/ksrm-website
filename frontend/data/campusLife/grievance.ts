@@ -32,7 +32,7 @@ export const grievance: GrievanceData = {
   pageTitle: "Grievance Redressal",
   subtitle: "Fair & Transparent Resolution",
   intro:
-    "KSRM College of Engineering has established a comprehensive grievance redressal system to address student concerns and complaints. We believe in fair, transparent, and timely resolution of all grievances while maintaining confidentiality and respecting the dignity of all parties involved.",
+    "K.S.R.M. College of Engineering has established a comprehensive grievance redressal system to address student concerns and complaints. We believe in fair, transparent, and timely resolution of all grievances while maintaining confidentiality and respecting the dignity of all parties involved.",
   policyStatement:
     "Every student has the right to file a grievance without fear of victimization or retaliation. The college is committed to providing a fair and transparent process for grievance redressal. All grievances will be treated with utmost confidentiality and resolved within the stipulated timelines. Any form of victimization for filing a genuine grievance is strictly prohibited and will result in disciplinary action.",
   grievanceTypes: [

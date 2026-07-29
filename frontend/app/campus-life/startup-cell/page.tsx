@@ -3,9 +3,9 @@ import PageResources from "@/components/PageResources";
 ﻿import Link from "next/link";
 
 export const metadata = {
-  title: "Startup Cell | KSRM College of Engineering",
+  title: "Startup Cell | K.S.R.M. College of Engineering",
   description:
-    "KSRM College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
+    "K.S.R.M. College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
 };
 
 const committee = [

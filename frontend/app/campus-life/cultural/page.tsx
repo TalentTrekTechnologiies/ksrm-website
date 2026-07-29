@@ -2,9 +2,9 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Cultural Club | KSRM College of Engineering",
+  title: "Cultural Club | K.S.R.M. College of Engineering",
   description:
-    "KSRM College of Engineering Cultural Club celebrating creativity, talent and the spirit of togetherness through KALAKRITI and cultural events.",
+    "K.S.R.M. College of Engineering Cultural Club celebrating creativity, talent and the spirit of togetherness through KALAKRITI and cultural events.",
 };
 
 const events = [

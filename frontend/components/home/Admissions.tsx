@@ -20,7 +20,7 @@ const fadeUp = {
 const FALLBACK_ADMISSIONS: AdmissionsContent = {
   badge: "ADMISSIONS 2025-26",
   heading: "Begin Your Engineering Journey",
-  subtitle: "EAPCET Code: KSRM | Kadapa, Andhra Pradesh",
+  subtitle: "EAPCET Code: K.S.R.M. | Kadapa, Andhra Pradesh",
   helplinePhones: [
     { display: "+91-9000073434", href: "tel:+919000073434" },
     { display: "+91-8143731980", href: "tel:+918143731980" },

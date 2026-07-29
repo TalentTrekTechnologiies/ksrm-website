@@ -76,7 +76,7 @@ export default function IICPage() {
       <section style={{ padding: "0 0 72px", background: "#ffffff" }}>
         <div className="responsive-container">
           <p className="iic-about-text">
-            The Institution&apos;s Innovation Council (IIC) at KSRM College of Engineering is established under the
+            The Institution&apos;s Innovation Council (IIC) at K.S.R.M. College of Engineering is established under the
             aegis of the Ministry of Education&apos;s Innovation Cell (MIC), Government of India. The IIC aims to
             foster a culture of innovation and entrepreneurship among students and faculty, encouraging them to work
             on new ideas, prototypes, and startups. It serves as a platform to promote innovation activities,

@@ -82,7 +82,7 @@ export default function CareersPage() {
       <section className="car-hero">
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Careers at KSRM</h1>
+            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Careers at K.S.R.M.</h1>
             <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Join Our Team of Excellence</p>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function CareersPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Why Join KSRM?</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Why Join K.S.R.M.?</h2>
           <div className="car-whyjoin-grid">
             {whyJoin.map((w) => (
               <div className="car-whyjoin-card" key={w.title}>
@@ -127,7 +127,7 @@ export default function CareersPage() {
 
       <section style={{ padding: "56px 0", background: "linear-gradient(135deg, #2B3490, #1e2570)", textAlign: "center" }}>
         <div className="responsive-container">
-          <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>Ready to Join KSRM?</h2>
+          <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>Ready to Join K.S.R.M.?</h2>
           <Link href="/careers/apply" className="car-cta-button">Submit a General Application</Link>
         </div>
       </section>

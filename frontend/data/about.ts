@@ -41,14 +41,14 @@ export const aboutData = {
       photo: "/leadership/correspondent.webp",
       name: "Smt. K. Rajeswari",
       title: "Secretary cum Correspondent",
-      bio: "Hon'ble Secretary cum Correspondent of KSRM College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance. Under her stewardship, KSRM continues to uphold the values of the Kandula family legacy while fostering innovation, research, and holistic student development. Her leadership ensures that the institution remains at the forefront of technical education, empowering students to become responsible citizens and global contributors.",
+      bio: "Hon'ble Secretary cum Correspondent of K.S.R.M. College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance. Under her stewardship, K.S.R.M. continues to uphold the values of the Kandula family legacy while fostering innovation, research, and holistic student development. Her leadership ensures that the institution remains at the forefront of technical education, empowering students to become responsible citizens and global contributors.",
       link: "/about/correspondent",
     },
     {
       photo: "/leadership/vicechairman.webp",
       name: "Sri K. Madan Mohan Reddy",
       title: "Chairman",
-      bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership that guides the college towards educational excellence and social responsibility. His commitment to nurturing quality technical talent has been instrumental in establishing KSRM as a beacon of learning in the Rayalaseema region. Under his watchful stewardship, the institution continues to evolve, adapt to global standards, and prepare students to meet the challenges of a rapidly changing world while maintaining the values and traditions that define the Kandula Group of Institutions.",
+      bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership that guides the college towards educational excellence and social responsibility. His commitment to nurturing quality technical talent has been instrumental in establishing K.S.R.M. as a beacon of learning in the Rayalaseema region. Under his watchful stewardship, the institution continues to evolve, adapt to global standards, and prepare students to meet the challenges of a rapidly changing world while maintaining the values and traditions that define the Kandula Group of Institutions.",
       link: "/about/chairman",
     },
     {

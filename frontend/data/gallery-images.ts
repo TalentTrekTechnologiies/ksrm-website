@@ -6,7 +6,7 @@ export interface GalleryImage {
 
 export const galleryImages: GalleryImage[] = [
   // Campus
-  { src: '/gallery/campus/topview.jpg', alt: 'KSRM College aerial campus view', category: 'Campus' },
+  { src: '/gallery/campus/topview.jpg', alt: 'K.S.R.M. College aerial campus view', category: 'Campus' },
   { src: '/gallery/campus/blocktop.jpg', alt: 'Main block aerial view', category: 'Campus' },
   { src: '/gallery/campus/block.jpg', alt: 'Main administrative block', category: 'Campus' },
   { src: '/gallery/campus/19.jpg', alt: 'Solar powered campus', category: 'Campus' },
@@ -64,7 +64,7 @@ export const galleryImages: GalleryImage[] = [
   { src: '/hero/KSR09989.webp', alt: 'Campus activity highlight', category: 'Events' },
 
   // Transport
-  { src: '/gallery/transport/buses.jpg', alt: 'KSRM college bus fleet', category: 'Transport' },
+  { src: '/gallery/transport/buses.jpg', alt: 'K.S.R.M. college bus fleet', category: 'Transport' },
 ];
 
 export const getImagesByCategory = (category: string) =>

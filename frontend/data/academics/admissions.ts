@@ -40,10 +40,10 @@ export interface AdmissionsData {
 
 export const admissions: AdmissionsData = {
   pageTitle: "Admissions",
-  subtitle: "Join the KSRM family — shaping engineers since 1980",
+  subtitle: "Join the K.S.R.M. family — shaping engineers since 1980",
   intro:
-    "KSRM College of Engineering welcomes applications for B.Tech, M.Tech and MBA programmes. Admissions are conducted through APSCHE (AP State Council of Higher Education) via EAPCET/ICET/PGECET counselling. All admissions follow the guidelines of the Government of Andhra Pradesh and JNTUA regulations.",
-  eapcetCode: "KSRM",
+    "K.S.R.M. College of Engineering welcomes applications for B.Tech, M.Tech and MBA programmes. Admissions are conducted through APSCHE (AP State Council of Higher Education) via EAPCET/ICET/PGECET counselling. All admissions follow the guidelines of the Government of Andhra Pradesh and JNTUA regulations.",
+  eapcetCode: "K.S.R.M.",
   admissionRoutes: [
     {
       programme: "B.Tech",
@@ -86,7 +86,7 @@ export const admissions: AdmissionsData = {
     {
       step: "2",
       title: "Web Counselling",
-      description: "Participate in APSCHE web counselling and exercise options for KSRM (Code: KSRM) based on your rank and category.",
+      description: "Participate in APSCHE web counselling and exercise options for K.S.R.M. (Code: K.S.R.M.) based on your rank and category.",
     },
     {
       step: "3",
@@ -96,7 +96,7 @@ export const admissions: AdmissionsData = {
     {
       step: "4",
       title: "Report to College",
-      description: "Report to KSRM College with original documents and pay the tuition fee within the stipulated deadline.",
+      description: "Report to K.S.R.M. College with original documents and pay the tuition fee within the stipulated deadline.",
     },
     {
       step: "5",
@@ -136,7 +136,7 @@ export const admissions: AdmissionsData = {
     },
   ],
   contact: {
-    office: "Admissions Office, KSRM College of Engineering, Kadapa – 516003",
+    office: "Admissions Office, K.S.R.M. College of Engineering, Kadapa – 516003",
     phone: "+91 8143731980 / 08562 295972 / +91 9000073434",
     email: "ksrmcengg@yahoo.co.in / principal@ksrmce.ac.in",
   },

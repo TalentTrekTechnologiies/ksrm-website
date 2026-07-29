@@ -29,8 +29,8 @@ export const coursesIntake: CoursesIntakeData = {
   pageTitle: "Courses Offered & Intake",
   subtitle: "AICTE approved programmes with strong industry alignment",
   intro:
-    "KSRM College of Engineering offers AICTE approved undergraduate, postgraduate and management programmes affiliated to Jawaharlal Nehru Technological University Anantapur (JNTUA). The college holds UGC Autonomous status and is recognized for excellence in engineering education.",
-  eapcetCode: "KSRM",
+    "K.S.R.M. College of Engineering offers AICTE approved undergraduate, postgraduate and management programmes affiliated to Jawaharlal Nehru Technological University Anantapur (JNTUA). The college holds UGC Autonomous status and is recognized for excellence in engineering education.",
+  eapcetCode: "K.S.R.M.",
   programmes: [
     {
       level: "B.Tech (4 Years)",

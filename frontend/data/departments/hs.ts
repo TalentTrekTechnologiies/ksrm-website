@@ -5,7 +5,7 @@ export const hs: Department = {
   name: "Humanities & Sciences",
   shortName: "H&S",
   tagline: "Building Foundations for Engineering Excellence",
-  about: "The Department of Humanities & Sciences at KSRM College of Engineering provides foundational knowledge in mathematics, physics, chemistry and humanities that form the backbone of engineering education. Our dedicated faculty ensures students develop strong analytical and communication skills essential for their engineering careers.",
+  about: "The Department of Humanities & Sciences at K.S.R.M. College of Engineering provides foundational knowledge in mathematics, physics, chemistry and humanities that form the backbone of engineering education. Our dedicated faculty ensures students develop strong analytical and communication skills essential for their engineering careers.",
   vision: "To be a center of excellence in providing foundational science and humanities education that supports engineering excellence and develops well-rounded professionals.",
   mission: [
     "To deliver high-quality education in mathematics, sciences and humanities with emphasis on practical application and critical thinking.",

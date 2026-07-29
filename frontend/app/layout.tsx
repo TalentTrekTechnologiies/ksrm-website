@@ -31,7 +31,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
   description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous | 7 Departments | 1200+ Students Placed",
-  keywords: ["engineering college", "KSRM", "Kadapa", "NAAC A+", "NBA accredited", "engineering education"],
+  keywords: ["engineering college", "K.S.R.M.", "Kadapa", "NAAC A+", "NBA accredited", "engineering education"],
   authors: [{ name: "K.S.R.M. College of Engineering" }],
   creator: "K.S.R.M. College of Engineering",
   publisher: "K.S.R.M. College of Engineering",

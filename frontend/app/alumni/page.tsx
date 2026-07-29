@@ -84,7 +84,7 @@ export default function AlumniPage() {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
         <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>🎓 Alumni Association</div>
-          <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>KSRM Alumni Association</h1>
+          <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>K.S.R.M. Alumni Association</h1>
           <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 16px" }}>Connecting 7,498+ Alumni Worldwide Since 1985</p>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}>
             The Alumni Association was formed in December 1985. Registered under the Andhra Pradesh Societies Act 35
