@@ -2,9 +2,32 @@
 
 import { mediaFile } from "@/lib/api-base";
 import Link from "next/link"
-import PageResources from "@/components/PageResources";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { useLiveData } from "@/lib/use-live-data";
+
+/** Group headings the About page's document sections are stored under, so an
+ *  admin can add/remove documents in Page Content -> About and have them land
+ *  in the right designed section rather than a generic list at the bottom. */
+const GROUP_JBOS = "Joint Board of Studies";
+const GROUP_STRATEGIC = "Strategic Plan & Deployment Documents";
+const GROUP_POLICY = "Policy Documents";
 
 export default function About() {
+  // CMS documents routed to this page. Each designed section below renders its
+  // own group when the CMS has one, and falls back to the built-in list
+  // otherwise - so the page is never empty, and anything added in Page Content
+  // shows up in the matching section instead of a separate block.
+  const cmsDocs = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "about").catch(() => [] as Download[]),
+    [],
+  );
+  const docsForGroup = (group: string, fallback: { title: string; url: string; icon: string }[]) => {
+    const rows = (cmsDocs ?? []).filter((d) => (d.groupLabel ?? "").trim() === group);
+    return rows.length > 0
+      ? rows.map((d) => ({ title: d.title, url: d.fileUrl, icon: "📄" }))
+      : fallback;
+  };
+
   const leadershipData = [
     {
       photo: "/images/leadership/correspondent.jpg",
@@ -266,7 +289,7 @@ export default function About() {
         <div className="k-container">
           <h2>Joint Board of Studies</h2>
           <div className="k-docs-grid">
-            {jbosDocuments.map((doc, i) => (
+            {docsForGroup(GROUP_JBOS, jbosDocuments).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <div className="k-doc-card">
                   <div className="k-doc-icon">{doc.icon}</div>
@@ -287,7 +310,7 @@ export default function About() {
         <div className="k-container">
           <h2>Strategic Plan & Deployment Documents</h2>
           <div className="k-docs-grid">
-            {strategicDocs.map((doc, i) => (
+            {docsForGroup(GROUP_STRATEGIC, strategicDocs).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <div className="k-doc-card">
                   <div className="k-doc-icon">{doc.icon}</div>
@@ -308,7 +331,7 @@ export default function About() {
         <div className="k-container">
           <h2>Institutional Policy Documents</h2>
           <div className="k-docs-grid">
-            {policyDocs.map((doc, i) => (
+            {docsForGroup(GROUP_POLICY, policyDocs).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <div className="k-doc-card">
                   <div className="k-doc-icon">{doc.icon}</div>
@@ -359,7 +382,6 @@ export default function About() {
         </div>
       </section>
     
-      <PageResources section="about" />
       </main>
   )
 }
