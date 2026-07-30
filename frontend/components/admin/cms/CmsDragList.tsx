@@ -22,7 +22,9 @@ import { GripVertical, Pencil, Trash2, RotateCcw } from "lucide-react"
 
 export interface CmsDragListItem {
   id: number
-  isActive: boolean
+  /** Optional: some modules (e.g. learning outcomes) have no active/inactive
+   *  column, so the "Inactive" badge is simply not shown for them. */
+  isActive?: boolean
   deletedAt: string | null
 }
 
@@ -69,7 +71,7 @@ function SortableRow<T extends CmsDragListItem>({
 
       <div className="min-w-0 flex-1">{children}</div>
 
-      {!isDeleted && !item.isActive && (
+      {!isDeleted && item.isActive === false && (
         <span className="shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold text-amber-700 bg-amber-50">
           Inactive
         </span>

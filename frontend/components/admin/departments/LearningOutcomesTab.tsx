@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import DepartmentDragListManager from "./DepartmentDragListManager"
-import { TextField, TextAreaField, ToggleField } from "@/components/admin/cms/CmsForm"
+import { TextField, TextAreaField } from "@/components/admin/cms/CmsForm"
 import {
   getLearningOutcomesAdmin,
   createLearningOutcome,
@@ -18,10 +18,9 @@ interface FormState {
   code: string
   title: string
   text: string
-  isActive: boolean
 }
 
-const emptyForm: FormState = { code: "", title: "", text: "", isActive: true }
+const emptyForm: FormState = { code: "", title: "", text: "" }
 
 const TABS: { type: OutcomeType; label: string }[] = [
   { type: "PEO", label: "Program Educational Objectives (PEO)" },
@@ -46,9 +45,9 @@ function OutcomeTypeManager({ departmentId, type }: { departmentId: number; type
       del={deleteLearningOutcome}
       restore={restoreLearningOutcome}
       reorder={reorderLearningOutcomes}
-      mapToForm={(item) => ({ code: item.code, title: item.title ?? "", text: item.text, isActive: item.isActive })}
-      buildCreateDto={(form, departmentId) => ({ departmentId, code: form.code, title: form.title || undefined, text: form.text, isActive: form.isActive })}
-      buildUpdateDto={(form) => ({ code: form.code, title: form.title || undefined, text: form.text, isActive: form.isActive })}
+      mapToForm={(item) => ({ code: item.code, title: item.title ?? "", text: item.text })}
+      buildCreateDto={(form, departmentId) => ({ departmentId, code: form.code, title: form.title || undefined, text: form.text })}
+      buildUpdateDto={(form) => ({ code: form.code, title: form.title || undefined, text: form.text })}
       isValid={(form) => !!form.code && !!form.text}
       getName={(item) => `${item.code}: ${item.text}`}
       addLabel={`Add ${type}`}
@@ -64,7 +63,6 @@ function OutcomeTypeManager({ departmentId, type }: { departmentId: number; type
           <TextField label="Code" value={form.code} onChange={(v) => setForm({ ...form, code: v })} required placeholder={`${type}1`} />
           <TextField label="Title (optional)" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
           <TextAreaField label="Text" value={form.text} onChange={(v) => setForm({ ...form, text: v })} required rows={3} />
-          <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
         </>
       )}
     />

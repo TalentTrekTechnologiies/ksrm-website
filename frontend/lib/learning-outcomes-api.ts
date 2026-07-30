@@ -10,7 +10,6 @@ export interface LearningOutcome {
   title: string | null;
   text: string;
   sortOrder: number;
-  isActive: boolean;
   deletedAt: string | null;
   deletedBy: number | null;
   version: number;
@@ -23,7 +22,6 @@ export interface LearningOutcomeInput {
   title?: string;
   text: string;
   sortOrder?: number;
-  isActive?: boolean;
 }
 
 export function getLearningOutcomesPublic(departmentId: number, type?: OutcomeType): Promise<LearningOutcome[]> {
