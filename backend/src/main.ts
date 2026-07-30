@@ -35,6 +35,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  // Serve the whole API under /api.
+  //
+  // In production one Nginx server block serves the static site at / and
+  // proxies /api/ to this process. Without the prefix the API answers on
+  // /departments, /gallery, /news ... which are exactly the public site's own
+  // page paths, so the two collide and one of them has to lose.
+  //
+  // Set on the app rather than in configureApp() so the e2e suite, which
+  // builds its own test app, keeps calling unprefixed routes.
+  app.setGlobalPrefix(configService.get<string>('API_PREFIX') ?? 'api');
+
   configureApp(app, configService);
 
   // Swagger docs - not exposed in production
