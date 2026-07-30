@@ -346,7 +346,7 @@ const SITE_SETTINGS_SEED: SiteSettingSeed[] = [
   { key: 'site.seoDefaultDescription', value: 'KSRM College of Engineering, Kadapa — UGC Autonomous, NAAC A++ accredited, NBA Tier-1, affiliated to JNTUA.', type: 'STRING', group: 'seo', isPublic: true, description: 'Fallback meta description for pages that don\'t set their own.' },
   { key: 'site.seoKeywords', value: 'KSRM, engineering college, Kadapa, JNTUA, NAAC, NBA', type: 'STRING', group: 'seo', isPublic: true, description: 'Comma-separated fallback meta keywords.' },
   { key: 'site.seoOgImageUrl', value: '', type: 'IMAGE_URL', group: 'seo', isPublic: true, description: 'Default social-share preview image (Open Graph).' },
-  { key: 'site.headerFlowerShower', value: 'true', type: 'BOOLEAN', group: 'branding', isPublic: true, description: 'Show the falling-flower animation over the founder's portrait in the header. Only applies to the built-in header banner.' },
+  { key: 'site.headerFlowerShower', value: 'true', type: 'BOOLEAN', group: 'branding', isPublic: true, description: 'Show the falling-flower animation over the founder portrait in the header. Only applies to the built-in header banner.' },
   // Popup Notice - a dismissible poster modal shown on the homepage (e.g. to
   // highlight an event / placement drive). CMS-driven so it can be turned on,
   // swapped, and turned off per event with no code change.
