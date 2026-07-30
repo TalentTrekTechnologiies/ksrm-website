@@ -21,8 +21,10 @@ backend/.env*
 .DS_Store
 Thumbs.db
 
-# Claude
+# Local editor/tooling config
 .claude/
+.cursor/
+.aider*
 
 # Editor settings (per-developer)
 .vscode/

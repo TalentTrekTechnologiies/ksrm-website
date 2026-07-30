@@ -176,5 +176,5 @@ Message:
 3. Extract faculty information
 4. Extract lab information and copy image URLs
 5. Fill in this template
-6. Provide the filled template to Claude
-7. Claude will populate all department data files automatically
+6. Hand the filled template to the development team
+7. The department data files are populated from it

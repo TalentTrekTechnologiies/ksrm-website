@@ -1,7 +1,7 @@
 # KSRM College CMS Backend — Technical Handoff
 
 **Prepared for:** continuation by another AI/engineer (GPT-5.5 or human) with no prior exposure to this codebase
-**Prepared by:** Claude Code, read-only repository analysis
+**Prepared by:** Talent Trek Technologies — read-only repository analysis
 **Date of analysis:** 2026-07-04
 **Repository:** `D:\ksrm-website` (monorepo) — this document covers `backend/` (NestJS/Prisma/PostgreSQL CMS). A sibling `frontend/` (Next.js) consumes/hosts the admin UI; it is referenced only where relevant to the backend's actual usage.
 
