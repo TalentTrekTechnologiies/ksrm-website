@@ -35,6 +35,11 @@ interface FormState {
   mediaId: number | null
   category: string
   isActive: boolean
+  videoUrl: string
+  videoMediaId: number | null
+  documentUrl: string
+  documentMediaId: number | null
+
 }
 
 function todayIso() {
@@ -50,6 +55,11 @@ const emptyForm: FormState = {
   mediaId: null,
   category: "",
   isActive: true,
+  videoUrl: "",
+  videoMediaId: null,
+  documentUrl: "",
+  documentMediaId: null,
+
 }
 
 function EventsManagerInner() {
@@ -106,6 +116,10 @@ function EventsManagerInner() {
       eventDate: item.eventDate.slice(0, 10),
       location: item.location ?? "",
       imageUrl: item.imageUrl ?? "",
+      videoUrl: item.videoUrl ?? "",
+      videoMediaId: item.videoMediaId,
+      documentUrl: item.documentUrl ?? "",
+      documentMediaId: item.documentMediaId,
       mediaId: item.mediaId,
       category: item.category ?? "",
       isActive: item.isActive,
@@ -128,6 +142,10 @@ function EventsManagerInner() {
         eventDate: form.eventDate,
         location: form.location || undefined,
         imageUrl: form.imageUrl || undefined,
+        videoUrl: form.videoUrl || undefined,
+        videoMediaId: form.videoMediaId,
+        documentUrl: form.documentUrl || undefined,
+        documentMediaId: form.documentMediaId,
         mediaId: form.mediaId,
         category: form.category || undefined,
         isActive: form.isActive,
@@ -262,6 +280,23 @@ function EventsManagerInner() {
             onChange={(url, mediaId) => setForm({ ...form, imageUrl: url, mediaId })}
             accept={["IMAGE"]}
             urlPlaceholder="/events/annual-day.jpg"
+          />
+          {/* Optional extras. News and events also cover newspaper clippings,
+              interviews and recorded coverage, so each item can carry a video
+              and a downloadable document as well as its image. */}
+          <MediaField
+            label="Video (optional)"
+            url={form.videoUrl}
+            mediaId={form.videoMediaId}
+            onChange={(url, mediaId) => setForm({ ...form, videoUrl: url, videoMediaId: mediaId })}
+            accept={["VIDEO"]}
+          />
+          <MediaField
+            label="Document (optional)"
+            url={form.documentUrl}
+            mediaId={form.documentMediaId}
+            onChange={(url, mediaId) => setForm({ ...form, documentUrl: url, documentMediaId: mediaId })}
+            accept={["DOCUMENT"]}
           />
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={3} />
           <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />

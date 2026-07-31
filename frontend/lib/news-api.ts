@@ -21,6 +21,12 @@ export interface NewsArticle {
   deletedAt: string | null;
   deletedBy: number | null;
   version: number;
+  /** Optional video and document attachments, alongside the image. */
+  videoUrl: string | null;
+  videoMediaId: number | null;
+  documentUrl: string | null;
+  documentMediaId: number | null;
+
 }
 
 export interface NewsArticleInput {
@@ -34,6 +40,11 @@ export interface NewsArticleInput {
   date: string;
   isPublished?: boolean;
   isFeatured?: boolean;
+  videoUrl?: string;
+  videoMediaId?: number | null;
+  documentUrl?: string;
+  documentMediaId?: number | null;
+
 }
 
 // Public listing - the homepage's Latest News teaser (visibility-gated via

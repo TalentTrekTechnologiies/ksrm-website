@@ -40,6 +40,11 @@ interface FormState {
   date: string
   isPublished: boolean
   isFeatured: boolean
+  videoUrl: string
+  videoMediaId: number | null
+  documentUrl: string
+  documentMediaId: number | null
+
 }
 
 function todayIso() {
@@ -55,6 +60,11 @@ const emptyForm: FormState = {
   date: todayIso(),
   isPublished: true,
   isFeatured: false,
+  videoUrl: "",
+  videoMediaId: null,
+  documentUrl: "",
+  documentMediaId: null,
+
 }
 
 const CATEGORY_OPTIONS = ["Examinations", "Results", "Event", "Admissions", "Placements", "General"].map((c) => ({
@@ -115,6 +125,10 @@ function NewsManagerInner() {
       content: item.content,
       category: item.category,
       imageUrl: item.imageUrl ?? "",
+      videoUrl: item.videoUrl ?? "",
+      videoMediaId: item.videoMediaId,
+      documentUrl: item.documentUrl ?? "",
+      documentMediaId: item.documentMediaId,
       mediaId: item.mediaId,
       date: item.date.slice(0, 10),
       isPublished: item.isPublished,
@@ -137,6 +151,10 @@ function NewsManagerInner() {
         content: form.content,
         category: form.category,
         imageUrl: form.imageUrl || undefined,
+        videoUrl: form.videoUrl || undefined,
+        videoMediaId: form.videoMediaId,
+        documentUrl: form.documentUrl || undefined,
+        documentMediaId: form.documentMediaId,
         mediaId: form.mediaId,
         date: form.date,
         isPublished: form.isPublished,
@@ -308,6 +326,23 @@ function NewsManagerInner() {
             onChange={(url, mediaId) => setForm({ ...form, imageUrl: url, mediaId })}
             accept={["IMAGE"]}
             urlPlaceholder="/news/article-1.jpg"
+          />
+          {/* Optional extras. News and events also cover newspaper clippings,
+              interviews and recorded coverage, so each item can carry a video
+              and a downloadable document as well as its image. */}
+          <MediaField
+            label="Video (optional)"
+            url={form.videoUrl}
+            mediaId={form.videoMediaId}
+            onChange={(url, mediaId) => setForm({ ...form, videoUrl: url, videoMediaId: mediaId })}
+            accept={["VIDEO"]}
+          />
+          <MediaField
+            label="Document (optional)"
+            url={form.documentUrl}
+            mediaId={form.documentMediaId}
+            onChange={(url, mediaId) => setForm({ ...form, documentUrl: url, documentMediaId: mediaId })}
+            accept={["DOCUMENT"]}
           />
           <TextAreaField label="Content" value={form.content} onChange={(v) => setForm({ ...form, content: v })} required rows={5} />
           <div className="flex flex-wrap gap-6">

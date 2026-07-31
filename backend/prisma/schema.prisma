@@ -134,6 +134,11 @@ model News {
   /// Media Library's current URL for that asset on every read/write so
   /// Replace propagates without a News re-save.
   mediaId Int?
+  /// Optional video and document attachments, alongside the image.
+  videoUrl        String?
+  videoMediaId    Int?
+  documentUrl     String?
+  documentMediaId Int?
 
   categoryRef    Category? @relation("News_Category", fields: [categoryId], references: [id], onDelete: SetNull)
   authorAdmin    Admin?    @relation("News_Author", fields: [authorAdminId], references: [id], onDelete: SetNull)
@@ -1028,6 +1033,11 @@ model Event {
   /// resolves this to the Media Library's current URL for that asset on
   /// every read/write so Replace propagates without an Events re-save.
   mediaId Int?
+  /// Optional video and document attachments, alongside the image.
+  videoUrl        String?
+  videoMediaId    Int?
+  documentUrl     String?
+  documentMediaId Int?
 
   deletedByAdmin Admin? @relation("Event_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 

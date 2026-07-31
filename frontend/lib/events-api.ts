@@ -19,6 +19,12 @@ export interface EventItem {
   deletedAt: string | null;
   deletedBy: number | null;
   version: number;
+  /** Optional video and document attachments, alongside the image. */
+  videoUrl: string | null;
+  videoMediaId: number | null;
+  documentUrl: string | null;
+  documentMediaId: number | null;
+
 }
 
 export interface EventInput {
@@ -34,6 +40,11 @@ export interface EventInput {
   category?: string;
   sortOrder?: number;
   isActive?: boolean;
+  videoUrl?: string;
+  videoMediaId?: number | null;
+  documentUrl?: string;
+  documentMediaId?: number | null;
+
 }
 
 export function getEventsPublic(): Promise<EventItem[]> {
