@@ -3,6 +3,7 @@
 import { mediaFile } from "@/lib/api-base";
 import { useState } from "react";
 import { getNewsPublic } from "@/lib/news-api";
+import NewsGrid, { toNewsItem, NewsItem } from "@/components/news/NewsGrid";
 import { useLiveData } from "@/lib/use-live-data";
 
 const filters = ["All", "Examinations", "Events", "Accreditation", "Rankings", "Placements"];
@@ -72,6 +73,14 @@ export default function NewsPage() {
       { initialValue: FALLBACK_NEWS },
     ) ?? FALLBACK_NEWS;
 
+  // The redesigned grid needs the whole article (image, video, document), not
+  // the flattened teaser shape above, so it reads from the API separately. The
+  // old `newsItems` list still backs the fallback when the CMS is empty.
+  const richNews = useLiveData<NewsItem[]>(
+    () => getNewsPublic().then(({ items }) => items.map(toNewsItem)).catch(() => [] as NewsItem[]),
+    [],
+  );
+
   const filteredNews = activeFilter === "All"
     ? newsItems
     : newsItems.filter(n => n.badge === activeFilter);
@@ -114,32 +123,36 @@ export default function NewsPage() {
         </div>
       </section>
 
-      <section style={{ padding: "48px 0", background: "#ffffff" }}>
+      {/* Full listing. Cards lead with whatever media the item carries -
+          newspaper clipping, interview video or document - and open a reader.
+          The homepage's news strip is deliberately left as it was. */}
+      <section style={{ padding: "56px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <div className="news-filters">
-            {filters.map((f) => (
-              <button key={f} onClick={() => setActiveFilter(f)} className={`news-filter-btn${activeFilter === f ? " active" : ""}`}>{f}</button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
-        <div className="responsive-container">
-          <div className="news-grid">
-            {filteredNews.map((n) => (
-              <div className="news-card" key={n.title}>
-                <div className="news-badge" style={{ background: n.badgeBg, color: n.badgeColor }}>{n.badge}</div>
-                {n.isNew && <div className="news-new-badge">🆕 NEW</div>}
-                <div className="news-content">
-                  <span className="news-date">{n.date}</span>
-                  <h3 className="news-title">{n.title}</h3>
-                  <p className="news-description">{n.desc}</p>
-                  <a href={n.href} className="news-read-more">Read More →</a>
-                </div>
+          {richNews && richNews.length > 0 ? (
+            <NewsGrid items={richNews} />
+          ) : (
+            <>
+              <div className="news-filters">
+                {filters.map((f) => (
+                  <button key={f} onClick={() => setActiveFilter(f)} className={`news-filter-btn${activeFilter === f ? " active" : ""}`}>{f}</button>
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="news-grid">
+                {filteredNews.map((n) => (
+                  <div className="news-card" key={n.title}>
+                    <div className="news-badge" style={{ background: n.badgeBg, color: n.badgeColor }}>{n.badge}</div>
+                    {n.isNew && <div className="news-new-badge">🆕 NEW</div>}
+                    <div className="news-content">
+                      <span className="news-date">{n.date}</span>
+                      <h3 className="news-title">{n.title}</h3>
+                      <p className="news-description">{n.desc}</p>
+                      <a href={n.href} className="news-read-more">Read More →</a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
     </main>
