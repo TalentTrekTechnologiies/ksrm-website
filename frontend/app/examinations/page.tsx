@@ -48,6 +48,10 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
+      {/* Examination Section staff - CMS-managed, shown up front. */}
+      <ExamSectionStaff />
+
+
       <section style={{ padding: "40px 0", background: "white" }}>
         <div className="responsive-container">
           <div className="exam-quick-links">
@@ -144,8 +148,6 @@ export default function ExaminationsPage() {
       </section>
 
     
-      {/* Examination Section staff - CMS-managed faculty records. */}
-      <ExamSectionStaff />
       </main>
   );
 }

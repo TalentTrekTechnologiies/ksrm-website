@@ -5,18 +5,29 @@ import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
 
 /**
- * The Examination Section's staff, shown on the Examinations page.
+ * The Examination Section's staff, shown at the top of the Examinations page.
  *
  * These are ordinary Faculty records carrying department = "Examination
  * Section", so they inherit everything that module already has: photos from the
  * Media Library, the Move up/down ordering, and the site-wide faculty-photos
- * switch. The Controller of Examinations is the record flagged isHod, and is
- * presented larger and first - the same treatment a department gives its HOD.
+ * switch. The Controller of Examinations is the record flagged isHod and gets
+ * the same gold-bordered treatment a department gives its HOD.
  *
- * Nothing here is hardcoded: staff add, remove, reorder and photograph these
- * people from Departments -> Faculty like any other entry.
+ * The card styling deliberately mirrors DepartmentPage's faculty cards - same
+ * grid, photo ratio, initials fallback and info block - so the section reads as
+ * part of the same site rather than a one-off.
  */
 const SECTION = "Examination Section"
+
+function initials(name: string) {
+  return name
+    .replace(/^(Dr\.|Sri\.|Smt\.|Mr\.|Ms\.|Prof\.)\s*/i, "")
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+}
 
 export default function ExamSectionStaff() {
   const staff = useLiveData<Faculty[]>(
@@ -24,78 +35,84 @@ export default function ExamSectionStaff() {
     [],
   )
   // One switch controls faculty photos across the whole site; honour it here so
-  // the Examinations page never disagrees with the department pages.
+  // this page never disagrees with the department pages.
   const settings = useLiveData<Record<string, string>>(() => getPublicSiteSettings(), [], { initialValue: {} })
   const showPhotos = (settings?.["faculty_show_photos"] ?? "true") !== "false"
 
   if (!staff || staff.length === 0) return null
 
-  const coe = staff.find((s) => s.isHod) ?? null
-  const rest = staff.filter((s) => s.id !== coe?.id)
-
   return (
-    <section style={{ width: "100%", background: "#f7f8fa", padding: "56px 0" }}>
+    <section style={{ width: "100%", background: "#ffffff", padding: "56px 0" }}>
       <style>{`
         .ess-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .ess-container { padding: 0 20px; } }
-        .ess-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; color: #2B3490; margin: 0 0 28px; text-align: center; }
-        .ess-coe { display: flex; align-items: center; gap: 22px; background: #fff; border: 1px solid #eef0f3; border-left: 5px solid #D4A500; border-radius: 14px; padding: 22px; margin-bottom: 26px; }
-        @media (max-width: 560px) { .ess-coe { flex-direction: column; text-align: center; } }
-        .ess-coe img { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 3px solid #FFE619; }
-        .ess-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
-        .ess-card { background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 18px; text-align: center; }
-        .ess-card img { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; display: block; border: 2px solid #eef0f3; }
-        .ess-name { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
-        .ess-desig { font-size: 13px; color: #666; margin: 0; }
-        /* Photos off: a compact list instead of cards, matching how the
-           department pages behave under the same switch. */
+        .ess-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; color: #2B3490; margin: 0 0 6px; }
+        .ess-sub { color: #666; font-size: 15.5px; margin: 0 0 26px; }
+
+        /* Mirrors .dept-faculty-* on the department pages. */
+        .ess-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .ess-card { background: #fff; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; transition: all 0.2s; }
+        .ess-card.coe { border: 2px solid #D4A500; box-shadow: 0 8px 32px rgba(255, 230, 25, 0.12); }
+        .ess-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(43,52,144,0.12); }
+        .ess-photo { position: relative; width: 100%; aspect-ratio: 3 / 3.5; border-radius: 12px 12px 0 0; overflow: hidden; background: linear-gradient(135deg, #2B3490, #1e2570); display: flex; align-items: center; justify-content: center; }
+        .ess-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .ess-badge { position: absolute; top: 12px; left: 12px; background: #FFE619; color: #1a1a2e; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: 'Rajdhani', sans-serif; }
+        .ess-initials { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; }
+        .ess-initials p { color: #D4A500; font-size: 20px; font-weight: 700; font-family: 'Rajdhani', sans-serif; margin: 0; }
+        .ess-info { padding: 20px; }
+        .ess-info h3 { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+        .ess-desig { color: #2B3490; font-size: 13.5px; font-weight: 600; margin: 0; }
+        .ess-email { color: #777; font-size: 13px; margin: 6px 0 0; word-break: break-word; }
+
+        /* Photos off - the same compact list the department pages fall back to. */
         .ess-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
-        .ess-row { background: #fff; border: 1px solid #eef0f3; border-radius: 10px; padding: 12px 16px; }
+        .ess-row { background: #fff; border: 1px solid #eef0f3; border-left: 3px solid #2B3490; border-radius: 10px; padding: 13px 16px; }
+        .ess-row.coe { border-left-color: #D4A500; }
       `}</style>
 
       <div className="ess-container">
         <h2 className="ess-title">Examination Section</h2>
+        <p className="ess-sub">Controller of Examinations and the examination office team.</p>
 
-        {coe && (
-          <div className="ess-coe">
-            {showPhotos && coe.photoUrl && (
-              // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-              <img src={coe.photoUrl} alt={coe.name} onError={(e) => (e.currentTarget.style.display = "none")} />
-            )}
-            <div>
-              <p style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 22, fontWeight: 700, color: "#1a1a2e", margin: "0 0 4px" }}>
-                {coe.name}
-              </p>
-              <p style={{ color: "#D4A500", fontSize: 15, fontWeight: 700, margin: 0 }}>{coe.designation}</p>
-              {coe.email && <p style={{ color: "#666", fontSize: 14, margin: "6px 0 0" }}>{coe.email}</p>}
-            </div>
+        {showPhotos ? (
+          <div className="ess-grid">
+            {staff.map((s) => (
+              <div key={s.id} className={`ess-card${s.isHod ? " coe" : ""}`}>
+                <div className="ess-photo">
+                  {s.photoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
+                    <img
+                      src={s.photoUrl}
+                      alt={s.name}
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none"
+                      }}
+                    />
+                  ) : (
+                    <div className="ess-initials"><p>{initials(s.name)}</p></div>
+                  )}
+                  {s.isHod && <span className="ess-badge">Controller of Examinations</span>}
+                </div>
+                <div className="ess-info">
+                  <h3>{s.name}</h3>
+                  <p className="ess-desig">{s.designation}</p>
+                  {s.email && <p className="ess-email">{s.email}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="ess-list">
+            {staff.map((s) => (
+              <div key={s.id} className={`ess-row${s.isHod ? " coe" : ""}`}>
+                <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: "0 0 2px" }}>
+                  {s.name}
+                </h3>
+                <p className="ess-desig">{s.designation}</p>
+              </div>
+            ))}
           </div>
         )}
-
-        {rest.length > 0 &&
-          (showPhotos ? (
-            <div className="ess-grid">
-              {rest.map((s) => (
-                <div key={s.id} className="ess-card">
-                  {s.photoUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                    <img src={s.photoUrl} alt={s.name} onError={(e) => (e.currentTarget.style.display = "none")} />
-                  )}
-                  <p className="ess-name">{s.name}</p>
-                  <p className="ess-desig">{s.designation}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="ess-list">
-              {rest.map((s) => (
-                <div key={s.id} className="ess-row">
-                  <p className="ess-name">{s.name}</p>
-                  <p className="ess-desig">{s.designation}</p>
-                </div>
-              ))}
-            </div>
-          ))}
       </div>
     </section>
   )
