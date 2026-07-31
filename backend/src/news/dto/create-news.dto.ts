@@ -1,11 +1,4 @@
-import {
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsDateString,
-  MaxLength,
-} from 'class-validator';
+import { IsBoolean, IsDateString, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateNewsDto {
   @IsString()
@@ -37,4 +30,21 @@ export class CreateNewsDto {
   @IsOptional()
   @IsBoolean()
   isFeatured?: boolean;
+
+  // Optional video and document attachments, alongside the existing image.
+  @IsOptional()
+  @IsString()
+  videoUrl?: string;
+
+  @IsOptional()
+  @IsInt()
+  videoMediaId?: number | null;
+
+  @IsOptional()
+  @IsString()
+  documentUrl?: string;
+
+  @IsOptional()
+  @IsInt()
+  documentMediaId?: number | null;
 }
