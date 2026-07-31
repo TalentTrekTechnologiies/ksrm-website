@@ -9,7 +9,8 @@
     "start": "next start",
     "export": "npm run build:static && next export",
     "zip": "next build && tar -a -c -f ../ksrm-site.zip -C out .",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:prod": "node -e \"process.env.NEXT_PUBLIC_API_URL='/api';require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
