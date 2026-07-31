@@ -1,6 +1,7 @@
 ﻿import ExamNotificationsList from "@/components/examinations/ExamNotificationsList";
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
+import ExamSectionStaff from "@/components/examinations/ExamSectionStaff";
 
 // Academic Calendars and Time Tables used to be hardcoded here, which meant a
 // code change to publish a new academic year. They now live in the CMS as
@@ -142,6 +143,9 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
-    </main>
+    
+      {/* Examination Section staff - CMS-managed faculty records. */}
+      <ExamSectionStaff />
+      </main>
   );
 }
