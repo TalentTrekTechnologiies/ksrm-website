@@ -35,6 +35,8 @@ export interface DepartmentInput {
   tagline?: string;
   intro?: string;
   about: string;
+  /** Video shown beside the About text on the department page. */
+  aboutVideoUrl?: string;
   heroImageUrl?: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing heroImageUrl. */

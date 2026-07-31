@@ -20,6 +20,7 @@ export default function ProfileTab({
     shortName: department.shortName ?? "",
     tagline: department.tagline ?? "",
     about: department.about,
+    aboutVideoUrl: department.aboutVideoUrl ?? "",
     heroImageUrl: department.heroImageUrl ?? "",
     heroMediaId: department.heroMediaId,
     vision: department.vision ?? "",
@@ -41,6 +42,7 @@ export default function ProfileTab({
         shortName: form.shortName || undefined,
         tagline: form.tagline || undefined,
         about: form.about,
+        aboutVideoUrl: form.aboutVideoUrl || undefined,
         heroImageUrl: form.heroImageUrl || undefined,
         heroMediaId: form.heroMediaId,
         vision: form.vision || undefined,
@@ -84,6 +86,15 @@ export default function ProfileTab({
           <NumberField label="Established year" value={form.establishedYear} onChange={(v) => { setForm({ ...form, establishedYear: v }); setSaved(false) }} />
         </div>
         <TextAreaField label="About" value={form.about} onChange={(v) => { setForm({ ...form, about: v }); setSaved(false) }} required rows={5} />
+        {/* Sits beside the About text on the public department page. Had no
+            admin field before, so it could only be set in the database. */}
+        <MediaField
+          label="About video (optional)"
+          url={form.aboutVideoUrl}
+          mediaId={null}
+          onChange={(url) => { setForm({ ...form, aboutVideoUrl: url }); setSaved(false) }}
+          accept={["VIDEO"]}
+        />
         <MediaField
           label="Hero Image"
           url={form.heroImageUrl}
