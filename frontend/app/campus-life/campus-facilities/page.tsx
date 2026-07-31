@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsVideos from "@/components/CmsVideos";
 
 ﻿const tourVideos = [
   "/videos/main-block.mp4",
@@ -145,13 +146,14 @@ export default function CampusFacilitiesPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}>Campus Infrastructure Tours</h2>
-          <div className="cf-video-grid">
-            {tourVideos.map((v) => (
-              <div className="cf-video-wrap" key={v}>
-                <video autoPlay loop muted playsInline><source src={v} type="video/mp4" /></video>
-              </div>
-            ))}
-          </div>
+          {/* CMS-managed (Page Content -> Campus Facilities -> Videos), with the
+              built-in tour list as the fallback. */}
+          <CmsVideos
+            section="campus-facilities"
+            fallback={tourVideos}
+            gridClassName="cf-video-grid"
+            itemClassName="cf-video-wrap"
+          />
         </div>
       </section>
 
@@ -228,7 +230,7 @@ export default function CampusFacilitiesPage() {
         </div>
       </section>
     
-      <PageResources section="campus-facilities" />
+      <PageResources section="campus-facilities" hideVideos />
       </main>
   );
 }
