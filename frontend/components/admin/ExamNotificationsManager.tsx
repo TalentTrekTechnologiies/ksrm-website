@@ -5,6 +5,8 @@ import { Loader2, Plus, AlertTriangle } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
+import FacultyTab from "@/components/admin/departments/FacultyTab"
+import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
   TextAreaField,
@@ -350,10 +352,62 @@ function ExamNotificationsManagerInner() {
   )
 }
 
+/**
+ * Everything examinations-related in one place: the notifications themselves,
+ * and the Examination Section's staff.
+ *
+ * The staff are Faculty records belonging to an "Examination Section"
+ * department (created inactive, so it never shows on the public departments
+ * page), which lets this tab reuse the department FacultyTab wholesale - photos,
+ * ordering, HOD/Controller flag and all - instead of duplicating that UI here.
+ */
+function ExamStaffTab() {
+  const [dept, setDept] = useState<{ id: number; name: string } | null | undefined>(undefined)
+
+  useEffect(() => {
+    getDepartmentsAdmin()
+      .then((all) => setDept(all.find((d) => d.slug === "examination-section") ?? null))
+      .catch(() => setDept(null))
+  }, [])
+
+  if (dept === undefined) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="h-6 w-6 animate-spin text-admin-primary" />
+      </div>
+    )
+  }
+  if (dept === null) {
+    return (
+      <p className="rounded-xl border border-dashed border-admin-border p-8 text-center text-sm text-slate-500">
+        The &ldquo;Examination Section&rdquo; department record is missing, so its staff cannot be loaded.
+        Ask your technical team to re-run the database seed.
+      </p>
+    )
+  }
+  return <FacultyTab departmentId={dept.id} departmentName={dept.name} />
+}
+
 export default function ExamNotificationsManager() {
+  const [tab, setTab] = useState<"notifications" | "staff">("notifications")
+  const tabClass = (on: boolean) =>
+    `rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+      on ? "bg-admin-primary text-white" : "border border-admin-border bg-white text-slate-600 hover:bg-admin-bg"
+    }`
+
   return (
     <PermissionGate permission="exam_notifications.view">
-      <ExamNotificationsManagerInner />
+      <div className="space-y-5">
+        <div className="flex gap-2">
+          <button type="button" className={tabClass(tab === "notifications")} onClick={() => setTab("notifications")}>
+            Notifications
+          </button>
+          <button type="button" className={tabClass(tab === "staff")} onClick={() => setTab("staff")}>
+            Examination Section Staff
+          </button>
+        </div>
+        {tab === "notifications" ? <ExamNotificationsManagerInner /> : <ExamStaffTab />}
+      </div>
     </PermissionGate>
   )
 }
