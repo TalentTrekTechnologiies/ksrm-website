@@ -79,3 +79,8 @@ export function deleteFaculty(id: number): Promise<Faculty> {
 export function restoreFaculty(id: number): Promise<Faculty> {
   return apiPost<Faculty>(`/faculty/${id}/restore`);
 }
+
+/** Persist a new display order. Send the full list in its intended order. */
+export function reorderFaculty(items: { id: number; sortOrder: number }[]): Promise<Faculty[]> {
+  return apiPatch<Faculty[]>("/faculty/reorder", { items });
+}

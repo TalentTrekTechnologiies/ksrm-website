@@ -18,6 +18,7 @@ import { UpdateFacultyDto } from './dto/update-faculty.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
+import { ReorderFacultyDto } from './dto/reorder-faculty.dto';
 import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
 import { DepartmentScoped } from '../auth/department-scope.decorator';
 
@@ -66,6 +67,14 @@ export class FacultyController {
   @DepartmentScoped({ source: 'body' })
   create(@Body() createFacultyDto: CreateFacultyDto, @Request() req) {
     return this.facultyService.create(createFacultyDto, req.user, req.requestId);
+  }
+
+  // Declared before @Patch(':id') so Nest does not treat "reorder" as an id.
+  @Patch('reorder')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('faculty.update')
+  reorder(@Body() dto: ReorderFacultyDto, @Request() req) {
+    return this.facultyService.reorder(dto, req.user, req.requestId);
   }
 
   @Patch(':id')

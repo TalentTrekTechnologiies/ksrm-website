@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star } from "lucide-react"
+import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star , ChevronUp, ChevronDown } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
 import { TextField, TextAreaField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
@@ -12,6 +12,7 @@ import {
   updateFaculty,
   deleteFaculty,
   restoreFaculty,
+  reorderFaculty,
   Faculty,
 } from "@/lib/faculty-api"
 
@@ -174,6 +175,30 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
     }
   }
 
+
+  /**
+   * Move one person up or down and persist the whole list's new order.
+   * Buttons rather than drag-and-drop: this list is edited by staff on any
+   * device, and arrows work on touch screens where dragging is fiddly.
+   */
+  async function move(index: number, direction: -1 | 1) {
+    const next = [...liveItems]
+    const target = index + direction
+    if (target < 0 || target >= next.length) return
+    ;[next[index], next[target]] = [next[target], next[index]]
+    setItems((prev) => {
+      const deleted = prev.filter((i) => i.deletedAt !== null)
+      return [...next, ...deleted]
+    })
+    try {
+      await reorderFaculty(next.map((item, i) => ({ id: item.id, sortOrder: i })))
+      await refresh()
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Could not save the new order")
+      await refresh()
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -252,7 +277,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
         <p className="rounded-lg border border-dashed border-admin-border p-6 text-center text-sm text-slate-400">No faculty yet.</p>
       ) : (
         <ul className="space-y-2">
-          {liveItems.map((item) => (
+          {liveItems.map((item, idx) => (
             <li key={item.id} className="flex items-center gap-3 rounded-xl border border-admin-border bg-white px-3 py-3">
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-slate-700">
@@ -260,6 +285,14 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
                   {item.name}
                 </p>
                 <p className="truncate text-xs text-slate-500">{item.designation} · {item.qualification}</p>
+              </div>
+              <div className="flex flex-col">
+                <button type="button" onClick={() => move(idx, -1)} disabled={idx === 0} aria-label="Move up" className="rounded p-0.5 text-slate-400 hover:text-admin-primary disabled:opacity-25">
+                  <ChevronUp className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={() => move(idx, 1)} disabled={idx === liveItems.length - 1} aria-label="Move down" className="rounded p-0.5 text-slate-400 hover:text-admin-primary disabled:opacity-25">
+                  <ChevronDown className="h-4 w-4" />
+                </button>
               </div>
               <button type="button" onClick={() => startEdit(item)} aria-label="Edit" className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-admin-primary">
                 <Pencil className="h-4 w-4" />

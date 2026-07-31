@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
+import { ReorderFacultyDto } from './dto/reorder-faculty.dto';
 import { UpdateFacultyDto } from './dto/update-faculty.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
@@ -187,5 +188,47 @@ export class FacultyService {
     });
 
     return restored;
+  }
+
+  /**
+   * Persist a new display order. The public faculty list sorts by
+   * (isHod desc, sortOrder asc, name asc), so this controls the order staff
+   * appear in after the HOD.
+   */
+  async reorder(dto: ReorderFacultyDto, admin: RequestAdmin, requestId?: string) {
+    const sortOrders = dto.items.map((i) => i.sortOrder);
+    if (new Set(sortOrders).size !== sortOrders.length) {
+      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+    }
+
+    const ids = dto.items.map((i) => i.id);
+    const existingRows = await this.prisma.faculty.findMany({
+      where: { id: { in: ids }, deletedAt: null },
+      select: { id: true },
+    });
+    if (existingRows.length !== ids.length) {
+      throw new BadRequestException('One or more faculty members do not exist');
+    }
+
+    await this.prisma.$transaction(
+      dto.items.map((item) =>
+        this.prisma.faculty.update({
+          where: { id: item.id },
+          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+        }),
+      ),
+    );
+
+    await this.auditLog.log({
+      adminId: admin.id,
+      adminName: admin.name,
+      adminEmail: admin.email,
+      action: 'REORDER',
+      module: MEDIA_MODULE,
+      details: { items: dto.items },
+      requestId,
+    });
+
+    return this.findAllAdmin();
   }
 }
