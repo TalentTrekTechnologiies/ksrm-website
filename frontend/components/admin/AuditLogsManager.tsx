@@ -8,7 +8,17 @@ import { TextField, SelectField } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { getStoredAdmin } from "@/lib/auth"
 import { getAuditLogs, downloadAuditLogsCsv, AuditLogEntry } from "@/lib/audit-logs-api"
-import { humanAction, humanModule } from "@/lib/audit-humanize"
+import { humanAction, humanActionLower, humanModule } from "@/lib/audit-humanize"
+import {
+  describeFields,
+  describeLocation,
+  describeQualifier,
+  describeRecord,
+  parseSnapshot,
+  subjectOf,
+} from "@/lib/audit-describe"
+import { computeFieldDiff } from "@/lib/audit-diff.util"
+import { getDepartmentsAdmin } from "@/lib/departments-api"
 
 // Values stay the raw database verbs (the API filters on them); only the
 // labels an admin reads are plain language, via the shared humanizer.
@@ -52,97 +62,162 @@ function ActionBadge({ action }: { action: string }) {
   )
 }
 
-function DetailsModal({ entry, onClose }: { entry: AuditLogEntry; onClose: () => void }) {
-  let parsed: { before?: unknown; after?: unknown; changedFields?: string[]; [key: string]: unknown } | null = null
-  try {
-    parsed = entry.details ? JSON.parse(entry.details) : null
-  } catch {
-    parsed = null
-  }
+/** Two-column label/value rows, used for created and deleted records. */
+function FieldTable({ rows }: { rows: { field: string; label: string; value: string }[] }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-admin-border">
+      <table className="w-full text-left text-xs">
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={r.field} className={i > 0 ? "border-t border-admin-border" : ""}>
+              <td className="w-48 bg-admin-bg/60 px-3 py-2 align-top font-medium text-slate-600">{r.label}</td>
+              <td className="break-words px-3 py-2 text-slate-800">{r.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function DetailsModal({
+  entry,
+  deptNames,
+  onClose,
+}: {
+  entry: AuditLogEntry
+  deptNames: Map<number, string>
+  onClose: () => void
+}) {
+  const snapshot = parseSnapshot(entry.details)
+  const record = describeRecord(entry)
+  const location = describeLocation(entry, deptNames)
+  const diffs = snapshot ? computeFieldDiff(snapshot.before, snapshot.after) : []
+
+  // An update shows what differed; a create or delete has nothing to compare
+  // against, so it lists the record's own contents instead.
+  const isUpdate = diffs.length > 0
+  const contents = !isUpdate ? describeFields(subjectOf(snapshot)) : []
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div
         style={{ boxShadow: "var(--shadow-admin-card)" }}
-        className="max-h-[85vh] w-full max-w-3xl space-y-4 overflow-auto rounded-2xl bg-white p-5"
+        className="max-h-[85vh] w-full max-w-3xl overflow-auto rounded-2xl bg-white"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold text-slate-700">Audit Log Entry #{entry.id}</p>
-          <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1 hover:bg-admin-bg">
+        {/* Headline: who did what, to which record, where. */}
+        <div className="flex items-start justify-between gap-3 border-b border-admin-border p-5">
+          <div className="min-w-0">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <ActionBadge action={entry.action} />
+              <span className="text-xs text-slate-500">{humanModule(entry.module)}</span>
+            </div>
+            <p className="truncate text-lg font-semibold text-slate-800" title={record}>
+              {record}
+            </p>
+            <p className="mt-1 text-sm text-slate-600">
+              <span className="font-medium text-slate-700">{entry.adminName}</span> {humanActionLower(entry.action)} this
+              {location && (
+                <>
+                  {" "}
+                  on <span className="font-medium text-slate-700">{location}</span>
+                </>
+              )}
+            </p>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Close" className="shrink-0 rounded-lg p-1 hover:bg-admin-bg">
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-3">
-          <div>
-            <p className="text-slate-400">Timestamp</p>
-            <p className="font-medium text-slate-700">{new Date(entry.createdAt).toLocaleString()}</p>
-          </div>
-          <div>
-            <p className="text-slate-400">Action</p>
-            <ActionBadge action={entry.action} />
-          </div>
-          <div>
-            <p className="text-slate-400">Module</p>
-            <p className="font-medium text-slate-700">{humanModule(entry.module)}</p>
-          </div>
-          <div>
-            <p className="text-slate-400">User</p>
-            <p className="font-medium text-slate-700">{entry.adminName}</p>
-            <p className="text-slate-500">{entry.adminEmail}</p>
-          </div>
-          <div>
-            <p className="text-slate-400">IP Address</p>
-            <p className="font-medium text-slate-700">{entry.ipAddress ?? "—"}</p>
-          </div>
-          <div>
-            <p className="text-slate-400">Request ID</p>
-            <p className="break-all font-mono text-[11px] text-slate-600">{entry.requestId ?? "—"}</p>
-          </div>
-          {entry.targetId !== null && (
+        <div className="space-y-5 p-5">
+          {/* Who / when / where from */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs sm:grid-cols-4">
             <div>
-              <p className="text-slate-400">Target ID</p>
-              <p className="font-medium text-slate-700">{entry.targetId}</p>
+              <p className="text-slate-400">When</p>
+              <p className="font-medium text-slate-700">{new Date(entry.createdAt).toLocaleString()}</p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-slate-400">Account</p>
+              <p className="truncate font-medium text-slate-700" title={entry.adminEmail}>{entry.adminEmail}</p>
+            </div>
+            <div>
+              <p className="text-slate-400">IP address</p>
+              <p className="font-medium text-slate-700">{entry.ipAddress ?? "—"}</p>
+            </div>
+            <div>
+              <p className="text-slate-400">Record ID</p>
+              <p className="font-medium text-slate-700">{entry.targetId ?? "—"}</p>
+            </div>
+          </div>
+
+          {isUpdate && (
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                What changed ({diffs.length} field{diffs.length === 1 ? "" : "s"})
+              </p>
+              <div className="overflow-hidden rounded-xl border border-admin-border">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-admin-bg">
+                    <tr>
+                      <th className="w-44 px-3 py-2 font-semibold text-slate-500">Field</th>
+                      <th className="px-3 py-2 font-semibold text-slate-500">Before</th>
+                      <th className="px-3 py-2 font-semibold text-slate-500">After</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {diffs.map((d) => (
+                      <tr key={d.field} className="border-t border-admin-border align-top">
+                        <td className="px-3 py-2 font-medium text-slate-700">{d.label}</td>
+                        <td className="break-words px-3 py-2 text-red-700 line-through decoration-red-300">{d.oldValue}</td>
+                        <td className="break-words px-3 py-2 text-emerald-700">{d.newValue}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
+
+          {!isUpdate && contents.length > 0 && (
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {entry.action === "DELETE" ? "The deleted record held" : "Details"}
+              </p>
+              <FieldTable rows={contents} />
+            </div>
+          )}
+
+          {!isUpdate && contents.length === 0 && (
+            <p className="rounded-lg bg-admin-bg px-3 py-2.5 text-xs text-slate-500">
+              No field-level detail was recorded for this change.
+            </p>
+          )}
+
+          {/* Kept for anyone who needs the exact payload, out of the way by default. */}
+          {entry.details && (
+            <details className="rounded-xl border border-admin-border">
+              <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-slate-500 hover:text-slate-700">
+                Technical detail
+              </summary>
+              <div className="border-t border-admin-border p-3">
+                <p className="mb-2 break-all font-mono text-[10px] text-slate-400">
+                  Entry #{entry.id} · request {entry.requestId ?? "—"}
+                </p>
+                <pre className="max-h-64 overflow-auto rounded-lg bg-admin-bg p-3 text-[11px] text-slate-700">
+                  {(() => {
+                    try {
+                      return JSON.stringify(JSON.parse(entry.details), null, 2)
+                    } catch {
+                      return entry.details
+                    }
+                  })()}
+                </pre>
+              </div>
+            </details>
+          )}
         </div>
-
-        {parsed?.changedFields && (
-          <div>
-            <p className="mb-1 text-xs font-semibold text-slate-500">Changed fields</p>
-            <div className="flex flex-wrap gap-1">
-              {(parsed.changedFields as string[]).map((f) => (
-                <span key={f} className="rounded bg-admin-bg px-1.5 py-0.5 text-[11px] text-slate-600">
-                  {f}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {parsed && (parsed.before !== undefined || parsed.after !== undefined) ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <p className="mb-1 text-xs font-semibold text-slate-500">Before</p>
-              <pre className="max-h-64 overflow-auto rounded-lg bg-admin-bg p-3 text-[11px] text-slate-700">
-                {parsed.before !== undefined ? JSON.stringify(parsed.before, null, 2) : "—"}
-              </pre>
-            </div>
-            <div>
-              <p className="mb-1 text-xs font-semibold text-slate-500">After</p>
-              <pre className="max-h-64 overflow-auto rounded-lg bg-admin-bg p-3 text-[11px] text-slate-700">
-                {parsed.after !== undefined ? JSON.stringify(parsed.after, null, 2) : "—"}
-              </pre>
-            </div>
-          </div>
-        ) : parsed ? (
-          <div>
-            <p className="mb-1 text-xs font-semibold text-slate-500">Details</p>
-            <pre className="max-h-64 overflow-auto rounded-lg bg-admin-bg p-3 text-[11px] text-slate-700">
-              {JSON.stringify(parsed, null, 2)}
-            </pre>
-          </div>
-        ) : null}
       </div>
     </div>
   )
@@ -163,6 +238,10 @@ function AuditLogsManagerInner() {
   const [to, setTo] = useState("")
   const [exporting, setExporting] = useState(false)
   const [viewing, setViewing] = useState<AuditLogEntry | null>(null)
+  // Resolves the departmentId-only entries (labs, outcomes, highlights) to a
+  // real department name in the "Where" column. Missing names degrade to
+  // "Department #3", so a failed load costs nothing.
+  const [deptNames, setDeptNames] = useState<Map<number, string>>(new Map())
 
   const query = {
     search: search || undefined,
@@ -207,6 +286,14 @@ function AuditLogsManagerInner() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, module, action, from, to])
+
+  useEffect(() => {
+    getDepartmentsAdmin()
+      .then((rows) => setDeptNames(new Map(rows.map((d) => [d.id, d.name]))))
+      .catch(() => {
+        /* names are a nicety; the ID fallback still reads fine */
+      })
+  }, [])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -285,11 +372,11 @@ function AuditLogsManagerInner() {
           <table className="w-full text-left text-sm">
             <thead className="bg-admin-bg">
               <tr>
-                <th className="px-4 py-2.5 font-semibold text-slate-500">Timestamp</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-500">User</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-500">Action</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-500">Module</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-500">Target</th>
+                <th className="px-4 py-2.5 font-semibold text-slate-500">When</th>
+                <th className="px-4 py-2.5 font-semibold text-slate-500">Who</th>
+                <th className="px-4 py-2.5 font-semibold text-slate-500">Did what</th>
+                <th className="px-4 py-2.5 font-semibold text-slate-500">To what</th>
+                <th className="px-4 py-2.5 font-semibold text-slate-500">Where</th>
                 <th className="px-4 py-2.5 font-semibold text-slate-500">IP</th>
                 <th className="px-4 py-2.5 font-semibold text-slate-500"></th>
               </tr>
@@ -302,26 +389,51 @@ function AuditLogsManagerInner() {
                   </td>
                 </tr>
               )}
-              {items.map((entry) => (
-                <tr key={entry.id} className="border-t border-admin-border hover:bg-admin-bg/60">
-                  <td className="px-4 py-2.5 text-xs text-slate-500">{new Date(entry.createdAt).toLocaleString()}</td>
-                  <td className="px-4 py-2.5">
-                    <p className="font-medium text-slate-800">{entry.adminName}</p>
-                    <p className="text-xs text-slate-500">{entry.adminEmail}</p>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <ActionBadge action={entry.action} />
-                  </td>
-                  <td className="px-4 py-2.5 text-xs text-slate-600">{humanModule(entry.module)}</td>
-                  <td className="px-4 py-2.5 text-xs text-slate-500">{entry.targetId ?? "—"}</td>
-                  <td className="px-4 py-2.5 text-xs text-slate-500">{entry.ipAddress ?? "—"}</td>
-                  <td className="px-4 py-2.5">
-                    <button type="button" onClick={() => setViewing(entry)} className="text-xs font-semibold text-admin-primary hover:underline">
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {items.map((entry) => {
+                const record = describeRecord(entry)
+                const qualifier = describeQualifier(entry)
+                const where = describeLocation(entry, deptNames)
+                return (
+                  <tr key={entry.id} className="border-t border-admin-border hover:bg-admin-bg/60">
+                    <td className="whitespace-nowrap px-4 py-2.5 text-xs text-slate-500">
+                      {new Date(entry.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <p className="font-medium text-slate-800">{entry.adminName}</p>
+                      <p className="text-xs text-slate-500">{entry.adminEmail}</p>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2.5">
+                      <ActionBadge action={entry.action} />
+                      <p className="mt-0.5 text-xs text-slate-500">{humanModule(entry.module)}</p>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <p className="max-w-[240px] truncate text-xs font-medium text-slate-800" title={record}>
+                        {record}
+                      </p>
+                      {qualifier && (
+                        <p className="max-w-[240px] truncate text-[11px] text-slate-500" title={qualifier}>
+                          {qualifier}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <p className="max-w-[190px] truncate text-xs text-slate-600" title={where ?? undefined}>
+                        {where ?? "—"}
+                      </p>
+                    </td>
+                    <td className="px-4 py-2.5 text-xs text-slate-500">{entry.ipAddress ?? "—"}</td>
+                    <td className="px-4 py-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setViewing(entry)}
+                        className="text-xs font-semibold text-admin-primary hover:underline"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -353,7 +465,7 @@ function AuditLogsManagerInner() {
         </div>
       </div>
 
-      {viewing && <DetailsModal entry={viewing} onClose={() => setViewing(null)} />}
+      {viewing && <DetailsModal entry={viewing} deptNames={deptNames} onClose={() => setViewing(null)} />}
     </div>
   )
 }

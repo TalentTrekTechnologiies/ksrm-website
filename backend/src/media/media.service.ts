@@ -537,7 +537,13 @@ export class MediaService {
       action: 'CROP',
       module: 'media',
       targetId: id,
-      details: { after: dto },
+      // Name the file that was cropped; the crop rectangle alone does not
+      // identify it.
+      details: {
+        title: existing.title,
+        originalFilename: existing.originalFilename,
+        after: dto,
+      },
       requestId,
     });
 

@@ -201,7 +201,14 @@ export class AnnouncementsService {
       action: isPublished ? 'PUBLISH' : 'UNPUBLISH',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: { isPublished: existing.isPublished }, after: { isPublished } },
+      // Carry the title: a log line reading "Published #14" tells a reviewer
+      // nothing, and the record may have been renamed or removed by the time
+      // anyone reads it back.
+      details: {
+        title: existing.title,
+        before: { isPublished: existing.isPublished },
+        after: { isPublished },
+      },
       requestId,
     });
 

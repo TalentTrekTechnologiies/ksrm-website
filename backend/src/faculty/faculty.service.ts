@@ -39,7 +39,11 @@ export class FacultyService {
         ...(!includeDeleted && { deletedAt: null }),
         ...(departmentId !== undefined && { departmentId }),
       },
-      orderBy: { name: 'asc' },
+      // Must match findAll's ordering. This used to sort by name alone, so
+      // Move up/down saved a new sortOrder that the admin list then ignored -
+      // the rows snapped straight back to alphabetical and the reorder looked
+      // broken, even though the public page was showing the intended order.
+      orderBy: [{ isHod: 'desc' }, { sortOrder: 'asc' }, { name: 'asc' }],
     });
   }
 

@@ -294,7 +294,14 @@ export class AdminsService {
       action: isActive ? 'ENABLE' : 'DISABLE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: { isActive: existing.isActive }, after: { isActive } },
+      // Name the account being enabled/disabled - this is exactly the entry a
+      // reviewer needs to read months later, and an id alone will not do.
+      details: {
+        name: existing.name,
+        email: existing.email,
+        before: { isActive: existing.isActive },
+        after: { isActive },
+      },
       requestId,
     });
 

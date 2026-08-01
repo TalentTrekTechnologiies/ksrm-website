@@ -120,7 +120,12 @@ export class ExamNotificationsService {
       action: isPublished ? 'PUBLISH' : 'UNPUBLISH',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: { isPublished: existing.isPublished }, after: { isPublished } },
+      // Carry the title so the entry names the notification, not just its id.
+      details: {
+        title: existing.title,
+        before: { isPublished: existing.isPublished },
+        after: { isPublished },
+      },
       requestId,
     });
 

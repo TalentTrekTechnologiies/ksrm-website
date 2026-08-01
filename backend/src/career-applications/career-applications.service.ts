@@ -365,6 +365,9 @@ export class CareerApplicationsService {
       module: AUDIT_MODULE,
       targetId: id,
       details: {
+        // Name the applicant, so the trail reads "moved Priya Sharma to
+        // Interview Scheduled" rather than "#8 status changed".
+        name: existing.fullName,
         before: { status: existing.status },
         after: { status: updated.status },
         changedFields: ['status'],
