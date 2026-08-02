@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from './prisma/prisma.service';
@@ -32,8 +33,16 @@ function assertRequiredEnv() {
 async function bootstrap() {
   assertRequiredEnv();
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
+
+  // In production Nginx proxies to this process, so without this every request
+  // arrives from 127.0.0.1 and the rate limiter sees the entire internet as a
+  // single client - one busy visitor could exhaust the quota for everybody and
+  // the site would start answering 429 to real users. Trusting one proxy hop
+  // makes req.ip the visitor's real address, which is what the limiter (and
+  // the IP recorded in the audit log) is meant to be counting.
+  app.set('trust proxy', 1);
 
   // Serve the whole API under /api.
   //

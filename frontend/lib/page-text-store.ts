@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { getPageTextPublic, PageText } from "./page-text-api"
 import { DEFAULT_POLL_INTERVAL_MS } from "./use-live-data"
+import { onContentChange } from "./content-version-store"
 
 /**
  * One fetch per page section, shared by every <CmsText> on the page.
@@ -22,6 +23,7 @@ interface SectionState {
   overrides: Map<string, string>
   listeners: Set<(m: Map<string, string>) => void>
   timer: ReturnType<typeof setInterval> | null
+  unsubscribe?: () => void
 }
 
 const sections = new Map<string, SectionState>()
@@ -65,6 +67,9 @@ function subscribe(section: string, fn: (m: Map<string, string>) => void): () =>
 
   if (state.timer === null) {
     load(section)
+    // Reload the instant anything is edited; the interval is only a fallback
+    // for when that signal is unavailable, matching useLiveData.
+    state.unsubscribe = onContentChange(() => load(section))
     state.timer = setInterval(() => load(section), DEFAULT_POLL_INTERVAL_MS)
   }
 
@@ -75,6 +80,8 @@ function subscribe(section: string, fn: (m: Map<string, string>) => void): () =>
     if (current.listeners.size === 0 && current.timer !== null) {
       clearInterval(current.timer)
       current.timer = null
+      current.unsubscribe?.()
+      current.unsubscribe = undefined
     }
   }
 }
