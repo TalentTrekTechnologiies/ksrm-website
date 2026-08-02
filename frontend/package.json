@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run clean:devtypes",
     "build": "next build",
     "build:static": "NEXT_PUBLIC_API_URL= next build",
     "start": "next start",
     "export": "npm run build:static && next export",
     "zip": "next build && tar -a -c -f ../ksrm-site.zip -C out .",
     "lint": "eslint",
-    "build:prod": "node -e \"process.env.NEXT_PUBLIC_API_URL='/api';require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\""
+    "clean:devtypes": "node -e \"require('fs').rmSync('.next/dev',{recursive:true,force:true})\"",
+    "build:prod": "npm run clean:devtypes && node -e \"process.env.NEXT_PUBLIC_API_URL='/api';require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

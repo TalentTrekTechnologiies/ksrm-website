@@ -81,16 +81,22 @@ function subscribe(section: string, fn: (m: Map<string, string>) => void): () =>
 
 /** This section's overrides, kept live. Empty until the first fetch lands. */
 export function usePageTextSection(section: string): Map<string, string> {
-  const [overrides, setOverrides] = useState<Map<string, string>>(
-    () => sections.get(section)?.overrides ?? new Map(),
-  )
+  const [state, setState] = useState<{ section: string; overrides: Map<string, string> }>(() => ({
+    section,
+    overrides: sections.get(section)?.overrides ?? new Map(),
+  }))
+
+  // If the section changes, adopt whatever is already cached for the new one
+  // straight away rather than showing the old section's text for a frame.
+  // Adjusting state during render is React's own answer to this; doing it in an
+  // effect would render the wrong text first and then correct it.
+  if (state.section !== section) {
+    setState({ section, overrides: sections.get(section)?.overrides ?? new Map() })
+  }
 
   useEffect(() => {
-    // Adopt whatever is already cached before the first fetch of this mount.
-    const cached = sections.get(section)?.overrides
-    if (cached && cached.size > 0) setOverrides(cached)
-    return subscribe(section, setOverrides)
+    return subscribe(section, (overrides) => setState({ section, overrides }))
   }, [section])
 
-  return overrides
+  return state.section === section ? state.overrides : new Map()
 }
