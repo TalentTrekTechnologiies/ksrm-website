@@ -303,11 +303,11 @@ export default function LibraryPage() {
       <section style={{ padding: "36px 0", background: "#2B3490" }}>
         <div className="responsive-container">
           <div className="lib-stats-bar">
-            {stats.map((s) => (
+            {stats.map((s, _i) => (
               <div className="lib-stat-item" key={s.label}>
                 <div className="lib-stat-icon">{s.icon}</div>
                 <div className="lib-stat-number">{s.value}</div>
-                <div className="lib-stat-label">{s.label}</div>
+                <div className="lib-stat-label"><CmsText section="library" slot={`stats.${_i}.label`} /></div>
               </div>
             ))}
           </div>
@@ -358,11 +358,11 @@ export default function LibraryPage() {
           <h2 className="lib-h2"><CmsText section="library" slot="services.heading" /></h2>
           <p className="lib-lead"><CmsText section="library" slot="services.lead" /></p>
           <div className="lib-service-grid">
-            {services.map((s) => (
+            {services.map((s, _i) => (
               <div className="lib-service-card" key={s.title}>
                 <div className="lib-service-icon">{s.icon}</div>
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
+                <h3><CmsText section="library" slot={`services.${_i}.title`} /></h3>
+                <p><CmsText section="library" slot={`services.${_i}.desc`} /></p>
               </div>
             ))}
           </div>
@@ -383,8 +383,8 @@ export default function LibraryPage() {
                     <tr><th>Section</th><th className="num">Seating Capacity</th></tr>
                   </thead>
                   <tbody>
-                    {seating.map((s) => (
-                      <tr key={s.section}><td>{s.section}</td><td className="num">{s.capacity}</td></tr>
+                    {seating.map((s, _i) => (
+                      <tr key={s.section}><td><CmsText section="library" slot={`seating.${_i}.section`} /></td><td className="num">{s.capacity}</td></tr>
                     ))}
                   </tbody>
                   <tfoot>
@@ -401,8 +401,8 @@ export default function LibraryPage() {
                     <tr><th>Equipment</th><th className="num">Quantity</th></tr>
                   </thead>
                   <tbody>
-                    {reprographics.map((r) => (
-                      <tr key={r.item}><td>{r.item}</td><td className="num">{r.count}</td></tr>
+                    {reprographics.map((r, _i) => (
+                      <tr key={r.item}><td><CmsText section="library" slot={`reprographics.${_i}.item`} /></td><td className="num">{r.count}</td></tr>
                     ))}
                   </tbody>
                 </table>
@@ -418,9 +418,9 @@ export default function LibraryPage() {
           <h2 className="lib-h2">What is on Each Floor</h2>
           <p className="lib-lead">The Central Library is spread over three floors.</p>
           <div className="lib-floor-grid">
-            {floors.map((f) => (
+            {floors.map((f, _i) => (
               <div className="lib-floor-card" key={f.floor}>
-                <h3>{f.floor}</h3>
+                <h3><CmsText section="library" slot={`floors.${_i}.floor`} /></h3>
                 <ul>{f.items.map((i) => <li key={i}>{i}</li>)}</ul>
               </div>
             ))}
@@ -441,8 +441,8 @@ export default function LibraryPage() {
                 <tr><th>Branch</th><th className="num">Volumes</th><th className="num">Titles</th></tr>
               </thead>
               <tbody>
-                {holdings.map((h) => (
-                  <tr key={h.branch}><td>{h.branch}</td><td className="num">{h.volumes}</td><td className="num">{h.titles}</td></tr>
+                {holdings.map((h, _i) => (
+                  <tr key={h.branch}><td><CmsText section="library" slot={`holdings.${_i}.branch`} /></td><td className="num">{h.volumes}</td><td className="num">{h.titles}</td></tr>
                 ))}
               </tbody>
               <tfoot>
@@ -458,8 +458,8 @@ export default function LibraryPage() {
                 <tr><th>Branch</th><th className="num">National</th><th className="num">International</th></tr>
               </thead>
               <tbody>
-                {journals.map((j) => (
-                  <tr key={j.branch}><td>{j.branch}</td><td className="num">{j.national}</td><td className="num">{j.international}</td></tr>
+                {journals.map((j, _i) => (
+                  <tr key={j.branch}><td><CmsText section="library" slot={`journals.${_i}.branch`} /></td><td className="num">{j.national}</td><td className="num">{j.international}</td></tr>
                 ))}
               </tbody>
               <tfoot>
@@ -475,8 +475,8 @@ export default function LibraryPage() {
                 <tr><th>Title</th><th className="num">Total Number</th></tr>
               </thead>
               <tbody>
-                {otherHoldings.map((o) => (
-                  <tr key={o.title}><td>{o.title}</td><td className="num">{o.count}</td></tr>
+                {otherHoldings.map((o, _i) => (
+                  <tr key={o.title}><td><CmsText section="library" slot={`otherHoldings.${_i}.title`} /></td><td className="num">{o.count}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -493,10 +493,10 @@ export default function LibraryPage() {
             users can reach the following electronic resources.
           </p>
           <div className="lib-eresources-grid">
-            {eresources.map((e) => (
+            {eresources.map((e, _i) => (
               <div className="lib-eresource-card" key={e.title}>
-                <h4>{e.title}</h4>
-                <p>{e.desc}</p>
+                <h4><CmsText section="library" slot={`eresources.${_i}.title`} /></h4>
+                <p><CmsText section="library" slot={`eresources.${_i}.desc`} /></p>
                 {e.href && (
                   <a href={e.href} className="lib-eresource-link" target="_blank" rel="noopener noreferrer">Access Resource →</a>
                 )}
@@ -542,10 +542,10 @@ export default function LibraryPage() {
           <h2 className="lib-h2">How the Library Works</h2>
           <p className="lib-lead">Procurement, classification and the day-to-day running of the collection.</p>
           <div className="lib-practice-grid">
-            {practices.map((p) => (
+            {practices.map((p, _i) => (
               <div className="lib-practice" key={p.title}>
-                <h3>{p.title}</h3>
-                <p>{p.body}</p>
+                <h3><CmsText section="library" slot={`practices.${_i}.title`} /></h3>
+                <p><CmsText section="library" slot={`practices.${_i}.body`} /></p>
               </div>
             ))}
           </div>
@@ -614,10 +614,10 @@ export default function LibraryPage() {
                 {committee.map((c, i) => (
                   <tr key={c.name}>
                     <td>{String(i + 1).padStart(2, "0")}</td>
-                    <td>{c.name}</td>
-                    <td>{c.dept}</td>
-                    <td>{c.desig}</td>
-                    <td>{c.role}</td>
+                    <td><CmsText section="library" slot={`committee.${i}.name`} /></td>
+                    <td><CmsText section="library" slot={`committee.${i}.dept`} /></td>
+                    <td><CmsText section="library" slot={`committee.${i}.desig`} /></td>
+                    <td><CmsText section="library" slot={`committee.${i}.role`} /></td>
                   </tr>
                 ))}
               </tbody>

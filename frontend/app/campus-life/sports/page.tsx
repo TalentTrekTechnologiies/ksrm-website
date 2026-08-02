@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 const facilities = [
   { title: "Basketball Court", desc: "Full-size international basketball court with professional lighting and seating.", type: "Outdoor", cap: "500" },
@@ -93,27 +94,22 @@ export default function SportsPage() {
       <section className="spo-hero">
         <div className="responsive-container">
           <div className="spo-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Sports</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Excellence Through Athletic Pursuits</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="sports" slot="sports" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="sports" slot="excellence-through-athletic-pursuits" /></p>
         </div>
       </section>
 
       <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <div style={{ maxWidth: 820 }}>
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              Sports at K.S.R.M. College of Engineering is an integral part of campus life, promoting physical fitness,
-              team spirit, and competitive excellence. With modern facilities and dedicated coaching staff, our
-              college encourages students to participate in both indoor and outdoor sports, fostering holistic
-              development.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}><CmsText section="sports" slot="sports-at-k-s-r" multiline /></p>
           </div>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}>Sports Arena Tours</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="sports" slot="sports-arena-tours" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
             <div style={{ borderRadius: 8, overflow: "hidden" }}>
               <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
@@ -136,18 +132,18 @@ export default function SportsPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Sports Facilities</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="sports" slot="sports-facilities" /></h2>
           <div className="spo-filters">
             <button className="spo-filter-btn active">All Facilities</button>
             <button className="spo-filter-btn">Indoor</button>
             <button className="spo-filter-btn">Outdoor</button>
           </div>
           <div className="spo-facility-grid">
-            {facilities.map((f) => (
+            {facilities.map((f, _i) => (
               <div className="spo-facility-card" key={f.title}>
                 <div className="spo-facility-icon">⚡</div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
+                <h3><CmsText section="sports" slot={`facilities.${_i}.title`} /></h3>
+                <p><CmsText section="sports" slot={`facilities.${_i}.desc`} /></p>
                 <div className="spo-facility-meta"><span>{f.type}</span><span>Capacity: {f.cap}</span></div>
               </div>
             ))}
@@ -157,26 +153,26 @@ export default function SportsPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>Achievements</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="sports" slot="achievements" /></h2>
           <div className="spo-achievements-container">
             <div>
-              {achievements.map((a) => (
+              {achievements.map((a, _i) => (
                 <div className="spo-achievement-card" key={a.title}>
                   <div className="spo-achievement-badge" style={{ background: badgeColors[a.badge] }}>🏆</div>
                   <div className="spo-achievement-content">
-                    <h4>{a.title}</h4>
-                    <p>{a.result}</p>
-                    <div className="spo-achievement-level">{a.level}</div>
+                    <h4><CmsText section="sports" slot={`achievements.${_i}.title`} /></h4>
+                    <p><CmsText section="sports" slot={`achievements.${_i}.result`} /></p>
+                    <div className="spo-achievement-level"><CmsText section="sports" slot={`achievements.${_i}.level`} /></div>
                     <p style={{ fontSize: 12, marginTop: 8 }}>Year: {a.year}</p>
                   </div>
                 </div>
               ))}
             </div>
             <div>
-              {achievementImages.map((img) => (
+              {achievementImages.map((img, _i) => (
                 <div key={img.src}>
                   <div className="spo-achievements-image"><img src={img.src} alt={img.alt} /></div>
-                  <p style={{ fontSize: 13, color: "#555", margin: "8px 0 0", fontWeight: 500 }}>{img.caption}</p>
+                  <p style={{ fontSize: 13, color: "#555", margin: "8px 0 0", fontWeight: 500 }}><CmsText section="sports" slot={`achievementImages.${_i}.caption`} /></p>
                 </div>
               ))}
               <div className="spo-achievements-caption">
@@ -190,11 +186,11 @@ export default function SportsPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>Upcoming Events</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="sports" slot="upcoming-events" /></h2>
           <div className="spo-upcoming-grid">
-            {upcomingEvents.map((e) => (
+            {upcomingEvents.map((e, _i) => (
               <div className="spo-event-card" key={e.title}>
-                <h3>{e.title}</h3>
+                <h3><CmsText section="sports" slot={`upcomingEvents.${_i}.title`} /></h3>
                 <p><strong>Date:</strong> {e.date}</p>
                 <p><strong>Venue:</strong> {e.venue}</p>
               </div>
@@ -206,15 +202,15 @@ export default function SportsPage() {
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <div className="spo-coordinator-card">
-            <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, margin: "0 0 24px" }}>Dr. [Sports Coordinator]</h3>
-            <p>Sports Coordinator</p>
+            <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, margin: "0 0 24px" }}><CmsText section="sports" slot="dr-sports-coordinator" /></h3>
+            <p><CmsText section="sports" slot="sports-coordinator" /></p>
             <div className="spo-contact-info">
               <div className="spo-contact-item">
-                <h4>Phone</h4>
+                <h4><CmsText section="sports" slot="phone" /></h4>
                 <p><a href="tel:+91-8554-233333 (Ext: 340)">+91-8554-233333 (Ext: 340)</a></p>
               </div>
               <div className="spo-contact-item">
-                <h4>Email</h4>
+                <h4><CmsText section="sports" slot="email" /></h4>
                 <p><a href="mailto:sports@ksrmce.ac.in">sports@ksrmce.ac.in</a></p>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 export default function TrainingsPage() {
   return (
@@ -73,18 +74,16 @@ export default function TrainingsPage() {
         <section className="trainings-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="trainings-title">Trainings</h1>
-              <p className="trainings-subtitle">Placements & Career Development</p>
+              <h1 className="trainings-title"><CmsText section="placements.trainings" slot="trainings" /></h1>
+              <p className="trainings-subtitle"><CmsText section="placements.trainings" slot="placements-career-development" /></p>
             </div>
           </div>
         </section>
         <PlacementsSubnav active="/placements/trainings" />
         <section className="trainings-intro-section">
           <div className="responsive-container">
-            <h2 className="trainings-heading">Trainings</h2>
-            <p className="trainings-text">
-              At K.S.R.M. College of Engineering, training is not viewed as a standalone activity but as a strategic and continuous process designed to nurture talent, build competencies, and enhance employability. The framework is built on a systematic approach that integrates assessment, skill development, practical application, industry exposure, certifications, internships, and placement readiness. Through trainings, students are empowered to develop the knowledge, skills, attitude, and professional competencies required to excel in a dynamic and competitive global workforce.
-            </p>
+            <h2 className="trainings-heading"><CmsText section="placements.trainings" slot="trainings-2" /></h2>
+            <p className="trainings-text"><CmsText section="placements.trainings" slot="at-k-s-r-m" multiline /></p>
           </div>
         </section>
       

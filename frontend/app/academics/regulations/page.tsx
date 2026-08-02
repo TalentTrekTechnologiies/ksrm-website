@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 const regulations = [
   {
@@ -210,35 +211,28 @@ export default function RegulationsPage() {
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="reg-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
-              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Regulations</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Academic Rules and Guidelines</p>
+              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="academics.regulations" slot="regulations" /></h1>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}><CmsText section="academics.regulations" slot="academic-rules-and-guidelines" /></p>
             </div>
           </div>
         </section>
 
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              K.S.R.M. College of Engineering follows comprehensive regulations for all academic programmes as
-              prescribed by JNTUA (Jawaharlal Nehru Technological University Ananthapuramu). These regulations
-              govern admission, curriculum, assessment, and graduation requirements. Students are expected to
-              adhere to all regulations outlined in this section.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}><CmsText section="academics.regulations" slot="k-s-r-m-college" multiline /></p>
           </div>
         </section>
 
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
-              Academic Regulations
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.regulations" slot="academic-regulations" /></h2>
             <div className="reg-card-grid">
-              {regulations.map((r) => (
+              {regulations.map((r, _i) => (
                 <div className="reg-card" key={r.code}>
                   <div className="reg-code-badge">{r.code}</div>
                   <h3>{r.code} Regulations ({r.year})</h3>
                   <div className="reg-card-meta"><div><strong>Applicable To:</strong> {r.applicable}</div></div>
-                  <p className="reg-card-description">{r.description}</p>
+                  <p className="reg-card-description"><CmsText section="academics.regulations" slot={`regulations.${_i}.description`} /></p>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#2B3490", marginBottom: 8 }}>KEY POINTS</div>
                     <div className="reg-keypoints">
@@ -256,9 +250,7 @@ export default function RegulationsPage() {
 
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
-              Examination and Assessment Rules
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.regulations" slot="examination-and-assessment-rules" /></h2>
             <div className="reg-rules-accordion">
               {examRules.map((rule) => <RuleItem key={rule.title} title={rule.title} text={rule.text} />)}
             </div>
@@ -268,10 +260,7 @@ export default function RegulationsPage() {
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
             <div className="reg-note">
-              <p>All regulations are subject to amendments as per directives from JNTUA and APSCHE (Andhra Pradesh
-              State Council for Higher Education). Students are advised to refer to the official regulation
-              documents and check with their respective departments for any clarifications or updates. The college
-              reserves the right to modify regulations to ensure quality education and regulatory compliance.</p>
+              <p><CmsText section="academics.regulations" slot="all-regulations-are-subject-to" multiline /></p>
             </div>
           </div>
         </section>

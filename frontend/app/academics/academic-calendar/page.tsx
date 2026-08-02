@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿const calendars2025 = [
   { title: "B.Tech I Semester (R23UG)", reg: "R23UG" },
@@ -247,8 +248,8 @@ export default function AcademicCalendarPage() {
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="ac-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
-              <h1 className="ac-hero-title">Academic Calendar</h1>
-              <p className="ac-hero-tagline">Stay on track with semester schedules, exam timetables and important academic dates</p>
+              <h1 className="ac-hero-title"><CmsText section="academics.calendar" slot="academic-calendar" /></h1>
+              <p className="ac-hero-tagline"><CmsText section="academics.calendar" slot="stay-on-track-with-semester" /></p>
               <div className="ac-year-badge">Current AY: 2025–2026</div>
               <a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" className="ac-cta-button">
                 <ExternalLinkIcon />View Exam Results
@@ -259,19 +260,13 @@ export default function AcademicCalendarPage() {
 
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              K.S.R.M. College of Engineering follows the academic calendar prescribed by JNTUA (Jawaharlal Nehru
-              Technological University Anantapur). The calendar includes important dates for semester classes,
-              examinations, and academic activities. Download regulation-wise academic calendars below.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}><CmsText section="academics.calendar" slot="k-s-r-m-college" multiline /></p>
           </div>
         </section>
 
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
-              Download Academic Calendars by Year
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.calendar" slot="download-academic-calendars-by-year" /></h2>
             <YearSection year="2025–2026" rows={calendars2025} />
             <YearSection year="2024–2025" rows={calendars2024} />
             <YearSection year="2023–2024" rows={calendars2023} />
@@ -291,15 +286,15 @@ export default function AcademicCalendarPage() {
           <div className="responsive-container">
             <div className="ac-contact-card">
               <div className="ac-contact-item">
-                <h4>Examination Section</h4>
-                <p>For calendar queries and exam timetable information</p>
+                <h4><CmsText section="academics.calendar" slot="examination-section" /></h4>
+                <p><CmsText section="academics.calendar" slot="for-calendar-queries-and-exam" /></p>
               </div>
               <div className="ac-contact-item">
-                <h4>Phone</h4>
+                <h4><CmsText section="academics.calendar" slot="phone" /></h4>
                 <p><a href="tel:+918143731980">+91 8143731980 / 08562 295972</a></p>
               </div>
               <div className="ac-contact-item">
-                <h4>Email</h4>
+                <h4><CmsText section="academics.calendar" slot="email" /></h4>
                 <p><a href="mailto:principal@ksrmce.ac.in">principal@ksrmce.ac.in</a></p>
               </div>
             </div>

@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 import PageResources from "@/components/PageResources";
 import AntiRaggingCommittee from "@/components/campus-life/AntiRaggingCommittee";
+import CmsText from "@/components/CmsText";
 
 export const metadata = {
   title: "Anti-Ragging | K.S.R.M. College of Engineering",
@@ -86,12 +87,8 @@ export default function AntiRaggingPage() {
               fontWeight: 700,
               margin: "0 0 16px",
             }}
-          >
-            Anti-Ragging
-          </h1>
-          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}>
-            Zero Tolerance Policy
-          </p>
+          ><CmsText section="anti-ragging" slot="anti-ragging" /></h1>
+          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}><CmsText section="anti-ragging" slot="zero-tolerance-policy" /></p>
           <div style={{ display: "flex", gap: 8, fontSize: 14, justifyContent: "center" }}>
             <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
               Home
@@ -117,13 +114,7 @@ export default function AntiRaggingPage() {
               margin: 0,
               maxWidth: 820,
             }}
-          >
-            K.S.R.M. College of Engineering has implemented a strict
-            zero-tolerance anti-ragging policy. The college is committed to
-            creating a safe, inclusive, and harassment-free environment for
-            all students. Ragging in any form is strictly prohibited and
-            will result in severe disciplinary action.
-          </p>
+          ><CmsText section="anti-ragging" slot="k-s-r-m-college" multiline /></p>
         </div>
       </section>
 
@@ -183,9 +174,7 @@ export default function AntiRaggingPage() {
               color: "#1a1a2e",
               margin: "0 0 40px",
             }}
-          >
-            Helpline Numbers
-          </h2>
+          ><CmsText section="anti-ragging" slot="helpline-numbers" /></h2>
           <div
             style={{
               display: "grid",
@@ -264,9 +253,7 @@ export default function AntiRaggingPage() {
                   paddingBottom: 12,
                   borderBottom: "2px solid #2B3490",
                 }}
-              >
-                What Constitutes Ragging
-              </h3>
+              ><CmsText section="anti-ragging" slot="what-constitutes-ragging" /></h3>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 12 }}>
                 {whatConstitutes.map((item) => (
                   <li
@@ -305,9 +292,7 @@ export default function AntiRaggingPage() {
                   paddingBottom: 12,
                   borderBottom: "2px solid #2B3490",
                 }}
-              >
-                Punishments
-              </h3>
+              ><CmsText section="anti-ragging" slot="punishments" /></h3>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 12 }}>
                 {punishments.map((item) => (
                   <li
@@ -343,9 +328,7 @@ export default function AntiRaggingPage() {
               color: "#1a1a2e",
               margin: "0 0 40px",
             }}
-          >
-            Anti-Ragging Committee Members
-          </h2>
+          ><CmsText section="anti-ragging" slot="anti-ragging-committee-members" /></h2>
           <AntiRaggingCommittee />
         </div>
       </section>
@@ -361,9 +344,7 @@ export default function AntiRaggingPage() {
               color: "#1a1a2e",
               margin: "0 0 40px",
             }}
-          >
-            How to Report Ragging
-          </h2>
+          ><CmsText section="anti-ragging" slot="how-to-report-ragging" /></h2>
           <ol style={{ listStyleType: "decimal", paddingLeft: 20, display: "flex", flexDirection: "column", gap: 12 }}>
             {reportingSteps.map((step) => (
               <li key={step} style={{ color: "#555", fontSize: 14, lineHeight: 1.6 }}>
@@ -385,9 +366,7 @@ export default function AntiRaggingPage() {
               color: "#1a1a2e",
               margin: "0 0 24px",
             }}
-          >
-            Anti-Ragging Affidavits
-          </h2>
+          ><CmsText section="anti-ragging" slot="anti-ragging-affidavits" /></h2>
           <p
             style={{
               fontSize: 15,
@@ -396,11 +375,7 @@ export default function AntiRaggingPage() {
               maxWidth: 820,
               marginBottom: 40,
             }}
-          >
-            All students and parents must submit anti-ragging affidavits at
-            the time of admission, confirming their commitment to adhering
-            to the anti-ragging policy.
-          </p>
+          ><CmsText section="anti-ragging" slot="all-students-and-parents-must" multiline /></p>
           <div
             style={{
               display: "grid",

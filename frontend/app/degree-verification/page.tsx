@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿const steps = [
   { n: 1, title: "Visit iCredify Portal", desc: "Go to the official verification portal at icredify.com" },
   { n: 2, title: "Enter Certificate Details", desc: "Enter the certificate number, student name or other required details" },
@@ -34,19 +35,15 @@ export default function DegreeVerificationPage() {
 
       <section className="dv-hero">
         <div className="responsive-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Degree Verification</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Verify the authenticity of degrees issued by K.S.R.M. College of Engineering</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="degree-verification" slot="degree-verification" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="degree-verification" slot="verify-the-authenticity-of-degrees" /></p>
         </div>
       </section>
 
       <section style={{ padding: "48px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div className="dv-about">
-            <p>
-              K.S.R.M. College of Engineering provides online degree verification services through iCredify platform.
-              Employers and institutions can verify the authenticity of degrees and certificates issued by our
-              college.
-            </p>
+            <p><CmsText section="degree-verification" slot="k-s-r-m-college" multiline /></p>
           </div>
         </div>
       </section>
@@ -59,7 +56,7 @@ export default function DegreeVerificationPage() {
 
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px", textAlign: "center" }}>How to Verify Your Degree</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px", textAlign: "center" }}><CmsText section="degree-verification" slot="how-to-verify-your-degree" /></h2>
           <div className="dv-steps-grid">
             {steps.map((s) => (
               <div className="dv-step-card" key={s.n}>
@@ -75,7 +72,7 @@ export default function DegreeVerificationPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div className="dv-contact-card">
-            <h2>Examination Section</h2>
+            <h2><CmsText section="degree-verification" slot="examination-section" /></h2>
             <p><strong>Phone:</strong></p>
             <a href="tel:08562 295972">08562 295972</a>
             <p style={{ marginTop: 12 }}><strong>Email:</strong></p>

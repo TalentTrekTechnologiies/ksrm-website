@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 
 const cards = [
@@ -118,26 +119,22 @@ export default function AdmissionsPage() {
         <section className="adm-hero">
           <div className="responsive-container">
             <div>
-              <h1 className="adm-title">Admissions</h1>
-              <p className="adm-subtitle">Join KSRM College of Engineering</p>
+              <h1 className="adm-title"><CmsText section="admissions" slot="admissions" /></h1>
+              <p className="adm-subtitle"><CmsText section="admissions" slot="join-ksrm-college-of-engineering" /></p>
             </div>
           </div>
         </section>
 
         <section className="adm-intro-section">
           <div className="responsive-container">
-            <p className="adm-intro-text">
-              K.S.R.M. College of Engineering offers quality technical education through multiple academic pathways.
-              Explore our undergraduate, postgraduate, and diploma programs designed to shape future engineers
-              and innovators.
-            </p>
+            <p className="adm-intro-text"><CmsText section="admissions" slot="k-s-r-m-college" multiline /></p>
             <div className="adm-cards-grid">
-              {cards.map((c) => (
+              {cards.map((c, _i) => (
                 <a key={c.href} href={c.href} style={{ textDecoration: "none", display: "block", height: "100%" }}>
                   <div className="adm-card">
                     <div className="adm-card-icon">{c.icon}</div>
-                    <h3 className="adm-card-title">{c.title}</h3>
-                    <p className="adm-card-desc">{c.desc}</p>
+                    <h3 className="adm-card-title"><CmsText section="admissions" slot={`cards.${_i}.title`} /></h3>
+                    <p className="adm-card-desc"><CmsText section="admissions" slot={`cards.${_i}.desc`} /></p>
                   </div>
                 </a>
               ))}

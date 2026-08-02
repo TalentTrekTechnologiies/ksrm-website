@@ -2,6 +2,7 @@
 
 
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 const nbaPrograms = [
   "Computer Science & Engineering (B.Tech) - Valid until 2026",
   "Electronics & Communication Engineering (B.Tech) - Valid until 2025",
@@ -50,26 +51,17 @@ export default function AccreditationPage() {
 
       <section className="acc-hero">
         <div className="responsive-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>
-            Accreditations &amp; Rankings
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
-            Recognition of Excellence
-          </p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="accreditation" slot="accreditations-rankings" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="accreditation" slot="recognition-of-excellence" /></p>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            NBA Accreditation
-          </h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="nba-accreditation" /></h2>
           <div className="acc-section-card">
-            <h3>Accredited Programs</h3>
-            <p style={{ color: "#666" }}>
-              All B.Tech engineering programs are accredited by the National Board of Accreditation (NBA),
-              recognizing excellence in engineering education.
-            </p>
+            <h3><CmsText section="accreditation" slot="accredited-programs" /></h3>
+            <p style={{ color: "#666" }}><CmsText section="accreditation" slot="all-b-tech-engineering-programs" multiline /></p>
             <ul className="acc-programs-list">
               {nbaPrograms.map((p) => <li key={p}>{p}</li>)}
             </ul>
@@ -79,23 +71,17 @@ export default function AccreditationPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            NAAC A+ Accreditation
-          </h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="naac-a-accreditation" /></h2>
           <div className="acc-section-card">
-            <h3>Highest Grade Recognition</h3>
-            <p style={{ color: "#666", marginBottom: 16 }}>
-              K.S.R.M. College has been accredited with A+ grade by the National Assessment and Accreditation Council
-              (NAAC), the highest rating in the framework. This recognition reflects our commitment to academic
-              excellence, research, infrastructure development, and institutional governance.
-            </p>
+            <h3><CmsText section="accreditation" slot="highest-grade-recognition" /></h3>
+            <p style={{ color: "#666", marginBottom: 16 }}><CmsText section="accreditation" slot="k-s-r-m-college" multiline /></p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <div>
-                <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}>Accreditation Grade</p>
-                <p style={{ color: "#666", fontSize: 13, margin: 0 }}>A+ (Highest)</p>
+                <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}><CmsText section="accreditation" slot="accreditation-grade" /></p>
+                <p style={{ color: "#666", fontSize: 13, margin: 0 }}><CmsText section="accreditation" slot="a-highest" /></p>
               </div>
               <div>
-                <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}>Valid Until</p>
+                <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 14, margin: "0 0 4px" }}><CmsText section="accreditation" slot="valid-until" /></p>
                 <p style={{ color: "#666", fontSize: 13, margin: 0 }}>2027</p>
               </div>
             </div>
@@ -105,19 +91,14 @@ export default function AccreditationPage() {
 
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            NIRF Rankings
-          </h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="nirf-rankings" /></h2>
           <div className="acc-section-card">
-            <h3>National Institutional Ranking Framework</h3>
-            <p style={{ color: "#666", marginBottom: 20 }}>
-              K.S.R.M. College is consistently ranked in the NIRF by the Ministry of Education, demonstrating our
-              commitment to academic excellence and institutional development.
-            </p>
+            <h3><CmsText section="accreditation" slot="national-institutional-ranking-framework" /></h3>
+            <p style={{ color: "#666", marginBottom: 20 }}><CmsText section="accreditation" slot="k-s-r-m-college-2" multiline /></p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-              {nirfStats.map((s) => (
+              {nirfStats.map((s, _i) => (
                 <div key={s.label} style={{ background: "#ffffff", padding: 16, borderRadius: 8, textAlign: "center" }}>
-                  <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 13, margin: "0 0 8px" }}>{s.label}</p>
+                  <p style={{ color: "#2B3490", fontWeight: 600, fontSize: 13, margin: "0 0 8px" }}><CmsText section="accreditation" slot={`nirfStats.${_i}.label`} /></p>
                   <p style={{ color: "#D4A500", fontWeight: 700, fontSize: 20, margin: "0 0 4px" }}>{s.value}</p>
                   <p style={{ color: "#999", fontSize: 12, margin: 0 }}>2024</p>
                 </div>
@@ -129,23 +110,15 @@ export default function AccreditationPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            Affiliations &amp; Recognition
-          </h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="affiliations-recognition" /></h2>
           <div className="acc-affiliations-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
             <div className="acc-section-card">
-              <h3>JNTUA Affiliation</h3>
-              <p style={{ color: "#666" }}>
-                Affiliated to Jawaharlal Nehru Technological University Anantapur, enabling collaboration while
-                maintaining academic autonomy.
-              </p>
+              <h3><CmsText section="accreditation" slot="jntua-affiliation" /></h3>
+              <p style={{ color: "#666" }}><CmsText section="accreditation" slot="affiliated-to-jawaharlal-nehru-technological" multiline /></p>
             </div>
             <div className="acc-section-card">
-              <h3>UGC Autonomous Status</h3>
-              <p style={{ color: "#666" }}>
-                Granted autonomous status by University Grants Commission in 2016, recognizing institutional
-                excellence and academic autonomy.
-              </p>
+              <h3><CmsText section="accreditation" slot="ugc-autonomous-status" /></h3>
+              <p style={{ color: "#666" }}><CmsText section="accreditation" slot="granted-autonomous-status-by-university" multiline /></p>
             </div>
           </div>
         </div>
@@ -153,12 +126,8 @@ export default function AccreditationPage() {
 
       <section style={{ padding: "56px 0", background: "linear-gradient(135deg, #2B3490, #1e2570)", textAlign: "center" }}>
         <div className="responsive-container">
-          <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>
-            Quality Assurance &amp; Excellence
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.8)", margin: "0 0 24px", maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}>
-            Our accreditations and rankings reflect our commitment to providing world-class engineering education
-          </p>
+          <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}><CmsText section="accreditation" slot="quality-assurance-excellence" /></h2>
+          <p style={{ color: "rgba(255,255,255,0.8)", margin: "0 0 24px", maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}><CmsText section="accreditation" slot="our-accreditations-and-rankings-reflect" multiline /></p>
         </div>
       </section>
     

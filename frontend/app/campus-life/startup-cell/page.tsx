@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿import Link from "next/link";
 
@@ -84,12 +85,8 @@ export default function StartupCellPage() {
               fontWeight: 700,
               margin: "0 0 16px",
             }}
-          >
-            Innovation &amp; Startup Cell
-          </h1>
-          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}>
-            Fostering Entrepreneurship &amp; Innovation
-          </p>
+          ><CmsText section="startup-cell" slot="innovation-startup-cell" /></h1>
+          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}><CmsText section="startup-cell" slot="fostering-entrepreneurship-innovation" /></p>
           <div style={{ display: "flex", gap: 8, fontSize: 14, justifyContent: "center" }}>
             <Link href="/" style={{ color: "#D4A500" }}>
               Home
@@ -116,14 +113,7 @@ export default function StartupCellPage() {
               maxWidth: 900,
               margin: "0 auto",
             }}
-          >
-            The KSRMCE Innovation &amp; Startup Cell operates under the
-            National Innovation and Startup Policy (NISP), fostering
-            entrepreneurship and innovation among students and faculty. The
-            cell mentors aspiring entrepreneurs, supports startup ideas, and
-            aligns with the AP State Innovation and Startup Policy, creating
-            an ecosystem for transforming ideas into viable businesses.
-          </p>
+          ><CmsText section="startup-cell" slot="the-ksrmce-innovation-startup-cell" multiline /></p>
         </div>
       </section>
 
@@ -139,9 +129,7 @@ export default function StartupCellPage() {
               margin: "0 0 48px",
               textAlign: "center",
             }}
-          >
-            Committee Members
-          </h2>
+          ><CmsText section="startup-cell" slot="committee-members" /></h2>
           <div
             style={{
               display: "grid",
@@ -150,7 +138,7 @@ export default function StartupCellPage() {
               marginTop: 40,
             }}
           >
-            {committee.map((member) => (
+            {committee.map((member, _i) => (
               <div
                 key={member.name}
                 style={{
@@ -184,7 +172,7 @@ export default function StartupCellPage() {
                 >
                   {member.position}
                 </p>
-                <p style={{ fontSize: 11 }}>{member.focus}</p>
+                <p style={{ fontSize: 11 }}><CmsText section="startup-cell" slot={`committee.${_i}.focus`} /></p>
               </div>
             ))}
           </div>
@@ -203,9 +191,7 @@ export default function StartupCellPage() {
               margin: "0 0 48px",
               textAlign: "center",
             }}
-          >
-            Our Objectives
-          </h2>
+          ><CmsText section="startup-cell" slot="our-objectives" /></h2>
           <div
             style={{
               display: "grid",

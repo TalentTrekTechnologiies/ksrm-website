@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 const hostels = [
   { title: "Boys' Hostel", tag: "Male Students", desc: "Spacious, well-furnished accommodation with dedicated study areas and recreational facilities.", count: "200+ Students", options: "Single, Double, Triple sharing options" },
@@ -49,8 +50,8 @@ export default function HostelsPage() {
 
       <section className="hostels-hero">
         <div className="responsive-container">
-          <h1 className="hostels-title">Student Hostels</h1>
-          <p className="hostels-subtitle">Safe, Comfortable Living on Campus</p>
+          <h1 className="hostels-title"><CmsText section="hostels" slot="student-hostels" /></h1>
+          <p className="hostels-subtitle"><CmsText section="hostels" slot="safe-comfortable-living-on-campus" /></p>
           <div style={{ display: "flex", gap: 8, fontSize: 14, marginTop: 16, color: "rgba(255,255,255,0.7)" }}>
             <a style={{ color: "#D4A500" }} href="/">Home</a><span>/</span>
             <a style={{ color: "#D4A500" }} href="/campus-life">Campus Life</a><span>/</span>
@@ -61,24 +62,19 @@ export default function HostelsPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <p className="hostels-about-text">
-            KSRMCE provides separate, well-maintained hostel facilities for boys and girls within the campus. The
-            hostels offer a safe, comfortable, and conducive environment for students to live and study, with modern
-            amenities and round-the-clock security. Our hostels foster a sense of community and provide essential
-            support for residential students.
-          </p>
+          <p className="hostels-about-text"><CmsText section="hostels" slot="ksrmce-provides-separate-well-maintained" multiline /></p>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 className="hostels-heading">Our Hostels</h2>
+          <h2 className="hostels-heading"><CmsText section="hostels" slot="our-hostels" /></h2>
           <div className="hostels-grid">
-            {hostels.map((h) => (
+            {hostels.map((h, _i) => (
               <div className="hostel-card" key={h.title}>
-                <h3>{h.title}</h3>
-                <p><strong>{h.tag}</strong></p>
-                <p>{h.desc}</p>
+                <h3><CmsText section="hostels" slot={`hostels.${_i}.title`} /></h3>
+                <p><strong><CmsText section="hostels" slot={`hostels.${_i}.tag`} /></strong></p>
+                <p><CmsText section="hostels" slot={`hostels.${_i}.desc`} /></p>
                 <p style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.3)" }}>
                   👥 {h.count}<br />🏠 {h.options}
                 </p>
@@ -90,7 +86,7 @@ export default function HostelsPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="hostels-heading">Hostel Tours</h2>
+          <h2 className="hostels-heading"><CmsText section="hostels" slot="hostel-tours" /></h2>
           <div className="hostels-grid">
             {tourVideos.map((v) => (
               <div style={{ borderRadius: 8, overflow: "hidden" }} key={v}>
@@ -105,13 +101,13 @@ export default function HostelsPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="hostels-heading">Facilities</h2>
+          <h2 className="hostels-heading"><CmsText section="hostels" slot="facilities" /></h2>
           <div className="facilities-grid">
-            {facilities.map((f) => (
+            {facilities.map((f, _i) => (
               <div className="facility-card" key={f.title}>
                 <div className="facility-icon">{f.icon}</div>
-                <h4>{f.title}</h4>
-                <p>{f.desc}</p>
+                <h4><CmsText section="hostels" slot={`facilities.${_i}.title`} /></h4>
+                <p><CmsText section="hostels" slot={`facilities.${_i}.desc`} /></p>
               </div>
             ))}
           </div>

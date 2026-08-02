@@ -3,6 +3,7 @@
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 // Fallback shown until/unless diploma programmes are added in the CMS, so the
 // page is never empty. Any diploma programme added to a department (Departments
@@ -166,19 +167,16 @@ export default function DiplomaAdmissionsPage() {
         <section className="dip-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="dip-title">Diploma Programs</h1>
-              <p className="dip-subtitle">Join Polytechnic, Build Your Career</p>
+              <h1 className="dip-title"><CmsText section="admissions.diploma" slot="diploma-programs" /></h1>
+              <p className="dip-subtitle"><CmsText section="admissions.diploma" slot="join-polytechnic-build-your-career" /></p>
             </div>
           </div>
         </section>
 
         <section className="dip-section">
           <div className="responsive-container">
-            <p className="dip-intro">
-              K.S.R.M. offers industry-oriented diploma programs designed to prepare students for practical
-              engineering roles. Our 3-year programs combine theoretical knowledge with hands-on training.
-            </p>
-            <h2 className="dip-heading">Available Programs</h2>
+            <p className="dip-intro"><CmsText section="admissions.diploma" slot="k-s-r-m-offers" multiline /></p>
+            <h2 className="dip-heading"><CmsText section="admissions.diploma" slot="available-programs" /></h2>
             <div className="dip-courses-grid">
               {diplomaCards.map((c, i) => (
                 <div className="dip-course-card" key={`${c.code}-${c.name}-${i}`}>
@@ -188,19 +186,19 @@ export default function DiplomaAdmissionsPage() {
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 12, color: "#888", marginTop: 16 }}>* Subject to approval by Statutory Bodies</p>
+            <p style={{ fontSize: 12, color: "#888", marginTop: 16 }}><CmsText section="admissions.diploma" slot="subject-to-approval-by-statutory" /></p>
           </div>
         </section>
 
         <section className="dip-section-alt">
           <div className="responsive-container">
-            <h2 className="dip-heading">Why Choose Our Diploma?</h2>
+            <h2 className="dip-heading"><CmsText section="admissions.diploma" slot="why-choose-our-diploma" /></h2>
             <div className="dip-features-grid">
-              {features.map((f) => (
+              {features.map((f, _i) => (
                 <div className="dip-feature-card" key={f.title}>
                   <div className="dip-feature-icon"><CheckIcon /></div>
-                  <h3 className="dip-feature-title">{f.title}</h3>
-                  <p className="dip-feature-desc">{f.desc}</p>
+                  <h3 className="dip-feature-title"><CmsText section="admissions.diploma" slot={`features.${_i}.title`} /></h3>
+                  <p className="dip-feature-desc"><CmsText section="admissions.diploma" slot={`features.${_i}.desc`} /></p>
                 </div>
               ))}
             </div>
@@ -209,16 +207,16 @@ export default function DiplomaAdmissionsPage() {
 
         <section className="dip-section">
           <div className="responsive-container">
-            <h2 className="dip-heading">Accreditations &amp; Rankings</h2>
+            <h2 className="dip-heading"><CmsText section="admissions.diploma" slot="accreditations-rankings" /></h2>
             <div className="dip-accred-list">
               {accreditations.map((a) => (
                 <div className="dip-accred-item" key={a}><CheckIcon />{a}</div>
               ))}
             </div>
             <div className="dip-ranking-grid">
-              {rankings.map((r) => (
+              {rankings.map((r, _i) => (
                 <div className="dip-ranking-card" key={r.title}>
-                  <div className="dip-ranking-title">{r.title}</div>
+                  <div className="dip-ranking-title"><CmsText section="admissions.diploma" slot={`rankings.${_i}.title`} /></div>
                   <div className="dip-ranking-value">{r.value}</div>
                 </div>
               ))}
@@ -228,8 +226,8 @@ export default function DiplomaAdmissionsPage() {
 
         <section className="dip-section-alt">
           <div className="responsive-container">
-            <h2 className="dip-heading">Bus Routes Available</h2>
-            <p style={{ color: "#555", marginBottom: 16 }}>Transportation available from:</p>
+            <h2 className="dip-heading"><CmsText section="admissions.diploma" slot="bus-routes-available" /></h2>
+            <p style={{ color: "#555", marginBottom: 16 }}><CmsText section="admissions.diploma" slot="transportation-available-from" /></p>
             <div className="dip-bus-pills">
               {busRoutes.map((r) => (
                 <div className="dip-bus-pill" key={r}>{r}</div>
@@ -241,8 +239,8 @@ export default function DiplomaAdmissionsPage() {
         <section className="dip-section">
           <div className="responsive-container">
             <div className="dip-contact">
-              <h2>Ready to Enroll?</h2>
-              <p style={{ margin: "0 0 16px", opacity: 0.9 }}>Contact us for more information about admissions and campus facilities.</p>
+              <h2><CmsText section="admissions.diploma" slot="ready-to-enroll" /></h2>
+              <p style={{ margin: "0 0 16px", opacity: 0.9 }}><CmsText section="admissions.diploma" slot="contact-us-for-more-information" /></p>
               {/*
                 NOTE: The deployed site's raw page text concatenated multiple phone
                 numbers together without separators ("8143731980994810198099482019809948301980"),

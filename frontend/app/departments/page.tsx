@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "Departments | K.S.R.M. College of Engineering",
@@ -42,25 +43,21 @@ export default function DepartmentsIndexPage() {
 
       <section className="dh-hero">
         <div className="dh-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}>
-            Departments
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}>
-            Seven departments offering undergraduate, postgraduate and research programmes.
-          </p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}><CmsText section="departments" slot="departments" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}><CmsText section="departments" slot="seven-departments-offering-undergraduate-postgra" /></p>
         </div>
       </section>
 
       <section style={{ padding: "64px 0" }}>
         <div className="dh-container">
           <div className="dh-grid">
-            {DEPARTMENTS.map((d) => (
+            {DEPARTMENTS.map((d, _i) => (
               <Link key={d.slug} href={`/departments/${d.slug}`} className="dh-card">
                 <span style={{ display: "inline-block", background: "#FFE619", color: "#1a1a2e", fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: 13, padding: "3px 10px", borderRadius: 5, marginBottom: 12 }}>
                   {d.short}
                 </span>
-                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 21, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>{d.name}</h2>
-                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}>{d.blurb}</p>
+                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 21, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="departments" slot={`DEPARTMENTS.${_i}.name`} /></h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="departments" slot={`DEPARTMENTS.${_i}.blurb`} /></p>
                 <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>View department →</span>
               </Link>
             ))}

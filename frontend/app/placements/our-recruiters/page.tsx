@@ -4,6 +4,7 @@ import PlacementsSubnav from "@/components/PlacementsSubnav";
 import { getRecruitersPublic, Recruiter } from "@/lib/homepage-api";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 export default function OurRecruitersPage() {
   // Polled, so a recruiter published in the admin appears here without a
@@ -74,8 +75,8 @@ export default function OurRecruitersPage() {
         <section className="recruiters-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="recruiters-title">Our Recruiters</h1>
-              <p className="recruiters-subtitle">Placements & Career Development</p>
+              <h1 className="recruiters-title"><CmsText section="placements.recruiters" slot="our-recruiters" /></h1>
+              <p className="recruiters-subtitle"><CmsText section="placements.recruiters" slot="placements-career-development" /></p>
             </div>
           </div>
         </section>
@@ -85,7 +86,7 @@ export default function OurRecruitersPage() {
             {recruiters.length === 0 ? (
               <div className="coming-soon-box">
                 <div className="coming-soon-icon">📋</div>
-                <h2 className="heading" style={{ color: "#D4A500", marginBottom: 16 }}>Our Recruiters</h2>
+                <h2 className="heading" style={{ color: "#D4A500", marginBottom: 16 }}><CmsText section="placements.recruiters" slot="our-recruiters-2" /></h2>
                 <p className="coming-soon-text">
                   {loaded
                     ? "Information about our industry partners and recruiters is coming soon. Check back for updates!"
@@ -94,7 +95,7 @@ export default function OurRecruitersPage() {
               </div>
             ) : (
               <>
-                <h2 className="heading">Recruited by Top Companies</h2>
+                <h2 className="heading"><CmsText section="placements.recruiters" slot="recruited-by-top-companies" /></h2>
                 <div className="recruiters-grid">
                   {recruiters.map((r) => (
                     <div className="recruiter-card" key={r.id}>

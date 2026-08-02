@@ -4,6 +4,7 @@ import { mediaFile } from "@/lib/api-base";
 import Link from "next/link"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 /** Group headings the About page's document sections are stored under, so an
  *  admin can add/remove documents in Page Content -> About and have them land
@@ -188,7 +189,7 @@ export default function About() {
         <div className="k-container">
           <div className="k-hero-content">
             <div className="k-hero-eyebrow">🏛️ ABOUT US</div>
-            <h1 className="k-hero-title">K.S.R.M. College of Engineering</h1>
+            <h1 className="k-hero-title"><CmsText section="about" slot="k-s-r-m-college" /></h1>
             <div className="k-hero-subtitle">Excellence in Technical Education Since 1980</div>
           </div>
         </div>
@@ -232,18 +233,16 @@ export default function About() {
       {/* VISION & MISSION */}
       <section className="k-section k-vision-mission" id="vision-mission">
         <div className="k-container">
-          <h2>Vision & Mission</h2>
+          <h2><CmsText section="about" slot="vision-mission" /></h2>
           <div className="k-vision-grid">
             <div>
-              <h3 style={{ marginBottom: "16px" }}>Our Vision</h3>
+              <h3 style={{ marginBottom: "16px" }}><CmsText section="about" slot="our-vision" /></h3>
               <div className="k-vision-box">
-                <p style={{ color: "#555", fontSize: "15px", lineHeight: "1.7" }}>
-                  To evolve as center of repute for providing quality academic programs amalgamated with creative learning and research excellence to produce graduates with leadership qualities, ethical and human values to serve the nation.
-                </p>
+                <p style={{ color: "#555", fontSize: "15px", lineHeight: "1.7" }}><CmsText section="about" slot="to-evolve-as-center-of" multiline /></p>
               </div>
             </div>
             <div>
-              <h3 style={{ marginBottom: "16px" }}>Our Mission</h3>
+              <h3 style={{ marginBottom: "16px" }}><CmsText section="about" slot="our-mission" /></h3>
               <div className="k-mission-items">
                 <div className="k-mission-item">
                   <div className="k-mission-badge">M1</div>
@@ -266,7 +265,7 @@ export default function About() {
       {/* LEADERSHIP */}
       <section className="k-section k-leadership" id="leadership">
         <div className="k-container">
-          <h2>Leadership</h2>
+          <h2><CmsText section="about" slot="leadership" /></h2>
           <div className="k-leadership-grid">
             {leadershipData.map((leader, i) => (
               <Link key={i} href={leader.href} style={{ textDecoration: "none" }}>
@@ -287,7 +286,7 @@ export default function About() {
       {/* JOINT BOARD OF STUDIES */}
       <section className="k-section k-docs" id="jbos">
         <div className="k-container">
-          <h2>Joint Board of Studies</h2>
+          <h2><CmsText section="about" slot="joint-board-of-studies" /></h2>
           <div className="k-docs-grid">
             {docsForGroup(GROUP_JBOS, jbosDocuments).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
@@ -308,7 +307,7 @@ export default function About() {
       {/* STRATEGIC PLAN & DEPLOYMENT DOCUMENTS */}
       <section className="k-section k-docs" id="strategic" style={{ background: "#F5EFE4" }}>
         <div className="k-container">
-          <h2>Strategic Plan & Deployment Documents</h2>
+          <h2><CmsText section="about" slot="strategic-plan-deployment-documents" /></h2>
           <div className="k-docs-grid">
             {docsForGroup(GROUP_STRATEGIC, strategicDocs).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
@@ -329,7 +328,7 @@ export default function About() {
       {/* INSTITUTIONAL POLICY DOCUMENTS */}
       <section className="k-section k-docs" id="policies">
         <div className="k-container">
-          <h2>Institutional Policy Documents</h2>
+          <h2><CmsText section="about" slot="institutional-policy-documents" /></h2>
           <div className="k-docs-grid">
             {docsForGroup(GROUP_POLICY, policyDocs).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
@@ -350,18 +349,18 @@ export default function About() {
       {/* GET IN TOUCH */}
       <section className="k-section k-contact" id="contact">
         <div className="k-container">
-          <h2 style={{ textAlign: "center" }}>Get In Touch</h2>
+          <h2 style={{ textAlign: "center" }}><CmsText section="about" slot="get-in-touch" /></h2>
           <div style={{ textAlign: "center", marginBottom: "32px" }} className="k-contact-subtitle">
             EAPCET Code: K.S.R.M. | Affiliated to JNTUA | UGC Autonomous
           </div>
           <div className="k-contact-grid">
             <div className="k-contact-box k-contact-find">
-              <h3>Find Us</h3>
+              <h3><CmsText section="about" slot="find-us" /></h3>
               <div className="k-contact-text">K.S.R.M. College of Engineering, Kadapa – 516003, Andhra Pradesh, India.</div>
               <div className="k-contact-text" style={{ fontSize: "14px" }}>7 KM from Kadapa town on Kadapa–Pulivendula Highway.</div>
             </div>
             <div className="k-contact-box k-contact-other k-contact-contact">
-              <h3>Contact Us</h3>
+              <h3><CmsText section="about" slot="contact-us" /></h3>
               <div className="k-contact-text"><a href="tel:+919000073434" className="k-contact-link">+91-9000073434</a></div>
               <div className="k-contact-text"><a href="tel:+918143731960" className="k-contact-link">+91-8143731960</a></div>
               <div className="k-contact-text"><a href="tel:+918562295972" className="k-contact-link">08562-295972</a></div>
@@ -369,7 +368,7 @@ export default function About() {
               <div className="k-contact-text"><a href="mailto:principal@ksrmce.ac.in" className="k-contact-link">principal@ksrmce.ac.in</a></div>
             </div>
             <div className="k-contact-box k-contact-other k-contact-connect">
-              <h3>Connect With Us</h3>
+              <h3><CmsText section="about" slot="connect-with-us" /></h3>
               <div className="k-contact-text"><a href="https://www.ksrmce.ac.in" target="_blank" rel="noopener noreferrer" className="k-contact-link">www.ksrmce.ac.in</a></div>
               <div className="k-social-links">
                 <a href="https://www.facebook.com/ksrmce" target="_blank" rel="noopener noreferrer" className="k-social-btn">Facebook</a>

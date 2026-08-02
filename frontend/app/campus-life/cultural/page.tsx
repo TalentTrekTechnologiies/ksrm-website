@@ -1,5 +1,6 @@
 ﻿import PageResources from "@/components/PageResources";
 import Link from "next/link";
+import CmsText from "@/components/CmsText";
 
 export const metadata = {
   title: "Cultural Club | K.S.R.M. College of Engineering",
@@ -107,12 +108,8 @@ export default function CulturalClubPage() {
               fontWeight: 700,
               margin: "0 0 16px",
             }}
-          >
-            Cultural Club
-          </h1>
-          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}>
-            Celebrating Art, Music &amp; Tradition
-          </p>
+          ><CmsText section="cultural" slot="cultural-club" /></h1>
+          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}><CmsText section="cultural" slot="celebrating-art-music-tradition" /></p>
           <div style={{ display: "flex", gap: 8, fontSize: 14, justifyContent: "center" }}>
             <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
               Home
@@ -139,14 +136,7 @@ export default function CulturalClubPage() {
               maxWidth: 900,
               margin: "0 auto",
             }}
-          >
-            The Cultural Club at KSRMCE nurtures the artistic and creative
-            talents of students through a vibrant calendar of cultural
-            events, festivals, and celebrations throughout the year. It
-            serves as a platform for students to showcase their talents in
-            music, dance, drama, and other performing arts while promoting
-            cultural awareness and social cohesion.
-          </p>
+          ><CmsText section="cultural" slot="the-cultural-club-at-ksrmce" multiline /></p>
         </div>
       </section>
 
@@ -162,9 +152,7 @@ export default function CulturalClubPage() {
               margin: "0 0 48px",
               textAlign: "center",
             }}
-          >
-            Annual Events
-          </h2>
+          ><CmsText section="cultural" slot="annual-events" /></h2>
           <div
             style={{
               display: "grid",
@@ -237,9 +225,7 @@ export default function CulturalClubPage() {
               margin: "0 0 48px",
               textAlign: "center",
             }}
-          >
-            Event Highlights
-          </h2>
+          ><CmsText section="cultural" slot="event-highlights" /></h2>
           <div
             style={{
               display: "grid",
@@ -273,9 +259,7 @@ export default function CulturalClubPage() {
               margin: "0 0 48px",
               textAlign: "center",
             }}
-          >
-            Committee Members
-          </h2>
+          ><CmsText section="cultural" slot="committee-members" /></h2>
           <div
             style={{
               display: "grid",

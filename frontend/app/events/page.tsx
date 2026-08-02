@@ -3,6 +3,7 @@
 import { getEventsPublic, EventItem } from "@/lib/events-api";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 export default function EventsPage() {
   // Polled, so an event published in the admin appears here without a refresh.
@@ -43,8 +44,8 @@ export default function EventsPage() {
       <section className="evt-hero">
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Campus Events</h1>
-            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Upcoming events and activities at K.S.R.M. College of Engineering</p>
+            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="events" slot="campus-events" /></h1>
+            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}><CmsText section="events" slot="upcoming-events-and-activities-at" /></p>
           </div>
         </div>
       </section>

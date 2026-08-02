@@ -3,6 +3,7 @@
 import PageResources from "@/components/PageResources";
 import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 const btechRows = [
   { name: "Civil Engineering", code: "CE", intake: 60, nba: true },
@@ -338,8 +339,8 @@ export default function CoursesIntakePage() {
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="ci-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
-              <h1 className="ci-hero-title">Courses Offered & Intake</h1>
-              <p className="ci-hero-tagline">AICTE approved programmes with strong industry alignment</p>
+              <h1 className="ci-hero-title"><CmsText section="academics.courses-intake" slot="courses-offered-intake" /></h1>
+              <p className="ci-hero-tagline"><CmsText section="academics.courses-intake" slot="aicte-approved-programmes-with-strong" /></p>
             </div>
           </div>
         </section>
@@ -357,11 +358,7 @@ export default function CoursesIntakePage() {
         {/* INTRO + EAPCET */}
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              K.S.R.M. College of Engineering offers AICTE approved undergraduate, postgraduate and management
-              programmes affiliated to Jawaharlal Nehru Technological University Anantapur (JNTUA). The college
-              holds UGC Autonomous status and is recognized for excellence in engineering education.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}><CmsText section="academics.courses-intake" slot="k-s-r-m-college" multiline /></p>
             <div className="ci-eapcet-box">
               <div className="ci-eapcet-label">Common Entrance Test Code</div>
               <div className="ci-eapcet-code">
@@ -371,9 +368,7 @@ export default function CoursesIntakePage() {
                 </svg>
                 K.S.R.M.
               </div>
-              <p style={{ margin: "8px 0 0", opacity: 0.9 }}>
-                Use this code during EAPCET/ICET/PGECET counselling
-              </p>
+              <p style={{ margin: "8px 0 0", opacity: 0.9 }}><CmsText section="academics.courses-intake" slot="use-this-code-during-eapcet" /></p>
             </div>
           </div>
         </section>
@@ -398,15 +393,15 @@ export default function CoursesIntakePage() {
           <div className="responsive-container">
             <div className="ci-contact-card">
               <div className="ci-contact-item">
-                <h4>Admissions Office</h4>
-                <p>For enquiries regarding courses and admissions</p>
+                <h4><CmsText section="academics.courses-intake" slot="admissions-office" /></h4>
+                <p><CmsText section="academics.courses-intake" slot="for-enquiries-regarding-courses-and" /></p>
               </div>
               <div className="ci-contact-item">
-                <h4>Phone</h4>
+                <h4><CmsText section="academics.courses-intake" slot="phone" /></h4>
                 <p><a href="tel:+918143731980">+91 8143731980 / 08562 295972</a></p>
               </div>
               <div className="ci-contact-item">
-                <h4>Email</h4>
+                <h4><CmsText section="academics.courses-intake" slot="email" /></h4>
                 <p><a href="mailto:principal@ksrmce.ac.in">principal@ksrmce.ac.in</a></p>
               </div>
             </div>

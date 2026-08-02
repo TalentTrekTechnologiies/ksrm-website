@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getCareersPublic, Career } from "@/lib/careers-api";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 function applyHref(o: { careerId: number | null; title: string; dept: string }) {
   const q = new URLSearchParams();
@@ -82,20 +83,20 @@ export default function CareersPage() {
       <section className="car-hero">
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Careers at K.S.R.M.</h1>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Join Our Team of Excellence</p>
+            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="careers" slot="careers-at-k-s-r" /></h1>
+            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}><CmsText section="careers" slot="join-our-team-of-excellence" /></p>
           </div>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Why Join K.S.R.M.?</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="careers" slot="why-join-k-s-r" /></h2>
           <div className="car-whyjoin-grid">
-            {whyJoin.map((w) => (
+            {whyJoin.map((w, _i) => (
               <div className="car-whyjoin-card" key={w.title}>
-                <h3><span>{w.icon}</span>{w.title}</h3>
-                <p>{w.desc}</p>
+                <h3><span>{w.icon}</span><CmsText section="careers" slot={`whyJoin.${_i}.title`} /></h3>
+                <p><CmsText section="careers" slot={`whyJoin.${_i}.desc`} /></p>
               </div>
             ))}
           </div>
@@ -104,7 +105,7 @@ export default function CareersPage() {
 
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Current Openings</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="careers" slot="current-openings" /></h2>
           {openings.map((o) => (
             <div className="car-opening-card" key={o.title}>
               <p className="car-opening-title">{o.title}</p>
@@ -127,7 +128,7 @@ export default function CareersPage() {
 
       <section style={{ padding: "56px 0", background: "linear-gradient(135deg, #2B3490, #1e2570)", textAlign: "center" }}>
         <div className="responsive-container">
-          <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}>Ready to Join K.S.R.M.?</h2>
+          <h2 style={{ color: "#fff", fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", margin: "0 0 24px" }}><CmsText section="careers" slot="ready-to-join-k-s" /></h2>
           <Link href="/careers/apply" className="car-cta-button">Submit a General Application</Link>
         </div>
       </section>

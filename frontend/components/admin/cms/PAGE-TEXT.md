@@ -21,12 +21,57 @@ Because "no row" is a valid state, **deleting an override is the undo** — whic
 is why `PageText` has no `isActive` and no soft-delete, unlike the content
 modules.
 
+## Two kinds of slot
+
+**Fixed slots** are one piece of text in one place — a heading, an intro
+paragraph:
+
+```tsx
+<h2><CmsText section="about" slot="vision-mission" /></h2>
+```
+
+**Array slots** cover the repeated content a page maps over — facility cards,
+rule lists, committee tables. They are keyed by position, and the page's own
+array supplies both the defaults and the item count:
+
+```tsx
+{facilities.map((f, _i) => (
+  <div key={f.title}>
+    <h3><CmsText section="campus-facilities" slot={`facilities.${_i}.title`} /></h3>
+    <p><CmsText section="campus-facilities" slot={`facilities.${_i}.desc`} /></p>
+  </div>
+))}
+```
+
+An admin can reword any item. **Adding or removing items is still a code
+change** — the array decides how many there are. If you change the array, the
+registry defaults for that page must be regenerated or they will drift out of
+step with what the page renders.
+
+> Arrays that are filtered, sliced or sorted before `.map()` are deliberately
+> not slotted: the callback index would no longer match the array position the
+> slots are keyed on, so item 3 could show item 5's text.
+
+## Where the registry lives
+
+Two files, merged at import:
+
+| File | Contents |
+|---|---|
+| `lib/page-text-registry.generated.ts` | Produced by the one-time migration that lifted 49 pages' wording out of their JSX. Do not hand-edit. |
+| `lib/page-text-registry.ts` | Types, helpers, and hand-curated entries — spread **on top**, so a page curated by hand wins over its generated entry. |
+
+The Library entry is the worked example of a curated page: meaningful slot ids
+(`about.p1`) and labels ("First paragraph") instead of the generated
+text-derived ones. Curating a page is optional; the generated entries work as
+they are.
+
 ## Adding a page
 
 1. **Register the slots.** Add an entry to `PAGE_TEXT` in
-   `frontend/lib/page-text-registry.ts`, keyed by the page's `PAGE_SECTIONS`
-   slug. Move the page's wording into `slots` **verbatim** — this is the text
-   the site will ship, so a paraphrase here changes the live site.
+   `frontend/lib/page-text-registry.ts`, keyed by the page's section slug. Move
+   the page's wording into `slots` **verbatim** — this is the text the site will
+   ship, so a paraphrase here changes the live site.
 
    ```ts
    library: {

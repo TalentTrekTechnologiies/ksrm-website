@@ -2,6 +2,7 @@
 
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 const criteria = [
   { n: 1, title: "Curricular Aspects", text: "Curriculum design, academic flexibility and enrichment programmes" },
@@ -97,23 +98,15 @@ export default function NAACPage() {
 
       <section className="naac-hero">
         <div className="responsive-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>
-            NAAC
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
-            National Assessment and Accreditation Council
-          </p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="naac" slot="naac" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="naac" slot="national-assessment-and-accreditation-council" /></p>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div style={{ maxWidth: 820, margin: "0 auto" }}>
-            <p style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8, margin: 0, textAlign: "center" }}>
-              K.S.R.M. College of Engineering has been accredited by the National Assessment and Accreditation Council
-              (NAAC). NAAC accreditation is a mark of quality assurance recognizing the institution&apos;s
-              commitment to providing quality higher education.
-            </p>
+            <p style={{ color: "#555", fontSize: 15.5, lineHeight: 1.8, margin: 0, textAlign: "center" }}><CmsText section="naac" slot="k-s-r-m-college" multiline /></p>
           </div>
         </div>
       </section>
@@ -132,15 +125,13 @@ export default function NAACPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px", textAlign: "center" }}>
-            NAAC Accreditation Criteria
-          </h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px", textAlign: "center" }}><CmsText section="naac" slot="naac-accreditation-criteria" /></h2>
           <div className="naac-criteria-grid">
-            {criteria.map((c) => (
+            {criteria.map((c, _i) => (
               <div className="naac-criteria-card" key={c.n}>
                 <div className="naac-criteria-number">Criterion {c.n}</div>
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
+                <h3><CmsText section="naac" slot={`criteria.${_i}.title`} /></h3>
+                <p><CmsText section="naac" slot={`criteria.${_i}.text`} /></p>
               </div>
             ))}
           </div>
@@ -149,13 +140,11 @@ export default function NAACPage() {
 
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            Key Documents
-          </h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="naac" slot="key-documents" /></h2>
           <ul style={{ listStyle: "none", padding: 0, margin: "32px 0" }}>
-            {documents.map((d) => (
+            {documents.map((d, _i) => (
               <li className="naac-document-item" key={d.name}>
-                <h4>{d.name}</h4>
+                <h4><CmsText section="naac" slot={`documents.${_i}.name`} /></h4>
                 <a href={d.href} target="_blank" rel="noopener noreferrer" className="naac-document-link">
                   <DownloadIcon />View
                 </a>
@@ -167,9 +156,7 @@ export default function NAACPage() {
 
       <section style={{ padding: "56px 0", background: "#ffffff", textAlign: "center" }}>
         <div className="responsive-container">
-          <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-            Explore NAAC Documentation
-          </h3>
+          <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="naac" slot="explore-naac-documentation" /></h3>
           <div className="naac-cta-buttons">
             <a href="https://ksrmce.ac.in/NAAC.php" target="_blank" rel="noopener noreferrer" className="naac-cta-button">SSR Report</a>
             <a href="https://ksrmce.ac.in/DVV2.php" target="_blank" rel="noopener noreferrer" className="naac-cta-button">DVV Clarifications</a>

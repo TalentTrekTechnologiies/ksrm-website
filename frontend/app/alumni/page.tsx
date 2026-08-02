@@ -1,4 +1,5 @@
 import { mediaFile } from "@/lib/api-base";
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 const stats = [
   { value: "7,498+", label: "Alumni Members" },
@@ -84,22 +85,19 @@ export default function AlumniPage() {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
         <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>🎓 Alumni Association</div>
-          <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>K.S.R.M. Alumni Association</h1>
-          <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 16px" }}>Connecting 7,498+ Alumni Worldwide Since 1985</p>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}>
-            The Alumni Association was formed in December 1985. Registered under the Andhra Pradesh Societies Act 35
-            of 2001, bearing Registration No.92/2004. With chapters in Hyderabad, Bangalore, Chennai and USA.
-          </p>
+          <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}><CmsText section="alumni" slot="k-s-r-m-alumni" /></h1>
+          <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 16px" }}><CmsText section="alumni" slot="connecting-7-498-alumni-worldwide" /></p>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}><CmsText section="alumni" slot="the-alumni-association-was-formed" multiline /></p>
         </div>
       </section>
 
       <section style={{ padding: "40px 0", background: "white" }}>
         <div className="responsive-container">
           <div className="alumni-stats-grid">
-            {stats.map((s) => (
+            {stats.map((s, _i) => (
               <div key={s.label} style={{ textAlign: "center", padding: 24 }}>
                 <div style={{ fontSize: 36, fontWeight: 800, color: "#2B3490" }}>{s.value}</div>
-                <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>{s.label}</div>
+                <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}><CmsText section="alumni" slot={`stats.${_i}.label`} /></div>
               </div>
             ))}
           </div>
@@ -108,34 +106,21 @@ export default function AlumniPage() {
 
       <section id="about" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>About Alumni Association</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="about-alumni-association" /></h2>
           <div style={{ background: "white", borderLeft: "4px solid #D4A500", borderRadius: 8, padding: 28, marginBottom: 32 }}>
-            <p style={{ fontSize: 15, lineHeight: 1.8, color: "#555", margin: 0 }}>
-              The Alumni Association was formed in December, 1985 with Sri K.Sivananda Reddy as Chief Patron and the
-              Principal as Patron. The association has grown in multifolds with duties and responsibilities shared by
-              Chairman, Secretary, Joint Secretary, Treasurer and three member directors. The Association is
-              registered under the Andhra Pradesh Societies Act 35 of 2001, bearing Registration No.92/2004.
-            </p>
+            <p style={{ fontSize: 15, lineHeight: 1.8, color: "#555", margin: 0 }}><CmsText section="alumni" slot="the-alumni-association-was-formed-2" multiline /></p>
           </div>
           <div className="alumni-vision-mission">
             <div style={{ background: "white", border: "2px solid #D4A500", borderRadius: 8, padding: 28 }}>
               <div style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}>🎯 Vision</div>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#555", margin: 0 }}>
-                To connect and contact with all Alumni members in different parts of the world to create brotherhood
-                among them and establish proper cooperation and coordination, so that everyone is benefited and to
-                involve all Alumni members in the development of the Institute.
-              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#555", margin: 0 }}><CmsText section="alumni" slot="to-connect-and-contact-with" multiline /></p>
             </div>
             <div style={{ background: "#2B3490", borderRadius: 8, padding: 28, color: "white" }}>
               <div style={{ fontSize: 18, fontWeight: 700, color: "#D4A500", marginBottom: 16 }}>🚀 Mission</div>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(255,255,255,0.9)", margin: 0 }}>
-                To make every Alumni member upgrade technical skills and become professional engineers through
-                interaction among all alumni members. And also to make use of the services of Alumni members to
-                upgrade infrastructure facilities in the development of the institution.
-              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(255,255,255,0.9)", margin: 0 }}><CmsText section="alumni" slot="to-make-every-alumni-member" multiline /></p>
             </div>
           </div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 24 }}>Alumni Activities</h3>
+          <h3 style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 24 }}><CmsText section="alumni" slot="alumni-activities" /></h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
             {activities.map((a) => (
               <div key={a} style={{ background: "white", borderRadius: 6, padding: 16, borderLeft: "4px solid #D4A500", fontSize: 14, color: "#444" }}>{a}</div>
@@ -146,17 +131,17 @@ export default function AlumniPage() {
 
       <section id="chapters" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Alumni Chapters</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="alumni-chapters" /></h2>
           <div className="alumni-chapters-grid">
-            {chapters.map((c) => (
+            {chapters.map((c, _i) => (
               <div key={c.city} style={{ background: "#f9f9f9", border: "1px solid #e5e7eb", borderRadius: 12, padding: 20, textAlign: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 6 }}>
                   <span style={{ fontSize: 20, lineHeight: 1 }}>{c.icon}</span>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: "#2B3490" }}>{c.city}</span>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: "#2B3490" }}><CmsText section="alumni" slot={`chapters.${_i}.city`} /></span>
                 </div>
-                <div style={{ fontSize: 14, color: "#666", fontWeight: 600, marginBottom: 8 }}>{c.contact}</div>
-                <div style={{ fontSize: 13, color: "#999", lineHeight: 1.6, marginBottom: 12 }}>{c.addr}</div>
-                <a href={`mailto:${c.email}`} style={{ fontSize: 13, color: "#2B3490", fontWeight: 600, textDecoration: "none" }}>{c.email}</a>
+                <div style={{ fontSize: 14, color: "#666", fontWeight: 600, marginBottom: 8 }}><CmsText section="alumni" slot={`chapters.${_i}.contact`} /></div>
+                <div style={{ fontSize: 13, color: "#999", lineHeight: 1.6, marginBottom: 12 }}><CmsText section="alumni" slot={`chapters.${_i}.addr`} /></div>
+                <a href={`mailto:${c.email}`} style={{ fontSize: 13, color: "#2B3490", fontWeight: 600, textDecoration: "none" }}><CmsText section="alumni" slot={`chapters.${_i}.email`} /></a>
               </div>
             ))}
           </div>
@@ -165,14 +150,14 @@ export default function AlumniPage() {
 
       <section id="meets" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Alumni Meets</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="alumni-meets" /></h2>
           <div className="alumni-meets-grid">
-            {meets.map((m) => (
+            {meets.map((m, _i) => (
               <a key={m.label} href={m.href} target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
                 <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>📅</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4, display: "inline-block", marginBottom: 4 }}>{m.badge}</div>
-                  <div style={{ color: "#2B3490", fontWeight: 500, fontSize: 14 }}>{m.label}</div>
+                  <div style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4, display: "inline-block", marginBottom: 4 }}><CmsText section="alumni" slot={`meets.${_i}.badge`} /></div>
+                  <div style={{ color: "#2B3490", fontWeight: 500, fontSize: 14 }}><CmsText section="alumni" slot={`meets.${_i}.label`} /></div>
                 </div>
                 <div style={{ color: "white", background: "#2B3490", padding: "4px 12px", borderRadius: 4, fontSize: 12, fontWeight: 700 }}>PDF →</div>
               </a>
@@ -183,20 +168,20 @@ export default function AlumniPage() {
 
       <section id="contributions" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Alumni Contributions</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="alumni-contributions" /></h2>
           <div style={{ marginBottom: 32 }}>
-            {contributions.map((c) => (
+            {contributions.map((c, _i) => (
               <div key={c.period + c.desc} style={{ background: "#f9f9f9", borderRadius: 8, padding: 24, borderLeft: "4px solid #D4A500", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
-                  <div style={{ fontSize: 13, color: "#999" }}>{c.period}</div>
-                  <div style={{ fontSize: 15, color: "#2B3490", fontWeight: 600, marginTop: 4 }}>{c.desc}</div>
+                  <div style={{ fontSize: 13, color: "#999" }}><CmsText section="alumni" slot={`contributions.${_i}.period`} /></div>
+                  <div style={{ fontSize: 15, color: "#2B3490", fontWeight: 600, marginTop: 4 }}><CmsText section="alumni" slot={`contributions.${_i}.desc`} /></div>
                 </div>
                 <div style={{ fontSize: 24, fontWeight: 800, color: "#2B3490" }}>{c.amount}</div>
               </div>
             ))}
           </div>
           <div style={{ background: "linear-gradient(135deg, #2B3490, #1a1d4d)", borderRadius: 12, padding: 32, color: "white", marginTop: 32 }}>
-            <h3 style={{ color: "#D4A500", fontSize: 20, fontWeight: 700, marginBottom: 16 }}>KSRMCE Friends Association (1985-89 Batch)</h3>
+            <h3 style={{ color: "#D4A500", fontSize: 20, fontWeight: 700, marginBottom: 16 }}><CmsText section="alumni" slot="ksrmce-friends-association-1985-89" /></h3>
             <ul style={{ margin: 0, paddingLeft: 20, color: "white" }}>
               <li style={{ marginBottom: 12 }}>Financially helped poor students</li>
               <li style={{ marginBottom: 12 }}>Built kitchen and dining facilities for tribal girls school at Araku, Vizag</li>
@@ -209,12 +194,12 @@ export default function AlumniPage() {
 
       <section id="activities" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Activity Reports</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="activity-reports" /></h2>
           <div className="alumni-activity-grid">
-            {activityReports.map((r) => (
+            {activityReports.map((r, _i) => (
               <a key={r.title} href={r.href} target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
                 <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>📋</div>
-                <div style={{ flex: 1, color: "#2B3490", fontWeight: 500, fontSize: 14 }}>{r.title}</div>
+                <div style={{ flex: 1, color: "#2B3490", fontWeight: 500, fontSize: 14 }}><CmsText section="alumni" slot={`activityReports.${_i}.title`} /></div>
               </a>
             ))}
           </div>
@@ -223,7 +208,7 @@ export default function AlumniPage() {
 
       <section id="top-alumni" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Top Alumni</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="top-alumni" /></h2>
           <div className="alumni-top-grid">
             <a href={mediaFile(217)} target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", borderRadius: 12, padding: 24, textAlign: "center", textDecoration: "none", display: "block" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14 }}>
@@ -241,8 +226,8 @@ export default function AlumniPage() {
             </a>
           </div>
           <div style={{ background: "#f4f3ef", borderRadius: 12, padding: 40, textAlign: "center" }}>
-            <h3 style={{ color: "#2B3490", fontSize: 24, fontWeight: 700, marginBottom: 12 }}>Are You a KSRMCE Alumni?</h3>
-            <p style={{ color: "#666", fontSize: 16, margin: "12px 0 24px" }}>Join our alumni network and stay connected with your alma mater.</p>
+            <h3 style={{ color: "#2B3490", fontSize: 24, fontWeight: 700, marginBottom: 12 }}><CmsText section="alumni" slot="are-you-a-ksrmce-alumni" /></h3>
+            <p style={{ color: "#666", fontSize: 16, margin: "12px 0 24px" }}><CmsText section="alumni" slot="join-our-alumni-network-and" /></p>
             <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
               <a href="https://ksrmce.ac.in/alumniregistration.php" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "#D4A500", padding: "14px 32px", borderRadius: 8, fontWeight: 700, fontSize: 16, textDecoration: "none", display: "inline-block" }}>Register as Alumni →</a>
               <a href="https://drive.google.com/drive/folders/10P_ptDp8fsxF93BKfyjxK38YQqojWLmC" target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "2px solid #2B3490", color: "#2B3490", padding: "12px 28px", borderRadius: 8, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>📷 View Photo Gallery →</a>

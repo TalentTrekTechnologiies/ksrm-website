@@ -5,6 +5,7 @@ import { useState } from "react";
 import { getNewsPublic } from "@/lib/news-api";
 import NewsGrid, { toNewsItem, NewsItem } from "@/components/news/NewsGrid";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 const filters = ["All", "Examinations", "Events", "Accreditation", "Rankings", "Placements"];
 
@@ -117,8 +118,8 @@ export default function NewsPage() {
       <section className="news-hero">
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>News &amp; Events</h1>
-            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Stay updated with the latest from K.S.R.M.</p>
+            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="news-page" slot="news-events" /></h1>
+            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}><CmsText section="news-page" slot="stay-updated-with-the-latest" /></p>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 const objectives = [
   "To create a vibrant local innovation ecosystem",
@@ -58,8 +59,8 @@ export default function IICPage() {
       <section className="iic-hero">
         <div className="responsive-container">
           <div style={{ padding: "0 0 32px 0" }}>
-            <h1 className="iic-title">Institution&apos;s Innovation Council (IIC)</h1>
-            <p className="iic-subtitle">Fostering Innovation &amp; Entrepreneurship</p>
+            <h1 className="iic-title"><CmsText section="iic" slot="institution-s-innovation-council-iic" /></h1>
+            <p className="iic-subtitle"><CmsText section="iic" slot="fostering-innovation-entrepreneurship" /></p>
           </div>
         </div>
       </section>
@@ -67,27 +68,21 @@ export default function IICPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div className="iic-moe-badge">
-            <p className="iic-moe-text">🎓 Ministry of Education Initiative</p>
-            <p className="iic-moe-desc">Established under the Innovation Cell (MIC), Government of India</p>
+            <p className="iic-moe-text"><CmsText section="iic" slot="ministry-of-education-initiative" /></p>
+            <p className="iic-moe-desc"><CmsText section="iic" slot="established-under-the-innovation-cell" /></p>
           </div>
         </div>
       </section>
 
       <section style={{ padding: "0 0 72px", background: "#ffffff" }}>
         <div className="responsive-container">
-          <p className="iic-about-text">
-            The Institution&apos;s Innovation Council (IIC) at K.S.R.M. College of Engineering is established under the
-            aegis of the Ministry of Education&apos;s Innovation Cell (MIC), Government of India. The IIC aims to
-            foster a culture of innovation and entrepreneurship among students and faculty, encouraging them to work
-            on new ideas, prototypes, and startups. It serves as a platform to promote innovation activities,
-            organize workshops, and connect students with the startup ecosystem.
-          </p>
+          <p className="iic-about-text"><CmsText section="iic" slot="the-institution-s-innovation-council" multiline /></p>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 className="iic-section-heading">Our Objectives</h2>
+          <h2 className="iic-section-heading"><CmsText section="iic" slot="our-objectives" /></h2>
           <div className="iic-objectives-grid">
             {objectives.map((o) => (
               <div className="iic-objective-card" key={o}><p className="iic-objective-text">{o}</p></div>
@@ -98,13 +93,13 @@ export default function IICPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="iic-section-heading">Key Activities</h2>
+          <h2 className="iic-section-heading"><CmsText section="iic" slot="key-activities" /></h2>
           <div className="iic-activities-grid">
-            {activities.map((a) => (
+            {activities.map((a, _i) => (
               <div className="iic-activity-card" key={a.title}>
                 <span className="iic-activity-icon">{a.icon}</span>
-                <h3 className="iic-activity-title">{a.title}</h3>
-                <p className="iic-activity-description">{a.desc}</p>
+                <h3 className="iic-activity-title"><CmsText section="iic" slot={`activities.${_i}.title`} /></h3>
+                <p className="iic-activity-description"><CmsText section="iic" slot={`activities.${_i}.desc`} /></p>
               </div>
             ))}
           </div>

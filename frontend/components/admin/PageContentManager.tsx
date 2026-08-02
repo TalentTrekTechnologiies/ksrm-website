@@ -7,7 +7,7 @@ import PermissionGate from "@/components/admin/cms/PermissionGate"
 import MediaField from "@/components/admin/cms/MediaField"
 import PageTableEditor from "@/components/admin/PageTableEditor"
 import PageTextEditor from "@/components/admin/PageTextEditor"
-import { PAGE_TEXT } from "@/lib/page-text-registry"
+import { PAGE_TEXT, pagesWithText } from "@/lib/page-text-registry"
 import {
   TextField,
   SelectField,
@@ -49,6 +49,20 @@ const CATEGORY_OPTIONS = [
   { value: "FORM", label: "Forms" },
   { value: "OTHER", label: "Other" },
 ]
+
+/**
+ * Every page an admin can manage here.
+ *
+ * PAGE_SECTIONS lists the pages that accept document/media uploads. The text
+ * registry covers more than that - a page can have editable wording without
+ * ever needing an attachment - so the two are merged. Without this, those
+ * pages' text panels would exist but be unreachable from the dropdown.
+ */
+const ALL_PAGES = (() => {
+  const byValue = new Map(PAGE_SECTIONS.map((s) => [s.value, s]))
+  for (const p of pagesWithText()) if (!byValue.has(p.value)) byValue.set(p.value, p)
+  return [...byValue.values()].sort((a, b) => a.label.localeCompare(b.label))
+})()
 
 /** Gallery rows holding a video carry this marker category. */
 const VIDEO_CATEGORY = "__video__"
@@ -253,7 +267,7 @@ function PageContentInner() {
         >
           <option value="">Select…</option>
           <optgroup label="Pages">
-            {PAGE_SECTIONS.map((s) => (
+            {ALL_PAGES.map((s) => (
               <option key={s.value} value={`page:${s.value}`}>{s.label}</option>
             ))}
           </optgroup>

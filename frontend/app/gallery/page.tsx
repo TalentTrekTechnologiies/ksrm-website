@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { getGalleryPublic } from "@/lib/gallery-api";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 interface GalleryImageDisplay {
   src: string;
@@ -188,8 +189,8 @@ export default function GalleryPage() {
 
       <section className="gal-hero">
         <div className="responsive-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Campus Gallery</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Explore life at K.S.R.M. College of Engineering</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="gallery-page" slot="campus-gallery" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="gallery-page" slot="explore-life-at-k-s" /></p>
         </div>
       </section>
 
@@ -227,7 +228,7 @@ export default function GalleryPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}>Campus Videos</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="gallery-page" slot="campus-videos" /></h2>
           <div className="gal-video-grid">
             {videos.map((v) => (
               <div className="gal-video-wrap" key={v}>

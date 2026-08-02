@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 const stats = [
   { icon: "🚌", value: "15", label: "Total Buses" },
@@ -79,19 +80,15 @@ export default function TransportPage() {
       <section className="trn-hero">
         <div className="responsive-container">
           <div className="trn-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Transport</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>Safe & Reliable Campus Connectivity</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="transport" slot="transport" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="transport" slot="safe-reliable-campus-connectivity" /></p>
         </div>
       </section>
 
       <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <div style={{ maxWidth: 820 }}>
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              K.S.R.M. College of Engineering operates a comprehensive transport system with a modern fleet of buses
-              covering major routes in and around Kadapa. Our transport facility ensures safe, comfortable, and
-              timely commute for students and staff from various areas.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}><CmsText section="transport" slot="k-s-r-m-college" multiline /></p>
           </div>
         </div>
       </section>
@@ -99,11 +96,11 @@ export default function TransportPage() {
       <section style={{ padding: "40px 0", background: "#2B3490" }}>
         <div className="responsive-container">
           <div className="trn-stats-bar">
-            {stats.map((s) => (
+            {stats.map((s, _i) => (
               <div className="trn-stat-item" key={s.label}>
                 <div className="trn-stat-icon">{s.icon}</div>
                 <div className="trn-stat-number">{s.value}</div>
-                <div className="trn-stat-label">{s.label}</div>
+                <div className="trn-stat-label"><CmsText section="transport" slot={`stats.${_i}.label`} /></div>
               </div>
             ))}
           </div>
@@ -112,19 +109,19 @@ export default function TransportPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>Bus Routes</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="transport" slot="bus-routes" /></h2>
           <div className="trn-table-wrapper">
             <table className="trn-table">
               <thead><tr><th>Route</th><th>From</th><th>Via (Stops)</th><th>Departure</th><th>Return</th><th>Fee</th></tr></thead>
               <tbody>
-                {routes.map((r) => (
+                {routes.map((r, _i) => (
                   <tr key={r.no}>
                     <td className="trn-route-no">{r.no}</td>
-                    <td>{r.from}</td>
-                    <td className="trn-via">{r.via}</td>
+                    <td><CmsText section="transport" slot={`routes.${_i}.from`} /></td>
+                    <td className="trn-via"><CmsText section="transport" slot={`routes.${_i}.via`} /></td>
                     <td>{r.dep}</td>
                     <td>{r.ret}</td>
-                    <td style={{ fontWeight: 700, color: "#2B3490" }}>{r.fee}</td>
+                    <td style={{ fontWeight: 700, color: "#2B3490" }}><CmsText section="transport" slot={`routes.${_i}.fee`} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -135,7 +132,7 @@ export default function TransportPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>Transport Rules</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="transport" slot="transport-rules" /></h2>
           <div className="trn-rules-container">
             <div className="trn-rules">
               {rules.map((r) => <div className="trn-rule" key={r}>{r}</div>)}
@@ -158,10 +155,8 @@ export default function TransportPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 48px", textAlign: "center" }}>🚌 Bus Routes</h2>
-          <p style={{ textAlign: "center", fontSize: 16, color: "#555", marginBottom: 40 }}>
-            College transport connects campus to multiple towns, providing convenient connectivity for students and staff.
-          </p>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 48px", textAlign: "center" }}><CmsText section="transport" slot="bus-routes-2" /></h2>
+          <p style={{ textAlign: "center", fontSize: 16, color: "#555", marginBottom: 40 }}><CmsText section="transport" slot="college-transport-connects-campus-to" multiline /></p>
           <div className="trn-towns-grid">
             {towns.map((t) => (
               <div className="trn-town-card" key={t}>
@@ -175,7 +170,7 @@ export default function TransportPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}>Bike Parking Facility</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="transport" slot="bike-parking-facility" /></h2>
           <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 1000, margin: "0 auto" }}>
             <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
               <source src="/videos/bike-parking.mp4" type="video/mp4" />
@@ -187,14 +182,14 @@ export default function TransportPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div className="trn-contact-card">
-            <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 24, fontWeight: 700, margin: 0 }}>Transport Officer</h3>
+            <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 24, fontWeight: 700, margin: 0 }}><CmsText section="transport" slot="transport-officer" /></h3>
             <div className="trn-contact-info">
               <div className="trn-contact-item">
-                <h4>Phone</h4>
+                <h4><CmsText section="transport" slot="phone" /></h4>
                 <p><a href="tel:+91-8554-233333 (Ext: 330)">+91-8554-233333 (Ext: 330)</a></p>
               </div>
               <div className="trn-contact-item">
-                <h4>Email</h4>
+                <h4><CmsText section="transport" slot="email" /></h4>
                 <p><a href="mailto:transport@ksrmce.ac.in">transport@ksrmce.ac.in</a></p>
               </div>
             </div>

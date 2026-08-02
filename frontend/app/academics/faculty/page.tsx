@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 type FacultyMember = {
   name: string;
@@ -233,19 +234,15 @@ export default function FacultyPage() {
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="fac-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
-              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Faculty</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Meet Our Experienced Educators</p>
+              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="academics.faculty" slot="faculty" /></h1>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}><CmsText section="academics.faculty" slot="meet-our-experienced-educators" /></p>
             </div>
           </div>
         </section>
 
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              K.S.R.M. College of Engineering is served by a dedicated team of experienced faculty members with strong
-              academic credentials and industry exposure. Our faculty are committed to imparting quality education,
-              conducting research, and mentoring the next generation of engineers.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}><CmsText section="academics.faculty" slot="k-s-r-m-college" multiline /></p>
           </div>
         </section>
 
@@ -273,9 +270,7 @@ export default function FacultyPage() {
 
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>
-              Our Faculty by Department
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="academics.faculty" slot="our-faculty-by-department" /></h2>
             <div className="fac-tabs">
               {TABS.map((tab) => (
                 <button
@@ -288,7 +283,7 @@ export default function FacultyPage() {
               ))}
             </div>
             {members.length === 0 ? (
-              <p style={{ color: "#666", fontSize: 14 }}>Faculty data for this department has not been added yet.</p>
+              <p style={{ color: "#666", fontSize: 14 }}><CmsText section="academics.faculty" slot="faculty-data-for-this-department" /></p>
             ) : (
               <div className="fac-grid">
                 {members.map((m) => (

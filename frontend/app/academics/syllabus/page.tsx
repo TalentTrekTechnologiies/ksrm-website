@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 const btechRegs = [
   { name: "R23UG (Current)", branches: "Computer Science & Engineering, CSE (AI & ML), CSE (Data Science), CSE (AI & ML Specialisation), Electronics & Communication Engineering, Electrical & Electronics Engineering, Civil Engineering, Mechanical Engineering" },
@@ -164,28 +165,21 @@ export default function SyllabusPage() {
           <div className="responsive-container">
             <div style={{ padding: "72px 0" }}>
               <div className="syl-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
-              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Syllabus</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Regulation-wise syllabus for all programmes</p>
+              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="syllabus" slot="syllabus" /></h1>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}><CmsText section="syllabus" slot="regulation-wise-syllabus-for-all" /></p>
             </div>
           </div>
         </section>
 
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              K.S.R.M. College of Engineering follows the academic syllabus prescribed by Jawaharlal Nehru Technological
-              University Anantapur (JNTUA). Detailed regulation-wise syllabi are available for download below for
-              all B.Tech, M.Tech and MBA programmes. The syllabi are designed to meet NBA accreditation standards
-              and equip students with industry-relevant knowledge and skills.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}><CmsText section="syllabus" slot="k-s-r-m-college" multiline /></p>
           </div>
         </section>
 
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
-              Download Syllabus by Programme
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="syllabus" slot="download-syllabus-by-programme" /></h2>
             <div className="syl-accordion">
               <AccordionItem title="B.Tech" regs={btechRegs} defaultOpen />
               <AccordionItem title="M.Tech" regs={mtechRegs} />
@@ -197,9 +191,7 @@ export default function SyllabusPage() {
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <div className="syl-note">
-              <p>For regulation-wise detailed syllabus PDFs, visit the Academics section or contact the respective
-              department. Syllabi are issued by JNTUA and are subject to periodic updates. Please verify with the
-              department for any recent amendments.</p>
+              <p><CmsText section="syllabus" slot="for-regulation-wise-detailed-syllabus" multiline /></p>
             </div>
           </div>
         </section>

@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿const ugPrograms = [
   { name: "Computer Science & Engineering", code: "CSE", intake: 240 },
@@ -109,23 +110,19 @@ export default function UGAdmissionsPage() {
         <section className="ug-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="ug-title">Undergraduate Programs</h1>
-              <p className="ug-subtitle">B.Tech Engineering Programs at KSRM</p>
+              <h1 className="ug-title"><CmsText section="admissions.ug" slot="undergraduate-programs" /></h1>
+              <p className="ug-subtitle"><CmsText section="admissions.ug" slot="b-tech-engineering-programs-at" /></p>
             </div>
           </div>
         </section>
 
         <section className="ug-content-section">
           <div className="responsive-container">
-            <p className="ug-intro">
-              K.S.R.M. College offers eight B.Tech undergraduate programs with a total intake of 810 seats.
-              Each program is designed to provide quality technical education with hands-on learning and
-              industry collaboration.
-            </p>
+            <p className="ug-intro"><CmsText section="admissions.ug" slot="k-s-r-m-college" multiline /></p>
 
             <div className="ug-summary">
-              <h3>Total UG Intake</h3>
-              <p style={{ margin: "8px 0 0" }}>810 Seats across 8 Programs</p>
+              <h3><CmsText section="admissions.ug" slot="total-ug-intake" /></h3>
+              <p style={{ margin: "8px 0 0" }}><CmsText section="admissions.ug" slot="810-seats-across-8-programs" /></p>
             </div>
 
             <div className="ug-table-wrapper">
@@ -146,13 +143,8 @@ export default function UGAdmissionsPage() {
             </div>
 
             <div className="ug-info-box">
-              <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>
-                Admission Code: K.S.R.M.
-              </h4>
-              <p style={{ color: "#555", fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                Use the code K.S.R.M. when applying through EAPCET. Admissions are merit-based and follow the norms
-                set by JNTUA and the Government of Andhra Pradesh for engineering programs.
-              </p>
+              <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="admissions.ug" slot="admission-code-k-s-r" /></h4>
+              <p style={{ color: "#555", fontSize: 14, lineHeight: 1.7, margin: 0 }}><CmsText section="admissions.ug" slot="use-the-code-k-s" multiline /></p>
             </div>
           </div>
         </section>

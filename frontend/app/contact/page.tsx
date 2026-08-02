@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿import type { ReactElement } from "react";
 
@@ -66,8 +67,8 @@ export default function ContactPage() {
 
       <section className="contact-hero">
         <div className="responsive-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Contact Us</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>We&apos;re here to help — reach out to us</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="contact" slot="contact-us" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="contact" slot="we-re-here-to-help" /></p>
         </div>
       </section>
 
@@ -81,8 +82,8 @@ export default function ContactPage() {
                   <div className="contact-info-card" key={c.title + i}>
                     <div className="contact-info-icon"><Icon /></div>
                     <div className="contact-info-content">
-                      <h3>{c.title}</h3>
-                      {c.href ? <a href={c.href}>{c.content}</a> : <p>{c.content}</p>}
+                      <h3><CmsText section="contact" slot={`infoCards.${i}.title`} /></h3>
+                      {c.href ? <a href={c.href}><CmsText section="contact" slot={`infoCards.${i}.content`} /></a> : <p><CmsText section="contact" slot={`infoCards.${i}.content`} /></p>}
                     </div>
                   </div>
                 );
@@ -97,15 +98,15 @@ export default function ContactPage() {
 
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Department Contacts</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="contact" slot="department-contacts" /></h2>
           <div className="contact-departments-grid">
-            {deptContacts.map((d) => (
+            {deptContacts.map((d, _i) => (
               <div className="contact-dept-card" key={d.title}>
-                <h3>{d.title}</h3>
+                <h3><CmsText section="contact" slot={`deptContacts.${_i}.title`} /></h3>
                 <p>Phone:</p>
                 <a href={d.phoneHref}>{d.phone}</a>
                 <p>Email:</p>
-                <a href={`mailto:${d.email}`}>{d.email}</a>
+                <a href={`mailto:${d.email}`}><CmsText section="contact" slot={`deptContacts.${_i}.email`} /></a>
               </div>
             ))}
           </div>
@@ -115,15 +116,15 @@ export default function ContactPage() {
       <section style={{ padding: "48px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div className="contact-hours-banner">
-            <h3>📅 Working Hours</h3>
-            <p style={{ margin: "12px 0 0", fontSize: 16 }}>Monday to Saturday: 9:00 AM – 5:00 PM</p>
+            <h3><CmsText section="contact" slot="working-hours" /></h3>
+            <p style={{ margin: "12px 0 0", fontSize: 16 }}><CmsText section="contact" slot="monday-to-saturday-9-00" /></p>
           </div>
         </div>
       </section>
 
       <section style={{ padding: "48px 0", background: "#f7f8fa", textAlign: "center" }}>
         <div className="responsive-container">
-          <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Follow Us</h3>
+          <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="contact" slot="follow-us" /></h3>
           <div className="contact-social">
             <a href="https://www.facebook.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Facebook">f</a>
             <a href="https://twitter.com/ksrmceofficial" target="_blank" rel="noopener noreferrer" className="contact-social-link" title="Twitter">𝕏</a>

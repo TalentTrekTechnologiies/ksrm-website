@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿import PlacementsSubnav from "@/components/PlacementsSubnav";
 
@@ -59,18 +60,18 @@ export default function InternshipsPage() {
         <section className="internships-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="internships-title">Internships</h1>
-              <p className="internships-subtitle">Placements & Career Development</p>
+              <h1 className="internships-title"><CmsText section="placements.internships" slot="internships" /></h1>
+              <p className="internships-subtitle"><CmsText section="placements.internships" slot="placements-career-development" /></p>
             </div>
           </div>
         </section>
         <PlacementsSubnav active="/placements/internships" />
         <section className="internships-section">
           <div className="responsive-container">
-            <h2 className="internships-heading">Internships</h2>
-            <p className="internships-text">At K.S.R.M. College of Engineering, internships provide valuable opportunities to bridge the gap between classroom learning and industry practice. Through strategic partnerships with leading organizations, we facilitate meaningful internship experiences.</p>
-            <p className="internships-text">Our internship programs offer students exposure to real-world challenges, industry tools, professional environments, and project-based learning across diverse domains including Software Development, AI & ML, Data Science, Cloud Computing, and Core Engineering.</p>
-            <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "32px 0 16px" }}>Key Highlights</h3>
+            <h2 className="internships-heading"><CmsText section="placements.internships" slot="internships-2" /></h2>
+            <p className="internships-text"><CmsText section="placements.internships" slot="at-k-s-r-m" multiline /></p>
+            <p className="internships-text"><CmsText section="placements.internships" slot="our-internship-programs-offer-students" multiline /></p>
+            <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "32px 0 16px" }}><CmsText section="placements.internships" slot="key-highlights" /></h3>
             <ul className="internships-list">
               <li>Industry internships facilitated through institutional MoUs</li>
               <li>Virtual and onsite internship opportunities</li>

@@ -1,6 +1,7 @@
 ﻿import type { ReactNode } from "react";
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 const objectives = [
   { icon: "trending-up", text: "To enhance students' employability through industry-relevant skill development, certifications, and career readiness programs." },
@@ -122,8 +123,8 @@ export default function PlacementsOverviewPage() {
         <section className="overview-hero">
           <div className="responsive-container">
             <div>
-              <h1 className="overview-hero-title">Placements & Training</h1>
-              <p className="overview-hero-subtitle">Career Development & Training and Placement Cell</p>
+              <h1 className="overview-hero-title"><CmsText section="placements.overview" slot="placements-training" /></h1>
+              <p className="overview-hero-subtitle"><CmsText section="placements.overview" slot="career-development-training-and-placement" /></p>
             </div>
           </div>
         </section>
@@ -134,21 +135,10 @@ export default function PlacementsOverviewPage() {
           <div className="responsive-container">
             <div className="overview-intro-grid">
               <div>
-                <h2 className="overview-heading">Career Development & Training and Placement Cell</h2>
+                <h2 className="overview-heading"><CmsText section="placements.overview" slot="career-development-training-and-placement-2" /></h2>
                 <span className="overview-highlight">About Training and Placement Cell</span>
-                <p className="overview-text">
-                  The Career Development and Training & Placement Cell at K.S.R.M. College of Engineering serves
-                  as a strategic bridge between academia and industry, fostering a culture of excellence, innovation,
-                  and career preparedness. The Cell is committed to empowering students with the knowledge, skills,
-                  and professional competencies required to thrive in a rapidly evolving global workforce.
-                </p>
-                <p className="overview-text">
-                  Through a comprehensive ecosystem comprising skill development programs, industry certifications,
-                  internships, career guidance, and placement assistance, the Cell ensures that students are
-                  well-prepared to meet industry expectations and pursue successful careers. The Centre actively
-                  collaborates with leading organizations, technology partners, alumni, and industry experts to
-                  create meaningful opportunities for students across diverse domains.
-                </p>
+                <p className="overview-text"><CmsText section="placements.overview" slot="the-career-development-and-training" multiline /></p>
+                <p className="overview-text"><CmsText section="placements.overview" slot="through-a-comprehensive-ecosystem-comprising" multiline /></p>
               </div>
               <div>
                 <div className="overview-image">📸 Placeholder Image<br />(Career Development Cell Photo)</div>
@@ -159,12 +149,12 @@ export default function PlacementsOverviewPage() {
 
         <section className="overview-objectives-section">
           <div className="responsive-container">
-            <h2 className="overview-section-heading">Objectives of the Career Development Centre</h2>
+            <h2 className="overview-section-heading"><CmsText section="placements.overview" slot="objectives-of-the-career-development" /></h2>
             <div className="overview-objectives-grid">
-              {objectives.map((o) => (
+              {objectives.map((o, _i) => (
                 <div className="overview-objective-card" key={o.icon}>
                   <div className="overview-icon-circle"><Icon name={o.icon} /></div>
-                  <p className="overview-objective-text">{o.text}</p>
+                  <p className="overview-objective-text"><CmsText section="placements.overview" slot={`objectives.${_i}.text`} /></p>
                 </div>
               ))}
             </div>
@@ -173,25 +163,20 @@ export default function PlacementsOverviewPage() {
 
         <section className="overview-team-section">
           <div className="responsive-container">
-            <h2 className="overview-section-heading">Our Leadership Team</h2>
+            <h2 className="overview-section-heading"><CmsText section="placements.overview" slot="our-leadership-team" /></h2>
             <div className="overview-team-grid">
               <div className="overview-dean-card">
                 <div className="overview-dean-photo">Dean – Industry Relations</div>
                 <div className="overview-dean-info">
-                  <h3 className="overview-dean-name">Mr. Venugopal Marella</h3>
-                  <p className="overview-dean-designation">Dean – Industry Relations</p>
-                  <p className="overview-dean-bio">
-                    Mr. Venugopal Marella plays a pivotal role in coordinating campus recruitment activities and strengthening relationships with industry partners.
-                  </p>
+                  <h3 className="overview-dean-name"><CmsText section="placements.overview" slot="mr-venugopal-marella" /></h3>
+                  <p className="overview-dean-designation"><CmsText section="placements.overview" slot="dean-industry-relations" /></p>
+                  <p className="overview-dean-bio"><CmsText section="placements.overview" slot="mr-venugopal-marella-plays-a" multiline /></p>
                 </div>
               </div>
             </div>
             <div className="overview-commitment-box">
-              <h3 className="overview-commitment-heading">Our Commitment</h3>
-              <p className="overview-commitment-text">
-                Together, the Training & Placement Team is committed to fostering a culture of excellence,
-                employability, innovation, and lifelong learning.
-              </p>
+              <h3 className="overview-commitment-heading"><CmsText section="placements.overview" slot="our-commitment" /></h3>
+              <p className="overview-commitment-text"><CmsText section="placements.overview" slot="together-the-training-placement-team" multiline /></p>
             </div>
           </div>
         </section>

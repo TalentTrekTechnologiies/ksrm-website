@@ -2,6 +2,7 @@
 
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 const missionFunctions = [
   "Development of quality benchmarks",
@@ -175,15 +176,9 @@ export default function IQACPage() {
             <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>
               ⭐ Quality Assurance
             </div>
-            <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>
-              Internal Quality Assurance Cell
-            </h1>
-            <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 24px" }}>IQAC — K.S.R.M. College of Engineering</p>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}>
-              IQAC was established on 18-01-2012 following NAAC norms. It consists of representatives of all
-              stakeholders, committed to institutional quality enhancement through internalization of quality
-              culture and best practices.
-            </p>
+            <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}><CmsText section="iqac" slot="internal-quality-assurance-cell" /></h1>
+            <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 24px" }}><CmsText section="iqac" slot="iqac-k-s-r-m" /></p>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}><CmsText section="iqac" slot="iqac-was-established-on-18" multiline /></p>
           </div>
         </div>
       </section>
@@ -192,8 +187,8 @@ export default function IQACPage() {
       <div style={{ position: "sticky", top: 0, zIndex: 100, background: "white", boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: "16px 0", overflowX: "auto" }}>
         <div className="responsive-container">
           <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
-            {tabs.map((t) => (
-              <button key={t.id} className="iqac-tab-btn" onClick={() => scrollTo(t.id)}>{t.label}</button>
+            {tabs.map((t, _i) => (
+              <button key={t.id} className="iqac-tab-btn" onClick={() => scrollTo(t.id)}><CmsText section="iqac" slot={`tabs.${_i}.label`} /></button>
             ))}
           </div>
         </div>
@@ -202,12 +197,10 @@ export default function IQACPage() {
       {/* ABOUT */}
       <section id="about" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>
-            About IQAC
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="iqac" slot="about-iqac" /></h2>
           <div className="iqac-about-grid">
             <div style={{ background: "#f9f9f9", borderTop: "4px solid #D4A500", borderRadius: 12, padding: 28 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}>🎯 Aim</h3>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}><CmsText section="iqac" slot="aim" /></h3>
               <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                 <li style={{ fontSize: 14, color: "#555", lineHeight: 1.8, marginBottom: 12, display: "flex", gap: 8 }}>
                   <span style={{ width: 6, height: 6, background: "#D4A500", borderRadius: "50%", marginTop: 6, flexShrink: 0 }} />
@@ -222,7 +215,7 @@ export default function IQACPage() {
               </ul>
             </div>
             <div style={{ background: "#f9f9f9", borderTop: "4px solid #2B3490", borderRadius: 12, padding: 28 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}>⚙️ Strategies</h3>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}><CmsText section="iqac" slot="strategies" /></h3>
               <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                 {strategies.map((s) => (
                   <li key={s} style={{ fontSize: 14, color: "#555", lineHeight: 1.6, marginBottom: 8, display: "flex", gap: 8 }}>
@@ -233,7 +226,7 @@ export default function IQACPage() {
               </ul>
             </div>
             <div style={{ background: "#f9f9f9", borderTop: "4px solid #e63946", borderRadius: 12, padding: 28 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}>🔧 Functions</h3>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", marginBottom: 16 }}><CmsText section="iqac" slot="functions" /></h3>
               <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                 {missionFunctions.map((f) => (
                   <li key={f} style={{ fontSize: 13, color: "#555", lineHeight: 1.5, marginBottom: 6, display: "flex", gap: 8 }}>
@@ -245,10 +238,8 @@ export default function IQACPage() {
             </div>
           </div>
           <div style={{ background: "linear-gradient(135deg, #2B3490, #1a1d4d)", borderRadius: 12, padding: 40, color: "white" }}>
-            <h3 style={{ color: "#D4A500", fontSize: 22, fontWeight: 700, marginBottom: 16 }}>Quality Policy</h3>
-            <p style={{ fontSize: 16, marginBottom: 20, lineHeight: 1.8 }}>
-              K.S.R.M. is committed to achieve excellence in Teaching, Research and Consultancy
-            </p>
+            <h3 style={{ color: "#D4A500", fontSize: 22, fontWeight: 700, marginBottom: 16 }}><CmsText section="iqac" slot="quality-policy" /></h3>
+            <p style={{ fontSize: 16, marginBottom: 20, lineHeight: 1.8 }}><CmsText section="iqac" slot="k-s-r-m-is" /></p>
             <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {qualityPolicy.map((q) => (
                 <li key={q} style={{ fontSize: 14, lineHeight: 1.8, marginBottom: 8, display: "flex", gap: 8 }}>
@@ -264,9 +255,7 @@ export default function IQACPage() {
       {/* COMPOSITION */}
       <section id="composition" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}>
-            IQAC Composition (35 Members)
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="iqac-composition-35-members" /></h2>
           <div className="iqac-table-wrapper">
             <table className="iqac-table">
               <thead>
@@ -276,8 +265,8 @@ export default function IQACPage() {
                 {composition.map((c, i) => (
                   <tr key={i} style={{ background: i % 2 === 0 ? "white" : "#f9f9f9" }}>
                     <td style={{ color: "#2B3490", fontWeight: 600 }}>{i + 1}</td>
-                    <td style={{ color: "#333" }}>{c.name}</td>
-                    <td style={{ color: "#666" }}>{c.designation}</td>
+                    <td style={{ color: "#333" }}><CmsText section="iqac" slot={`composition.${i}.name`} /></td>
+                    <td style={{ color: "#666" }}><CmsText section="iqac" slot={`composition.${i}.designation`} /></td>
                     <td>
                       {c.role === "Chairperson" || c.role === "Coordinator" ? (
                         <span style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
@@ -296,9 +285,7 @@ export default function IQACPage() {
       {/* MINUTES */}
       <section id="minutes" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}>
-            Minutes of Meeting
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="minutes-of-meeting" /></h2>
           <div style={{ maxWidth: 800, margin: "0 auto" }}>
             {minutesYears.map((y) => (
               <div key={y} style={{ marginBottom: 8 }}>
@@ -312,9 +299,7 @@ export default function IQACPage() {
       {/* AQAR */}
       <section id="aqar" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}>
-            AQAR Reports
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="aqar-reports" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
             {aqarReports.map((r) => (
               <a href={r.href} target="_blank" rel="noopener noreferrer" className="iqac-doc-link" key={r.label}>
@@ -333,9 +318,7 @@ export default function IQACPage() {
       {/* SURVEY */}
       <section id="survey" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}>
-            Student Satisfaction Survey
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="student-satisfaction-survey" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16, marginBottom: 48 }}>
             {surveys.map((s) => (
               <a href={s.href} target="_blank" rel="noopener noreferrer" className="iqac-doc-link" key={s.label}>
@@ -348,10 +331,10 @@ export default function IQACPage() {
               </a>
             ))}
           </div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 20, textAlign: "center" }}>Feedback Forms</h3>
+          <h3 style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 20, textAlign: "center" }}><CmsText section="iqac" slot="feedback-forms" /></h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
-            {feedbackForms.map((f) => (
-              <a href={f.href} target="_blank" rel="noopener noreferrer" className="iqac-feedback-btn" key={f.label}>{f.label}</a>
+            {feedbackForms.map((f, _i) => (
+              <a href={f.href} target="_blank" rel="noopener noreferrer" className="iqac-feedback-btn" key={f.label}><CmsText section="iqac" slot={`feedbackForms.${_i}.label`} /></a>
             ))}
           </div>
         </div>
@@ -360,15 +343,13 @@ export default function IQACPage() {
       {/* APEX */}
       <section id="apex" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}>
-            Apex Bodies
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="apex-bodies" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-            {apexBodies.map((a) => (
+            {apexBodies.map((a, _i) => (
               <a href={a.href} target="_blank" rel="noopener noreferrer" className="iqac-apex-card" key={a.label}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                   <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{a.icon}</span>
-                  <span style={{ fontSize: 20, fontWeight: 700, color: "#2B3490" }}>{a.label}</span>
+                  <span style={{ fontSize: 20, fontWeight: 700, color: "#2B3490" }}><CmsText section="iqac" slot={`apexBodies.${_i}.label`} /></span>
                 </div>
                 <div className="iqac-apex-btn">View Details →</div>
               </a>
@@ -380,9 +361,7 @@ export default function IQACPage() {
       {/* CONTACT */}
       <section id="contact" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}>
-            Contact IQAC
-          </h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="contact-iqac" /></h2>
           <div style={{ maxWidth: 600, margin: "0 auto", border: "2px solid #D4A500", borderRadius: 12, padding: 40 }}>
             <div style={{ fontWeight: 700, fontSize: 20, color: "#2B3490", marginBottom: 8 }}>Internal Quality Assurance Cell (IQAC)</div>
             <div style={{ fontSize: 15, color: "#666", marginBottom: 32 }}>K.S.R.M. College of Engineering (Autonomous)</div>

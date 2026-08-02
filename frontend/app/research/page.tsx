@@ -5,6 +5,7 @@ import PageResources from "@/components/PageResources";
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 // Videos published to a page are stored as Gallery rows tagged with this
 // category (same sentinel PageResources uses). Kept in one place so the
@@ -196,20 +197,10 @@ export default function ResearchPage() {
       >
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px", position: "relative", zIndex: 1 }}>
-          <p style={{ fontSize: 14, letterSpacing: 2, textTransform: "uppercase", color: "#D4A500", fontWeight: 600, margin: "0 0 8px" }}>
-            🔬 Research Excellence
-          </p>
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 700, margin: "0 0 16px", fontFamily: "'Rajdhani', sans-serif" }}>
-            Research &amp; Development Cell (RDC)
-          </h1>
-          <p style={{ fontSize: 18, color: "#D4A500", fontWeight: 600, margin: "0 0 24px" }}>
-            Advancing Knowledge Through Research &amp; Innovation
-          </p>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: "#e0e0e0", margin: 0, maxWidth: 600 }}>
-            The Research and Development Cell (RDC) of KSRMCE is committed to building a robust research ecosystem
-            that fosters innovation, industry-academia collaboration, and ethical research practices among faculty
-            and students.
-          </p>
+          <p style={{ fontSize: 14, letterSpacing: 2, textTransform: "uppercase", color: "#D4A500", fontWeight: 600, margin: "0 0 8px" }}><CmsText section="research" slot="research-excellence" /></p>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 700, margin: "0 0 16px", fontFamily: "'Rajdhani', sans-serif" }}><CmsText section="research" slot="research-development-cell-rdc" /></h1>
+          <p style={{ fontSize: 18, color: "#D4A500", fontWeight: 600, margin: "0 0 24px" }}><CmsText section="research" slot="advancing-knowledge-through-research-innovation" /></p>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: "#e0e0e0", margin: 0, maxWidth: 600 }}><CmsText section="research" slot="the-research-and-development-cell" multiline /></p>
         </div>
       </section>
 
@@ -217,8 +208,8 @@ export default function ResearchPage() {
       <section style={{ padding: "40px 0", background: "#f4f3ef", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8 }}>
-            {tabs.map((t) => (
-              <button key={t.id} className="rdc-hero-btn" onClick={() => scrollTo(t.id)}>{t.label}</button>
+            {tabs.map((t, _i) => (
+              <button key={t.id} className="rdc-hero-btn" onClick={() => scrollTo(t.id)}><CmsText section="research" slot={`tabs.${_i}.label`} /></button>
             ))}
           </div>
         </div>
@@ -227,30 +218,11 @@ export default function ResearchPage() {
       {/* ABOUT */}
       <section style={{ padding: "80px 0", background: "#fff" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }} id="about">
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
-            About the Research &amp; Development Cell
-          </h2>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}><CmsText section="research" slot="about-the-research-development-cell" /></h2>
           <div style={{ background: "#f9f9f9", borderLeft: "4px solid #D4A500", borderRadius: 8, padding: 28, fontSize: 16, lineHeight: 1.9, color: "#444" }}>
-            <p style={{ margin: "0 0 16px" }}>
-              The Research and Development Cell (RDC) of KSRMCE facilitates and encourages the research culture
-              among faculty and students. The establishment of the R&amp;D Cell is to develop and strengthen the
-              research environment in the departments and to align it with the educational policies of India. The
-              RDC provides a favorable environment for productive research, industrial and institutional
-              collaborations, and mobilizes resources and grants. The college follows the research mandate by
-              various National Missions, SDGs, and the Start-up India initiative leading to a Self-Reliant India
-              (Atma-Nirbhar Bharat).
-            </p>
-            <p style={{ margin: "0 0 16px" }}>
-              RDC encourages faculty to conceive ideas through enhanced industry-academia interactions and prepare
-              research proposals for funding from various agencies. It organizes events like capacity-building
-              programs and research theme-based workshops and internships that motivate students, scholars, and
-              faculty to participate actively in ideation and innovative research in emerging areas.
-            </p>
-            <p style={{ margin: 0 }}>
-              RDC ensures that researchers understand the importance of integrity and ethics, comply with ethical
-              codes of research, and follow publishing practices at institutional, national, and global levels. All
-              papers undergo standard plagiarism checks, and necessary software is made available for all researchers.
-            </p>
+            <p style={{ margin: "0 0 16px" }}><CmsText section="research" slot="the-research-and-development-cell-2" multiline /></p>
+            <p style={{ margin: "0 0 16px" }}><CmsText section="research" slot="rdc-encourages-faculty-to-conceive" multiline /></p>
+            <p style={{ margin: 0 }}><CmsText section="research" slot="rdc-ensures-that-researchers-understand" multiline /></p>
           </div>
         </div>
       </section>
@@ -258,15 +230,11 @@ export default function ResearchPage() {
       {/* PUBLICATIONS - aggregated from every department's CMS records */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="publications">
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>
-            📚 Research Publications
-          </h2>
-          <p style={{ color: "#666", fontSize: 15, margin: "0 0 28px" }}>
-            Publications, projects and patents from across all departments.
-          </p>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}><CmsText section="research" slot="research-publications" /></h2>
+          <p style={{ color: "#666", fontSize: 15, margin: "0 0 28px" }}><CmsText section="research" slot="publications-projects-and-patents-from" /></p>
 
           {records === null ? (
-            <p style={{ color: "#888", fontSize: 15 }}>Loading research records...</p>
+            <p style={{ color: "#888", fontSize: 15 }}><CmsText section="research" slot="loading-research-records" /></p>
           ) : records.length === 0 ? (
             <div style={{ background: "#fff", border: "1px solid #ddd", borderRadius: 8, padding: 28, color: "#666", fontSize: 15 }}>
               No research records have been published yet. They appear here as departments add them.
@@ -335,9 +303,7 @@ export default function ResearchPage() {
       {/* INNOVATION HEADING */}
       <section style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px" }}>
-            🤖 Innovation &amp; Student Projects
-          </h2>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px" }}><CmsText section="research" slot="innovation-student-projects" /></h2>
         </div>
       </section>
 
@@ -348,9 +314,7 @@ export default function ResearchPage() {
           shown twice. */}
       <section id="resources" style={{ padding: "80px 0", background: "#ffffff" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px", textAlign: "center" }}>
-            🎬 Research Videos
-          </h2>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 40px", textAlign: "center" }}><CmsText section="research" slot="research-videos" /></h2>
           {researchVideos && researchVideos.length > 0 ? (
             <div
               style={{
@@ -413,16 +377,12 @@ export default function ResearchPage() {
       {/* VISION & MISSION */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="vision">
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
-            Vision &amp; Mission
-          </h2>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}><CmsText section="research" slot="vision-mission" /></h2>
           <div style={{ background: "#fff", border: "2px solid #D4A500", borderRadius: 8, padding: 24, marginBottom: 48 }}>
-            <h3 style={{ color: "#2B3490", fontWeight: 700, margin: "0 0 12px" }}>🎯 Vision</h3>
-            <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8, margin: 0 }}>
-              To establish a robust mechanism for developing and strengthening the research ecosystem of the institution.
-            </p>
+            <h3 style={{ color: "#2B3490", fontWeight: 700, margin: "0 0 12px" }}><CmsText section="research" slot="vision" /></h3>
+            <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8, margin: 0 }}><CmsText section="research" slot="to-establish-a-robust-mechanism" multiline /></p>
           </div>
-          <h3 style={{ color: "#2B3490", fontWeight: 700, margin: "0 0 20px", fontSize: 18 }}>🚀 Our Missions</h3>
+          <h3 style={{ color: "#2B3490", fontWeight: 700, margin: "0 0 20px", fontSize: 18 }}><CmsText section="research" slot="our-missions" /></h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
             {missions.map((m, i) => (
               <div key={i} style={{ background: "#fff", border: "1px solid #ddd", borderRadius: 8, padding: 20 }}>
@@ -448,9 +408,9 @@ export default function ResearchPage() {
                   {i + 1}
                 </div>
                 <div style={{ fontSize: 12, color: "#D4A500", fontWeight: 700, marginBottom: 8, letterSpacing: 1 }}>COMMITTEE MEMBER</div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}>{c.name}</h3>
-                <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}>{c.designation}</p>
-                <p style={{ fontSize: 12, color: "#999", margin: 0 }}>{c.dept}</p>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}><CmsText section="research" slot={`committee.${i}.name`} /></h3>
+                <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}><CmsText section="research" slot={`committee.${i}.designation`} /></p>
+                <p style={{ fontSize: 12, color: "#999", margin: 0 }}><CmsText section="research" slot={`committee.${i}.dept`} /></p>
               </div>
             ))}
           </div>
@@ -460,32 +420,28 @@ export default function ResearchPage() {
       {/* POLICIES */}
       <section style={{ padding: "80px 0", background: "#f4f3ef", borderTop: "1px solid #e8e8e8" }} id="policies">
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
-            📋 Policies &amp; Guidelines
-          </h2>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}><CmsText section="research" slot="policies-guidelines" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
-            {policies.map((p) => (
+            {policies.map((p, _i) => (
               <div className="rdc-policy-card" key={p.name}>
                 <div style={{ fontSize: 28 }}>{p.icon}</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#D4A500" }}>{p.name}</h3>
-                <p style={{ fontSize: 13, color: "#d0d0d0", lineHeight: 1.6, margin: 0 }}>{p.desc}</p>
+                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#D4A500" }}><CmsText section="research" slot={`policies.${_i}.name`} /></h3>
+                <p style={{ fontSize: 13, color: "#d0d0d0", lineHeight: 1.6, margin: 0 }}><CmsText section="research" slot={`policies.${_i}.desc`} /></p>
                 <a href={p.file} download className="rdc-policy-link"><DownloadIcon />Download PDF</a>
               </div>
             ))}
           </div>
 
           <div style={{ marginTop: 60 }}>
-            <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 24px" }}>
-              📥 Additional Resources &amp; Documents
-            </h3>
+            <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 24px" }}><CmsText section="research" slot="additional-resources-documents" /></h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-              {additionalDocs.map((d) => (
+              {additionalDocs.map((d, _i) => (
                 <a href={d.file} download className="rdc-doc-link" key={d.name}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, background: "#eef1ff", borderRadius: 6 }}>
                     <FileIcon />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, fontWeight: 600, fontSize: 13 }}>{d.name}</p>
+                    <p style={{ margin: 0, fontWeight: 600, fontSize: 13 }}><CmsText section="research" slot={`additionalDocs.${_i}.name`} /></p>
                     <p style={{ margin: "3px 0 0", fontSize: 11, color: "#999" }}>Download →</p>
                   </div>
                   <span style={{ color: "#D4A500" }}><DownloadIcon /></span>
@@ -499,16 +455,14 @@ export default function ResearchPage() {
       {/* CONTACT */}
       <section style={{ padding: "80px 0", background: "#fff", borderTop: "1px solid #e8e8e8" }} id="contact">
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px", textAlign: "center" }}>
-          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}>
-            Contact RDC
-          </h2>
+          <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}><CmsText section="research" slot="contact-rdc" /></h2>
           <div style={{ background: "#eef1ff", borderRadius: 8, padding: "16px 24px", marginBottom: 24, fontSize: 14, color: "#2B3490", fontWeight: 600, display: "inline-block" }}>
             📍 K.S.R.M. College of Engineering, Cuddapah – 516003, Andhra Pradesh
           </div>
           <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 8, padding: 32, maxWidth: 600, margin: "0 auto" }}>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}>Dr. M. Venkatanarayana</h3>
-            <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}>Dean, Research & Development Cell</p>
-            <p style={{ fontSize: 12, color: "#999", margin: "0 0 20px" }}>Professor, Electronics & Communication Engineering</p>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}><CmsText section="research" slot="dr-m-venkatanarayana" /></h3>
+            <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}><CmsText section="research" slot="dean-research-development-cell" /></p>
+            <p style={{ fontSize: 12, color: "#999", margin: "0 0 20px" }}><CmsText section="research" slot="professor-electronics-communication-engineering" /></p>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <a href="tel:+918554233333380" className="rdc-contact-link"><PhoneIcon />+91-8554-233333 (Ext: 380)</a>
               <a href="mailto:rdc@ksrmce.ac.in" className="rdc-contact-link"><MailIcon />rdc@ksrmce.ac.in</a>

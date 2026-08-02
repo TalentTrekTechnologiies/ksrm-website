@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 
 const objectives = [
@@ -85,8 +86,8 @@ export default function EDCPage() {
       <section className="edc-hero">
         <div className="responsive-container">
           <div style={{ padding: "0 0 32px 0" }}>
-            <h1 className="edc-title">Entrepreneurship Development Cell (EDC)</h1>
-            <p className="edc-subtitle">Developing Entrepreneurs Since August 2005</p>
+            <h1 className="edc-title"><CmsText section="edc-page" slot="entrepreneurship-development-cell-edc" /></h1>
+            <p className="edc-subtitle"><CmsText section="edc-page" slot="developing-entrepreneurs-since-august-2005" /></p>
           </div>
         </div>
       </section>
@@ -94,16 +95,7 @@ export default function EDCPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <div className="edc-about-grid">
-            <p className="edc-about-text">
-              Entrepreneurs play a vital role in the economic development of any region or country. An entrepreneur
-              is a person who organizes, manages and takes the risk of running an enterprise. It is proven that with
-              the right training and adequate motivation, entrepreneurs can be developed. With this objective, the
-              Entrepreneurship Development Cell organizes entrepreneurship development programmes and regularly
-              invites successful entrepreneurs to share their experiences with students. The cell considers its
-              major role is to develop employment providers, not employment seekers. Established in August 2005, the
-              cell plans and implements entrepreneurship development programs including training, education,
-              research and consultancy.
-            </p>
+            <p className="edc-about-text"><CmsText section="edc-page" slot="entrepreneurs-play-a-vital-role" multiline /></p>
             <div className="edc-meta">
               <div className="edc-meta-item"><span className="edc-meta-label">Established</span><span className="edc-meta-value">August 2005</span></div>
               <div className="edc-meta-item"><span className="edc-meta-label">Coordinator</span><span className="edc-meta-value">Dr. B. Sudarshan</span></div>
@@ -117,15 +109,12 @@ export default function EDCPage() {
         <div className="responsive-container">
           <div className="edc-vision-grid">
             <div className="edc-vision-card">
-              <h2 className="edc-vision-title">Vision</h2>
-              <p className="edc-vision-text">
-                To be a well-recognized center of excellence for entrepreneurship development programmes based in an
-                institute of quality learning.
-              </p>
+              <h2 className="edc-vision-title"><CmsText section="edc-page" slot="vision" /></h2>
+              <p className="edc-vision-text"><CmsText section="edc-page" slot="to-be-a-well-recognized" multiline /></p>
             </div>
             <div className="edc-vision-card">
-              <h2 className="edc-vision-title">Mission</h2>
-              <p className="edc-vision-text">To train and develop Successful Entrepreneurs towards evergreen economic prosperity.</p>
+              <h2 className="edc-vision-title"><CmsText section="edc-page" slot="mission" /></h2>
+              <p className="edc-vision-text"><CmsText section="edc-page" slot="to-train-and-develop-successful" /></p>
             </div>
           </div>
         </div>
@@ -133,7 +122,7 @@ export default function EDCPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="edc-section-heading">Our Objectives</h2>
+          <h2 className="edc-section-heading"><CmsText section="edc-page" slot="our-objectives" /></h2>
           <div className="edc-objectives-grid">
             {objectives.map((o) => (
               <div className="edc-objective-card" key={o}><p className="edc-objective-text">{o}</p></div>
@@ -145,11 +134,8 @@ export default function EDCPage() {
       <section style={{ padding: "72px 0", background: "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)" }}>
         <div className="responsive-container">
           <div className="edc-dst-card">
-            <h2 className="edc-dst-title">DST/NSTEDB Sponsorship</h2>
-            <p className="edc-dst-content">
-              The NSTEDB (National Science and Technology Entrepreneurship Development Board), DST, New Delhi
-              sanctioned multiple Entrepreneurship Awareness Camps (EACs):
-            </p>
+            <h2 className="edc-dst-title"><CmsText section="edc-page" slot="dst-nstedb-sponsorship" /></h2>
+            <p className="edc-dst-content"><CmsText section="edc-page" slot="the-nstedb-national-science-and" multiline /></p>
             <div className="edc-dst-camps">
               {eacCamps.map((c) => <div className="edc-dst-camp-badge" key={c}>{c}</div>)}
             </div>
@@ -159,15 +145,15 @@ export default function EDCPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 className="edc-section-heading">Committee Members</h2>
+          <h2 className="edc-section-heading"><CmsText section="edc-page" slot="committee-members" /></h2>
           <table className="edc-committee-table">
             <thead><tr><th>Name</th><th>Designation</th><th>Role</th></tr></thead>
             <tbody>
-              {committee.map((m) => (
+              {committee.map((m, _i) => (
                 <tr key={m.name}>
-                  <td className="edc-committee-name">{m.name}</td>
-                  <td>{m.role}</td>
-                  <td><span className="edc-committee-role">{m.tag}</span></td>
+                  <td className="edc-committee-name"><CmsText section="edc-page" slot={`committee.${_i}.name`} /></td>
+                  <td><CmsText section="edc-page" slot={`committee.${_i}.role`} /></td>
+                  <td><span className="edc-committee-role"><CmsText section="edc-page" slot={`committee.${_i}.tag`} /></span></td>
                 </tr>
               ))}
             </tbody>

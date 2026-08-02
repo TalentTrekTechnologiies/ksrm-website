@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import PublicDocumentList from "@/components/PublicDocumentList";
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 const CATEGORY_LABELS: Record<DownloadCategory, string> = {
   SYLLABUS: "Syllabus",
@@ -54,8 +55,8 @@ export default function DownloadsPage() {
       <section className="dl-hero">
         <div className="responsive-container">
           <div style={{ padding: "72px 0" }}>
-            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Downloads</h1>
-            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}>Syllabi, question papers, brochures, forms and other documents</p>
+            <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="downloads-page" slot="downloads" /></h1>
+            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 600 }}><CmsText section="downloads-page" slot="syllabi-question-papers-brochures-forms" /></p>
           </div>
         </div>
       </section>

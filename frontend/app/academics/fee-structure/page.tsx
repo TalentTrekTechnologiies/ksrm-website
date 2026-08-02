@@ -3,6 +3,7 @@
 import PageResources from "@/components/PageResources";
 import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
 import { useLiveData } from "@/lib/use-live-data";
+import CmsText from "@/components/CmsText";
 
 const btechFirstYear = [
   { branch: "Computer Science & Engineering", fee: "₹1,15,000", admission: "₹5,000", notes: "Per annum for 4 years" },
@@ -236,8 +237,8 @@ export default function FeeStructurePage() {
           <div className="responsive-container">
             <div style={{ padding: "72px 0" }}>
               <div className="fee-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
-              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Fee Structure</h1>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>Transparent and Affordable Education</p>
+              <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="academics.fee-structure" slot="fee-structure" /></h1>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}><CmsText section="academics.fee-structure" slot="transparent-and-affordable-education" /></p>
             </div>
           </div>
         </section>
@@ -247,9 +248,7 @@ export default function FeeStructurePage() {
             <div className="fee-notice">
               <div className="fee-notice-icon"><AlertIcon /></div>
               <div className="fee-notice-content">
-                <p>Fees are subject to revision by APSCHE (Andhra Pradesh State Council for Higher Education) and the
-                University. All fees mentioned are annual fees unless stated otherwise. The college reserves the
-                right to modify the fee structure as per directives from the government and regulatory bodies.</p>
+                <p><CmsText section="academics.fee-structure" slot="fees-are-subject-to-revision" multiline /></p>
               </div>
             </div>
           </div>
@@ -257,20 +256,13 @@ export default function FeeStructurePage() {
 
         <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}>
-              K.S.R.M. College of Engineering is committed to providing quality education at competitive and affordable
-              fee rates. Our transparent fee structure ensures that deserving students are not held back by
-              financial constraints. Various scholarships and fee waivers are available to meritorious and
-              economically disadvantaged students.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}><CmsText section="academics.fee-structure" slot="k-s-r-m-college" multiline /></p>
           </div>
         </section>
 
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
-              Fee Structure by Programme
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.fee-structure" slot="fee-structure-by-programme" /></h2>
             {cmsTables && cmsTables.length > 0 ? (
               cmsTables.map((t, i) => <CmsTable key={t.id} table={t} first={i === 0} />)
             ) : (
@@ -286,15 +278,13 @@ export default function FeeStructurePage() {
 
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
-            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>
-              Scholarships &amp; Financial Assistance
-            </h2>
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.fee-structure" slot="scholarships-financial-assistance" /></h2>
             <div className="fee-scholarship-grid">
-              {scholarships.map((s) => (
+              {scholarships.map((s, _i) => (
                 <div className="fee-scholarship-card" key={s.title}>
                   <div className="fee-scholarship-icon"><AwardIcon /></div>
-                  <h3>{s.title}</h3>
-                  <p>{s.desc}</p>
+                  <h3><CmsText section="academics.fee-structure" slot={`scholarships.${_i}.title`} /></h3>
+                  <p><CmsText section="academics.fee-structure" slot={`scholarships.${_i}.desc`} /></p>
                 </div>
               ))}
             </div>
@@ -304,16 +294,16 @@ export default function FeeStructurePage() {
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
             <div className="fee-contact-card">
-              <h3>Accounts &amp; Fee Management Office</h3>
+              <h3><CmsText section="academics.fee-structure" slot="accounts-fee-management-office" /></h3>
               <div className="fee-contact-items">
                 <div className="fee-contact-item">
                   <div className="fee-contact-item-icon"><PhoneIcon /></div>
-                  <h4>Phone</h4>
+                  <h4><CmsText section="academics.fee-structure" slot="phone" /></h4>
                   <p><a href="tel:+918554233333">+91-8554-233333</a></p>
                 </div>
                 <div className="fee-contact-item">
                   <div className="fee-contact-item-icon"><MailIcon /></div>
-                  <h4>Email</h4>
+                  <h4><CmsText section="academics.fee-structure" slot="email" /></h4>
                   <p><a href="mailto:fee@ksrmce.ac.in">fee@ksrmce.ac.in</a></p>
                 </div>
               </div>

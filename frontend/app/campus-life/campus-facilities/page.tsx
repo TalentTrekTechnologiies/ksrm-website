@@ -1,5 +1,6 @@
 import PageResources from "@/components/PageResources";
 import CmsVideos from "@/components/CmsVideos";
+import CmsText from "@/components/CmsText";
 
 ﻿const tourVideos = [
   "/videos/main-block.mp4",
@@ -126,26 +127,22 @@ export default function CampusFacilitiesPage() {
       <section className="cf-hero">
         <div className="responsive-container">
           <div className="cf-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}>Campus Facilities</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>A world-class campus built for academic and personal excellence</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0, textShadow: "0 2px 12px rgba(0,0,0,0.7)" }}><CmsText section="campus-facilities" slot="campus-facilities" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}><CmsText section="campus-facilities" slot="a-world-class-campus-built" /></p>
         </div>
       </section>
 
       <section style={{ padding: "56px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <div style={{ maxWidth: 820 }}>
-            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              Spread across a lush green campus in Kadapa, K.S.R.M. College of Engineering provides state-of-the-art
-              infrastructure and facilities to support the overall development of students. Our modern campus
-              features academic buildings, residential facilities, recreation areas, and essential amenities.
-            </p>
+            <p style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0 }}><CmsText section="campus-facilities" slot="spread-across-a-lush-green" multiline /></p>
           </div>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}>Campus Infrastructure Tours</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="campus-facilities" slot="campus-infrastructure-tours" /></h2>
           {/* CMS-managed (Page Content -> Campus Facilities -> Videos), with the
               built-in tour list as the fallback. */}
           <CmsVideos
@@ -159,13 +156,13 @@ export default function CampusFacilitiesPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}>Campus Overview</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="campus-facilities" slot="campus-overview" /></h2>
           <div className="cf-stats-bar">
-            {stats.map((s) => (
+            {stats.map((s, _i) => (
               <div className="cf-stat-item" key={s.label}>
                 <div className="cf-stat-icon">{s.icon}</div>
                 <div className="cf-stat-number">{s.value}</div>
-                <div className="cf-stat-label">{s.label}</div>
+                <div className="cf-stat-label"><CmsText section="campus-facilities" slot={`stats.${_i}.label`} /></div>
               </div>
             ))}
           </div>
@@ -174,19 +171,19 @@ export default function CampusFacilitiesPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Campus Facilities</h2>
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="campus-facilities" slot="campus-facilities-2" /></h2>
           <div className="cf-filters">
             {filters.map((f, i) => (
               <button key={f} className={`cf-filter-btn${i === 0 ? " active" : ""}`}>{f}</button>
             ))}
           </div>
           <div className="cf-facility-grid">
-            {facilities.map((f) => (
+            {facilities.map((f, _i) => (
               <div className="cf-facility-card" key={f.title}>
                 <div className="cf-facility-icon">🏛️</div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-                <div className="cf-category-badge">{f.cat}</div>
+                <h3><CmsText section="campus-facilities" slot={`facilities.${_i}.title`} /></h3>
+                <p><CmsText section="campus-facilities" slot={`facilities.${_i}.desc`} /></p>
+                <div className="cf-category-badge"><CmsText section="campus-facilities" slot={`facilities.${_i}.cat`} /></div>
               </div>
             ))}
           </div>
@@ -195,10 +192,10 @@ export default function CampusFacilitiesPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}>Explore Our Facilities</h2>
-          {exploreSections.map((sec) => (
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="campus-facilities" slot="explore-our-facilities" /></h2>
+          {exploreSections.map((sec, _i) => (
             <div style={{ marginBottom: 56 }} key={sec.title}>
-              <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#2B3490", margin: "0 0 20px" }}>{sec.title}</h3>
+              <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#2B3490", margin: "0 0 20px" }}><CmsText section="campus-facilities" slot={`exploreSections.${_i}.title`} /></h3>
               <div className="cf-explore-imggrid">
                 {sec.images.map((img) => (
                   <div className="cf-explore-img" key={img.src}>
@@ -215,15 +212,15 @@ export default function CampusFacilitiesPage() {
         <div className="responsive-container">
           <div className="cf-contact-card">
             <div className="cf-contact-item">
-              <h4>Campus Administration</h4>
-              <p>For questions about campus facilities and infrastructure</p>
+              <h4><CmsText section="campus-facilities" slot="campus-administration" /></h4>
+              <p><CmsText section="campus-facilities" slot="for-questions-about-campus-facilities" /></p>
             </div>
             <div className="cf-contact-item">
-              <h4>Phone</h4>
+              <h4><CmsText section="campus-facilities" slot="phone" /></h4>
               <p><a href="tel:+91 9000073434">+91 9000073434</a></p>
             </div>
             <div className="cf-contact-item">
-              <h4>Email</h4>
+              <h4><CmsText section="campus-facilities" slot="email" /></h4>
               <p><a href="mailto:principal@ksrmce.ac.in">principal@ksrmce.ac.in</a></p>
             </div>
           </div>

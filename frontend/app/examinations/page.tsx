@@ -2,6 +2,7 @@
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
 import ExamSectionStaff from "@/components/examinations/ExamSectionStaff";
+import CmsText from "@/components/CmsText";
 
 // Academic Calendars and Time Tables used to be hardcoded here, which meant a
 // code change to publish a new academic year. They now live in the CMS as
@@ -39,11 +40,9 @@ export default function ExaminationsPage() {
         <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
           <div className="responsive-container">
             <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>📋 Examinations</div>
-            <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}>Examination Portal</h1>
-            <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 16px" }}>K.S.R.M. College of Engineering (Autonomous)</p>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}>
-              Access academic calendars, exam timetables, notifications, results and all examination-related information.
-            </p>
+            <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}><CmsText section="examinations" slot="examination-portal" /></h1>
+            <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 16px" }}><CmsText section="examinations" slot="k-s-r-m-college" /></p>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.9)", lineHeight: 1.8, maxWidth: 700, margin: 0 }}><CmsText section="examinations" slot="access-academic-calendars-exam-timetables" multiline /></p>
           </div>
         </div>
       </section>
@@ -55,10 +54,10 @@ export default function ExaminationsPage() {
       <section style={{ padding: "40px 0", background: "white" }}>
         <div className="responsive-container">
           <div className="exam-quick-links">
-            {quickLinks.map((q) => (
+            {quickLinks.map((q, _i) => (
               <a key={q.label} href={q.href} target={q.external ? "_blank" : undefined} rel={q.external ? "noopener noreferrer" : undefined} className="exam-link-card">
                 <span style={{ fontSize: 20, lineHeight: 1, flexShrink: 0 }}>{q.icon}</span>
-                <span style={{ fontSize: 14.5, fontWeight: 700, color: "#2B3490", lineHeight: 1.25 }}>{q.label}</span>
+                <span style={{ fontSize: 14.5, fontWeight: 700, color: "#2B3490", lineHeight: 1.25 }}><CmsText section="examinations" slot={`quickLinks.${_i}.label`} /></span>
               </a>
             ))}
           </div>
@@ -69,7 +68,7 @@ export default function ExaminationsPage() {
           comes here for. Fee payment / SBI sits lower down. */}
       <section id="notifications" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Latest Notifications</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="latest-notifications" /></h2>
           <ExamNotificationsList />
           <PageResources section="examinations.notifications" embedded />
         </div>
@@ -77,7 +76,7 @@ export default function ExaminationsPage() {
 
       <section id="calendars" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Academic Calendars</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="academic-calendars" /></h2>
           {/* CMS-driven: Downloads routed to "Examinations → Academic Calendars",
               grouped by their AY heading, newest first. */}
           <PageResources section="examinations.calendars" embedded maxVisible={8} />
@@ -86,7 +85,7 @@ export default function ExaminationsPage() {
 
       <section id="timetables" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Exam Time Tables</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="exam-time-tables" /></h2>
           {/* CMS-driven: Downloads routed to "Examinations → Time Tables". */}
           <PageResources section="examinations.timetables" embedded maxVisible={8} />
         </div>
@@ -100,7 +99,7 @@ export default function ExaminationsPage() {
           what most visitors scan the page for. */}
       <section id="results" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Results &amp; Fee Payment</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="results-fee-payment" /></h2>
           <div className="exam-results-grid">
             <a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #2B3490, #1a1d4d)", borderRadius: 12, padding: 28, color: "white", textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
@@ -130,7 +129,7 @@ export default function ExaminationsPage() {
 
       <section id="contact" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Contact Examination Cell</h2>
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="contact-examination-cell" /></h2>
           <div style={{ maxWidth: 600, margin: "0 auto", border: "2px solid #D4A500", borderRadius: 12, padding: 40 }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 8 }}>Controller of Examinations</div>
             <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>K.S.R.M. College of Engineering (Autonomous)</div>

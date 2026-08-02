@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿import Link from "next/link";
 
@@ -102,12 +103,8 @@ export default function GrievanceRedressalPage() {
               fontWeight: 700,
               margin: "0 0 16px",
             }}
-          >
-            Grievance Redressal
-          </h1>
-          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}>
-            Fair &amp; Transparent Resolution
-          </p>
+          ><CmsText section="grievance" slot="grievance-redressal" /></h1>
+          <p style={{ fontSize: 18, margin: "0 0 24px", opacity: 0.95 }}><CmsText section="grievance" slot="fair-transparent-resolution" /></p>
           <div style={{ display: "flex", gap: 8, fontSize: 14, justifyContent: "center" }}>
             <Link href="/" style={{ color: "#D4A500", textDecoration: "none" }}>
               Home
@@ -133,13 +130,7 @@ export default function GrievanceRedressalPage() {
               margin: 0,
               maxWidth: 820,
             }}
-          >
-            K.S.R.M. College of Engineering has established a comprehensive
-            grievance redressal system to address student concerns and
-            complaints. We believe in fair, transparent, and timely
-            resolution of all grievances while maintaining confidentiality
-            and respecting the dignity of all parties involved.
-          </p>
+          ><CmsText section="grievance" slot="k-s-r-m-college" multiline /></p>
         </div>
       </section>
 
@@ -185,9 +176,7 @@ export default function GrievanceRedressalPage() {
               color: "#1a1a2e",
               margin: "0 0 40px",
             }}
-          >
-            Types of Grievances Addressed
-          </h2>
+          ><CmsText section="grievance" slot="types-of-grievances-addressed" /></h2>
           <div
             style={{
               display: "grid",
@@ -236,9 +225,7 @@ export default function GrievanceRedressalPage() {
               color: "#1a1a2e",
               margin: "0 0 40px",
             }}
-          >
-            Grievance Resolution Process
-          </h2>
+          ><CmsText section="grievance" slot="grievance-resolution-process" /></h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {processSteps.map((step, i) => (
               <div key={step.title} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
@@ -351,12 +338,8 @@ export default function GrievanceRedressalPage() {
                   color: "#D4A500",
                   margin: 0,
                 }}
-              >
-                Chief Grievance Officer
-              </h4>
-              <p style={{ fontSize: 14, margin: "8px 0 0" }}>
-                Available for grievance filing and consultation
-              </p>
+              ><CmsText section="grievance" slot="chief-grievance-officer" /></h4>
+              <p style={{ fontSize: 14, margin: "8px 0 0" }}><CmsText section="grievance" slot="available-for-grievance-filing-and" /></p>
             </div>
             <div>
               <h4
@@ -369,9 +352,7 @@ export default function GrievanceRedressalPage() {
                   color: "#D4A500",
                   margin: 0,
                 }}
-              >
-                Phone
-              </h4>
+              ><CmsText section="grievance" slot="phone" /></h4>
               <p style={{ fontSize: 14, margin: "8px 0 0" }}>
                 <a href="tel:+918554233333" style={{ color: "#D4A500", textDecoration: "none" }}>
                   +91-8554-233333 (Ext: 390)
@@ -389,9 +370,7 @@ export default function GrievanceRedressalPage() {
                   color: "#D4A500",
                   margin: 0,
                 }}
-              >
-                Email
-              </h4>
+              ><CmsText section="grievance" slot="email" /></h4>
               <p style={{ fontSize: 14, margin: "8px 0 0" }}>
                 <a
                   href="mailto:grievance@ksrmce.ac.in"
@@ -412,12 +391,8 @@ export default function GrievanceRedressalPage() {
                   color: "#D4A500",
                   margin: 0,
                 }}
-              >
-                Office Hours
-              </h4>
-              <p style={{ fontSize: 14, margin: "8px 0 0" }}>
-                Monday to Friday, 10:00 AM - 4:00 PM
-              </p>
+              ><CmsText section="grievance" slot="office-hours" /></h4>
+              <p style={{ fontSize: 14, margin: "8px 0 0" }}><CmsText section="grievance" slot="monday-to-friday-10-00" /></p>
             </div>
           </div>
         </div>

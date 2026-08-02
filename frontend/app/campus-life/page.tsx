@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "Campus Life | K.S.R.M. College of Engineering",
@@ -43,22 +44,18 @@ export default function CampusLifeIndexPage() {
 
       <section className="cl-hero">
         <div className="cl-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}>
-            Campus Life
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}>
-            Facilities, activities and student support across a green 25-acre campus.
-          </p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}><CmsText section="campus-life" slot="campus-life" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}><CmsText section="campus-life" slot="facilities-activities-and-student-support" /></p>
         </div>
       </section>
 
       <section style={{ padding: "64px 0" }}>
         <div className="cl-container">
           <div className="cl-grid">
-            {SECTIONS.map((s) => (
+            {SECTIONS.map((s, _i) => (
               <Link key={s.href} href={s.href} className="cl-card">
-                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>{s.label}</h2>
-                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}>{s.blurb}</p>
+                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="campus-life" slot={`SECTIONS.${_i}.label`} /></h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="campus-life" slot={`SECTIONS.${_i}.blurb`} /></p>
                 <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>Open →</span>
               </Link>
             ))}

@@ -1,3 +1,4 @@
+import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 const aims = [
   "To understand the community in which they work",
@@ -71,36 +72,28 @@ export default function NSSPage() {
 
       <section className="nss-hero">
         <div className="responsive-container">
-          <h1 className="nss-title">National Service Scheme (NSS)</h1>
-          <p className="nss-subtitle">Empowering Youth through Community Service</p>
+          <h1 className="nss-title"><CmsText section="nss" slot="national-service-scheme-nss" /></h1>
+          <p className="nss-subtitle"><CmsText section="nss" slot="empowering-youth-through-community-service" /></p>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="nss-section-heading">History & Background</h2>
-          <p className="nss-history-text">
-            National Service Scheme (NSS) was launched in 1969, the birth centenary year of Mahatma Gandhi, in 37
-            universities involving 40,000 students. NSS is an extension dimension to the higher education system to
-            orient student youth to community service while they study. It is implemented by the Ministry of Youth
-            Affairs and Sports, Government of India.
-          </p>
+          <h2 className="nss-section-heading"><CmsText section="nss" slot="history-background" /></h2>
+          <p className="nss-history-text"><CmsText section="nss" slot="national-service-scheme-nss-was" multiline /></p>
         </div>
       </section>
 
       <section className="nss-motto-section">
         <div className="responsive-container">
-          <h2 className="nss-motto-quote">"NOT ME BUT YOU"</h2>
-          <p className="nss-motto-desc">
-            This powerful motto embodies the spirit of selfless service, encouraging NSS volunteers to prioritize the
-            welfare of others and communities over personal interests.
-          </p>
+          <h2 className="nss-motto-quote"><CmsText section="nss" slot="not-me-but-you" /></h2>
+          <p className="nss-motto-desc"><CmsText section="nss" slot="this-powerful-motto-embodies-the" multiline /></p>
         </div>
       </section>
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 className="nss-section-heading">Aims & Objectives</h2>
+          <h2 className="nss-section-heading"><CmsText section="nss" slot="aims-objectives" /></h2>
           <div className="nss-aims-grid">
             {aims.map((a, i) => (
               <div className="nss-aim-card" key={a}>
@@ -114,19 +107,14 @@ export default function NSSPage() {
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="nss-section-heading">NSS Symbol</h2>
+          <h2 className="nss-section-heading"><CmsText section="nss" slot="nss-symbol" /></h2>
           <div className="nss-symbol-container">
             <div className="nss-symbol-image">
               <div style={{ width: "100%", aspectRatio: "1", background: "linear-gradient(135deg, #2B3490 0%, #D4A500 100%)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 48 }}>🕉️</div>
             </div>
             <div className="nss-symbol-content">
-              <h3>NSS Symbol</h3>
-              <p>
-                The NSS symbol is based on the Rath wheel of the Konark Sun Temple in Odisha. The navy blue colour
-                indicates the cosmos of which NSS is a tiny part. The red colour indicates that NSS volunteers are
-                full of energy and high spirit. The giant wheels portray the cycle of creation, preservation and
-                release, signifying movement across time and space.
-              </p>
+              <h3><CmsText section="nss" slot="nss-symbol-2" /></h3>
+              <p><CmsText section="nss" slot="the-nss-symbol-is-based" multiline /></p>
             </div>
           </div>
         </div>
@@ -134,11 +122,8 @@ export default function NSSPage() {
 
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 className="nss-section-heading">Annual Activities & Initiatives</h2>
-          <p style={{ textAlign: "center", color: "#666", marginBottom: 40 }}>
-            NSS at KSRMCE conducts regular activities and special initiatives throughout the academic year to engage
-            students in community service and social development.
-          </p>
+          <h2 className="nss-section-heading"><CmsText section="nss" slot="annual-activities-initiatives" /></h2>
+          <p style={{ textAlign: "center", color: "#666", marginBottom: 40 }}><CmsText section="nss" slot="nss-at-ksrmce-conducts-regular" multiline /></p>
           <div className="nss-activities-list">
             {activities.map((a, i) => (
               <div className="nss-activity-item" key={a}>

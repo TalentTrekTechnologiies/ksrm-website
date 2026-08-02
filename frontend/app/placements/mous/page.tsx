@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿import PlacementsSubnav from "@/components/PlacementsSubnav";
 
@@ -88,8 +89,8 @@ export default function MoUsPage() {
         <section className="mous-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="mous-title">MoUs</h1>
-              <p className="mous-subtitle">Placements & Career Development</p>
+              <h1 className="mous-title"><CmsText section="placements.mous" slot="mous" /></h1>
+              <p className="mous-subtitle"><CmsText section="placements.mous" slot="placements-career-development" /></p>
             </div>
           </div>
         </section>
@@ -97,26 +98,26 @@ export default function MoUsPage() {
 
         <section className="mous-intro-section">
           <div className="responsive-container">
-            <h2 className="mous-heading">Industry Collaborations & Memoranda of Understanding</h2>
-            <p className="mous-text">K.S.R.M. College of Engineering believes that strong industry-academia collaboration is essential for preparing students to meet the evolving demands of the global workforce. Through strategic partnerships and MoUs with leading technology companies, the institution has created pathways for skill development, certifications, internships, and career opportunities.</p>
+            <h2 className="mous-heading"><CmsText section="placements.mous" slot="industry-collaborations-memoranda-of-understandi" /></h2>
+            <p className="mous-text"><CmsText section="placements.mous" slot="k-s-r-m-college" multiline /></p>
           </div>
         </section>
 
         <section className="mous-table-section">
           <div className="responsive-container">
-            <h2 className="mous-section-heading">Major Industry & Technology Partners</h2>
-            <p className="mous-text">KSRMCE actively collaborates with leading organizations including: ServiceNow University Program, Cisco Networking Academy, Oracle Academy, AWS Academy, Salesforce Academic Alliance, Infosys Springboard, IBM Career Education Program, Snowflake Academic Program, and SAP University Alliances.</p>
+            <h2 className="mous-section-heading"><CmsText section="placements.mous" slot="major-industry-technology-partners" /></h2>
+            <p className="mous-text"><CmsText section="placements.mous" slot="ksrmce-actively-collaborates-with-leading" multiline /></p>
             <div className="mous-table-wrapper">
               <table className="mous-table">
                 <thead>
                   <tr><th>Partner</th><th>Training</th><th>Certifications</th><th>Internships</th><th>Hackathons</th><th>Placements</th></tr>
                 </thead>
                 <tbody>
-                  {partnerTable.map((p) => (
+                  {partnerTable.map((p, _i) => (
                     <tr key={p.name}>
-                      <td><strong>{p.name}</strong></td>
+                      <td><strong><CmsText section="placements.mous" slot={`partnerTable.${_i}.name`} /></strong></td>
                       <td className="mous-checkmark">{p.training ? "✓" : "-"}</td>
-                      <td>{p.cert}</td>
+                      <td><CmsText section="placements.mous" slot={`partnerTable.${_i}.cert`} /></td>
                       <td className="mous-checkmark">{p.internships ? "✓" : "-"}</td>
                       <td>{typeof p.hackathons === "string" ? p.hackathons : p.hackathons ? "✓" : "-"}</td>
                       <td className="mous-checkmark">{p.placements ? "✓" : "-"}</td>
@@ -130,14 +131,12 @@ export default function MoUsPage() {
 
         <section className="mous-impact-section">
           <div className="responsive-container">
-            <h2 className="mous-section-heading">Impact of Our MoUs</h2>
-            <p className="mous-text">The institution's industry partnerships have enabled students to:</p>
+            <h2 className="mous-section-heading"><CmsText section="placements.mous" slot="impact-of-our-mous" /></h2>
+            <p className="mous-text"><CmsText section="placements.mous" slot="the-institution-s-industry-partnerships" /></p>
             <ul className="mous-list">
               {impactList.map((i) => <li key={i}>{i}</li>)}
             </ul>
-            <p className="mous-text" style={{ fontStyle: "italic", fontWeight: 500, marginTop: 32 }}>
-              At KSRMCE, industry collaborations are not limited to formal agreements; they are active partnerships that create meaningful learning experiences, foster innovation, and empower students to achieve professional excellence in a competitive global environment.
-            </p>
+            <p className="mous-text" style={{ fontStyle: "italic", fontWeight: 500, marginTop: 32 }}><CmsText section="placements.mous" slot="at-ksrmce-industry-collaborations-are" multiline /></p>
           </div>
         </section>
       

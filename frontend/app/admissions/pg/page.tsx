@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 ﻿const mtechPrograms = [
   { name: "Geotechnical Engineering", dept: "Civil Engineering", intake: 18 },
@@ -91,32 +92,28 @@ export default function PGAdmissionsPage() {
         <section className="pg-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="pg-title">Postgraduate Programs</h1>
-              <p className="pg-subtitle">M.Tech &amp; MBA Programs at KSRM</p>
+              <h1 className="pg-title"><CmsText section="admissions.pg" slot="postgraduate-programs" /></h1>
+              <p className="pg-subtitle"><CmsText section="admissions.pg" slot="m-tech-mba-programs-at" /></p>
             </div>
           </div>
         </section>
 
         <section className="pg-content-section">
           <div className="responsive-container">
-            <p className="pg-intro">
-              K.S.R.M. College offers specialized postgraduate programs including M.Tech in five engineering
-              specializations and an MBA program. Our PG programs focus on research, innovation, and
-              industry-relevant skills.
-            </p>
+            <p className="pg-intro"><CmsText section="admissions.pg" slot="k-s-r-m-college" multiline /></p>
 
             <div className="pg-summary-boxes">
               <div className="pg-summary-box">
-                <h3>M.Tech Programs</h3>
-                <p style={{ margin: "8px 0 0" }}>90 Seats across 5 Specializations</p>
+                <h3><CmsText section="admissions.pg" slot="m-tech-programs" /></h3>
+                <p style={{ margin: "8px 0 0" }}><CmsText section="admissions.pg" slot="90-seats-across-5-specializations" /></p>
               </div>
               <div className="pg-summary-box">
-                <h3>MBA Program</h3>
-                <p style={{ margin: "8px 0 0" }}>120 Seats</p>
+                <h3><CmsText section="admissions.pg" slot="mba-program" /></h3>
+                <p style={{ margin: "8px 0 0" }}><CmsText section="admissions.pg" slot="120-seats" /></p>
               </div>
             </div>
 
-            <h2 className="pg-section-heading">Master of Technology (M.Tech)</h2>
+            <h2 className="pg-section-heading"><CmsText section="admissions.pg" slot="master-of-technology-m-tech" /></h2>
             <div className="pg-table-wrapper">
               <table className="pg-table">
                 <thead><tr><th>Program</th><th>Department</th><th>Annual Intake</th></tr></thead>
@@ -132,7 +129,7 @@ export default function PGAdmissionsPage() {
               </table>
             </div>
 
-            <h2 className="pg-section-heading">Master of Business Administration (MBA)</h2>
+            <h2 className="pg-section-heading"><CmsText section="admissions.pg" slot="master-of-business-administration-mba" /></h2>
             <div className="pg-table-wrapper">
               <table className="pg-table">
                 <thead><tr><th>Program</th><th>Duration</th><th>Annual Intake</th></tr></thead>

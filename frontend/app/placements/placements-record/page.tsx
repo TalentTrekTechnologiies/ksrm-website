@@ -4,6 +4,7 @@ import PlacementsSubnav from "@/components/PlacementsSubnav";
 import { getPlacementsPublic, Placement } from "@/lib/placements-api";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
+import CmsText from "@/components/CmsText";
 
 export default function PlacementsRecordPage() {
   // Polled, so a placement record published in the admin appears here without a
@@ -79,8 +80,8 @@ export default function PlacementsRecordPage() {
         <section className="record-hero">
           <div className="responsive-container">
             <div style={{ paddingTop: 40 }}>
-              <h1 className="record-title">Placements Record</h1>
-              <p className="record-subtitle">Placements & Career Development</p>
+              <h1 className="record-title"><CmsText section="placements.record" slot="placements-record" /></h1>
+              <p className="record-subtitle"><CmsText section="placements.record" slot="placements-career-development" /></p>
             </div>
           </div>
         </section>
@@ -90,7 +91,7 @@ export default function PlacementsRecordPage() {
             {records.length === 0 ? (
               <div className="coming-soon-box">
                 <div className="coming-soon-icon">📊</div>
-                <h2 className="heading" style={{ color: "#D4A500", marginBottom: 16 }}>Placements Record</h2>
+                <h2 className="heading" style={{ color: "#D4A500", marginBottom: 16 }}><CmsText section="placements.record" slot="placements-record-2" /></h2>
                 <p className="coming-soon-text">
                   {loaded
                     ? "Our placement statistics and records are coming soon. Check back for detailed information about our placement achievements!"
@@ -99,7 +100,7 @@ export default function PlacementsRecordPage() {
               </div>
             ) : (
               <>
-                <h2 className="heading">Our Placed Students</h2>
+                <h2 className="heading"><CmsText section="placements.record" slot="our-placed-students" /></h2>
                 <div className="record-grid">
                   {records.map((r) => (
                     <div className="record-card" key={r.id}>

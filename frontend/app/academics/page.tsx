@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "Academics | K.S.R.M. College of Engineering",
@@ -40,20 +41,18 @@ export default function AcademicsIndexPage() {
 
       <section className="hb-hero">
         <div className="hb-container">
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}>
-            Academics
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}>Programmes, curriculum, regulations and everything academic.</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.4rem)", fontWeight: 700, color: "#fff", margin: 0 }}><CmsText section="academics" slot="academics" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, margin: "14px 0 0", maxWidth: 720 }}><CmsText section="academics" slot="programmes-curriculum-regulations-and-everything" /></p>
         </div>
       </section>
 
       <section style={{ padding: "64px 0" }}>
         <div className="hb-container">
           <div className="hb-grid">
-            {LINKS.map((l) => (
+            {LINKS.map((l, _i) => (
               <Link key={l.href} href={l.href} className="hb-card">
-                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>{l.label}</h2>
-                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}>{l.blurb}</p>
+                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="academics" slot={`LINKS.${_i}.label`} /></h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="academics" slot={`LINKS.${_i}.blurb`} /></p>
                 <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>Open →</span>
               </Link>
             ))}
