@@ -226,11 +226,14 @@ export function SelectField({
  * implementation every boolean field in the admin should use. */
 export function ToggleField({
   label,
+  description,
   checked,
   onChange,
   disabled,
 }: {
   label: string
+  /** Optional line under the label, for when a switch needs a word of context. */
+  description?: string
   checked: boolean
   onChange: (checked: boolean) => void
   disabled?: boolean
@@ -239,7 +242,10 @@ export function ToggleField({
     <label
       className={`flex items-center justify-between gap-3 text-[15px] font-medium text-slate-700 ${disabled ? "opacity-50" : "cursor-pointer"}`}
     >
-      <span>{label}</span>
+      <span>
+        {label}
+        {description && <span className="mt-0.5 block text-[13px] font-normal text-slate-500">{description}</span>}
+      </span>
       <button
         type="button"
         role="switch"

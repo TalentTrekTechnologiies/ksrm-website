@@ -68,12 +68,17 @@ export default function Header() {
         )}
       </Link>
       {/* Petals over the founder's portrait at the right edge of the banner.
-          Only for the built-in banner: the overlay is positioned against that
-          image's known layout (the portrait occupies its right ~11%), so a
-          custom banner uploaded through the CMS would have petals falling over
-          whatever happens to sit there. It can also be switched off entirely in
-          Site Settings. */}
-      {!isCustomLogo && showFlowers && <FlowerShower />}
+          The overlay is positioned against that portrait's place in the banner
+          (its right ~11%), so it suits a banner laid out that way.
+
+          This used to be suppressed whenever a logo had been uploaded through
+          the CMS, on the reasoning that a custom banner might have something
+          else in that corner. In practice the replacement banner keeps the same
+          layout, and the effect silently vanished the moment anyone uploaded
+          one - leaving a Site Settings switch that was on and did nothing.
+          The switch decides now; an admin who dislikes where the petals land
+          can see that and turn it off. */}
+      {showFlowers && <FlowerShower />}
     </header>
   )
 }
