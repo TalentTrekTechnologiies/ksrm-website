@@ -17,6 +17,7 @@ import { DownloadsService } from './downloads.service';
 import { CreateDownloadDto } from './dto/create-download.dto';
 import { UpdateDownloadDto } from './dto/update-download.dto';
 import { ReorderDownloadsDto } from './dto/reorder-downloads.dto';
+import { BulkCreateDownloadsDto } from './dto/bulk-create-downloads.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
@@ -62,6 +63,16 @@ export class DownloadsController {
   @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreateDownloadDto, @Request() req) {
     return this.downloadsService.create(dto, req.user, req.requestId);
+  }
+
+  // Declared before @Patch(':id')/@Post(':id/...') so "bulk" is never parsed
+  // as a record id.
+  @Post('bulk')
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @RequirePermission('downloads.create')
+  @DepartmentScoped({ source: 'body' })
+  bulkCreate(@Body() dto: BulkCreateDownloadsDto, @Request() req) {
+    return this.downloadsService.bulkCreate(dto, req.user, req.requestId);
   }
 
   @Patch('reorder')

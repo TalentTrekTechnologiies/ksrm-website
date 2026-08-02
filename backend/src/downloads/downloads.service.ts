@@ -9,6 +9,7 @@ import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateDownloadDto } from './dto/create-download.dto';
 import { UpdateDownloadDto } from './dto/update-download.dto';
 import { ReorderDownloadsDto } from './dto/reorder-downloads.dto';
+import { BulkCreateDownloadsDto } from './dto/bulk-create-downloads.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
 import { MediaLinkService } from '../media/media-link.service';
@@ -91,6 +92,69 @@ export class DownloadsService {
       details: { after: created },
       requestId,
     });
+
+    return created;
+  }
+
+  /**
+   * Publishes many documents in one go, sharing category/page/group across the
+   * batch.
+   *
+   * Publishing a semester's results meant filling the same form once per PDF -
+   * forty near-identical entries differing only in title and file. This takes
+   * the files (already in the Media Library) plus one set of shared settings
+   * and creates the rows together.
+   *
+   * Items are created sequentially rather than via createMany because each one
+   * still needs its media usage tracked and its own audit entry - a bulk
+   * publish must be as reviewable afterwards as forty single ones would have
+   * been.
+   */
+  async bulkCreate(dto: BulkCreateDownloadsDto, admin: RequestAdmin, requestId?: string) {
+    const { items, ...shared } = dto;
+
+    // One starting point for the whole batch so the files keep the order they
+    // were listed in, rather than each re-counting and colliding.
+    let sortOrder = (await this.prisma.download.count({
+      where: { deletedAt: null },
+    })) as number;
+
+    const created: Awaited<ReturnType<typeof this.prisma.download.create>>[] = [];
+
+    for (const item of items) {
+      const resolvedUrl = await this.mediaLink.prepareLink(item.mediaId, 'DOCUMENT');
+      const fileUrl = resolvedUrl ?? item.fileUrl;
+      if (!fileUrl) {
+        throw new BadRequestException(
+          `"${item.title}" has no file - give it a mediaId or a fileUrl.`,
+        );
+      }
+
+      const row = await this.prisma.download.create({
+        data: {
+          ...shared,
+          title: item.title,
+          mediaId: item.mediaId,
+          fileUrl,
+          sortOrder: sortOrder++,
+        },
+      });
+
+      await this.mediaLink.syncUsage(MEDIA_MODULE, row.id, MEDIA_FIELD, item.mediaId);
+
+      await this.auditLog.log({
+        adminId: admin.id,
+        adminName: admin.name,
+        adminEmail: admin.email,
+        action: 'CREATE',
+        module: 'downloads',
+        targetId: row.id,
+        details: { after: row },
+        requestId,
+      });
+
+      created.push(row);
+    }
 
     return created;
   }

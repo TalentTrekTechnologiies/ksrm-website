@@ -1,12 +1,13 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Loader2, Plus, AlertTriangle } from "lucide-react"
+import { Loader2, Plus, AlertTriangle, UploadCloud, CheckCircle2 } from "lucide-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTable from "@/components/admin/cms/CmsTable"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
+import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import {
   TextField,
   TextAreaField,
@@ -69,6 +70,8 @@ function DownloadsManagerInner() {
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState("")
   const [pageFilter, setPageFilter] = useState("")
+  const [bulkOpen, setBulkOpen] = useState(false)
+  const [notice, setNotice] = useState<string | null>(null)
 
   async function refresh() {
     try {
@@ -257,6 +260,23 @@ function DownloadsManagerInner() {
         </p>
       )}
 
+      {bulkOpen && (
+        <BulkDocumentUpload
+          onCancel={() => setBulkOpen(false)}
+          onDone={(count) => {
+            setBulkOpen(false)
+            setNotice(`Published ${count} document${count === 1 ? "" : "s"}.`)
+            refresh()
+          }}
+        />
+      )}
+
+      {notice && (
+        <p className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700">
+          <CheckCircle2 className="h-4 w-4 shrink-0" /> {notice}
+        </p>
+      )}
+
       {isFormOpen && (
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit download" : "New download"}</p>
@@ -305,6 +325,17 @@ function DownloadsManagerInner() {
                 </option>
               ))}
             </select>
+            <button
+              type="button"
+              onClick={() => {
+                setBulkOpen(true)
+                setCreating(false)
+                setEditing(null)
+              }}
+              className="flex items-center gap-1.5 rounded-lg border border-admin-border bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-admin-bg"
+            >
+              <UploadCloud className="h-4 w-4" /> Bulk upload
+            </button>
             <button
               type="button"
               onClick={startCreate}

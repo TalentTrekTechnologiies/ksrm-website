@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Loader2, Plus, AlertTriangle } from "lucide-react"
+import { Loader2, Plus, AlertTriangle, CheckCircle2 } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
 import FacultyTab from "@/components/admin/departments/FacultyTab"
+import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
@@ -388,8 +389,70 @@ function ExamStaffTab() {
   return <FacultyTab departmentId={dept.id} departmentName={dept.name} />
 }
 
+// The examination sections of the public page, in the order they appear there.
+// Results lead because that is the bulk job - a semester's results across every
+// branch and year arrive as a folder of PDFs, not one at a time.
+const EXAM_PAGE_SECTIONS = [
+  { value: "examinations.results", label: "Exam Results" },
+  { value: "examinations.timetables", label: "Time Tables" },
+  { value: "examinations.notifications", label: "Notifications" },
+  { value: "examinations.calendars", label: "Academic Calendars" },
+  { value: "examinations", label: "Other Exam Documents" },
+]
+
+/**
+ * Results and other examination documents.
+ *
+ * These are ordinary Documents routed to the examinations.* page sections -
+ * the same records the Documents module manages - surfaced here because this
+ * is where the examination staff actually look for them. Uploading is the bulk
+ * flow by default: set the semester heading once, drop the PDFs, publish.
+ */
+function ExamResultsTab() {
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [notice, setNotice] = useState<string | null>(null)
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <p className="text-sm font-semibold text-slate-800">Results &amp; Exam Documents</p>
+        <p className="text-sm text-slate-500">
+          Upload results, time tables and calendars. Use the group heading for the semester or academic
+          year (e.g. &ldquo;AY 2025-26&rdquo;) - the public page groups documents under it.
+        </p>
+      </div>
+
+      {notice && (
+        <p className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700">
+          <CheckCircle2 className="h-4 w-4 shrink-0" /> {notice}
+        </p>
+      )}
+
+      <BulkDocumentUpload
+        key={refreshKey}
+        defaultCategory="QUESTION_PAPER"
+        defaultPageSection="examinations.results"
+        pageSectionOptions={EXAM_PAGE_SECTIONS}
+        onCancel={() => setRefreshKey((k) => k + 1)}
+        onDone={(count) => {
+          setNotice(`Published ${count} document${count === 1 ? "" : "s"} to the Examinations page.`)
+          setRefreshKey((k) => k + 1)
+        }}
+      />
+
+      <p className="text-xs text-slate-500">
+        Already-published documents are listed under{" "}
+        <a href="/admin/downloads" className="font-semibold text-admin-primary hover:underline">
+          Documents
+        </a>
+        , where they can be renamed, reordered or removed.
+      </p>
+    </div>
+  )
+}
+
 export default function ExamNotificationsManager() {
-  const [tab, setTab] = useState<"notifications" | "staff">("notifications")
+  const [tab, setTab] = useState<"notifications" | "results" | "staff">("notifications")
   const tabClass = (on: boolean) =>
     `rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
       on ? "bg-admin-primary text-white" : "border border-admin-border bg-white text-slate-600 hover:bg-admin-bg"
@@ -402,11 +465,16 @@ export default function ExamNotificationsManager() {
           <button type="button" className={tabClass(tab === "notifications")} onClick={() => setTab("notifications")}>
             Notifications
           </button>
+          <button type="button" className={tabClass(tab === "results")} onClick={() => setTab("results")}>
+            Results &amp; Documents
+          </button>
           <button type="button" className={tabClass(tab === "staff")} onClick={() => setTab("staff")}>
             Examination Section Staff
           </button>
         </div>
-        {tab === "notifications" ? <ExamNotificationsManagerInner /> : <ExamStaffTab />}
+        {tab === "notifications" && <ExamNotificationsManagerInner />}
+        {tab === "results" && <ExamResultsTab />}
+        {tab === "staff" && <ExamStaffTab />}
       </div>
     </PermissionGate>
   )

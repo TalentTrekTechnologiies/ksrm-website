@@ -119,6 +119,33 @@ export function createDownload(dto: DownloadInput): Promise<Download> {
   return apiPost<Download>("/downloads", dto);
 }
 
+/** One file in a bulk publish - only what differs per document. */
+export interface BulkDownloadItem {
+  title: string;
+  /** Optional when mediaId is set - the server resolves the id to its file URL. */
+  fileUrl?: string;
+  mediaId?: number;
+}
+
+export interface BulkDownloadsInput {
+  items: BulkDownloadItem[];
+  /** Applied to every item in the batch. */
+  category: DownloadCategory;
+  pageSection?: string;
+  groupLabel?: string;
+  departmentId?: number;
+  isActive?: boolean;
+}
+
+/**
+ * Publishes many documents at once, sharing category/page/group across them.
+ * Files must already be in the Media Library - upload them with
+ * bulkUploadMedia first, then pass the resulting ids here.
+ */
+export function bulkCreateDownloads(dto: BulkDownloadsInput): Promise<Download[]> {
+  return apiPost<Download[]>("/downloads/bulk", dto);
+}
+
 export function updateDownload(
   id: number,
   dto: Partial<DownloadInput> & { version: number },
