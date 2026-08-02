@@ -1,6 +1,7 @@
 import PageResources from "@/components/PageResources";
 import CmsVideos from "@/components/CmsVideos";
 import LibraryStaff from "@/components/library/LibraryStaff";
+import CmsText, { CmsTextProvider } from "@/components/CmsText";
 
 /**
  * Central Library.
@@ -179,6 +180,7 @@ const journalTotals = journals.reduce(
 
 export default function LibraryPage() {
   return (
+    <CmsTextProvider section="library">
     <main style={{ background: "#ffffff" }}>
       <style>{`
         .responsive-container { max-width: 1760px; margin: 0 auto; padding: 0 40px; }
@@ -278,8 +280,8 @@ export default function LibraryPage() {
       <section className="lib-hero">
         <div className="responsive-container">
           <div className="lib-eyebrow" style={{ marginBottom: 16 }}>Campus Life</div>
-          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}>Central Library</h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}>The depository of knowledge for our students, staff and faculty</p>
+          <h1 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", fontWeight: 700, color: "#fff", lineHeight: 1.08, margin: 0 }}><CmsText section="library" slot="hero.title" /></h1>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 18, lineHeight: 1.6, margin: "16px 0 0", fontWeight: 400, maxWidth: 700 }}><CmsText section="library" slot="hero.subtitle" /></p>
         </div>
       </section>
 
@@ -288,18 +290,10 @@ export default function LibraryPage() {
         <div className="responsive-container">
           <div style={{ maxWidth: 900 }}>
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.85, margin: 0 }}>
-              The Library is one of the most important facilities on campus and is well developed with digital library
-              and reprographic facilities. A three-storeyed building, the Central Library is the depository of knowledge
-              serving the students, staff and faculty of the college. It is spacious enough to accommodate nearly
-              300 users at a time.
+              <CmsText section="library" slot="about.p1" multiline />
             </p>
             <p style={{ color: "#555", fontSize: 16, lineHeight: 1.85, margin: "18px 0 0" }}>
-              At present the Library holds about 65,384 volumes, and is constantly being strengthened by adding new
-              literature in the form of encyclopedias, periodicals, text books, reference books, journals of national
-              and international repute, and CD-ROMs. Basic literature is also acquired for new programmes. Keeping in
-              view the growing importance of this treasure of knowledge, it has been completely automated. The college
-              also runs a book bank for the benefit of students belonging to weaker sections and Scheduled Castes and
-              Scheduled Tribes.
+              <CmsText section="library" slot="about.p2" multiline />
             </p>
           </div>
         </div>
@@ -328,15 +322,11 @@ export default function LibraryPage() {
           <div className="lib-vm-grid">
             <div className="lib-vm-card">
               <h3>Vision</h3>
-              <p>To see this Central Library on par with reputed libraries as a seminary and repository of library resources and services.</p>
+              <p><CmsText section="library" slot="vision.text" multiline /></p>
             </div>
             <div className="lib-vm-card">
               <h3>Mission</h3>
-              <p>
-                To support K.S.R.M. College of Engineering to become a global leader in the fields of engineering and
-                management technology, to create a knowledge hub, and to enable access to information and effective,
-                innovative services to the user community.
-              </p>
+              <p><CmsText section="library" slot="mission.text" multiline /></p>
             </div>
             <div className="lib-vm-card">
               <h3>Goals</h3>
@@ -351,8 +341,8 @@ export default function LibraryPage() {
       {/* Tour video */}
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
-          <h2 className="lib-h2">Library Tour</h2>
-          <p className="lib-lead">A look inside the Central Library.</p>
+          <h2 className="lib-h2"><CmsText section="library" slot="tour.heading" /></h2>
+          <p className="lib-lead"><CmsText section="library" slot="tour.lead" /></p>
           <CmsVideos
             section="library"
             fallback={["/videos/central-library.mp4"]}
@@ -365,8 +355,8 @@ export default function LibraryPage() {
       {/* Services */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
-          <h2 className="lib-h2">Library Services</h2>
-          <p className="lib-lead">Services available to every member of the college.</p>
+          <h2 className="lib-h2"><CmsText section="library" slot="services.heading" /></h2>
+          <p className="lib-lead"><CmsText section="library" slot="services.lead" /></p>
           <div className="lib-service-grid">
             {services.map((s) => (
               <div className="lib-service-card" key={s.title}>
@@ -688,17 +678,17 @@ export default function LibraryPage() {
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">📞</div>
               <h4>Phone</h4>
-              <p><a href="tel:+919441373732">94413 73732</a></p>
+              <p><a href="tel:+919441373732"><CmsText section="library" slot="contact.phone" /></a></p>
             </div>
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">✉️</div>
               <h4>Email</h4>
-              <p><a href="mailto:library@ksrmce.ac.in">library@ksrmce.ac.in</a></p>
+              <p><a href="mailto:library@ksrmce.ac.in"><CmsText section="library" slot="contact.email" /></a></p>
             </div>
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">🕐</div>
               <h4>Timings</h4>
-              <p>09:00 am to 05:00 pm on all working days</p>
+              <p><CmsText section="library" slot="contact.timings" /></p>
             </div>
           </div>
         </div>
@@ -706,5 +696,6 @@ export default function LibraryPage() {
 
       <PageResources section="library" hideVideos />
     </main>
+    </CmsTextProvider>
   );
 }

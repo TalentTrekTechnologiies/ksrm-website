@@ -3,6 +3,7 @@
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
+import CmsText from "@/components/CmsText"
 
 /**
  * The Central Library's staff, shown on the Library page.
@@ -67,8 +68,8 @@ export default function LibraryStaff() {
       `}</style>
 
       <div className="responsive-container">
-        <h2 className="lst-title">Library Staff</h2>
-        <p className="lst-sub">The Librarian and the Central Library team.</p>
+        <h2 className="lst-title"><CmsText section="library" slot="staff.heading" /></h2>
+        <p className="lst-sub"><CmsText section="library" slot="staff.lead" /></p>
 
         {showPhotos ? (
           <div className="lst-grid">

@@ -30,6 +30,7 @@ import { DepartmentHighlightsModule } from './department-highlights/department-h
 import { ContactChannelsModule } from './contact-channels/contact-channels.module';
 import { ResearchModule } from './research/research.module';
 import { PageTablesModule } from './page-tables/page-tables.module';
+import { PageTextModule } from './page-text/page-text.module';
 import { DepartmentDisplaySettingsModule } from './department-display-settings/department-display-settings.module';
 import { MailerModule } from './mailer/mailer.module';
 import { CareerApplicationsModule } from './career-applications/career-applications.module';
@@ -74,6 +75,7 @@ import { AdminNotificationsModule } from './admin-notifications/admin-notificati
     ContactChannelsModule,
     ResearchModule,
     PageTablesModule,
+    PageTextModule,
     DepartmentDisplaySettingsModule,
     MailerModule,
     CareerApplicationsModule,

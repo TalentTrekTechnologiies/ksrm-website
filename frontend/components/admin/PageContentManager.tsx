@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
-import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon } from "lucide-react"
+import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon, Type } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import MediaField from "@/components/admin/cms/MediaField"
 import PageTableEditor from "@/components/admin/PageTableEditor"
+import PageTextEditor from "@/components/admin/PageTextEditor"
+import { PAGE_TEXT } from "@/lib/page-text-registry"
 import {
   TextField,
   SelectField,
@@ -311,6 +313,19 @@ function PageContentInner() {
                 <PrimaryButton onClick={() => saveMedia(adding)} disabled={saving || !mediaForm.url}>{saving ? "Adding…" : "Add"}</PrimaryButton>
               </FormActions>
             </div>
+          )}
+
+          {/* PAGE TEXT - the page's own wording. First, because it is the part
+              of a page an editor most often comes here to change. Only shown
+              for pages listed in the text registry; the rest of this screen
+              still works for every page. */}
+          {target.kind === "page" && PAGE_TEXT[target.section] && (
+            <section>
+              <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+                <Type className="h-4 w-4" /> Page Text
+              </h3>
+              <PageTextEditor section={target.section} />
+            </section>
           )}
 
           {/* TEXT TABLES - fee structures, intake tables, etc. Only for page

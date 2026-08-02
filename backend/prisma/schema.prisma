@@ -1861,3 +1861,26 @@ model PageTable {
   @@index([pageSection])
   @@index([isActive])
 }
+
+/// An admin's replacement for a piece of a page's built-in text.
+///
+/// Pages keep their wording in code (see frontend/lib/page-text-registry.ts),
+/// which is what the static export ships and what search engines index. A row
+/// here overrides one of those slots at runtime. No row means "use the page's
+/// own text", so deleting a row is the natural undo - which is why this model
+/// has no isActive or soft-delete columns, unlike the content modules.
+model PageText {
+  id          Int      @id @default(autoincrement())
+  /// Slot identifier from the frontend registry, e.g. "library.about.p1".
+  key         String   @unique
+  /// PAGE_SECTIONS value the slot belongs to, e.g. "library". Indexed because
+  /// a page fetches its overrides by section in one request.
+  pageSection String
+  value       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  version     Int      @default(1)
+
+  @@index([pageSection])
+}
+
