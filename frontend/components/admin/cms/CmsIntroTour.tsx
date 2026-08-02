@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { useRouter } from "next/navigation"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { getStoredAdmin } from "@/lib/auth"
+import { normalizePath } from "@/lib/use-route-path"
 
 /**
  * First-login walkthrough that spotlights the REAL interface - it darkens the
@@ -296,7 +297,7 @@ export default function CmsIntroTour() {
     }
     setLocating(true)
 
-    if (s.route && window.location.pathname !== s.route) {
+    if (s.route && normalizePath(window.location.pathname) !== s.route) {
       router.push(s.route)
     }
 

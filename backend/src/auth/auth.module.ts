@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { TOKEN_LIFETIME } from './token-lifetime';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { EffectivePermissionsService } from './effective-permissions.service';
 
@@ -21,7 +22,7 @@ import { EffectivePermissionsService } from './effective-permissions.service';
         }
         return {
           secret,
-          signOptions: { expiresIn: '7d' },
+          signOptions: { expiresIn: TOKEN_LIFETIME },
         };
       },
     }),

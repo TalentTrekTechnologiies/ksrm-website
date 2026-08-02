@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { EffectivePermissionsService } from './effective-permissions.service';
 import * as bcrypt from 'bcrypt';
+import { TOKEN_LIFETIME } from './token-lifetime';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +55,7 @@ export class AuthService {
         permissions,
         department: admin.department,
       },
-      { expiresIn: '7d' },
+      { expiresIn: TOKEN_LIFETIME },
     );
 
     return {

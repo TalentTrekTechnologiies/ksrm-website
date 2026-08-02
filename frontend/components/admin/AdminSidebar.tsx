@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useRoutePath } from "@/lib/use-route-path"
 import {
   LayoutDashboard,
   ScrollText,
@@ -199,7 +199,7 @@ export default function AdminSidebar({
   collapsed?: boolean
   onToggleCollapse?: () => void
 }) {
-  const pathname = usePathname()
+  const pathname = useRoutePath()
   const [visibleKeys, setVisibleKeys] = useState<Set<string> | null>(null)
   const admin = getStoredAdmin()
   const isOnHomepageSection = pathname?.startsWith("/admin/homepage") ?? false

@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import { useCallback, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useRoutePath } from "@/lib/use-route-path"
+import { useIdleLogout } from "@/lib/use-idle-logout"
 import AdminSidebar from "@/components/admin/AdminSidebar"
 import AdminNavbar from "@/components/admin/AdminNavbar"
 import CmsConfirmProvider from "@/components/admin/cms/CmsConfirmProvider"
@@ -18,7 +20,9 @@ import { SESSION_EXPIRED_EVENT } from "@/lib/api-client"
  * protected content) is the tradeoff, handled below via `authChecked`.
  */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
+  // Normalised: trailingSlash makes usePathname() return "/admin/login/",
+  // which no === check against "/admin/login" would ever match.
+  const pathname = useRoutePath()
   const router = useRouter()
   const isLoginPage = pathname === "/admin/login"
   // The homepage Preview panel loads this route inside an <iframe> to get a
@@ -73,6 +77,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       // log a working admin out.
     })
   }, [skipChrome, authChecked])
+
+  // Sign out an unattended session. Wired here because this layout is the one
+  // component every admin page shares, and it already owns the redirect.
+  const onIdleExpire = useCallback(() => {
+    router.replace("/admin/login?reason=idle")
+  }, [router])
+  useIdleLogout(!skipChrome, onIdleExpire)
 
   // Bounce to login the moment ANY api call reports the session is gone -
   // without waiting for the next navigation.

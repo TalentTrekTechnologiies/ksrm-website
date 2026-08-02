@@ -49,6 +49,29 @@ export default function AdminLoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Explain an automatic sign-out rather than dropping the admin back at a
+  // blank login form wondering what happened. Read from the URL directly:
+  // useSearchParams would opt this statically-exported page into a Suspense
+  // boundary for one string.
+  const [notice, setNotice] = useState<string | null>(null)
+  useEffect(() => {
+    const reason = new URLSearchParams(window.location.search).get("reason")
+    if (reason === "idle") {
+      // Set from an effect on purpose: the statically-exported HTML is built
+      // with no query string, so deriving this during render would hydrate
+      // against markup that disagrees. Same reasoning as the admin layout's
+      // auth check.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setNotice("You were signed out because the session was idle. Please sign in again.")
+      // Open the form rather than leaving the admin on the splash: they have
+      // just been signed out and need to sign back in, and the message lives
+      // inside the panel.
+      setPanelOpen(true)
+      // Clear it so a refresh doesn't keep showing the message.
+      window.history.replaceState({}, "", window.location.pathname)
+    }
+  }, [])
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setPanelOpen(false)
@@ -292,6 +315,17 @@ export default function AdminLoginPage() {
                     Forgot Password?
                   </button>
                 </div>
+
+                {notice && !error && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    role="status"
+                    className="rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-800"
+                  >
+                    {notice}
+                  </motion.p>
+                )}
 
                 {error && (
                   <motion.p
