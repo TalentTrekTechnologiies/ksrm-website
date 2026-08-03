@@ -8,6 +8,7 @@ export interface ResearchRecord {
   year: number;
   department: string;
   departmentId: number | null;
+  facultyId: number | null;
   type: string;
   doiOrLink: string | null;
   mediaId: number | null;
@@ -24,6 +25,7 @@ export interface ResearchRecordInput {
   year: number;
   department?: string;
   departmentId?: number;
+  facultyId?: number | null;
   type: string;
   doiOrLink?: string;
   /** Pass the picked Media's id (DOCUMENT type) to link it; pass `null` explicitly to unlink. */
@@ -34,13 +36,19 @@ export interface ResearchRecordInput {
 
 // Research has no soft-delete/version columns by design (isActive is its
 // hide/show toggle) - no restore/reorder endpoints exist for this module.
-export function getResearchPublic(departmentId?: number): Promise<ResearchRecord[]> {
-  const query = departmentId !== undefined ? `?departmentId=${departmentId}` : "";
+export function getResearchPublic(departmentId?: number, facultyId?: number): Promise<ResearchRecord[]> {
+  const params = new URLSearchParams();
+  if (departmentId !== undefined) params.set("departmentId", String(departmentId));
+  if (facultyId !== undefined) params.set("facultyId", String(facultyId));
+  const query = params.toString() ? `?${params.toString()}` : "";
   return apiGet<ResearchRecord[]>(`/research${query}`);
 }
 
-export function getResearchAdmin(departmentId?: number): Promise<ResearchRecord[]> {
-  const query = departmentId !== undefined ? `?departmentId=${departmentId}` : "";
+export function getResearchAdmin(departmentId?: number, facultyId?: number): Promise<ResearchRecord[]> {
+  const params = new URLSearchParams();
+  if (departmentId !== undefined) params.set("departmentId", String(departmentId));
+  if (facultyId !== undefined) params.set("facultyId", String(facultyId));
+  const query = params.toString() ? `?${params.toString()}` : "";
   return apiGet<ResearchRecord[]>(`/research/admin${query}`);
 }
 

@@ -186,6 +186,7 @@ model Faculty {
   deletedByAdmin       Admin?            @relation("Faculty_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
   labsInCharge         Lab[]             @relation("Lab_InCharge")
   committeeMemberships CommitteeMember[] @relation("CommitteeMember_Faculty")
+  researchRecords      Research[]        @relation("Research_Faculty")
 
   @@index([departmentId])
   @@index([isActive])
@@ -395,8 +396,11 @@ model Research {
   attachmentUrl String?
 
   departmentRef Department? @relation("Research_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  facultyRef    Faculty?    @relation("Research_Faculty", fields: [facultyId], references: [id], onDelete: SetNull)
+  facultyId     Int?
 
   @@index([departmentId])
+  @@index([facultyId])
   @@index([year])
 }
 
@@ -1883,4 +1887,3 @@ model PageText {
 
   @@index([pageSection])
 }
-

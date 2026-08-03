@@ -27,18 +27,20 @@ export class ResearchController {
   constructor(private readonly researchService: ResearchService) {}
 
   @Get()
-  findAllPublic(@Query('departmentId') departmentId?: string) {
+  findAllPublic(@Query('departmentId') departmentId?: string, @Query('facultyId') facultyId?: string) {
     return this.researchService.findAllPublic(
       departmentId ? parseInt(departmentId) : undefined,
+      facultyId ? parseInt(facultyId) : undefined,
     );
   }
 
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('research.view')
-  findAllAdmin(@Query('departmentId') departmentId?: string) {
+  findAllAdmin(@Query('departmentId') departmentId?: string, @Query('facultyId') facultyId?: string) {
     return this.researchService.findAllAdmin(
       departmentId ? parseInt(departmentId) : undefined,
+      facultyId ? parseInt(facultyId) : undefined,
     );
   }
 

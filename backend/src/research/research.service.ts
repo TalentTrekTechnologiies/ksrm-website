@@ -19,19 +19,23 @@ export class ResearchService {
 
   // departmentId omitted -> every active record (the site-wide Research/
   // Publications page); provided -> just that department's Research tab.
-  async findAllPublic(departmentId?: number) {
+  async findAllPublic(departmentId?: number, facultyId?: number) {
     return this.prisma.research.findMany({
       where: {
         isActive: true,
         ...(departmentId !== undefined && { departmentId }),
+        ...(facultyId !== undefined && { facultyId }),
       },
       orderBy: [{ year: 'desc' }, { createdAt: 'desc' }],
     });
   }
 
-  async findAllAdmin(departmentId?: number) {
+  async findAllAdmin(departmentId?: number, facultyId?: number) {
     return this.prisma.research.findMany({
-      where: { ...(departmentId !== undefined && { departmentId }) },
+      where: {
+        ...(departmentId !== undefined && { departmentId }),
+        ...(facultyId !== undefined && { facultyId }),
+      },
       orderBy: [{ year: 'desc' }, { createdAt: 'desc' }],
     });
   }

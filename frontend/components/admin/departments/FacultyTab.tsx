@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star , ChevronUp, ChevronDown } from "lucide-react"
+import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star , ChevronUp, ChevronDown, BookOpen } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
-import { TextField, TextAreaField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
+import { TextField, TextAreaField, NumberField, SelectField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
@@ -15,6 +15,13 @@ import {
   reorderFaculty,
   Faculty,
 } from "@/lib/faculty-api"
+import {
+  getResearchAdmin,
+  createResearch,
+  updateResearch,
+  deleteResearch,
+  ResearchRecord,
+} from "@/lib/research-api"
 
 interface FormState {
   name: string
@@ -30,6 +37,18 @@ interface FormState {
   welcomeMessage: string
 }
 
+interface ResearchFormState {
+  title: string
+  authors: string
+  journal: string
+  year: number
+  type: string
+  doiOrLink: string
+  attachmentUrl: string
+  mediaId: number | null
+  isActive: boolean
+}
+
 const emptyForm: FormState = {
   name: "",
   designation: "",
@@ -43,6 +62,24 @@ const emptyForm: FormState = {
   isHod: false,
   welcomeMessage: "",
 }
+
+const emptyResearchForm = (facultyName: string): ResearchFormState => ({
+  title: "",
+  authors: facultyName,
+  journal: "",
+  year: new Date().getFullYear(),
+  type: "Publication",
+  doiOrLink: "",
+  attachmentUrl: "",
+  mediaId: null,
+  isActive: true,
+})
+
+const RESEARCH_TYPE_OPTIONS = [
+  { value: "Publication", label: "Publication" },
+  { value: "Project", label: "Project" },
+  { value: "Patent", label: "Patent" },
+]
 
 /**
  * Faculty & HOD tab for one department. Faculty is a shared, institution-
@@ -264,6 +301,13 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
               helperText="Shown on the department's HOD's Desk section."
             />
           )}
+          {editing && (
+            <FacultyResearchPanel
+              faculty={editing}
+              departmentId={departmentId}
+              departmentName={departmentName}
+            />
+          )}
           <FormActions>
             <SecondaryButton onClick={cancelForm}>Cancel</SecondaryButton>
             <PrimaryButton onClick={handleSave} disabled={saving || !form.name || !form.designation}>
@@ -321,5 +365,188 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
         </div>
       )}
     </div>
+  )
+}
+
+function FacultyResearchPanel({
+  faculty,
+  departmentId,
+  departmentName,
+}: {
+  faculty: Faculty
+  departmentId: number
+  departmentName: string
+}) {
+  const [items, setItems] = useState<ResearchRecord[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [editing, setEditing] = useState<ResearchRecord | null>(null)
+  const [creating, setCreating] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [form, setForm] = useState<ResearchFormState>(emptyResearchForm(faculty.name))
+  const { confirm, notifySaved } = useCmsConfirm()
+
+  function belongsToFaculty(item: ResearchRecord) {
+    return item.facultyId === faculty.id || item.authors.toLowerCase().includes(faculty.name.toLowerCase())
+  }
+
+  async function refresh() {
+    const records = await getResearchAdmin(departmentId)
+    setItems(records.filter(belongsToFaculty))
+  }
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      setLoading(true)
+      setError(null)
+      try {
+        const records = await getResearchAdmin(departmentId)
+        if (!cancelled) setItems(records.filter(belongsToFaculty))
+      } catch (err) {
+        if (!cancelled) setError(err instanceof ApiError ? err.message : "Failed to load publications and patents")
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [departmentId, faculty.id, faculty.name])
+
+  function startCreateResearch() {
+    setCreating(true)
+    setEditing(null)
+    setForm(emptyResearchForm(faculty.name))
+  }
+
+  function startEditResearch(item: ResearchRecord) {
+    setEditing(item)
+    setCreating(false)
+    setForm({
+      title: item.title,
+      authors: item.authors,
+      journal: item.journal ?? "",
+      year: item.year,
+      type: item.type,
+      doiOrLink: item.doiOrLink ?? "",
+      attachmentUrl: item.attachmentUrl ?? "",
+      mediaId: item.mediaId,
+      isActive: item.isActive,
+    })
+  }
+
+  function closeResearchForm() {
+    setCreating(false)
+    setEditing(null)
+  }
+
+  async function saveResearch() {
+    if (!(await confirm({ title: "Save research record?", message: "Save this publication/patent under this faculty member?", confirmLabel: "Save" }))) return
+    setSaving(true)
+    setError(null)
+    try {
+      const dto = {
+        title: form.title,
+        authors: form.authors,
+        journal: form.journal || undefined,
+        year: form.year,
+        type: form.type,
+        doiOrLink: form.doiOrLink || undefined,
+        attachmentUrl: form.attachmentUrl || undefined,
+        mediaId: form.mediaId,
+        isActive: form.isActive,
+        department: departmentName,
+        departmentId,
+        facultyId: faculty.id,
+      }
+      if (editing) await updateResearch(editing.id, dto)
+      else await createResearch(dto)
+      closeResearchForm()
+      await refresh()
+      notifySaved("Research record saved.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to save research record")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function removeResearch(item: ResearchRecord) {
+    if (!(await confirm({ title: "Delete", message: `Delete "${item.title}"? This cannot be undone.`, confirmLabel: "Delete", destructive: true }))) return
+    try {
+      await deleteResearch(item.id)
+      await refresh()
+      notifySaved("Research record deleted.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to delete research record")
+    }
+  }
+
+  const isFormOpen = creating || editing !== null
+
+  return (
+    <section className="space-y-3 rounded-xl border border-admin-border bg-admin-bg/50 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <BookOpen className="h-4 w-4 text-admin-primary" /> Publications / Patents
+          </p>
+          <p className="text-xs text-slate-500">Add this faculty member's new publications, projects and patents here.</p>
+        </div>
+        {!isFormOpen && (
+          <button type="button" onClick={startCreateResearch} className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-admin-primary ring-1 ring-admin-border hover:bg-admin-bg">
+            <Plus className="h-4 w-4" /> Add record
+          </button>
+        )}
+      </div>
+
+      {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+
+      {isFormOpen && (
+        <div className="space-y-4 rounded-xl border border-admin-border bg-white p-4">
+          <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <TextField label="Authors" value={form.authors} onChange={(v) => setForm({ ...form, authors: v })} required />
+            <TextField label="Journal / Venue" value={form.journal} onChange={(v) => setForm({ ...form, journal: v })} />
+            <NumberField label="Year" value={form.year} onChange={(v) => setForm({ ...form, year: v })} required />
+            <SelectField label="Type" value={form.type} onChange={(v) => setForm({ ...form, type: v })} options={RESEARCH_TYPE_OPTIONS} />
+          </div>
+          <TextField label="DOI / Link" value={form.doiOrLink} onChange={(v) => setForm({ ...form, doiOrLink: v })} />
+          <MediaField label="Attachment (paper / patent PDF)" url={form.attachmentUrl} mediaId={form.mediaId} onChange={(url, mediaId) => setForm({ ...form, attachmentUrl: url, mediaId })} accept={["DOCUMENT"]} />
+          <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
+          <FormActions>
+            <SecondaryButton onClick={closeResearchForm}>Cancel</SecondaryButton>
+            <PrimaryButton onClick={saveResearch} disabled={saving || !form.title || !form.authors}>
+              {saving ? "Saving..." : "Save record"}
+            </PrimaryButton>
+          </FormActions>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-admin-primary" /></div>
+      ) : items.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-admin-border bg-white p-4 text-center text-sm text-slate-400">No records linked to this faculty yet.</p>
+      ) : (
+        <ul className="space-y-2">
+          {items.map((item) => (
+            <li key={item.id} className="flex items-center gap-3 rounded-lg border border-admin-border bg-white px-3 py-2.5">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-slate-700">{item.title}</p>
+                <p className="truncate text-xs text-slate-500">{item.type} - {item.year}{!item.isActive && <span className="ml-2 font-semibold text-amber-600">Inactive</span>}</p>
+              </div>
+              <button type="button" onClick={() => startEditResearch(item)} aria-label="Edit research record" className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-admin-primary">
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button type="button" onClick={() => removeResearch(item)} aria-label="Delete research record" className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   )
 }

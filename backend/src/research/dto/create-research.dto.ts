@@ -35,6 +35,10 @@ export class CreateResearchDto {
   @IsInt()
   departmentId?: number;
 
+  @IsOptional()
+  @IsInt()
+  facultyId?: number;
+
   @IsString()
   @MaxLength(40)
   type: string;
