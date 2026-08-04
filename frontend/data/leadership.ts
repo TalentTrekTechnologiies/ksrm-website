@@ -28,11 +28,11 @@ export const LEADERSHIP: Leader[] = [
   {
     slug: "correspondent",
     name: "Smt. K. Rajeswari",
-    // Published as "Secretary cum Correspondent"; the college asked for the
-    // plain title.
-    role: "Correspondent",
+    // Published as "Secretary cum Correspondent"; the college asked for "and"
+    // in place of "cum", keeping both titles.
+    role: "Correspondent and Secretary",
     photo: "/images/leadership/correspondent.jpg",
-    email: "correspondent@ksrmce.ac.in",
+    email: "rajeswari@ksrmce.ac.in",
     messageHeading: "Correspondent's Message",
     paragraphs: [
       "The college was started with a noble cause to provide Technical Education to the people in the Rayalaseema region, one of the backward regions, of Andhra Pradesh. The college has been doing well in accordance with the motivation behind it's establishment. KSRMCE has produced noteworthy alumni since it's existence from 1980. The institute aims to produce potentially matured, professionally equipped graduates with values, morals and ethics and has been striving to achieve through the academics, extra and co-curricular activities.",
