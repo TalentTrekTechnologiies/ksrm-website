@@ -1,7 +1,14 @@
+"use client";
+
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
+import { useLiveData } from "@/lib/use-live-data";
 
-﻿const ugPrograms = [
+// Fallback shown until/unless UG programmes are added in the CMS (Departments
+// -> Programmes -> level "UG"), matching the built-in list exactly so nothing
+// changes visually until a real one is added.
+const ugPrograms = [
   { name: "Computer Science & Engineering", code: "CSE", intake: 240 },
   { name: "CSE (AI & Machine Learning)", code: "CSE-AIML", intake: 60 },
   { name: "CSE (Data Science)", code: "CSE-DS", intake: 60 },
@@ -13,6 +20,22 @@ import CmsText from "@/components/CmsText";
 ];
 
 export default function UGAdmissionsPage() {
+  // Every UG programme across all departments. The fetcher never rejects, so
+  // an API failure falls back to the built-in list rather than emptying the
+  // table - the same pattern the Diploma admissions page already uses.
+  const cmsUg = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic(undefined, "UG").catch(() => [] as DepartmentProgramme[]),
+    [],
+  );
+  const programs =
+    cmsUg && cmsUg.length > 0
+      ? cmsUg.map((p) => ({
+          name: p.name,
+          code: p.department?.shortName || p.department?.name || "—",
+          intake: p.intake,
+        }))
+      : ugPrograms;
+
   return (
     <>
       <style>{`
@@ -131,8 +154,8 @@ export default function UGAdmissionsPage() {
                   <tr><th>Program</th><th>Code</th><th>Annual Intake</th></tr>
                 </thead>
                 <tbody>
-                  {ugPrograms.map((p) => (
-                    <tr key={p.code}>
+                  {programs.map((p, i) => (
+                    <tr key={`${p.code}-${p.name}-${i}`}>
                       <td className="ug-program-name">{p.name}</td>
                       <td><span className="ug-program-code">{p.code}</span></td>
                       <td className="ug-intake-badge">{p.intake}</td>

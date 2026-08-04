@@ -1,7 +1,15 @@
+"use client";
+
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
+import { useLiveData } from "@/lib/use-live-data";
 
-﻿const mtechPrograms = [
+// Fallback shown until/unless M.Tech programmes are added in the CMS
+// (Departments -> Programmes -> level "PG"), matching the built-in list
+// exactly so nothing changes visually until a real one is added. The MBA
+// table below is a single fixed program, not a list, and is left as-is.
+const mtechPrograms = [
   { name: "Geotechnical Engineering", dept: "Civil Engineering", intake: 18 },
   { name: "Power Systems", dept: "Electrical & Electronics", intake: 18 },
   { name: "Embedded Systems & VLSI", dept: "Electronics & Communication", intake: 18 },
@@ -10,6 +18,22 @@ import CmsText from "@/components/CmsText";
 ];
 
 export default function PGAdmissionsPage() {
+  // Every PG programme across all departments. The fetcher never rejects, so
+  // an API failure falls back to the built-in list rather than emptying the
+  // table - the same pattern the Diploma admissions page already uses.
+  const cmsPg = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic(undefined, "PG").catch(() => [] as DepartmentProgramme[]),
+    [],
+  );
+  const programs =
+    cmsPg && cmsPg.length > 0
+      ? cmsPg.map((p) => ({
+          name: p.name,
+          dept: p.department?.name || p.department?.shortName || "—",
+          intake: p.intake,
+        }))
+      : mtechPrograms;
+
   return (
     <>
       <style>{`
@@ -118,8 +142,8 @@ export default function PGAdmissionsPage() {
               <table className="pg-table">
                 <thead><tr><th>Program</th><th>Department</th><th>Annual Intake</th></tr></thead>
                 <tbody>
-                  {mtechPrograms.map((p) => (
-                    <tr key={p.name}>
+                  {programs.map((p, i) => (
+                    <tr key={`${p.name}-${i}`}>
                       <td className="pg-program-name">{p.name}</td>
                       <td style={{ color: "#666" }}>{p.dept}</td>
                       <td className="pg-intake-badge">{p.intake}</td>
