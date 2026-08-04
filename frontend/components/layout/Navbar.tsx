@@ -4,6 +4,7 @@ import { mediaFile } from "@/lib/api-base";
 import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ChevronDown, Send } from "lucide-react"
 
 const socialLinks = [
   { Icon: "f", href: "https://facebook.com/ksrmceofficial", label: "Facebook" },
@@ -12,12 +13,25 @@ const socialLinks = [
   { Icon: "▶", href: "https://youtube.com/ksrmceofficialmedia", label: "YouTube" },
 ]
 
+interface NavChild {
+  label: string
+  href: string
+}
+
 interface NavItem {
   label: string
   href: string
-  children?: Array<{ label: string; href: string }>
+  children?: NavChild[]
 }
 
+/**
+ * Top-level headings keep their original names and their original sub-menus,
+ * unchanged. The split is only about which ones stay on the row: a heading
+ * that has sub-pages stays, and the ones that were only ever a single page
+ * (Research, IIC, EDC, Examinations, Alumni, Gallery, Careers, Degree
+ * Verification, News & Events) collect under "More" - which is an ordinary
+ * dropdown, exactly like every other sub-menu here, not a separate panel.
+ */
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   {
@@ -83,7 +97,6 @@ const navItems: NavItem[] = [
       { label: "Placements Record", href: "/placements/placements-record" },
     ],
   },
-  { label: "Research", href: "/research" },
   {
     label: "Campus Life",
     href: "/campus-life",
@@ -118,20 +131,27 @@ const navItems: NavItem[] = [
       { label: "AICTE Feedback", href: "https://www.aicte-india.org/feedback/" },
     ],
   },
-  { label: "IIC", href: "/iic" },
-  { label: "EDC", href: "/edc" },
-  { label: "Examinations", href: "/examinations" },
-  { label: "Alumni", href: "/alumni" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Careers", href: "/careers" },
-  { label: "Degree Verification", href: "/degree-verification" },
-  { label: "News & Events", href: "/news" },
   {
     label: "Contact",
     href: "/contact",
     children: [
       { label: "Contact Us", href: "/contact" },
       { label: "RTI Rules", href: mediaFile(174) },
+    ],
+  },
+  {
+    label: "More",
+    href: "#",
+    children: [
+      { label: "Research", href: "/research" },
+      { label: "IIC", href: "/iic" },
+      { label: "EDC", href: "/edc" },
+      { label: "Examinations", href: "/examinations" },
+      { label: "Alumni", href: "/alumni" },
+      { label: "Gallery", href: "/gallery" },
+      { label: "Careers", href: "/careers" },
+      { label: "Degree Verification", href: "/degree-verification" },
+      { label: "News & Events", href: "/news" },
     ],
   },
 ]
@@ -143,9 +163,8 @@ export default function Navbar() {
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null)
   const pathname = usePathname()
 
-  // Horizontal-scroll state for the desktop nav row: with 18 top-level
-  // items the row is wider than the viewport, so it scrolls sideways and
-  // shows yellow arrow affordances at whichever edge still has hidden items.
+  // The row still scrolls sideways as a safety net for narrow laptops and
+  // browser zoom, rather than wrapping onto a second line.
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canLeft, setCanLeft] = useState(false)
   const [canRight, setCanRight] = useState(false)
@@ -165,11 +184,6 @@ export default function Navbar() {
     return () => { clearTimeout(t); window.removeEventListener("resize", updateArrows) }
   }, [updateArrows, pathname])
 
-  const scrollByAmount = (dir: number) => {
-    scrollRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" })
-    setHoveredDropdown(null)
-  }
-
   // Dropdowns render as position:fixed so they escape the scroll row's
   // overflow clip; a short close timer bridges the gap between the trigger
   // and the fixed menu so the pointer can travel between them.
@@ -182,13 +196,18 @@ export default function Navbar() {
 
   const openDropdown = (label: string, triggerEl: HTMLElement) => {
     cancelClose()
+    // Measured from the trigger itself, never assumed: the navbar sits below
+    // the header and ticker, so a hardcoded offset lands the menu up in the
+    // logo area instead of under the item that opened it.
     const r = triggerEl.getBoundingClientRect()
-    const left = Math.max(8, Math.min(r.left, window.innerWidth - 252))
-    setDropdownPos({ left, top: r.bottom })
+    setDropdownPos({
+      left: Math.max(8, Math.min(r.left, window.innerWidth - 262)),
+      top: r.bottom,
+    })
     setHoveredDropdown(label)
   }
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/")
+  const isActive = (href: string) => href !== "#" && (pathname === href || pathname.startsWith(href + "/"))
 
   return (
     <div style={{
@@ -199,7 +218,7 @@ export default function Navbar() {
       boxShadow: "0 5px 20px rgba(0,0,0,0.15)",
     }}>
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .navbar-desktop-wrap { display: none !important; }
           .navbar-hamburger { display: flex !important; }
         }
@@ -218,128 +237,185 @@ export default function Navbar() {
           background: linear-gradient(to right, #2B3490 60%, rgba(43,52,144,0)); }
         .nav-scroll-arrow.right { right: 0; justify-content: flex-end; padding-right: 4px;
           background: linear-gradient(to left, #2B3490 60%, rgba(43,52,144,0)); }
+        .nav-top-link:hover { color: #FFE619 !important; }
+        .nav-drop-item:hover { background: #f2f4ff; }
+        .nav-apply:hover { background: #b71c1c !important; }
       `}</style>
 
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
-        padding: "0 20px",
-        height: "48px",
-      }}>
-        {/* Desktop Navigation — horizontally scrollable row with yellow edge arrows */}
-        <div className="navbar-desktop-wrap" style={{ position: "relative", flex: 1, minWidth: 0 }}>
-          {canLeft && (
-            <button className="nav-scroll-arrow left" aria-label="Scroll navigation left" onClick={() => scrollByAmount(-1)}>‹</button>
-          )}
+      <div className="navbar-desktop-wrap" style={{ position: "relative" }}>
+        {canLeft && (
+          <button className="nav-scroll-arrow left" aria-label="Scroll navigation left" onClick={() => scrollRef.current?.scrollBy({ left: -320, behavior: "smooth" })}>‹</button>
+        )}
 
-          <div
-            ref={scrollRef}
-            onScroll={updateArrows}
-            className="navbar-desktop"
-            style={{
+        <div
+          ref={scrollRef}
+          onScroll={updateArrows}
+          className="navbar-desktop"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "3px",
+            padding: "0 18px",
+            height: "48px",
+            overflowX: "auto",
+            overflowY: "hidden",
+            whiteSpace: "nowrap",
+            scrollBehavior: "smooth",
+          }}
+        >
+          {navItems.map((item) => {
+            const active = isActive(item.href)
+            const hasChildren = !!(item.children && item.children.length > 0)
+            const isOpen = hoveredDropdown === item.label
+            // "More" is a grouping label, not a destination, so it opens on
+            // click as a button instead of navigating anywhere.
+            const isButton = item.href === "#"
+
+            const sharedStyle: React.CSSProperties = {
               display: "flex",
               alignItems: "center",
-              gap: 0,
-              overflowX: "auto",
-              overflowY: "hidden",
+              gap: "4px",
+              padding: "0 13px",
+              height: "34px",
+              borderRadius: "5px",
+              // The original nav sat at 15px; the design asks for 10% more.
+              fontSize: "16.5px",
+              fontWeight: 600,
+              fontFamily: "'Rajdhani', sans-serif",
+              letterSpacing: "0.2px",
               whiteSpace: "nowrap",
-              scrollBehavior: "smooth",
-            }}
-          >
-            {navItems.map((item) => {
-              const active = isActive(item.href)
-              const hasChildren = !!(item.children && item.children.length > 0)
-              const isOpen = hoveredDropdown === item.label
+              textDecoration: "none",
+              transition: "all 0.2s",
+              flex: "0 0 auto",
+            }
 
-              return (
-                <div
-                  key={item.label}
-                  style={{ display: "flex", alignItems: "center", flex: "0 0 auto" }}
-                  onMouseEnter={(e) => (hasChildren ? openDropdown(item.label, e.currentTarget) : (cancelClose(), setHoveredDropdown(null)))}
-                  onMouseLeave={scheduleClose}
-                >
-                  <Link
-                    href={item.href}
+            return (
+              <div
+                key={item.label}
+                // Full row height so the measured bottom edge is the navbar's
+                // own bottom, and so the hover target covers the whole strip.
+                style={{ display: "flex", alignItems: "center", height: "48px", flex: "0 0 auto" }}
+                onMouseEnter={(e) => (hasChildren ? openDropdown(item.label, e.currentTarget) : (cancelClose(), setHoveredDropdown(null)))}
+                onMouseLeave={scheduleClose}
+              >
+                {isButton ? (
+                  <button
+                    onClick={(e) => (isOpen ? setHoveredDropdown(null) : openDropdown(item.label, e.currentTarget))}
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "5px",
-                      padding: "0 12px",
-                      height: "48px",
-                      color: active || isOpen ? "#FFE619" : "rgba(255, 255, 255, 0.82)",
-                      textDecoration: "none",
-                      fontSize: "15px",
-                      fontWeight: 600,
-                      fontFamily: "'Rajdhani', sans-serif",
-                      whiteSpace: "nowrap",
-                      borderBottom: active ? "3px solid #FFE619" : "3px solid transparent",
-                      transition: "all 0.2s",
+                      ...sharedStyle,
+                      background: "#c62828",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#fff",
                     }}
                   >
                     {item.label}
-                    {hasChildren && <span style={{ fontSize: "10px" }}>▾</span>}
+                    <ChevronDown size={13} strokeWidth={2.5} style={{ transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="nav-top-link"
+                    style={{
+                      ...sharedStyle,
+                      color: active || isOpen ? "#FFE619" : "rgba(255,255,255,0.9)",
+                      background: isOpen ? "rgba(255,255,255,0.08)" : "transparent",
+                      boxShadow: active ? "inset 0 -2px 0 #FFE619" : "none",
+                    }}
+                  >
+                    {item.label}
+                    {hasChildren && <ChevronDown size={13} strokeWidth={2.5} />}
                   </Link>
-                </div>
-              )
-            })}
-          </div>
+                )}
+              </div>
+            )
+          })}
 
-          {canRight && (
-            <button className="nav-scroll-arrow right" aria-label="Scroll navigation right" onClick={() => scrollByAmount(1)}>›</button>
-          )}
+          <Link
+            href="/admissions"
+            className="nav-apply"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              marginLeft: "8px",
+              padding: "0 15px",
+              height: "34px",
+              borderRadius: "5px",
+              background: "#c62828",
+              color: "#fff",
+              fontSize: "16.5px",
+              fontWeight: 700,
+              fontFamily: "'Rajdhani', sans-serif",
+              letterSpacing: "0.2px",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+              flex: "0 0 auto",
+              transition: "background 0.2s",
+            }}
+          >
+            Apply Now
+            <Send size={13} strokeWidth={2.5} />
+          </Link>
         </div>
 
-        {/* Dropdown menu — fixed-position so it escapes the scroll row's clip */}
-        {(() => {
-          const item = navItems.find((i) => i.label === hoveredDropdown && i.children && i.children.length)
-          if (!item || !dropdownPos) return null
-          return (
-            <div
-              style={{
-                position: "fixed",
-                left: dropdownPos.left,
-                top: dropdownPos.top,
-                background: "#fff",
-                minWidth: "240px",
-                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                borderRadius: "0 0 8px 8px",
-                zIndex: 1100,
-                padding: "6px 0",
-                display: "flex",
-                flexDirection: "column",
-              }}
-              onMouseEnter={cancelClose}
-              onMouseLeave={scheduleClose}
-            >
-              {item.children?.map((child) => (
-                <Link
-                  key={child.href}
-                  href={child.href}
-                  onClick={() => setHoveredDropdown(null)}
-                  style={{
-                    display: "block",
-                    padding: "10px 18px",
-                    color: "#2B3490",
-                    fontFamily: "'Rajdhani', sans-serif",
-                    fontSize: "15px",
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    whiteSpace: "nowrap",
-                    transition: "background 0.2s",
-                  }}
-                  onMouseEnter={(e) => { (e.target as HTMLAnchorElement).style.background = "#f2f4ff" }}
-                  onMouseLeave={(e) => { (e.target as HTMLAnchorElement).style.background = "transparent" }}
-                >
-                  {child.label}
-                </Link>
-              ))}
-            </div>
-          )
-        })()}
+        {canRight && (
+          <button className="nav-scroll-arrow right" aria-label="Scroll navigation right" onClick={() => scrollRef.current?.scrollBy({ left: 320, behavior: "smooth" })}>›</button>
+        )}
+      </div>
 
-        {/* Mobile Hamburger */}
+      {/* Dropdown menu — fixed-position so it escapes the scroll row's clip */}
+      {(() => {
+        const item = navItems.find((i) => i.label === hoveredDropdown && i.children && i.children.length)
+        if (!item || !dropdownPos) return null
+        return (
+          <div
+            style={{
+              position: "fixed",
+              left: dropdownPos.left,
+              top: dropdownPos.top,
+              background: "#fff",
+              minWidth: "250px",
+              boxShadow: "0 10px 28px rgba(0,0,0,0.18)",
+              borderRadius: "0 0 8px 8px",
+              zIndex: 1100,
+              padding: "6px 0",
+              display: "flex",
+              flexDirection: "column",
+            }}
+            onMouseEnter={cancelClose}
+            onMouseLeave={scheduleClose}
+          >
+            {item.children?.map((child) => (
+              <Link
+                key={child.href}
+                href={child.href}
+                className="nav-drop-item"
+                onClick={() => setHoveredDropdown(null)}
+                target={child.href.startsWith("http") ? "_blank" : undefined}
+                rel={child.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                style={{
+                  display: "block",
+                  padding: "10px 20px",
+                  color: "#2B3490",
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontSize: "16.5px",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  transition: "background 0.15s",
+                }}
+              >
+                {child.label}
+              </Link>
+            ))}
+          </div>
+        )
+      })()}
+
+      {/* Mobile Hamburger */}
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 12px" }}>
         <button
           className="navbar-hamburger"
           style={{
@@ -349,7 +425,7 @@ export default function Navbar() {
             color: "#fff",
             fontSize: "24px",
             cursor: "pointer",
-            padding: "4px 8px",
+            padding: "10px 8px",
           }}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
@@ -367,7 +443,7 @@ export default function Navbar() {
           overflowY: "auto",
         }}>
           {navItems.map((item) => {
-            const hasChildren = item.children && item.children.length > 0
+            const hasChildren = !!(item.children && item.children.length > 0)
             const isExpanded = expandedMobile === item.label
             const active = isActive(item.href)
 
@@ -379,7 +455,7 @@ export default function Navbar() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "13px 8px",
+                      padding: "13px 14px",
                       fontSize: "15px",
                       fontWeight: 600,
                       borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -391,11 +467,7 @@ export default function Navbar() {
                     onClick={() => setExpandedMobile(isExpanded ? null : item.label)}
                   >
                     <span>{item.label}</span>
-                    <span style={{
-                      transition: "transform 0.2s",
-                      transform: isExpanded ? "rotate(-180deg)" : "rotate(0deg)",
-                      fontSize: "13px",
-                    }}>▾</span>
+                    <ChevronDown size={15} style={{ transition: "transform 0.2s", transform: isExpanded ? "rotate(180deg)" : "none" }} />
                   </div>
                   {isExpanded && (
                     <div style={{ background: "rgba(255,255,255,0.05)" }}>
@@ -403,9 +475,11 @@ export default function Navbar() {
                         <Link
                           key={child.href}
                           href={child.href}
+                          target={child.href.startsWith("http") ? "_blank" : undefined}
+                          rel={child.href.startsWith("http") ? "noopener noreferrer" : undefined}
                           style={{
                             display: "block",
-                            padding: "10px 8px 10px 32px",
+                            padding: "10px 14px 10px 36px",
                             fontSize: "14px",
                             fontWeight: 500,
                             borderBottom: "1px solid rgba(255,255,255,0.05)",
@@ -430,7 +504,7 @@ export default function Navbar() {
                 href={item.href}
                 style={{
                   display: "block",
-                  padding: "13px 8px",
+                  padding: "13px 14px",
                   fontSize: "15px",
                   fontWeight: 600,
                   borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -445,10 +519,34 @@ export default function Navbar() {
             )
           })}
 
+          <div style={{ padding: "14px" }}>
+            <Link
+              href="/admissions"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                padding: "11px",
+                borderRadius: "6px",
+                background: "#c62828",
+                color: "#fff",
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: "15px",
+                fontWeight: 700,
+                textDecoration: "none",
+              }}
+            >
+              Apply Now
+              <Send size={15} strokeWidth={2.5} />
+            </Link>
+          </div>
+
           {/* Mobile Social Links */}
           <div style={{
             borderTop: "1px solid rgba(255,255,255,0.1)",
-            padding: "12px 8px",
+            padding: "12px 14px",
             display: "flex",
             gap: "12px",
           }}>

@@ -48,3 +48,21 @@ frontend/public/*.mov
 # Local Hostinger deploy artifact - large, never commit
 ksrm-site.zip
 ksrm-site-updated.zip
+
+# Database dumps - NEVER commit. These carry live production data: the Admin
+# table's bcrypt password hashes, CareerApplication rows with applicants'
+# personal details, and the full AuditLog. Pushing one to this repo would
+# publish real credentials. Keep them on disk; move them with scp, not git.
+*.sql
+*.sql.bak
+# ...but Prisma's migrations ARE source and must stay tracked. Without this
+# exception the blanket *.sql rule above silently swallows every new
+# migration, and the schema stops being reproducible from a fresh clone.
+!backend/prisma/migrations/**/*.sql
+
+# Media Library uploads - user-uploaded files, served from the backend's own
+# storage root. Reproducible from the running instance, not source.
+backend/storage/
+
+# Scraped reference image from another college's site; not ours to ship.
+frontend/iare_faculty.png
