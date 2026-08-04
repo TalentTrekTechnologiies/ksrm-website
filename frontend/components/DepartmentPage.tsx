@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Department } from "@/types/department";
+import type { Department, FacultyMember } from "@/types/department";
 import { getDepartmentsPublic } from "@/lib/departments-api";
-import { getFacultyPublic } from "@/lib/faculty-api";
+import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
 import { getDepartmentProgrammesPublic } from "@/lib/department-programmes-api";
 import { getLabsPublic } from "@/lib/labs-api";
 import { getLearningOutcomesPublic } from "@/lib/learning-outcomes-api";
@@ -12,6 +12,7 @@ import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
 import { getGalleryPublic } from "@/lib/gallery-api";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api";
+import FacultyGrid from "@/components/faculty/FacultyGrid"
 import { getEffectiveDisplaySettings } from "@/lib/department-display-settings-api";
 import { getCampusVideosForDepartment, getStatisticsPublic, SiteStatistic, CampusVideo } from "@/lib/homepage-api";
 import { getPublicSiteSettings } from "@/lib/site-settings-api";
@@ -57,6 +58,39 @@ function groupDownloadsByCategory(downloads: Download[]): { category: string; it
       return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
     })
     .map((category) => ({ category, items: byCat.get(category)! }));
+}
+
+/**
+ * Adapts this page's FacultyMember shape to the Faculty record FacultyGrid and
+ * the profile view expect. A member with no id (the static fallback data a page
+ * ships with, before its CMS faculty load) gets id 0 - the profile still opens
+ * and shows the details it has, and simply finds no publications, which is the
+ * honest result for a record that is not in the CMS.
+ */
+function toFacultyRecord(f: FacultyMember): Faculty {
+  return {
+    id: f.id ?? 0,
+    name: f.name,
+    designation: f.designation,
+    qualification: f.qualification,
+    department: f.department ?? "",
+    specialization: f.specialization || null,
+    experience: f.experience || null,
+    email: f.email || null,
+    phone: f.phone || null,
+    photoUrl: f.photo || null,
+    mediaId: null,
+    isHod: f.isHod ?? /head|hod/i.test(f.designation),
+    isActive: true,
+    createdAt: "",
+    updatedAt: "",
+    departmentId: null,
+    welcomeMessage: null,
+    sortOrder: 0,
+    deletedAt: null,
+    deletedBy: null,
+    version: 1,
+  }
 }
 
 export default function DepartmentPage({ department: fallbackDepartment }: { department: Department }) {
@@ -155,6 +189,9 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         setDepartment((prev) => ({
           ...prev,
           faculty: facultyRes.value.map((f) => ({
+            // id and isHod carry through so the profile view can load this
+            // person's publications and flag the head of department.
+            id: f.id,
             name: f.name,
             designation: f.designation,
             qualification: f.qualification,
@@ -163,6 +200,8 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
             experience: f.experience ?? "",
             email: f.email ?? "",
             phone: f.phone ?? "",
+            isHod: f.isHod,
+            department: f.department,
           })),
         }))
         const hod = facultyRes.value.find((f) => f.isHod)
@@ -979,53 +1018,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 ))}
               </div>
             ) : facultyShowPhotos ? (
-            <div className="dept-faculty-grid">
-              {department.faculty.map((f, i) => {
-                const initials = f.name
-                  .replace(/^(Dr\.|Sri\.|Smt\.)\s*/, "")
-                  .split(" ")
-                  .map((w) => w[0])
-                  .join("")
-                  .toUpperCase();
-                const desig = f.designation.toLowerCase();
-                const isHod = desig.includes("head") || desig.includes("hod");
-                return (
-                  <div className={`dept-faculty-card ${isHod ? "hod" : ""}`} key={i}>
-                    <div className="dept-faculty-photo">
-                      {isHod && <div className="dept-faculty-hod-badge">HOD</div>}
-                      {f.photo ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={f.photo} alt={f.name} loading="lazy"
-                          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }} />
-                      ) : (
-                        <div className="dept-faculty-initials"><p>{initials}</p></div>
-                      )}
-                    </div>
-                    <div className="dept-faculty-info">
-                      <h3>{f.name}</h3>
-                      <p className="dept-faculty-designation">{f.designation}</p>
-                      {isVisible("faculty.showQualification") && (
-                        <p className="dept-faculty-qual">{f.qualification}</p>
-                      )}
-                      <div className="dept-faculty-spec">{f.specialization}</div>
-                      {isVisible("faculty.showExperience") && f.experience && (
-                        <p className="dept-faculty-qual">{f.experience}</p>
-                      )}
-                      {isVisible("faculty.showEmail") && f.email && (
-                        <a href={`mailto:${f.email}`} className="dept-faculty-qual" style={{ display: "block", textDecoration: "none" }}>
-                          {f.email}
-                        </a>
-                      )}
-                      {f.phone && (
-                        <a href={`tel:${f.phone}`} className="dept-faculty-qual" style={{ display: "block", textDecoration: "none" }}>
-                          {f.phone}
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <FacultyGrid
+              faculty={department.faculty.map(toFacultyRecord)}
+              showPhotos
+            />
             ) : (
             <div className="dept-faculty-table-wrap">
               <table className="dept-faculty-table">

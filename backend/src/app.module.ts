@@ -32,6 +32,7 @@ import { ResearchModule } from './research/research.module';
 import { PageTablesModule } from './page-tables/page-tables.module';
 import { PageTextModule } from './page-text/page-text.module';
 import { ContentVersionModule } from './content-version/content-version.module';
+import { FacultyAchievementsModule } from './faculty-achievements/faculty-achievements.module';
 import { DepartmentDisplaySettingsModule } from './department-display-settings/department-display-settings.module';
 import { MailerModule } from './mailer/mailer.module';
 import { CareerApplicationsModule } from './career-applications/career-applications.module';
@@ -78,6 +79,7 @@ import { AdminNotificationsModule } from './admin-notifications/admin-notificati
     PageTablesModule,
     PageTextModule,
     ContentVersionModule,
+    FacultyAchievementsModule,
     DepartmentDisplaySettingsModule,
     MailerModule,
     CareerApplicationsModule,

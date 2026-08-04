@@ -3,6 +3,7 @@
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
+import FacultyGrid from "@/components/faculty/FacultyGrid"
 
 /**
  * The Examination Section's staff, shown at the top of the Examinations page.
@@ -74,45 +75,7 @@ export default function ExamSectionStaff() {
         <h2 className="ess-title">Examination Section</h2>
         <p className="ess-sub">Controller of Examinations and the examination office team.</p>
 
-        {showPhotos ? (
-          <div className="ess-grid">
-            {staff.map((s) => (
-              <div key={s.id} className={`ess-card${s.isHod ? " coe" : ""}`}>
-                <div className="ess-photo">
-                  {s.photoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                    <img
-                      src={s.photoUrl}
-                      alt={s.name}
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none"
-                      }}
-                    />
-                  ) : (
-                    <div className="ess-initials"><p>{initials(s.name)}</p></div>
-                  )}
-                  {s.isHod && <span className="ess-badge">Controller of Examinations</span>}
-                </div>
-                <div className="ess-info">
-                  <h3>{s.name}</h3>
-                  <p className="ess-desig">{s.designation}</p>
-                  {s.email && <p className="ess-email">{s.email}</p>}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="ess-list">
-            {staff.map((s) => (
-              <div key={s.id} className={`ess-row${s.isHod ? " coe" : ""}`}>
-                <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: "0 0 2px" }}>
-                  {s.name}
-                </h3>
-                <p className="ess-desig">{s.designation}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        <FacultyGrid faculty={staff} showPhotos={showPhotos} headLabel="Controller of Examinations" />
       </div>
     </section>
   )

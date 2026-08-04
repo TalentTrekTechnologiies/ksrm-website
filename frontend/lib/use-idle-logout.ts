@@ -25,7 +25,7 @@ const ACTIVITY_KEY = "ksrm_admin_last_activity"
 
 /** How long an admin may idle before being signed out. */
 export const IDLE_TIMEOUT_MS = Number(
-  process.env.NEXT_PUBLIC_ADMIN_IDLE_MS ?? 15 * 60 * 1000,
+  process.env.NEXT_PUBLIC_ADMIN_IDLE_MS ?? 10 * 60 * 1000,
 )
 
 // How often to compare now against the last activity. Fine-grained enough that
@@ -33,7 +33,7 @@ export const IDLE_TIMEOUT_MS = Number(
 const CHECK_INTERVAL_MS = 15_000
 
 // Pointer moves fire continuously; writing localStorage on each would be
-// wasteful, and second-level precision is plenty for a fifteen-minute window.
+// wasteful, and second-level precision is plenty for a ten-minute window.
 const WRITE_THROTTLE_MS = 5_000
 
 const ACTIVITY_EVENTS = [

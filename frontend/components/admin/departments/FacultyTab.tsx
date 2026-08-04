@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star , ChevronUp, ChevronDown, BookOpen } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
+import FacultyAchievementsEditor from "@/components/admin/departments/FacultyAchievementsEditor"
 import { TextField, TextAreaField, NumberField, SelectField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
@@ -307,6 +308,14 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
               departmentId={departmentId}
               departmentName={departmentName}
             />
+          )}
+          {/* Only when editing: an achievement needs a saved faculty id to
+              attach to, and these are appended over years rather than filled
+              in at the moment someone is first added. */}
+          {editing && (
+            <div className="rounded-2xl border border-admin-border bg-admin-bg/40 p-4">
+              <FacultyAchievementsEditor facultyId={editing.id} facultyName={editing.name} />
+            </div>
           )}
           <FormActions>
             <SecondaryButton onClick={cancelForm}>Cancel</SecondaryButton>

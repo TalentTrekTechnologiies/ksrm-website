@@ -187,9 +187,61 @@ model Faculty {
   labsInCharge         Lab[]             @relation("Lab_InCharge")
   committeeMemberships CommitteeMember[] @relation("CommitteeMember_Faculty")
   researchRecords      Research[]        @relation("Research_Faculty")
+  achievements         FacultyAchievement[] @relation("FacultyAchievement_Faculty")
 
   @@index([departmentId])
   @@index([isActive])
+  @@index([deletedAt])
+}
+
+/// What a faculty achievement record represents. One table rather than a
+/// separate model per kind: they carry the same fields (a title, who published
+/// or granted it, a reference number, a date) and are always shown together on
+/// a profile, so splitting them would mean four near-identical modules.
+enum FacultyAchievementType {
+  PUBLICATION
+  PATENT
+  BOOK
+  AWARD
+  CERTIFICATION
+}
+
+/// A publication, patent, book, award or certification belonging to one faculty
+/// member.
+///
+/// Staff accumulate these every year - four papers and a patent is a normal
+/// annual haul. They are rows against the existing Faculty record rather than
+/// fields on it, so adding this year's work never means duplicating a person.
+model FacultyAchievement {
+  id        Int                    @id @default(autoincrement())
+  facultyId Int
+  type      FacultyAchievementType
+  title     String
+  /// Journal, conference, publisher, or the authority that granted it.
+  detail    String?
+  /// DOI, ISSN/ISBN, patent or application number - whatever identifies it.
+  referenceNo String?
+  /// Date of publication, or date of issue for a patent. Nullable because
+  /// older records are often remembered only by year, and a filed-but-not-yet
+  /// granted patent has no issue date at all.
+  date      DateTime?
+  /// Free text so "Granted", "Filed", "Published" all fit without a migration.
+  status    String?
+  url       String?
+  sortOrder Int                    @default(0)
+  isActive  Boolean                @default(true)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  faculty        Faculty @relation("FacultyAchievement_Faculty", fields: [facultyId], references: [id], onDelete: Cascade)
+  deletedByAdmin Admin?  @relation("FacultyAchievement_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([facultyId])
+  @@index([type])
   @@index([deletedAt])
 }
 
@@ -308,6 +360,7 @@ model Admin {
   // DATA_MODEL_DESIGN.md §5 for the soft-delete matrix these correspond to.
   deletedNews                 News[]                @relation("News_DeletedBy")
   deletedFaculty              Faculty[]             @relation("Faculty_DeletedBy")
+  deletedFacultyAchievements  FacultyAchievement[]  @relation("FacultyAchievement_DeletedBy")
   deletedPlacements           Placement[]           @relation("Placement_DeletedBy")
   deletedGalleryImages        GalleryImage[]        @relation("GalleryImage_DeletedBy")
   deletedLabs                 Lab[]                 @relation("Lab_DeletedBy")

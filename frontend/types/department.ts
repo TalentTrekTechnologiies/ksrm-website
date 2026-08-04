@@ -28,6 +28,10 @@ export interface HOD {
   email: string;
 }
 export interface FacultyMember {
+  /** CMS record id. Absent on the static fallback data that ships with a
+   *  department page before its faculty load; the profile view needs it to
+   *  fetch that person's publications and patents. */
+  id?: number;
   name: string;
   designation: string;
   qualification: string;
@@ -36,6 +40,8 @@ export interface FacultyMember {
   experience?: string;
   email?: string;
   phone?: string;
+  isHod?: boolean;
+  department?: string;
 }
 export interface Programme {
   name: string;

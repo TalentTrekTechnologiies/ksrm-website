@@ -4,6 +4,7 @@ import { getFacultyPublic, Faculty } from "@/lib/faculty-api"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
 import CmsText from "@/components/CmsText"
+import FacultyGrid from "@/components/faculty/FacultyGrid"
 
 /**
  * The Central Library's staff, shown on the Library page.
@@ -71,47 +72,7 @@ export default function LibraryStaff() {
         <h2 className="lst-title"><CmsText section="library" slot="staff.heading" /></h2>
         <p className="lst-sub"><CmsText section="library" slot="staff.lead" /></p>
 
-        {showPhotos ? (
-          <div className="lst-grid">
-            {staff.map((s) => (
-              <div key={s.id} className={`lst-card${s.isHod ? " head" : ""}`}>
-                <div className="lst-photo">
-                  {s.photoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                    <img
-                      src={s.photoUrl}
-                      alt={s.name}
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none"
-                      }}
-                    />
-                  ) : (
-                    <div className="lst-initials"><p>{initials(s.name)}</p></div>
-                  )}
-                  {s.isHod && <span className="lst-badge">Librarian</span>}
-                </div>
-                <div className="lst-info">
-                  <h3>{s.name}</h3>
-                  <p className="lst-desig">{s.designation}</p>
-                  {s.qualification && <p className="lst-meta">{s.qualification}</p>}
-                  {s.experience && <p className="lst-meta">{s.experience} experience</p>}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="lst-list">
-            {staff.map((s) => (
-              <div key={s.id} className={`lst-row${s.isHod ? " head" : ""}`}>
-                <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: "0 0 2px" }}>
-                  {s.name}
-                </h3>
-                <p className="lst-desig">{s.designation}</p>
-                {s.qualification && <p className="lst-meta">{s.qualification}</p>}
-              </div>
-            ))}
-          </div>
-        )}
+        <FacultyGrid faculty={staff} showPhotos={showPhotos} headLabel="Librarian" />
       </div>
     </section>
   )
