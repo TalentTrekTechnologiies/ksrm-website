@@ -616,10 +616,13 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           margin: 0;
         }
 
+        /* First column matches a faculty card's width so the HOD's photo is
+           the same size as everyone else's, rather than a 320px portrait
+           towering over the grid below it. */
         .dept-hod-grid {
           display: grid;
-          grid-template-columns: 320px 1fr;
-          gap: 48px;
+          grid-template-columns: 213px 1fr;
+          gap: 40px;
         }
         @media (max-width: 768px) {
           .dept-hod-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
@@ -959,7 +962,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
               <div>
                 {isVisible("hod.showPhoto") && (
                 <div style={{
-                  width: "100%", aspectRatio: "3/4", borderRadius: 16, overflow: "hidden",
+                  width: "100%", aspectRatio: "1/1", borderRadius: 10, overflow: "hidden",
                   background: "linear-gradient(135deg, #2B3490, #1e2570)",
                   display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
                 }}>
