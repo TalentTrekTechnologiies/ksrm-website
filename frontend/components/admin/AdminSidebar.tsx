@@ -77,8 +77,8 @@ interface NavItem {
 
 // Only modules that already have a real admin page today - see
 // DATA_MODEL_DESIGN.md's Phase 1B content entities (research, page_content,
-// contact, roles) for modules that exist in the data model and would show a
-// real count on the dashboard, but have no admin CRUD page yet to link to.
+// roles) for modules that exist in the data model and would show a real
+// count on the dashboard, but have no admin CRUD page yet to link to.
 // Adding one is a one-line addition here once that page exists.
 // Faculty/Gallery/Downloads are deliberately NOT in this flat list - all
 // three are department-owned content and are managed exclusively through
@@ -101,6 +101,7 @@ const NAV_ITEMS: NavItem[] = [
   { widgetKey: "career_applications", label: "Job Applications", href: "/admin/careers/applications" },
   { widgetKey: "events", label: "Events", href: "/admin/events" },
   { widgetKey: "committees", label: "Committees", href: "/admin/committees" },
+  { widgetKey: "contact", label: "Contacts", href: "/admin/contacts" },
   {
     widgetKey: "exam_notifications",
     label: "Exam Notifications",

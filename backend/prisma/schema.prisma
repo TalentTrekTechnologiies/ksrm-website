@@ -1467,6 +1467,16 @@ model ContactChannel {
   /// reusable model instead of two.
   departmentId Int?
 
+  /// Only meaningful for the global directory (departmentId: null), where the
+  /// public Contact page renders two visually different blocks from the same
+  /// table: "info" is the single-fact icon row (Address/Phone/Email at the top
+  /// of the page - one of address/phones/emails is set per row), "directory"
+  /// is the office card grid (Principal/Admissions/Exam/Placement - name plus
+  /// its own phones/emails/address). A department's own Contact tab ignores
+  /// this and always renders as one directory-style grid, so it is left at its
+  /// default there rather than exposed as a choice with only one right answer.
+  group String @default("directory")
+
   deletedByAdmin Admin?      @relation("ContactChannel_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
   departmentRef  Department? @relation("ContactChannel_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 

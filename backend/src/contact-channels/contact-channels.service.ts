@@ -21,21 +21,35 @@ export class ContactChannelsService {
   ) {}
 
   // departmentId omitted/null -> the global office directory (unchanged
-  // default); a specific id -> that department's Contact Information.
-  async findAllPublic(departmentId: number | null = null) {
+  // default); a specific id -> that department's Contact Information. `group`
+  // only matters for the global directory - see the schema comment on
+  // ContactChannel.group - and is ignored (both groups returned) when unset,
+  // which is what a department's Contact tab wants.
+  async findAllPublic(departmentId: number | null = null, group?: string) {
     return this.prisma.contactChannel.findMany({
-      where: { departmentId, isActive: true, deletedAt: null },
+      where: {
+        departmentId,
+        isActive: true,
+        deletedAt: null,
+        ...(group && { group }),
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
 
-  async findAllAdmin(departmentId?: number, includeDeleted = false) {
+  // departmentId: undefined -> no department filter at all (every row, rarely
+  // wanted); null -> explicitly the global directory only; a number -> that
+  // department. This three-way distinction is why departmentId is typed
+  // `number | null | undefined` rather than just optional - the controller
+  // has to be able to ask for "global only", which "omitted" cannot express.
+  async findAllAdmin(departmentId?: number | null, includeDeleted = false, group?: string) {
     return this.prisma.contactChannel.findMany({
       where: {
         ...(departmentId !== undefined && { departmentId }),
         ...(!includeDeleted && { deletedAt: null }),
+        ...(group && { group }),
       },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ group: 'asc' }, { sortOrder: 'asc' }],
     });
   }
 
@@ -50,10 +64,18 @@ export class ContactChannelsService {
   }
 
   async create(dto: CreateContactChannelDto, admin: RequestAdmin, requestId?: string) {
+    // Scoped by group too, so a new office card doesn't inherit a sort
+    // position from however many info-row cards already exist alongside it -
+    // the two groups are separate visual lists on the page and should each
+    // start their own count.
     const sortOrder =
       dto.sortOrder ??
       (await this.prisma.contactChannel.count({
-        where: { departmentId: dto.departmentId ?? null, deletedAt: null },
+        where: {
+          departmentId: dto.departmentId ?? null,
+          group: dto.group ?? 'directory',
+          deletedAt: null,
+        },
       }));
 
     const created = await this.prisma.contactChannel.create({

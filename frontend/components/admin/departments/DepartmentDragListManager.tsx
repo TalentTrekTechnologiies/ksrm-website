@@ -14,20 +14,28 @@ import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
  * its own field set (renderFields) and DTO mapping; this component owns
  * loading, the drag-reorder, save/delete/restore plumbing and error
  * display so that plumbing is written once, not five times.
+ *
+ * `D` is the department-id type, defaulting to `number` - what every existing
+ * tab already uses, unaffected by this. The one exception is the global
+ * Contacts directory (Admin -> Contacts), which isn't scoped to a department
+ * at all and passes `D = number | null` explicitly. Either way `departmentId`
+ * is passed straight through to the caller-supplied fetchAdmin/
+ * buildCreateDto, so this component never needs to know what a department id
+ * means for them.
  */
-export interface DragListManagerConfig<T extends CmsDragListItem & { version: number }, F> {
+export interface DragListManagerConfig<T extends CmsDragListItem & { version: number }, F, D = number> {
   title: string
   description?: string
-  departmentId: number
+  departmentId: D
   emptyForm: F
-  fetchAdmin: (departmentId: number, includeDeleted: boolean) => Promise<T[]>
+  fetchAdmin: (departmentId: D, includeDeleted: boolean) => Promise<T[]>
   create: (dto: any) => Promise<T>
   update: (id: number, dto: any) => Promise<T>
   del: (id: number) => Promise<T>
   restore: (id: number) => Promise<T>
   reorder: (items: { id: number; sortOrder: number }[]) => Promise<T[]>
   mapToForm: (item: T) => F
-  buildCreateDto: (form: F, departmentId: number) => Record<string, unknown>
+  buildCreateDto: (form: F, departmentId: D) => Record<string, unknown>
   buildUpdateDto: (form: F) => Record<string, unknown>
   renderFields: (form: F, setForm: (f: F) => void) => ReactNode
   renderRow: (item: T) => ReactNode
@@ -36,8 +44,8 @@ export interface DragListManagerConfig<T extends CmsDragListItem & { version: nu
   addLabel?: string
 }
 
-export default function DepartmentDragListManager<T extends CmsDragListItem & { version: number }, F>(
-  config: DragListManagerConfig<T, F>,
+export default function DepartmentDragListManager<T extends CmsDragListItem & { version: number }, F, D = number>(
+  config: DragListManagerConfig<T, F, D>,
 ) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

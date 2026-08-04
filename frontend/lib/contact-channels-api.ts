@@ -1,8 +1,20 @@
 import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
 
+/**
+ * Only meaningful for the global office directory (departmentId: null). The
+ * public Contact page renders two visually different blocks from this same
+ * table: "info" is the single-fact icon row at the top (Address/Phone/Email -
+ * one of address/phones/emails set per row), "directory" is the office card
+ * grid below it (Principal/Admissions/Exam/Placement - a name plus its own
+ * phones/emails/address). A department's own Contact tab ignores this and
+ * always renders as one directory-style grid.
+ */
+export type ContactChannelGroup = "info" | "directory";
+
 export interface ContactChannel {
   id: number;
   departmentId: number | null;
+  group: string;
   name: string;
   phones: string[];
   emails: string[];
@@ -18,6 +30,7 @@ export interface ContactChannel {
 export interface ContactChannelInput {
   /** Omit for the global office directory; set for one department's Contact tab. */
   departmentId?: number;
+  group?: ContactChannelGroup;
   name: string;
   phones?: string[];
   emails?: string[];
@@ -27,15 +40,33 @@ export interface ContactChannelInput {
   isActive?: boolean;
 }
 
-export function getContactChannelsPublic(departmentId?: number): Promise<ContactChannel[]> {
-  const query = departmentId !== undefined ? `?departmentId=${departmentId}` : "";
+export function getContactChannelsPublic(
+  departmentId?: number,
+  group?: ContactChannelGroup,
+): Promise<ContactChannel[]> {
+  const params = new URLSearchParams();
+  if (departmentId !== undefined) params.set("departmentId", String(departmentId));
+  if (group) params.set("group", group);
+  const query = params.toString() ? `?${params.toString()}` : "";
   return apiGet<ContactChannel[]>(`/contact-channels${query}`);
 }
 
-export function getContactChannelsAdmin(departmentId?: number, includeDeleted = false): Promise<ContactChannel[]> {
+/**
+ * `departmentId`: omit for no department filter (every row, rarely wanted);
+ * pass `null` explicitly for the global directory only; pass a number for one
+ * department. `undefined` and `null` are genuinely different requests here -
+ * see the backend controller's own comment on why.
+ */
+export function getContactChannelsAdmin(
+  departmentId?: number | null,
+  includeDeleted = false,
+  group?: ContactChannelGroup,
+): Promise<ContactChannel[]> {
   const params = new URLSearchParams();
-  if (departmentId !== undefined) params.set("departmentId", String(departmentId));
+  if (departmentId === null) params.set("global", "true");
+  else if (departmentId !== undefined) params.set("departmentId", String(departmentId));
   if (includeDeleted) params.set("includeDeleted", "true");
+  if (group) params.set("group", group);
   const query = params.toString() ? `?${params.toString()}` : "";
   return apiGet<ContactChannel[]>(`/contact-channels/admin${query}`);
 }

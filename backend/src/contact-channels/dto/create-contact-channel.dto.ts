@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 // Serves both the global office directory (departmentId omitted/null -
 // Principal/Admissions/Exam/Placement/Main) and a single department's
@@ -7,6 +7,13 @@ export class CreateContactChannelDto {
   @IsOptional()
   @IsInt()
   departmentId?: number;
+
+  // Only meaningful for the global directory - see the schema comment on
+  // ContactChannel.group. A department's Contact tab never sends this and
+  // the column default ("directory") is what it means there.
+  @IsOptional()
+  @IsIn(['info', 'directory'])
+  group?: string;
 
   @IsString()
   @MaxLength(120)

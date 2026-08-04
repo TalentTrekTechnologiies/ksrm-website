@@ -29,10 +29,16 @@ export class ContactChannelsController {
 
   // No departmentId -> the global office directory (Principal/Admissions/
   // Exam/Placement/Main). departmentId set -> that department's Contact tab.
+  // `group` narrows the global directory to one of its two on-page blocks
+  // (info/directory) - see the schema comment on ContactChannel.group.
   @Get()
-  findAllPublic(@Query('departmentId') departmentId?: string) {
+  findAllPublic(
+    @Query('departmentId') departmentId?: string,
+    @Query('group') group?: string,
+  ) {
     return this.contactChannelsService.findAllPublic(
       departmentId ? parseInt(departmentId) : null,
+      group,
     );
   }
 
@@ -41,12 +47,16 @@ export class ContactChannelsController {
   @RequirePermission('contact.view')
   findAllAdmin(
     @Query('departmentId') departmentId?: string,
+    // Explicit flag rather than overloading departmentId, because "global
+    // only" (departmentId IS NULL) and "no filter" (every department mixed
+    // together) are both real, different admin views and a query string can't
+    // otherwise tell "omitted" from "null".
+    @Query('global') global?: string,
     @Query('includeDeleted') includeDeleted?: string,
+    @Query('group') group?: string,
   ) {
-    return this.contactChannelsService.findAllAdmin(
-      departmentId ? parseInt(departmentId) : undefined,
-      includeDeleted === 'true',
-    );
+    const scope = global === 'true' ? null : departmentId ? parseInt(departmentId) : undefined;
+    return this.contactChannelsService.findAllAdmin(scope, includeDeleted === 'true', group);
   }
 
   @Post()

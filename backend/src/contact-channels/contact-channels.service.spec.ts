@@ -69,17 +69,97 @@ describe('ContactChannelsService', () => {
         orderBy: { sortOrder: 'asc' },
       });
     });
+
+    // The public Contact page fetches the info row and the office grid
+    // separately so it can render them as the two different-looking blocks
+    // they are.
+    it('narrows to one group when asked', async () => {
+      prisma.contactChannel.findMany.mockResolvedValue([]);
+
+      await service.findAllPublic(null, 'info');
+
+      expect(prisma.contactChannel.findMany).toHaveBeenCalledWith({
+        where: { departmentId: null, isActive: true, deletedAt: null, group: 'info' },
+        orderBy: { sortOrder: 'asc' },
+      });
+    });
+  });
+
+  describe('findAllAdmin', () => {
+    // undefined, null and a number are three different scopes - see the
+    // service's own comment on why "omitted" cannot stand in for "global only".
+    it('applies no department filter when omitted', async () => {
+      prisma.contactChannel.findMany.mockResolvedValue([]);
+
+      await service.findAllAdmin();
+
+      expect(prisma.contactChannel.findMany).toHaveBeenCalledWith({
+        where: { deletedAt: null },
+        orderBy: [{ group: 'asc' }, { sortOrder: 'asc' }],
+      });
+    });
+
+    it('scopes to the global directory only when departmentId is explicitly null', async () => {
+      prisma.contactChannel.findMany.mockResolvedValue([]);
+
+      await service.findAllAdmin(null);
+
+      expect(prisma.contactChannel.findMany).toHaveBeenCalledWith({
+        where: { departmentId: null, deletedAt: null },
+        orderBy: [{ group: 'asc' }, { sortOrder: 'asc' }],
+      });
+    });
+
+    it('scopes to one department when an id is given', async () => {
+      prisma.contactChannel.findMany.mockResolvedValue([]);
+
+      await service.findAllAdmin(7);
+
+      expect(prisma.contactChannel.findMany).toHaveBeenCalledWith({
+        where: { departmentId: 7, deletedAt: null },
+        orderBy: [{ group: 'asc' }, { sortOrder: 'asc' }],
+      });
+    });
+
+    // The Contacts admin page renders the info row and the office grid as two
+    // independent CmsDragList instances - each must fetch only its own group,
+    // or a card added to one would appear editable in the other's list too.
+    it('narrows to one group when asked', async () => {
+      prisma.contactChannel.findMany.mockResolvedValue([]);
+
+      await service.findAllAdmin(null, false, 'info');
+
+      expect(prisma.contactChannel.findMany).toHaveBeenCalledWith({
+        where: { departmentId: null, deletedAt: null, group: 'info' },
+        orderBy: [{ group: 'asc' }, { sortOrder: 'asc' }],
+      });
+    });
   });
 
   describe('create', () => {
-    it('auto-assigns sortOrder scoped to departmentId (null for global rows)', async () => {
+    it('auto-assigns sortOrder scoped to departmentId and group (null/"directory" for global rows)', async () => {
       prisma.contactChannel.count.mockResolvedValue(2);
       prisma.contactChannel.create.mockResolvedValue({ id: 5, sortOrder: 2 });
 
       await service.create({ name: 'Principal Office' } as any, admin, undefined);
 
       expect(prisma.contactChannel.count).toHaveBeenCalledWith({
-        where: { departmentId: null, deletedAt: null },
+        where: { departmentId: null, group: 'directory', deletedAt: null },
+      });
+    });
+
+    // The info row (Address/Phone/Email at the top of the page) and the
+    // office directory grid are separate lists on the page, so a new info
+    // card must not inherit a position from however many office cards
+    // already exist.
+    it('counts only within the same group when assigning sortOrder', async () => {
+      prisma.contactChannel.count.mockResolvedValue(0);
+      prisma.contactChannel.create.mockResolvedValue({ id: 6, sortOrder: 0 });
+
+      await service.create({ name: 'Address', group: 'info' } as any, admin, undefined);
+
+      expect(prisma.contactChannel.count).toHaveBeenCalledWith({
+        where: { departmentId: null, group: 'info', deletedAt: null },
       });
     });
   });

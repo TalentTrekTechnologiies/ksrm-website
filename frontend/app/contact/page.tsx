@@ -1,34 +1,7 @@
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
-
-﻿import type { ReactElement } from "react";
-
-const infoCards = [
-  { icon: "map-pin", title: "Address", content: "K.S.R.M. College of Engineering, Kadapa – 516 003, Andhra Pradesh, India", isLink: false },
-  { icon: "phone", title: "Phone", content: "+91 9000073434", href: "tel:+91 9000073434" },
-  { icon: "phone", title: "Alternate", content: "08562 295972", href: "tel:08562 295972" },
-  { icon: "phone", title: "Alternate", content: "+91 8143731980", href: "tel:+91 8143731980" },
-  { icon: "mail", title: "Email", content: "ksrmcengg@yahoo.co.in", href: "mailto:ksrmcengg@yahoo.co.in" },
-  { icon: "mail", title: "Alternate", content: "principal@ksrmce.ac.in", href: "mailto:principal@ksrmce.ac.in" },
-];
-
-const deptContacts = [
-  { title: "Principal Office", phone: "+91 9000073434", phoneHref: "tel:+91 9000073434", email: "principal@ksrmce.ac.in" },
-  { title: "Admissions Office", phone: "+91 8143731980", phoneHref: "tel:+91 8143731980", email: "ksrmcengg@yahoo.co.in" },
-  { title: "Examination Section", phone: "08562 295972", phoneHref: "tel:08562 295972", email: "principal@ksrmce.ac.in" },
-  { title: "Training & Placement", phone: "+91 9000073434", phoneHref: "tel:+91 9000073434", email: "principal@ksrmce.ac.in" },
-];
-
-function IconMapPin() {
-  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /><circle cx="12" cy="10" r="3" /></svg>);
-}
-function IconPhone() {
-  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></svg>);
-}
-function IconMail() {
-  return (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg>);
-}
-const icons: Record<string, () => ReactElement> = { "map-pin": IconMapPin, phone: IconPhone, mail: IconMail };
+import ContactInfoRow from "@/components/contact/ContactInfoRow";
+import OfficeDirectory from "@/components/contact/OfficeDirectory";
 
 export default function ContactPage() {
   return (
@@ -76,18 +49,7 @@ export default function ContactPage() {
         <div className="responsive-container">
           <div className="contact-main-grid">
             <div>
-              {infoCards.map((c, i) => {
-                const Icon = icons[c.icon];
-                return (
-                  <div className="contact-info-card" key={c.title + i}>
-                    <div className="contact-info-icon"><Icon /></div>
-                    <div className="contact-info-content">
-                      <h3><CmsText section="contact" slot={`infoCards.${i}.title`} /></h3>
-                      {c.href ? <a href={c.href}><CmsText section="contact" slot={`infoCards.${i}.content`} /></a> : <p><CmsText section="contact" slot={`infoCards.${i}.content`} /></p>}
-                    </div>
-                  </div>
-                );
-              })}
+              <ContactInfoRow />
             </div>
             <div className="contact-map">
               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0g4LCG4LCr4LGNIOCwh-CwguCwnOCwv-CwqOCxgOCwsOCwv-CwguCwl-CxjQ!5e0!3m2!1ste!2sin!4v1479195998208" />
@@ -100,15 +62,7 @@ export default function ContactPage() {
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="contact" slot="department-contacts" /></h2>
           <div className="contact-departments-grid">
-            {deptContacts.map((d, _i) => (
-              <div className="contact-dept-card" key={d.title}>
-                <h3><CmsText section="contact" slot={`deptContacts.${_i}.title`} /></h3>
-                <p>Phone:</p>
-                <a href={d.phoneHref}>{d.phone}</a>
-                <p>Email:</p>
-                <a href={`mailto:${d.email}`}><CmsText section="contact" slot={`deptContacts.${_i}.email`} /></a>
-              </div>
-            ))}
+            <OfficeDirectory />
           </div>
         </div>
       </section>
@@ -133,7 +87,7 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-    
+
       <PageResources section="contact" />
       </main>
   );
