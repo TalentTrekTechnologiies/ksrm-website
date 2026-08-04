@@ -117,11 +117,11 @@ export default function ResearchTab({ departmentId }: { departmentId: number }) 
       const dto = {
         title: form.title,
         authors: form.authors,
-        journal: form.journal || undefined,
+        journal: form.journal || null,
         year: form.year,
         type: form.type,
-        doiOrLink: form.doiOrLink || undefined,
-        attachmentUrl: form.attachmentUrl || undefined,
+        doiOrLink: form.doiOrLink || null,
+        attachmentUrl: form.attachmentUrl || null,
         mediaId: form.mediaId,
         isActive: form.isActive,
       }

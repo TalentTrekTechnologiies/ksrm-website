@@ -130,9 +130,9 @@ function PlacementsManagerInner() {
         package: form.package,
         department: form.department,
         year: form.year,
-        imageUrl: form.imageUrl || undefined,
+        imageUrl: form.imageUrl || null,
         mediaId: form.mediaId,
-        companyLogoUrl: form.companyLogoUrl || undefined,
+        companyLogoUrl: form.companyLogoUrl || null,
         companyLogoMediaId: form.companyLogoMediaId,
         isPublished: form.isPublished,
       }

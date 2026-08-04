@@ -166,12 +166,12 @@ function ExamNotificationsManagerInner() {
     try {
       const dto = {
         title: form.title,
-        description: form.description || undefined,
-        buttonText: form.buttonText || undefined,
-        buttonUrl: form.buttonUrl || undefined,
-        academicYear: form.academicYear || undefined,
+        description: form.description || null,
+        buttonText: form.buttonText || null,
+        buttonUrl: form.buttonUrl || null,
+        academicYear: form.academicYear || null,
         startDate: form.startDate,
-        endDate: form.endDate || undefined,
+        endDate: form.endDate || null,
         isActive: form.isActive,
       }
       if (editing) {

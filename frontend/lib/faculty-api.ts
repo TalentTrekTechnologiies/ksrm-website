@@ -26,22 +26,28 @@ export interface Faculty {
   version: number;
 }
 
+/**
+ * Optional text fields accept `null` as well as a string, and the difference
+ * matters on update: omitting a key leaves the stored value untouched, so a
+ * field the admin cleared has to be sent as an explicit `null` to actually be
+ * removed. Sending `undefined` there silently kept the old value.
+ */
 export interface FacultyInput {
   name: string;
   designation: string;
   qualification: string;
   department: string;
   departmentId?: number;
-  specialization?: string;
-  experience?: string;
-  email?: string;
-  phone?: string;
-  photoUrl?: string;
+  specialization?: string | null;
+  experience?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  photoUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing photoUrl. */
   mediaId?: number | null;
   isHod?: boolean;
-  welcomeMessage?: string;
+  welcomeMessage?: string | null;
   sortOrder?: number;
 }
 

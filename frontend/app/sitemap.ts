@@ -21,7 +21,6 @@ const STATIC_PATHS = [
   "/academics/admissions",
   "/academics/courses-intake",
   "/academics/diploma",
-  "/academics/faculty",
   "/academics/fee-structure",
   "/academics/regulations",
   "/academics/syllabus",

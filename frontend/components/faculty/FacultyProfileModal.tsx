@@ -5,8 +5,10 @@ import { Faculty } from "@/lib/faculty-api"
 import {
   ACHIEVEMENT_TYPES,
   FacultyAchievement,
+  FacultyAchievementType,
   getFacultyAchievementsPublic,
 } from "@/lib/faculty-achievements-api"
+import { getResearchPublic, ResearchRecord } from "@/lib/research-api"
 
 /**
  * The full profile behind a faculty card's "View Profile".
@@ -58,18 +60,25 @@ export default function FacultyProfileModal({
   const [achievements, setAchievements] = useState<FacultyAchievement[] | null>(
     faculty.id ? null : [],
   )
+  const [research, setResearch] = useState<ResearchRecord[]>([])
 
   useEffect(() => {
     if (!faculty.id) return
     let cancelled = false
-    getFacultyAchievementsPublic(faculty.id)
-      .then((rows) => {
-        if (!cancelled) setAchievements(rows)
-      })
-      .catch(() => {
-        // A profile is still worth showing without its publication list.
-        if (!cancelled) setAchievements([])
-      })
+    // Two separate stores hold a person's work, and both are edited from the
+    // same faculty form: FacultyAchievement (the "Profile Records" editor) and
+    // Research (the "Department Research Output" editor, which also feeds the
+    // Research page). A patent entered in either one is a patent, so this
+    // reads both rather than leaving whichever the admin happened to pick
+    // invisible here. Failure of one must not hide the other, hence allSettled.
+    Promise.allSettled([
+      getFacultyAchievementsPublic(faculty.id),
+      getResearchPublic(undefined, faculty.id),
+    ]).then(([a, r]) => {
+      if (cancelled) return
+      setAchievements(a.status === "fulfilled" ? a.value : [])
+      setResearch(r.status === "fulfilled" ? r.value : [])
+    })
     return () => {
       cancelled = true
     }
@@ -89,10 +98,47 @@ export default function FacultyProfileModal({
     }
   }, [onClose])
 
-  const grouped = ACHIEVEMENT_TYPES.map((t) => ({
-    ...t,
-    items: (achievements ?? []).filter((a) => a.type === t.value),
-  })).filter((g) => g.items.length > 0)
+  // A Research row's `type` is free text ("Publication" / "Patent" / "Project")
+  // rather than the achievement enum, so map it onto the same headings and
+  // present both stores as one list. Anything unrecognised lands under
+  // Publications rather than being dropped.
+  const researchAsAchievements: FacultyAchievement[] = research
+    .filter((r) => r.isActive !== false)
+    .map((r) => {
+      const t = (r.type || "").toUpperCase()
+      const type: FacultyAchievementType =
+        t === "PATENT" ? "PATENT" : t === "BOOK" ? "BOOK" : "PUBLICATION"
+      return {
+        id: -r.id, // negative so it cannot collide with a FacultyAchievement id
+        facultyId: r.facultyId ?? faculty.id,
+        type,
+        title: r.title,
+        detail: r.journal || null,
+        referenceNo: null,
+        date: r.year ? `${r.year}-01-01T00:00:00.000Z` : null,
+        status: null,
+        url: r.doiOrLink || r.attachmentUrl || null,
+        sortOrder: 0,
+        isActive: true,
+        deletedAt: null,
+        deletedBy: null,
+        version: 1,
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+      }
+    })
+
+  const allRecords = [...(achievements ?? []), ...researchAsAchievements]
+
+  const grouped = ACHIEVEMENT_TYPES
+    // DETAIL rows belong with Experience and Phone below, not as an
+    // achievement list of their own.
+    .filter((t) => t.value !== "DETAIL")
+    .map((t) => ({
+      ...t,
+      items: allRecords.filter((a) => a.type === t.value),
+    }))
+    .filter((g) => g.items.length > 0)
 
   const details: { label: string; value: string | null }[] = [
     { label: "Designation", value: faculty.designation },
@@ -102,6 +148,11 @@ export default function FacultyProfileModal({
     { label: "Experience", value: faculty.experience },
     { label: "Email", value: faculty.email },
     { label: "Phone", value: faculty.phone },
+    // Anything the fixed columns do not cover, added from the CMS as an
+    // "Extra Detail" and appearing here in the order it was entered.
+    ...(achievements ?? [])
+      .filter((a) => a.type === "DETAIL")
+      .map((a) => ({ label: a.title, value: a.detail })),
   ].filter((d) => d.value)
 
   return (

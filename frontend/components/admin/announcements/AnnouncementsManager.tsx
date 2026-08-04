@@ -180,11 +180,11 @@ function AnnouncementsManagerInner() {
     try {
       const dto = {
         title: form.title,
-        shortText: form.shortText || undefined,
-        description: form.description || undefined,
-        badge: form.badge || undefined,
+        shortText: form.shortText || null,
+        description: form.description || null,
+        badge: form.badge || null,
         priority: form.priority,
-        linkUrl: form.linkUrl || undefined,
+        linkUrl: form.linkUrl || null,
         openInNewTab: form.openInNewTab,
         startDate: form.startDate ? new Date(form.startDate).toISOString() : undefined,
         endDate: form.endDate ? new Date(form.endDate).toISOString() : undefined,

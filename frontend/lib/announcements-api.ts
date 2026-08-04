@@ -72,16 +72,16 @@ export interface AnnouncementPlacementInput {
 
 export interface AnnouncementInput {
   title: string
-  shortText?: string
-  description?: string
+  shortText?: string | null
+  description?: string | null
   icon?: string
-  badge?: string
+  badge?: string | null
   priority?: AnnouncementPriority
   color?: string
   source?: AnnouncementSource
   sourceModule?: string
   sourceRecordId?: number
-  linkUrl?: string
+  linkUrl?: string | null
   openInNewTab?: boolean
   startDate?: string
   endDate?: string

@@ -29,20 +29,20 @@ export interface EventItem {
 
 export interface EventInput {
   title: string;
-  description?: string;
+  description?: string | null;
   eventDate: string;
-  endDate?: string;
-  location?: string;
-  imageUrl?: string;
+  endDate?: string | null;
+  location?: string | null;
+  imageUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
-  category?: string;
+  category?: string | null;
   sortOrder?: number;
   isActive?: boolean;
-  videoUrl?: string;
+  videoUrl?: string | null;
   videoMediaId?: number | null;
-  documentUrl?: string;
+  documentUrl?: string | null;
   documentMediaId?: number | null;
 
 }

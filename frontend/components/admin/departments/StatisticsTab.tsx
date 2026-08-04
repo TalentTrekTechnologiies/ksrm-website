@@ -40,13 +40,13 @@ export default function StatisticsTab({ departmentId }: { departmentId: number }
         departmentId,
         label: form.label,
         value: form.value,
-        suffix: form.suffix || undefined,
+        suffix: form.suffix || null,
         isActive: form.isActive,
       })}
       buildUpdateDto={(form) => ({
         label: form.label,
         value: form.value,
-        suffix: form.suffix || undefined,
+        suffix: form.suffix || null,
         isActive: form.isActive,
       })}
       isValid={(form) => !!form.label && !Number.isNaN(form.value)}

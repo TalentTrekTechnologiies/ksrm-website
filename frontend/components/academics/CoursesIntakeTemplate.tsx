@@ -5,6 +5,22 @@ import Container from "@/components/ui/Container"
 import { coursesIntake } from "@/data/academics/coursesIntake"
 import { Award, BookOpen } from "lucide-react"
 import Link from "next/link"
+import CmsText from "@/components/CmsText"
+import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api"
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api"
+import { useLiveData } from "@/lib/use-live-data"
+
+/**
+ * Headings for each CMS level, in the order they should appear. The static
+ * table used free-text headings ("B.Tech (4 Years)"); these are the same
+ * groupings keyed off the ProgrammeLevel enum instead.
+ */
+const LEVEL_GROUPS: { level: "UG" | "PG" | "DIPLOMA" | "PHD"; label: string; regulation: string }[] = [
+  { level: "UG", label: "B.Tech (4 Years)", regulation: "R23" },
+  { level: "PG", label: "M.Tech / MBA (2 Years)", regulation: "R23" },
+  { level: "DIPLOMA", label: "Diploma (3 Years)", regulation: "SBTET" },
+  { level: "PHD", label: "Ph.D (Research)", regulation: "JNTUA" },
+]
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -19,6 +35,48 @@ const stagger = {
 }
 
 export default function CoursesIntakeTemplate() {
+  // Every programme across every department. Adding one under Departments ->
+  // Programmes (with its intake) makes it appear here, so the seat counts on
+  // this page and on the department's own page can no longer disagree. The
+  // fetcher never rejects: an unreachable API falls back to the built-in
+  // table rather than emptying the page.
+  const cmsProgrammes = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
+    [],
+  )
+
+  const cmsGroups = LEVEL_GROUPS.map((g) => ({
+    level: g.label,
+    regulation: g.regulation,
+    intake: (cmsProgrammes ?? [])
+      .filter((p) => p.level === g.level)
+      .map((p) => ({
+        branch: p.name,
+        // Falls back to the department's short name when no code is set, so
+        // the column is never blank for want of a value someone has not typed.
+        code: p.code || p.department?.shortName || p.department?.name || "",
+        intake: p.intake,
+        // Never inferred - an accreditation claim is only shown if an admin
+        // actually recorded one against this programme.
+        accreditation: p.accreditation ?? "",
+      })),
+  })).filter((g) => g.intake.length > 0)
+
+  // Real CMS data wins; otherwise the page reads exactly as it always has.
+  const programmes = cmsGroups.length > 0 ? cmsGroups : coursesIntake.programmes
+
+  // The admissions phone and email come from the Contacts module rather than
+  // a copy kept here: the college's number already lives there, and a second
+  // copy is the thing that goes stale. Falls back to the built-in values when
+  // no matching contact record exists.
+  const contacts = useLiveData<ContactChannel[]>(
+    () => getContactChannelsPublic(undefined, "directory").catch(() => [] as ContactChannel[]),
+    [],
+  )
+  const admissions = (contacts ?? []).find((c) => /admission/i.test(c.name))
+  const admissionsPhone = admissions?.phones?.join(" / ") || coursesIntake.contactAdmissions.phone
+  const admissionsEmail = admissions?.emails?.[0] || coursesIntake.contactAdmissions.email
+
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
@@ -251,7 +309,7 @@ export default function CoursesIntakeTemplate() {
                   margin: 0,
                 }}
               >
-                {coursesIntake.pageTitle}
+                <CmsText section="academics.courses-intake" slot="courses-offered-intake" />
               </motion.h1>
               <motion.p
                 variants={fadeUp}
@@ -264,7 +322,7 @@ export default function CoursesIntakeTemplate() {
                   maxWidth: 700,
                 }}
               >
-                {coursesIntake.subtitle}
+                <CmsText section="academics.courses-intake" slot="aicte-approved-programmes-with-strong" />
               </motion.p>
 
               <motion.div variants={fadeUp} className="ci-breadcrumb">
@@ -272,7 +330,7 @@ export default function CoursesIntakeTemplate() {
                 <span>/</span>
                 <Link href="/academics">Academics</Link>
                 <span>/</span>
-                <span>{coursesIntake.pageTitle}</span>
+                <span><CmsText section="academics.courses-intake" slot="courses-offered-intake" /></span>
               </motion.div>
             </motion.div>
           </div>
@@ -284,7 +342,9 @@ export default function CoursesIntakeTemplate() {
         {coursesIntake.approvals.map((approval, idx) => (
           <motion.div key={idx} variants={fadeUp} className="ci-approval-badge">
             <Award size={16} />
-            {approval}
+            {/* The array only fixes how many badges render; each label is
+                editable at Page Content -> Academics -> Courses & Intake. */}
+            <CmsText section="academics.courses-intake" slot={`approvals.${idx}`} />
           </motion.div>
         ))}
       </motion.section>
@@ -302,16 +362,16 @@ export default function CoursesIntakeTemplate() {
               variants={fadeUp}
               style={{ color: "#555", fontSize: 16, lineHeight: 1.8, margin: 0, maxWidth: 820 }}
             >
-              {coursesIntake.intro}
+              <CmsText section="academics.courses-intake" slot="k-s-r-m-college" multiline />
             </motion.p>
 
             <motion.div variants={fadeUp} className="ci-eapcet-box">
               <div className="ci-eapcet-label">Common Entrance Test Code</div>
               <div className="ci-eapcet-code">
                 <BookOpen size={40} style={{ display: "inline", marginRight: 12 }} />
-                {coursesIntake.eapcetCode}
+                <CmsText section="academics.courses-intake" slot="eapcetCode" />
               </div>
-              <p style={{ margin: "8px 0 0", opacity: 0.9 }}>Use this code during EAPCET/ICET/PGECET counselling</p>
+              <p style={{ margin: "8px 0 0", opacity: 0.9 }}><CmsText section="academics.courses-intake" slot="use-this-code-during-eapcet" /></p>
             </motion.div>
           </motion.div>
         </Container>
@@ -326,7 +386,7 @@ export default function CoursesIntakeTemplate() {
             viewport={{ once: true, amount: 0.3 }}
             variants={stagger}
           >
-            {coursesIntake.programmes.map((prog, progIdx) => {
+            {programmes.map((prog, progIdx) => {
               const totalIntake = prog.intake.reduce((sum, entry) => sum + entry.intake, 0)
 
               return (
@@ -384,21 +444,21 @@ export default function CoursesIntakeTemplate() {
             className="ci-contact-card"
           >
             <div className="ci-contact-item">
-              <h4>{coursesIntake.contactAdmissions.office}</h4>
+              <h4><CmsText section="academics.courses-intake" slot="admissions-office" /></h4>
               <p>For enquiries regarding courses and admissions</p>
             </div>
             <div className="ci-contact-item">
               <h4>Phone</h4>
               <p>
-                <a href={`tel:${coursesIntake.contactAdmissions.phone.split("/")[0].trim()}`}>
-                  {coursesIntake.contactAdmissions.phone}
+                <a href={`tel:${admissionsPhone.split("/")[0].trim()}`}>
+                  {admissionsPhone}
                 </a>
               </p>
             </div>
             <div className="ci-contact-item">
               <h4>Email</h4>
               <p>
-                <a href={`mailto:${coursesIntake.contactAdmissions.email}`}>{coursesIntake.contactAdmissions.email}</a>
+                <a href={`mailto:${admissionsEmail}`}>{admissionsEmail}</a>
               </p>
             </div>
           </motion.div>

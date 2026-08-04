@@ -40,6 +40,8 @@ const navItems: NavItem[] = [
     children: [
       { label: "About KSRMCE", href: "/about#about-ksrmce" },
       { label: "Vision & Mission", href: "/about#vision" },
+      { label: "Sri Kandula Obula Reddy Charities", href: "/about#charities" },
+      { label: "Governing Body", href: "/about#governing-body" },
       { label: "Leadership", href: "/about#leadership" },
       { label: "  ↳ Correspondent and Secretary", href: "/about/correspondent" },
       { label: "  ↳ Chairman", href: "/about/chairman" },
@@ -71,7 +73,6 @@ const navItems: NavItem[] = [
       { label: "Academic Calendar", href: "/academics/academic-calendar" },
       { label: "Syllabus", href: "/academics/syllabus" },
       { label: "Regulations", href: "/academics/regulations" },
-      { label: "Faculty", href: "/academics/faculty" },
     ],
   },
   {
@@ -127,7 +128,6 @@ const navItems: NavItem[] = [
       { label: "Accreditation", href: "/accreditation" },
       { label: "UGC Autonomous", href: "/mandatory-disclosure#doc-ugc-autonomous" },
       { label: "Other Statutory Documents", href: "/mandatory-disclosure#doc-other-statutory-documents" },
-      { label: "AICTE Feedback", href: "https://www.aicte-india.org/feedback/" },
     ],
   },
   {
@@ -223,6 +223,15 @@ export default function Navbar() {
         }
         .navbar-desktop { scrollbar-width: none; -ms-overflow-style: none; }
         .navbar-desktop::-webkit-scrollbar { display: none; }
+        /* Centre the row WITHOUT justify-content: center. On a scrolling flex
+           container that centres by pushing overflow equally to both sides,
+           and the left-hand overflow lands at a negative scroll offset that no
+           scrollbar or arrow can reach - which is how "Home" disappeared on
+           narrower screens. Auto margins collapse to zero the moment free
+           space runs out, so the row centres when it fits and starts hard at
+           the left edge when it does not, with every item reachable. */
+        .navbar-desktop > :first-child { margin-left: auto; }
+        .navbar-desktop > :last-child { margin-right: auto; }
         .nav-scroll-arrow {
           position: absolute; top: 0; height: 48px; width: 46px;
           display: flex; align-items: center;
@@ -253,7 +262,7 @@ export default function Navbar() {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             gap: "3px",
             padding: "0 18px",
             height: "48px",

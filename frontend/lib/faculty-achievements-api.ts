@@ -6,7 +6,8 @@ export type FacultyAchievementType =
   | "BOOK"
   | "AWARD"
   | "CERTIFICATION"
-  | "PROFILE_ID";
+  | "PROFILE_ID"
+  | "DETAIL";
 
 export interface FacultyAchievement {
   id: number;
@@ -33,11 +34,11 @@ export interface FacultyAchievementInput {
   facultyId: number;
   type: FacultyAchievementType;
   title: string;
-  detail?: string;
-  referenceNo?: string;
+  detail?: string | null;
+  referenceNo?: string | null;
   date?: string | null;
-  status?: string;
-  url?: string;
+  status?: string | null;
+  url?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }
@@ -53,6 +54,10 @@ export const ACHIEVEMENT_TYPES: { value: FacultyAchievementType; label: string; 
   // the label and detail the value, so any identifier can be recorded without
   // a schema change for each one.
   { value: "PROFILE_ID", label: "ID / Profile", plural: "Researcher IDs & Profiles" },
+  // Anything the fixed Faculty fields do not cover - date of joining,
+  // languages, memberships. title is the label, detail the value, so a new
+  // kind of detail needs no schema change.
+  { value: "DETAIL", label: "Extra Detail", plural: "Additional Details" },
 ];
 
 export function getFacultyAchievementsPublic(

@@ -55,14 +55,14 @@ function KindManager({ departmentId, kind }: { departmentId: number; kind: Depar
         departmentId,
         title: form.title,
         description: form.description,
-        imageUrl: form.imageUrl || undefined,
+        imageUrl: form.imageUrl || null,
         mediaId: form.mediaId,
         isActive: form.isActive,
       })}
       buildUpdateDto={(form) => ({
         title: form.title,
         description: form.description,
-        imageUrl: form.imageUrl || undefined,
+        imageUrl: form.imageUrl || null,
         mediaId: form.mediaId,
         isActive: form.isActive,
       })}

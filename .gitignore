@@ -60,6 +60,14 @@ ksrm-site-updated.zip
 # migration, and the schema stops being reproducible from a fresh clone.
 !backend/prisma/migrations/**/*.sql
 
+# Deployment content scripts are source too: hand-written, reviewed, and
+# carrying no credentials - only INSERTs for CMS content. They have to reach
+# the server to be run, and a git pull is safer than emailing a .sql around.
+# This is NOT a hole in the dump rule above: a pg_dump is named
+# ksrm_db_dump.sql / *.bak and stays ignored.
+!deploy-data.sql
+!import-library-exam-staff.sql
+
 # Media Library uploads - user-uploaded files, served from the backend's own
 # storage root. Reproducible from the running instance, not source.
 backend/storage/

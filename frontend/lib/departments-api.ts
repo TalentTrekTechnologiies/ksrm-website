@@ -31,17 +31,17 @@ export interface Department {
 export interface DepartmentInput {
   slug: string;
   name: string;
-  shortName?: string;
-  tagline?: string;
+  shortName?: string | null;
+  tagline?: string | null;
   intro?: string;
   about: string;
   /** Video shown beside the About text on the department page. */
-  aboutVideoUrl?: string;
-  heroImageUrl?: string;
+  aboutVideoUrl?: string | null;
+  heroImageUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing heroImageUrl. */
   heroMediaId?: number | null;
-  vision?: string;
+  vision?: string | null;
   mission?: string[];
   establishedYear?: number;
   isActive?: boolean;

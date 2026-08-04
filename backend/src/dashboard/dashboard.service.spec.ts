@@ -18,6 +18,7 @@ describe('DashboardService', () => {
   const countingModels = [
     'faculty',
     'department',
+    'departmentProgramme',
     'news',
     'galleryImage',
     'placement',
@@ -73,13 +74,16 @@ describe('DashboardService', () => {
   describe('getOverview', () => {
     it('includes every widget for a super admin, regardless of permissions', async () => {
       const result = await service.getOverview({ id: 1, isSuperAdmin: true });
-      expect(result.widgets.length).toBe(19);
+      expect(result.widgets.length).toBe(20);
       expect(result.widgets.map((w) => w.key)).toContain('admins');
       expect(result.widgets.map((w) => w.key)).toContain('roles');
       expect(result.widgets.map((w) => w.key)).toContain('careers');
       expect(result.widgets.map((w) => w.key)).toContain('events');
       expect(result.widgets.map((w) => w.key)).toContain('career_applications');
       expect(result.widgets.map((w) => w.key)).toContain('announcements');
+      // Programmes drive the college-wide Academics and admissions pages, so
+      // they get their own widget and sidebar entry, not just a department tab.
+      expect(result.widgets.map((w) => w.key)).toContain('department_programmes');
     });
 
     it('only includes widgets the admin has <key>.view permission for', async () => {

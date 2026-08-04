@@ -20,7 +20,8 @@ const LINKS = [
   { label: "Regulations", href: "/academics/regulations", blurb: "Academic regulations and examination rules." },
   { label: "Academic Calendar", href: "/academics/academic-calendar", blurb: "Term dates, examinations and holidays." },
   { label: "Fee Structure", href: "/academics/fee-structure", blurb: "Programme-wise tuition and admission fees." },
-  { label: "Faculty", href: "/academics/faculty", blurb: "Faculty across all departments." },
+  // Faculty deliberately absent: it duplicated the CMS-driven faculty already
+  // on each department's page, from a separate hardcoded list that could drift.
   { label: "Admissions", href: "/academics/admissions", blurb: "How to apply and eligibility." },
   { label: "Diploma", href: "/academics/diploma", blurb: "Diploma programmes offered." },
 ];

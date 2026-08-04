@@ -17,10 +17,12 @@ interface FormState {
   name: string
   level: ProgrammeLevel
   intake: number
+  code: string
+  accreditation: string
   isActive: boolean
 }
 
-const emptyForm: FormState = { name: "", level: "UG", intake: NaN, isActive: true }
+const emptyForm: FormState = { name: "", level: "UG", intake: NaN, code: "", accreditation: "", isActive: true }
 
 const LEVEL_OPTIONS: { value: ProgrammeLevel; label: string }[] = [
   { value: "UG", label: "Undergraduate" },
@@ -42,9 +44,27 @@ export default function ProgrammesTab({ departmentId }: { departmentId: number }
       del={deleteDepartmentProgramme}
       restore={restoreDepartmentProgramme}
       reorder={reorderDepartmentProgrammes}
-      mapToForm={(item) => ({ name: item.name, level: item.level, intake: item.intake, isActive: item.isActive })}
-      buildCreateDto={(form, departmentId) => ({ departmentId, ...form })}
-      buildUpdateDto={(form) => ({ ...form })}
+      mapToForm={(item) => ({
+        name: item.name,
+        level: item.level,
+        intake: item.intake,
+        code: item.code ?? "",
+        accreditation: item.accreditation ?? "",
+        isActive: item.isActive,
+      })}
+      // null, not undefined, so clearing a code or accreditation actually
+      // removes it rather than silently leaving the old value in place.
+      buildCreateDto={(form, departmentId) => ({
+        departmentId,
+        ...form,
+        code: form.code.trim() || null,
+        accreditation: form.accreditation.trim() || null,
+      })}
+      buildUpdateDto={(form) => ({
+        ...form,
+        code: form.code.trim() || null,
+        accreditation: form.accreditation.trim() || null,
+      })}
       isValid={(form) => !!form.name && !Number.isNaN(form.intake)}
       getName={(item) => item.name}
       renderRow={(item) => (
@@ -66,6 +86,23 @@ export default function ProgrammesTab({ departmentId }: { departmentId: number }
               options={LEVEL_OPTIONS.map((l) => ({ value: l.value, label: l.label }))}
             />
             <NumberField label="Intake" value={form.intake} onChange={(v) => setForm({ ...form, intake: v })} required />
+          </div>
+          {/* Both feed the Academics -> Courses & Intake table. */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <TextField
+              label="Course code"
+              value={form.code}
+              onChange={(v) => setForm({ ...form, code: v })}
+              placeholder="CSE"
+              helperText="Shown in the Code column. Leave blank to fall back to the department's short name."
+            />
+            <TextField
+              label="Accreditation"
+              value={form.accreditation}
+              onChange={(v) => setForm({ ...form, accreditation: v })}
+              placeholder="NBA Accredited"
+              helperText="Leave blank if this programme is not separately accredited."
+            />
           </div>
           <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
         </>

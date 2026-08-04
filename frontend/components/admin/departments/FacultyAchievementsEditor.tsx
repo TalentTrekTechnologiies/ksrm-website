@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AlertTriangle, Loader2, Plus, Trash2 } from "lucide-react"
 import { TextField, SelectField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
@@ -56,6 +56,7 @@ const FIELD_LABELS: Record<FacultyAchievementType, { detail: string; ref: string
   AWARD: { detail: "Awarded by", ref: "Reference", date: "Date received" },
   CERTIFICATION: { detail: "Issued by", ref: "Certificate number", date: "Date of issue" },
   PROFILE_ID: { detail: "Value", ref: "Reference (optional)", date: "Date added (optional)" },
+  DETAIL: { detail: "Value", ref: "Reference (optional)", date: "Date (optional)" },
 }
 
 function fmtDate(iso: string | null): string {
@@ -81,6 +82,8 @@ export default function FacultyAchievementsEditor({
   const [adding, setAdding] = useState(false)
   const [editing, setEditing] = useState<FacultyAchievement | null>(null)
   const [form, setForm] = useState<FormState>(emptyForm)
+  const formRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   async function refresh() {
     try {
@@ -110,13 +113,28 @@ export default function FacultyAchievementsEditor({
     }
   }, [facultyId])
 
+  /**
+   * Bring this editor's own form into view.
+   *
+   * It sits inside the faculty form, which is itself well down a long page, so
+   * clicking "Patent" could open a form that was entirely below the fold - it
+   * looked as though the button had done nothing.
+   */
+  function revealForm() {
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+    })
+  }
+
   function startAdd(type: FacultyAchievementType) {
     setForm({ ...emptyForm, type })
     setEditing(null)
     setAdding(true)
+    revealForm()
   }
 
   function startEdit(row: FacultyAchievement) {
+    revealForm()
     setForm({
       type: row.type,
       title: row.title,
@@ -143,12 +161,12 @@ export default function FacultyAchievementsEditor({
       const payload = {
         type: form.type,
         title: form.title.trim(),
-        detail: form.detail.trim() || undefined,
-        referenceNo: form.referenceNo.trim() || undefined,
+        detail: form.detail.trim() || null,
+        referenceNo: form.referenceNo.trim() || null,
         // Empty means "not known" rather than a date of zero.
         date: form.date ? new Date(form.date).toISOString() : null,
-        status: form.status.trim() || undefined,
-        url: form.url.trim() || undefined,
+        status: form.status.trim() || null,
+        url: form.url.trim() || null,
       }
       if (editing) {
         await updateFacultyAchievement(editing.id, { ...payload, version: editing.version })
@@ -158,6 +176,12 @@ export default function FacultyAchievementsEditor({
       cancel()
       await refresh()
       notifySaved("Saved.")
+      // The form closes on save, so without this the page jumps back to
+      // wherever it was and the row just added is off-screen - the reason
+      // adding a patent looked like it had not worked.
+      requestAnimationFrame(() => {
+        listRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+      })
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Could not save")
     } finally {
@@ -198,9 +222,10 @@ export default function FacultyAchievementsEditor({
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm font-semibold text-slate-800">Publications, Patents &amp; Achievements</p>
+        <p className="text-sm font-semibold text-slate-800">Profile Records — Publications, Patents &amp; IDs</p>
         <p className="text-xs text-slate-500">
-          Records for {facultyName}. Add each new paper or patent here — there is never a need to create a
+          Records for {facultyName}. <strong>These are what appear when a visitor clicks &ldquo;View Profile&rdquo;</strong> on
+          the public faculty list. Add each new paper or patent here — there is never a need to create a
           second faculty entry for the same person.
         </p>
       </div>
@@ -225,7 +250,7 @@ export default function FacultyAchievementsEditor({
       </div>
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-3 rounded-2xl border border-admin-border bg-white p-4">
+        <div ref={formRef} style={{ boxShadow: "var(--shadow-admin-card)", scrollMarginTop: "16px" }} className="space-y-3 rounded-2xl border border-admin-border bg-white p-4">
           <p className="text-sm font-semibold text-slate-700">
             {editing ? "Edit" : "New"} {ACHIEVEMENT_TYPES.find((t) => t.value === form.type)?.label}
           </p>
@@ -236,12 +261,18 @@ export default function FacultyAchievementsEditor({
             options={ACHIEVEMENT_TYPES.map((t) => ({ value: t.value, label: t.label }))}
           />
           <TextField
-            label={form.type === "PROFILE_ID" ? "Name" : "Title"}
+            label={form.type === "PROFILE_ID" || form.type === "DETAIL" ? "Label" : "Title"}
             value={form.title}
             onChange={(v) => setForm({ ...form, title: v })}
             required
             maxLength={500}
-            placeholder={form.type === "PROFILE_ID" ? "Scopus ID · ORCID · Vidwan" : undefined}
+            placeholder={
+              form.type === "PROFILE_ID"
+                ? "Scopus ID · ORCID · Vidwan"
+                : form.type === "DETAIL"
+                  ? "Date of Joining · Languages Known · Membership"
+                  : undefined
+            }
           />
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField label={labels.detail} value={form.detail} onChange={(v) => setForm({ ...form, detail: v })} />
@@ -274,6 +305,8 @@ export default function FacultyAchievementsEditor({
           </FormActions>
         </div>
       )}
+
+      <div ref={listRef} style={{ scrollMarginTop: "16px" }} />
 
       {items.length === 0 ? (
         <p className="rounded-xl border border-dashed border-admin-border p-6 text-center text-sm text-slate-400">

@@ -88,7 +88,7 @@ export default function VideosTab({ departmentId }: { departmentId: number }) {
         await updateCampusVideo(editing.id, {
           title: form.title,
           youtubeUrl: form.youtubeUrl,
-          badgeLabel: form.badgeLabel || undefined,
+          badgeLabel: form.badgeLabel || null,
           isActive: form.isActive,
           version: editing.version,
         })
@@ -96,7 +96,7 @@ export default function VideosTab({ departmentId }: { departmentId: number }) {
         await createCampusVideo({
           title: form.title,
           youtubeUrl: form.youtubeUrl,
-          badgeLabel: form.badgeLabel || undefined,
+          badgeLabel: form.badgeLabel || null,
           isActive: form.isActive,
           departmentId,
         })

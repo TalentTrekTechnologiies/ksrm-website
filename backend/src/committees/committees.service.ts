@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CommitteeType } from '@prisma/client';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { CommitteeType, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateCommitteeDto } from './dto/create-committee.dto';
@@ -43,7 +43,27 @@ export class CommitteesService {
   }
 
   async create(dto: CreateCommitteeDto, admin: RequestAdmin, requestId?: string) {
-    const created = await this.prisma.committee.create({ data: dto });
+    let created;
+    try {
+      created = await this.prisma.committee.create({ data: dto });
+    } catch (err) {
+      // @@unique([type, name]) counts soft-deleted rows too, so deleting a
+      // committee and then creating one with the same name again hit the
+      // constraint and surfaced as a bare 500. Say what actually happened,
+      // and point at the restore that the admin almost certainly wants -
+      // recreating it here would silently resurrect the old membership.
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        const deleted = await this.prisma.committee.findFirst({
+          where: { type: dto.type, name: dto.name, deletedAt: { not: null } },
+        });
+        throw new ConflictException(
+          deleted
+            ? `A deleted committee named '${dto.name}' already exists. Restore it from Recently deleted, or use a different name.`
+            : `A committee named '${dto.name}' already exists for this type.`,
+        );
+      }
+      throw err;
+    }
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -64,10 +84,22 @@ export class CommitteesService {
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Committee ${id}`);
 
-    const updated = await this.prisma.committee.update({
-      where: { id },
-      data: { ...rest, version: { increment: 1 } },
-    });
+    // Renaming onto a name a deleted committee still holds trips the same
+    // constraint as create, so it gets the same explanation rather than a 500.
+    let updated;
+    try {
+      updated = await this.prisma.committee.update({
+        where: { id },
+        data: { ...rest, version: { increment: 1 } },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new ConflictException(
+          `Another committee of this type is already named '${rest.name ?? existing.name}'. It may be in Recently deleted.`,
+        );
+      }
+      throw err;
+    }
 
     await this.auditLog.log({
       adminId: admin.id,

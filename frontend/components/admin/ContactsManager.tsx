@@ -165,16 +165,16 @@ function OfficeDirectoryManager() {
         name: form.name,
         phones: form.phones,
         emails: form.emails,
-        address: form.address || undefined,
-        mapEmbedUrl: form.mapEmbedUrl || undefined,
+        address: form.address || null,
+        mapEmbedUrl: form.mapEmbedUrl || null,
         isActive: form.isActive,
       })}
       buildUpdateDto={(form) => ({
         name: form.name,
         phones: form.phones,
         emails: form.emails,
-        address: form.address || undefined,
-        mapEmbedUrl: form.mapEmbedUrl || undefined,
+        address: form.address || null,
+        mapEmbedUrl: form.mapEmbedUrl || null,
         isActive: form.isActive,
       })}
       isValid={(form) => !!form.name.trim()}

@@ -123,7 +123,7 @@ function DownloadsManagerInner() {
     setSaving(true)
     setError(null)
     try {
-      const dto = { title: form.title, description: form.description || undefined, category: form.category, pageSection: form.pageSection || null, groupLabel: form.groupLabel || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
+      const dto = { title: form.title, description: form.description || null, category: form.category, pageSection: form.pageSection || null, groupLabel: form.groupLabel || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
       if (editing) {
         await updateDownload(editing.id, { ...dto, version: editing.version })
       } else {

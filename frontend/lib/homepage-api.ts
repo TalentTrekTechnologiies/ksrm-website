@@ -41,18 +41,18 @@ export interface HomepageHero {
 // `string | undefined` (omit the key entirely), matching the backend DTO's
 // @IsOptional() fields.
 export interface HeroInput {
-  accreditationLabel?: string;
+  accreditationLabel?: string | null;
   heading: string;
   subtitle: string;
   videoUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing videoUrl. */
   mediaId?: number | null;
-  ctaPrimaryText?: string;
-  ctaPrimaryHref?: string;
-  ctaSecondaryText?: string;
-  ctaSecondaryHref?: string;
-  panelLabel?: string;
+  ctaPrimaryText?: string | null;
+  ctaPrimaryHref?: string | null;
+  ctaSecondaryText?: string | null;
+  ctaSecondaryHref?: string | null;
+  panelLabel?: string | null;
   captions?: HeroCaption[];
   newsTicker?: HeroNewsTickerItem[];
   isActive?: boolean;
@@ -83,7 +83,7 @@ export interface StatisticInput {
   departmentId?: number;
   label: string;
   value: number;
-  suffix?: string;
+  suffix?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }
@@ -112,16 +112,16 @@ export interface QuickLink {
 
 export interface QuickLinkInput {
   section: QuickLinkSection;
-  icon?: string;
+  icon?: string | null;
   imageUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
   title: string;
-  description?: string;
+  description?: string | null;
   tags?: string[];
   linkUrl: string;
-  linkText?: string;
+  linkText?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }
@@ -155,16 +155,16 @@ export interface AdmissionProgram {
 
 export interface AdmissionProgramInput {
   section: AdmissionProgramSection;
-  icon?: string;
+  icon?: string | null;
   imageUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
   title: string;
-  description?: string;
+  description?: string | null;
   tags: string[];
   linkUrl: string;
-  linkText?: string;
+  linkText?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }
@@ -198,7 +198,7 @@ export interface AboutStat {
 
 export interface AboutHighlight {
   title: string;
-  description?: string;
+  description?: string | null;
 }
 
 export interface AboutImage {
@@ -221,7 +221,7 @@ export interface AboutContent {
   statistics: AboutStat[];
   foundingYear: number;
   image: AboutImage;
-  badgeLabel?: string;
+  badgeLabel?: string | null;
   cta: AboutCta;
 }
 
@@ -330,10 +330,10 @@ export interface Testimonial {
 export interface TestimonialInput {
   name: string;
   role: string;
-  company?: string;
+  company?: string | null;
   quote: string;
   rating: number;
-  photoUrl?: string;
+  photoUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing photoUrl. */
   mediaId?: number | null;
@@ -362,7 +362,7 @@ export interface CampusVideo {
 export interface CampusVideoInput {
   title: string;
   youtubeUrl: string;
-  badgeLabel?: string;
+  badgeLabel?: string | null;
   departmentId?: number;
   sortOrder?: number;
   isActive?: boolean;
@@ -391,11 +391,11 @@ export interface AccreditationBadge {
 
 export interface AccreditationBadgeInput {
   shortName: string;
-  grade?: string;
+  grade?: string | null;
   name: string;
-  subtext?: string;
-  linkUrl?: string;
-  linkText?: string;
+  subtext?: string | null;
+  linkUrl?: string | null;
+  linkText?: string | null;
   imageUrl: string;
   mediaId?: number | null;
   sortOrder?: number;
@@ -459,16 +459,16 @@ export interface DepartmentCard {
 
 export interface DepartmentCardInput {
   section: DepartmentCardSection;
-  icon?: string;
+  icon?: string | null;
   imageUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
   title: string;
-  description?: string;
+  description?: string | null;
   tags?: string[];
   linkUrl: string;
-  linkText?: string;
+  linkText?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }

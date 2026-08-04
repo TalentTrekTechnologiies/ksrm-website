@@ -26,7 +26,7 @@ export interface SiteSettingInput {
   type: SiteSettingType;
   group: string;
   isPublic?: boolean;
-  description?: string;
+  description?: string | null;
 }
 
 export function getSiteSettings(group?: string): Promise<SiteSetting[]> {

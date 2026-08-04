@@ -19,7 +19,7 @@ export interface Permission {
 
 export interface RoleInput {
   name: string;
-  description?: string;
+  description?: string | null;
   permissionKeys: string[];
 }
 

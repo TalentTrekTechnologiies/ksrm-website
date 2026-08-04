@@ -65,7 +65,7 @@ export default function DownloadsTab({ departmentId }: { departmentId: number })
       buildCreateDto={(form, departmentId) => ({
         departmentId,
         title: form.title,
-        description: form.description || undefined,
+        description: form.description || null,
         category: form.category,
         fileUrl: form.fileUrl,
         mediaId: form.mediaId,
@@ -73,7 +73,7 @@ export default function DownloadsTab({ departmentId }: { departmentId: number })
       })}
       buildUpdateDto={(form) => ({
         title: form.title,
-        description: form.description || undefined,
+        description: form.description || null,
         category: form.category,
         fileUrl: form.fileUrl,
         mediaId: form.mediaId,

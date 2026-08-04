@@ -33,16 +33,16 @@ export interface NewsArticleInput {
   title: string;
   content: string;
   category: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
   date: string;
   isPublished?: boolean;
   isFeatured?: boolean;
-  videoUrl?: string;
+  videoUrl?: string | null;
   videoMediaId?: number | null;
-  documentUrl?: string;
+  documentUrl?: string | null;
   documentMediaId?: number | null;
 
 }

@@ -22,12 +22,12 @@ export interface Career {
 
 export interface CareerInput {
   title: string;
-  department?: string;
-  employmentType?: string;
-  location?: string;
+  department?: string | null;
+  employmentType?: string | null;
+  location?: string | null;
   description: string;
-  applyUrl?: string;
-  applyEmail?: string;
+  applyUrl?: string | null;
+  applyEmail?: string | null;
   closingAt?: string;
   sortOrder?: number;
   isActive?: boolean;

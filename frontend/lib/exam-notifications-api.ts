@@ -18,12 +18,12 @@ export interface ExamNotification {
 
 export interface ExamNotificationInput {
   title: string;
-  description?: string;
-  buttonText?: string;
-  buttonUrl?: string;
-  academicYear?: string;
+  description?: string | null;
+  buttonText?: string | null;
+  buttonUrl?: string | null;
+  academicYear?: string | null;
   startDate: string;
-  endDate?: string;
+  endDate?: string | null;
   isActive?: boolean;
 }
 

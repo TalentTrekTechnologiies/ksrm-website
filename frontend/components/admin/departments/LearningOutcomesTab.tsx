@@ -46,8 +46,8 @@ function OutcomeTypeManager({ departmentId, type }: { departmentId: number; type
       restore={restoreLearningOutcome}
       reorder={reorderLearningOutcomes}
       mapToForm={(item) => ({ code: item.code, title: item.title ?? "", text: item.text })}
-      buildCreateDto={(form, departmentId) => ({ departmentId, code: form.code, title: form.title || undefined, text: form.text })}
-      buildUpdateDto={(form) => ({ code: form.code, title: form.title || undefined, text: form.text })}
+      buildCreateDto={(form, departmentId) => ({ departmentId, code: form.code, title: form.title || null, text: form.text })}
+      buildUpdateDto={(form) => ({ code: form.code, title: form.title || null, text: form.text })}
       isValid={(form) => !!form.code && !!form.text}
       getName={(item) => `${item.code}: ${item.text}`}
       addLabel={`Add ${type}`}

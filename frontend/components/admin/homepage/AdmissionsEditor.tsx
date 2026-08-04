@@ -131,14 +131,14 @@ function ProgramsManager() {
     setError(null)
     try {
       const shared = {
-        icon: form.icon || undefined,
+        icon: form.icon || null,
         imageUrl: form.imageUrl,
         mediaId: form.mediaId,
         title: form.title,
-        description: form.description || undefined,
+        description: form.description || null,
         tags: form.tags,
         linkUrl: form.linkUrl,
-        linkText: form.linkText || undefined,
+        linkText: form.linkText || null,
       }
       if (editing) {
         await updateAdmissionProgram(editing.id, { ...shared, section: "homepage_admission_programs", version: editing.version })

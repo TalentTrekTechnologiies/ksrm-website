@@ -57,7 +57,12 @@ export default function AccreditationPage() {
         </div>
       </section>
 
-      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
+      {/* The certificates themselves - logo cards that open the letters.
+          First thing under the hero: these are the proof behind everything
+          the rest of the page describes, so they lead rather than trail it. */}
+      <AccreditationCertificates />
+
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="nba-accreditation" /></h2>
           <div className="acc-section-card">
@@ -70,7 +75,7 @@ export default function AccreditationPage() {
         </div>
       </section>
 
-      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="naac-a-accreditation" /></h2>
           <div className="acc-section-card">
@@ -90,7 +95,7 @@ export default function AccreditationPage() {
         </div>
       </section>
 
-      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="nirf-rankings" /></h2>
           <div className="acc-section-card">
@@ -109,7 +114,7 @@ export default function AccreditationPage() {
         </div>
       </section>
 
-      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+      <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="accreditation" slot="affiliations-recognition" /></h2>
           <div className="acc-affiliations-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
@@ -131,9 +136,6 @@ export default function AccreditationPage() {
           <p style={{ color: "rgba(255,255,255,0.8)", margin: "0 0 24px", maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}><CmsText section="accreditation" slot="our-accreditations-and-rankings-reflect" multiline /></p>
         </div>
       </section>
-    
-      {/* The certificates themselves - logo cards that open the letters. */}
-      <AccreditationCertificates />
 
       <PageResources section="accreditation" />
       </main>

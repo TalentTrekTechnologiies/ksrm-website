@@ -29,11 +29,11 @@ export interface PlacementInput {
   package: string;
   department: string;
   year: number;
-  imageUrl?: string;
+  imageUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
-  companyLogoUrl?: string;
+  companyLogoUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing companyLogoUrl. */
   companyLogoMediaId?: number | null;

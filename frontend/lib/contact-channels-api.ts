@@ -34,8 +34,8 @@ export interface ContactChannelInput {
   name: string;
   phones?: string[];
   emails?: string[];
-  address?: string;
-  mapEmbedUrl?: string;
+  address?: string | null;
+  mapEmbedUrl?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }

@@ -33,6 +33,14 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     label: 'Departments',
     count: (p) => p.department.count(),
   },
+  // Programmes are edited per-department too, but they drive the college-wide
+  // Academics pages (Courses & Intake, UG/PG/Diploma admissions), so they get
+  // their own screen listing every programme across every department.
+  {
+    key: 'department_programmes',
+    label: 'Programmes',
+    count: (p) => p.departmentProgramme.count({ where: { deletedAt: null } }),
+  },
   { key: 'news', label: 'News Posts', count: (p) => p.news.count() },
   {
     key: 'gallery',

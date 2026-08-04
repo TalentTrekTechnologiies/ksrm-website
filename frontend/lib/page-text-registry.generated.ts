@@ -367,6 +367,42 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "K.S.R.M. College of Engineering offers AICTE approved undergraduate, postgraduate and management programmes affiliated to Jawaharlal Nehru Technological University Anantapur (JNTUA). The college holds UGC Autonomous status and is recognized for excellence in engineering education.",
           },
           {
+            id: "approvals.0",
+            label: "Approval badge 1",
+            kind: "line",
+            default: "AICTE Approved",
+          },
+          {
+            id: "approvals.1",
+            label: "Approval badge 2",
+            kind: "line",
+            default: "Affiliated to JNTUA",
+          },
+          {
+            id: "approvals.2",
+            label: "Approval badge 3",
+            kind: "line",
+            default: "UGC Autonomous",
+          },
+          {
+            id: "approvals.3",
+            label: "Approval badge 4",
+            kind: "line",
+            default: "NAAC Accredited",
+          },
+          {
+            id: "approvals.4",
+            label: "Approval badge 5",
+            kind: "line",
+            default: "NBA Accredited (select programmes)",
+          },
+          {
+            id: "eapcetCode",
+            label: "EAPCET / ICET code",
+            kind: "line",
+            default: "K.S.R.M.",
+          },
+          {
             id: "use-this-code-during-eapcet",
             label: "Use this code during EAPCET/ICET/PGECET counselling",
             kind: "line",
@@ -418,52 +454,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "Content",
             kind: "line",
             default: "Content",
-          },
-        ],
-      },
-    ],
-  },
-  "academics.faculty": {
-    label: "Academics -> Faculty",
-    path: "/academics/faculty",
-    groups: [
-      {
-        label: "Faculty",
-        slots: [
-          {
-            id: "faculty",
-            label: "Faculty",
-            kind: "line",
-            default: "Faculty",
-          },
-          {
-            id: "meet-our-experienced-educators",
-            label: "Meet Our Experienced Educators",
-            kind: "line",
-            default: "Meet Our Experienced Educators",
-          },
-          {
-            id: "k-s-r-m-college",
-            label: "K.S.R.M. College of Engineering is served by a dedicated tea...",
-            kind: "paragraph",
-            default: "K.S.R.M. College of Engineering is served by a dedicated team of experienced faculty members with strong academic credentials and industry exposure. Our faculty are committed to imparting quality education, conducting research, and mentoring the next generation of engineers.",
-          },
-        ],
-      },
-      {
-        label: "Our Faculty by Department",
-        slots: [
-          {
-            id: "our-faculty-by-department",
-            label: "Our Faculty by Department",
-            kind: "line",
-            default: "Our Faculty by Department",
-          },
-          {
-            id: "faculty-data-for-this-department",
-            label: "Faculty data for this department has not been added yet.",
-            kind: "line",
-            default: "Faculty data for this department has not been added yet.",
           },
         ],
       },

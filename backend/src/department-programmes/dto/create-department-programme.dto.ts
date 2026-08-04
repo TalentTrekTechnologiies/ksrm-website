@@ -16,6 +16,14 @@ export class CreateDepartmentProgrammeDto {
   intake: number;
 
   @IsOptional()
+  @IsString()
+  code?: string | null;
+
+  @IsOptional()
+  @IsString()
+  accreditation?: string | null;
+
+  @IsOptional()
   @IsInt()
   @Min(0)
   sortOrder?: number;

@@ -17,12 +17,18 @@ import { useLiveData } from "@/lib/use-live-data"
  * recognised logo still appears, with its initials, rather than being dropped.
  */
 
-// Matched against the document title, first hit wins. Ordered so "NBA" is
-// tested before "NAAC & NBA" can be mistaken for NAAC alone.
+// Matched against the document title, first hit wins.
+//
+// NAAC is deliberately tested BEFORE NBA. The combined "Accreditation Status
+// (NAAC & NBA)" document names both bodies, and testing NBA first gave it the
+// NBA logo - the same logo the separate "NBA Accreditation Letter" card
+// already carries, so two different documents appeared under one identical
+// badge. The combined status document leads with NAAC, and the NBA letter
+// still matches NBA on its own, so each card now reads as its own thing.
 const LOGOS: { match: RegExp; src: string; alt: string }[] = [
   { match: /\bUGC\b|autonom/i, src: "/ugc.webp", alt: "University Grants Commission" },
-  { match: /\bNBA\b/i, src: "/nba.png", alt: "National Board of Accreditation" },
   { match: /\bNAAC\b/i, src: "/naac.png", alt: "NAAC" },
+  { match: /\bNBA\b/i, src: "/nba.png", alt: "National Board of Accreditation" },
   { match: /\bNIRF\b/i, src: "/nirf.jpg", alt: "NIRF" },
   // A typographic wordmark, not AICTE's official emblem - see public/aicte.svg.
   { match: /\bAICTE\b|\bEOA\b/i, src: "/aicte.svg", alt: "AICTE Approved" },
@@ -67,8 +73,13 @@ export default function AccreditationCertificates({
         @media (max-width: 768px) { .ac-container { padding: 0 20px; } }
         .ac-h2 { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 700; color: #1a1a2e; margin: 0 0 6px; }
         .ac-lead { color: #666; font-size: 15.5px; margin: 0 0 28px; }
-        .ac-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
-        .ac-card { display: flex; flex-direction: column; align-items: center; text-align: center; background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 22px 18px 18px; text-decoration: none; transition: box-shadow .18s, transform .18s, border-color .18s; }
+        /* Flex-centred rather than an auto-fill grid: on a 1760px container
+           auto-fill lays out roughly eight 210px tracks, so three certificates
+           filled the first three and left the rest of the row visibly empty on
+           the right. Centring wraps the same cards with balanced space on both
+           sides, and still fills the row once more documents are uploaded. */
+        .ac-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+        .ac-card { flex: 0 1 250px; display: flex; flex-direction: column; align-items: center; text-align: center; background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 22px 18px 18px; text-decoration: none; transition: box-shadow .18s, transform .18s, border-color .18s; }
         .ac-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(43,52,144,.13); border-color: #dfe3ea; }
         .ac-logo { height: 72px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
         .ac-logo img { max-height: 72px; max-width: 150px; object-fit: contain; }

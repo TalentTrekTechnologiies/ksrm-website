@@ -99,16 +99,16 @@ function HeroEditorInner() {
     setSuccess(false)
     try {
       const dto = {
-        accreditationLabel: form.accreditationLabel || undefined,
+        accreditationLabel: form.accreditationLabel || null,
         heading: form.heading,
         subtitle: form.subtitle,
         videoUrl: form.videoUrl,
         mediaId: form.mediaId,
-        ctaPrimaryText: form.ctaPrimaryText || undefined,
-        ctaPrimaryHref: form.ctaPrimaryHref || undefined,
-        ctaSecondaryText: form.ctaSecondaryText || undefined,
-        ctaSecondaryHref: form.ctaSecondaryHref || undefined,
-        panelLabel: form.panelLabel || undefined,
+        ctaPrimaryText: form.ctaPrimaryText || null,
+        ctaPrimaryHref: form.ctaPrimaryHref || null,
+        ctaSecondaryText: form.ctaSecondaryText || null,
+        ctaSecondaryHref: form.ctaSecondaryHref || null,
+        panelLabel: form.panelLabel || null,
         captions,
         isActive: form.isActive,
       }

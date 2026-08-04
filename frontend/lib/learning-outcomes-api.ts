@@ -19,7 +19,7 @@ export interface LearningOutcomeInput {
   departmentId: number;
   type: OutcomeType;
   code: string;
-  title?: string;
+  title?: string | null;
   text: string;
   sortOrder?: number;
 }

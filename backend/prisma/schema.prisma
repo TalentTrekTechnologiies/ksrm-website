@@ -59,6 +59,11 @@ enum DepartmentHighlightKind {
 enum CommitteeType {
   ANTI_RAGGING
   GRIEVANCE_REDRESSAL
+  /// The institution's Governing Body, rendered as its own section on the
+  /// About page. A dedicated type rather than an OTHER committee named
+  /// "Governing Body": the public page selects on type, so renaming the
+  /// committee in the CMS can never silently empty that section.
+  GOVERNING_BODY
   OTHER
 }
 
@@ -209,6 +214,12 @@ enum FacultyAchievementType {
   /// so an admin can record any identifier that comes along without waiting for
   /// a schema change for each one.
   PROFILE_ID
+  /// A free label/value pair for anything the fixed Faculty columns do not
+  /// cover - "Date of Joining", "Languages Known", "Membership". Same row
+  /// shape again (title = the label, detail = the value), so a new kind of
+  /// detail never needs a migration. Shown with the profile's other details
+  /// rather than as an achievement list.
+  DETAIL
 }
 
 /// A publication, patent, book, award or certification belonging to one faculty
@@ -680,6 +691,14 @@ model DepartmentProgramme {
   name         String
   level        ProgrammeLevel
   intake       Int
+  /// Course/branch code as printed on the Courses & Intake table (e.g. "CSE",
+  /// "05"). Optional: not every programme has one, and the table shows the
+  /// department's short name when it is absent.
+  code          String?
+  /// Accreditation badge for this specific programme, e.g. "NBA Accredited".
+  /// Optional and deliberately free text - it is a claim about this branch
+  /// only, so it is never inferred or defaulted.
+  accreditation String?
   sortOrder    Int            @default(0)
   isActive     Boolean        @default(true)
   createdAt    DateTime       @default(now())

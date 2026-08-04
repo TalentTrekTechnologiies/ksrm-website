@@ -120,12 +120,12 @@ function CareersManagerInner() {
     try {
       const dto = {
         title: form.title,
-        department: form.department || undefined,
-        employmentType: form.employmentType || undefined,
-        location: form.location || undefined,
+        department: form.department || null,
+        employmentType: form.employmentType || null,
+        location: form.location || null,
         description: form.description,
-        applyUrl: form.applyUrl || undefined,
-        applyEmail: form.applyEmail || undefined,
+        applyUrl: form.applyUrl || null,
+        applyEmail: form.applyEmail || null,
         isActive: form.isActive,
       }
       if (editing) {

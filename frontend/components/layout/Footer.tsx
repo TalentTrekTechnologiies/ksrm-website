@@ -366,7 +366,7 @@ export default function Footer() {
               {s("site.footerCopyright", `© ${currentYear} K.S.R.M. College of Engineering. All Rights Reserved.`)}
             </span>
             <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
-              A unit of Sri Kandula Obul Reddy Charities
+              A unit of Sri Kandula Obula Reddy Charities
             </span>
           </div>
 

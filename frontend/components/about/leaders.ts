@@ -60,7 +60,7 @@ export const leaders: Record<string, Leader> = {
     email: "principal@ksrmce.ac.in",
     photo: "/images/leadership/correspondent.jpg",
     message: [
-      "Welcome to KSRMCE, an institution of excellence under Kandula Obul Reddy Charities. Since 1980, we have produced quality technical graduates for the country and the world, maintaining our commitment to academic rigor and ethical development.",
+      "Welcome to KSRMCE, an institution of excellence under Kandula Obula Reddy Charities. Since 1980, we have produced quality technical graduates for the country and the world, maintaining our commitment to academic rigor and ethical development.",
       "Over four decades, we have become a premier hub of learning blending state-of-the-art infrastructure with committed faculty, fostering knowledge while instilling human values and social responsibility. Our campus is a vibrant ecosystem where innovation thrives alongside tradition.",
       "We prioritize interdisciplinary research, experiential learning and outcome-based education (OBE), giving our students critical thinking, skill development, analytical, entrepreneurial and leadership skills for a globalized world. Our curriculum is continuously updated to reflect industry trends and technological advancements.",
       "Beyond the classroom, KSRMCE offers extracurricular and co-curricular activities through technical clubs, cultural events, sports and volunteer work. We develop capable engineers who are also morally upright global citizens, ready to contribute to a better future.",

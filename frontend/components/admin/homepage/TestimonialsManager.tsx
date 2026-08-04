@@ -113,10 +113,10 @@ function TestimonialsManagerInner() {
       const dto = {
         name: form.name,
         role: form.role,
-        company: form.company || undefined,
+        company: form.company || null,
         quote: form.quote,
         rating: form.rating,
-        photoUrl: form.photoUrl || undefined,
+        photoUrl: form.photoUrl || null,
         mediaId: form.mediaId,
         isActive: form.isActive,
       }

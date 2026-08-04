@@ -41,6 +41,9 @@ const emptyForm: FormState = { name: "", type: "OTHER", description: "", isActiv
 const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [
   { value: "ANTI_RAGGING", label: "Anti-Ragging" },
   { value: "GRIEVANCE_REDRESSAL", label: "Grievance Redressal" },
+  // Anything filed under this type renders in the About page's Governing
+  // Body section - members added here appear there with no code change.
+  { value: "GOVERNING_BODY", label: "Governing Body" },
   { value: "OTHER", label: "Other" },
 ]
 
@@ -116,7 +119,7 @@ function CommitteesManagerInner() {
     setSaving(true)
     setError(null)
     try {
-      const dto = { name: form.name, type: form.type, description: form.description || undefined, isActive: form.isActive }
+      const dto = { name: form.name, type: form.type, description: form.description || null, isActive: form.isActive }
       if (editing) {
         await updateCommittee(editing.id, { ...dto, version: editing.version })
       } else {

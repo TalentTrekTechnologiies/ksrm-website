@@ -1,6 +1,6 @@
 import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
 
-export type CommitteeType = "ANTI_RAGGING" | "GRIEVANCE_REDRESSAL" | "OTHER";
+export type CommitteeType = "ANTI_RAGGING" | "GRIEVANCE_REDRESSAL" | "GOVERNING_BODY" | "OTHER";
 
 export interface CommitteeMember {
   id: number;
@@ -33,7 +33,7 @@ export interface Committee {
 export interface CommitteeInput {
   name: string;
   type: CommitteeType;
-  description?: string;
+  description?: string | null;
   isActive?: boolean;
 }
 

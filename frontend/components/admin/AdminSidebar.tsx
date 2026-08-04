@@ -93,6 +93,10 @@ const NAV_ITEMS: NavItem[] = [
   { widgetKey: "gallery", label: "Gallery", href: "/admin/gallery" },
   // Labelled "Documents" for admins - the model/route stay `downloads`, this is
   // wording only (a visitor still clicks a "Download" button on the public site).
+  // College-wide programmes. Also editable inside each department, but these
+  // rows drive the Academics and admissions pages, which are not scoped to a
+  // department - so they get a top-level screen of their own.
+  { widgetKey: "department_programmes", label: "Academics", href: "/admin/academics" },
   { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },
   { widgetKey: "news", label: "News", href: "/admin/news" },
   { widgetKey: "research", label: "Research", href: "/admin/research" },

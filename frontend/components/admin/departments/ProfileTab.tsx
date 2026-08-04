@@ -39,13 +39,13 @@ export default function ProfileTab({
     try {
       const updated = await updateDepartment(department.id, {
         name: form.name,
-        shortName: form.shortName || undefined,
-        tagline: form.tagline || undefined,
+        shortName: form.shortName || null,
+        tagline: form.tagline || null,
         about: form.about,
-        aboutVideoUrl: form.aboutVideoUrl || undefined,
-        heroImageUrl: form.heroImageUrl || undefined,
+        aboutVideoUrl: form.aboutVideoUrl || null,
+        heroImageUrl: form.heroImageUrl || null,
         heroMediaId: form.heroMediaId,
-        vision: form.vision || undefined,
+        vision: form.vision || null,
         mission: form.mission,
         establishedYear: Number.isNaN(form.establishedYear) ? undefined : form.establishedYear,
         isActive: form.isActive,

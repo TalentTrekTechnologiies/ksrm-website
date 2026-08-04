@@ -8,6 +8,10 @@ export interface DepartmentProgramme {
   name: string;
   level: ProgrammeLevel;
   intake: number;
+  /** Branch/course code shown on Academics -> Courses & Intake. */
+  code: string | null;
+  /** Per-programme accreditation badge, e.g. "NBA Accredited". */
+  accreditation: string | null;
   sortOrder: number;
   isActive: boolean;
   deletedAt: string | null;
@@ -23,6 +27,8 @@ export interface DepartmentProgrammeInput {
   name: string;
   level: ProgrammeLevel;
   intake: number;
+  code?: string | null;
+  accreditation?: string | null;
   sortOrder?: number;
   isActive?: boolean;
 }

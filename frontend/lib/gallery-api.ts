@@ -26,7 +26,7 @@ export interface GalleryImageInput {
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
-  category?: string;
+  category?: string | null;
   pageSection?: string | null;
   date?: string;
   sortOrder?: number;

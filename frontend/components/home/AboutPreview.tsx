@@ -18,7 +18,7 @@ const FALLBACK_ABOUT: AboutContent = {
   title: "Four Decades of Engineering Excellence",
   subtitle: null,
   paragraphs: [
-    "Established in 1980 in memory of Late Sri Srinivasa Reddy, K.S.R.M. College of Engineering was founded on the visionary ideal of Late Sri Kandula Obul Reddy — to bring high-quality, affordable technical education to the students of the Rayalaseema region and beyond.",
+    "Established in 1980 in memory of Late Sri Srinivasa Reddy, K.S.R.M. College of Engineering was founded on the visionary ideal of Late Sri Kandula Obula Reddy — to bring high-quality, affordable technical education to the students of the Rayalaseema region and beyond.",
     "Today KSRMCE stands as a UGC Autonomous institution affiliated to JNTU Anantapur, accredited by NAAC with an 'A+' grade, with NBA-accredited programmes and approval from AICTE. Spread across a green, 25-acre campus, seven engineering and management departments offer UG and PG programmes delivered by highly qualified faculty in modern laboratories, seminar halls and a well-stocked central library.",
     "Backed by a dedicated Training & Placement cell and vibrant innovation and entrepreneurship cells, the college has placed 1200+ students with 200+ recruiting companies and nurtured an alumni family of more than 15,000 engineers serving across the globe.",
     "More than four decades on, we carry that founding legacy forward — shaping engineers, innovators and responsible leaders who live our guiding motto, 'Lighted to Lighten'.",

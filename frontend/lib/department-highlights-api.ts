@@ -22,7 +22,7 @@ export interface DepartmentHighlightInput {
   kind: DepartmentHighlightKind;
   title: string;
   description: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   /** Pass the picked Media's id to link it; pass `null` explicitly to unlink. */
   mediaId?: number | null;
   sortOrder?: number;

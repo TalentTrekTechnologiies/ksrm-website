@@ -102,7 +102,7 @@ function CampusVideosManagerInner() {
       const dto = {
         title: form.title,
         youtubeUrl: form.youtubeUrl,
-        badgeLabel: form.badgeLabel || undefined,
+        badgeLabel: form.badgeLabel || null,
         isActive: form.isActive,
       }
       if (editing) {

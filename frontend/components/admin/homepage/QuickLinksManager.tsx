@@ -119,13 +119,13 @@ function QuickLinksManagerInner() {
     setError(null)
     try {
       const shared = {
-        icon: form.icon || undefined,
+        icon: form.icon || null,
         imageUrl: form.imageUrl,
         mediaId: form.mediaId,
         title: form.title,
-        description: form.description || undefined,
+        description: form.description || null,
         linkUrl: form.linkUrl,
-        linkText: form.linkText || undefined,
+        linkText: form.linkText || null,
         isActive: form.isActive,
       }
       if (editing) {

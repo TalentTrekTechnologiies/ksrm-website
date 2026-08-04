@@ -181,7 +181,7 @@ function AdminsManagerInner() {
         await updateAdmin(editing.id, {
           name: form.name,
           email: form.email,
-          department: form.department || undefined,
+          department: form.department || null,
           // Sent as-is (not `?? undefined`) - `null` here means "clear the
           // department scope," which must reach the backend as an explicit
           // null, not be silently dropped as "don't change."
@@ -193,7 +193,7 @@ function AdminsManagerInner() {
           name: form.name,
           email: form.email,
           password: form.password,
-          department: form.department || undefined,
+          department: form.department || null,
           departmentId: form.departmentId ?? undefined,
           roleIds: form.roleIds,
           isSuperAdmin: form.isSuperAdmin,

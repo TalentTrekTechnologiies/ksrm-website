@@ -6,6 +6,7 @@ import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { LEADERSHIP } from "@/data/leadership"
 import CmsText from "@/components/CmsText";
+import GoverningBody from "@/components/about/GoverningBody";
 
 /** Group headings the About page's document sections are stored under, so an
  *  admin can add/remove documents in Page Content -> About and have them land
@@ -16,6 +17,32 @@ import CmsText from "@/components/CmsText";
 const GROUP_JBOS = "Joint Board of Studies";
 const GROUP_STRATEGIC = "Strategic Plan & Deployment Documents";
 const GROUP_POLICY = "Policy Documents";
+
+/** Managing Trustees of the charities. Names and roles are editable from
+ *  Page Content -> About; this array only fixes how many rows render, the
+ *  same indexed-slot approach the Accreditation page uses for its rankings. */
+const TRUSTEES = [
+  // Three of the six already have a portrait in the Leadership section - the
+  // same people, so the same file rather than a second copy. The rest fall
+  // back to their initials; a missing photo should read as deliberate, not
+  // as a broken image.
+  { name: "Sri. K. Madan Mohan Reddy", role: "President", photo: "/images/leadership/chairman.webp" },
+  { name: "Smt. K. Rajeswari", role: "Vice-President & Treasurer", photo: "/images/leadership/correspondent.jpg" },
+  { name: "Sri. K. Chandra Obul Reddy", role: "Secretary", photo: "/images/leadership/managing-director.webp" },
+  { name: "Sri. K. Raja Mohan Reddy", role: "Member", photo: "" },
+  { name: "Sri. S. Venkata Siva Reddy", role: "Member", photo: "" },
+  { name: "Sri. K. Murali Mohan Reddy", role: "Member", photo: "" },
+];
+
+/** "Sri. K. Madan Mohan Reddy" -> "MM". Honorifics and the single initial
+ *  carry no meaning, so they are skipped in favour of the actual name. */
+function trusteeInitials(name: string): string {
+  const words = name
+    .replace(/^(Sri\.?|Smt\.?|Dr\.?|Kum\.?)\s+/i, "")
+    .split(/\s+/)
+    .filter((w) => w.replace(/\./g, "").length > 1);
+  return words.slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "K";
+}
 
 export default function About() {
   // CMS documents routed to this page. Each designed section below renders its
@@ -100,6 +127,24 @@ export default function About() {
         .k-mission-item { background: #F4F3EF; border-radius: 8px; padding: 20px; position: relative; }
         .k-mission-badge { position: absolute; top: 12px; right: 12px; background: #2B3490; color: #D4A500; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; }
         .k-mission-text { padding-top: 16px; color: #555; font-size: 15px; line-height: 1.7; }
+
+        /* Trustees: a numbered name/role list, two columns on desktop so six
+           short rows do not run as one thin strip down a very wide page. */
+        /* Portrait cards rather than a two-column name/role list: the list
+           left most of a very wide row empty to the right of each role, and
+           the photos already exist for half of these people. */
+        .k-trustees { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        /* Three fixed tracks rather than flex: with the role pushed to each
+           card's right edge it landed at a different distance from every name,
+           so the roles read as ragged instead of as a column. A fixed role
+           track starts them all at the same x. */
+        .k-trustee { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; background: #fff; border: 1px solid #EADFC8; border-radius: 12px; padding: 24px 18px 20px; transition: box-shadow .18s, transform .18s; }
+        .k-trustee:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(43,52,144,.12); }
+        .k-trustee-photo { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; object-position: top center; border: 3px solid #fff; box-shadow: 0 0 0 2px #2B3490; margin-bottom: 12px; background: #F4F3EF; }
+        /* Same circle as a real photo so a card without one keeps the row's rhythm. */
+        .k-trustee-initials { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2B3490, #1e2570); color: #FFE619; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: 1px; }
+        .k-trustee-name { color: #1a1a2e; font-weight: 700; font-size: 16px; font-family: 'Rajdhani', sans-serif; line-height: 1.3; }
+        .k-trustee-role { color: #2B3490; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
         .k-leadership { background: #F4F3EF; }
         .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-items: stretch; }
@@ -241,6 +286,43 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* SRI KANDULA OBULA REDDY CHARITIES — the founding trust. Sits before
+          Leadership so the institution's origin and its trustees introduce the
+          people who lead it, rather than following them. */}
+      <section className="k-section" id="charities" style={{ background: "#F5EFE4" }}>
+        <div className="k-container">
+          <h2><CmsText section="about" slot="charities.heading" /></h2>
+          <p style={{ color: "#555", fontSize: "15.5px", lineHeight: 1.8, margin: "0 0 18px", maxWidth: "1100px" }}>
+            <CmsText section="about" slot="charities.p1" multiline />
+          </p>
+          <p style={{ color: "#555", fontSize: "15.5px", lineHeight: 1.8, margin: "0 0 28px", maxWidth: "1100px" }}>
+            <CmsText section="about" slot="charities.p2" multiline />
+          </p>
+
+          <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "20px", fontWeight: 700, color: "#2B3490", margin: "0 0 16px" }}>
+            <CmsText section="about" slot="charities.trusteesHeading" />
+          </h3>
+          <div className="k-trustees">
+            {TRUSTEES.map((t, i) => (
+              <div key={i} className="k-trustee">
+                {t.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- static asset, same as the Leadership cards
+                  <img src={t.photo} alt={t.name} className="k-trustee-photo" />
+                ) : (
+                  <span className="k-trustee-photo k-trustee-initials">{trusteeInitials(t.name)}</span>
+                )}
+                <span className="k-trustee-name"><CmsText section="about" slot={`trustees.${i}.name`} /></span>
+                <span className="k-trustee-role"><CmsText section="about" slot={`trustees.${i}.role`} /></span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* GOVERNING BODY — entirely CMS-driven (Admin -> Committees, type
+          "Governing Body"). Renders nothing until members are added. */}
+      <GoverningBody />
 
       {/* LEADERSHIP */}
       <section className="k-section k-leadership" id="leadership">

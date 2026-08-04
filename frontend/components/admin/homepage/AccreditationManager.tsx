@@ -122,11 +122,11 @@ function AccreditationManagerInner() {
     try {
       const dto = {
         shortName: form.shortName,
-        grade: form.grade || undefined,
+        grade: form.grade || null,
         name: form.name,
-        subtext: form.subtext || undefined,
-        linkUrl: form.linkUrl || undefined,
-        linkText: form.linkText || undefined,
+        subtext: form.subtext || null,
+        linkUrl: form.linkUrl || null,
+        linkText: form.linkText || null,
         imageUrl: form.imageUrl,
         mediaId: form.mediaId,
         isActive: form.isActive,

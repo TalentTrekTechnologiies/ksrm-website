@@ -81,7 +81,7 @@ export interface Download {
 
 export interface DownloadInput {
   title: string;
-  description?: string;
+  description?: string | null;
   category: DownloadCategory;
   pageSection?: string | null;
   groupLabel?: string | null;

@@ -21,16 +21,16 @@ export interface ResearchRecord {
 export interface ResearchRecordInput {
   title: string;
   authors: string;
-  journal?: string;
+  journal?: string | null;
   year: number;
-  department?: string;
+  department?: string | null;
   departmentId?: number;
   facultyId?: number | null;
   type: string;
-  doiOrLink?: string;
+  doiOrLink?: string | null;
   /** Pass the picked Media's id (DOCUMENT type) to link it; pass `null` explicitly to unlink. */
   mediaId?: number | null;
-  attachmentUrl?: string;
+  attachmentUrl?: string | null;
   isActive?: boolean;
 }
 

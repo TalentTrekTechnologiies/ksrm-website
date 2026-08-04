@@ -52,7 +52,7 @@ export default function LabsTab({ departmentId }: { departmentId: number }) {
         departmentId,
         name: form.name,
         description: form.description,
-        imageUrl: form.imageUrl || undefined,
+        imageUrl: form.imageUrl || null,
         mediaId: form.mediaId,
         capacity: Number.isNaN(form.capacity) ? undefined : form.capacity,
         equipment: form.equipment,
@@ -61,7 +61,7 @@ export default function LabsTab({ departmentId }: { departmentId: number }) {
       buildUpdateDto={(form) => ({
         name: form.name,
         description: form.description,
-        imageUrl: form.imageUrl || undefined,
+        imageUrl: form.imageUrl || null,
         mediaId: form.mediaId,
         capacity: Number.isNaN(form.capacity) ? undefined : form.capacity,
         equipment: form.equipment,

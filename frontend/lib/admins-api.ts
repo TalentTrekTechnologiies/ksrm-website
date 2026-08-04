@@ -43,16 +43,16 @@ export interface CreateAdminInput {
   email: string;
   password: string;
   name: string;
-  department?: string;
+  department?: string | null;
   departmentId?: number;
   roleIds?: number[];
   isSuperAdmin?: boolean;
 }
 
 export interface UpdateAdminInput {
-  email?: string;
+  email?: string | null;
   name?: string;
-  department?: string;
+  department?: string | null;
   /** Explicit `null` clears the department scope; omit the key to leave it
    * unchanged (matches the mediaId:null "unlink" convention). */
   departmentId?: number | null;

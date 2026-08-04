@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star, BookOpen } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
@@ -98,6 +98,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
   const { confirm, notifySaved } = useCmsConfirm()
   const [items, setItems] = useState<Faculty[]>([])
   const [editing, setEditing] = useState<Faculty | null>(null)
+  const formRef = useRef<HTMLDivElement>(null)
   const [creating, setCreating] = useState(false)
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
@@ -134,11 +135,13 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
     setCreating(true)
     setEditing(null)
     setForm(emptyForm)
+    revealForm()
   }
 
   function startEdit(item: Faculty) {
     setEditing(item)
     setCreating(false)
+    revealForm()
     setForm({
       name: item.name,
       designation: item.designation,
@@ -159,6 +162,21 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
     setCreating(false)
   }
 
+  /**
+   * Bring the form into view when it opens.
+   *
+   * The form renders above the list, so opening it from a row near the bottom
+   * of a long faculty list left it off-screen entirely - the page looked like
+   * nothing had happened and the edit fields had to be hunted for by scrolling
+   * up. rAF waits for the form to actually be in the DOM before scrolling to
+   * it, since setState has not committed at the moment this is called.
+   */
+  function revealForm() {
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    })
+  }
+
   async function handleSave() {
     if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
@@ -170,23 +188,36 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
         qualification: form.qualification,
         department: departmentName,
         departmentId,
-        specialization: form.specialization || undefined,
-        experience: form.experience || undefined,
-        email: form.email || undefined,
-        phone: form.phone || undefined,
-        photoUrl: form.photoUrl || undefined,
+        // null, not undefined: an omitted key leaves the stored value alone,
+        // so clearing a field and saving used to appear to do nothing - the
+        // old phone number or email stayed on the public site.
+        specialization: form.specialization.trim() || null,
+        experience: form.experience.trim() || null,
+        email: form.email.trim() || null,
+        phone: form.phone.trim() || null,
+        photoUrl: form.photoUrl.trim() || null,
         mediaId: form.mediaId,
         isHod: form.isHod,
-        welcomeMessage: form.welcomeMessage || undefined,
+        welcomeMessage: form.welcomeMessage.trim() || null,
       }
       if (editing) {
         await updateFaculty(editing.id, { ...dto, version: editing.version })
+        cancelForm()
+        await refresh()
+        notifySaved("Your changes have been saved.")
       } else {
-        await createFaculty(dto)
+        // Stay on the newly created person instead of closing. Achievements
+        // need a saved faculty id to attach to, so on a brand-new record the
+        // Publications/Patents editor cannot exist until this point - closing
+        // here meant finding the person again in the list and reopening them
+        // just to add their first patent.
+        const created = await createFaculty(dto)
+        await refresh()
+        setCreating(false)
+        setEditing(created)
+        notifySaved("Saved. You can now add publications, patents and IDs below.")
+        revealForm()
       }
-      cancelForm()
-      await refresh()
-      notifySaved("Your changes have been saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save faculty")
     } finally {
@@ -277,7 +308,7 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
       )}
 
       {isFormOpen && (
-        <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
+        <div ref={formRef} style={{ boxShadow: "var(--shadow-admin-card)", scrollMarginTop: "16px" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit faculty" : "New faculty"}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
@@ -312,13 +343,20 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
               departmentName={departmentName}
             />
           )}
-          {/* Only when editing: an achievement needs a saved faculty id to
-              attach to, and these are appended over years rather than filled
-              in at the moment someone is first added. */}
-          {editing && (
+          {/* An achievement needs a saved faculty id to attach to, so on a
+              brand-new person this cannot exist yet. Say so rather than
+              leaving a silent gap - the section simply being absent read as
+              "patents cannot be added here". Saving flips this into the real
+              editor without closing the form. */}
+          {editing ? (
             <div className="rounded-2xl border border-admin-border bg-admin-bg/40 p-4">
               <FacultyAchievementsEditor facultyId={editing.id} facultyName={editing.name} />
             </div>
+          ) : (
+            <p className="rounded-2xl border border-dashed border-admin-border bg-admin-bg/40 p-4 text-sm text-slate-500">
+              Save this person first, then publications, patents, books, awards and researcher IDs
+              can be added here. The form stays open so you can add them straight away.
+            </p>
           )}
           <FormActions>
             <SecondaryButton onClick={cancelForm}>Cancel</SecondaryButton>
@@ -450,11 +488,11 @@ function FacultyResearchPanel({
       const dto = {
         title: form.title,
         authors: form.authors,
-        journal: form.journal || undefined,
+        journal: form.journal || null,
         year: form.year,
         type: form.type,
-        doiOrLink: form.doiOrLink || undefined,
-        attachmentUrl: form.attachmentUrl || undefined,
+        doiOrLink: form.doiOrLink || null,
+        attachmentUrl: form.attachmentUrl || null,
         mediaId: form.mediaId,
         isActive: form.isActive,
         department: departmentName,
@@ -490,10 +528,17 @@ function FacultyResearchPanel({
     <section className="space-y-3 rounded-xl border border-admin-border bg-admin-bg/50 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
+          {/* Named for where it actually appears. This and the achievements
+              editor below were both called "Publications / Patents" but write
+              to different tables and surface on different pages, so a record
+              added here never appeared under "View Profile" and looked lost. */}
           <p className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-            <BookOpen className="h-4 w-4 text-admin-primary" /> Publications / Patents
+            <BookOpen className="h-4 w-4 text-admin-primary" /> Department Research Output
           </p>
-          <p className="text-xs text-slate-500">Add this faculty member's new publications, projects and patents here.</p>
+          <p className="text-xs text-slate-500">
+            Appears on the <strong>Research page</strong> and this department&apos;s research section — not on the
+            person&apos;s View Profile. For what shows on their profile, use &ldquo;Profile Records&rdquo; below.
+          </p>
         </div>
         {!isFormOpen && (
           <button type="button" onClick={startCreateResearch} className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-admin-primary ring-1 ring-admin-border hover:bg-admin-bg">

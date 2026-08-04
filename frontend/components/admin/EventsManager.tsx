@@ -138,16 +138,16 @@ function EventsManagerInner() {
     try {
       const dto = {
         title: form.title,
-        description: form.description || undefined,
+        description: form.description || null,
         eventDate: form.eventDate,
-        location: form.location || undefined,
-        imageUrl: form.imageUrl || undefined,
-        videoUrl: form.videoUrl || undefined,
+        location: form.location || null,
+        imageUrl: form.imageUrl || null,
+        videoUrl: form.videoUrl || null,
         videoMediaId: form.videoMediaId,
-        documentUrl: form.documentUrl || undefined,
+        documentUrl: form.documentUrl || null,
         documentMediaId: form.documentMediaId,
         mediaId: form.mediaId,
-        category: form.category || undefined,
+        category: form.category || null,
         isActive: form.isActive,
       }
       if (editing) {

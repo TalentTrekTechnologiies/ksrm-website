@@ -107,7 +107,7 @@ function StatisticsManagerInner() {
         await updateStatistic(editing.id, {
           label: form.label,
           value: form.value,
-          suffix: form.suffix || undefined,
+          suffix: form.suffix || null,
           isActive: form.isActive,
           version: editing.version,
         })
@@ -116,7 +116,7 @@ function StatisticsManagerInner() {
           scope: creatingGroup,
           label: form.label,
           value: form.value,
-          suffix: form.suffix || undefined,
+          suffix: form.suffix || null,
           isActive: form.isActive,
         })
       }

@@ -68,6 +68,59 @@ export interface PageTextPage {
 export const PAGE_TEXT: Record<string, PageTextPage> = {
   ...GENERATED_PAGE_TEXT,
 
+  // Extends the generated About entry rather than replacing it: a plain
+  // `about: {...}` here would win outright and silently drop every slot the
+  // migration lifted out of that page's JSX.
+  about: {
+    ...GENERATED_PAGE_TEXT.about,
+    groups: [
+      ...GENERATED_PAGE_TEXT.about.groups,
+      {
+        label: "Sri Kandula Obula Reddy Charities",
+        slots: [
+          {
+            id: "charities.heading",
+            label: "Section heading",
+            kind: "line",
+            default: "Sri Kandula Obula Reddy Charities",
+          },
+          {
+            id: "charities.p1",
+            label: "Founding paragraph",
+            kind: "paragraph",
+            default:
+              "Late Sri Kandula Obula Reddy, former Member of Parliament, transformed his noble vision into reality by establishing K.S.R.M. College of Engineering (KSRMCE) under the aegis of Sri Kandula Obula Reddy Charities in 1980. The institution was established in the rural part of Kadapa in memory of his younger son, Late Sri Kandula Srinivasa Reddy, who tragically lost his life in a road accident in New Delhi while pursuing his engineering education.",
+          },
+          {
+            id: "charities.p2",
+            label: "Vision paragraph",
+            kind: "paragraph",
+            default:
+              "Since its inception, the institute has stood as a testament to the foresight, commitment, and social responsibility of its Founder Chairman, Late Sri Kandula Obula Reddy. He envisioned KSRMCE as a centre of excellence that would empower the youth of the rural and underserved communities of the Rayalaseema region through quality technical education. The region, characterized by its arid and semi-arid climate and recurrent drought conditions, had limited access to higher technical education. KSRMCE was established to bridge this gap and has since played a pivotal role in producing competent engineers, technologists, and leaders who have contributed significantly to society and the nation.",
+          },
+          {
+            id: "charities.trusteesHeading",
+            label: "Trustees heading",
+            kind: "line",
+            default: "The following are the current Managing Trustees of Sri Kandula Obula Reddy Charities",
+          },
+          { id: "trustees.0.name", label: "Trustee 1 - name", kind: "line", default: "Sri. K. Madan Mohan Reddy" },
+          { id: "trustees.0.role", label: "Trustee 1 - role", kind: "line", default: "President" },
+          { id: "trustees.1.name", label: "Trustee 2 - name", kind: "line", default: "Smt. K. Rajeswari" },
+          { id: "trustees.1.role", label: "Trustee 2 - role", kind: "line", default: "Vice-President & Treasurer" },
+          { id: "trustees.2.name", label: "Trustee 3 - name", kind: "line", default: "Sri. K. Chandra Obul Reddy" },
+          { id: "trustees.2.role", label: "Trustee 3 - role", kind: "line", default: "Secretary" },
+          { id: "trustees.3.name", label: "Trustee 4 - name", kind: "line", default: "Sri. K. Raja Mohan Reddy" },
+          { id: "trustees.3.role", label: "Trustee 4 - role", kind: "line", default: "Member" },
+          { id: "trustees.4.name", label: "Trustee 5 - name", kind: "line", default: "Sri. S. Venkata Siva Reddy" },
+          { id: "trustees.4.role", label: "Trustee 5 - role", kind: "line", default: "Member" },
+          { id: "trustees.5.name", label: "Trustee 6 - name", kind: "line", default: "Sri. K. Murali Mohan Reddy" },
+          { id: "trustees.5.role", label: "Trustee 6 - role", kind: "line", default: "Member" },
+        ],
+      },
+    ],
+  },
+
   library: {
     label: "Library",
     path: "/campus-life/library",

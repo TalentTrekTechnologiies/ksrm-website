@@ -104,7 +104,7 @@ function RolesManagerInner() {
     try {
       const dto = {
         name: form.name,
-        description: form.description || undefined,
+        description: form.description || null,
         permissionKeys: form.permissionKeys,
       }
       if (editing) {
