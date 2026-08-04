@@ -45,12 +45,7 @@ export default function AccreditationCertificates({
    * from its Mandatory Disclosure page - the MoUs and general policies filed
    * alongside them are documents, not certificates, and stay off this block.
    */
-  groups = [
-    "AICTE Mandatory Disclosure",
-    "Accreditation Status",
-    "AICTE Approval Letters",
-    "UGC Autonomous",
-  ],
+  groups = ["Accreditation Status", "AICTE Approval Letters", "UGC Autonomous"],
   heading = "Certificates & Letters",
 }: {
   section?: string

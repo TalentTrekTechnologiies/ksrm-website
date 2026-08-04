@@ -122,8 +122,15 @@ function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: num
   const overflowing = group.items.length > maxVisible
   const items = expanded || !overflowing ? group.items : group.items.slice(0, maxVisible)
 
+  // A slug of the group name, so a nav item can link straight to this block
+  // (e.g. Mandatory Disclosure -> Memorandum of Understandings). scroll-margin
+  // keeps the heading clear of the sticky header when jumped to.
+  const anchor = group.label
+    ? "doc-" + group.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    : undefined
+
   return (
-    <div>
+    <div id={anchor} style={anchor ? { scrollMarginTop: 100 } : undefined}>
       {group.label && <div className="pr-group-head">{group.label}</div>}
       <PublicDocumentList
         items={items.map((d) => ({

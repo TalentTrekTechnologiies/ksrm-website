@@ -27,14 +27,13 @@ const navItems: NavItem[] = [
       { label: "About KSRMCE", href: "/about#about-ksrmce" },
       { label: "Vision & Mission", href: "/about#vision" },
       { label: "Leadership", href: "/about#leadership" },
-      { label: "  ↳ Secretary cum Correspondent", href: "/about/correspondent" },
+      { label: "  ↳ Correspondent and Secretary", href: "/about/correspondent" },
       { label: "  ↳ Chairman", href: "/about/chairman" },
       { label: "  ↳ Vice Chairman & MD", href: "/about/managing-director" },
       { label: "  ↳ Principal", href: "/about/principal" },
       { label: "Board of Studies", href: "/about#jbos" },
       { label: "Strategic Plan", href: "/about#strategic" },
       { label: "Policy Documents", href: "/about#policies" },
-      { label: "Mandatory Disclosure", href: "/mandatory-disclosure" },
     ],
   },
   {
@@ -106,7 +105,17 @@ const navItems: NavItem[] = [
     href: "/iqac",
     children: [
       { label: "NAAC", href: "/naac" },
+    ],
+  },
+  {
+    label: "Mandatory Disclosure",
+    href: "/mandatory-disclosure",
+    children: [
       { label: "Accreditation", href: "/accreditation" },
+      { label: "AICTE Approval Letters", href: "/mandatory-disclosure#doc-aicte-approval-letters" },
+      { label: "UGC Autonomous", href: "/mandatory-disclosure#doc-ugc-autonomous" },
+      { label: "Other Statutory Documents", href: "/mandatory-disclosure#doc-other-statutory-documents" },
+      { label: "AICTE Feedback", href: "https://www.aicte-india.org/feedback/" },
     ],
   },
   { label: "IIC", href: "/iic" },
