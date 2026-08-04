@@ -125,7 +125,6 @@ const navItems: NavItem[] = [
     href: "/mandatory-disclosure",
     children: [
       { label: "Accreditation", href: "/accreditation" },
-      { label: "AICTE Approval Letters", href: "/mandatory-disclosure#doc-aicte-approval-letters" },
       { label: "UGC Autonomous", href: "/mandatory-disclosure#doc-ugc-autonomous" },
       { label: "Other Statutory Documents", href: "/mandatory-disclosure#doc-other-statutory-documents" },
       { label: "AICTE Feedback", href: "https://www.aicte-india.org/feedback/" },
