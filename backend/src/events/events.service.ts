@@ -200,7 +200,7 @@ export class EventsService {
       dto.items.map((item) =>
         this.prisma.event.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

@@ -84,9 +84,28 @@ export class FacultyService {
   async create(createFacultyDto: CreateFacultyDto, admin: RequestAdmin, requestId?: string) {
     const resolvedUrl = await this.mediaLink.prepareLink(createFacultyDto.mediaId, 'IMAGE');
 
+    // Append to the end of the department's roster. Without this a new member
+    // takes the default sortOrder of 0 and jumps to the top of a list somebody
+    // has already put in a deliberate order - which is never what adding a
+    // colleague is meant to do.
+    const sortOrder =
+      createFacultyDto.sortOrder ??
+      ((
+        await this.prisma.faculty.aggregate({
+          where: {
+            deletedAt: null,
+            ...(createFacultyDto.departmentId !== undefined && {
+              departmentId: createFacultyDto.departmentId,
+            }),
+          },
+          _max: { sortOrder: true },
+        })
+      )._max.sortOrder ?? 0) + 1;
+
     const newFaculty = await this.prisma.faculty.create({
       data: {
         ...createFacultyDto,
+        sortOrder,
         photoUrl: resolvedUrl ?? createFacultyDto.photoUrl,
       },
     });
@@ -218,7 +237,7 @@ export class FacultyService {
       dto.items.map((item) =>
         this.prisma.faculty.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

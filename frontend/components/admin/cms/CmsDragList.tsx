@@ -54,20 +54,27 @@ function SortableRow<T extends CmsDragListItem>({
   const isDeleted = item.deletedAt !== null
 
   return (
+    // The whole row is the drag handle, not just the grip - a 16px target was
+    // easy to miss, and picking a row up from wherever the cursor happens to be
+    // is what people expect from a list like this.
+    //
+    // Safe for the buttons on the right: PointerSensor only starts a drag after
+    // 4px of movement, so a click still reaches them. touch-none keeps a
+    // touchscreen drag from scrolling the page instead of moving the row.
     <li
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-3 rounded-xl border border-admin-border bg-white px-3 py-3"
+      className={`flex touch-none items-center gap-3 rounded-xl border bg-white px-3 py-3 transition-colors ${
+        isDragging
+          ? "border-admin-primary shadow-lg"
+          : "border-admin-border hover:border-slate-300 hover:bg-admin-bg/40"
+      } cursor-grab active:cursor-grabbing`}
+      {...attributes}
+      {...listeners}
     >
-      <button
-        type="button"
-        aria-label="Drag to reorder"
-        className="cursor-grab touch-none text-slate-300 hover:text-slate-500 active:cursor-grabbing"
-        {...attributes}
-        {...listeners}
-      >
+      <span aria-hidden="true" className="shrink-0 text-slate-300">
         <GripVertical className="h-4 w-4" />
-      </button>
+      </span>
 
       <div className="min-w-0 flex-1">{children}</div>
 
@@ -82,7 +89,7 @@ function SortableRow<T extends CmsDragListItem>({
         </span>
       )}
 
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="flex shrink-0 items-center gap-1" onPointerDown={(e) => e.stopPropagation()}>
         {isDeleted ? (
           onRestore && (
             <button

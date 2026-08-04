@@ -133,6 +133,8 @@ export default function FacultyProfileModal({
         .fp-item-meta a { color: #2B3490; }
         .fp-chip { display: inline-block; background: #fff; border: 1px solid #e3e6ec; color: #555; font-size: 11.5px; padding: 2px 8px; border-radius: 5px; margin-right: 6px; }
         .fp-empty { color: #888; font-size: 14px; }
+        .fp-item.id { border-left-color: #6b7280; }
+        .fp-id-value { color: #2B3490; font-weight: 700; margin-left: 8px; }
 
         @media (max-width: 640px) {
           .fp-head { grid-template-columns: 1fr; gap: 16px; padding: 22px; }
@@ -172,18 +174,32 @@ export default function FacultyProfileModal({
           </div>
         </div>
 
-        <div className="fp-body">
+        {/* Hidden entirely when there is nothing to show, rather than
+            announcing an absence - a profile with no publications should just
+            end after the details. */}
+        <div className="fp-body" style={grouped.length === 0 && achievements !== null ? { display: "none" } : undefined}>
           {achievements === null ? (
             <p className="fp-empty">Loading…</p>
-          ) : grouped.length === 0 ? (
-            <p className="fp-empty">No publications or patents recorded yet.</p>
           ) : (
             grouped.map((g) => (
               <div className="fp-group" key={g.value}>
                 <h3>
                   {g.plural} <span className="fp-count">{g.items.length}</span>
                 </h3>
-                {g.items.map((a) => (
+                {g.items.map((a) =>
+                  a.type === "PROFILE_ID" ? (
+                    <div className="fp-item id" key={a.id}>
+                      <p className="fp-item-title">
+                        {a.title}
+                        {a.detail && <span className="fp-id-value">{a.detail}</span>}
+                      </p>
+                      {a.url && (
+                        <p className="fp-item-meta">
+                          <a href={a.url} target="_blank" rel="noopener noreferrer">Open profile →</a>
+                        </p>
+                      )}
+                    </div>
+                  ) : (
                   <div className={`fp-item${a.type === "PATENT" ? " patent" : ""}`} key={a.id}>
                     <p className="fp-item-title">{a.title}</p>
                     <p className="fp-item-meta">
@@ -204,7 +220,8 @@ export default function FacultyProfileModal({
                       )}
                     </p>
                   </div>
-                ))}
+                  ),
+                )}
               </div>
             ))
           )}

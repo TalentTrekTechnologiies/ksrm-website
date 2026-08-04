@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star , ChevronUp, ChevronDown, BookOpen } from "lucide-react"
+import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw, Star, BookOpen } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
+import CmsDragList from "@/components/admin/cms/CmsDragList"
 import FacultyAchievementsEditor from "@/components/admin/departments/FacultyAchievementsEditor"
 import { TextField, TextAreaField, NumberField, SelectField, ToggleField, FormActions, PrimaryButton, SecondaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
@@ -219,11 +220,13 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
    * Buttons rather than drag-and-drop: this list is edited by staff on any
    * device, and arrows work on touch screens where dragging is fiddly.
    */
-  async function move(index: number, direction: -1 | 1) {
-    const next = [...liveItems]
-    const target = index + direction
-    if (target < 0 || target >= next.length) return
-    ;[next[index], next[target]] = [next[target], next[index]]
+  /**
+   * Saves the order produced by a drag. Applied locally first so the row stays
+   * where it was dropped instead of snapping back while the request is in
+   * flight; a failure re-reads the server's order rather than leaving the list
+   * showing something that was never saved.
+   */
+  async function persistOrder(next: Faculty[]) {
     setItems((prev) => {
       const deleted = prev.filter((i) => i.deletedAt !== null)
       return [...next, ...deleted]
@@ -326,37 +329,25 @@ export default function FacultyTab({ departmentId, departmentName }: { departmen
         </div>
       )}
 
-      {liveItems.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-admin-border p-6 text-center text-sm text-slate-400">No faculty yet.</p>
-      ) : (
-        <ul className="space-y-2">
-          {liveItems.map((item, idx) => (
-            <li key={item.id} className="flex items-center gap-3 rounded-xl border border-admin-border bg-white px-3 py-3">
-              <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-slate-700">
-                  {item.isHod && <Star className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400" />}
-                  {item.name}
-                </p>
-                <p className="truncate text-xs text-slate-500">{item.designation} · {item.qualification}</p>
-              </div>
-              <div className="flex flex-col">
-                <button type="button" onClick={() => move(idx, -1)} disabled={idx === 0} aria-label="Move up" className="rounded p-0.5 text-slate-400 hover:text-admin-primary disabled:opacity-25">
-                  <ChevronUp className="h-4 w-4" />
-                </button>
-                <button type="button" onClick={() => move(idx, 1)} disabled={idx === liveItems.length - 1} aria-label="Move down" className="rounded p-0.5 text-slate-400 hover:text-admin-primary disabled:opacity-25">
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </div>
-              <button type="button" onClick={() => startEdit(item)} aria-label="Edit" className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-admin-primary">
-                <Pencil className="h-4 w-4" />
-              </button>
-              <button type="button" onClick={() => handleDelete(item)} aria-label="Delete" className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600">
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* Drag to reorder by grabbing the handle. The arrow buttons that used
+          to be the only way to move a row are gone - CmsDragList keeps
+          keyboard reordering, so this is not a loss for anyone using one. */}
+      <CmsDragList
+        items={liveItems}
+        onReorder={persistOrder}
+        onEdit={startEdit}
+        onDelete={handleDelete}
+        emptyLabel="No faculty yet."
+        renderRow={(item) => (
+          <div className="min-w-0 flex-1">
+            <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-slate-700">
+              {item.isHod && <Star className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400" />}
+              {item.name}
+            </p>
+            <p className="truncate text-xs text-slate-500">{item.designation} · {item.qualification}</p>
+          </div>
+        )}
+      />
 
       {deletedItems.length > 0 && (
         <div className="border-t border-admin-border pt-3">

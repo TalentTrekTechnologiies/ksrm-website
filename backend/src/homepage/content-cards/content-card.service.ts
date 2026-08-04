@@ -230,7 +230,7 @@ export class ContentCardService {
       dto.items.map((item) =>
         this.prisma.contentCard.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

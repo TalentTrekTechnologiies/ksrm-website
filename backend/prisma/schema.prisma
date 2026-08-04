@@ -204,6 +204,11 @@ enum FacultyAchievementType {
   BOOK
   AWARD
   CERTIFICATION
+  /// A named identifier or profile link - Scopus ID, ORCID, Vidwan, Google
+  /// Scholar. Uses the same row shape (title = the label, detail = the value),
+  /// so an admin can record any identifier that comes along without waiting for
+  /// a schema change for each one.
+  PROFILE_ID
 }
 
 /// A publication, patent, book, award or certification belonging to one faculty

@@ -14,7 +14,9 @@ describe('FacultyService', () => {
       findUnique: jest.Mock;
       create: jest.Mock;
       update: jest.Mock;
+      aggregate: jest.Mock;
     };
+    $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
   let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
@@ -29,7 +31,11 @@ describe('FacultyService', () => {
         findUnique: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
+        // create() reads the current highest sortOrder so a new member lands at
+        // the end of the roster rather than the top.
+        aggregate: jest.fn().mockResolvedValue({ _max: { sortOrder: 4 } }),
       },
+      $transaction: jest.fn().mockResolvedValue([]),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
@@ -123,6 +129,54 @@ describe('FacultyService', () => {
       await service.restore(1, admin, undefined);
 
       expect(mediaLink.syncUsage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ordering', () => {
+    // A new colleague appearing at the top of a roster somebody has already
+    // arranged is never what adding them was meant to do.
+    it('appends a new member after the current last one', async () => {
+      prisma.faculty.aggregate.mockResolvedValue({ _max: { sortOrder: 7 } });
+      prisma.faculty.create.mockResolvedValue({ id: 5 });
+
+      await service.create(
+        { name: 'New Person', designation: 'Assistant Professor', qualification: 'M.Tech', department: 'CSE' },
+        admin,
+        undefined,
+      );
+
+      expect(prisma.faculty.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ sortOrder: 8 }) }),
+      );
+    });
+
+    it('starts at 1 for the first member of an empty department', async () => {
+      prisma.faculty.aggregate.mockResolvedValue({ _max: { sortOrder: null } });
+      prisma.faculty.create.mockResolvedValue({ id: 1 });
+
+      await service.create(
+        { name: 'First', designation: 'Professor', qualification: 'PhD', department: 'CSE' },
+        admin,
+        undefined,
+      );
+
+      expect(prisma.faculty.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ sortOrder: 1 }) }),
+      );
+    });
+
+    // Reordering changes sortOrder and nothing an edit form is holding, so
+    // bumping the optimistic-lock version made every open form stale and the
+    // admin got "changed by someone else" when nobody had.
+    it('does not bump the optimistic-lock version when reordering', async () => {
+      prisma.faculty.findMany.mockResolvedValue([{ id: 1 }, { id: 2 }]);
+      prisma.$transaction.mockResolvedValue([]);
+
+      await service.reorder({ items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 1 }] }, admin, undefined);
+
+      for (const call of prisma.faculty.update.mock.calls) {
+        expect(call[0].data).not.toHaveProperty('version');
+      }
     });
   });
 

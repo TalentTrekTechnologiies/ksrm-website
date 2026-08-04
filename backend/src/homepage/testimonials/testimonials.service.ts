@@ -209,7 +209,7 @@ export class TestimonialsService {
       dto.items.map((item) =>
         this.prisma.testimonial.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

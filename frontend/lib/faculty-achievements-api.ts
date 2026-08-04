@@ -5,7 +5,8 @@ export type FacultyAchievementType =
   | "PATENT"
   | "BOOK"
   | "AWARD"
-  | "CERTIFICATION";
+  | "CERTIFICATION"
+  | "PROFILE_ID";
 
 export interface FacultyAchievement {
   id: number;
@@ -48,6 +49,10 @@ export const ACHIEVEMENT_TYPES: { value: FacultyAchievementType; label: string; 
   { value: "BOOK", label: "Book / Chapter", plural: "Books & Chapters" },
   { value: "AWARD", label: "Award", plural: "Awards & Recognition" },
   { value: "CERTIFICATION", label: "Certification", plural: "Certifications" },
+  // A named identifier - Scopus ID, ORCID, Vidwan, Google Scholar. title is
+  // the label and detail the value, so any identifier can be recorded without
+  // a schema change for each one.
+  { value: "PROFILE_ID", label: "ID / Profile", plural: "Researcher IDs & Profiles" },
 ];
 
 export function getFacultyAchievementsPublic(

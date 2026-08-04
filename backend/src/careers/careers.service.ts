@@ -192,7 +192,7 @@ export class CareersService {
       dto.items.map((item) =>
         this.prisma.career.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

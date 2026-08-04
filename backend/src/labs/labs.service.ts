@@ -185,7 +185,7 @@ export class LabsService {
       dto.items.map((item) =>
         this.prisma.lab.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

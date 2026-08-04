@@ -191,7 +191,7 @@ export class CampusVideosService {
       dto.items.map((item) =>
         this.prisma.campusVideo.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

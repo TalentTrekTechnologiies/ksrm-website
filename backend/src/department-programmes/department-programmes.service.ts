@@ -180,7 +180,7 @@ export class DepartmentProgrammesService {
       dto.items.map((item) =>
         this.prisma.departmentProgramme.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

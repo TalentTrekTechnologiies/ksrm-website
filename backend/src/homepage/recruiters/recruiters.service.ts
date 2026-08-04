@@ -209,7 +209,7 @@ export class RecruitersService {
       dto.items.map((item) =>
         this.prisma.recruiter.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

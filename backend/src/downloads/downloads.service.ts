@@ -265,7 +265,7 @@ export class DownloadsService {
       dto.items.map((item) =>
         this.prisma.download.update({
           where: { id: item.id },
-          data: { sortOrder: item.sortOrder, version: { increment: 1 } },
+          data: { sortOrder: item.sortOrder },
         }),
       ),
     );

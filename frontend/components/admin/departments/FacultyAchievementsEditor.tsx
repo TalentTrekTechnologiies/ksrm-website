@@ -55,6 +55,7 @@ const FIELD_LABELS: Record<FacultyAchievementType, { detail: string; ref: string
   BOOK: { detail: "Publisher", ref: "ISBN", date: "Date of publication" },
   AWARD: { detail: "Awarded by", ref: "Reference", date: "Date received" },
   CERTIFICATION: { detail: "Issued by", ref: "Certificate number", date: "Date of issue" },
+  PROFILE_ID: { detail: "Value", ref: "Reference (optional)", date: "Date added (optional)" },
 }
 
 function fmtDate(iso: string | null): string {
@@ -234,7 +235,14 @@ export default function FacultyAchievementsEditor({
             onChange={(v) => setForm({ ...form, type: v as FacultyAchievementType })}
             options={ACHIEVEMENT_TYPES.map((t) => ({ value: t.value, label: t.label }))}
           />
-          <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={500} />
+          <TextField
+            label={form.type === "PROFILE_ID" ? "Name" : "Title"}
+            value={form.title}
+            onChange={(v) => setForm({ ...form, title: v })}
+            required
+            maxLength={500}
+            placeholder={form.type === "PROFILE_ID" ? "Scopus ID · ORCID · Vidwan" : undefined}
+          />
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField label={labels.detail} value={form.detail} onChange={(v) => setForm({ ...form, detail: v })} />
             <TextField label={labels.ref} value={form.referenceNo} onChange={(v) => setForm({ ...form, referenceNo: v })} />
