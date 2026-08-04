@@ -2,6 +2,7 @@
 
 
 import PageResources from "@/components/PageResources";
+import AccreditationCertificates from "@/components/accreditation/AccreditationCertificates";
 import CmsText from "@/components/CmsText";
 const nbaPrograms = [
   "Computer Science & Engineering (B.Tech) - Valid until 2026",
@@ -131,6 +132,9 @@ export default function AccreditationPage() {
         </div>
       </section>
     
+      {/* The certificates themselves - logo cards that open the letters. */}
+      <AccreditationCertificates />
+
       <PageResources section="accreditation" />
       </main>
   );

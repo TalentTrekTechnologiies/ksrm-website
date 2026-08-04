@@ -34,6 +34,7 @@ const navItems: NavItem[] = [
       { label: "Board of Studies", href: "/about#jbos" },
       { label: "Strategic Plan", href: "/about#strategic" },
       { label: "Policy Documents", href: "/about#policies" },
+      { label: "Mandatory Disclosure", href: "/mandatory-disclosure" },
     ],
   },
   {

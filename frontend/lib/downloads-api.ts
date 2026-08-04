@@ -35,6 +35,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   // uploaded here actually renders there.
   { value: "about", label: "About Us" },
   { value: "accreditation", label: "Accreditation" },
+  { value: "mandatory-disclosure", label: "Mandatory Disclosure" },
   { value: "events", label: "Events" },
   { value: "careers", label: "Careers" },
   { value: "contact", label: "Contact Us" },
