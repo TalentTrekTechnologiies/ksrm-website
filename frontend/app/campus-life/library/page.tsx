@@ -1,6 +1,7 @@
 import PageResources from "@/components/PageResources";
 import CmsVideos from "@/components/CmsVideos";
 import LibraryStaff from "@/components/library/LibraryStaff";
+import LibrarianProfile, { LibrarianName } from "@/components/library/LibrarianProfile";
 import CmsText, { CmsTextProvider } from "@/components/CmsText";
 
 /**
@@ -552,50 +553,10 @@ export default function LibraryPage() {
         </div>
       </section>
 
-      {/* Librarian */}
-      <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
-        <div className="responsive-container">
-          <h2 className="lib-h2">Librarian</h2>
-          <p className="lib-lead">Profile of the Librarian, Central Library.</p>
-          <div className="lib-librarian">
-            <div>
-              <div className="lib-librarian-photo">
-                {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
-                <img src="/library/ravi.jpg" alt="Dr. N. Ravisankar Reddy, Librarian" />
-              </div>
-            </div>
-            <div>
-              <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 24, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
-                Dr. N. Ravisankar Reddy, Ph.D
-              </h3>
-              <p style={{ color: "#2B3490", fontSize: 15, fontWeight: 600, margin: "4px 0 0" }}>Librarian</p>
-              <dl>
-                <dt>Educational Qualifications</dt>
-                <dd>M.A., B.Ed., M.L.I.Sc., Ph.D</dd>
-                <dt>Area of Specialisation</dt>
-                <dd>Digital Resources</dd>
-                <dt>Work Experience</dt>
-                <dd>16 years</dd>
-                <dt>Date of Joining K.S.R.M.C.E.</dt>
-                <dd>09 October 2010</dd>
-                <dt>Previous Experience</dt>
-                <dd>
-                  Teacher, Mangalakara Children&apos;s Home Education Centre, Puttaparthi (2004&ndash;2009);
-                  Loyola Master of Computer Science &amp; Applications, Pulivendula (2009&ndash;2010)
-                </dd>
-                <dt>Publications</dt>
-                <dd>12 articles in national and international conferences; 5 workshops; 6 seminars</dd>
-                <dt>Contact</dt>
-                <dd>
-                  <a href="tel:+919441373732" style={{ color: "#2B3490", textDecoration: "none" }}>94413 73732</a>
-                  {" · "}
-                  <a href="mailto:library@ksrmce.ac.in" style={{ color: "#2B3490", textDecoration: "none" }}>library@ksrmce.ac.in</a>
-                </dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Librarian - identity fields come from the same Faculty record the
+          staff grid below shows (the one flagged isHod), so there is one
+          place to edit the Librarian's name/qualification/photo, not two. */}
+      <LibrarianProfile />
 
       {/* Staff - CMS driven */}
       <LibraryStaff />
@@ -673,7 +634,7 @@ export default function LibraryPage() {
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">📖</div>
               <h4>Librarian</h4>
-              <p>Dr. N. Ravisankar Reddy, Ph.D</p>
+              <p><LibrarianName /></p>
             </div>
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">📞</div>

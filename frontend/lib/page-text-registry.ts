@@ -156,6 +156,38 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
           },
         ],
       },
+      {
+        // The Librarian's own profile block, above the editable staff grid.
+        // Name, qualification, specialisation, experience and photo come from
+        // the Faculty record itself (Admin -> Departments -> Central Library
+        // -> Faculty, the isHod row) rather than a slot here - Faculty already
+        // has columns for all of those, and a second, separate copy of the
+        // same facts is exactly the kind of drift that caused this page to
+        // need fixing in the first place. Only what Faculty has no column for
+        // stays here.
+        label: "Librarian profile",
+        slots: [
+          {
+            id: "librarian.joiningDate",
+            label: "Date of joining K.S.R.M.C.E.",
+            kind: "line",
+            default: "09 October 2010",
+          },
+          {
+            id: "librarian.previousExperience",
+            label: "Previous experience",
+            kind: "paragraph",
+            default:
+              "Teacher, Mangalakara Children's Home Education Centre, Puttaparthi (2004–2009); Loyola Master of Computer Science & Applications, Pulivendula (2009–2010)",
+          },
+          {
+            id: "librarian.publications",
+            label: "Publications",
+            kind: "line",
+            default: "12 articles in national and international conferences; 5 workshops; 6 seminars",
+          },
+        ],
+      },
 
       {
         label: "stats (4 items)",
