@@ -31,7 +31,7 @@ const navItems: NavItem[] = [
       { label: "  ↳ Chairman", href: "/about/chairman" },
       { label: "  ↳ Vice Chairman & MD", href: "/about/managing-director" },
       { label: "  ↳ Principal", href: "/about/principal" },
-      { label: "Joint Board of Studies", href: "/about#jbos" },
+      { label: "Board of Studies", href: "/about#jbos" },
       { label: "Strategic Plan", href: "/about#strategic" },
       { label: "Policy Documents", href: "/about#policies" },
     ],

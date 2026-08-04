@@ -67,13 +67,13 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "Joint Board of Studies",
+        label: "Board of Studies",
         slots: [
           {
             id: "joint-board-of-studies",
-            label: "Joint Board of Studies",
+            label: "Board of Studies",
             kind: "line",
-            default: "Joint Board of Studies",
+            default: "Board of Studies",
           },
         ],
       },

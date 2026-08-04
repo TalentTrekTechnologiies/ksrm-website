@@ -4,11 +4,15 @@ import { mediaFile } from "@/lib/api-base";
 import Link from "next/link"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { LEADERSHIP } from "@/data/leadership"
 import CmsText from "@/components/CmsText";
 
 /** Group headings the About page's document sections are stored under, so an
  *  admin can add/remove documents in Page Content -> About and have them land
  *  in the right designed section rather than a generic list at the bottom. */
+// The label 8 existing documents are already filed under, here and on the live
+// site. It is a data key, not a caption - the heading and nav now read "Board
+// of Studies", but renaming this would orphan every one of those documents.
 const GROUP_JBOS = "Joint Board of Studies";
 const GROUP_STRATEGIC = "Strategic Plan & Deployment Documents";
 const GROUP_POLICY = "Policy Documents";
@@ -28,39 +32,6 @@ export default function About() {
       ? rows.map((d) => ({ title: d.title, url: d.fileUrl, icon: "📄" }))
       : fallback;
   };
-
-  const leadershipData = [
-    {
-      photo: "/images/leadership/correspondent.jpg",
-      name: "Smt. K. Rajeswari",
-      role: "Secretary cum Correspondent",
-      href: "/about/correspondent",
-      bio: "Hon'ble Secretary cum Correspondent of K.S.R.M. College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance.",
-    },
-    {
-      photo: "/images/leadership/chairman.webp",
-      name: "Sri K. Madan Mohan Reddy",
-      role: "Chairman",
-      href: "/about/chairman",
-      bio: "Chairman of K.S.R.M. College of Engineering and custodian of the proud legacy of the Kandula family's educational mission. With decades of experience in institutional governance and strategic management, he provides visionary leadership that guides the college towards educational excellence and social responsibility.",
-    },
-    {
-      photo: "/images/leadership/managing-director.webp",
-      name: "Dr. K. Chandra Obula Reddy",
-      role: "Vice Chairman & Managing Director",
-      email: "md@ksrmce.ac.in",
-      href: "/about/managing-director",
-      bio: "The Kandula Group of Institutions' youngest and most energetic Managing Director. An entrepreneur who founded KOR Ginning & Oil Mills Private Limited and serves as Director of three organizations. He took over as Managing Director to continue the legacy of his father and grandfather.",
-    },
-    {
-      photo: "/images/leadership/principalphoto.webp",
-      name: "Dr. T. Nageswara Prasad",
-      role: "Principal",
-      email: "principal@ksrmce.ac.in",
-      href: "/about/principal",
-      bio: "Since its inception in 1980, KSRMCE has shown its impact on producing quality technical graduates not only for the country but also the world. Over the past four decades, KSRMCE has transformed into a premier hub of learning, blending state-of-the-art infrastructure with human resource deeply committed to imparting quality technical education.",
-    },
-  ]
 
   const statsData = [
     { number: "45+", label: "Years of Excellence" },
@@ -131,8 +102,17 @@ export default function About() {
         .k-mission-text { padding-top: 16px; color: #555; font-size: 15px; line-height: 1.7; }
 
         .k-leadership { background: #F4F3EF; }
-        .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-        .k-leadership-card { background: white; border: 0.8px solid #E5E7EB; border-radius: 12px; padding: 28px; text-align: center; }
+        .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-items: stretch; }
+        /* The cards used to be whatever height their bio made them, so the
+           "View Profile" buttons sat at four different heights. The link is a
+           flex item filling its grid cell, the card fills the link, and the
+           button is pushed to the bottom - so every button lines up however
+           long the text above it runs. */
+        .k-leader-link { text-decoration: none; display: flex; height: 100%; }
+        .k-leadership-card { background: white; border: 0.8px solid #E5E7EB; border-radius: 12px; padding: 28px; text-align: center; display: flex; flex-direction: column; width: 100%; }
+        .k-leadership-card .k-leader-btn { margin-top: auto; }
+        /* Clamp the summary so one long message can't make every card tall. */
+        .k-leader-bio { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
         .k-leader-photo { width: 120px; height: 120px; border: 4px solid #D4A500; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; display: block; }
         .k-leader-name { color: #2B3490; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
         .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 14px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
@@ -209,7 +189,7 @@ export default function About() {
           <a href="#stats" className="nav-link active" style={{ background: "#2B3490", color: "white" }}>About</a>
           <a href="#vision-mission" className="nav-link">Vision & Mission</a>
           <a href="#leadership" className="nav-link">Leadership</a>
-          <a href="#jbos" className="nav-link">Joint Board of Studies</a>
+          <a href="#jbos" className="nav-link">Board of Studies</a>
           <a href="#strategic" className="nav-link">Strategic Plan</a>
           <a href="#policies" className="nav-link">Policies</a>
           <a href="#contact" className="nav-link">Contact</a>
@@ -267,14 +247,14 @@ export default function About() {
         <div className="k-container">
           <h2><CmsText section="about" slot="leadership" /></h2>
           <div className="k-leadership-grid">
-            {leadershipData.map((leader, i) => (
-              <Link key={i} href={leader.href} style={{ textDecoration: "none" }}>
+            {LEADERSHIP.map((leader, i) => (
+              <Link key={i} href={`/about/${leader.slug}`} className="k-leader-link">
                 <div className="k-leadership-card" style={{ cursor: "pointer" }}>
                   <img src={leader.photo} alt={leader.name} className="k-leader-photo" />
                   <div className="k-leader-name">{leader.name}</div>
                   <div className="k-leader-role">{leader.role}</div>
                   {leader.email && <div className="k-leader-email">📧 {leader.email}</div>}
-                  <div className="k-leader-bio">{leader.bio}</div>
+                  <div className="k-leader-bio">{leader.paragraphs[0]}</div>
                   <div className="k-leader-btn">View Profile →</div>
                 </div>
               </Link>
@@ -283,7 +263,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* JOINT BOARD OF STUDIES */}
+      {/* BOARD OF STUDIES */}
       <section className="k-section k-docs" id="jbos">
         <div className="k-container">
           <h2><CmsText section="about" slot="joint-board-of-studies" /></h2>
