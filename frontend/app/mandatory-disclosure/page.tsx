@@ -30,6 +30,10 @@ export default function MandatoryDisclosurePage() {
         .md-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,26,74,0.74) 0%, rgba(20,26,74,0.88) 100%); }
         .md-hero > * { position: relative; z-index: 2; }
         .md-note { background: #f7f8fa; border-left: 4px solid #2B3490; border-radius: 0 10px 10px 0; padding: 18px 22px; margin: 40px 0 0; color: #555; font-size: 15px; line-height: 1.7; }
+        .md-feedback { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #fff; border: 1px solid #eef0f3; border-left: 4px solid #D4A500; border-radius: 0 10px 10px 0; padding: 16px 22px; margin-top: 20px; text-decoration: none; color: #1a1a2e; font-size: 15.5px; transition: box-shadow .18s, border-color .18s; }
+        .md-feedback:hover { box-shadow: 0 8px 22px rgba(43,52,144,.10); border-color: #dfe3ea; border-left-color: #D4A500; }
+        .md-feedback-sub { display: block; color: #666; font-size: 13.5px; margin-top: 3px; }
+        .md-feedback > span:last-child { color: #2B3490; font-size: 19px; }
       `}</style>
 
       <section className="md-hero">
@@ -53,6 +57,25 @@ export default function MandatoryDisclosurePage() {
             </a>
             .
           </p>
+        </div>
+      </section>
+
+      {/* The old page carried this as a tab of its own. It is a link to AICTE's
+          portal rather than a document, so it cannot be a Download record. */}
+      <section style={{ padding: "8px 0 0" }}>
+        <div className="md-container">
+          <a
+            className="md-feedback"
+            href="https://www.aicte-india.org/feedback/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>
+              <strong>AICTE Feedback for Students &amp; Faculty</strong>
+              <span className="md-feedback-sub">Submit feedback on AICTE&rsquo;s national portal</span>
+            </span>
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </section>
 

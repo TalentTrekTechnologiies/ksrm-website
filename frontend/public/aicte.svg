@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 150" width="300" height="150" role="img" aria-label="AICTE Approved">
+  <!--
+    A typographic wordmark used to label the college's AICTE documents.
+
+    Deliberately NOT a reproduction of the All India Council for Technical
+    Education's official emblem - that is their mark to issue, and inventing a
+    lookalike would misrepresent it. This is a plain text tile in the site's own
+    palette, doing the same job the initials fallback did but looking designed
+    rather than missing.
+  -->
+  <rect width="300" height="150" rx="14" fill="#2B3490"/>
+  <rect x="8" y="8" width="284" height="134" rx="9" fill="none" stroke="#FFE619" stroke-opacity="0.35" stroke-width="2"/>
+  <text x="150" y="72"
+        font-family="Rajdhani, 'Segoe UI', Arial, sans-serif"
+        font-size="52" font-weight="700" letter-spacing="4"
+        fill="#FFE619" text-anchor="middle">AICTE</text>
+  <line x1="86" y1="88" x2="214" y2="88" stroke="#FFE619" stroke-opacity="0.5" stroke-width="2"/>
+  <text x="150" y="112"
+        font-family="'Segoe UI', Arial, sans-serif"
+        font-size="17" font-weight="600" letter-spacing="3"
+        fill="#ffffff" fill-opacity="0.9" text-anchor="middle">APPROVED</text>
+</svg>

@@ -24,6 +24,8 @@ const LOGOS: { match: RegExp; src: string; alt: string }[] = [
   { match: /\bNBA\b/i, src: "/nba.png", alt: "National Board of Accreditation" },
   { match: /\bNAAC\b/i, src: "/naac.png", alt: "NAAC" },
   { match: /\bNIRF\b/i, src: "/nirf.jpg", alt: "NIRF" },
+  // A typographic wordmark, not AICTE's official emblem - see public/aicte.svg.
+  { match: /\bAICTE\b|\bEOA\b/i, src: "/aicte.svg", alt: "AICTE Approved" },
 ]
 
 function logoFor(title: string) {
@@ -38,8 +40,17 @@ function initials(title: string) {
 export default function AccreditationCertificates({
   /** Which page section the certificates are filed under. */
   section = "mandatory-disclosure",
-  /** Only documents in these groups are certificates; the rest are policies. */
-  groups = ["Accreditation & Autonomy", "AICTE"],
+  /**
+   * Only these groups are certificates. They are the college's own tab names
+   * from its Mandatory Disclosure page - the MoUs and general policies filed
+   * alongside them are documents, not certificates, and stay off this block.
+   */
+  groups = [
+    "AICTE Mandatory Disclosure",
+    "Accreditation Status",
+    "AICTE Approval Letters",
+    "UGC Autonomous",
+  ],
   heading = "Certificates & Letters",
 }: {
   section?: string
