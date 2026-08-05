@@ -19,6 +19,7 @@ describe('DashboardService', () => {
     'faculty',
     'department',
     'departmentProgramme',
+    'transportRoute',
     'news',
     'galleryImage',
     'placement',
@@ -74,7 +75,7 @@ describe('DashboardService', () => {
   describe('getOverview', () => {
     it('includes every widget for a super admin, regardless of permissions', async () => {
       const result = await service.getOverview({ id: 1, isSuperAdmin: true });
-      expect(result.widgets.length).toBe(20);
+      expect(result.widgets.length).toBe(21);
       expect(result.widgets.map((w) => w.key)).toContain('admins');
       expect(result.widgets.map((w) => w.key)).toContain('roles');
       expect(result.widgets.map((w) => w.key)).toContain('careers');

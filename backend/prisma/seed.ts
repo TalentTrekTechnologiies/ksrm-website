@@ -89,6 +89,7 @@ const MODULE_ACTIONS: Record<string, readonly string[]> = {
   labs: [...CRUD_ACTIONS, 'restore'],
   learning_outcomes: [...CRUD_ACTIONS, 'restore'],
   department_programmes: [...CRUD_ACTIONS, 'restore'],
+  transport_routes: [...CRUD_ACTIONS, 'restore'],
   department_highlights: [...CRUD_ACTIONS, 'restore'],
   // No create/delete/restore: display settings are toggles on a fixed,
   // code-defined catalog (see DEPARTMENT_DISPLAY_SETTINGS_CATALOG), not
@@ -129,6 +130,7 @@ const MODULE_LABELS: Record<string, string> = {
   labs: 'department laboratory records',
   learning_outcomes: 'department PEO/PO/PSO learning outcome records',
   department_programmes: 'department academic programme records',
+  transport_routes: 'college bus routes, timings and crew',
   department_highlights: 'department highlight and achievement records',
   department_display_settings: 'department page section visibility toggles',
   career_applications: 'job applications submitted through the Careers page',
@@ -223,6 +225,7 @@ const ROLES: {
       'labs',
       'learning_outcomes',
       'department_programmes',
+      'transport_routes',
       'department_highlights',
       'department_display_settings',
       'research',

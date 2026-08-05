@@ -415,6 +415,7 @@ model Admin {
 
   // Media Library.
   uploadedMedia           Media[]        @relation("Media_UploadedBy")
+  deletedTransportRoutes TransportRoute[] @relation("TransportRoute_DeletedBy")
   deletedMedia            Media[]        @relation("Media_DeletedBy")
   mediaVersionsReplacedBy MediaVersion[] @relation("MediaVersion_ReplacedBy")
 
@@ -1973,4 +1974,47 @@ model PageText {
   version     Int      @default(1)
 
   @@index([pageSection])
+}
+
+/// A college bus route, with its timings, fee and the crew who run it.
+///
+/// The transport page listed eight routes as a hardcoded array; the wording of
+/// each was editable through page-text slots, but a route could not be added,
+/// removed or reordered without a code change - and the fleet changes every
+/// year. Same shape as ContactChannel: a repeating public record with its own
+/// admin screen, soft-delete and optimistic locking.
+model TransportRoute {
+  id       Int    @id @default(autoincrement())
+  /// Route number as displayed, e.g. "R1". Free text, not an integer - some
+  /// colleges use "A1" or "N-2".
+  routeNo  String
+  /// Where the route starts from.
+  fromPlace String
+  /// The stops in between, as one line: "Clock Tower -> Tirupati Road -> Gate".
+  via      String?
+  /// Departure and return times, kept as free text so "6:45 AM" and
+  /// "6:45 AM (Sat 7:15)" are both expressible without a schema change.
+  departTime String?
+  returnTime String?
+  /// Monthly fee as displayed, e.g. "Rs 3,000/month".
+  fee      String?
+  /// The bus and its crew. All optional - a route can be published before the
+  /// driver is assigned for the year.
+  busNo       String?
+  driverName  String?
+  driverPhone String?
+
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("TransportRoute_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([deletedAt])
+  @@index([sortOrder])
 }

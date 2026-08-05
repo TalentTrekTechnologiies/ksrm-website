@@ -58,9 +58,10 @@ pm2 logs ksrm-api --lines 30      # confirm it came up clean
 | `20260804160000_committee_type_governing_body` | `ALTER TYPE "CommitteeType" ADD VALUE 'GOVERNING_BODY'` |
 | `20260804180000_faculty_achievement_detail` | `ALTER TYPE "FacultyAchievementType" ADD VALUE 'DETAIL'` |
 | `20260805000000_programme_code_accreditation` | Adds `code` and `accreditation` to `DepartmentProgramme` |
+| `20260805040000_transport_routes` | New `TransportRoute` table (bus routes, timings, fees, crew) |
 
-All three are additive — two enum values and two nullable columns. No drops, no
-renames, no type changes. Existing rows are untouched.
+All four are additive — two enum values, two nullable columns and one new
+table. No drops, no renames, no type changes. Existing rows are untouched.
 
 `ALTER TYPE ... ADD VALUE` is the one to watch: on older PostgreSQL it cannot
 run inside a transaction. `migrate deploy` handles this, but if a step is going
@@ -115,6 +116,7 @@ MCA departments retired  : 1
 Contact records added    : 8
 Programmes added         : 12
 Disclosure documents     : 6
+Bus routes added         : 8
 ```
 
 Safe to run twice — a second run reports 0 for everything. Rows are matched on
@@ -156,6 +158,7 @@ Then in a browser:
 
 - **Admin login works** — this is what proves step 1 landed
 - Admin → **Academics** — 12 programmes, 1,074 seats total
+- Admin → **Transport** — 8 bus routes; add a driver/phone and it shows publicly
 - Admin → **Committees** — "Governing Body" appears in the Type dropdown
 - Faculty → edit someone, clear their phone, save — it stays cleared
 - `/academics/courses-intake` — seat table populated

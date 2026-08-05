@@ -1,4 +1,8 @@
+"use client";
+
 import CmsText from "@/components/CmsText";
+import { getTransportRoutesPublic, TransportRoute } from "@/lib/transport-routes-api";
+import { useLiveData } from "@/lib/use-live-data";
 ﻿import PageResources from "@/components/PageResources";
 const stats = [
   { icon: "🚌", value: "15", label: "Total Buses" },
@@ -34,6 +38,15 @@ const rules = [
 const towns = ["Vempalli", "Yerraguntla", "Badvel", "Mydukur", "Proddutur", "Ontimitta", "Kadapa", "Rayachoti"];
 
 export default function TransportPage() {
+  // Routes come from the CMS (Admin -> Transport), so adding a route, changing
+  // a fee or assigning a driver needs no code change. The fetcher never
+  // rejects: an unreachable API falls back to the built-in table below.
+  const routesData = useLiveData<TransportRoute[]>(
+    () => getTransportRoutesPublic().catch(() => [] as TransportRoute[]),
+    [],
+  );
+  const cmsRoutes = routesData ?? [];
+
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
@@ -114,16 +127,29 @@ export default function TransportPage() {
             <table className="trn-table">
               <thead><tr><th>Route</th><th>From</th><th>Via (Stops)</th><th>Departure</th><th>Return</th><th>Fee</th></tr></thead>
               <tbody>
-                {routes.map((r, _i) => (
-                  <tr key={r.no}>
-                    <td className="trn-route-no">{r.no}</td>
-                    <td><CmsText section="transport" slot={`routes.${_i}.from`} /></td>
-                    <td className="trn-via"><CmsText section="transport" slot={`routes.${_i}.via`} /></td>
-                    <td>{r.dep}</td>
-                    <td>{r.ret}</td>
-                    <td style={{ fontWeight: 700, color: "#2B3490" }}><CmsText section="transport" slot={`routes.${_i}.fee`} /></td>
-                  </tr>
-                ))}
+                {cmsRoutes.length > 0
+                  ? cmsRoutes.map((r) => (
+                      <tr key={r.id}>
+                        <td className="trn-route-no">{r.routeNo}</td>
+                        <td>{r.fromPlace}</td>
+                        <td className="trn-via">{r.via || "—"}</td>
+                        <td>{r.departTime || "—"}</td>
+                        <td>{r.returnTime || "—"}</td>
+                        <td style={{ fontWeight: 700, color: "#2B3490" }}>{r.fee || "—"}</td>
+                      </tr>
+                    ))
+                  : /* Only until routes are added in the CMS, or if the API is
+                       unreachable - the table is never empty. */
+                    routes.map((r, _i) => (
+                      <tr key={r.no}>
+                        <td className="trn-route-no">{r.no}</td>
+                        <td><CmsText section="transport" slot={`routes.${_i}.from`} /></td>
+                        <td className="trn-via"><CmsText section="transport" slot={`routes.${_i}.via`} /></td>
+                        <td>{r.dep}</td>
+                        <td>{r.ret}</td>
+                        <td style={{ fontWeight: 700, color: "#2B3490" }}><CmsText section="transport" slot={`routes.${_i}.fee`} /></td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
           </div>

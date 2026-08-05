@@ -33,6 +33,11 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     label: 'Departments',
     count: (p) => p.department.count(),
   },
+  {
+    key: 'transport_routes',
+    label: 'Bus Routes',
+    count: (p) => p.transportRoute.count({ where: { deletedAt: null } }),
+  },
   // Programmes are edited per-department too, but they drive the college-wide
   // Academics pages (Courses & Intake, UG/PG/Diploma admissions), so they get
   // their own screen listing every programme across every department.

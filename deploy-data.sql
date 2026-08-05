@@ -3,12 +3,13 @@
 -- Source: local KSRM CMS database
 --
 -- Data-only, narrow and idempotent, in the same shape as
--- import-library-exam-staff.sql. It applies four things:
+-- import-library-exam-staff.sql. It applies five things:
 --
 --   1. Retires the MCA department (soft-delete, matched by slug)
 --   2. Adds the 8 global Contact page records (4 directory + 4 info)
 --   3. Adds the 12 Academics programmes with their seats, codes and NBA marks
 --   4. Adds 6 Mandatory Disclosure documents whose files already exist there
+--   5. Adds the 8 college bus routes
 --
 -- Non-destructive and safe to re-run:
 --   - Nothing is hard-deleted. MCA is soft-deleted exactly as the admin UI
@@ -20,8 +21,8 @@
 --   - No UPDATE touches a row this script did not create, except the one
 --     deliberate MCA soft-delete.
 --
--- RUN THE MIGRATIONS FIRST. This depends on columns added by
--- 20260805000000_programme_code_accreditation:
+-- RUN THE MIGRATIONS FIRST. This depends on columns and a table added by
+-- 20260805000000_programme_code_accreditation and 20260805040000_transport_routes:
 --     cd /var/www/ksrm/backend && npx prisma migrate deploy
 --
 -- NOT INCLUDED - 8 further Mandatory Disclosure documents (Accreditation
@@ -45,6 +46,7 @@ DECLARE
   n_contacts integer := 0;
   n_progs    integer := 0;
   n_docs     integer := 0;
+  n_routes   integer := 0;
 BEGIN
 
   ------------------------------------------------------------------
@@ -147,11 +149,38 @@ BEGIN
   );
   GET DIAGNOSTICS n_docs = ROW_COUNT;
 
+  ------------------------------------------------------------------
+  -- 5. College bus routes
+  ------------------------------------------------------------------
+  -- Matched on (routeNo, fromPlace) so re-running never duplicates a route.
+  -- Driver and bus columns are left null deliberately: they change every year
+  -- and belong to the transport office, not to this script.
+  INSERT INTO "TransportRoute"
+    ("routeNo", "fromPlace", via, "departTime", "returnTime", fee,
+     "sortOrder", "isActive", "createdAt", "updatedAt")
+  SELECT v.no, v.frm, v.via, v.dep, v.ret, v.fee, v.sort, true, now(), now()
+  FROM (VALUES
+      ('R1','Kadapa Railway Station','Clock Tower -> Tirupati Road -> KSRMCE Gate','7:30 AM','5:30 PM','Rs 3,000/month',0),
+      ('R2','Giddapalem','Ambapuram -> Piler Road -> KSRMCE Gate','7:00 AM','6:00 PM','Rs 2,500/month',1),
+      ('R3','Srikalahasthi','Hayathnagar -> Chandragiri Road -> KSRMCE Gate','6:30 AM','5:00 PM','Rs 4,000/month',2),
+      ('R4','Tirupati','Arani -> Kodur -> KSRMCE Gate','6:00 AM','4:30 PM','Rs 4,500/month',3),
+      ('R5','Naidupet','Proddatur -> Chakrayapet -> KSRMCE Gate','7:15 AM','5:45 PM','Rs 3,500/month',4),
+      ('R6','Rayachoti','Jammalamadugu -> Mydukur -> KSRMCE Gate','6:45 AM','5:15 PM','Rs 3,800/month',5),
+      ('R7','Chintachintala','KSRMCE Gate','7:45 AM','5:00 PM','Rs 2,000/month',6),
+      ('R8','Palamaner','Madanapalle -> Gangavalli -> KSRMCE Gate','6:15 AM','4:45 PM','Rs 4,200/month',7)
+    ) AS v(no, frm, via, dep, ret, fee, sort)
+  WHERE NOT EXISTS (
+    SELECT 1 FROM "TransportRoute" t
+     WHERE t."routeNo" = v.no AND t."fromPlace" = v.frm
+  );
+  GET DIAGNOSTICS n_routes = ROW_COUNT;
+
   RAISE NOTICE '-------------------------------------------';
   RAISE NOTICE 'MCA departments retired  : %', n_mca;
   RAISE NOTICE 'Contact records added    : %', n_contacts;
   RAISE NOTICE 'Programmes added         : %', n_progs;
   RAISE NOTICE 'Disclosure documents     : %', n_docs;
+  RAISE NOTICE 'Bus routes added         : %', n_routes;
   RAISE NOTICE '-------------------------------------------';
   IF n_progs < 12 THEN
     RAISE NOTICE 'Fewer than 12 programmes added - they already existed, or a';

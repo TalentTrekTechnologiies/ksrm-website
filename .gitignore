@@ -74,3 +74,8 @@ backend/storage/
 
 # Scraped reference image from another college's site; not ours to ship.
 frontend/iare_faculty.png
+
+# One-off export of the Mandatory Disclosure PDFs for uploading to the VPS by
+# hand (19MB of binaries). The files live in the Media Library; this folder is
+# a convenience copy, regenerated whenever it is needed - not source.
+deploy-pdfs/

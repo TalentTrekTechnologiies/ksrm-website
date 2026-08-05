@@ -1,7 +1,7 @@
 "use client";
 
 import PageResources from "@/components/PageResources";
-import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
 
@@ -45,35 +45,6 @@ function AwardIcon() {
 
 /** Renders a CMS-managed intake table. Free-form columns, so adding a branch or
  *  revising an intake is an admin edit rather than a code change. */
-function CmsCourseTable({ table }: { table: PageTable }) {
-  return (
-    <div>
-      <h3 className="ci-programme-title">{table.title}</h3>
-      {table.footnote && <p style={{ fontSize: 13, color: "#666", margin: "4px 0 8px" }}>{table.footnote}</p>}
-      <div className="ci-table-wrapper">
-        <table className="ci-table">
-          <thead>
-            <tr>{table.columns.map((c, i) => <th key={i}>{c}</th>)}</tr>
-          </thead>
-          <tbody>
-            {table.rows.map((row, ri) => (
-              <tr key={ri}>
-                {row.map((cell, ci) => (
-                  <td key={ci} className={ci === 0 ? "ci-branch-name" : ci === 2 ? "ci-intake-number" : undefined}>
-                    {ci === 1 ? <span className="ci-code-badge">{cell}</span>
-                      : ci === 3 && cell === "NBA" ? <span className="ci-nba-badge">NBA</span>
-                      : ci === 3 ? <span style={{ color: "#999" }}>{cell}</span>
-                      : cell}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
 
 function CourseTable({
   title,
@@ -120,12 +91,33 @@ function CourseTable({
 }
 
 export default function CoursesIntakePage() {
-  // Intake tables come from the CMS; the built-in tables below stay as a
-  // fallback so the page never renders empty.
-  const cmsTables = useLiveData<PageTable[]>(
-    () => getPageTablesPublic("academics.courses-intake").catch(() => [] as PageTable[]),
+  // Seats come from the same DepartmentProgramme rows the department pages
+  // and the UG/PG admissions tables read, so a change to an intake shows up
+  // everywhere at once instead of needing a second table kept in step here.
+  const cmsProgrammes = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
     [],
   );
+
+  // Group into the three tables the page has always shown. MBA is a PG
+  // programme in the CMS, so it is split out by name rather than by level.
+  const ug = (cmsProgrammes ?? []).filter((p) => p.level === "UG");
+  const pgAll = (cmsProgrammes ?? []).filter((p) => p.level === "PG");
+  const mba = pgAll.filter((p) => /MBA/i.test(p.name));
+  const mtech = pgAll.filter((p) => !/MBA/i.test(p.name));
+
+  const toRows = (list: DepartmentProgramme[]) =>
+    list.map((p) => ({
+      name: p.name,
+      code: p.code || p.department?.shortName || p.department?.name || "",
+      intake: p.intake,
+      // Never inferred - a programme is only marked accredited if an admin
+      // actually recorded it against that programme.
+      nba: Boolean(p.accreditation),
+    }));
+
+  const sum = (list: DepartmentProgramme[]) => list.reduce((t, p) => t + (p.intake || 0), 0);
+  const hasCms = (cmsProgrammes ?? []).length > 0;
 
   return (
     <>
@@ -376,9 +368,15 @@ export default function CoursesIntakePage() {
         {/* TABLES */}
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
-            {cmsTables && cmsTables.length > 0 ? (
-              cmsTables.map((t) => <CmsCourseTable key={t.id} table={t} />)
+            {hasCms ? (
+              <>
+                {ug.length > 0 && <CourseTable title="B.Tech (4 Years)" regulation="R23UG" totalIntake={sum(ug)} rows={toRows(ug)} />}
+                {mtech.length > 0 && <CourseTable title="M.Tech (2 Years)" regulation="R22PG" totalIntake={sum(mtech)} rows={toRows(mtech)} />}
+                {mba.length > 0 && <CourseTable title="MBA (2 Years)" regulation="R25" totalIntake={sum(mba)} rows={toRows(mba)} />}
+              </>
             ) : (
+              /* Only while the CMS has no programmes at all, or the API is
+                 unreachable - so the page never renders empty. */
               <>
                 <CourseTable title="B.Tech (4 Years)" regulation="R23UG" totalIntake={600} rows={btechRows} />
                 <CourseTable title="M.Tech (2 Years)" regulation="R22PG" totalIntake={54} rows={mtechRows} />
