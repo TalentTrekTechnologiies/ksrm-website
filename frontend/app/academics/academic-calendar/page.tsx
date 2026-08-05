@@ -1,25 +1,33 @@
+"use client";
+
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import { useMemo } from "react";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { useLiveData } from "@/lib/use-live-data";
 
-﻿const calendars2025 = [
-  { title: "B.Tech I Semester (R23UG)", reg: "R23UG" },
-  { title: "B.Tech III & IV Semester (R23UG)", reg: "R23UG" },
-  { title: "B.Tech V & VI Semester (R23UG)", reg: "R23UG" },
-  { title: "B.Tech VII & VIII Semester (R23UG)", reg: "R23UG" },
-  { title: "MBA I Year (R25)", reg: "R25" },
-  { title: "M.Tech I Semester (R22PG)", reg: "R22PG" },
-];
+/**
+ * The calendars listed here were invented rows: eleven of them, every single
+ * one with href="#", so the whole page offered PDF buttons that downloaded
+ * nothing. Meanwhile the college HAD uploaded eleven real calendars - filed
+ * under Examinations, where this page never looked.
+ *
+ * Both buckets are read now and merged, deduplicated on the file URL, because
+ * an academic calendar is an academic calendar wherever it was filed. Uploads
+ * to either destination show up here.
+ */
 
-const calendars2024 = [
-  { title: "B.Tech (R23UG / R20UG / R18UG)", reg: "Multiple" },
-  { title: "M.Tech (R22PG / R18PG)", reg: "Multiple" },
-  { title: "MBA (R19 / R25)", reg: "Multiple" },
-];
-
-const calendars2023 = [
-  { title: "B.Tech (R20UG / R18UG / R15UG)", reg: "Multiple" },
-  { title: "M.Tech (R18PG)", reg: "R18PG" },
-];
+/** "Academic Calendar - B.Tech III & IV Semester AY 2025-26" -> "2025-2026". */
+function academicYearOf(title: string): string {
+  const span = title.match(/(20\d{2})\s*[-–]\s*(\d{2,4})/);
+  if (span) {
+    const from = span[1];
+    const to = span[2].length === 2 ? from.slice(0, 2) + span[2] : span[2];
+    return `${from}–${to}`;
+  }
+  const single = title.match(/(20\d{2})/);
+  return single ? single[1] : "Other";
+}
 
 function DownloadIcon() {
   return (
@@ -41,7 +49,7 @@ function ExternalLinkIcon() {
   );
 }
 
-function YearSection({ year, rows }: { year: string; rows: { title: string; reg: string }[] }) {
+function YearSection({ year, rows }: { year: string; rows: { title: string; reg: string; file: string }[] }) {
   return (
     <div className="ac-calendar-section">
       <h3 className="ac-year-title">Academic Year {year}</h3>
@@ -52,7 +60,7 @@ function YearSection({ year, rows }: { year: string; rows: { title: string; reg:
               <h4>{r.title}</h4>
               <p>{r.reg}</p>
             </div>
-            <a href="#" className="ac-download-btn" target="_blank" rel="noopener noreferrer">
+            <a href={r.file} className="ac-download-btn" target="_blank" rel="noopener noreferrer">
               <DownloadIcon />PDF
             </a>
           </div>
@@ -63,6 +71,36 @@ function YearSection({ year, rows }: { year: string; rows: { title: string; reg:
 }
 
 export default function AcademicCalendarPage() {
+  const filed = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "academics.calendar").catch(() => [] as Download[]),
+    [],
+  );
+  const fromExams = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "examinations.calendars").catch(() => [] as Download[]),
+    [],
+  );
+
+  const years = useMemo(() => {
+    const seen = new Set<string>();
+    const merged = [...(filed ?? []), ...(fromExams ?? [])].filter((d) => {
+      if (seen.has(d.fileUrl)) return false;
+      seen.add(d.fileUrl);
+      return true;
+    });
+
+    const groups = new Map<string, { title: string; reg: string; file: string }[]>();
+    for (const d of merged) {
+      const year = academicYearOf(d.title);
+      const rows = groups.get(year) ?? [];
+      rows.push({ title: d.title, reg: d.description ?? "", file: d.fileUrl });
+      groups.set(year, rows);
+    }
+    // Newest academic year first; "Other" last, since it has no year to sort on.
+    return [...groups.entries()].sort((a, b) =>
+      a[0] === "Other" ? 1 : b[0] === "Other" ? -1 : b[0].localeCompare(a[0]),
+    );
+  }, [filed, fromExams]);
+
   return (
     <>
       <style>{`
@@ -267,9 +305,14 @@ export default function AcademicCalendarPage() {
         <section style={{ padding: "72px 0", background: "#ffffff" }}>
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.calendar" slot="download-academic-calendars-by-year" /></h2>
-            <YearSection year="2025–2026" rows={calendars2025} />
-            <YearSection year="2024–2025" rows={calendars2024} />
-            <YearSection year="2023–2024" rows={calendars2023} />
+            {years.length === 0 && (
+              <p style={{ color: "#666", fontSize: 15, fontStyle: "italic" }}>
+                Academic calendars will be published here shortly.
+              </p>
+            )}
+            {years.map(([year, rows]) => (
+              <YearSection key={year} year={year} rows={rows} />
+            ))}
           </div>
         </section>
 

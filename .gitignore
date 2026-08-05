@@ -82,3 +82,8 @@ frontend/iare_faculty.png
 # hand (19MB of binaries). The files live in the Media Library; this folder is
 # a convenience copy, regenerated whenever it is needed - not source.
 deploy-pdfs/
+
+# Source PDFs handed over for uploading (academic calendars and the like).
+# They live in the Media Library once uploaded - backend/storage, which is
+# already ignored - so the copies here are a handover folder, not source.
+uploaded-calendars/
