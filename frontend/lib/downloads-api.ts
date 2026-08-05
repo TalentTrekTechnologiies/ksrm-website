@@ -8,7 +8,15 @@ export type DownloadCategory = "SYLLABUS" | "QUESTION_PAPER" | "BROCHURE" | "AFF
 export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "edc", label: "EDC — Entrepreneurship Development Cell" },
   { value: "iic", label: "IIC — Institution's Innovation Council" },
-  { value: "iqac", label: "IQAC" },
+  // IQAC is split into its page's tabs so an upload lands in the right one -
+  // an AQAR report under AQAR Reports, an apex-body document under Apex
+  // Bodies - instead of the page's catch-all block at the bottom.
+  { value: "iqac.composition", label: "IQAC → Composition" },
+  { value: "iqac.minutes", label: "IQAC → Minutes & Agenda" },
+  { value: "iqac.aqar", label: "IQAC → AQAR Reports" },
+  { value: "iqac.survey", label: "IQAC → Student Survey" },
+  { value: "iqac.apex", label: "IQAC → Apex Bodies" },
+  { value: "iqac", label: "IQAC → Other Documents" },
   { value: "naac", label: "NAAC" },
   { value: "alumni", label: "Alumni" },
   { value: "syllabus", label: "Syllabus" },

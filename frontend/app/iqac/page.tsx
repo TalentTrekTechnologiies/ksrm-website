@@ -2,6 +2,7 @@
 
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
+import ApexBodies from "@/components/iqac/ApexBodies";
 import CmsText from "@/components/CmsText";
 
 const missionFunctions = [
@@ -99,15 +100,6 @@ const feedbackForms = [
   { label: "Employer Feedback", href: "https://ksrmce.ac.in/EmployerFeedback.php" },
 ];
 
-// Governing Body now lives on this site - About -> Governing Body, driven by
-// Admin -> Committees. The other two still point at the old site because no
-// equivalent page exists here yet; they are external links, marked as such,
-// rather than dead ends.
-const apexBodies = [
-  { icon: "🏛️", label: "Governing Body", href: "/about#governing-body" },
-  { icon: "🎓", label: "Academic Council", href: "https://ksrmce.ac.in/academiccouncil.php" },
-  { icon: "💰", label: "Finance Committee", href: "https://ksrmce.ac.in/financial.php" },
-];
 
 const tabs = [
   { label: "📋 About IQAC", id: "about" },
@@ -284,6 +276,8 @@ export default function IQACPage() {
             </table>
           </div>
         </div>
+          {/* Anything uploaded to "IQAC -> Composition" in Documents. */}
+          <PageResources section="iqac.composition" embedded />
       </section>
 
       {/* MINUTES */}
@@ -298,6 +292,8 @@ export default function IQACPage() {
             ))}
           </div>
         </div>
+          {/* Anything uploaded to "IQAC -> Minutes" in Documents. */}
+          <PageResources section="iqac.minutes" embedded />
       </section>
 
       {/* AQAR */}
@@ -317,6 +313,8 @@ export default function IQACPage() {
             ))}
           </div>
         </div>
+          {/* Anything uploaded to "IQAC -> Aqar" in Documents. */}
+          <PageResources section="iqac.aqar" embedded />
       </section>
 
       {/* SURVEY */}
@@ -342,23 +340,19 @@ export default function IQACPage() {
             ))}
           </div>
         </div>
+          {/* Anything uploaded to "IQAC -> Survey" in Documents. */}
+          <PageResources section="iqac.survey" embedded />
       </section>
 
       {/* APEX */}
       <section id="apex" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="apex-bodies" /></h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-            {apexBodies.map((a, _i) => (
-              <a href={a.href} target="_blank" rel="noopener noreferrer" className="iqac-apex-card" key={a.label}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                  <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{a.icon}</span>
-                  <span style={{ fontSize: 20, fontWeight: 700, color: "#2B3490" }}><CmsText section="iqac" slot={`apexBodies.${_i}.label`} /></span>
-                </div>
-                <div className="iqac-apex-btn">View Details →</div>
-              </a>
-            ))}
-          </div>
+          {/* Members come from Admin -> Committees; a body with no committee
+              record yet keeps its old-site link until one is added. */}
+          <ApexBodies />
+          {/* Anything uploaded to "IQAC -> Apex Bodies" in Documents. */}
+          <PageResources section="iqac.apex" embedded />
         </div>
       </section>
 
