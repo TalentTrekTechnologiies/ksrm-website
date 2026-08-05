@@ -277,7 +277,11 @@ export default function Navbar() {
         .nav-apply:hover { background: #b71c1c !important; }
       `}</style>
 
-      <div className="navbar-desktop-wrap" style={{ position: "relative" }}>
+      {/* Apply Now sits OUTSIDE the scrolling row, so the row can overflow
+          without carrying the college's main call to action off the right-hand
+          edge with it - which is what an eleventh nav item did. */}
+      <div className="navbar-desktop-wrap" style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ position: "relative", flex: "1 1 auto", minWidth: 0 }}>
         {canLeft && (
           <button className="nav-scroll-arrow left" aria-label="Scroll navigation left" onClick={() => scrollRef.current?.scrollBy({ left: -320, behavior: "smooth" })}>‹</button>
         )}
@@ -290,8 +294,8 @@ export default function Navbar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-start",
-            gap: "3px",
-            padding: "0 18px",
+            gap: "2px",
+            padding: "0 10px",
             height: "48px",
             overflowX: "auto",
             overflowY: "hidden",
@@ -311,10 +315,13 @@ export default function Navbar() {
               display: "flex",
               alignItems: "center",
               gap: "4px",
-              padding: "0 13px",
+              padding: "0 10px",
               height: "34px",
               borderRadius: "5px",
               // The original nav sat at 15px; the design asks for 10% more.
+              // Eleven top-level items fit at this size because Apply Now no
+              // longer competes for room inside the scrolling row, and the
+              // horizontal padding was tightened to buy the space back.
               fontSize: "16.5px",
               fontWeight: 600,
               fontFamily: "'Rajdhani', sans-serif",
@@ -366,6 +373,12 @@ export default function Navbar() {
               </div>
             )
           })}
+        </div>
+
+        {canRight && (
+          <button className="nav-scroll-arrow right" aria-label="Scroll navigation right" onClick={() => scrollRef.current?.scrollBy({ left: 320, behavior: "smooth" })}>&rsaquo;</button>
+        )}
+        </div>
 
           <Link
             href="/admissions"
@@ -374,8 +387,9 @@ export default function Navbar() {
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              marginLeft: "8px",
-              padding: "0 15px",
+              marginLeft: "6px",
+              marginRight: "12px",
+              padding: "0 13px",
               height: "34px",
               borderRadius: "5px",
               background: "#c62828",
@@ -393,11 +407,6 @@ export default function Navbar() {
             Apply Now
             <Send size={13} strokeWidth={2.5} />
           </Link>
-        </div>
-
-        {canRight && (
-          <button className="nav-scroll-arrow right" aria-label="Scroll navigation right" onClick={() => scrollRef.current?.scrollBy({ left: 320, behavior: "smooth" })}>›</button>
-        )}
       </div>
 
       {/* Dropdown menu — fixed-position so it escapes the scroll row's clip */}
