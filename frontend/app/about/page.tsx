@@ -158,10 +158,21 @@ export default function About() {
         .k-leadership-card .k-leader-btn { margin-top: auto; }
         /* Clamp the summary so one long message can't make every card tall. */
         .k-leader-bio { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
-        .k-leader-photo { width: 120px; height: 120px; border: 4px solid #D4A500; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; display: block; }
+        .k-leader-photo { width: 120px; height: 120px; border: 4px solid #D4A500; border-radius: 50%; object-fit: cover; object-position: top center; background: #F4F3EF; margin: 0 auto 16px; display: block; }
         .k-leader-name { color: #2B3490; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
         .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 14px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
-        .k-leader-email { font-size: 13px; color: #999; margin-bottom: 12px; }
+        .k-charities-body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: start; }
+        .k-charities-p { color: #555; font-size: 15.5px; line-height: 1.85; margin: 0 0 18px; text-align: justify; text-justify: inter-word; hyphens: auto; }
+        .k-charities-figure { margin: 0; }
+        .k-charities-figure img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: top center; border-radius: 10px; border: 4px solid #fff; box-shadow: 0 8px 24px rgba(43,52,144,.16); background: #F4F3EF; display: block; }
+        .k-charities-figure figcaption { margin-top: 12px; text-align: center; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; color: #1a1a2e; }
+        .k-charities-figure figcaption span { display: block; font-size: 13px; font-weight: 600; color: #2B3490; margin-top: 2px; }
+        /* Portrait above the text once there is no room beside it. */
+        @media (max-width: 900px) {
+          .k-charities-body { grid-template-columns: 1fr; }
+          .k-charities-figure { max-width: 260px; margin: 0 auto 8px; order: -1; }
+          .k-charities-p { text-align: left; }
+        }
         .k-leader-bio { color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
         .k-leader-btn { display: inline-block; background: #2B3490; color: #D4A500; padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s; cursor: pointer; }
         .k-leadership-card:hover .k-leader-btn { background: #D4A500; color: #2B3490; }
@@ -293,12 +304,21 @@ export default function About() {
       <section className="k-section" id="charities" style={{ background: "#F5EFE4" }}>
         <div className="k-container">
           <h2><CmsText section="about" slot="charities.heading" /></h2>
-          <p style={{ color: "#555", fontSize: "15.5px", lineHeight: 1.8, margin: "0 0 18px", maxWidth: "1100px" }}>
-            <CmsText section="about" slot="charities.p1" multiline />
-          </p>
-          <p style={{ color: "#555", fontSize: "15.5px", lineHeight: 1.8, margin: "0 0 28px", maxWidth: "1100px" }}>
-            <CmsText section="about" slot="charities.p2" multiline />
-          </p>
+          {/* Prose left, portrait right. Justified so the two long paragraphs
+              form a clean block against the image edge rather than a ragged one. */}
+          <div className="k-charities-body">
+            <div>
+              <p className="k-charities-p"><CmsText section="about" slot="charities.p1" multiline /></p>
+              <p className="k-charities-p" style={{ marginBottom: 28 }}>
+                <CmsText section="about" slot="charities.p2" multiline />
+              </p>
+            </div>
+            <figure className="k-charities-figure">
+              {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
+              <img src="/images/leadership/correspondent.jpg" alt="Smt. K. Rajeswari, Correspondent" />
+              <figcaption>Smt. K. Rajeswari<span>Correspondent and Secretary</span></figcaption>
+            </figure>
+          </div>
 
           <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "20px", fontWeight: 700, color: "#2B3490", margin: "0 0 16px" }}>
             <CmsText section="about" slot="charities.trusteesHeading" />
@@ -335,7 +355,6 @@ export default function About() {
                   <img src={leader.photo} alt={leader.name} className="k-leader-photo" />
                   <div className="k-leader-name">{leader.name}</div>
                   <div className="k-leader-role">{leader.role}</div>
-                  {leader.email && <div className="k-leader-email">📧 {leader.email}</div>}
                   <div className="k-leader-bio">{leader.paragraphs[0]}</div>
                   <div className="k-leader-btn">View Profile →</div>
                 </div>

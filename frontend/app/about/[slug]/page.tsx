@@ -44,7 +44,7 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
         .k-back-btn:hover { color: #FFD700; }
         .k-section { padding: 60px 0; }
         .k-profile-header { display: grid; grid-template-columns: 400px 1fr; gap: 48px; padding: 0; align-items: stretch; }
-        .k-profile-photo { width: 100%; object-fit: cover; border: 8px solid #2B3490; border-radius: 8px; box-shadow: 0 4px 12px rgba(43, 52, 144, 0.15); }
+        .k-profile-photo { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: top center; background: #F4F3EF; border: 8px solid #2B3490; border-radius: 8px; box-shadow: 0 4px 12px rgba(43, 52, 144, 0.15); }
         .k-profile-info { padding: 0; display: flex; flex-direction: column; justify-content: flex-start; }
         .k-profile-name { color: #2B3490; font-size: clamp(25px, 6.7vw, 42px); font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
         .k-profile-role { color: #D4A500; font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #D4A500; width: fit-content; }

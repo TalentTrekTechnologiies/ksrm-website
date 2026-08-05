@@ -81,7 +81,7 @@ export default function LeadershipProfile({ leader }: LeadershipProfileProps) {
           background: linear-gradient(135deg, #2B3490, #1e2570);
           display: flex; align-items: center; justify-content: center;
         }
-        .leadership-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .leadership-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; background: #F4F3EF; }
 
         .leadership-card {
           background: #f7f8fa; border-radius: 16px; padding: 28px;
