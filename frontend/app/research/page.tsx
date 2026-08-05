@@ -464,8 +464,8 @@ export default function ResearchPage() {
             <p style={{ fontSize: 13, color: "#666", margin: "0 0 4px", fontWeight: 600 }}><CmsText section="research" slot="dean-research-development-cell" /></p>
             <p style={{ fontSize: 12, color: "#999", margin: "0 0 20px" }}><CmsText section="research" slot="professor-electronics-communication-engineering" /></p>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <a href="tel:+918554233333380" className="rdc-contact-link"><PhoneIcon />+91-8554-233333 (Ext: 380)</a>
-              <a href="mailto:rdc@ksrmce.ac.in" className="rdc-contact-link"><MailIcon />rdc@ksrmce.ac.in</a>
+              <a href="tel:+919440425221" className="rdc-contact-link"><PhoneIcon />+91 94404 25221</a>
+              <a href="mailto:dean.rdc@ksrmce.ac.in" className="rdc-contact-link"><MailIcon />dean.rdc@ksrmce.ac.in</a>
             </div>
           </div>
         </div>

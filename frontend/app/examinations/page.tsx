@@ -2,6 +2,7 @@
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
 import ExamSectionStaff from "@/components/examinations/ExamSectionStaff";
+import CoeContact from "@/components/examinations/CoeContact";
 import CmsText from "@/components/CmsText";
 
 // Academic Calendars and Time Tables used to be hardcoded here, which meant a
@@ -144,14 +145,7 @@ export default function ExaminationsPage() {
             <div style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 8 }}>Controller of Examinations</div>
             <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>K.S.R.M. College of Engineering (Autonomous)</div>
             <div style={{ fontSize: 16, color: "#444", fontWeight: 600, marginBottom: 24 }}>Dr. M. V. Ravi Kishore Reddy</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <a href="tel:+918554233333" style={{ background: "rgba(255,230,25,0.1)", color: "#2B3490", padding: "12px 16px", borderRadius: 4, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "flex", gap: 8 }}>
-                <span>📞</span><span>+91-8554-233333 (Ext: 350)</span>
-              </a>
-              <a href="mailto:exams@ksrmce.ac.in" style={{ background: "rgba(255,230,25,0.1)", color: "#2B3490", padding: "12px 16px", borderRadius: 4, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "flex", gap: 8 }}>
-                <span>✉️</span><span>exams@ksrmce.ac.in</span>
-              </a>
-            </div>
+            <CoeContact />
           </div>
         </div>
       </section>
