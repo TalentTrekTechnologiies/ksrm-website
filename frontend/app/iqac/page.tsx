@@ -99,8 +99,12 @@ const feedbackForms = [
   { label: "Employer Feedback", href: "https://ksrmce.ac.in/EmployerFeedback.php" },
 ];
 
+// Governing Body now lives on this site - About -> Governing Body, driven by
+// Admin -> Committees. The other two still point at the old site because no
+// equivalent page exists here yet; they are external links, marked as such,
+// rather than dead ends.
 const apexBodies = [
-  { icon: "🏛️", label: "Governing Body", href: "https://ksrmce.ac.in/gbody.php" },
+  { icon: "🏛️", label: "Governing Body", href: "/about#governing-body" },
   { icon: "🎓", label: "Academic Council", href: "https://ksrmce.ac.in/academiccouncil.php" },
   { icon: "💰", label: "Finance Committee", href: "https://ksrmce.ac.in/financial.php" },
 ];

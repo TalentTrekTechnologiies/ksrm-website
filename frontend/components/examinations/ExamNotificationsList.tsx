@@ -2,7 +2,7 @@
 
 import PublicDocumentList from "@/components/PublicDocumentList"
 import { getAnnouncementsPublic, Announcement } from "@/lib/announcements-api"
-import { getExamNotificationsPublic, ExamNotification } from "@/lib/exam-notifications-api"
+import { getExamNotificationsPublic, ExamNotification, ExamNotificationType } from "@/lib/exam-notifications-api"
 import { useLiveData } from "@/lib/use-live-data"
 
 type ExamNoticeItem =
@@ -38,12 +38,27 @@ function fromAnnouncement(n: Announcement): ExamNoticeItem {
 // Shows both dedicated Exam Notifications and Announcement Engine items that
 // are placed on EXAM_NOTIFICATIONS_PAGE. This makes a single Announcement
 // reusable across the header ticker, homepage latest updates, and this list.
-export default function ExamNotificationsList() {
+export default function ExamNotificationsList({
+  /**
+   * Which list this is - results, timetables, question papers and so on.
+   * Omitted means the notifications block, which also carries the exam
+   * announcements so a notice written once appears here too.
+   */
+  type,
+  emptyText,
+}: {
+  type?: ExamNotificationType
+  emptyText?: string
+} = {}) {
   const items = useLiveData<ExamNoticeItem[]>(
     async () => {
       const [examNotifications, examAnnouncements] = await Promise.all([
-        getExamNotificationsPublic().catch(() => [] as ExamNotification[]),
-        getAnnouncementsPublic("EXAM_NOTIFICATIONS_PAGE").catch(() => [] as Announcement[]),
+        getExamNotificationsPublic(type).catch(() => [] as ExamNotification[]),
+        // Announcements have no type of their own, so they belong with the
+        // notifications block only - never duplicated into every section.
+        type && type !== "NOTIFICATION"
+          ? Promise.resolve([] as Announcement[])
+          : getAnnouncementsPublic("EXAM_NOTIFICATIONS_PAGE").catch(() => [] as Announcement[]),
       ])
 
       return [
@@ -51,7 +66,7 @@ export default function ExamNotificationsList() {
         ...examAnnouncements.map(fromAnnouncement),
       ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     },
-    [],
+    [type],
   )
 
   if (items === null) {
@@ -59,7 +74,7 @@ export default function ExamNotificationsList() {
   }
 
   if (items.length === 0) {
-    return <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "24px 0" }}>No active notifications right now.</p>
+    return <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "24px 0" }}>{emptyText ?? "No active notifications right now."}</p>
   }
 
   // Group by academic year, newest first, so the current year sits on top and

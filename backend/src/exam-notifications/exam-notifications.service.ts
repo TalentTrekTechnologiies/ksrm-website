@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ExamNotificationType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateExamNotificationDto } from './dto/create-exam-notification.dto';
@@ -17,7 +18,10 @@ export class ExamNotificationsService {
   // "Active" on the public site means published, enabled, and currently
   // inside its [startDate, endDate] window - endDate is optional (an
   // open-ended notice, e.g. "Results" with no known end).
-  async findAllPublic() {
+  // `type` narrows to one list on the Examinations page (results, timetables,
+  // question papers...). Omitted returns everything, which is what the
+  // homepage ticker and the notifications block want.
+  async findAllPublic(type?: ExamNotificationType) {
     const now = new Date();
     return this.prisma.examNotification.findMany({
       where: {
@@ -25,13 +29,15 @@ export class ExamNotificationsService {
         isActive: true,
         startDate: { lte: now },
         OR: [{ endDate: null }, { endDate: { gte: now } }],
+        ...(type && { type }),
       },
       orderBy: { startDate: 'desc' },
     });
   }
 
-  async findAllAdmin() {
+  async findAllAdmin(type?: ExamNotificationType) {
     return this.prisma.examNotification.findMany({
+      where: { ...(type && { type }) },
       orderBy: { createdAt: 'desc' },
     });
   }

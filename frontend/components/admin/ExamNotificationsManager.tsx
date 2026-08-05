@@ -11,6 +11,7 @@ import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
   TextAreaField,
+  SelectField,
   ToggleField,
   FormActions,
   PrimaryButton,
@@ -26,9 +27,12 @@ import {
   unpublishExamNotification,
   deleteExamNotification,
   ExamNotification,
+  ExamNotificationType,
+  EXAM_TYPES,
 } from "@/lib/exam-notifications-api"
 
 interface FormState {
+  type: ExamNotificationType
   title: string
   description: string
   buttonText: string
@@ -61,6 +65,7 @@ function currentAcademicYear() {
 }
 
 const emptyForm: FormState = {
+  type: "NOTIFICATION",
   title: "",
   description: "",
   buttonText: "",
@@ -142,6 +147,7 @@ function ExamNotificationsManagerInner() {
     setEditing(item)
     setCreating(false)
     setForm({
+      type: item.type ?? "NOTIFICATION",
       title: item.title,
       description: item.description ?? "",
       buttonText: item.buttonText ?? "",
@@ -165,6 +171,7 @@ function ExamNotificationsManagerInner() {
     setError(null)
     try {
       const dto = {
+        type: form.type,
         title: form.title,
         description: form.description || null,
         buttonText: form.buttonText || null,
@@ -250,7 +257,14 @@ function ExamNotificationsManagerInner() {
 
       {isFormOpen && (
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
-          <p className="text-sm font-semibold text-slate-700">{editing ? "Edit notification" : "New notification"}</p>
+          <p className="text-sm font-semibold text-slate-700">{editing ? "Edit entry" : "New entry"}</p>
+          <SelectField
+            label="Type"
+            value={form.type}
+            onChange={(v) => setForm({ ...form, type: v as ExamNotificationType })}
+            options={EXAM_TYPES.map((t) => ({ value: t.value, label: t.label }))}
+            helperText="Decides which list this appears under on the Examinations page."
+          />
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={200} placeholder="B.Tech VI Sem Hall Tickets Released" />
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={2} maxLength={500} />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

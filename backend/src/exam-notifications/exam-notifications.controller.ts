@@ -5,11 +5,13 @@ import {
   Patch,
   Delete,
   Param,
+  Query,
   Body,
   ParseIntPipe,
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { ExamNotificationType } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { ExamNotificationsService } from './exam-notifications.service';
 import { CreateExamNotificationDto } from './dto/create-exam-notification.dto';
@@ -24,15 +26,15 @@ export class ExamNotificationsController {
   constructor(private readonly examNotificationsService: ExamNotificationsService) {}
 
   @Get()
-  findAllPublic() {
-    return this.examNotificationsService.findAllPublic();
+  findAllPublic(@Query('type') type?: ExamNotificationType) {
+    return this.examNotificationsService.findAllPublic(type);
   }
 
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('exam_notifications.view')
-  findAllAdmin() {
-    return this.examNotificationsService.findAllAdmin();
+  findAllAdmin(@Query('type') type?: ExamNotificationType) {
+    return this.examNotificationsService.findAllAdmin(type);
   }
 
   @Post()

@@ -513,6 +513,14 @@ model ExamNotification {
   academicYear String?
   updatedAt    DateTime @default(now()) @updatedAt
 
+  /// Which list on the Examinations page this appears under.
+  type ExamNotificationType @default(NOTIFICATION)
+
+  /// The attached file (result sheet, timetable, question paper). mediaId is
+  /// the Media Library link; fileUrl stays for a plain external URL and for
+  /// the rows that predate the Media Library.
+  mediaId Int?
+
   categoryRef   Category?   @relation("ExamNotification_Category", fields: [categoryId], references: [id], onDelete: SetNull)
   departmentRef Department? @relation("ExamNotification_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
@@ -2017,4 +2025,19 @@ model TransportRoute {
 
   @@index([deletedAt])
   @@index([sortOrder])
+}
+
+/// What kind of exam record this is.
+///
+/// The Examinations page has always shown these as separate lists, but they
+/// were fed from Downloads with a page-section slug - so publishing a result
+/// meant going to Documents, picking the right section, and then writing a
+/// notice separately. One screen, one dropdown, and the page sorts itself.
+enum ExamNotificationType {
+  NOTIFICATION
+  RESULT
+  TIMETABLE
+  QUESTION_PAPER
+  SYLLABUS
+  CALENDAR
 }
