@@ -169,18 +169,12 @@ export default function LeadershipProfile({ leader }: LeadershipProfileProps) {
                 {leader.credentials && <div className="leadership-credentials">{leader.credentials}</div>}
                 <div className="leadership-role">{leader.role}</div>
 
-                {(leader.phone || leader.email) && (
+                {leader.phone && (
                   <div className="leadership-contact">
                     {leader.phone && (
                       <a href={`tel:${leader.phone}`} className="leadership-contact-item" style={{ textDecoration: "none" }}>
                         <Phone size={16} />
                         <span>{leader.phone}</span>
-                      </a>
-                    )}
-                    {leader.email && (
-                      <a href={`mailto:${leader.email}`} className="leadership-contact-item" style={{ textDecoration: "none" }}>
-                        <Mail size={16} />
-                        <span>{leader.email}</span>
                       </a>
                     )}
                   </div>

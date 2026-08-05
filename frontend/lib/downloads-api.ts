@@ -174,3 +174,26 @@ export function restoreDownload(id: number): Promise<Download> {
 export function reorderDownloads(items: { id: number; sortOrder: number }[]): Promise<Download[]> {
   return apiPatch<Download[]>("/downloads/reorder", { items });
 }
+
+/**
+ * Group headings that a page actually renders as its own block.
+ *
+ * The group label is free text, and that is deliberate - a page can grow a new
+ * heading without a code change. But several pages bind a *specific* heading to
+ * a designed block, and typing it differently silently drops the document into
+ * the page's catch-all list instead. These are those headings, offered as
+ * suggestions so the binding ones can be picked rather than remembered.
+ */
+export const GROUP_SUGGESTIONS: Record<string, string[]> = {
+  about: [
+    "Joint Board of Studies",
+    "Strategic Plan & Deployment Documents",
+    "Policy Documents",
+  ],
+  alumni: ["Alumni Meets", "Activity Reports"],
+  "mandatory-disclosure": [
+    "Accreditation Status",
+    "UGC Autonomous",
+    "Other Statutory Documents",
+  ],
+};

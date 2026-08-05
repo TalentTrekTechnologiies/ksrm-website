@@ -28,6 +28,7 @@ import {
   Download,
   DownloadCategory,
   PAGE_SECTIONS,
+  GROUP_SUGGESTIONS,
 } from "@/lib/downloads-api"
 
 interface FormState {
@@ -283,7 +284,39 @@ function DownloadsManagerInner() {
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
           <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} required />
           <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={PAGE_SECTION_OPTIONS} />
-          <TextField label="Group heading (optional)" value={form.groupLabel} onChange={(v) => setForm({ ...form, groupLabel: v })} placeholder="AY 2025-26 · B.Tech · M.Tech · MBA" />
+          {/* Free text still - a page can grow a heading without a code change -
+              but the headings a page binds to a designed block are offered as
+              buttons, because typing one differently drops the document into
+              the page's catch-all list with nothing to say why. */}
+          <div>
+            <TextField
+              label="Group heading (optional)"
+              value={form.groupLabel}
+              onChange={(v) => setForm({ ...form, groupLabel: v })}
+              placeholder="AY 2025-26 · B.Tech · M.Tech · MBA"
+            />
+            {(GROUP_SUGGESTIONS[form.pageSection] ?? []).length > 0 && (
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                  This page shows:
+                </span>
+                {GROUP_SUGGESTIONS[form.pageSection].map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setForm({ ...form, groupLabel: g })}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${
+                      form.groupLabel === g
+                        ? "bg-admin-primary text-white"
+                        : "border border-admin-border bg-white text-slate-700 hover:bg-admin-bg"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <MediaField
             label="File"
             url={form.fileUrl}

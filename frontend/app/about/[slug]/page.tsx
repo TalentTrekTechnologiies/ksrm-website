@@ -85,13 +85,6 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
               {leader.paragraphs.map((para, i) => (
                 <p className="k-profile-bio" key={i}>{para}</p>
               ))}
-              {leader.email && (
-                <div style={{ color: "#888", fontSize: "15px", marginTop: "0" }}>
-                  📧 <a href={`mailto:${leader.email}`} style={{ color: "#2B3490", textDecoration: "none" }}>
-                    {leader.email}
-                  </a>
-                </div>
-              )}
             </div>
           </div>
         </div>
