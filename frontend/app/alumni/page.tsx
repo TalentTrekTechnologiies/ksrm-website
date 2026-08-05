@@ -1,5 +1,8 @@
+"use client";
+
 import { mediaFile } from "@/lib/api-base";
 import CmsText from "@/components/CmsText";
+import { useCmsDocGroup } from "@/lib/use-cms-doc-group";
 ﻿import PageResources from "@/components/PageResources";
 const stats = [
   { value: "7,498+", label: "Alumni Members" },
@@ -25,6 +28,11 @@ const chapters = [
   { icon: "🏛️", city: "Hyderabad", contact: "G. Rajesh Kumar", addr: "Plot No.516, Gokula Apartments, IX Phase, Hitech-City, Hyderabad-500072", email: "rajesh_reddy22@yahoo.co.in" },
   { icon: "🌎", city: "USA Chapter", contact: "International Chapter", addr: "United States of America", email: "alumni@ksrmce.ac.in" },
 ];
+
+/** Group labels an admin selects in Admin -> Documents to publish into these
+ *  two blocks. Uploading under one of them replaces the built-in list. */
+export const GROUP_MEETS = "Alumni Meets";
+export const GROUP_REPORTS = "Activity Reports";
 
 const meets = [
   { badge: "2022-23", label: "Alumni Meet 2022-23", href: mediaFile(175) },
@@ -64,6 +72,19 @@ const activityReports = [
 ];
 
 export default function AlumniPage() {
+  // Both lists come from the CMS once documents are filed under these group
+  // labels; until then the built-in lists below render unchanged.
+  const cmsMeets = useCmsDocGroup(
+    "alumni",
+    GROUP_MEETS,
+    meets.map((m) => ({ title: m.label, url: m.href, badge: m.badge })),
+  );
+  const cmsReports = useCmsDocGroup(
+    "alumni",
+    GROUP_REPORTS,
+    activityReports.map((r) => ({ title: r.title, url: r.href })),
+  );
+
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
@@ -152,12 +173,14 @@ export default function AlumniPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="alumni-meets" /></h2>
           <div className="alumni-meets-grid">
-            {meets.map((m, _i) => (
-              <a key={m.label} href={m.href} target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
+            {cmsMeets.map((m, _i) => (
+              <a key={m.title} href={m.url} target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
                 <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>📅</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4, display: "inline-block", marginBottom: 4 }}><CmsText section="alumni" slot={`meets.${_i}.badge`} /></div>
-                  <div style={{ color: "#2B3490", fontWeight: 500, fontSize: 14 }}><CmsText section="alumni" slot={`meets.${_i}.label`} /></div>
+                  <div style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4, display: "inline-block", marginBottom: 4 }}>
+                    {m.badge ?? <CmsText section="alumni" slot={`meets.${_i}.badge`} />}
+                  </div>
+                  <div style={{ color: "#2B3490", fontWeight: 500, fontSize: 14 }}>{m.title}</div>
                 </div>
                 <div style={{ color: "white", background: "#2B3490", padding: "4px 12px", borderRadius: 4, fontSize: 12, fontWeight: 700 }}>PDF →</div>
               </a>
@@ -196,10 +219,10 @@ export default function AlumniPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="alumni" slot="activity-reports" /></h2>
           <div className="alumni-activity-grid">
-            {activityReports.map((r, _i) => (
-              <a key={r.title} href={r.href} target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
+            {cmsReports.map((r) => (
+              <a key={r.title} href={r.url} target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
                 <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>📋</div>
-                <div style={{ flex: 1, color: "#2B3490", fontWeight: 500, fontSize: 14 }}><CmsText section="alumni" slot={`activityReports.${_i}.title`} /></div>
+                <div style={{ flex: 1, color: "#2B3490", fontWeight: 500, fontSize: 14 }}>{r.title}</div>
               </a>
             ))}
           </div>
