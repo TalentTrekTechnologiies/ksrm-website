@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { resolveFileUrl } from "@/lib/api-base";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
@@ -188,7 +189,7 @@ function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: num
           id: d.id,
           title: d.title,
           description: d.description,
-          href: d.fileUrl,
+          href: resolveFileUrl(d.fileUrl),
           actionLabel: "Download",
         }))}
       />

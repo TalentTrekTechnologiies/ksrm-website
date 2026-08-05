@@ -30,3 +30,30 @@ export const API_BASE = resolveApiBase();
 export function mediaFile(id: number): string {
   return `${API_BASE}/media/file/${id}/ORIGINAL/SOURCE`;
 }
+
+/**
+ * Makes a URL stored in the database servable from wherever the page is.
+ *
+ * Rows hold two shapes, both legitimate. Older ones were rewritten to a
+ * relative "/api/media/file/..." so they would follow the site's own scheme
+ * and host rather than being pinned to an IP; newer ones are absolute,
+ * because the server resolves the URL at save time against its own origin.
+ *
+ * A relative one only works where the site and the API share an origin -
+ * true in production, where Nginx proxies /api, and false in development,
+ * where the site is on :3000 and the API on :4000. Rendered raw, every
+ * pre-existing document 404'd locally while freshly uploaded ones worked,
+ * which reads like "some of the PDFs are broken" rather than a host mismatch.
+ *
+ * Anything already absolute, or pointing somewhere else entirely (an external
+ * site, a static file under /public), is returned untouched.
+ */
+export function resolveFileUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^(https?:|data:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+  // API_BASE already carries the /api prefix, so the stored one is dropped
+  // rather than doubled.
+  if (trimmed.startsWith("/api/")) return `${API_BASE}${trimmed.slice(4)}`;
+  return trimmed;
+}

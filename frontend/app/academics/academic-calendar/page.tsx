@@ -1,6 +1,7 @@
 "use client";
 
 import PageResources from "@/components/PageResources";
+import { resolveFileUrl } from "@/lib/api-base";
 import CmsText from "@/components/CmsText";
 import { useMemo } from "react";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
@@ -92,7 +93,7 @@ export default function AcademicCalendarPage() {
     for (const d of merged) {
       const year = academicYearOf(d.title);
       const rows = groups.get(year) ?? [];
-      rows.push({ title: d.title, reg: d.description ?? "", file: d.fileUrl });
+      rows.push({ title: d.title, reg: d.description ?? "", file: resolveFileUrl(d.fileUrl) });
       groups.set(year, rows);
     }
     // Newest academic year first; "Other" last, since it has no year to sort on.

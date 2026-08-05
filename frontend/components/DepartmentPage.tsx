@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { resolveFileUrl } from "@/lib/api-base";
 import type { Department, FacultyMember } from "@/types/department";
 import { getDepartmentsPublic } from "@/lib/departments-api";
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
@@ -1302,7 +1303,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                   return (
                     <a
                       key={d.id}
-                      href={d.fileUrl}
+                      href={resolveFileUrl(d.fileUrl)}
                       target="_blank"
                       rel="noreferrer"
                       className="dept-card"
@@ -1311,7 +1312,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                       {isImage && (
                         // eslint-disable-next-line @next/next/no-img-element -- CMS-supplied URL
                         <img
-                          src={d.fileUrl}
+                          src={resolveFileUrl(d.fileUrl)}
                           alt={d.title}
                           loading="lazy"
                           style={{ width: "100%", aspectRatio: "16 / 10", objectFit: "cover", borderRadius: 6, marginBottom: 4 }}
@@ -1348,7 +1349,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                     {group.items.map((d) => (
                       <a
                         key={d.id}
-                        href={d.fileUrl}
+                        href={resolveFileUrl(d.fileUrl)}
                         target="_blank"
                         rel="noreferrer"
                         className="dept-card"

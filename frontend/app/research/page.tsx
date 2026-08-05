@@ -5,7 +5,7 @@ import PageResources from "@/components/PageResources";
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
-import { mediaFile } from "@/lib/api-base";
+import { mediaFile, resolveFileUrl } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
 
@@ -130,11 +130,11 @@ export default function ResearchPage() {
           icon: "📄",
           name: d.title,
           desc: d.description ?? "",
-          file: d.fileUrl,
+          file: resolveFileUrl(d.fileUrl),
         }))
       : FALLBACK_POLICIES;
 
-  const additionalDocs = (cmsDocs ?? []).map((d) => ({ name: d.title, file: d.fileUrl }));
+  const additionalDocs = (cmsDocs ?? []).map((d) => ({ name: d.title, file: resolveFileUrl(d.fileUrl) }));
 
   // No departmentId argument = every department's research, whereas a
   // department page passes its own id and gets only its own. Research is

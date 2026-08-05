@@ -1,6 +1,7 @@
 "use client";
 
 import CmsText from "@/components/CmsText";
+import { resolveFileUrl } from "@/lib/api-base";
 import Link from "next/link";
 import PublicDocumentList from "@/components/PublicDocumentList";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
@@ -85,7 +86,7 @@ export default function OmbudspersonPage() {
                   id: d.id,
                   title: d.title,
                   description: d.description,
-                  href: d.fileUrl,
+                  href: resolveFileUrl(d.fileUrl),
                   actionLabel: "Open",
                 }))}
               />

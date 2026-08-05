@@ -1,6 +1,7 @@
 "use client"
 
 import { getDownloadsPublic, Download } from "@/lib/downloads-api"
+import { resolveFileUrl } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data"
 
 /**
@@ -98,7 +99,7 @@ export default function AccreditationCertificates({
               <a
                 key={d.id}
                 className="ac-card"
-                href={d.fileUrl}
+                href={resolveFileUrl(d.fileUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 title={`Open ${d.title}`}

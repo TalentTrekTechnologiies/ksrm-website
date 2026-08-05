@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { resolveFileUrl } from "@/lib/api-base";
 import PublicDocumentList from "@/components/PublicDocumentList";
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -82,7 +83,7 @@ export default function DownloadsPage() {
                 title: d.title,
                 description: d.description,
                 meta: CATEGORY_LABELS[d.category],
-                href: d.fileUrl,
+                href: resolveFileUrl(d.fileUrl),
                 actionLabel: "Download",
               }))}
             />

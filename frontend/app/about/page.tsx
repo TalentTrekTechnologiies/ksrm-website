@@ -1,6 +1,6 @@
 "use client"
 
-import { mediaFile } from "@/lib/api-base";
+import { mediaFile, resolveFileUrl } from "@/lib/api-base";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import Link from "next/link"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
@@ -58,7 +58,7 @@ export default function About() {
   const docsForGroup = (group: string, fallback: { title: string; url: string; icon: string }[]) => {
     const rows = (cmsDocs ?? []).filter((d) => (d.groupLabel ?? "").trim() === group);
     return rows.length > 0
-      ? rows.map((d) => ({ title: d.title, url: d.fileUrl, icon: "📄" }))
+      ? rows.map((d) => ({ title: d.title, url: resolveFileUrl(d.fileUrl), icon: "📄" }))
       : fallback;
   };
 
