@@ -12,6 +12,9 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   // an AQAR report under AQAR Reports, an apex-body document under Apex
   // Bodies - instead of the page's catch-all block at the bottom.
   { value: "professional-chapters", label: "Campus Life → Professional Chapters" },
+  // The Ombudsperson's appointment order sits in its own block on the About
+  // page rather than that page's general document list.
+  { value: "about.ombudsman", label: "About → Ombudsman" },
   { value: "iqac.composition", label: "IQAC → Composition" },
   { value: "iqac.minutes", label: "IQAC → Minutes & Agenda" },
   { value: "iqac.aqar", label: "IQAC → AQAR Reports" },

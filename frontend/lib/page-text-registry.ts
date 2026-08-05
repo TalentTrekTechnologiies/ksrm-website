@@ -76,6 +76,47 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
     groups: [
       ...GENERATED_PAGE_TEXT.about.groups,
       {
+        label: "Ombudsperson",
+        slots: [
+          {
+            id: "ombudsman.heading",
+            label: "Section heading",
+            kind: "line",
+            default: "Ombudsperson",
+          },
+          {
+            id: "ombudsman.intro",
+            label: "Intro paragraph",
+            kind: "paragraph",
+            default: "In accordance with the UGC (Redressal of Grievances of Students) Regulations, a student whose grievance is not resolved by the college's Grievance Redressal Committee may appeal to the Ombudsperson appointed by the affiliating university. Appeals should be made in writing to the address below.",
+          },
+          {
+            id: "ombudsman.name",
+            label: "Ombudsperson - name",
+            kind: "line",
+            default: "To be notified",
+          },
+          {
+            id: "ombudsman.designation",
+            label: "Ombudsperson - designation",
+            kind: "line",
+            default: "Ombudsperson, JNTUA",
+          },
+          {
+            id: "ombudsman.email",
+            label: "Ombudsperson - email",
+            kind: "line",
+            default: "To be notified",
+          },
+          {
+            id: "ombudsman.phone",
+            label: "Ombudsperson - phone",
+            kind: "line",
+            default: "To be notified",
+          },
+        ],
+      },
+      {
         label: "Sri Kandula Obula Reddy Charities",
         slots: [
           {
