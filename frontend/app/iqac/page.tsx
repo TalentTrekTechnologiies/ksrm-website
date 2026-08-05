@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { mediaFile } from "@/lib/api-base";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
 import ApexBodies from "@/components/iqac/ApexBodies";
 import { getCommitteesPublic, Committee } from "@/lib/committees-api";
@@ -391,6 +392,10 @@ export default function IQACPage() {
           </div>
         </div>
       </section>
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="IQAC" heading="Committees" />
+
       <PageResources section="iqac" />
     </main>
   );

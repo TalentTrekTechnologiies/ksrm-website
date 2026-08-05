@@ -12,7 +12,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CommitteeType } from '@prisma/client';
+import { CommitteeType, CommitteePlacement } from '@prisma/client';
 import { CommitteesService } from './committees.service';
 import { CreateCommitteeDto } from './dto/create-committee.dto';
 import { UpdateCommitteeDto } from './dto/update-committee.dto';
@@ -29,8 +29,11 @@ export class CommitteesController {
   constructor(private readonly committeesService: CommitteesService) {}
 
   @Get()
-  findAllPublic(@Query('type') type?: CommitteeType) {
-    return this.committeesService.findAllPublic(type);
+  findAllPublic(
+    @Query('type') type?: CommitteeType,
+    @Query('placement') placement?: CommitteePlacement,
+  ) {
+    return this.committeesService.findAllPublic(type, placement);
   }
 
   @Get('admin')

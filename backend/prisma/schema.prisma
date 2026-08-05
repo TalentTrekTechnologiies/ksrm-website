@@ -56,6 +56,24 @@ enum DepartmentHighlightKind {
 /// future committee rather than a speculative pre-seeded type - no
 /// Women's-Cell/SC-ST-Cell values are included since no such page/content
 /// exists yet (per explicit instruction: don't invent future committee data).
+/// Where a committee shows up on the public site.
+///
+/// `type` decides this for the five committees that have a section built for
+/// them by name. Every other committee - an Internal Complaint Committee, an
+/// SC/ST Cell, a Women's Empowerment Cell - had nowhere to go: it saved as
+/// OTHER and rendered on no page at all. Placement lets the admin choose the
+/// page instead of a developer adding an enum value and a section each time.
+///
+/// Null means "not published on any page yet", which is the state every
+/// existing committee starts in - so adding this changes no page today.
+enum CommitteePlacement {
+  ABOUT
+  IQAC
+  GRIEVANCE
+  ANTI_RAGGING
+  CAMPUS_LIFE
+}
+
 enum CommitteeType {
   ANTI_RAGGING
   GRIEVANCE_REDRESSAL
@@ -799,6 +817,8 @@ model Committee {
   /// Admin-controlled display order. Committees used to come out alphabetically,
   /// which is not the order a college lists its committees in.
   sortOrder   Int           @default(0)
+  /// Which public page lists this committee. See CommitteePlacement.
+  placement   CommitteePlacement?
   isActive    Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

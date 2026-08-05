@@ -2,6 +2,16 @@ import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
 
 export type CommitteeType = "ANTI_RAGGING" | "GRIEVANCE_REDRESSAL" | "GOVERNING_BODY" | "IQAC" | "OTHER";
 
+/**
+ * Which public page lists a committee, chosen in the CMS.
+ *
+ * `type` covers the five committees that have a section built for them by
+ * name. Anything else - an Internal Complaint Committee, an SC/ST Cell - used
+ * to have nowhere to go: it saved as OTHER and rendered on no page. null means
+ * "not published on a page yet".
+ */
+export type CommitteePlacement = "ABOUT" | "IQAC" | "GRIEVANCE" | "ANTI_RAGGING" | "CAMPUS_LIFE";
+
 export interface CommitteeMember {
   id: number;
   committeeId: number;
@@ -22,6 +32,7 @@ export interface Committee {
   type: CommitteeType;
   description: string | null;
   sortOrder: number;
+  placement: CommitteePlacement | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -35,6 +46,7 @@ export interface CommitteeInput {
   name: string;
   type: CommitteeType;
   description?: string | null;
+  placement?: CommitteePlacement | null;
   isActive?: boolean;
 }
 
@@ -50,6 +62,11 @@ export interface CommitteeMemberInput {
 export function getCommitteesPublic(type?: CommitteeType): Promise<Committee[]> {
   const query = type ? `?type=${type}` : "";
   return apiGet<Committee[]>(`/committees${query}`);
+}
+
+/** Every committee the CMS has pointed at one page, in drag order. */
+export function getCommitteesByPlacement(placement: CommitteePlacement): Promise<Committee[]> {
+  return apiGet<Committee[]>(`/committees?placement=${placement}`);
 }
 
 export function getCommitteesAdmin(includeDeleted = false): Promise<Committee[]> {

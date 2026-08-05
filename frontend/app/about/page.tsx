@@ -1,6 +1,7 @@
 "use client"
 
 import { mediaFile } from "@/lib/api-base";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import Link from "next/link"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -466,6 +467,10 @@ export default function About() {
         </div>
       </section>
     
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="ABOUT" heading="Committees" />
+
       </main>
   )
 }

@@ -29,16 +29,36 @@ import {
   Committee,
   CommitteeMember,
   CommitteeType,
+  CommitteePlacement,
 } from "@/lib/committees-api"
 
 interface FormState {
   name: string
   type: CommitteeType
   description: string
+  /** "" means not shown on any page; the select's blank option. */
+  placement: CommitteePlacement | ""
   isActive: boolean
 }
 
-const emptyForm: FormState = { name: "", type: "OTHER", description: "", isActive: true }
+const emptyForm: FormState = { name: "", type: "OTHER", description: "", placement: "", isActive: true }
+
+/**
+ * Where a committee appears, when its Type has no section of its own.
+ *
+ * The five types below each drive one built-in section. Anything else - an
+ * Internal Complaint Committee, an SC/ST Cell, a Women's Empowerment Cell -
+ * is saved as "Other" and had nowhere to appear at all; this is what gives
+ * it a page without a developer adding one.
+ */
+const PLACEMENT_OPTIONS: { value: string; label: string }[] = [
+  { value: "", label: "Not shown on any page" },
+  { value: "ABOUT", label: "About Us page" },
+  { value: "IQAC", label: "IQAC page" },
+  { value: "GRIEVANCE", label: "Grievance Redressal page" },
+  { value: "ANTI_RAGGING", label: "Anti-Ragging page" },
+  { value: "CAMPUS_LIFE", label: "Campus Life page" },
+]
 
 const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [
   { value: "ANTI_RAGGING", label: "Anti-Ragging" },
@@ -119,7 +139,13 @@ function CommitteesManagerInner() {
   function startEdit(item: Committee) {
     setEditing(item)
     setCreating(false)
-    setForm({ name: item.name, type: item.type, description: item.description ?? "", isActive: item.isActive })
+    setForm({
+      name: item.name,
+      type: item.type,
+      description: item.description ?? "",
+      placement: item.placement ?? "",
+      isActive: item.isActive,
+    })
   }
 
   function cancelForm() {
@@ -132,7 +158,15 @@ function CommitteesManagerInner() {
     setSaving(true)
     setError(null)
     try {
-      const dto = { name: form.name, type: form.type, description: form.description || null, isActive: form.isActive }
+      const dto = {
+        name: form.name,
+        type: form.type,
+        description: form.description || null,
+        // null, never undefined: an omitted key leaves the column untouched,
+        // so "Not shown on any page" would silently fail to clear it.
+        placement: form.placement === "" ? null : form.placement,
+        isActive: form.isActive,
+      }
       if (editing) {
         await updateCommittee(editing.id, { ...dto, version: editing.version })
       } else {
@@ -285,6 +319,17 @@ function CommitteesManagerInner() {
             <TextField label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
             <SelectField label="Type" value={form.type} onChange={(v) => setForm({ ...form, type: v as CommitteeType })} options={TYPE_OPTIONS} required />
           </div>
+          <SelectField
+            label="Show on page"
+            value={form.placement}
+            onChange={(v) => setForm({ ...form, placement: v as CommitteePlacement | "" })}
+            options={PLACEMENT_OPTIONS}
+          />
+          <p className="-mt-2 text-xs text-slate-500">
+            Anti-Ragging, Grievance Redressal, Governing Body and IQAC Composition already have their own
+            section and appear there automatically. Use this for any other committee — an Internal Complaint
+            Committee, an SC/ST Cell — to choose which page lists it.
+          </p>
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={2} />
           <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
           <FormActions>
@@ -375,6 +420,7 @@ function CommitteesManagerInner() {
                 {TYPE_OPTIONS.find((t) => t.value === c.type)?.label ?? c.type}
                 {" · "}
                 {c.members.length} {c.members.length === 1 ? "member" : "members"}
+                {c.placement && ` · on ${PLACEMENT_OPTIONS.find((p) => p.value === c.placement)?.label ?? c.placement}`}
               </p>
             </div>
             {!c.deletedAt && (

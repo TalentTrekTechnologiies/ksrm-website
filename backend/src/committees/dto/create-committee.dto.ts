@@ -1,5 +1,5 @@
 import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
-import { CommitteeType } from '@prisma/client';
+import { CommitteeType, CommitteePlacement } from '@prisma/client';
 
 export class CreateCommitteeDto {
   @IsString()
@@ -12,6 +12,14 @@ export class CreateCommitteeDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  /**
+   * Which public page lists this committee. Nullable on purpose - clearing it
+   * takes the committee off the page without deleting it or its roster.
+   */
+  @IsOptional()
+  @IsEnum(CommitteePlacement)
+  placement?: CommitteePlacement | null;
 
   @IsOptional()
   @IsBoolean()

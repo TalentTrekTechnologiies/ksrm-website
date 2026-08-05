@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
 import AntiRaggingCommittee from "@/components/campus-life/AntiRaggingCommittee";
 import CmsText from "@/components/CmsText";
@@ -437,6 +438,10 @@ export default function AntiRaggingPage() {
           </div>
         </div>
       </section>
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="ANTI_RAGGING" heading="Committees" />
+
       <PageResources section="anti-ragging" />
     </main>
   );

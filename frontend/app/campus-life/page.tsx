@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
 
@@ -63,6 +64,10 @@ export default function CampusLifeIndexPage() {
           </div>
         </div>
       </section>
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="CAMPUS_LIFE" heading="Committees" />
+
     </main>
   );
 }

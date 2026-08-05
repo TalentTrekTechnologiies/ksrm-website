@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CommitteeType, Prisma } from '@prisma/client';
+import { CommitteeType, CommitteePlacement, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateCommitteeDto } from './dto/create-committee.dto';
@@ -25,9 +25,14 @@ export class CommitteesService {
   private static readonly MEMBER_ORDER: Prisma.CommitteeMemberOrderByWithRelationInput[] =
     [{ sortOrder: 'asc' }, { id: 'asc' }];
 
-  async findAllPublic(type?: CommitteeType) {
+  async findAllPublic(type?: CommitteeType, placement?: CommitteePlacement) {
     return this.prisma.committee.findMany({
-      where: { isActive: true, deletedAt: null, ...(type && { type }) },
+      where: {
+        isActive: true,
+        deletedAt: null,
+        ...(type && { type }),
+        ...(placement && { placement }),
+      },
       include: {
         members: {
           where: { isActive: true, deletedAt: null },

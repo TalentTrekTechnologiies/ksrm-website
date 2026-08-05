@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import CmsText from "@/components/CmsText";
 import CommitteeRoster from "@/components/committees/CommitteeRoster";
 
@@ -421,6 +422,10 @@ export default function GrievanceRedressalPage() {
         </div>
       </section>
     
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="GRIEVANCE" heading="Committees" />
+
       <PageResources section="grievance" />
       </main>
   );
