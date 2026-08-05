@@ -71,7 +71,7 @@ export const LEADERSHIP: Leader[] = [
     slug: "principal",
     name: "Dr. T. Nageswara Prasad",
     role: "Principal",
-    photo: "/images/leadership/principalphoto.webp",
+    photo: "/images/leadership/principal.png",
     email: "principal@ksrmce.ac.in",
     messageHeading: "Principal's Message",
     paragraphs: [

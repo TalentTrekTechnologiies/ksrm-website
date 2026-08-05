@@ -1295,24 +1295,40 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 Activities, events and reports from this department&apos;s student chapter.
               </p>
               <div className="dept-download-grid">
-                {chapterDocs.map((d) => (
-                  <a
-                    key={d.id}
-                    href={d.fileUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="dept-card"
-                    style={{ display: "flex", flexDirection: "column", gap: 6, textDecoration: "none" }}
-                  >
-                    <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
-                      {d.title}
-                    </h3>
-                    {d.description && (
-                      <p style={{ color: "#666", fontSize: 13.5, margin: 0, lineHeight: 1.6 }}>{d.description}</p>
-                    )}
-                    <span style={{ color: "#2B3490", fontSize: 12.5, fontWeight: 700, marginTop: 4 }}>Open →</span>
-                  </a>
-                ))}
+                {chapterDocs.map((d) => {
+                  // A chapter posts photos and video links as often as PDFs, so
+                  // show a picture as a picture rather than as a file link.
+                  const isImage = /\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(d.fileUrl)
+                  return (
+                    <a
+                      key={d.id}
+                      href={d.fileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="dept-card"
+                      style={{ display: "flex", flexDirection: "column", gap: 6, textDecoration: "none", overflow: "hidden" }}
+                    >
+                      {isImage && (
+                        // eslint-disable-next-line @next/next/no-img-element -- CMS-supplied URL
+                        <img
+                          src={d.fileUrl}
+                          alt={d.title}
+                          loading="lazy"
+                          style={{ width: "100%", aspectRatio: "16 / 10", objectFit: "cover", borderRadius: 6, marginBottom: 4 }}
+                        />
+                      )}
+                      <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
+                        {d.title}
+                      </h3>
+                      {d.description && (
+                        <p style={{ color: "#666", fontSize: 13.5, margin: 0, lineHeight: 1.6 }}>{d.description}</p>
+                      )}
+                      <span style={{ color: "#2B3490", fontSize: 12.5, fontWeight: 700, marginTop: 4 }}>
+                        {isImage ? "View →" : "Open →"}
+                      </span>
+                    </a>
+                  )
+                })}
               </div>
             </div>
           </section>

@@ -108,12 +108,15 @@ export default function ChapterTab({ departmentId }: { departmentId: number }) {
             rows={2}
             helperText="Optional. e.g. 48-hour hackathon, 120 participants"
           />
+          {/* Any of the three, or a pasted URL - a chapter's output is as
+              often a photo set or a YouTube link as it is a PDF report. */}
           <MediaField
-            label="File"
+            label="File, image, video or link"
             url={form.fileUrl}
             mediaId={form.mediaId}
             onChange={(url, mediaId) => setForm({ ...form, fileUrl: url, mediaId })}
-            accept={["DOCUMENT"]}
+            accept={["DOCUMENT", "IMAGE", "VIDEO"]}
+            urlPlaceholder="…or paste a link: YouTube, Drive, an external page"
           />
           <ToggleField
             label="Active"
