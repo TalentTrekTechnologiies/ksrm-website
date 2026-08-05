@@ -1844,6 +1844,11 @@ model Media {
   codec           String?
   bitrateKbps     Int?
 
+  /// PII that must never be reachable from the public file route - an
+  /// applicant's resume, and anything else uploaded on someone's behalf
+  /// rather than for publication. Staff read these through the
+  /// permission-gated route on the owning module instead.
+  isPrivate        Boolean               @default(false)
   processingStatus MediaProcessingStatus @default(PENDING)
   processingError  String?
 

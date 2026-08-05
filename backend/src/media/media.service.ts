@@ -200,6 +200,10 @@ export class MediaService {
         query.tags.length > 0 && { tags: { hasSome: query.tags } }),
       ...(query.isActive !== undefined && { isActive: query.isActive }),
       ...(!query.includeDeleted && { deletedAt: null }),
+      // Resumes are kept out of the library listing and the picker. This is
+      // how a resume came to be attached to two public documents: it sat in
+      // the picker looking like any other PDF.
+      isPrivate: false,
       ...(query.q && {
         OR: [
           {

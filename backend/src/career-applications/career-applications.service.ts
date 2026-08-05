@@ -106,6 +106,12 @@ export class CareerApplicationsService {
       requestId,
     );
     const mediaId = (uploadResult.media as { id: number }).id;
+
+    // Mark it PII straight away, before the row can be reached. This is what
+    // keeps it off the unauthenticated /media/file route and out of the Media
+    // Library picker; staff read it through the permission-gated
+    // GET /career-applications/admin/:id/resume instead.
+    await this.prisma.media.update({ where: { id: mediaId }, data: { isPrivate: true } });
     // Not resolveUrl() - the ORIGINAL/SOURCE MediaVariant row for this
     // upload is created asynchronously by the processing queue moments
     // after upload() returns; resolveUrl() would lose that race and

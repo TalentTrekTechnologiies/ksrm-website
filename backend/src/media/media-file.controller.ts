@@ -46,8 +46,12 @@ export class MediaFileController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
+    // isPrivate is the important one here. Resumes live in this same table,
+    // and this route has no auth guard - so without it, every resume ever
+    // submitted was downloadable by anyone who walked the id sequence. A 404
+    // rather than a 403: whether a given id exists is itself not public.
     const media = await this.prisma.media.findFirst({
-      where: { id: mediaId, deletedAt: null, isActive: true },
+      where: { id: mediaId, deletedAt: null, isActive: true, isPrivate: false },
     });
     if (!media) throw new NotFoundException();
 
