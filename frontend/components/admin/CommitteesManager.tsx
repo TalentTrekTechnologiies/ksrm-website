@@ -384,11 +384,19 @@ function CommitteesManagerInner() {
             onEdit={startEditMember}
             onDelete={(m) => handleDeleteMember(m.id)}
             emptyLabel="No members yet."
+            // Two lines that wrap, not one that truncates. These entries carry
+            // a full posting - "Educationalist nominated by the management for
+            // the duration of 5 years" - so an ellipsis hides exactly the part
+            // that identifies the person. break-words also stops a single long
+            // unbroken token widening the row.
             renderRow={(m) => (
-              <span className="min-w-0 flex-1 truncate text-sm">
-                <span className="font-medium text-slate-800">{m.name}</span>{" "}
-                <span className="text-slate-500">— {m.designation}, {m.role}</span>
-              </span>
+              <div className="min-w-0">
+                <p className="break-words text-sm font-medium text-slate-800">{m.name}</p>
+                <p className="break-words text-xs text-slate-500">
+                  {m.designation}
+                  {m.role && <span className="text-slate-400"> · {m.role}</span>}
+                </p>
+              </div>
             )}
           />
 
