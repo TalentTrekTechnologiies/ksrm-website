@@ -147,11 +147,6 @@ export default function About() {
         .k-trustee-name { color: #1a1a2e; font-weight: 700; font-size: 16px; font-family: 'Rajdhani', sans-serif; line-height: 1.3; }
         .k-trustee-role { color: #2B3490; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
-        .k-ombuds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 28px; }
-        .k-ombuds-card { background: #fff; border: 1px solid #EADFC8; border-radius: 10px; padding: 18px 20px; }
-        .k-ombuds-label { font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #2B3490; margin: 0 0 6px; }
-        .k-ombuds-value { margin: 0; color: #1a1a2e; font-size: 15px; font-weight: 600; word-break: break-word; }
-
         .k-leadership { background: #F4F3EF; }
         .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-items: stretch; }
         /* The cards used to be whatever height their bio made them, so the
@@ -364,37 +359,6 @@ export default function About() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* OMBUDSPERSON
-          UGC (Redressal of Grievances of Students) Regulations: the appeal
-          authority above the college's own grievance committee. Details are
-          Page Content fields; the appointment order is uploaded under
-          "About -> Ombudsman". */}
-      <section className="k-section k-docs" id="ombudsman" style={{ background: "#F5EFE4" }}>
-        <div className="k-container">
-          <h2><CmsText section="about" slot="ombudsman.heading" /></h2>
-          <p style={{ color: "#555", fontSize: "15.5px", lineHeight: 1.8, margin: "0 0 28px", maxWidth: "1000px" }}>
-            <CmsText section="about" slot="ombudsman.intro" multiline />
-          </p>
-
-          <div className="k-ombuds-grid">
-            {[
-              { label: "Ombudsperson", slot: "ombudsman.name" },
-              { label: "Designation", slot: "ombudsman.designation" },
-              { label: "Email", slot: "ombudsman.email" },
-              { label: "Phone", slot: "ombudsman.phone" },
-            ].map((f) => (
-              <div className="k-ombuds-card" key={f.slot}>
-                <p className="k-ombuds-label">{f.label}</p>
-                <p className="k-ombuds-value"><CmsText section="about" slot={f.slot} /></p>
-              </div>
-            ))}
-          </div>
-
-          {/* Appointment order and any related notices. */}
-          <PageResources section="about.ombudsman" embedded />
         </div>
       </section>
 

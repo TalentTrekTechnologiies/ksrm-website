@@ -34,6 +34,7 @@ const STATIC_PATHS = [
   "/campus-life/anti-ragging",
   "/campus-life/campus-facilities",
   "/campus-life/cultural",
+  "/about/ombudsman",
   "/campus-life/professional-chapters",
   "/campus-life/edc",
   "/campus-life/grievance",
