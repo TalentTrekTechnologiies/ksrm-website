@@ -11,6 +11,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   // IQAC is split into its page's tabs so an upload lands in the right one -
   // an AQAR report under AQAR Reports, an apex-body document under Apex
   // Bodies - instead of the page's catch-all block at the bottom.
+  { value: "professional-chapters", label: "Campus Life → Professional Chapters" },
   { value: "iqac.composition", label: "IQAC → Composition" },
   { value: "iqac.minutes", label: "IQAC → Minutes & Agenda" },
   { value: "iqac.aqar", label: "IQAC → AQAR Reports" },

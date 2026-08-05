@@ -21,6 +21,7 @@ const SECTIONS = [
   { label: "Transport", href: "/campus-life/transport", blurb: "Bus routes and parking across Kadapa and nearby towns." },
   { label: "Sports", href: "/campus-life/sports", blurb: "Grounds, indoor courts, gymnasium and tournaments." },
   { label: "Cultural", href: "/campus-life/cultural", blurb: "Cultural club, fests and student performances." },
+  { label: "Professional Chapters", href: "/campus-life/professional-chapters", blurb: "Department-led student associations and technical chapters." },
   { label: "NSS", href: "/campus-life/nss", blurb: "National Service Scheme activities and community outreach." },
   { label: "EDC", href: "/campus-life/edc", blurb: "Entrepreneurship Development Cell programmes." },
   { label: "Startup Cell", href: "/campus-life/startup-cell", blurb: "Incubation support for student and faculty startups." },

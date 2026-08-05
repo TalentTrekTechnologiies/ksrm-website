@@ -121,6 +121,101 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
     ],
   },
 
+  "professional-chapters": {
+    label: "Campus Life -> Professional Chapters",
+    path: "/campus-life/professional-chapters",
+    groups: [
+      {
+        label: "Header",
+        slots: [
+          {
+            id: "hero.title",
+            label: "Page title",
+            kind: "line",
+            default: "Professional Chapters",
+          },
+          {
+            id: "hero.subtitle",
+            label: "Subtitle",
+            kind: "line",
+            default: "Department-led student associations at K.S.R.M. College of Engineering",
+          },
+          {
+            id: "intro",
+            label: "Intro paragraph",
+            kind: "paragraph",
+            default: "Every engineering department runs its own professional chapter, giving students a place to build on what they learn in class - through technical events, industry sessions, site visits and competitions organised by students themselves.",
+          },
+        ],
+      },
+      {
+        label: "Chapters",
+        slots: [
+          {
+            id: "chapters.0.name",
+            label: "Chapter 1 - name",
+            kind: "line",
+            default: "Technical Club",
+          },
+          {
+            id: "chapters.0.blurb",
+            label: "Chapter 1 - description",
+            kind: "paragraph",
+            default: "Coding contests, hackathons, technical talks and peer workshops for Computer Science students.",
+          },
+          {
+            id: "chapters.1.name",
+            label: "Chapter 2 - name",
+            kind: "line",
+            default: "Echo Club",
+          },
+          {
+            id: "chapters.1.blurb",
+            label: "Chapter 2 - description",
+            kind: "paragraph",
+            default: "Electronics and communication projects, circuit design events and industry sessions.",
+          },
+          {
+            id: "chapters.2.name",
+            label: "Chapter 3 - name",
+            kind: "line",
+            default: "EEE Club",
+          },
+          {
+            id: "chapters.2.blurb",
+            label: "Chapter 3 - description",
+            kind: "paragraph",
+            default: "Electrical engineering seminars, energy projects and student-led technical activities.",
+          },
+          {
+            id: "chapters.3.name",
+            label: "Chapter 4 - name",
+            kind: "line",
+            default: "Civil Engineers Association",
+          },
+          {
+            id: "chapters.3.blurb",
+            label: "Chapter 4 - description",
+            kind: "paragraph",
+            default: "Site visits, surveying and structural design events for Civil Engineering students.",
+          },
+          {
+            id: "chapters.4.name",
+            label: "Chapter 5 - name",
+            kind: "line",
+            default: "Mechanical Engineers Association",
+          },
+          {
+            id: "chapters.4.blurb",
+            label: "Chapter 5 - description",
+            kind: "paragraph",
+            default: "Workshops, design competitions and industry interaction for Mechanical Engineering students.",
+          },
+        ],
+      },
+    ],
+  },
+
   library: {
     label: "Library",
     path: "/campus-life/library",

@@ -112,6 +112,7 @@ const navItems: NavItem[] = [
       { label: "Anti-Ragging", href: "/campus-life/anti-ragging" },
       { label: "Grievance Redressal", href: "/campus-life/grievance" },
       { label: "Cultural Club", href: "/campus-life/cultural" },
+      { label: "Professional Chapters", href: "/campus-life/professional-chapters" },
     ],
   },
   {
