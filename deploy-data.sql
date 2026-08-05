@@ -9,7 +9,7 @@
 --   2. Adds the 8 global Contact page records (4 directory + 4 info)
 --   3. Adds the 12 Academics programmes with their seats, codes and NBA marks
 --   4. Adds 6 Mandatory Disclosure documents whose files already exist there
---   5. Adds the 8 college bus routes
+--   5. Adds the 6 college bus routes
 --
 -- Non-destructive and safe to re-run:
 --   - Nothing is hard-deleted. MCA is soft-deleted exactly as the admin UI
@@ -152,6 +152,10 @@ BEGIN
   ------------------------------------------------------------------
   -- 5. College bus routes
   ------------------------------------------------------------------
+  -- The six real routes, taken from the live page the college itself edited -
+  -- NOT the eight placeholder rows that were hardcoded in the repo, which
+  -- named towns 120-200km away (Tirupati, Palamaner, Srikalahasthi) and two
+  -- routes with no destination at all.
   -- Matched on (routeNo, fromPlace) so re-running never duplicates a route.
   -- Driver and bus columns are left null deliberately: they change every year
   -- and belong to the transport office, not to this script.
@@ -160,14 +164,12 @@ BEGIN
      "sortOrder", "isActive", "createdAt", "updatedAt")
   SELECT v.no, v.frm, v.via, v.dep, v.ret, v.fee, v.sort, true, now(), now()
   FROM (VALUES
-      ('R1','Kadapa Railway Station','Clock Tower -> Tirupati Road -> KSRMCE Gate','7:30 AM','5:30 PM','Rs 3,000/month',0),
-      ('R2','Giddapalem','Ambapuram -> Piler Road -> KSRMCE Gate','7:00 AM','6:00 PM','Rs 2,500/month',1),
-      ('R3','Srikalahasthi','Hayathnagar -> Chandragiri Road -> KSRMCE Gate','6:30 AM','5:00 PM','Rs 4,000/month',2),
-      ('R4','Tirupati','Arani -> Kodur -> KSRMCE Gate','6:00 AM','4:30 PM','Rs 4,500/month',3),
-      ('R5','Naidupet','Proddatur -> Chakrayapet -> KSRMCE Gate','7:15 AM','5:45 PM','Rs 3,500/month',4),
-      ('R6','Rayachoti','Jammalamadugu -> Mydukur -> KSRMCE Gate','6:45 AM','5:15 PM','Rs 3,800/month',5),
-      ('R7','Chintachintala','KSRMCE Gate','7:45 AM','5:00 PM','Rs 2,000/month',6),
-      ('R8','Palamaner','Madanapalle -> Gangavalli -> KSRMCE Gate','6:15 AM','4:45 PM','Rs 4,200/month',7)
+      ('R1','All points of Kadapa','Connected to all points from Kadapa','7:30 AM','5:30 PM','Rs 3,000/month',0),
+      ('R2','Pulivendula','Pulivendula -> Vempalli -> KSRMCE Gate','7:00 AM','6:00 PM','Rs 2,500/month',1),
+      ('R3','Proddatur','Proddatur -> Mydukur -> KSRMCE Gate','6:30 AM','5:00 PM','Rs 4,000/month',2),
+      ('R4','Badvel','Badvel -> Ontimitta -> KSRMCE Gate','6:00 AM','4:30 PM','Rs 4,500/month',3),
+      ('R5','Rayachoti','Rayachoti -> Kadapa -> KSRMCE Gate','7:15 AM','5:45 PM','Rs 3,500/month',4),
+      ('R6','Yerraguntla','Yerraguntla -> Kamalapuram -> KSRMCE Gate','6:45 AM','5:15 PM','Rs 3,800/month',5)
     ) AS v(no, frm, via, dep, ret, fee, sort)
   WHERE NOT EXISTS (
     SELECT 1 FROM "TransportRoute" t
