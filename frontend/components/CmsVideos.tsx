@@ -29,8 +29,15 @@ export default function CmsVideos({
   showTitles = false,
 }: {
   section: string
-  /** Video paths the page shipped with, used when the CMS has none. */
-  fallback: string[]
+  /**
+   * Videos the page shipped with, used when the CMS has none.
+   *
+   * A bare path carries no name, so a page showing captions had nothing to put
+   * under its built-in clips - the CMS ones were captioned and the fallbacks
+   * were not. Pass `{ src, title }` to name them; a plain string still works
+   * for pages that show no captions.
+   */
+  fallback: (string | { src: string; title: string })[]
   gridClassName: string
   itemClassName: string
   /** Captions under each clip - off by default to match the original layouts. */
@@ -47,7 +54,11 @@ export default function CmsVideos({
   const items =
     cms && cms.length > 0
       ? cms.map((g) => ({ key: String(g.id), src: g.imageUrl, title: g.title }))
-      : fallback.map((src) => ({ key: src, src, title: "" }))
+      : fallback.map((f) =>
+          typeof f === "string"
+            ? { key: f, src: f, title: "" }
+            : { key: f.src, src: f.src, title: f.title },
+        )
 
   if (items.length === 0) return null
 

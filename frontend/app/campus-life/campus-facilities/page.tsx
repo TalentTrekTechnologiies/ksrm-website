@@ -2,15 +2,22 @@ import PageResources from "@/components/PageResources";
 import CmsVideos from "@/components/CmsVideos";
 import CmsText from "@/components/CmsText";
 
-﻿const tourVideos = [
-  "/videos/main-block.mp4",
-  "/videos/civil-block.mp4",
-  "/videos/mechanical-block.mp4",
-  "/videos/block-e.mp4",
-  "/videos/sliver-jubilee-block.mp4",
-  "/videos/kor-auditorium.mp4",
-  "/videos/pg-block.mp4",
-  "/videos/3d-robo.mp4",
+﻿// Named, so a visitor can tell which building each clip is of. These were bare
+// file paths, and the grid showed eight unlabelled videos. Titles for videos
+// managed in the CMS come from the record itself; these cover the built-in
+// clips that ship with the page.
+//
+// The Silver Jubilee filename is misspelt "sliver" on disk - kept as it is,
+// since renaming the file would break the clip for no gain.
+const tourVideos = [
+  { src: "/videos/main-block.mp4", title: "Main Block" },
+  { src: "/videos/civil-block.mp4", title: "Civil Block" },
+  { src: "/videos/mechanical-block.mp4", title: "Mechanical Block" },
+  { src: "/videos/block-e.mp4", title: "Block E" },
+  { src: "/videos/sliver-jubilee-block.mp4", title: "Silver Jubilee Block" },
+  { src: "/videos/kor-auditorium.mp4", title: "K.O.R. Auditorium" },
+  { src: "/videos/pg-block.mp4", title: "PG Block" },
+  { src: "/videos/3d-robo.mp4", title: "3D Robotics Laboratory" },
 ];
 
 const stats = [
@@ -120,8 +127,16 @@ export default function CampusFacilitiesPage() {
         .cf-video-wrap { border-radius: 8px; overflow: hidden; }
         .cf-video-wrap video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
         .cf-explore-imggrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
-        .cf-explore-img { position: relative; height: 200px; border-radius: 12px; overflow: hidden; }
+        .cf-explore-img { position: relative; height: 200px; border-radius: 12px; overflow: hidden; margin: 0; }
         .cf-explore-img img { width: 100%; height: 100%; object-fit: cover; }
+        /* Over the photo rather than below it, so a caption never changes the
+           height of a cell and breaks the grid alignment. The gradient keeps
+           the text readable on a light photo as well as a dark one. */
+        .cf-explore-img figcaption {
+          position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 10px;
+          background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 60%);
+          color: #fff; font-size: 13px; font-weight: 600; line-height: 1.35;
+        }
       `}</style>
 
       <section className="cf-hero">
@@ -150,6 +165,7 @@ export default function CampusFacilitiesPage() {
             fallback={tourVideos}
             gridClassName="cf-video-grid"
             itemClassName="cf-video-wrap"
+            showTitles
           />
         </div>
       </section>
@@ -198,9 +214,13 @@ export default function CampusFacilitiesPage() {
               <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#2B3490", margin: "0 0 20px" }}><CmsText section="campus-facilities" slot={`exploreSections.${_i}.title`} /></h3>
               <div className="cf-explore-imggrid">
                 {sec.images.map((img) => (
-                  <div className="cf-explore-img" key={img.src}>
+                  <figure className="cf-explore-img" key={img.src}>
                     <img src={img.src} alt={img.alt} loading="lazy" />
-                  </div>
+                    {/* The alt text already names the photo, so it doubles as
+                        the caption - one string to keep right rather than two
+                        that can drift apart. */}
+                    <figcaption>{img.alt}</figcaption>
+                  </figure>
                 ))}
               </div>
             </div>
