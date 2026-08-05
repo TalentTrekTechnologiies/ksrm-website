@@ -161,16 +161,14 @@ export default function About() {
         .k-leader-photo { width: 120px; height: 120px; border: 4px solid #D4A500; border-radius: 50%; object-fit: cover; object-position: top center; background: #F4F3EF; margin: 0 auto 16px; display: block; }
         .k-leader-name { color: #2B3490; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
         .k-leader-role { display: inline-block; background: #2B3490; color: white; font-size: 14px; font-weight: 600; padding: 3px 10px; border-radius: 4px; margin-bottom: 16px; }
-        .k-charities-body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: start; }
+        .k-charities-body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: stretch; }
         .k-charities-p { color: #555; font-size: 15.5px; line-height: 1.85; margin: 0 0 18px; text-align: justify; text-justify: inter-word; hyphens: auto; }
-        .k-charities-figure { margin: 0; }
-        .k-charities-figure img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: top center; border-radius: 10px; border: 4px solid #fff; box-shadow: 0 8px 24px rgba(43,52,144,.16); background: #F4F3EF; display: block; }
-        .k-charities-figure figcaption { margin-top: 12px; text-align: center; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; color: #1a1a2e; }
-        .k-charities-figure figcaption span { display: block; font-size: 13px; font-weight: 600; color: #2B3490; margin-top: 2px; }
+        .k-charities-figure { margin: 0; height: 100%; }
+        .k-charities-figure img { width: 100%; height: 100%; min-height: 280px; object-fit: cover; object-position: top center; border-radius: 10px; border: 4px solid #fff; box-shadow: 0 8px 24px rgba(43,52,144,.16); background: #F4F3EF; display: block; }
         /* Portrait above the text once there is no room beside it. */
         @media (max-width: 900px) {
           .k-charities-body { grid-template-columns: 1fr; }
-          .k-charities-figure { max-width: 260px; margin: 0 auto 8px; order: -1; }
+          .k-charities-figure { max-width: 260px; height: auto; margin: 0 auto 8px; order: -1; }
           .k-charities-p { text-align: left; }
         }
         .k-leader-bio { color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
@@ -316,7 +314,6 @@ export default function About() {
             <figure className="k-charities-figure">
               {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
               <img src="/images/leadership/correspondent.jpg" alt="Smt. K. Rajeswari, Correspondent" />
-              <figcaption>Smt. K. Rajeswari<span>Correspondent and Secretary</span></figcaption>
             </figure>
           </div>
 
