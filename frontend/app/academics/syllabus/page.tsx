@@ -3,22 +3,32 @@
 import { useState } from "react";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { useLiveData } from "@/lib/use-live-data";
+import { resolveFileUrl } from "@/lib/api-base";
 
+// Each regulation carries the code that appears in its syllabus filenames, so
+// a card can find the PDFs uploaded for it. Without this the cards were purely
+// decorative: every "Download PDF" button was href="#" and downloaded nothing.
 const btechRegs = [
-  { name: "R23UG (Current)", branches: "Computer Science & Engineering, CSE (AI & ML), CSE (Data Science), CSE (AI & ML Specialisation), Electronics & Communication Engineering, Electrical & Electronics Engineering, Civil Engineering, Mechanical Engineering" },
-  { name: "R20UG", branches: "All B.Tech Branches" },
-  { name: "R18UG", branches: "All B.Tech Branches" },
-  { name: "R15UG (Archive)", branches: "All B.Tech Branches" },
+  // R26 applies to the batch admitted in AY 2026-27, so it leads the list.
+  // R23 stays here rather than being retired: the three senior years are still
+  // studying under it.
+  { code: "R26", name: "R26UG (AY 2026-27 intake)", branches: "All B.Tech Branches" },
+  { code: "R23", name: "R23UG", branches: "Computer Science & Engineering, CSE (AI & ML), CSE (Data Science), CSE (AI & ML Specialisation), Electronics & Communication Engineering, Electrical & Electronics Engineering, Civil Engineering, Mechanical Engineering" },
+  { code: "R20", name: "R20UG", branches: "All B.Tech Branches" },
+  { code: "R18", name: "R18UG", branches: "All B.Tech Branches" },
+  { code: "R15", name: "R15UG (Archive)", branches: "All B.Tech Branches" },
 ];
 
 const mtechRegs = [
-  { name: "R22PG (Current)", branches: "All Specialisations" },
-  { name: "R18PG", branches: "All Specialisations" },
+  { code: "R22", name: "R22PG (Current)", branches: "All Specialisations" },
+  { code: "R18PG", name: "R18PG", branches: "All Specialisations" },
 ];
 
 const mbaRegs = [
-  { name: "R25 (Current)", branches: "Management Studies" },
-  { name: "R19 (Archive)", branches: "Management Studies" },
+  { code: "R25", name: "R25 (Current)", branches: "Management Studies" },
+  { code: "R19", name: "R19 (Archive)", branches: "Management Studies" },
 ];
 
 function DownloadIcon() {
@@ -42,10 +52,12 @@ function ChevronDown() {
 function AccordionItem({
   title,
   regs,
+  docs,
   defaultOpen,
 }: {
   title: string;
-  regs: { name: string; branches: string }[];
+  regs: { code: string; name: string; branches: string }[];
+  docs: Download[];
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(!!defaultOpen);
@@ -57,17 +69,36 @@ function AccordionItem({
       </button>
       <div className="syl-accordion-content">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
-          {regs.map((r) => (
-            <div key={r.name} style={{ background: "#fff", border: "1px solid #eef0f3", borderRadius: 8, padding: 16 }}>
-              <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 12px" }}>{r.name}</h4>
-              <p style={{ fontSize: 13, color: "#555", margin: "0 0 12px", lineHeight: 1.6 }}>
-                <strong>Branches:</strong><br />{r.branches}
-              </p>
-              <a href="#" className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                <DownloadIcon />Download PDF
-              </a>
-            </div>
-          ))}
+          {regs.map((r) => {
+            // Matched on the regulation code in the document title, which is
+            // how the college names these files - "Computer Science and
+            // Engineering(R23)". A regulation with nothing uploaded says so,
+            // instead of offering a button that does nothing.
+            // \\b, not \b: inside a template literal \b is the backspace
+            // character, so the regex became /\x08R23\x08/ and matched nothing.
+            const forReg = docs.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
+            return (
+              <div key={r.name} style={{ background: "#fff", border: "1px solid #eef0f3", borderRadius: 8, padding: 16 }}>
+                <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 12px" }}>{r.name}</h4>
+                <p style={{ fontSize: 13, color: "#555", margin: "0 0 12px", lineHeight: 1.6 }}>
+                  <strong>Branches:</strong><br />{r.branches}
+                </p>
+                {forReg.length === 0 ? (
+                  <p style={{ fontSize: 12, color: "#888", fontStyle: "italic", margin: 0 }}>
+                    Syllabus not published yet.
+                  </p>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {forReg.map((d) => (
+                      <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
+                        <DownloadIcon />{d.title}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -75,6 +106,12 @@ function AccordionItem({
 }
 
 export default function SyllabusPage() {
+  const docs = useLiveData<Download[]>(
+    () => getDownloadsPublic("SYLLABUS").catch(() => [] as Download[]),
+    [],
+  );
+  const syllabi = docs ?? [];
+
   return (
     <>
       <style>{`
@@ -181,9 +218,9 @@ export default function SyllabusPage() {
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="syllabus" slot="download-syllabus-by-programme" /></h2>
             <div className="syl-accordion">
-              <AccordionItem title="B.Tech" regs={btechRegs} defaultOpen />
-              <AccordionItem title="M.Tech" regs={mtechRegs} />
-              <AccordionItem title="MBA" regs={mbaRegs} />
+              <AccordionItem title="B.Tech" regs={btechRegs} docs={syllabi} defaultOpen />
+              <AccordionItem title="M.Tech" regs={mtechRegs} docs={syllabi} />
+              <AccordionItem title="MBA" regs={mbaRegs} docs={syllabi} />
             </div>
           </div>
         </section>
