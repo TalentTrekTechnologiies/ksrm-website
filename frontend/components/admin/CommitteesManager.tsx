@@ -23,6 +23,7 @@ import {
   deleteCommittee,
   restoreCommittee,
   createCommitteeMember,
+  updateCommitteeMember,
   deleteCommitteeMember,
   reorderCommittees,
   reorderCommitteeMembers,
@@ -95,6 +96,9 @@ function CommitteesManagerInner() {
   const [managingMembersId, setManagingMembersId] = useState<number | null>(null)
   const [memberForm, setMemberForm] = useState<MemberFormState>(emptyMemberForm)
   const [savingMember, setSavingMember] = useState(false)
+  // Which member the form below the list is editing; null means it adds a new
+  // one. An id rather than a copy, for the same reason as managingMembersId.
+  const [editingMemberId, setEditingMemberId] = useState<number | null>(null)
   const [reordering, setReordering] = useState(false)
 
   const managingMembersOf = useMemo(
@@ -129,6 +133,16 @@ function CommitteesManagerInner() {
       cancelled = true
     }
   }, [])
+
+  function startEditMember(m: CommitteeMember) {
+    setEditingMemberId(m.id)
+    setMemberForm({ name: m.name, designation: m.designation, role: m.role })
+  }
+
+  function cancelMemberEdit() {
+    setEditingMemberId(null)
+    setMemberForm(emptyMemberForm)
+  }
 
   function startCreate() {
     setCreating(true)
@@ -202,16 +216,25 @@ function CommitteesManagerInner() {
     }
   }
 
-  async function handleAddMember() {
+  async function handleSaveMember() {
     if (!managingMembersOf) return
     setSavingMember(true)
     setError(null)
     try {
-      await createCommitteeMember(managingMembersOf.id, memberForm)
-      setMemberForm(emptyMemberForm)
+      if (editingMemberId !== null) {
+        // Read the version at save time, not from whatever was on screen when
+        // the form opened - someone else may have edited this row since.
+        const current = managingMembersOf.members.find((m) => m.id === editingMemberId)
+        if (!current) throw new ApiError("That member no longer exists. Reload and try again.", 404)
+        await updateCommitteeMember(editingMemberId, { ...memberForm, version: current.version })
+      } else {
+        await createCommitteeMember(managingMembersOf.id, memberForm)
+      }
+      cancelMemberEdit()
       await refresh()
+      notifySaved("Your changes have been saved.")
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Failed to add member")
+      setError(err instanceof ApiError ? err.message : "Failed to save member")
     } finally {
       setSavingMember(false)
     }
@@ -221,6 +244,7 @@ function CommitteesManagerInner() {
     if (!managingMembersOf) return
     try {
       await deleteCommitteeMember(memberId)
+      if (editingMemberId === memberId) cancelMemberEdit()
       await refresh()
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to remove member")
@@ -357,6 +381,7 @@ function CommitteesManagerInner() {
           <CmsDragList
             items={managingMembersOf.members.filter((m) => !m.deletedAt)}
             onReorder={handleReorderMembers}
+            onEdit={startEditMember}
             onDelete={(m) => handleDeleteMember(m.id)}
             emptyLabel="No members yet."
             renderRow={(m) => (
@@ -367,14 +392,18 @@ function CommitteesManagerInner() {
             )}
           />
 
+          <p className="text-sm font-semibold text-slate-700">
+            {editingMemberId !== null ? "Edit member" : "Add a member"}
+          </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <TextField label="Name" value={memberForm.name} onChange={(v) => setMemberForm({ ...memberForm, name: v })} />
             <TextField label="Designation" value={memberForm.designation} onChange={(v) => setMemberForm({ ...memberForm, designation: v })} />
             <TextField label="Role" value={memberForm.role} onChange={(v) => setMemberForm({ ...memberForm, role: v })} placeholder="Chairperson" />
           </div>
           <FormActions>
-            <PrimaryButton onClick={handleAddMember} disabled={savingMember || !memberForm.name || !memberForm.designation || !memberForm.role}>
-              {savingMember ? "Adding..." : "Add member"}
+            {editingMemberId !== null && <SecondaryButton onClick={cancelMemberEdit}>Cancel</SecondaryButton>}
+            <PrimaryButton onClick={handleSaveMember} disabled={savingMember || !memberForm.name || !memberForm.designation || !memberForm.role}>
+              {savingMember ? "Saving..." : editingMemberId !== null ? "Save member" : "Add member"}
             </PrimaryButton>
           </FormActions>
         </div>
@@ -426,7 +455,7 @@ function CommitteesManagerInner() {
             {!c.deletedAt && (
               <button
                 type="button"
-                onClick={() => setManagingMembersId(c.id)}
+                onClick={() => { setManagingMembersId(c.id); cancelMemberEdit() }}
                 className="flex shrink-0 items-center gap-1 text-xs font-semibold text-admin-primary hover:underline"
               >
                 <Users className="h-3.5 w-3.5" /> Members
