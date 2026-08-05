@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import CmsText from "@/components/CmsText";
 import { getTransportRoutesPublic, TransportRoute } from "@/lib/transport-routes-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -46,6 +48,10 @@ export default function TransportPage() {
     [],
   );
   const cmsRoutes = routesData ?? [];
+
+  // See the bike-parking section below: starts visible so a working video is
+  // never hidden by a slow load, and switches off the moment it fails.
+  const [bikeVideoOk, setBikeVideoOk] = useState(true);
 
   return (
     <main style={{ background: "#ffffff" }}>
@@ -194,16 +200,31 @@ export default function TransportPage() {
         </div>
       </section>
 
-      <section style={{ padding: "72px 0", background: "#ffffff" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="transport" slot="bike-parking-facility" /></h2>
-          <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 1000, margin: "0 auto" }}>
-            <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-              <source src="/videos/bike-parking.mp4" type="video/mp4" />
-            </video>
+      {/* Hidden entirely unless the video actually loads. The file is missing,
+          and the static host answers an unknown path with the site's HTML
+          shell under a 200 - so the browser gets HTML where it expected video
+          and renders a blank black box under a heading. onError fires for
+          exactly that case, so the section self-heals once a real file is
+          uploaded, with no code change. */}
+      {bikeVideoOk && (
+        <section style={{ padding: "72px 0", background: "#ffffff" }}>
+          <div className="responsive-container">
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="transport" slot="bike-parking-facility" /></h2>
+            <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 1000, margin: "0 auto" }}>
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                onError={() => setBikeVideoOk(false)}
+                style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}
+              >
+                <source src="/videos/bike-parking.mp4" type="video/mp4" onError={() => setBikeVideoOk(false)} />
+              </video>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
