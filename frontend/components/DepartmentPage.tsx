@@ -100,6 +100,13 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
   const [research, setResearch] = useState<ResearchRecord[]>([]);
   const [videos, setVideos] = useState<CampusVideo[]>([]);
   const [downloads, setDownloads] = useState<Download[]>([]);
+
+  // A chapter's uploads are ordinary department documents routed to the
+  // Professional Chapters section, so they need no separate table - just
+  // separating here keeps them out of the general Downloads list.
+  const CHAPTER_SECTION = "professional-chapters";
+  const chapterDocs = downloads.filter((d) => d.pageSection === CHAPTER_SECTION);
+  const generalDownloads = downloads.filter((d) => d.pageSection !== CHAPTER_SECTION);
   const [contacts, setContacts] = useState<ContactChannel[]>([]);
   const [statistics, setStatistics] = useState<SiteStatistic[]>([]);
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});
@@ -1275,12 +1282,48 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           </section>
         )}
 
+        {/* PROFESSIONAL CHAPTER ACTIVITIES
+            Anything the department's chapter uploads - filed under Documents
+            with this department and the "Campus Life -> Professional Chapters"
+            section. Split out from the general Downloads block below so a
+            chapter's event reports are not buried among syllabi and forms. */}
+        {chapterDocs.length > 0 && (
+          <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
+            <div className="responsive-container">
+              <h2 className="dept-section-title" style={{ marginBottom: 8 }}>Professional Chapter</h2>
+              <p style={{ color: "#666", fontSize: 15, margin: "0 0 32px" }}>
+                Activities, events and reports from this department&apos;s student chapter.
+              </p>
+              <div className="dept-download-grid">
+                {chapterDocs.map((d) => (
+                  <a
+                    key={d.id}
+                    href={d.fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="dept-card"
+                    style={{ display: "flex", flexDirection: "column", gap: 6, textDecoration: "none" }}
+                  >
+                    <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
+                      {d.title}
+                    </h3>
+                    {d.description && (
+                      <p style={{ color: "#666", fontSize: 13.5, margin: 0, lineHeight: 1.6 }}>{d.description}</p>
+                    )}
+                    <span style={{ color: "#2B3490", fontSize: 12.5, fontWeight: 700, marginTop: 4 }}>Open →</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* DOWNLOADS */}
-        {isVisible("downloads.showSection") && downloads.length > 0 && (
+        {isVisible("downloads.showSection") && generalDownloads.length > 0 && (
           <section style={{ padding: "72px 0", background: "#ffffff" }}>
             <div className="responsive-container">
               <h2 className="dept-section-title" style={{ marginBottom: 32 }}>Downloads</h2>
-              {groupDownloadsByCategory(downloads).map((group) => (
+              {groupDownloadsByCategory(generalDownloads).map((group) => (
                 <div key={group.category} style={{ marginBottom: 36 }}>
                   <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#2B3490", borderLeft: "4px solid #D4A500", paddingLeft: 14, margin: "0 0 20px" }}>
                     {DOWNLOAD_CATEGORY_LABELS[group.category] ?? group.category}
