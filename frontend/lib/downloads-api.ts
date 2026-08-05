@@ -7,6 +7,8 @@ export type DownloadCategory = "SYLLABUS" | "QUESTION_PAPER" | "BROCHURE" | "AFF
 // the label is what the admin sees in the dropdown.
 export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "kgcet", label: "KGCET — results, notifications" },
+  { value: "research.policies", label: "Research → RDC Policies" },
+  { value: "research.documents", label: "Research → Additional Documents" },
   { value: "edc", label: "EDC — Entrepreneurship Development Cell" },
   { value: "iic", label: "IIC — Institution's Innovation Council" },
   // IQAC is split into its page's tabs so an upload lands in the right one -

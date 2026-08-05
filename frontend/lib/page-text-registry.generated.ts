@@ -5742,119 +5742,11 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
       {
         label: "policies (7 items)",
         slots: [
-          {
-            id: "policies.0.desc",
-            label: "1. desc - Overall research and development cell polici...",
-            kind: "line",
-            default: "Overall research and development cell policies and procedures",
-          },
-          {
-            id: "policies.0.name",
-            label: "1. name - RDC Policy",
-            kind: "line",
-            default: "RDC Policy",
-          },
-          {
-            id: "policies.1.desc",
-            label: "2. desc - Policy for promoting research activities amo...",
-            kind: "line",
-            default: "Policy for promoting research activities among faculty and students",
-          },
-          {
-            id: "policies.1.name",
-            label: "2. name - Research Promotion Policy",
-            kind: "line",
-            default: "Research Promotion Policy",
-          },
-          {
-            id: "policies.2.desc",
-            label: "3. desc - Guidelines for seed funding schemes to suppo...",
-            kind: "line",
-            default: "Guidelines for seed funding schemes to support research initiation",
-          },
-          {
-            id: "policies.2.name",
-            label: "3. name - Seed Fund Policy",
-            kind: "line",
-            default: "Seed Fund Policy",
-          },
-          {
-            id: "policies.3.desc",
-            label: "4. desc - Ethical guidelines for research conduct, pla...",
-            kind: "line",
-            default: "Ethical guidelines for research conduct, plagiarism prevention, and integrity",
-          },
-          {
-            id: "policies.3.name",
-            label: "4. name - Code of Ethics for Research",
-            kind: "line",
-            default: "Code of Ethics for Research",
-          },
-          {
-            id: "policies.4.desc",
-            label: "5. desc - Policy framework for startup development and...",
-            kind: "line",
-            default: "Policy framework for startup development and innovation initiatives",
-          },
-          {
-            id: "policies.4.name",
-            label: "5. name - Startup & Innovation Policy",
-            kind: "line",
-            default: "Startup & Innovation Policy",
-          },
-          {
-            id: "policies.5.desc",
-            label: "6. desc - Guidelines for intellectual property protect...",
-            kind: "line",
-            default: "Guidelines for intellectual property protection and management",
-          },
-          {
-            id: "policies.5.name",
-            label: "6. name - Intellectual Property Rights (IPR) Policy",
-            kind: "line",
-            default: "Intellectual Property Rights (IPR) Policy",
-          },
-          {
-            id: "policies.6.desc",
-            label: "7. desc - Framework for faculty and institutional cons...",
-            kind: "line",
-            default: "Framework for faculty and institutional consultancy projects",
-          },
-          {
-            id: "policies.6.name",
-            label: "7. name - Consultancy Policy",
-            kind: "line",
-            default: "Consultancy Policy",
-          },
         ],
       },
       {
         label: "additionalDocs (4 items)",
         slots: [
-          {
-            id: "additionalDocs.0.name",
-            label: "1. name - RDC Policy Framework",
-            kind: "line",
-            default: "RDC Policy Framework",
-          },
-          {
-            id: "additionalDocs.1.name",
-            label: "2. name - Research & Development Cell Guidelines",
-            kind: "line",
-            default: "Research & Development Cell Guidelines",
-          },
-          {
-            id: "additionalDocs.2.name",
-            label: "3. name - Seed Funding Scheme",
-            kind: "line",
-            default: "Seed Funding Scheme",
-          },
-          {
-            id: "additionalDocs.3.name",
-            label: "4. name - Co-Working Agreement",
-            kind: "line",
-            default: "Co-Working Agreement",
-          },
         ],
       },
       {

@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import PageResources from "@/components/PageResources";
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { mediaFile } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
 
@@ -34,21 +36,25 @@ const committee = [
   { name: "Dr. D. Ravikanth", designation: "Head of Department", dept: "Mechanical Engineering" },
 ];
 
-const policies = [
-  { icon: "📋", name: "RDC Policy", desc: "Overall research and development cell policies and procedures", file: "/documents/research/RDC-Policy.pdf" },
-  { icon: "🔬", name: "Research Promotion Policy", desc: "Policy for promoting research activities among faculty and students", file: "/documents/research/Research-Promotion-Policy.pdf" },
-  { icon: "💰", name: "Seed Fund Policy", desc: "Guidelines for seed funding schemes to support research initiation", file: "/documents/research/Seed-Funding-Scheme-Policy.pdf" },
-  { icon: "⚖️", name: "Code of Ethics for Research", desc: "Ethical guidelines for research conduct, plagiarism prevention, and integrity", file: "/documents/research/Code-of-Ethics-Research-Innovation.pdf" },
-  { icon: "🚀", name: "Startup & Innovation Policy", desc: "Policy framework for startup development and innovation initiatives", file: "/documents/research/Startup-Policy-KSRM-BICF.doc" },
-  { icon: "🔐", name: "Intellectual Property Rights (IPR) Policy", desc: "Guidelines for intellectual property protection and management", file: "/documents/research/IPR-Policy.pdf" },
-  { icon: "🤝", name: "Consultancy Policy", desc: "Framework for faculty and institutional consultancy projects", file: "/documents/research/Consultancy-Policy.pdf" },
-];
-
-const additionalDocs = [
-  { name: "RDC Policy Framework", file: "/documents/research/RDC-Policy.pdf" },
-  { name: "Research & Development Cell Guidelines", file: "/documents/research/Research%20and%20Development%20Cell%20(1).pdf" },
-  { name: "Seed Funding Scheme", file: "/documents/research/Seed%20Funding%20Scheme%20Policy%20(1)%20(1).pdf" },
-  { name: "Co-Working Agreement", file: "/documents/research/Co-Working_Agreement_KSRM-BICF.docx" },
+// The RDC policies, and the further documents below them.
+//
+// These listed eleven files under /documents/research/ - a folder that has
+// never existed in this project. Not in git, not in the Media Library, not on
+// disk. The paths were written during the rebuild for files that were never
+// supplied, so every link handed the visitor the site's own homepage back,
+// with no error to notice.
+//
+// Both lists are filled from Documents now, so uploading a policy publishes
+// it. Exactly one of the eleven turned out to exist, and it is the only thing
+// left hardcoded: a fallback made of dead links is worse than an empty
+// section, because a visitor has to click to find out it is empty.
+const FALLBACK_POLICIES = [
+  {
+    icon: "⚖️",
+    name: "Code of Ethics in Research and Innovation",
+    desc: "Ethical guidelines for research conduct, plagiarism prevention, and integrity",
+    file: mediaFile(172),
+  },
 ];
 
 const tabs = [
@@ -105,6 +111,30 @@ export default function ResearchPage() {
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // Uploads land in Documents under "Research — RDC Policies" and
+  // "Research — Additional Documents". The single built-in policy shows only
+  // while nothing has been uploaded to the first of those.
+  const cmsPolicies = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "research.policies").catch(() => [] as Download[]),
+    [],
+  );
+  const cmsDocs = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "research.documents").catch(() => [] as Download[]),
+    [],
+  );
+
+  const policies =
+    (cmsPolicies ?? []).length > 0
+      ? (cmsPolicies ?? []).map((d) => ({
+          icon: "📄",
+          name: d.title,
+          desc: d.description ?? "",
+          file: d.fileUrl,
+        }))
+      : FALLBACK_POLICIES;
+
+  const additionalDocs = (cmsDocs ?? []).map((d) => ({ name: d.title, file: d.fileUrl }));
 
   // No departmentId argument = every department's research, whereas a
   // department page passes its own id and gets only its own. Research is
@@ -424,11 +454,16 @@ export default function ResearchPage() {
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}><CmsText section="research" slot="policies-guidelines" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
-            {policies.map((p, _i) => (
+            {/* Title and description come from the uploaded document itself,
+                not from Page Content: the list length is no longer fixed, and
+                slots addressed by position (policies.0.name and so on) would
+                attach the wrong wording to the wrong card the moment a policy
+                is added or removed. */}
+            {policies.map((p) => (
               <div className="rdc-policy-card" key={p.name}>
                 <div style={{ fontSize: 28 }}>{p.icon}</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#D4A500" }}><CmsText section="research" slot={`policies.${_i}.name`} /></h3>
-                <p style={{ fontSize: 13, color: "#d0d0d0", lineHeight: 1.6, margin: 0 }}><CmsText section="research" slot={`policies.${_i}.desc`} /></p>
+                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#D4A500" }}>{p.name}</h3>
+                {p.desc && <p style={{ fontSize: 13, color: "#d0d0d0", lineHeight: 1.6, margin: 0 }}>{p.desc}</p>}
                 <a href={p.file} download className="rdc-policy-link"><DownloadIcon />Download PDF</a>
               </div>
             ))}
@@ -437,13 +472,18 @@ export default function ResearchPage() {
           <div style={{ marginTop: 60 }}>
             <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 24px" }}><CmsText section="research" slot="additional-resources-documents" /></h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-              {additionalDocs.map((d, _i) => (
+              {additionalDocs.length === 0 && (
+                <p style={{ color: "#666", fontSize: 14, fontStyle: "italic", margin: 0 }}>
+                  Further RDC documents will be published here shortly.
+                </p>
+              )}
+              {additionalDocs.map((d) => (
                 <a href={d.file} download className="rdc-doc-link" key={d.name}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, background: "#eef1ff", borderRadius: 6 }}>
                     <FileIcon />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, fontWeight: 600, fontSize: 13 }}><CmsText section="research" slot={`additionalDocs.${_i}.name`} /></p>
+                    <p style={{ margin: 0, fontWeight: 600, fontSize: 13 }}>{d.name}</p>
                     <p style={{ margin: "3px 0 0", fontSize: 11, color: "#999" }}>Download →</p>
                   </div>
                   <span style={{ color: "#D4A500" }}><DownloadIcon /></span>
