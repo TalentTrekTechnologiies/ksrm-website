@@ -222,6 +222,7 @@ export default function PageResources({
   anchorId,
   heading,
   hideVideos = false,
+  hideDocs = false,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -251,12 +252,20 @@ export default function PageResources({
    * they aren't listed twice.
    */
   hideVideos?: boolean
+  /**
+   * Skip the document rows - the sibling of hideVideos, for a page that already
+   * renders the same documents itself in a designed section. Without it the
+   * syllabus page listed each syllabus once under its regulation card and again
+   * in the block at the foot of the page.
+   */
+  hideDocs?: boolean
 }) {
   const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
 
   if (!data) return null
-  const { docs, images, tables } = data
+  const { images, tables } = data
   const videos = hideVideos ? [] : data.videos
+  const docs = hideDocs ? [] : data.docs
   if (docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0) return null
 
   const docsList =

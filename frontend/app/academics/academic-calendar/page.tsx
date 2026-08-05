@@ -345,7 +345,8 @@ export default function AcademicCalendarPage() {
           </div>
         </section>
       
-      <PageResources section="academics.calendar" />
+      {/* The calendars themselves are listed by academic year above. */}
+      <PageResources section="academics.calendar" hideDocs />
       </main>
     </>
   );

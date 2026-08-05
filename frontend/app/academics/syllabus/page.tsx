@@ -233,7 +233,9 @@ export default function SyllabusPage() {
           </div>
         </section>
 
-      <PageResources section="syllabus" docsCategory="SYLLABUS" docsTitle="Syllabus Downloads" />
+      {/* Documents only; each syllabus is already listed under its regulation
+          card above, so hideDocs stops it appearing twice on the page. */}
+      <PageResources section="syllabus" hideDocs />
       </main>
     </>
   );

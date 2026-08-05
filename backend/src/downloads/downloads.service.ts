@@ -81,10 +81,33 @@ export class DownloadsService {
     return record;
   }
 
+  /**
+   * The lowest sortOrder in use, minus one - so a new document lands at the TOP
+   * of the list.
+   *
+   * This used to be the row COUNT, which put every upload below everything
+   * already published: the list sorts by sortOrder ascending, and each new row
+   * got a bigger number than the last. A calendar published today appeared
+   * under one from two years ago, and someone uploading a document had to
+   * scroll to the bottom of the page to find it.
+   *
+   * Counting was doubly wrong - deleting a row makes the count collide with an
+   * existing value, which is why 61 documents share only 38 distinct
+   * sortOrders here.
+   *
+   * Going below the minimum rather than renumbering everything means the manual
+   * order an admin has set with the reorder endpoint is left exactly as it is.
+   */
+  private async sortOrderForNewest(): Promise<number> {
+    const lowest = await this.prisma.download.aggregate({
+      _min: { sortOrder: true },
+      where: { deletedAt: null },
+    });
+    return (lowest._min.sortOrder ?? 0) - 1;
+  }
+
   async create(dto: CreateDownloadDto, admin: RequestAdmin, requestId?: string) {
-    const sortOrder =
-      dto.sortOrder ??
-      ((await this.prisma.download.count({ where: { deletedAt: null } })) as number);
+    const sortOrder = dto.sortOrder ?? (await this.sortOrderForNewest());
 
     const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'DOCUMENT');
 
@@ -126,10 +149,10 @@ export class DownloadsService {
     const { items, ...shared } = dto;
 
     // One starting point for the whole batch so the files keep the order they
-    // were listed in, rather than each re-counting and colliding.
-    let sortOrder = (await this.prisma.download.count({
-      where: { deletedAt: null },
-    })) as number;
+    // were listed in, rather than each re-deriving one and colliding. The batch
+    // goes above everything already published, and counts UP from there so the
+    // first file listed stays first within the batch.
+    let sortOrder = (await this.sortOrderForNewest()) - items.length + 1;
 
     const created: Awaited<ReturnType<typeof this.prisma.download.create>>[] = [];
 
