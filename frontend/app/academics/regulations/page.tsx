@@ -3,6 +3,8 @@
 import { useState } from "react";
 import PageResources from "@/components/PageResources";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { getDepartmentsPublic, Department } from "@/lib/departments-api";
+import { useMemo } from "react";
 import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
 import CmsText from "@/components/CmsText";
@@ -136,13 +138,40 @@ function RuleItem({ title, text }: { title: string; text: string }) {
 }
 
 export default function RegulationsPage() {
-  // Regulation documents uploaded in Documents; matched to a card by the
-  // regulation code in the title, e.g. "B.Tech Regulations R23".
-  const uploaded = useLiveData<Download[]>(
+  // A regulation is institution-wide; what varies by department is the course
+  // structure and syllabi published under it - which is how the college
+  // already names these files: "ACADEMIC REGULATIONS (R25MBA) COURSE
+  // STRUCTURE AND SYLLABI", "Computer Science and Engineering(R23)".
+  //
+  // So both destinations are read: documents filed against this page, and
+  // syllabus documents, which are the per-department half of the same thing.
+  // One upload then serves this page and the syllabus page instead of the
+  // college having to file the same PDF twice.
+  const filed = useLiveData<Download[]>(
     () => getDownloadsPublic(undefined, undefined, "academics.regulations").catch(() => [] as Download[]),
     [],
   );
-  const docs = uploaded ?? [];
+  const syllabi = useLiveData<Download[]>(
+    () => getDownloadsPublic("SYLLABUS").catch(() => [] as Download[]),
+    [],
+  );
+  const departments = useLiveData<Department[]>(
+    () => getDepartmentsPublic().catch(() => [] as Department[]),
+    [],
+  );
+
+  const docs = useMemo(() => {
+    const seen = new Set<number>();
+    return [...(filed ?? []), ...(syllabi ?? [])].filter((d) => {
+      if (seen.has(d.id)) return false;
+      seen.add(d.id);
+      return true;
+    });
+  }, [filed, syllabi]);
+
+  /** Shown as a badge so a card with several departments' documents reads clearly. */
+  const departmentOf = (d: Download) =>
+    (departments ?? []).find((x) => x.id === d.departmentId)?.shortName ?? null;
 
   return (
     <>
@@ -286,11 +315,15 @@ export default function RegulationsPage() {
                         </p>
                       );
                     }
-                    return files.map((d) => (
-                      <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="reg-download-btn" target="_blank" rel="noopener noreferrer">
-                        <DownloadIcon />{d.title}
-                      </a>
-                    ));
+                    return files.map((d) => {
+                      const dept = departmentOf(d);
+                      return (
+                        <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="reg-download-btn" target="_blank" rel="noopener noreferrer">
+                          <DownloadIcon />
+                          {dept ? `${dept} — ${d.title}` : d.title}
+                        </a>
+                      );
+                    });
                   })()}
                 </div>
               ))}
