@@ -339,10 +339,12 @@ export default function CoursesIntakePage() {
 
         {/* APPROVALS STRIP */}
         <section className="ci-approvals-strip">
-          {approvals.map((a) => (
+          {approvals.map((a, i) => (
             <div className="ci-approval-badge" key={a}>
               <AwardIcon />
-              {a}
+              {/* The array fixes how many badges show; each label is editable
+                  at Page Content -> Academics -> Courses & Intake. */}
+              <CmsText section="academics.courses-intake" slot={`approvals.${i}`} />
             </div>
           ))}
         </section>
@@ -358,7 +360,7 @@ export default function CoursesIntakePage() {
                   <path d="M12 7v14" />
                   <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
                 </svg>
-                K.S.R.M.
+                <CmsText section="academics.courses-intake" slot="eapcetCode" />
               </div>
               <p style={{ margin: "8px 0 0", opacity: 0.9 }}><CmsText section="academics.courses-intake" slot="use-this-code-during-eapcet" /></p>
             </div>
