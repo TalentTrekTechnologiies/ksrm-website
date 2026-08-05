@@ -88,6 +88,25 @@ const navItems: NavItem[] = [
       { label: "Fee Structure", href: "/academics/fee-structure" },
     ],
   },
+  // Promoted out of "More" to the main bar at the college's request. It sits
+  // between Admissions and Placements so the bar follows a student's path
+  // through the college rather than listing pages in no particular order.
+  //
+  // It earns a main-bar slot on the same rule as its neighbours: the page has
+  // real sections to jump to, so it opens a menu rather than being a bare
+  // link. "More" is for pages with nothing underneath them.
+  {
+    label: "Examinations",
+    href: "/examinations",
+    children: [
+      { label: "Latest Notifications", href: "/examinations#notifications" },
+      { label: "Academic Calendars", href: "/examinations#calendars" },
+      { label: "Exam Time Tables", href: "/examinations#timetables" },
+      { label: "Question Papers", href: "/examinations#question-papers" },
+      { label: "Results & Fee Payment", href: "/examinations#results" },
+      { label: "Contact the COE", href: "/examinations#contact" },
+    ],
+  },
   {
     label: "Placements",
     href: "/placements",
@@ -148,7 +167,6 @@ const navItems: NavItem[] = [
       { label: "Research", href: "/research" },
       { label: "IIC", href: "/iic" },
       { label: "EDC", href: "/edc" },
-      { label: "Examinations", href: "/examinations" },
       { label: "Alumni", href: "/alumni" },
       { label: "Gallery", href: "/gallery" },
       { label: "Careers", href: "/careers" },
