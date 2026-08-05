@@ -1,9 +1,14 @@
+"use client";
+
 import CmsText from "@/components/CmsText";
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
+import { useLiveData } from "@/lib/use-live-data";
 ﻿import PageResources from "@/components/PageResources";
 
 const cards = [
   {
     href: "/admissions/ug",
+    level: "UG" as const,
     title: "UG Programs",
     desc: "B.Tech Undergraduate Programs",
     icon: (
@@ -15,6 +20,7 @@ const cards = [
   },
   {
     href: "/admissions/pg",
+    level: "PG" as const,
     title: "PG Programs",
     desc: "M.Tech & MBA Programs",
     icon: (
@@ -27,6 +33,7 @@ const cards = [
   },
   {
     href: "/admissions/diploma",
+    level: "DIPLOMA" as const,
     title: "Diploma",
     desc: "Diploma Engineering Programs",
     icon: (
@@ -39,6 +46,19 @@ const cards = [
 ];
 
 export default function AdmissionsPage() {
+  // Seats and programme counts come from the same DepartmentProgramme rows the
+  // UG / PG / Diploma tables behind these links render, so the headline number
+  // on this page can never disagree with the table it sends you to.
+  const programmes = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
+    [],
+  );
+  const tally = (level: "UG" | "PG" | "DIPLOMA") => {
+    const rows = (programmes ?? []).filter((p) => p.level === level);
+    return { programmes: rows.length, seats: rows.reduce((t, p) => t + (p.intake || 0), 0) };
+  };
+  const counts = { UG: tally("UG"), PG: tally("PG"), DIPLOMA: tally("DIPLOMA") };
+
   return (
     <>
       <style>{`
@@ -109,6 +129,7 @@ export default function AdmissionsPage() {
         .adm-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(43, 52, 144, 0.13); border-color: #D4A500; }
         .adm-card-icon { width: 48px; height: 48px; background: #f7f8fa; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
         .adm-card-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #2B3490; margin: 0; }
+        .adm-card-seats { margin: 10px 0 0; font-size: 13.5px; color: #2B3490; font-weight: 600; }
         .adm-card-desc { font-size: 15px; color: #888; margin: 0; }
 
         @media (max-width: 1024px) { .adm-cards-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -135,6 +156,15 @@ export default function AdmissionsPage() {
                     <div className="adm-card-icon">{c.icon}</div>
                     <h3 className="adm-card-title"><CmsText section="admissions" slot={`cards.${_i}.title`} /></h3>
                     <p className="adm-card-desc"><CmsText section="admissions" slot={`cards.${_i}.desc`} /></p>
+                    {/* Counted live from the same programmes the tables behind
+                        each link show, so this can never quote a stale total. */}
+                    {counts[c.level].programmes > 0 && (
+                      <p className="adm-card-seats">
+                        {counts[c.level].programmes} programme{counts[c.level].programmes === 1 ? "" : "s"}
+                        {" · "}
+                        <strong>{counts[c.level].seats} seats</strong>
+                      </p>
+                    )}
                   </div>
                 </a>
               ))}
