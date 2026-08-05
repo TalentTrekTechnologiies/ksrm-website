@@ -4,6 +4,7 @@ import { useState } from "react"
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
+import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api"
 import { useLiveData } from "@/lib/use-live-data"
 
 // Videos published to a page are stored as Gallery records tagged with this
@@ -15,6 +16,44 @@ interface SectionData {
   docs: Download[]
   images: GalleryImage[]
   videos: GalleryImage[]
+  tables: PageTable[]
+}
+
+/**
+ * A table built in Page Content -> (page) -> Tables.
+ *
+ * Page Content offers the table editor on every page, but until now only the
+ * Fee Structure page rendered one - so a table added anywhere else saved
+ * successfully and appeared nowhere. Rendering them here puts them on every
+ * page that already carries a PageResources block.
+ */
+function CmsPageTable({ table }: { table: PageTable }) {
+  return (
+    <div className="pr-table-block">
+      {table.title && <h3 className="pr-table-title">{table.title}</h3>}
+      <div className="pr-table-wrap">
+        <table className="pr-table">
+          <thead>
+            <tr>
+              {table.columns.map((c, i) => (
+                <th key={i}>{c}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row, ri) => (
+              <tr key={ri}>
+                {row.map((cell, ci) => (
+                  <td key={ci}>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {table.footnote && <p className="pr-table-note">{table.footnote}</p>}
+    </div>
+  )
 }
 
 interface DocGroup {
@@ -47,13 +86,14 @@ function groupDocs(docs: Download[]): DocGroup[] {
 }
 
 async function fetchSection(section: string, docsCategory?: DownloadCategory): Promise<SectionData> {
-  const [routed, byCategory, images] = await Promise.all([
+  const [routed, byCategory, images, tables] = await Promise.all([
     getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
     // Category-driven inclusion (e.g. every SYLLABUS doc shows on the
     // Syllabus page regardless of explicit page routing) - matches the
     // natural admin mental model "I set the category, it shows there".
     docsCategory ? getDownloadsPublic(docsCategory).catch(() => [] as Download[]) : Promise.resolve([] as Download[]),
     getGalleryPublic(undefined, undefined, section).catch(() => [] as GalleryImage[]),
+    getPageTablesPublic(section).catch(() => [] as PageTable[]),
   ])
   // Explicit page routing wins over category inclusion: a doc the admin routed
   // to a specific section (e.g. "examinations.results") must appear only there,
@@ -76,7 +116,7 @@ async function fetchSection(section: string, docsCategory?: DownloadCategory): P
   // Split video-tagged gallery records out so they render as <video> players.
   const videos = images.filter((g) => g.category === VIDEO_CATEGORY)
   const realImages = images.filter((g) => g.category !== VIDEO_CATEGORY)
-  return { docs, images: realImages, videos }
+  return { docs, images: realImages, videos, tables }
 }
 
 const PR_STYLES = `
@@ -110,6 +150,17 @@ const PR_STYLES = `
   ${PUBLIC_DOCUMENT_LIST_STYLES}
   .pr-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: none; border: 1.5px solid #2B3490; color: #2B3490; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s; }
   .pr-more:hover { background: #2B3490; color: #fff; }
+
+  .pr-table-block { margin: 0 0 32px; }
+  .pr-table-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #1a1a2e; margin: 0 0 14px; padding-bottom: 10px; border-bottom: 2px solid #FFE619; }
+  /* The table scrolls inside its own box rather than widening the page. */
+  .pr-table-wrap { overflow-x: auto; border: 1px solid #eef0f3; border-radius: 8px; }
+  .pr-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 15px; }
+  .pr-table thead th { background: #2B3490; color: #fff; padding: 14px 16px; text-align: left; font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .pr-table tbody td { padding: 12px 16px; border-bottom: 1px solid #eef0f3; color: #555; }
+  .pr-table tbody tr:nth-child(odd) { background: #f7f8fa; }
+  .pr-table tbody tr:last-child td { border-bottom: none; }
+  .pr-table-note { margin: 10px 0 0; font-size: 13px; color: #666; }
 `
 
 /**
@@ -203,9 +254,9 @@ export default function PageResources({
   const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
 
   if (!data) return null
-  const { docs, images } = data
+  const { docs, images, tables } = data
   const videos = hideVideos ? [] : data.videos
-  if (docs.length === 0 && images.length === 0 && videos.length === 0) return null
+  if (docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0) return null
 
   const docsList =
     docs.length > 0 ? (
@@ -216,11 +267,15 @@ export default function PageResources({
       </div>
     ) : null
 
+  const tablesList =
+    tables.length > 0 ? tables.map((t) => <CmsPageTable key={t.id} table={t} />) : null
+
   if (embedded) {
-    if (!docsList) return null
+    if (!docsList && !tablesList) return null
     return (
       <>
         <style>{PR_STYLES}</style>
+        {tablesList}
         {docsList}
       </>
     )
@@ -243,6 +298,9 @@ export default function PageResources({
             {heading}
           </h2>
         )}
+        {/* TABLES - built in Page Content, shown before documents. */}
+        {tablesList}
+
         {/* VIDEOS */}
         {videos.length > 0 && (
           <>
