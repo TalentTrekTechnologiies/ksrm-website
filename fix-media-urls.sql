@@ -1,5 +1,5 @@
 --
--- Rewrite hardcoded http://200.141.7.253 media URLs to relative paths.
+-- Rewrite hardcoded media URLs (VPS IP, and localhost) to relative paths.
 --
 -- THE PROBLEM
 --
@@ -34,7 +34,11 @@ BEGIN;
 
 DO $$
 DECLARE
+  -- Both origins that have been written into rows over this project's life:
+  -- the VPS by IP, and a developer's own machine (which resolves to the
+  -- VISITOR's localhost, so it can never load for anyone).
   old_origin text := 'http://200.141.7.253';
+  dev_origin text := 'http://localhost:4000';
   n_down     integer := 0;
   n_gal      integer := 0;
   n_fac      integer := 0;
@@ -42,6 +46,7 @@ DECLARE
   n_event    integer := 0;
   n_exam     integer := 0;
   n_place    integer := 0;
+  n_tmp      integer := 0;
 BEGIN
 
   UPDATE "Download"
@@ -49,35 +54,77 @@ BEGIN
    WHERE "fileUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_down = ROW_COUNT;
 
+  UPDATE "Download"
+     SET "fileUrl" = substring("fileUrl" from length(dev_origin) + 1)
+   WHERE "fileUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_down := n_down + n_tmp;
+
   UPDATE "GalleryImage"
      SET "imageUrl" = substring("imageUrl" from length(old_origin) + 1)
    WHERE "imageUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_gal = ROW_COUNT;
+
+  UPDATE "GalleryImage"
+     SET "imageUrl" = substring("imageUrl" from length(dev_origin) + 1)
+   WHERE "imageUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_gal := n_gal + n_tmp;
 
   UPDATE "Faculty"
      SET "photoUrl" = substring("photoUrl" from length(old_origin) + 1)
    WHERE "photoUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_fac = ROW_COUNT;
 
+  UPDATE "Faculty"
+     SET "photoUrl" = substring("photoUrl" from length(dev_origin) + 1)
+   WHERE "photoUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_fac := n_fac + n_tmp;
+
   UPDATE "News"
      SET "imageUrl" = substring("imageUrl" from length(old_origin) + 1)
    WHERE "imageUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_news = ROW_COUNT;
+
+  UPDATE "News"
+     SET "imageUrl" = substring("imageUrl" from length(dev_origin) + 1)
+   WHERE "imageUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_news := n_news + n_tmp;
 
   UPDATE "Event"
      SET "imageUrl" = substring("imageUrl" from length(old_origin) + 1)
    WHERE "imageUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_event = ROW_COUNT;
 
+  UPDATE "Event"
+     SET "imageUrl" = substring("imageUrl" from length(dev_origin) + 1)
+   WHERE "imageUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_event := n_event + n_tmp;
+
   UPDATE "ExamNotification"
      SET "buttonUrl" = substring("buttonUrl" from length(old_origin) + 1)
    WHERE "buttonUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_exam = ROW_COUNT;
 
+  UPDATE "ExamNotification"
+     SET "buttonUrl" = substring("buttonUrl" from length(dev_origin) + 1)
+   WHERE "buttonUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_exam := n_exam + n_tmp;
+
   UPDATE "Placement"
      SET "companyLogoUrl" = substring("companyLogoUrl" from length(old_origin) + 1)
    WHERE "companyLogoUrl" LIKE old_origin || '/%';
   GET DIAGNOSTICS n_place = ROW_COUNT;
+
+  UPDATE "Placement"
+     SET "companyLogoUrl" = substring("companyLogoUrl" from length(dev_origin) + 1)
+   WHERE "companyLogoUrl" LIKE dev_origin || '/%';
+  GET DIAGNOSTICS n_tmp = ROW_COUNT;
+  n_place := n_place + n_tmp;
 
   RAISE NOTICE '----------------------------------------';
   RAISE NOTICE 'Downloads   : %', n_down;
