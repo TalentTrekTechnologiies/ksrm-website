@@ -1,6 +1,7 @@
 "use client";
 
 import PageResources from "@/components/PageResources";
+import Link from "next/link";
 import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
@@ -280,6 +281,20 @@ export default function FeeStructurePage() {
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.fee-structure" slot="scholarships-financial-assistance" /></h2>
             <div className="fee-scholarship-grid">
+              {/* KGCET leads the list, and deliberately sits OUTSIDE the
+                  indexed array below. The cards there are addressed by
+                  position (scholarships.0.title and so on), so inserting one
+                  at the front would shift every id by one and silently reassign
+                  whatever an admin has already edited to the wrong card. */}
+              <Link href="/kgcet" className="fee-scholarship-card" style={{ textDecoration: "none", borderColor: "#D4A500", background: "#fffdf2" }}>
+                <div className="fee-scholarship-icon"><AwardIcon /></div>
+                <h3>KGCET — Kandula Group Common Entrance Test</h3>
+                <p>
+                  The group&rsquo;s own scholarship entrance test, held every year since 2021. Scholarships of
+                  ₹6,000 to ₹40,000 towards B.Tech admission, on the rank secured.
+                </p>
+                <span style={{ color: "#2B3490", fontWeight: 700, fontSize: 14 }}>Read more and register →</span>
+              </Link>
               {scholarships.map((s, _i) => (
                 <div className="fee-scholarship-card" key={s.title}>
                   <div className="fee-scholarship-icon"><AwardIcon /></div>

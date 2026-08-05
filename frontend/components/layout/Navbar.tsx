@@ -164,6 +164,7 @@ const navItems: NavItem[] = [
     label: "More",
     href: "#",
     children: [
+      { label: "KGCET", href: "/kgcet" },
       { label: "Research", href: "/research" },
       { label: "IIC", href: "/iic" },
       { label: "EDC", href: "/edc" },

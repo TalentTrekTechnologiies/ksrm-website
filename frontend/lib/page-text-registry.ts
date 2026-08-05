@@ -69,6 +69,62 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
   ...GENERATED_PAGE_TEXT,
 
 
+  // KGCET has no generated entry - it is a new page, so its slots are all
+  // hand-written here rather than spread over a generated base.
+  kgcet: {
+    label: "KGCET",
+    path: "/kgcet",
+    groups: [
+      {
+        label: "Header",
+        slots: [
+          { id: "heading", label: "Page heading", kind: "line", default: "KGCET" },
+          { id: "subheading", label: "Sub-heading", kind: "line", default: "Kandula Group Common Entrance Test" },
+          {
+            id: "intro",
+            label: "Intro paragraph",
+            kind: "paragraph",
+            default:
+              "KGCET is the scholarship entrance test of the Kandula Group of Institutions. Held every year since 2021, it exists to promote equity in education by opening opportunities to poor and deserving students, awarding scholarships against B.Tech admission on the strength of the rank secured.",
+          },
+        ],
+      },
+      {
+        label: "Highlights",
+        slots: [
+          { id: "highlights.0.title", label: "Highlight 1 - title", kind: "line", default: "Scholarships of ₹6,000 to ₹40,000" },
+          { id: "highlights.0.desc", label: "Highlight 1 - text", kind: "line", default: "Awarded against B.Tech admission, on the rank secured in the test." },
+          { id: "highlights.1.title", label: "Highlight 2 - title", kind: "line", default: "Running since 2021" },
+          { id: "highlights.1.desc", label: "Highlight 2 - text", kind: "line", default: "Conducted every year by the Kandula Group of Institutions." },
+          { id: "highlights.2.title", label: "Highlight 3 - title", kind: "line", default: "Merit, not means alone" },
+          { id: "highlights.2.desc", label: "Highlight 3 - text", kind: "line", default: "Set up to widen access for deserving students who would struggle with fees." },
+        ],
+      },
+      {
+        label: "Participation & applying",
+        slots: [
+          { id: "participation-heading", label: "Table heading", kind: "line", default: "Participation year by year" },
+          { id: "apply-heading", label: "Apply heading", kind: "line", default: "How to apply" },
+          {
+            id: "apply-body",
+            label: "Apply paragraph",
+            kind: "paragraph",
+            default:
+              "Registration is free and open to students appearing for, or having completed, Intermediate / 10+2. Complete the registration form to receive your hall ticket and the test schedule.",
+          },
+          {
+            id: "register.href",
+            label: "Registration form link",
+            kind: "line",
+            default: "https://docs.google.com/forms/d/e/1FAIpQLScLovBp7VOypmAjCd0fgsSZea68NPo83cXQFRt2fg3RKVy6wQ/viewform",
+            help: "Leave blank to hide the Register button entirely rather than show one that goes nowhere.",
+          },
+          { id: "enquiry.phone", label: "Enquiry phone", kind: "line", default: "" },
+        ],
+      },
+    ],
+  },
+
   // "Register as Alumni" pointed at alumniregistration.php on the old site,
   // which that domain no longer serves - the button handed the visitor the
   // homepage. The URL is the college's to set now, and the button stays
