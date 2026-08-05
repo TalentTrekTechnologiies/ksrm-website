@@ -86,8 +86,8 @@ export default function UGAdmissionsPage() {
           text-align: center;
         }
         .ug-summary h3 { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; margin: 0; }
-        .ug-table-wrapper { border-radius: 12px; overflow: hidden; border: 1px solid #eef0f3; }
-        .ug-table { width: 100%; border-collapse: collapse; }
+        .ug-table-wrapper { border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #eef0f3; }
+        .ug-table { width: 100%; min-width: 560px; border-collapse: collapse; }
         .ug-table thead th {
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           color: #fff;

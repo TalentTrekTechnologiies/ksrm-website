@@ -73,7 +73,8 @@ export default function EDCPage() {
         .edc-dst-camps { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
         .edc-dst-camp-badge { background: #D4A500; color: #2B3490; padding: 12px 16px; border-radius: 6px; font-weight: 600; text-align: center; font-size: 15px; }
 
-        .edc-committee-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
+        .edc-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+        .edc-committee-table { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(43,52,144,0.08); }
         .edc-committee-table th { background: #2B3490; color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; padding: 18px; text-align: left; border-bottom: 2px solid #D4A500; }
         .edc-committee-table td { padding: 16px 18px; border-bottom: 1px solid #eef0f3; font-size: 16px; color: #555; }
         .edc-committee-table tr:last-child td { border-bottom: none; }
@@ -146,7 +147,7 @@ export default function EDCPage() {
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 className="edc-section-heading"><CmsText section="edc-page" slot="committee-members" /></h2>
-          <table className="edc-committee-table">
+          <div className="edc-table-scroll"><table className="edc-committee-table">
             <thead><tr><th>Name</th><th>Designation</th><th>Role</th></tr></thead>
             <tbody>
               {committee.map((m, _i) => (
@@ -157,7 +158,7 @@ export default function EDCPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       </section>
 

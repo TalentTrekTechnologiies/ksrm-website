@@ -125,6 +125,23 @@
     max-width: 100%;
   }
 
+  /* A long unbroken string - an email, a URL, a course code - is one "word" to
+     the browser, so it forces the line wider than the phone and, because
+     html/body hide overflow-x, the rest of that line is clipped away rather
+     than scrolled to. This is the "text going away" on a phone. Breaking such
+     words keeps every line inside the viewport. */
+  p, li, td, th, h1, h2, h3, h4, h5, h6, dd, dt, figcaption, span, a {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* A table is as wide as its content, so one inside a container that hides
+     overflow loses its right-hand columns with no way to reach them. Any table
+     not already inside a scrolling wrapper gets its own. */
+  table {
+    max-width: 100%;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 700;

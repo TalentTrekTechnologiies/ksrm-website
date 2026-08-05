@@ -91,8 +91,8 @@ export default function PGAdmissionsPage() {
           color: #2B3490;
           margin: 48px 0 32px;
         }
-        .pg-table-wrapper { border-radius: 12px; overflow: hidden; border: 1px solid #eef0f3; margin-bottom: 16px; }
-        .pg-table { width: 100%; border-collapse: collapse; }
+        .pg-table-wrapper { border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #eef0f3; margin-bottom: 16px; }
+        .pg-table { width: 100%; min-width: 560px; border-collapse: collapse; }
         .pg-table thead th {
           background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
           color: #fff;
