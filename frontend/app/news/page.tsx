@@ -36,7 +36,7 @@ const FALLBACK_NEWS: NewsDisplay[] = [
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: true, date: "2026-04-01", title: "Graduation Day 2026 Applications Open", desc: "Applications for Graduation Day 2026 are now open. Students who have completed their degree can apply.", href: "#" },
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2025-08-15", title: "Freshers Orientation 2025-26", desc: "Welcome to the new batch of 2025-26. Orientation program details have been announced.", href: "#" },
   { badge: "Accreditation", badgeBg: "#e8f5e9", badgeColor: "#388e3c", isNew: false, date: "2025-06-01", title: "NBA Accreditation Renewed", desc: "K.S.R.M. College of Engineering has successfully renewed NBA accreditation for multiple programmes.", href: "#" },
-  { badge: "Rankings", badgeBg: "#fce4ec", badgeColor: "#c2185b", isNew: false, date: "2025-03-01", title: "NIRF Ranking 2025 Submitted", desc: "KSRM College has submitted its NIRF ranking data for 2025.", href: "https://ksrmce.ac.in/nirf.php" },
+  { badge: "Rankings", badgeBg: "#fce4ec", badgeColor: "#c2185b", isNew: false, date: "2025-03-01", title: "NIRF Ranking 2025 Submitted", desc: "KSRM College has submitted its NIRF ranking data for 2025.", href: "/accreditation" },
   { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2024-12-10", title: "Industry-Academia Meet 2024", desc: "Annual Industry-Academia meet held with participation from 20+ companies.", href: "#" },
 ];
 

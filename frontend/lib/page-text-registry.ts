@@ -68,6 +68,76 @@ export interface PageTextPage {
 export const PAGE_TEXT: Record<string, PageTextPage> = {
   ...GENERATED_PAGE_TEXT,
 
+
+  // "Register as Alumni" pointed at alumniregistration.php on the old site,
+  // which that domain no longer serves - the button handed the visitor the
+  // homepage. The URL is the college's to set now, and the button stays
+  // hidden until they set one.
+  alumni: {
+    ...GENERATED_PAGE_TEXT.alumni,
+    groups: [
+      ...GENERATED_PAGE_TEXT.alumni.groups,
+      {
+        label: "Alumni registration",
+        slots: [
+          {
+            id: "register.href",
+            label: "Registration form link",
+            kind: "line",
+            default: "",
+          },
+        ],
+      },
+    ],
+  },
+
+  // The five feedback forms were working PHP pages on the old site. That
+  // domain now serves this site, so every one of them returned the homepage
+  // instead of a form. The labels stay; the URL is now something the college
+  // sets - a Google Form, or a new page - and a form with no URL simply does
+  // not render, rather than presenting a button that goes nowhere.
+  iqac: {
+    ...GENERATED_PAGE_TEXT.iqac,
+    groups: [
+      ...GENERATED_PAGE_TEXT.iqac.groups,
+      {
+        label: "Feedback form links",
+        slots: [
+          {
+            id: "feedbackForms.0.href",
+            label: "Alumni Feedback - form link",
+            kind: "line",
+            default: "",
+          },
+          {
+            id: "feedbackForms.1.href",
+            label: "Student Feedback - form link",
+            kind: "line",
+            default: "",
+          },
+          {
+            id: "feedbackForms.2.href",
+            label: "Parent Feedback - form link",
+            kind: "line",
+            default: "",
+          },
+          {
+            id: "feedbackForms.3.href",
+            label: "Teacher Feedback - form link",
+            kind: "line",
+            default: "",
+          },
+          {
+            id: "feedbackForms.4.href",
+            label: "Employer Feedback - form link",
+            kind: "line",
+            default: "",
+          },
+        ],
+      },
+    ],
+  },
+
   // Same spread-don't-replace rule as `about` below: the generated entry
   // carries every slot lifted out of that page's JSX.
   grievance: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { mediaFile } from "@/lib/api-base";
-import CmsText from "@/components/CmsText";
+import CmsText, { usePageTextValue } from "@/components/CmsText";
 import { useCmsDocGroup } from "@/lib/use-cms-doc-group";
 ﻿import PageResources from "@/components/PageResources";
 const stats = [
@@ -70,6 +70,27 @@ const activityReports = [
   { title: "Webinar on Power BI", href: mediaFile(215) },
   { title: "Balancing Research and Teaching", href: mediaFile(216) },
 ];
+
+/**
+ * Hidden until the college sets a registration URL in
+ * Page Content -> Alumni. It used to link to alumniregistration.php on the
+ * old site, which that domain no longer serves, so the button looked live and
+ * returned the homepage.
+ */
+function AlumniRegisterButton() {
+  const href = usePageTextValue("alumni", "register.href").trim();
+  if (!href) return null;
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ background: "#2B3490", color: "#D4A500", padding: "14px 32px", borderRadius: 8, fontWeight: 700, fontSize: 16, textDecoration: "none", display: "inline-block" }}
+    >
+      Register as Alumni →
+    </a>
+  );
+}
 
 export default function AlumniPage() {
   // Both lists come from the CMS once documents are filed under these group
@@ -252,7 +273,7 @@ export default function AlumniPage() {
             <h3 style={{ color: "#2B3490", fontSize: 24, fontWeight: 700, marginBottom: 12 }}><CmsText section="alumni" slot="are-you-a-ksrmce-alumni" /></h3>
             <p style={{ color: "#666", fontSize: 16, margin: "12px 0 24px" }}><CmsText section="alumni" slot="join-our-alumni-network-and" /></p>
             <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="https://ksrmce.ac.in/alumniregistration.php" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "#D4A500", padding: "14px 32px", borderRadius: 8, fontWeight: 700, fontSize: 16, textDecoration: "none", display: "inline-block" }}>Register as Alumni →</a>
+              <AlumniRegisterButton />
               <a href="https://drive.google.com/drive/folders/10P_ptDp8fsxF93BKfyjxK38YQqojWLmC" target="_blank" rel="noopener noreferrer" style={{ background: "white", border: "2px solid #2B3490", color: "#2B3490", padding: "12px 28px", borderRadius: 8, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>📷 View Photo Gallery →</a>
             </div>
           </div>

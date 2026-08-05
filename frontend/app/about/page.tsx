@@ -87,16 +87,16 @@ export default function About() {
     { title: "Code of Ethics in Research and Innovation", url: mediaFile(172), icon: "🔬" },
   ]
 
-  const jbosDocuments = [
-    { title: "Board of Studies Members 2020-21", url: "/demo1/BOARD%20OF%20STUDIES%20MEMBERS%20FOR%20THE%20YEAR%202020-21.pdf", icon: "👥" },
-    { title: "04-09-2014", url: "/demo1/JBoSMeeting/JBoS%202014-09-04.pdf", icon: "📄" },
-    { title: "22-06-2015", url: "/demo1/JBoSMeeting/JBoS%202015-06-22.pdf", icon: "📄" },
-    { title: "08-06-2018", url: "/demo1/JBoSMeeting/JBoS%202018-06-08.pdf", icon: "📄" },
-    { title: "03-06-2019", url: "/demo1/JBoSMeeting/JBoS%202019-06-03.pdf", icon: "📄" },
-    { title: "28-12-2019", url: "/demo1/JBoSMeeting/JBoS%202019-12-28.pdf", icon: "📄" },
-    { title: "10-01-2021", url: "/demo1/JBoSMeeting/JBoS%202021-01-10.pdf", icon: "📄" },
-    { title: "04-08-2022", url: "/demo1/JBoSMeeting/JBoS%202022-08-04.pdf", icon: "📄" },
-  ]
+  // Empty on purpose. This held eight links to /demo1/JBoSMeeting/*.pdf,
+  // every one of which now returns the site's own HTML shell with a 200 - the
+  // files did not survive the move off the old site. A fallback whose whole
+  // job is to keep the section populated is worse than an empty section when
+  // every entry in it is dead: the visitor clicks and gets the homepage back.
+  //
+  // The section fills itself from Page Content -> About, group
+  // "Joint Board of Studies", as soon as the PDFs are uploaded there.
+  const jbosDocuments: { title: string; url: string; icon: string }[] = []
+
 
   return (
     <main style={{ backgroundColor: "#F5EFE4", fontFamily: "Arimo, Arial, Helvetica, sans-serif", color: "#1F2937" }}>
@@ -374,6 +374,11 @@ export default function About() {
         <div className="k-container">
           <h2><CmsText section="about" slot="joint-board-of-studies" /></h2>
           <div className="k-docs-grid">
+            {docsForGroup(GROUP_JBOS, jbosDocuments).length === 0 && (
+              <p style={{ color: "#666", fontSize: 15, fontStyle: "italic", gridColumn: "1 / -1" }}>
+                Board of Studies minutes will be published here shortly.
+              </p>
+            )}
             {docsForGroup(GROUP_JBOS, jbosDocuments).map((doc, i) => (
               <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <div className="k-doc-card">

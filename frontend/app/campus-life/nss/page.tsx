@@ -110,7 +110,42 @@ export default function NSSPage() {
           <h2 className="nss-section-heading"><CmsText section="nss" slot="nss-symbol" /></h2>
           <div className="nss-symbol-container">
             <div className="nss-symbol-image">
-              <div style={{ width: "100%", aspectRatio: "1", background: "linear-gradient(135deg, #2B3490 0%, #D4A500 100%)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 48 }}>🕉️</div>
+              {/*
+                The emblem, drawn rather than stood in for. This showed an Om
+                emoji - a religious symbol - directly above a caption that
+                explains the NSS symbol is the Konark Rath wheel, so the
+                picture contradicted its own text.
+
+                Drawn as SVG rather than shipped as a bitmap: it is pure
+                geometry, so it stays sharp at any size and needs no file. The
+                eight spokes are the eight of the Konark wheel, and the two
+                colours are the ones the caption beside it names - navy for the
+                cosmos, red for the volunteers.
+              */}
+              <svg
+                viewBox="0 0 100 100"
+                role="img"
+                aria-label="The NSS emblem: the Rath wheel of the Konark Sun Temple"
+                style={{ width: "100%", aspectRatio: "1", borderRadius: 12, background: "#2B3490", display: "block" }}
+              >
+                <g stroke="#E53935" strokeLinecap="round" fill="none">
+                  <circle cx="50" cy="50" r="34" strokeWidth={6} />
+                  {Array.from({ length: 8 }).map((_, i) => {
+                    const a = (Math.PI / 4) * i
+                    return (
+                      <line
+                        key={i}
+                        x1={50 + Math.cos(a) * 11}
+                        y1={50 + Math.sin(a) * 11}
+                        x2={50 + Math.cos(a) * 34}
+                        y2={50 + Math.sin(a) * 34}
+                        strokeWidth={5}
+                      />
+                    )
+                  })}
+                </g>
+                <circle cx="50" cy="50" r="10" fill="#E53935" />
+              </svg>
             </div>
             <div className="nss-symbol-content">
               <h3><CmsText section="nss" slot="nss-symbol-2" /></h3>

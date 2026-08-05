@@ -6,7 +6,7 @@ import PageResources from "@/components/PageResources";
 import ApexBodies from "@/components/iqac/ApexBodies";
 import { getCommitteesPublic, Committee } from "@/lib/committees-api";
 import { useLiveData } from "@/lib/use-live-data";
-import CmsText from "@/components/CmsText";
+import CmsText, { usePageTextValue } from "@/components/CmsText";
 
 const missionFunctions = [
   "Development of quality benchmarks",
@@ -95,13 +95,28 @@ const surveys = [
   { label: "2018-2019", href: mediaFile(231) },
 ];
 
+// Labels only. Each form's URL comes from Page Content -> IQAC -> "Feedback
+// form links", and a form with no URL is not rendered at all - see
+// FeedbackFormLink below. These used to point at AlumniFeedback.php and its
+// four siblings on the old site; that domain serves this site now, so all
+// five handed the visitor the homepage back instead of a form.
 const feedbackForms = [
-  { label: "Alumni Feedback", href: "https://ksrmce.ac.in/AlumniFeedback.php" },
-  { label: "Student Feedback", href: "https://ksrmce.ac.in/StudentFeedback.php" },
-  { label: "Parent Feedback", href: "https://ksrmce.ac.in/ParentFeedback.php" },
-  { label: "Teacher Feedback", href: "https://ksrmce.ac.in/TeacherFeedback.php" },
-  { label: "Employer Feedback", href: "https://ksrmce.ac.in/EmployerFeedback.php" },
+  { label: "Alumni Feedback" },
+  { label: "Student Feedback" },
+  { label: "Parent Feedback" },
+  { label: "Teacher Feedback" },
+  { label: "Employer Feedback" },
 ];
+
+function FeedbackFormLink({ index }: { index: number }) {
+  const href = usePageTextValue("iqac", `feedbackForms.${index}.href`).trim();
+  if (!href) return null;
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="iqac-feedback-btn">
+      <CmsText section="iqac" slot={`feedbackForms.${index}.label`} />
+    </a>
+  );
+}
 
 
 const tabs = [
@@ -356,7 +371,7 @@ export default function IQACPage() {
           <h3 style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 20, textAlign: "center" }}><CmsText section="iqac" slot="feedback-forms" /></h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
             {feedbackForms.map((f, _i) => (
-              <a href={f.href} target="_blank" rel="noopener noreferrer" className="iqac-feedback-btn" key={f.label}><CmsText section="iqac" slot={`feedbackForms.${_i}.label`} /></a>
+              <FeedbackFormLink key={f.label} index={_i} />
             ))}
           </div>
         </div>

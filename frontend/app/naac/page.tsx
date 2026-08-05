@@ -14,10 +14,15 @@ const criteria = [
   { n: 7, title: "Institutional Values & Best Practices", text: "Gender equity, environmental consciousness and best practices" },
 ];
 
+// Only documents that actually resolve. The SSR and the DVV Clarifications
+// pointed at ksrmce.ac.in/NAAC.php and /DVV2.php - pages of the old site,
+// which that domain no longer serves, so both returned the new site's own
+// shell and the visitor got the homepage back instead of a report. "AQAR
+// 2023-24" was href="#", which went nowhere at all.
+//
+// They are not replaced with guesses: the real files go in Page Content ->
+// NAAC and appear in the documents block at the foot of this page.
 const documents = [
-  { name: "Self Study Report (SSR)", href: "https://ksrmce.ac.in/NAAC.php" },
-  { name: "DVV Clarifications", href: "https://ksrmce.ac.in/DVV2.php" },
-  { name: "AQAR 2023-24", href: "#" },
   { name: "Institution Core Values", href: mediaFile(168) },
   { name: "Code of Professional Conduct", href: mediaFile(169) },
 ];
@@ -162,10 +167,11 @@ export default function NAACPage() {
       <section style={{ padding: "56px 0", background: "#ffffff", textAlign: "center" }}>
         <div className="responsive-container">
           <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="naac" slot="explore-naac-documentation" /></h3>
-          <div className="naac-cta-buttons">
-            <a href="https://ksrmce.ac.in/NAAC.php" target="_blank" rel="noopener noreferrer" className="naac-cta-button">SSR Report</a>
-            <a href="https://ksrmce.ac.in/DVV2.php" target="_blank" rel="noopener noreferrer" className="naac-cta-button">DVV Clarifications</a>
-          </div>
+          {/* The two buttons here linked to the same dead old-site pages as
+              the list above. Removed rather than repointed at a guess. */}
+          <p style={{ color: "#666", fontSize: 15, margin: 0 }}>
+            The Self Study Report, DVV Clarifications and AQAR reports are published in the documents below.
+          </p>
         </div>
       </section>
       <PageResources section="naac" />
