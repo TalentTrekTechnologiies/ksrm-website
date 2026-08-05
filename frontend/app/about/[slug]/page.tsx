@@ -1,6 +1,20 @@
 import Link from "next/link"
 import { LEADERSHIP, leaderBySlug } from "@/data/leadership"
 
+/** "8919181206" -> "+91 89191 81206"; anything already formatted is left alone. */
+function prettyPhone(p: string): string {
+  const digits = p.replace(/\D/g, "")
+  if (p.trim().startsWith("+")) return p.trim()
+  return digits.length === 10 ? `+91 ${digits.slice(0, 5)} ${digits.slice(5)}` : p.trim()
+}
+
+/** A bare 10-digit number needs the country code, or the link fails on roaming. */
+function dialable(p: string): string {
+  const digits = p.replace(/\D/g, "")
+  if (p.trim().startsWith("+")) return `+${digits}`
+  return digits.length === 10 ? `+91${digits}` : digits
+}
+
 export function generateStaticParams() {
   // Driven by the data, so adding a leader cannot leave their page unbuilt.
   return LEADERSHIP.map((l) => ({ slug: l.slug }))
@@ -52,6 +66,9 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
         .k-profile-bio { color: #555; font-size: 16px; line-height: 1.8; margin-bottom: 18px; }
         .k-profile-cred { color: #444; font-size: 15px; font-style: italic; margin-bottom: 18px; }
         .k-profile-msg-heading { color: #2B3490; font-size: 20px; font-weight: 700; margin-bottom: 14px; }
+        .k-profile-contact { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+        .k-profile-contact a { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,230,25,0.14); color: #2B3490; font-size: 15px; font-weight: 600; padding: 11px 16px; border-radius: 6px; text-decoration: none; word-break: break-word; }
+        .k-profile-contact a:hover { background: #FFE619; }
         @media (max-width: 768px) {
           .k-hero { min-height: 280px; }
           .k-hero-title { font-size: clamp(29px, 7.7vw, 48px); }
@@ -80,11 +97,27 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
               <div className="k-profile-name">{leader.name}</div>
               <div className="k-profile-role">{leader.role}</div>
               {leader.credential && <div className="k-profile-cred">{leader.credential}</div>}
-              <div className="k-quote-icon">&ldquo;</div>
+              {leader.showQuoteMark !== false && <div className="k-quote-icon">&ldquo;</div>}
               <h2 className="k-profile-msg-heading">{leader.messageHeading}</h2>
               {leader.paragraphs.map((para, i) => (
                 <p className="k-profile-bio" key={i}>{para}</p>
               ))}
+              {/* Only offices the public is meant to reach carry these; the
+                  college asked for the leaders' own addresses to come off. */}
+              {(leader.email || leader.phone) && (
+                <div className="k-profile-contact">
+                  {leader.phone && (
+                    <a href={`tel:${dialable(leader.phone)}`}>
+                      <span aria-hidden="true">📞</span>{prettyPhone(leader.phone)}
+                    </a>
+                  )}
+                  {leader.email && (
+                    <a href={`mailto:${leader.email}`}>
+                      <span aria-hidden="true">✉️</span>{leader.email}
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

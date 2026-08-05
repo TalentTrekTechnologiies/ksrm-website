@@ -148,7 +148,8 @@ export default function About() {
         .k-trustee-role { color: #2B3490; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
         .k-leadership { background: #F4F3EF; }
-        .k-leadership-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-items: stretch; }
+        /* Five cards. Four columns stranded the fifth alone on a second row. */
+        .k-leadership-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; align-items: stretch; }
         /* The cards used to be whatever height their bio made them, so the
            "View Profile" buttons sat at four different heights. The link is a
            flex item filling its grid cell, the card fills the link, and the
@@ -204,6 +205,11 @@ export default function About() {
         .k-social-btn { display: inline-block; padding: 8px 14px; background: #2B3490; color: white; border-radius: 4px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
         .k-social-btn:hover { background: #D4A500; color: #2B3490; }
 
+        /* Five across needs the room; below it the cards get too narrow to
+           read, so drop to three before the 1024 rule takes over at two. */
+        @media (max-width: 1440px) {
+          .k-leadership-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         @media (max-width: 1024px) {
           .k-stats-grid { grid-template-columns: repeat(3, 1fr); }
           .k-leadership-grid { grid-template-columns: repeat(2, 1fr); }
