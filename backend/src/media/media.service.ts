@@ -575,8 +575,16 @@ export class MediaService {
     // soft-deleted alongside the media - rather than blocking the delete. Every
     // other module still blocks with a 409 so an in-use faculty photo or logo
     // can't be silently broken.
-    const galleryUsages = usages.filter((u) => u.module === 'gallery');
-    const blocking = usages.filter((u) => u.module !== 'gallery');
+    // Documents belong in the same category as gallery rows: a Download is a
+    // title and a button pointing at a file, nothing more. Blocking the delete
+    // left the admin with a file they could not remove; deleting the file
+    // around it left a published document whose button returned the site's own
+    // homepage - which is exactly what happened to "sem exams" and "syllabus
+    // 2026" on the live site. Neither outcome is what anyone wants, so the
+    // document goes with its file.
+    const CASCADE_MODULES = ['gallery', 'downloads'];
+    const cascading = usages.filter((u) => CASCADE_MODULES.includes(u.module));
+    const blocking = usages.filter((u) => !CASCADE_MODULES.includes(u.module));
 
     if (blocking.length > 0 && !force) {
       throw new ConflictException({
@@ -597,18 +605,23 @@ export class MediaService {
       );
     }
 
-    // Cascade the gallery display rows (soft-delete + drop their usage links)
-    // so nothing on a public page keeps pointing at the now-deleted asset.
-    for (const gu of galleryUsages) {
-      await this.prisma.galleryImage.updateMany({
-        where: { id: gu.recordId, deletedAt: null },
-        data: {
-          deletedAt: new Date(),
-          deletedBy: admin.id,
-          version: { increment: 1 },
-        },
-      });
-      await this.usageService.untrackAll('gallery', gu.recordId);
+    // Cascade the display rows (soft-delete + drop their usage links) so
+    // nothing on a public page keeps pointing at the now-deleted asset.
+    // Soft, so an accidental delete is recoverable from Recently deleted on
+    // both sides.
+    for (const u of cascading) {
+      if (u.module === 'gallery') {
+        await this.prisma.galleryImage.updateMany({
+          where: { id: u.recordId, deletedAt: null },
+          data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+        });
+      } else {
+        await this.prisma.download.updateMany({
+          where: { id: u.recordId, deletedAt: null },
+          data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+        });
+      }
+      await this.usageService.untrackAll(u.module, u.recordId);
     }
 
     const deleted = await this.prisma.media.update({
@@ -630,7 +643,7 @@ export class MediaService {
       details: {
         before: existing,
         forced: blocking.length > 0 && force,
-        cascadedGalleryRows: galleryUsages.map((u) => u.recordId),
+        cascaded: cascading.map((u) => ({ module: u.module, recordId: u.recordId })),
       },
       requestId,
     });

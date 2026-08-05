@@ -30,10 +30,22 @@ export class DownloadsService {
     departmentId?: number,
     pageSection?: string,
   ) {
+    // A document whose file is gone must not be listed. The cascade on media
+    // delete keeps this from arising going forward, but rows orphaned before
+    // it existed - or by a forced delete - would otherwise stay published with
+    // a button that hands the visitor the site's own homepage back, with no
+    // error to notice. mediaId is a plain Int by design (no Prisma relation),
+    // so the live ids are gathered and filtered on rather than joined.
+    const gone = await this.prisma.media.findMany({
+      where: { OR: [{ deletedAt: { not: null } }, { isActive: false }, { isPrivate: true }] },
+      select: { id: true },
+    });
+
     return this.prisma.download.findMany({
       where: {
         isActive: true,
         deletedAt: null,
+        ...(gone.length > 0 && { NOT: { mediaId: { in: gone.map((m) => m.id) } } }),
         ...(category && { category }),
         ...(departmentId !== undefined && { departmentId }),
         ...(pageSection && { pageSection }),
