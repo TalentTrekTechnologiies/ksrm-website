@@ -21,6 +21,7 @@ export interface Committee {
   name: string;
   type: CommitteeType;
   description: string | null;
+  sortOrder: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -54,6 +55,23 @@ export function getCommitteesPublic(type?: CommitteeType): Promise<Committee[]> 
 export function getCommitteesAdmin(includeDeleted = false): Promise<Committee[]> {
   const query = includeDeleted ? "?includeDeleted=true" : "";
   return apiGet<Committee[]>(`/committees/admin${query}`);
+}
+
+/**
+ * Both reorder calls take the COMPLETE list of ids in its new order, not just
+ * the rows that moved - array position becomes sortOrder, so a partial list
+ * would renumber those rows from 0 and collide with the ones left out. The
+ * backend rejects a partial list rather than accepting it.
+ *
+ * Each returns the full admin list, already in its new order, so the caller
+ * can replace its state with the server's answer instead of trusting its own.
+ */
+export function reorderCommittees(ids: number[]): Promise<Committee[]> {
+  return apiPost<Committee[]>("/committees/reorder", { ids });
+}
+
+export function reorderCommitteeMembers(committeeId: number, ids: number[]): Promise<Committee[]> {
+  return apiPost<Committee[]>(`/committees/${committeeId}/members/reorder`, { ids });
 }
 
 export function createCommittee(dto: CommitteeInput): Promise<Committee> {

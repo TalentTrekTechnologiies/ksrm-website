@@ -18,6 +18,7 @@ import { CreateCommitteeDto } from './dto/create-committee.dto';
 import { UpdateCommitteeDto } from './dto/update-committee.dto';
 import { CreateCommitteeMemberDto } from './dto/create-committee-member.dto';
 import { UpdateCommitteeMemberDto } from './dto/update-committee-member.dto';
+import { ReorderCommitteesDto } from './dto/reorder-committees.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
@@ -44,6 +45,26 @@ export class CommitteesController {
   @RequirePermission('committees.create')
   create(@Body() dto: CreateCommitteeDto, @Request() req) {
     return this.committeesService.create(dto, req.user, req.requestId);
+  }
+
+  // Declared above the ':id' routes on purpose - Nest matches in order, so
+  // 'reorder' would otherwise be swallowed by ':id' and fail to parse as an int.
+  @Post('reorder')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('committees.update')
+  reorder(@Body() dto: ReorderCommitteesDto, @Request() req) {
+    return this.committeesService.reorder(dto.ids, req.user, req.requestId);
+  }
+
+  @Post(':committeeId/members/reorder')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('committees.update')
+  reorderMembers(
+    @Param('committeeId', ParseIntPipe) committeeId: number,
+    @Body() dto: ReorderCommitteesDto,
+    @Request() req,
+  ) {
+    return this.committeesService.reorderMembers(committeeId, dto.ids, req.user, req.requestId);
   }
 
   @Patch(':id')

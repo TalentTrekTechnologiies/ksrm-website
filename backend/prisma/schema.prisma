@@ -796,6 +796,9 @@ model Committee {
   name        String
   type        CommitteeType
   description String?
+  /// Admin-controlled display order. Committees used to come out alphabetically,
+  /// which is not the order a college lists its committees in.
+  sortOrder   Int           @default(0)
   isActive    Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

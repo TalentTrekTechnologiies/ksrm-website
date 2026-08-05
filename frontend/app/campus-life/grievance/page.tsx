@@ -1,5 +1,6 @@
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import CommitteeRoster from "@/components/committees/CommitteeRoster";
 
 ﻿import Link from "next/link";
 
@@ -313,6 +314,28 @@ export default function GrievanceRedressalPage() {
         </div>
       </section>
 
+      {/* Grievance Redressal Committee - driven by Admin -> Committees, type
+          "Grievance Redressal". That type could be saved in the CMS but was
+          rendered on no page at all, so anyone who entered the committee there
+          watched it vanish. */}
+      <section style={{ padding: "72px 0", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
+          <h2
+            style={{
+              fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
+              fontWeight: 800,
+              fontFamily: "var(--font-rajdhani), sans-serif",
+              color: "#2B3490",
+              marginBottom: 28,
+              textAlign: "center",
+            }}
+          >
+            <CmsText section="grievance" slot="grievance-redressal-committee" />
+          </h2>
+          <CommitteeRoster type="GRIEVANCE_REDRESSAL" emptyLabel="The committee roster will be published here shortly." />
+        </div>
+      </section>
+
       {/* Contact */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
@@ -355,7 +378,7 @@ export default function GrievanceRedressalPage() {
               ><CmsText section="grievance" slot="phone" /></h4>
               <p style={{ fontSize: 14, margin: "8px 0 0" }}>
                 <a href="tel:+918554233333" style={{ color: "#D4A500", textDecoration: "none" }}>
-                  +91-8554-233333 (Ext: 390)
+                  +91 90003 32294
                 </a>
               </p>
             </div>

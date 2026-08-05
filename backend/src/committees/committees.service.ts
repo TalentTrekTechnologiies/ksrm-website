@@ -16,22 +16,132 @@ export class CommitteesService {
     private auditLog: AuditLogService,
   ) {}
 
+  // Both lists sort the same way, so the admin sees exactly the order the
+  // public gets. The id tie-break matters: sortOrder alone left rows that
+  // share a value in whatever order Postgres felt like returning, which is
+  // how a roster could come back differently on two consecutive requests.
+  private static readonly COMMITTEE_ORDER: Prisma.CommitteeOrderByWithRelationInput[] =
+    [{ sortOrder: 'asc' }, { name: 'asc' }];
+  private static readonly MEMBER_ORDER: Prisma.CommitteeMemberOrderByWithRelationInput[] =
+    [{ sortOrder: 'asc' }, { id: 'asc' }];
+
   async findAllPublic(type?: CommitteeType) {
     return this.prisma.committee.findMany({
       where: { isActive: true, deletedAt: null, ...(type && { type }) },
       include: {
-        members: { where: { isActive: true, deletedAt: null }, orderBy: { sortOrder: 'asc' } },
+        members: {
+          where: { isActive: true, deletedAt: null },
+          orderBy: CommitteesService.MEMBER_ORDER,
+        },
       },
-      orderBy: { name: 'asc' },
+      orderBy: CommitteesService.COMMITTEE_ORDER,
     });
   }
 
   async findAllAdmin(includeDeleted = false) {
     return this.prisma.committee.findMany({
       where: { ...(!includeDeleted && { deletedAt: null }) },
-      include: { members: { where: { deletedAt: null }, orderBy: { sortOrder: 'asc' } } },
-      orderBy: { name: 'asc' },
+      include: {
+        members: { where: { deletedAt: null }, orderBy: CommitteesService.MEMBER_ORDER },
+      },
+      orderBy: CommitteesService.COMMITTEE_ORDER,
     });
+  }
+
+  /**
+   * Write a new display order for committees.
+   *
+   * `ids` is the full list in its new order; position in the array becomes
+   * sortOrder. Sending a partial list would renumber those rows from 0 and
+   * collide them with rows that were left out, so the whole list is required
+   * and verified before anything is written.
+   */
+  async reorder(ids: number[], admin: RequestAdmin, requestId?: string) {
+    await this.assertCompleteOrdering(ids);
+
+    await this.prisma.$transaction(
+      ids.map((id, index) =>
+        this.prisma.committee.update({ where: { id }, data: { sortOrder: index } }),
+      ),
+    );
+
+    await this.auditLog.log({
+      adminId: admin.id,
+      adminName: admin.name,
+      adminEmail: admin.email,
+      action: 'REORDER',
+      module: 'committees',
+      details: { ids },
+      requestId,
+    });
+
+    return this.findAllAdmin(true);
+  }
+
+  /** Same contract as `reorder`, for the roster inside one committee. */
+  async reorderMembers(
+    committeeId: number,
+    ids: number[],
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    await this.findActiveOrThrow(committeeId);
+    await this.assertCompleteMemberOrdering(committeeId, ids);
+
+    await this.prisma.$transaction(
+      ids.map((id, index) =>
+        this.prisma.committeeMember.update({ where: { id }, data: { sortOrder: index } }),
+      ),
+    );
+
+    await this.auditLog.log({
+      adminId: admin.id,
+      adminName: admin.name,
+      adminEmail: admin.email,
+      action: 'REORDER',
+      module: 'committee_members',
+      targetId: committeeId,
+      details: { committeeId, ids },
+      requestId,
+    });
+
+    return this.findAllAdmin(true);
+  }
+
+  private async assertCompleteOrdering(ids: number[]) {
+    const live = await this.prisma.committee.findMany({
+      where: { deletedAt: null },
+      select: { id: true },
+    });
+    this.assertSameSet(ids, live.map((c) => c.id), 'committees');
+  }
+
+  private async assertCompleteMemberOrdering(committeeId: number, ids: number[]) {
+    const live = await this.prisma.committeeMember.findMany({
+      where: { committeeId, deletedAt: null },
+      select: { id: true },
+    });
+    this.assertSameSet(ids, live.map((m) => m.id), 'members of this committee');
+  }
+
+  private assertSameSet(given: number[], live: number[], label: string) {
+    if (new Set(given).size !== given.length) {
+      throw new ConflictException(`The same ${label} id was listed twice.`);
+    }
+    const liveSet = new Set(live);
+    const unknown = given.filter((id) => !liveSet.has(id));
+    if (unknown.length) {
+      throw new NotFoundException(
+        `Cannot reorder: ${unknown.join(', ')} no longer exist. Reload and try again.`,
+      );
+    }
+    if (given.length !== live.length) {
+      // Someone else added or removed a row since this list was loaded.
+      // Renumbering now would drop the missing rows to the top at 0.
+      throw new ConflictException(
+        `Cannot reorder: the list of ${label} changed while you were dragging. Reload and try again.`,
+      );
+    }
   }
 
   private async findActiveOrThrow(id: number) {
@@ -43,9 +153,19 @@ export class CommitteesService {
   }
 
   async create(dto: CreateCommitteeDto, admin: RequestAdmin, requestId?: string) {
+    // A new committee goes to the bottom of the list, not to position 0 where
+    // the column default would tie it with whatever already sits there.
+    const last = await this.prisma.committee.findFirst({
+      where: { deletedAt: null },
+      orderBy: { sortOrder: 'desc' },
+      select: { sortOrder: true },
+    });
+
     let created;
     try {
-      created = await this.prisma.committee.create({ data: dto });
+      created = await this.prisma.committee.create({
+        data: { ...dto, sortOrder: last ? last.sortOrder + 1 : 0 },
+      });
     } catch (err) {
       // @@unique([type, name]) counts soft-deleted rows too, so deleting a
       // committee and then creating one with the same name again hit the
@@ -180,8 +300,21 @@ export class CommitteesService {
   ) {
     await this.findActiveOrThrow(committeeId);
 
+    // Land new members at the end of the roster. Left to the column default
+    // every one of them arrived at 0, tied with each other, so a new member
+    // appeared at an unpredictable place in the list rather than the bottom.
+    const last = await this.prisma.committeeMember.findFirst({
+      where: { committeeId, deletedAt: null },
+      orderBy: { sortOrder: 'desc' },
+      select: { sortOrder: true },
+    });
+
     const created = await this.prisma.committeeMember.create({
-      data: { ...dto, committeeId },
+      data: {
+        ...dto,
+        committeeId,
+        sortOrder: dto.sortOrder ?? (last ? last.sortOrder + 1 : 0),
+      },
     });
 
     await this.auditLog.log({

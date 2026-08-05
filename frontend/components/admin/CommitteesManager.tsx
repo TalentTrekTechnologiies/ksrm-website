@@ -1,10 +1,9 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Loader2, Plus, AlertTriangle, Users, X, Trash2 } from "lucide-react"
-import type { ColumnDef } from "@tanstack/react-table"
+import { Loader2, Plus, AlertTriangle, Users, X } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
-import CmsTable from "@/components/admin/cms/CmsTable"
+import CmsDragList from "@/components/admin/cms/CmsDragList"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import {
   TextField,
@@ -25,7 +24,10 @@ import {
   restoreCommittee,
   createCommitteeMember,
   deleteCommitteeMember,
+  reorderCommittees,
+  reorderCommitteeMembers,
   Committee,
+  CommitteeMember,
   CommitteeType,
 } from "@/lib/committees-api"
 
@@ -67,9 +69,18 @@ function CommitteesManagerInner() {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState("")
-  const [managingMembersOf, setManagingMembersOf] = useState<Committee | null>(null)
+  // Held as an id, not as a copy of the row. A copy went stale the moment the
+  // list was refetched, so every caller had to remember to re-point it at the
+  // new object; deriving it means the panel always shows current data.
+  const [managingMembersId, setManagingMembersId] = useState<number | null>(null)
   const [memberForm, setMemberForm] = useState<MemberFormState>(emptyMemberForm)
   const [savingMember, setSavingMember] = useState(false)
+  const [reordering, setReordering] = useState(false)
+
+  const managingMembersOf = useMemo(
+    () => items.find((c) => c.id === managingMembersId) ?? null,
+    [items, managingMembersId],
+  )
 
   async function refresh() {
     try {
@@ -165,11 +176,6 @@ function CommitteesManagerInner() {
       await createCommitteeMember(managingMembersOf.id, memberForm)
       setMemberForm(emptyMemberForm)
       await refresh()
-      // Keep the members panel open, pointed at the freshly-updated committee.
-      const updatedList = await getCommitteesAdmin(true)
-      setItems(updatedList)
-      const refreshed = updatedList.find((c) => c.id === managingMembersOf.id)
-      if (refreshed) setManagingMembersOf(refreshed)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to add member")
     } finally {
@@ -181,71 +187,71 @@ function CommitteesManagerInner() {
     if (!managingMembersOf) return
     try {
       await deleteCommitteeMember(memberId)
-      const updatedList = await getCommitteesAdmin(true)
-      setItems(updatedList)
-      const refreshed = updatedList.find((c) => c.id === managingMembersOf.id)
-      if (refreshed) setManagingMembersOf(refreshed)
+      await refresh()
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to remove member")
     }
   }
 
+  /**
+   * The list on screen may be filtered by the search box, so the dragged
+   * order covers only part of the data - but the reorder call needs every
+   * live row. Put the visible rows back into the slots they already occupied,
+   * in their new relative order, and leave the hidden rows exactly where they
+   * were. Deleted rows never take part: the server orders live rows only.
+   */
+  function applyVisibleOrder(full: Committee[], reorderedVisible: Committee[]): number[] {
+    const moved = reorderedVisible.filter((c) => !c.deletedAt)
+    const movedIds = new Set(moved.map((c) => c.id))
+    let next = 0
+    return full
+      .filter((c) => !c.deletedAt)
+      .map((c) => (movedIds.has(c.id) ? moved[next++] : c))
+      .map((c) => c.id)
+  }
+
+  async function handleReorderCommittees(reorderedVisible: Committee[]) {
+    setReordering(true)
+    setError(null)
+    try {
+      setItems(await reorderCommittees(applyVisibleOrder(items, reorderedVisible)))
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to save the new order")
+      // The rows have already animated into place, so leave nothing on screen
+      // that the server did not accept.
+      await refresh()
+    } finally {
+      setReordering(false)
+    }
+  }
+
+  async function handleReorderMembers(reordered: CommitteeMember[]) {
+    if (!managingMembersOf) return
+    setReordering(true)
+    setError(null)
+    try {
+      setItems(
+        await reorderCommitteeMembers(
+          managingMembersOf.id,
+          reordered.filter((m) => !m.deletedAt).map((m) => m.id),
+        ),
+      )
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to save the new order")
+      await refresh()
+    } finally {
+      setReordering(false)
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return items
-    return items.filter((i) => i.name.toLowerCase().includes(q))
+    const matched = q ? items.filter((i) => i.name.toLowerCase().includes(q)) : items
+    // Deleted rows sink to the bottom: they take no part in the ordering the
+    // public sees, so leaving them mixed in would make a drag land somewhere
+    // other than where it looked like it would.
+    return [...matched].sort((a, b) => Number(!!a.deletedAt) - Number(!!b.deletedAt))
   }, [items, search])
-
-  const columns: ColumnDef<Committee>[] = [
-    {
-      accessorKey: "name",
-      header: "Name",
-      cell: ({ row }) => (
-        <div>
-          <p className="max-w-[220px] truncate font-medium text-slate-800">{row.original.name}</p>
-          {row.original.deletedAt && <span className="text-[11px] font-semibold text-red-600">Deleted</span>}
-        </div>
-      ),
-    },
-    { accessorKey: "type", header: "Type" },
-    {
-      id: "members",
-      header: "Members",
-      cell: ({ row }) => row.original.members.length,
-    },
-    {
-      id: "status",
-      header: "Status",
-      cell: ({ row }) =>
-        row.original.isActive ? (
-          <span className="rounded px-1.5 py-0.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50">Active</span>
-        ) : (
-          <span className="rounded px-1.5 py-0.5 text-[11px] font-semibold text-amber-700 bg-amber-50">Inactive</span>
-        ),
-    },
-    {
-      id: "actions",
-      header: "",
-      cell: ({ row }) =>
-        row.original.deletedAt ? (
-          <button type="button" onClick={() => handleRestore(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">
-            Restore
-          </button>
-        ) : (
-          <div className="flex items-center gap-3">
-            <button type="button" onClick={() => setManagingMembersOf(row.original)} className="flex items-center gap-1 text-xs font-semibold text-admin-primary hover:underline">
-              <Users className="h-3.5 w-3.5" /> Members
-            </button>
-            <button type="button" onClick={() => startEdit(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">
-              Edit
-            </button>
-            <button type="button" onClick={() => handleDelete(row.original)} className="text-xs font-semibold text-red-600 hover:underline">
-              Delete
-            </button>
-          </div>
-        ),
-    },
-  ]
 
   if (loading) {
     return (
@@ -294,27 +300,27 @@ function CommitteesManagerInner() {
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-slate-700">Members of &ldquo;{managingMembersOf.name}&rdquo;</p>
-            <button type="button" onClick={() => setManagingMembersOf(null)} className="text-slate-400 hover:text-slate-700">
+            <button type="button" onClick={() => setManagingMembersId(null)} className="text-slate-400 hover:text-slate-700">
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <ul className="space-y-1.5">
-            {managingMembersOf.members.length === 0 && (
-              <p className="text-sm text-slate-400">No members yet.</p>
+          <p className="text-xs text-slate-500">
+            Drag a member to change where they appear on the public page — the Chairperson first, and so on.
+          </p>
+
+          <CmsDragList
+            items={managingMembersOf.members.filter((m) => !m.deletedAt)}
+            onReorder={handleReorderMembers}
+            onDelete={(m) => handleDeleteMember(m.id)}
+            emptyLabel="No members yet."
+            renderRow={(m) => (
+              <span className="min-w-0 flex-1 truncate text-sm">
+                <span className="font-medium text-slate-800">{m.name}</span>{" "}
+                <span className="text-slate-500">— {m.designation}, {m.role}</span>
+              </span>
             )}
-            {managingMembersOf.members.map((m) => (
-              <li key={m.id} className="flex items-center justify-between rounded-lg bg-admin-bg px-3 py-2 text-sm">
-                <span>
-                  <span className="font-medium text-slate-800">{m.name}</span>{" "}
-                  <span className="text-slate-500">— {m.designation}, {m.role}</span>
-                </span>
-                <button type="button" onClick={() => handleDeleteMember(m.id)} className="text-red-600 hover:text-red-800">
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </li>
-            ))}
-          </ul>
+          />
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <TextField label="Name" value={memberForm.name} onChange={(v) => setMemberForm({ ...memberForm, name: v })} />
@@ -344,7 +350,45 @@ function CommitteesManagerInner() {
         }
       />
 
-      <CmsTable data={filtered} columns={columns} emptyTitle="No committees yet" emptyDescription="Add your first committee." pageSize={15} />
+      <p className="flex items-center gap-1.5 text-xs text-slate-500">
+        {reordering ? (
+          <>
+            <Loader2 className="h-3 w-3 animate-spin" /> Saving the new order…
+          </>
+        ) : (
+          <>Drag a committee to change the order it appears in on the public site.</>
+        )}
+      </p>
+
+      <CmsDragList
+        items={filtered}
+        onReorder={handleReorderCommittees}
+        onEdit={startEdit}
+        onDelete={handleDelete}
+        onRestore={handleRestore}
+        emptyLabel="No committees yet. Add your first committee."
+        renderRow={(c) => (
+          <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate font-medium text-slate-800">{c.name}</p>
+              <p className="text-xs text-slate-500">
+                {TYPE_OPTIONS.find((t) => t.value === c.type)?.label ?? c.type}
+                {" · "}
+                {c.members.length} {c.members.length === 1 ? "member" : "members"}
+              </p>
+            </div>
+            {!c.deletedAt && (
+              <button
+                type="button"
+                onClick={() => setManagingMembersId(c.id)}
+                className="flex shrink-0 items-center gap-1 text-xs font-semibold text-admin-primary hover:underline"
+              >
+                <Users className="h-3.5 w-3.5" /> Members
+              </button>
+            )}
+          </div>
+        )}
+      />
     </div>
   )
 }

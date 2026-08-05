@@ -68,6 +68,26 @@ export interface PageTextPage {
 export const PAGE_TEXT: Record<string, PageTextPage> = {
   ...GENERATED_PAGE_TEXT,
 
+  // Same spread-don't-replace rule as `about` below: the generated entry
+  // carries every slot lifted out of that page's JSX.
+  grievance: {
+    ...GENERATED_PAGE_TEXT.grievance,
+    groups: [
+      ...GENERATED_PAGE_TEXT.grievance.groups,
+      {
+        label: "Grievance Redressal Committee",
+        slots: [
+          {
+            id: "grievance-redressal-committee",
+            label: "Committee section heading",
+            kind: "line",
+            default: "Grievance Redressal Committee",
+          },
+        ],
+      },
+    ],
+  },
+
   // Extends the generated About entry rather than replacing it: a plain
   // `about: {...}` here would win outright and silently drop every slot the
   // migration lifted out of that page's JSX.

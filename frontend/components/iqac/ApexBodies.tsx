@@ -27,20 +27,14 @@ const BODIES = [
  *  22 members, and three such lists in full buried the page. */
 const PREVIEW = 4
 
-/** Office-bearers first, then everyone else in the order the CMS holds them. */
-const RANK = ["chairperson", "chairman", "convener", "convenor", "coordinator", "member secretary"]
-function rankOf(role: string) {
-  const r = (role || "").trim().toLowerCase()
-  const i = RANK.findIndex((x) => r.includes(x))
-  return i === -1 ? RANK.length : i
-}
-
 function BodyCard({ icon, name, committee }: { icon: string; name: string; committee?: Committee }) {
   const [expanded, setExpanded] = useState(false)
 
-  const members: CommitteeMember[] = [...(committee?.members ?? [])].sort(
-    (a, b) => rankOf(a.role) - rankOf(b.role) || a.sortOrder - b.sortOrder,
-  )
+  // Exactly the order the CMS holds. This used to re-sort by job title -
+  // chairperson, convener, coordinator, then the rest - which quietly beat
+  // whatever order was set in Admin -> Committees, so dragging a member there
+  // changed nothing on this page. The admin's order wins.
+  const members: CommitteeMember[] = committee?.members ?? []
   const overflowing = members.length > PREVIEW
   const shown = expanded || !overflowing ? members : members.slice(0, PREVIEW)
 
@@ -97,9 +91,15 @@ export default function ApexBodies() {
   const loading = committees === null
 
   const find = (name: string) =>
-    (committees ?? []).find(
-      (c) => c.name.trim().toLowerCase() === name.toLowerCase() && (c.members?.length ?? 0) > 0,
-    )
+    (committees ?? []).find((c) => c.name.trim().toLowerCase() === name.toLowerCase())
+
+  // The cards follow the order the committees are dragged into in
+  // Admin -> Committees, not the order they happen to be listed above. A body
+  // that has no committee entered yet has no sortOrder to sort by, so it goes
+  // last rather than jumping to the front on 0.
+  const cards = BODIES.map((b) => ({ ...b, committee: loading ? undefined : find(b.name) })).sort(
+    (a, b) => (a.committee?.sortOrder ?? Number.MAX_SAFE_INTEGER) - (b.committee?.sortOrder ?? Number.MAX_SAFE_INTEGER),
+  )
 
   return (
     <div className="ab-grid">
@@ -123,15 +123,10 @@ export default function ApexBodies() {
         .ab-empty { font-size: 14px; color: #888; margin: 12px 0 0; }
       `}</style>
 
-      {BODIES.map((b) => (
-        <BodyCard
-          key={b.name}
-          icon={b.icon}
-          name={b.name}
-          // While loading, pass nothing so the server render and the first
-          // client render agree.
-          committee={loading ? undefined : find(b.name)}
-        />
+      {/* While loading, `committee` is undefined so the server render and the
+          first client render agree. */}
+      {cards.map((b) => (
+        <BodyCard key={b.name} icon={b.icon} name={b.name} committee={b.committee} />
       ))}
     </div>
   )

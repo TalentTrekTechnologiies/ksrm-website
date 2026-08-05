@@ -225,6 +225,12 @@ export default function Navbar() {
           .navbar-hamburger { display: flex !important; }
         }
         .navbar-desktop { scrollbar-width: none; -ms-overflow-style: none; }
+        /* The dropdown's scrollbar, unlike the nav row's, is deliberately
+           visible - it is the only cue that there is more below the fold. */
+        .nav-dropdown-panel { scrollbar-width: thin; scrollbar-color: #C7CBE8 transparent; }
+        .nav-dropdown-panel::-webkit-scrollbar { width: 8px; }
+        .nav-dropdown-panel::-webkit-scrollbar-thumb { background: #C7CBE8; border-radius: 4px; }
+        .nav-dropdown-panel::-webkit-scrollbar-thumb:hover { background: #2B3490; }
         .navbar-desktop::-webkit-scrollbar { display: none; }
         /* Centre the row WITHOUT justify-content: center. On a scrolling flex
            container that centres by pushing overflow equally to both sides,
@@ -394,7 +400,18 @@ export default function Navbar() {
               padding: "6px 0",
               display: "flex",
               flexDirection: "column",
+              // About now carries 14 links. The menu is position:fixed, so it
+              // simply ran past the bottom of the window and the last few
+              // items were unreachable - no scrollbar, nothing to drag.
+              // Cap it at whatever room is left below the trigger and let it
+              // scroll. 12px keeps it off the very bottom edge.
+              maxHeight: `calc(100vh - ${dropdownPos.top}px - 12px)`,
+              overflowY: "auto",
+              // Without this, reaching the end of the menu hands the wheel
+              // back to the page, which scrolls away under the pointer.
+              overscrollBehavior: "contain",
             }}
+            className="nav-dropdown-panel"
             onMouseEnter={cancelClose}
             onMouseLeave={scheduleClose}
           >
