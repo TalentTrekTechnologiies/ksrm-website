@@ -1,5 +1,10 @@
+"use client";
+
+import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
-﻿import PageResources from "@/components/PageResources";
+import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
+import { useLiveData } from "@/lib/use-live-data";
+
 const aims = [
   "To understand the community in which they work",
   "To understand themselves in relation to their community",
@@ -22,6 +27,51 @@ const activities = [
   "NSS Day celebrations and cultural programs",
   "// activity details and photos from client",
 ];
+
+/**
+ * The NSS emblem.
+ *
+ * This block used to show an Om emoji - a religious symbol - directly above a
+ * caption explaining that the NSS symbol is the Konark Rath wheel, so the
+ * picture contradicted its own text.
+ *
+ * public/nss-logo.svg is the official emblem: the Ministry of Youth Affairs
+ * and Sports artwork published on presentations.gov.in, the Government of
+ * India identity portal, and in the public domain. Vector, so it stays sharp
+ * at any size, and it carries the wordmark in both scripts - none of which a
+ * crop from the page banner could give, that being a photograph with the
+ * emblem small and angled on the volunteers' shirts.
+ *
+ * An image uploaded to the NSS page titled "logo", "symbol" or "emblem" takes
+ * precedence, so the college can substitute its own unit's artwork without a
+ * code change.
+ */
+function NssEmblem() {
+  const images = useLiveData<GalleryImage[]>(
+    () => getGalleryPublic(undefined, undefined, "nss").catch(() => [] as GalleryImage[]),
+    [],
+  );
+  const uploaded = (images ?? []).find((g) => /logo|symbol|emblem/i.test(g.title ?? ""));
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- SVG asset / admin upload
+    <img
+      src={uploaded ? uploaded.imageUrl : "/nss-logo.svg"}
+      alt="The NSS emblem: the Rath wheel of the Konark Sun Temple"
+      style={{
+        // Deliberately smaller than the column it sits in. At full width the
+        // emblem outweighed the text beside it and the section read as a logo
+        // with a note attached, rather than an explanation with a mark.
+        width: "100%",
+        maxWidth: 200,
+        aspectRatio: "1",
+        objectFit: "contain",
+        margin: "0 auto",
+        display: "block",
+      }}
+    />
+  );
+}
 
 export default function NSSPage() {
   return (
@@ -110,42 +160,7 @@ export default function NSSPage() {
           <h2 className="nss-section-heading"><CmsText section="nss" slot="nss-symbol" /></h2>
           <div className="nss-symbol-container">
             <div className="nss-symbol-image">
-              {/*
-                The emblem, drawn rather than stood in for. This showed an Om
-                emoji - a religious symbol - directly above a caption that
-                explains the NSS symbol is the Konark Rath wheel, so the
-                picture contradicted its own text.
-
-                Drawn as SVG rather than shipped as a bitmap: it is pure
-                geometry, so it stays sharp at any size and needs no file. The
-                eight spokes are the eight of the Konark wheel, and the two
-                colours are the ones the caption beside it names - navy for the
-                cosmos, red for the volunteers.
-              */}
-              <svg
-                viewBox="0 0 100 100"
-                role="img"
-                aria-label="The NSS emblem: the Rath wheel of the Konark Sun Temple"
-                style={{ width: "100%", aspectRatio: "1", borderRadius: 12, background: "#2B3490", display: "block" }}
-              >
-                <g stroke="#E53935" strokeLinecap="round" fill="none">
-                  <circle cx="50" cy="50" r="34" strokeWidth={6} />
-                  {Array.from({ length: 8 }).map((_, i) => {
-                    const a = (Math.PI / 4) * i
-                    return (
-                      <line
-                        key={i}
-                        x1={50 + Math.cos(a) * 11}
-                        y1={50 + Math.sin(a) * 11}
-                        x2={50 + Math.cos(a) * 34}
-                        y2={50 + Math.sin(a) * 34}
-                        strokeWidth={5}
-                      />
-                    )
-                  })}
-                </g>
-                <circle cx="50" cy="50" r="10" fill="#E53935" />
-              </svg>
+              <NssEmblem />
             </div>
             <div className="nss-symbol-content">
               <h3><CmsText section="nss" slot="nss-symbol-2" /></h3>

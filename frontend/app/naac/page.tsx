@@ -3,6 +3,9 @@
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { useLiveData } from "@/lib/use-live-data";
+import { resolveFileUrl } from "@/lib/api-base";
 
 const criteria = [
   { n: 1, title: "Curricular Aspects", text: "Curriculum design, academic flexibility and enrichment programmes" },
@@ -34,12 +37,44 @@ function DownloadIcon() {
     </svg>
   );
 }
-function AwardIcon() {
+
+/**
+ * The accreditation badge: the NAAC logo, the grade, and the term.
+ *
+ * Clicking it opens the certificate. That document comes from the CMS rather
+ * than a hardcoded path - the two links this page used to carry pointed at the
+ * old site and returned the homepage - so it becomes a link only once a
+ * certificate is actually uploaded.
+ */
+function NaacBadge() {
+  const docs = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "naac").catch(() => [] as Download[]),
+    [],
+  );
+  const certificate = (docs ?? []).find((d) => /certificat|accreditation/i.test(d.title)) ?? (docs ?? [])[0];
+
+  const inner = (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
+      <img src="/naac.png" alt="NAAC" className="naac-logo" />
+      <div className="naac-grade">A+</div>
+      <div className="naac-badge-detail">Accredited 25-10-2024</div>
+      <div className="naac-badge-detail">Valid for 5 years, until 2029</div>
+      {certificate && <div className="naac-badge-cta">View the certificate &rarr;</div>}
+    </>
+  );
+
+  if (!certificate) return <div className="naac-badge">{inner}</div>;
+
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D4A500" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 16 }}>
-      <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
-      <circle cx="12" cy="8" r="6" />
-    </svg>
+    <a
+      className="naac-badge naac-badge-link"
+      href={resolveFileUrl(certificate.fileUrl)}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {inner}
+    </a>
   );
 }
 
@@ -68,6 +103,10 @@ export default function NAACPage() {
           background: #f7f8fa; border: 2px solid #D4A500; border-radius: 12px; padding: 40px; text-align: center;
           margin: 48px auto; max-width: 500px;
         }
+        .naac-logo { width: 110px; height: auto; margin: 0 auto 18px; display: block; }
+        .naac-badge-link { display: block; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+        .naac-badge-link:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(43,52,144,.16); }
+        .naac-badge-cta { margin-top: 16px; color: #2B3490; font-weight: 700; font-size: 14px; }
         .naac-grade { font-family: 'Rajdhani', sans-serif; font-size: clamp(29px, 7.7vw, 48px); font-weight: 700; color: #D4A500; margin-bottom: 12px; }
         .naac-badge-detail { font-size: 17px; color: #555; margin: 8px 0; }
         .naac-criteria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; }
@@ -118,18 +157,19 @@ export default function NAACPage() {
 
       <section style={{ padding: "48px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          <div className="naac-badge">
-            <AwardIcon />
-            {/* The whole badge described the superseded cycle: B++ at 2.88,
-                which is the B++ band, expiring 2026. The current award is A+
-                for five years from 25-10-2024. The cycle number is not stated
-                on the certificate, so it is no longer claimed here rather than
-                carried over from the old one. */}
-            <div className="naac-grade">A+</div>
-            <div className="naac-badge-detail">CGPA: 3.60</div>
-            <div className="naac-badge-detail">Accredited 25-10-2024</div>
-            <div className="naac-badge-detail">Valid for 5 years, until 2029</div>
-          </div>
+          {/* The badge described the superseded cycle: B++ at 2.88, which is
+              the B++ band, expiring 2026. The current award is A+ for five
+              years from 25-10-2024.
+
+              The CGPA is gone. It was carried over from the old cycle and the
+              certificate quotes only the grade and the term, so the figure was
+              never confirmed - better absent than wrong on the page that
+              exists to state the accreditation.
+
+              The logo links to the certificate when one is uploaded (Documents
+              -> NAAC, with "certificate" in the title). Until then it is a
+              plain badge rather than a link that goes nowhere. */}
+          <NaacBadge />
         </div>
       </section>
 
