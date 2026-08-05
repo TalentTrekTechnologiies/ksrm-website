@@ -3,6 +3,8 @@
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
 import ApexBodies from "@/components/iqac/ApexBodies";
+import { getCommitteesPublic, Committee } from "@/lib/committees-api";
+import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
 
 const missionFunctions = [
@@ -112,6 +114,19 @@ const tabs = [
 ];
 
 export default function IQACPage() {
+  // The IQAC's own composition is a committee like any other, kept in
+  // Admin -> Committees under the "IQAC Composition" type. Falls back to the
+  // built-in table while none exists, so the page is never empty.
+  const iqacCommittees = useLiveData<Committee[]>(
+    () => getCommitteesPublic("IQAC").catch(() => [] as Committee[]),
+    [],
+  );
+  const cmsMembers = (iqacCommittees ?? []).flatMap((c) => c.members ?? []);
+  const fromCms = cmsMembers.length > 0;
+  const rows = fromCms
+    ? cmsMembers.map((m) => ({ name: m.name, designation: m.designation, role: m.role }))
+    : composition;
+
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
@@ -258,11 +273,15 @@ export default function IQACPage() {
                 <tr><th>S.No</th><th>Name</th><th>Designation</th><th>Role</th></tr>
               </thead>
               <tbody>
-                {composition.map((c, i) => (
+                {rows.map((c, i) => (
                   <tr key={i} style={{ background: i % 2 === 0 ? "white" : "#f9f9f9" }}>
                     <td style={{ color: "#2B3490", fontWeight: 600 }}>{i + 1}</td>
-                    <td style={{ color: "#333" }}><CmsText section="iqac" slot={`composition.${i}.name`} /></td>
-                    <td style={{ color: "#666" }}><CmsText section="iqac" slot={`composition.${i}.designation`} /></td>
+                    <td style={{ color: "#333" }}>
+                      {fromCms ? c.name : <CmsText section="iqac" slot={`composition.${i}.name`} />}
+                    </td>
+                    <td style={{ color: "#666" }}>
+                      {fromCms ? c.designation : <CmsText section="iqac" slot={`composition.${i}.designation`} />}
+                    </td>
                     <td>
                       {c.role === "Chairperson" || c.role === "Coordinator" ? (
                         <span style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>

@@ -64,6 +64,10 @@ enum CommitteeType {
   /// "Governing Body": the public page selects on type, so renaming the
   /// committee in the CMS can never silently empty that section.
   GOVERNING_BODY
+  /// The IQAC's own 35-member composition, listed on the IQAC page. Same
+  /// shape as any other committee, so it is maintained in the same screen
+  /// rather than being a hardcoded table only a developer can change.
+  IQAC
   OTHER
 }
 

@@ -44,6 +44,8 @@ const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [
   // Anything filed under this type renders in the About page's Governing
   // Body section - members added here appear there with no code change.
   { value: "GOVERNING_BODY", label: "Governing Body" },
+  // Renders as the IQAC page's Composition table.
+  { value: "IQAC", label: "IQAC Composition" },
   { value: "OTHER", label: "Other" },
 ]
 
