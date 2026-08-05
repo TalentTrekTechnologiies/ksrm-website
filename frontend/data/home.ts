@@ -2,7 +2,7 @@ export const homeData = {
   hero: {
     videoUrl: "/videos/main-block.mp4",
     fallbackImage: "/gallery/campus/topview.jpg",
-    badge: "NAAC A++ · NBA Tier-1 · UGC Autonomous",
+    badge: "NAAC A+ · NBA Tier-1 · UGC Autonomous",
     heading: "Ignite Your Potential, Engineer Your Future",
     subtext: "K.S.R.M. College of Engineering, Kadapa — 45 years of engineering excellence.",
     labels: ["RESEARCH & INNOVATION", "State-of-the-art Laboratories"],

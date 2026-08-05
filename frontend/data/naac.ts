@@ -20,7 +20,7 @@ export const naac: NAACData = {
   about:
     "K.S.R.M. College of Engineering has been accredited by the National Assessment and Accreditation Council (NAAC). NAAC accreditation is a mark of quality assurance recognizing the institution's commitment to providing quality higher education.",
   accreditationStatus: {
-    grade: "B++",
+    grade: "A+",
     cgpa: "2.88",
     cycle: "3rd Cycle",
     validUntil: "2026",

@@ -115,10 +115,15 @@ export default function NAACPage() {
         <div className="responsive-container">
           <div className="naac-badge">
             <AwardIcon />
-            <div className="naac-grade">B++</div>
-            <div className="naac-badge-detail">CGPA: 2.88</div>
-            <div className="naac-badge-detail">3rd Cycle</div>
-            <div className="naac-badge-detail">Valid Until: 2026</div>
+            {/* The whole badge described the superseded cycle: B++ at 2.88,
+                which is the B++ band, expiring 2026. The current award is A+
+                for five years from 25-10-2024. The cycle number is not stated
+                on the certificate, so it is no longer claimed here rather than
+                carried over from the old one. */}
+            <div className="naac-grade">A+</div>
+            <div className="naac-badge-detail">CGPA: 3.60</div>
+            <div className="naac-badge-detail">Accredited 25-10-2024</div>
+            <div className="naac-badge-detail">Valid for 5 years, until 2029</div>
           </div>
         </div>
       </section>

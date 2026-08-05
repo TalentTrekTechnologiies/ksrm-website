@@ -21,7 +21,7 @@ export const aboutData = {
   aboutCards: [
     {
       title: "Academic Excellence",
-      description: "NAAC A++ accredited institution offering quality engineering education with modern curriculum and experienced faculty.",
+      description: "NAAC A+ accredited institution offering quality engineering education with modern curriculum and experienced faculty.",
     },
     {
       title: "Campus Facilities",
