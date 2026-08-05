@@ -68,6 +68,7 @@ ksrm-site-updated.zip
 !deploy-data.sql
 !deploy-routes-only.sql
 !fix-media-urls.sql
+!deploy-committees.sql
 !import-library-exam-staff.sql
 
 # Media Library uploads - user-uploaded files, served from the backend's own
