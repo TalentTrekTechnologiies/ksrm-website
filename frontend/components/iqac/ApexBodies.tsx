@@ -28,6 +28,13 @@ export default function ApexBodies() {
     [],
   )
 
+  // null means "not fetched yet", which is what both the server render and the
+  // first client render see. Treating that as "empty" would print "members
+  // will be published shortly" on every single load and then swap it for the
+  // real list a moment later - a visible flash, and the kind of server/client
+  // divergence that produces a hydration mismatch.
+  const loading = committees === null
+
   const find = (name: string) =>
     (committees ?? []).find(
       (c) => c.name.trim().toLowerCase() === name.toLowerCase() && (c.members?.length ?? 0) > 0,
@@ -77,6 +84,8 @@ export default function ApexBodies() {
                   </li>
                 ))}
               </ul>
+            ) : loading ? (
+              <p className="iqac-apex-empty">&nbsp;</p>
             ) : (
               <p className="iqac-apex-empty">Members will be published here shortly.</p>
             )}
