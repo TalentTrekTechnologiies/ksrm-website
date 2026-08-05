@@ -4,7 +4,7 @@ import CmsText from "@/components/CmsText";
 export const metadata = {
   title: "Professional Chapters | K.S.R.M. College of Engineering",
   description:
-    "Department-led professional chapters and student associations at K.S.R.M. College of Engineering, Kadapa - Technical Club (CSE), Echo Club (ECE), EEE Club, Civil Engineers Association and Mechanical Engineers Association.",
+    "Department-led professional chapters and student associations at K.S.R.M. College of Engineering, Kadapa - Technical Club (CSE), Echo Club (ECE), EEE Club, Civil Engineers Association and Mechanical Engineer Association.",
   alternates: { canonical: "/campus-life/professional-chapters" },
 };
 
@@ -44,7 +44,7 @@ const chapters = [
   },
   {
     dept: "ME",
-    name: "Mechanical Engineers Association",
+    name: "Mechanical Engineer Association",
     blurb: "Workshops, design competitions and industry interaction for Mechanical Engineering students.",
     href: "/departments/mechanical",
   },

@@ -203,7 +203,7 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
             id: "chapters.4.name",
             label: "Chapter 5 - name",
             kind: "line",
-            default: "Mechanical Engineers Association",
+            default: "Mechanical Engineer Association",
           },
           {
             id: "chapters.4.blurb",
