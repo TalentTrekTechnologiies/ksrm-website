@@ -25,7 +25,9 @@ const committee = [
   { name: "Dr. K. Chandra Obul Reddy", designation: "Managing Director", dept: "Administration" },
   { name: "Dr. T. Nageswara Prasad", designation: "Principal", dept: "Academic Administration" },
   { name: "Dr. M. Venkatanarayana", designation: "Professor, ECE & Dean, R&D Cell", dept: "Electronics & Communication Engineering" },
-  { name: "Sri A. Ramprakash Reddy", designation: "Head of Department", dept: "Computer Science & Engineering" },
+  // Spelt as the Academic Council records him. He replaced Sri A. Ramprakash
+  // Reddy as HoD, CSE.
+  { name: "Dr. P. Venkata Kishore", designation: "Head of Department", dept: "Computer Science & Engineering" },
   { name: "Dr. B. Bhaskar Reddy", designation: "Head of Department", dept: "Electronics & Communication Engineering" },
   { name: "Dr. G. Chennakesava Reddy", designation: "Head of Department", dept: "Civil Engineering" },
   { name: "Dr. M. S. Priyadarshini", designation: "Head of Department", dept: "Electrical & Electronics Engineering" },

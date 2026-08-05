@@ -5661,9 +5661,9 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
           },
           {
             id: "committee.4.name",
-            label: "5. name - Sri A. Ramprakash Reddy",
+            label: "5. name - Dr. P. Venkata Kishore",
             kind: "line",
-            default: "Sri A. Ramprakash Reddy",
+            default: "Dr. P. Venkata Kishore",
           },
           {
             id: "committee.5.dept",
