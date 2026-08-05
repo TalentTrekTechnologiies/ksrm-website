@@ -693,30 +693,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
       {
         label: "regulations (4 items)",
         slots: [
-          {
-            id: "regulations.0.description",
-            label: "1. description - The latest regulations incorporating outcome...",
-            kind: "paragraph",
-            default: "The latest regulations incorporating outcome-based education, credit system, and industry-aligned curriculum. R20 regulations emphasize skill development, research aptitude, and holistic learning.",
-          },
-          {
-            id: "regulations.1.description",
-            label: "2. description - Previous regulation framework with tradition...",
-            kind: "paragraph",
-            default: "Previous regulation framework with traditional semester system. Provides flexibility in course selection and assessment methodology.",
-          },
-          {
-            id: "regulations.2.description",
-            label: "3. description - Former regulation framework with traditional...",
-            kind: "paragraph",
-            default: "Former regulation framework with traditional grading system. Still applicable to continuing students as per JNTUA guidelines.",
-          },
-          {
-            id: "regulations.3.description",
-            label: "4. description - Earlier regulation framework maintained for ...",
-            kind: "paragraph",
-            default: "Earlier regulation framework maintained for reference and archival purposes. New admissions follow R20 or R19.",
-          },
         ],
       },
     ],

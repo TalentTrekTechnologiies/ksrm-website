@@ -2,14 +2,38 @@
 
 import { useState } from "react";
 import PageResources from "@/components/PageResources";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { useLiveData } from "@/lib/use-live-data";
+import { resolveFileUrl } from "@/lib/api-base";
 import CmsText from "@/components/CmsText";
 
 const regulations = [
+  // R26 and R23 carry no key points on purpose. The lists below were written
+  // for the older regulations and state specifics - credit minimums, exam
+  // weightings, CGPA thresholds - that cannot be carried across to a
+  // regulation without reading it. The regulation document itself is the
+  // authority, and it is published from the CMS.
+  {
+    code: "R26",
+    year: "2026",
+    applicable: "Students admitted from the academic year 2026-27",
+    description:
+      "The regulations governing students admitted from the academic year 2026-27. Refer to the regulation document for the credit structure, assessment scheme and promotion criteria in full.",
+    keyPoints: [],
+  },
+  {
+    code: "R23",
+    year: "2023",
+    applicable: "Students admitted from 2023 to 2025",
+    description:
+      "The regulations the current senior B.Tech years are studying under. Refer to the regulation document for the credit structure, assessment scheme and promotion criteria in full.",
+    keyPoints: [],
+  },
   {
     code: "R20",
     year: "2020",
-    applicable: "Students admitted from 2020 onwards",
-    description: "The latest regulations incorporating outcome-based education, credit system, and industry-aligned curriculum. R20 regulations emphasize skill development, research aptitude, and holistic learning.",
+    applicable: "Students admitted from 2020 to 2022",
+    description: "Regulations incorporating outcome-based education, a credit system and an industry-aligned curriculum, emphasising skill development, research aptitude and holistic learning.",
     keyPoints: [
       "Credit-based semester system with minimum 120 credits for B.Tech",
       "Outcome-Based Education (OBE) framework aligned with NBA standards",
@@ -20,7 +44,6 @@ const regulations = [
       "Mandatory internship and project work",
       "Minimum 6.5 CGPA required for distinction",
     ],
-    pdf: "/documents/regulations/R20-regulations.pdf",
   },
   {
     code: "R19",
@@ -37,7 +60,6 @@ const regulations = [
       "Minimum GPA 6.0 for distinction",
       "Flexibility in course completion up to 8 years",
     ],
-    pdf: "/documents/regulations/R19-regulations.pdf",
   },
   {
     code: "R16",
@@ -54,13 +76,12 @@ const regulations = [
       "Comprehensive project and viva voce requirements",
       "Maximum academic period: 8 years from admission",
     ],
-    pdf: "/documents/regulations/R16-regulations.pdf",
   },
   {
     code: "R13",
     year: "2013",
     applicable: "Old regulation (archived reference)",
-    description: "Earlier regulation framework maintained for reference and archival purposes. New admissions follow R20 or R19.",
+    description: "Earlier regulation framework, maintained for reference and archival purposes.",
     keyPoints: [
       "Semester system with coursework and evaluation",
       "Continuous internal assessment (30%) and end-semester (70%)",
@@ -70,7 +91,6 @@ const regulations = [
       "Provision for improvement examinations",
       "Academic performance monitoring and counseling",
     ],
-    pdf: "/documents/regulations/R13-regulations.pdf",
   },
 ];
 
@@ -116,6 +136,14 @@ function RuleItem({ title, text }: { title: string; text: string }) {
 }
 
 export default function RegulationsPage() {
+  // Regulation documents uploaded in Documents; matched to a card by the
+  // regulation code in the title, e.g. "B.Tech Regulations R23".
+  const uploaded = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "academics.regulations").catch(() => [] as Download[]),
+    [],
+  );
+  const docs = uploaded ?? [];
+
   return (
     <>
       <style>{`
@@ -232,16 +260,38 @@ export default function RegulationsPage() {
                   <div className="reg-code-badge">{r.code}</div>
                   <h3>{r.code} Regulations ({r.year})</h3>
                   <div className="reg-card-meta"><div><strong>Applicable To:</strong> {r.applicable}</div></div>
-                  <p className="reg-card-description"><CmsText section="academics.regulations" slot={`regulations.${_i}.description`} /></p>
-                  <div>
+                  {/* Straight from the entry, not a Page Content slot. Those
+                      were addressed by position - regulations.0.description -
+                      so adding R26 and R23 at the front would have shifted
+                      every description onto the wrong regulation. */}
+                  <p className="reg-card-description">{r.description}</p>
+                  <div style={{ display: r.keyPoints.length ? undefined : "none" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#2B3490", marginBottom: 8 }}>KEY POINTS</div>
                     <div className="reg-keypoints">
                       {r.keyPoints.map((kp) => <div className="reg-keypoint" key={kp}>{kp}</div>)}
                     </div>
                   </div>
-                  <a href={r.pdf} className="reg-download-btn" target="_blank" rel="noopener noreferrer">
-                    <DownloadIcon />Download PDF
-                  </a>
+                  {/* Uploaded regulation documents, matched on the code in the
+                      title. The built-in paths pointed at
+                      /documents/regulations/*.pdf, a folder that does not
+                      exist - all four returned the site's own homepage. */}
+                  {(() => {
+                    // \\b, not \b - in a template literal \b is the backspace
+                    // character, so the regex would match nothing at all.
+                    const files = docs.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
+                    if (files.length === 0) {
+                      return (
+                        <p style={{ fontSize: 12, color: "#888", fontStyle: "italic", margin: 0 }}>
+                          Regulation document not published yet.
+                        </p>
+                      );
+                    }
+                    return files.map((d) => (
+                      <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="reg-download-btn" target="_blank" rel="noopener noreferrer">
+                        <DownloadIcon />{d.title}
+                      </a>
+                    ));
+                  })()}
                 </div>
               ))}
             </div>
@@ -265,7 +315,8 @@ export default function RegulationsPage() {
           </div>
         </section>
       
-      <PageResources section="academics.regulations" />
+      {/* Each regulation document is already shown on its own card. */}
+      <PageResources section="academics.regulations" hideDocs />
       </main>
     </>
   );
