@@ -32,7 +32,10 @@ const committee = [
   { name: "Dr. P. Venkata Kishore", designation: "Head of Department", dept: "Computer Science & Engineering" },
   { name: "Dr. B. Bhaskar Reddy", designation: "Head of Department", dept: "Electronics & Communication Engineering" },
   { name: "Dr. G. Chennakesava Reddy", designation: "Head of Department", dept: "Civil Engineering" },
-  { name: "Dr. M. S. Priyadarshini", designation: "Head of Department", dept: "Electrical & Electronics Engineering" },
+  // EEE, not Civil - Dr. M. S. Priyadarshini, whom he replaces, held EEE. The
+  // Academic Council records him as "Dr. A. Sudhakar HoD, EEE"; Civil remains
+  // Dr. G. Chennakesava Reddy on the line above.
+  { name: "Dr. A. Sudhakar", designation: "Head of Department", dept: "Electrical & Electronics Engineering" },
   { name: "Dr. D. Ravikanth", designation: "Head of Department", dept: "Mechanical Engineering" },
 ];
 

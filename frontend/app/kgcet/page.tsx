@@ -3,6 +3,9 @@
 import Link from "next/link";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
+import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
+import { useLiveData } from "@/lib/use-live-data";
 
 /**
  * KGCET - the Kandula Group Common Entrance Test.
@@ -48,6 +51,43 @@ const GALLERY = [
   { src: "/kgcet/joh03099.webp", caption: "KGCET 2K22 — the top rank holder with her family, at KSRMCE" },
   { src: "/kgcet/joh03106.webp", caption: "A KGCET rank holder felicitated at KLM College of Engineering for Women, Orientation Day 2024" },
 ];
+
+/**
+ * The gallery: images routed to the KGCET page in the CMS, falling back to the
+ * photographs above while none have been uploaded.
+ *
+ * So the college can replace these with its own - a current year's event, or
+ * the current poster - without a code change, and the carried-across ones stop
+ * showing the moment they do.
+ */
+function Gallery() {
+  const uploaded = useLiveData<GalleryImage[]>(
+    () => getGalleryPublic(undefined, undefined, "kgcet").catch(() => [] as GalleryImage[]),
+    [],
+  );
+  const shots = (uploaded ?? []).length
+    ? (uploaded ?? []).map((g) => ({ src: g.imageUrl, caption: g.title ?? "" }))
+    : GALLERY;
+
+  if (shots.length === 0) return null;
+
+  return (
+    <section style={{ padding: "64px 0", background: "#f4f3ef" }}>
+      <div className="kg-container">
+        <h2 className="kg-h2"><CmsText section="kgcet" slot="gallery-heading" /></h2>
+        <div className="kg-gallery">
+          {shots.map((g) => (
+            <figure className="kg-shot" key={g.src}>
+              {/* eslint-disable-next-line @next/next/no-img-element -- static asset / admin upload */}
+              <img src={g.src} alt={g.caption} loading="lazy" />
+              {g.caption && <figcaption>{g.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /** Rendered only once the college sets a link, so it is never a dead button. */
 function RegisterButton() {
@@ -186,20 +226,10 @@ export default function KgcetPage() {
         </div>
       </section>
 
-      <section style={{ padding: "64px 0", background: "#f4f3ef" }}>
-        <div className="kg-container">
-          <h2 className="kg-h2"><CmsText section="kgcet" slot="gallery-heading" /></h2>
-          <div className="kg-gallery">
-            {GALLERY.map((g) => (
-              <figure className="kg-shot" key={g.src}>
-                {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
-                <img src={g.src} alt={g.caption} loading="lazy" />
-                <figcaption>{g.caption}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Gallery />
+
+      {/* The KGCET committee, if one is pointed at this page. */}
+      <PlacedCommittees placement="KGCET" heading="KGCET Committee" />
 
       {/* Results, notifications and any other KGCET file, from Documents. */}
       <PageResources section="kgcet" />

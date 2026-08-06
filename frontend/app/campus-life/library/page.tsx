@@ -1,4 +1,5 @@
 import PageResources from "@/components/PageResources";
+import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import CmsVideos from "@/components/CmsVideos";
 import LibraryStaff from "@/components/library/LibraryStaff";
 import LibrarianProfile, { LibrarianName } from "@/components/library/LibrarianProfile";
@@ -658,6 +659,10 @@ export default function LibraryPage() {
           </div>
         </div>
       </section>
+
+      {/* The Library Committee, and anything else pointed at this page in
+          Admin -> Committees. Renders nothing until one is. */}
+      <PlacedCommittees placement="LIBRARY" heading="Library Committee" />
 
       <PageResources section="library" hideVideos />
     </main>

@@ -59,6 +59,8 @@ const PLACEMENT_OPTIONS: { value: string; label: string }[] = [
   { value: "GRIEVANCE", label: "Grievance Redressal page" },
   { value: "ANTI_RAGGING", label: "Anti-Ragging page" },
   { value: "CAMPUS_LIFE", label: "Campus Life page" },
+  { value: "LIBRARY", label: "Central Library page" },
+  { value: "KGCET", label: "KGCET page" },
 ]
 
 const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [

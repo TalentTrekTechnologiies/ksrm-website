@@ -72,6 +72,8 @@ enum CommitteePlacement {
   GRIEVANCE
   ANTI_RAGGING
   CAMPUS_LIFE
+  LIBRARY
+  KGCET
 }
 
 enum CommitteeType {
