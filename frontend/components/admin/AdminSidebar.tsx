@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRoutePath } from "@/lib/use-route-path"
@@ -220,6 +220,14 @@ export default function AdminSidebar({
   const [departments, setDepartments] = useState<Department[] | null>(null)
   const isOnPageContentSection = pathname?.startsWith("/admin/page-content") ?? false
   const [pageContentExpanded, setPageContentExpanded] = useState(isOnPageContentSection)
+  const [pageFilter, setPageFilter] = useState("")
+  // Alphabetical rather than the order they happen to be declared in. The
+  // "Area → Sub-page" labels keep each area's entries together, so this groups
+  // as well as sorts.
+  const sortedPageSections = useMemo(
+    () => [...PAGE_SECTIONS].sort((a, b) => a.label.localeCompare(b.label)),
+    [],
+  )
   const examAdminUrl = useExamAdminUrl()
 
   useEffect(() => {
@@ -472,17 +480,32 @@ export default function AdminSidebar({
               <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${pageContentExpanded ? "rotate-180" : ""}`} />
             </button>
             {pageContentExpanded && (
-              <div className="mt-1 max-h-72 space-y-1 overflow-y-auto pl-8">
-                {PAGE_SECTIONS.map((s) => (
-                  <Link
-                    key={s.value}
-                    href={`/admin/page-content?section=${encodeURIComponent(s.value)}`}
-                    onClick={onNavigate}
-                    className="block truncate rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors hover:bg-admin-sidebar-hover hover:text-white"
-                  >
-                    {s.label}
-                  </Link>
-                ))}
+              <div className="mt-1 pl-8">
+                {/* 53 pages in a 288px scroll box, in no particular order, is
+                    not findable - Library and Examinations are both in here and
+                    were reported missing. Filtered and sorted, they are one
+                    keystroke away. */}
+                <input
+                  value={pageFilter}
+                  onChange={(e) => setPageFilter(e.target.value)}
+                  placeholder="Find a page…"
+                  aria-label="Find a page"
+                  className="mb-1 w-full rounded-lg bg-admin-sidebar-hover px-3 py-1.5 text-xs font-medium text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-admin-primary-light"
+                />
+                <div className="max-h-72 space-y-1 overflow-y-auto">
+                  {sortedPageSections
+                    .filter((s) => s.label.toLowerCase().includes(pageFilter.trim().toLowerCase()))
+                    .map((s) => (
+                      <Link
+                        key={s.value}
+                        href={`/admin/page-content?section=${encodeURIComponent(s.value)}`}
+                        onClick={onNavigate}
+                        className="block truncate rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors hover:bg-admin-sidebar-hover hover:text-white"
+                      >
+                        {s.label}
+                      </Link>
+                    ))}
+                </div>
               </div>
             )}
           </div>
