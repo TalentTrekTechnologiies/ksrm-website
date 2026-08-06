@@ -52,7 +52,10 @@ export class PageTextService {
 
       // Nothing changed - don't bump the version or write an audit entry for a
       // no-op, or every Save would look like an edit to all of them.
-      if (before && before.value === item.value) {
+      const styleUnchanged =
+        (before?.fontSize ?? null) === (item.fontSize ?? null) &&
+        (before?.color ?? null) === (item.color ?? null);
+      if (before && before.value === item.value && styleUnchanged) {
         saved.push(before);
         continue;
       }
@@ -63,9 +66,15 @@ export class PageTextService {
           key: item.key,
           pageSection: item.pageSection,
           value: item.value,
+          fontSize: item.fontSize ?? null,
+          color: item.color ?? null,
         },
         update: {
           value: item.value,
+          // ?? null, never undefined: an omitted key leaves the column
+          // untouched, so clearing a colour would silently do nothing.
+          fontSize: item.fontSize ?? null,
+          color: item.color ?? null,
           pageSection: item.pageSection,
           version: { increment: 1 },
         },

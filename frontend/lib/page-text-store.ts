@@ -19,17 +19,24 @@ import { onContentChange } from "./content-version-store"
  * including inside a server-rendered page.
  */
 
+/** A slot's override: its wording, plus any per-slot styling set with it. */
+export interface PageTextEntry {
+  value: string
+  fontSize?: string | null
+  color?: string | null
+}
+
 interface SectionState {
-  overrides: Map<string, string>
-  listeners: Set<(m: Map<string, string>) => void>
+  overrides: Map<string, PageTextEntry>
+  listeners: Set<(m: Map<string, PageTextEntry>) => void>
   timer: ReturnType<typeof setInterval> | null
   unsubscribe?: () => void
 }
 
 const sections = new Map<string, SectionState>()
 
-function toMap(rows: PageText[]): Map<string, string> {
-  return new Map(rows.map((r) => [r.key, r.value]))
+function toMap(rows: PageText[]): Map<string, PageTextEntry> {
+  return new Map(rows.map((r) => [r.key, { value: r.value, fontSize: r.fontSize, color: r.color }]))
 }
 
 function load(section: string) {
@@ -51,13 +58,20 @@ function load(section: string) {
     })
 }
 
-function sameMap(a: Map<string, string>, b: Map<string, string>): boolean {
+function sameMap(a: Map<string, PageTextEntry>, b: Map<string, PageTextEntry>): boolean {
   if (a.size !== b.size) return false
-  for (const [k, v] of a) if (b.get(k) !== v) return false
+  for (const [k, v] of a) {
+    const other = b.get(k)
+    // Compare the styling too, or a colour change would poll in and be
+    // discarded as "no change".
+    if (!other || other.value !== v.value) return false
+    if ((other.fontSize ?? null) !== (v.fontSize ?? null)) return false
+    if ((other.color ?? null) !== (v.color ?? null)) return false
+  }
   return true
 }
 
-function subscribe(section: string, fn: (m: Map<string, string>) => void): () => void {
+function subscribe(section: string, fn: (m: Map<string, PageTextEntry>) => void): () => void {
   let state = sections.get(section)
   if (!state) {
     state = { overrides: new Map(), listeners: new Set(), timer: null }
@@ -87,8 +101,8 @@ function subscribe(section: string, fn: (m: Map<string, string>) => void): () =>
 }
 
 /** This section's overrides, kept live. Empty until the first fetch lands. */
-export function usePageTextSection(section: string): Map<string, string> {
-  const [state, setState] = useState<{ section: string; overrides: Map<string, string> }>(() => ({
+export function usePageTextSection(section: string): Map<string, PageTextEntry> {
+  const [state, setState] = useState<{ section: string; overrides: Map<string, PageTextEntry> }>(() => ({
     section,
     overrides: sections.get(section)?.overrides ?? new Map(),
   }))

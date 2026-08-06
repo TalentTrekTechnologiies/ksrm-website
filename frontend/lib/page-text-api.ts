@@ -1,11 +1,20 @@
 import { apiGet, apiPut, apiDelete } from "./api-client";
 
+export interface PageTextStyle {
+  /** e.g. "18px", "1.2rem". Null/absent leaves the page's own size alone. */
+  fontSize?: string | null;
+  /** Any CSS colour. Null/absent leaves the page's own colour alone. */
+  color?: string | null;
+}
+
 export interface PageText {
   id: number;
   /** Namespaced slot key, e.g. "library.about.p1". */
   key: string;
   pageSection: string;
   value: string;
+  fontSize?: string | null;
+  color?: string | null;
   createdAt: string;
   updatedAt: string;
   version: number;
@@ -15,6 +24,8 @@ export interface PageTextItemInput {
   key: string;
   pageSection: string;
   value: string;
+  fontSize?: string | null;
+  color?: string | null;
 }
 
 /** Overrides for one page, or every page when the section is omitted. */

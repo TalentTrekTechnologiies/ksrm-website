@@ -26,7 +26,24 @@ import { usePageTextSection } from "@/lib/page-text-store"
 export function usePageTextValue(section: string, slot: string): string {
   const overrides = usePageTextSection(section)
   const override = overrides.get(slotKey(section, slot))
-  return override !== undefined ? override : defaultText(section, slot)
+  return override !== undefined ? override.value : defaultText(section, slot)
+}
+
+/**
+ * The per-slot appearance an admin has set in Page Content, if any.
+ *
+ * Returns undefined when nothing is set, so the slot renders with the page's
+ * own styling rather than an inline style that merely repeats it - a page
+ * whose text has never been styled produces no extra markup at all.
+ */
+function usePageTextStyle(section: string, slot: string): React.CSSProperties | undefined {
+  const overrides = usePageTextSection(section)
+  const override = overrides.get(slotKey(section, slot))
+  if (!override) return undefined
+  const style: React.CSSProperties = {}
+  if (override.fontSize) style.fontSize = override.fontSize
+  if (override.color) style.color = override.color
+  return Object.keys(style).length ? style : undefined
 }
 
 export default function CmsText({
@@ -40,8 +57,12 @@ export default function CmsText({
   multiline?: boolean
 }) {
   const value = usePageTextValue(section, slot)
+  const style = usePageTextStyle(section, slot)
   if (!value) return null
-  if (multiline) return <span style={{ whiteSpace: "pre-line" }}>{value}</span>
+  if (multiline) return <span style={{ whiteSpace: "pre-line", ...style }}>{value}</span>
+  // Only wrapped in a span when there is something to apply, so unstyled slots
+  // keep rendering as a bare text node and inherit from the page as before.
+  if (style) return <span style={style}>{value}</span>
   return <>{value}</>
 }
 

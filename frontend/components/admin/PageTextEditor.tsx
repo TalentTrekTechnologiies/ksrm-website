@@ -18,12 +18,41 @@ import { PAGE_TEXT, slotKey } from "@/lib/page-text-registry"
  *
  * Shown as the Text tab of Page Content for pages listed in the registry.
  */
+/** Empty string means "not set" - the field is blank in the form. */
+interface SlotStyle {
+  fontSize: string
+  color: string
+}
+
+/**
+ * Sizes offered rather than a free number box: an admin picking from a short
+ * list cannot enter "40px" into a caption and break a layout, and every value
+ * here is one the page designs already use.
+ */
+const FONT_SIZES: { value: string; label: string }[] = [
+  { value: "", label: "Default" },
+  { value: "13px", label: "Small" },
+  { value: "15px", label: "Normal" },
+  { value: "18px", label: "Large" },
+  { value: "22px", label: "Extra large" },
+  { value: "28px", label: "Heading" },
+]
+
 export default function PageTextEditor({ section }: { section: string }) {
   const page = PAGE_TEXT[section]
   const { confirm, notifySaved } = useCmsConfirm()
 
   const [saved, setSaved] = useState<Map<string, string>>(new Map())
   const [draft, setDraft] = useState<Map<string, string>>(new Map())
+  /**
+   * Per-slot appearance, kept in maps of its own beside the wording.
+   *
+   * Separate rather than folded into the value maps: the wording and the
+   * styling are saved together but edited independently, and a slot can have
+   * a colour set while its wording is still the page's own.
+   */
+  const [savedStyle, setSavedStyle] = useState<Map<string, SlotStyle>>(new Map())
+  const [styleDraft, setStyleDraft] = useState<Map<string, SlotStyle>>(new Map())
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,8 +66,13 @@ export default function PageTextEditor({ section }: { section: string }) {
         const rows = await getPageTextAdmin(section)
         if (cancelled) return
         const map = new Map(rows.map((r) => [r.key, r.value]))
+        const styles = new Map(
+          rows.map((r) => [r.key, { fontSize: r.fontSize ?? "", color: r.color ?? "" }]),
+        )
         setSaved(map)
         setDraft(new Map(map))
+        setSavedStyle(styles)
+        setStyleDraft(new Map(styles))
       } catch (err) {
         if (!cancelled) setError(err instanceof ApiError ? err.message : "Could not load this page's text")
       } finally {
@@ -62,16 +96,32 @@ export default function PageTextEditor({ section }: { section: string }) {
   }
 
   const dirtyKeys = useMemo(() => {
-    const keys: string[] = []
+    const keys = new Set<string>()
     for (const [key, value] of draft) {
-      if ((saved.get(key) ?? null) !== value) keys.push(key)
+      if ((saved.get(key) ?? null) !== value) keys.add(key)
     }
-    return keys
-  }, [draft, saved])
+    // A styling-only change is a change: without this, setting a colour and
+    // pressing Save would do nothing at all.
+    for (const [key, style] of styleDraft) {
+      const before = savedStyle.get(key)
+      if ((before?.fontSize ?? "") !== style.fontSize || (before?.color ?? "") !== style.color) keys.add(key)
+    }
+    return [...keys]
+  }, [draft, saved, styleDraft, savedStyle])
 
   function setValue(slotId: string, value: string) {
     const key = slotKey(section, slotId)
     setDraft((prev) => new Map(prev).set(key, value))
+  }
+
+  function styleOf(slotId: string): SlotStyle {
+    const key = slotKey(section, slotId)
+    return styleDraft.get(key) ?? savedStyle.get(key) ?? { fontSize: "", color: "" }
+  }
+
+  function setStyle(slotId: string, patch: Partial<SlotStyle>) {
+    const key = slotKey(section, slotId)
+    setStyleDraft((prev) => new Map(prev).set(key, { ...styleOf(slotId), ...patch }))
   }
 
   async function handleSave() {
@@ -87,11 +137,31 @@ export default function PageTextEditor({ section }: { section: string }) {
     setSaving(true)
     setError(null)
     try {
-      const items = dirtyKeys.map((key) => ({ key, pageSection: section, value: draft.get(key) ?? "" }))
+      const items = dirtyKeys.map((key) => {
+        const style = styleDraft.get(key) ?? savedStyle.get(key)
+        return {
+          key,
+          pageSection: section,
+          // A slot may be styled while its wording is untouched, so fall back
+          // to whatever is saved rather than blanking it.
+          value: draft.get(key) ?? saved.get(key) ?? "",
+          // Empty means "no styling" and must be sent as null, not "" - an
+          // empty string would be written into the style attribute.
+          fontSize: style?.fontSize?.trim() ? style.fontSize.trim() : null,
+          color: style?.color?.trim() ? style.color.trim() : null,
+        }
+      })
       await savePageText(items)
       setSaved((prev) => {
         const next = new Map(prev)
         for (const item of items) next.set(item.key, item.value)
+        return next
+      })
+      setSavedStyle((prev) => {
+        const next = new Map(prev)
+        for (const item of items) {
+          next.set(item.key, { fontSize: item.fontSize ?? "", color: item.color ?? "" })
+        }
         return next
       })
       notifySaved("Your changes have been saved.")
@@ -222,6 +292,44 @@ export default function PageTextEditor({ section }: { section: string }) {
                     className="w-full rounded-lg border border-admin-border bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-admin-primary focus:outline-none"
                   />
                 )}
+
+                {/* Appearance for this one slot. Both blank by default, so a
+                    slot nobody styles renders exactly as the page designed it
+                    and produces no extra markup. */}
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <label className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                    Size
+                    <select
+                      value={styleOf(slot.id).fontSize}
+                      onChange={(e) => setStyle(slot.id, { fontSize: e.target.value })}
+                      className="rounded-md border border-admin-border bg-white px-2 py-1 text-[11px] text-slate-700 focus:border-admin-primary focus:outline-none"
+                    >
+                      {FONT_SIZES.map((f) => (
+                        <option key={f.value} value={f.value}>{f.label}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                    Colour
+                    <input
+                      type="color"
+                      value={styleOf(slot.id).color || "#333333"}
+                      onChange={(e) => setStyle(slot.id, { color: e.target.value })}
+                      className="h-6 w-8 cursor-pointer rounded border border-admin-border bg-white p-0.5"
+                    />
+                  </label>
+
+                  {(styleOf(slot.id).fontSize || styleOf(slot.id).color) && (
+                    <button
+                      type="button"
+                      onClick={() => setStyle(slot.id, { fontSize: "", color: "" })}
+                      className="text-[11px] font-semibold text-admin-primary hover:underline"
+                    >
+                      Clear formatting
+                    </button>
+                  )}
+                </div>
 
                 {slot.help && <p className="mt-1 text-[11px] text-slate-500">{slot.help}</p>}
               </div>

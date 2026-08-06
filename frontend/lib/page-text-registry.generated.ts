@@ -5915,9 +5915,9 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
           },
           {
             id: "committee.7.name",
-            label: "8. name - Dr. M. S. Priyadarshini",
+            label: "8. name - Dr. A. Sudhakar",
             kind: "line",
-            default: "Dr. M. S. Priyadarshini",
+            default: "Dr. A. Sudhakar",
           },
           {
             id: "committee.8.dept",

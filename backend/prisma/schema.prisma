@@ -2011,6 +2011,18 @@ model PageText {
   /// a page fetches its overrides by section in one request.
   pageSection String
   value       String
+  /// Optional per-slot appearance, set alongside the wording in Page Content.
+  ///
+  /// Deliberately per slot rather than a site-wide setting: the request was to
+  /// style one piece of text on one page, which a global control cannot do
+  /// without changing every other page too.
+  ///
+  /// Both nullable, and null means "leave the page's own styling alone" - so
+  /// every existing slot keeps rendering exactly as it does now, and clearing
+  /// a field returns that slot to the design rather than to a default anyone
+  /// has to guess.
+  fontSize    String?
+  color       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
   version     Int      @default(1)
