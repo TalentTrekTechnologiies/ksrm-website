@@ -13,6 +13,8 @@ interface NewsAndEventsState {
   newsVisible: boolean
   news: NewsArticle[]
   events: EventItem[]
+  /** Drives the panel heading, so it never says "Upcoming" over a past event. */
+  eventsAllUpcoming: boolean
 }
 
 async function fetchNewsAndEvents(): Promise<NewsAndEventsState> {
@@ -21,11 +23,24 @@ async function fetchNewsAndEvents(): Promise<NewsAndEventsState> {
     getEventsPublic().catch(() => [] as EventItem[]),
   ])
   const now = Date.now()
-  const upcoming = eventsData
-    .filter((e) => new Date(e.eventDate).getTime() >= now)
-    .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
-  const events = (upcoming.length ? upcoming : eventsData.slice().sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())).slice(0, 6)
-  return { newsVisible: newsResult.visible, news: newsResult.articles, events }
+  const at = (e: EventItem) => new Date(e.eventDate).getTime()
+
+  const upcoming = eventsData.filter((e) => at(e) >= now).sort((a, b) => at(a) - at(b))
+  const past = eventsData.filter((e) => at(e) < now).sort((a, b) => at(b) - at(a))
+
+  // Soonest first, then the most recent that have been and gone.
+  //
+  // Showing only future events starved this box: the college had five events,
+  // two already past, so it rendered three in a well sized for six - short
+  // enough that there was nothing to scroll, while News beside it scrolled
+  // through seven. A college's events page is mostly a record of what it has
+  // held, and a visitor looking at it wants to see that too.
+  const events = [...upcoming, ...past].slice(0, 8)
+
+  // Only claim "Upcoming" when that is all it is showing.
+  const eventsAllUpcoming = events.length > 0 && events.every((e) => at(e) >= now)
+
+  return { newsVisible: newsResult.visible, news: newsResult.articles, events, eventsAllUpcoming }
 }
 
 // Compact date chip parts (e.g. 12 / JUL) shown at the left of each row.
@@ -270,7 +285,7 @@ export default function NewsAndEvents() {
           {showEvents && (
             <div className="ne-box">
               <div className="ne-box-head">
-                <h3 className="ne-box-title">Upcoming Events</h3>
+                <h3 className="ne-box-title">{state.eventsAllUpcoming ? "Upcoming Events" : "Events"}</h3>
                 <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
               </div>
               <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll}>
