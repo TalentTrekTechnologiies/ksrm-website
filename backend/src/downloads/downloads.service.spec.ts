@@ -18,6 +18,10 @@ describe('DownloadsService', () => {
       count: jest.Mock;
       create: jest.Mock;
       update: jest.Mock;
+      // Added when uploads started going to the TOP of the list: the service
+      // takes min(sortOrder) - 1 rather than count(), so a new document is
+      // first rather than buried at the bottom.
+      aggregate: jest.Mock;
     };
     $transaction: jest.Mock;
   };
@@ -32,6 +36,7 @@ describe('DownloadsService', () => {
         findMany: jest.fn(),
         findFirst: jest.fn(),
         count: jest.fn(),
+        aggregate: jest.fn().mockResolvedValue({ _min: { sortOrder: 0 } }),
         create: jest.fn(),
         update: jest.fn(),
       },

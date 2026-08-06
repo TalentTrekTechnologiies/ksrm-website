@@ -855,6 +855,10 @@ model Committee {
   @@unique([type, name, departmentId])
   @@index([deletedAt])
   @@index([departmentId])
+  /// Created by 20260805120000_committee_placement. Declared here so schema
+  /// and migrations agree - otherwise the next `migrate dev` writes a
+  /// migration dropping it.
+  @@index([placement])
 }
 
 model CommitteeMember {
@@ -1910,6 +1914,10 @@ model Media {
   @@index([folderId])
   @@index([category])
   @@index([processingStatus])
+  /// Created by 20260805140000_media_is_private, when a resume upload started
+  /// being marked private so the picker could never surface it. Declared here
+  /// so schema and migrations agree.
+  @@index([isPrivate])
 }
 
 /// One row per (size, format) rendition. Images get up to 12 (6 sizes x

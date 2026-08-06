@@ -17,6 +17,10 @@ jest.mock('fs/promises', () => ({
 describe('CareerApplicationsService', () => {
   let service: CareerApplicationsService;
   let prisma: {
+    // A submitted resume is marked private the moment it is stored, so the
+    // Media Library picker can never surface an applicant's CV. The mock
+    // predates that.
+    media: { update: jest.Mock };
     careerApplication: {
       findFirst: jest.Mock;
       findMany: jest.Mock;
@@ -42,6 +46,7 @@ describe('CareerApplicationsService', () => {
 
   beforeEach(async () => {
     prisma = {
+      media: { update: jest.fn().mockResolvedValue({}) },
       careerApplication: {
         findFirst: jest.fn(),
         findMany: jest.fn(),
