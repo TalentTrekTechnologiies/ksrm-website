@@ -18,6 +18,7 @@ import { getEffectiveDisplaySettings } from "@/lib/department-display-settings-a
 import { getCampusVideosForDepartment, getStatisticsPublic, SiteStatistic, CampusVideo } from "@/lib/homepage-api";
 import { getPublicSiteSettings } from "@/lib/site-settings-api";
 import { useLiveData, DEFAULT_POLL_INTERVAL_MS } from "@/lib/use-live-data";
+import BoardOfStudies from "@/components/departments/BoardOfStudies";
 
 const NAV_ITEMS = [
   { id: "about", label: "About" },
@@ -28,6 +29,9 @@ const NAV_ITEMS = [
   { id: "programmes", label: "Programmes" },
   { id: "labs", label: "Laboratories" },
   { id: "outcomes", label: "Outcomes" },
+  // The section this points at renders only when the department has a Board of
+  // Studies in the CMS. The link is harmless without it: nothing to scroll to.
+  { id: "board-of-studies", label: "Board of Studies" },
 ];
 
 const LEVEL_LABEL: Record<string, string> = { UG: "Undergraduate", PG: "Postgraduate", PHD: "Ph.D.", DIPLOMA: "Diploma" };
@@ -1126,6 +1130,12 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           </div>
         </section>
         )}
+
+        {/* BOARD OF STUDIES - Admin -> Committees, type "Board of Studies",
+            with this department picked. Renders nothing until one exists, so
+            every department has the section available without any of them
+            being forced to show an empty one. */}
+        <BoardOfStudies departmentId={resolvedDepartmentId} />
 
         {/* OUTCOMES: PEOs / PSOs / POs */}
         <section id="outcomes" style={{ padding: "72px 0", background: "#f7f8fa" }}>

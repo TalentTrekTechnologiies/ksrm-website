@@ -32,8 +32,16 @@ export class CommitteesController {
   findAllPublic(
     @Query('type') type?: CommitteeType,
     @Query('placement') placement?: CommitteePlacement,
+    // Not ParseIntPipe: the param is optional, and that pipe rejects a missing
+    // value rather than passing it through.
+    @Query('departmentId') departmentId?: string,
   ) {
-    return this.committeesService.findAllPublic(type, placement);
+    const deptId = departmentId ? Number(departmentId) : undefined;
+    return this.committeesService.findAllPublic(
+      type,
+      placement,
+      Number.isFinite(deptId) ? deptId : undefined,
+    );
   }
 
   @Get('admin')

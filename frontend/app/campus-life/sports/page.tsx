@@ -1,14 +1,22 @@
 import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
+/**
+ * `slot` is the card's permanent id in Page Content, not its position here.
+ *
+ * The cards are edited as facilities.N.title, and N used to be the array
+ * index, so removing one handed every card below it the wording of its
+ * neighbour. Pinned ids mean a facility can be removed or reordered freely.
+ * 7, the swimming pool, was removed at the college's request - the college has
+ * no pool - and its number stays retired.
+ */
 const facilities = [
-  { title: "Basketball Court", desc: "Full-size international basketball court with professional lighting and seating.", type: "Outdoor", cap: "500" },
-  { title: "Tennis Courts", desc: "Four all-weather tennis courts with professional surface and lighting.", type: "Outdoor", cap: "200" },
-  { title: "Football Ground", desc: "Full-size football pitch with natural grass, lighting, and spectator stand.", type: "Outdoor", cap: "1,000+" },
-  { title: "Cricket Ground", desc: "International standard cricket ground with practice nets and pavilion.", type: "Outdoor", cap: "2,000+" },
-  { title: "Badminton Hall", desc: "Air-conditioned badminton courts with professional flooring and lighting.", type: "Indoor", cap: "300" },
-  { title: "Gymnasium", desc: "State-of-the-art gymnasium with cardio, strength training, and CrossFit equipment.", type: "Indoor", cap: "150" },
-  { title: "Table Tennis Hall", desc: "Modern table tennis facility with 8 professional tables.", type: "Indoor", cap: "100" },
-  { title: "Swimming Pool", desc: "Olympic-size swimming pool with dedicated coaching staff.", type: "Outdoor", cap: "400" },
+  { slot: 0, title: "Basketball Court", desc: "Full-size international basketball court with professional lighting and seating.", type: "Outdoor", cap: "500" },
+  { slot: 1, title: "Tennis Courts", desc: "Four all-weather tennis courts with professional surface and lighting.", type: "Outdoor", cap: "200" },
+  { slot: 2, title: "Football Ground", desc: "Full-size football pitch with natural grass, lighting, and spectator stand.", type: "Outdoor", cap: "1,000+" },
+  { slot: 3, title: "Cricket Ground", desc: "International standard cricket ground with practice nets and pavilion.", type: "Outdoor", cap: "2,000+" },
+  { slot: 4, title: "Badminton Hall", desc: "Air-conditioned badminton courts with professional flooring and lighting.", type: "Indoor", cap: "300" },
+  { slot: 5, title: "Gymnasium", desc: "State-of-the-art gymnasium with cardio, strength training, and CrossFit equipment.", type: "Indoor", cap: "150" },
+  { slot: 6, title: "Table Tennis Hall", desc: "Modern table tennis facility with 8 professional tables.", type: "Indoor", cap: "100" },
 ];
 
 type AchievementBadge = "state" | "national" | "university";
@@ -139,11 +147,11 @@ export default function SportsPage() {
             <button className="spo-filter-btn">Outdoor</button>
           </div>
           <div className="spo-facility-grid">
-            {facilities.map((f, _i) => (
-              <div className="spo-facility-card" key={f.title}>
+            {facilities.map((f) => (
+              <div className="spo-facility-card" key={f.slot}>
                 <div className="spo-facility-icon">⚡</div>
-                <h3><CmsText section="sports" slot={`facilities.${_i}.title`} /></h3>
-                <p><CmsText section="sports" slot={`facilities.${_i}.desc`} /></p>
+                <h3><CmsText section="sports" slot={`facilities.${f.slot}.title`} /></h3>
+                <p><CmsText section="sports" slot={`facilities.${f.slot}.desc`} /></p>
                 <div className="spo-facility-meta"><span>{f.type}</span><span>Capacity: {f.cap}</span></div>
               </div>
             ))}

@@ -22,7 +22,6 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "iqac.minutes", label: "IQAC → Minutes & Agenda" },
   { value: "iqac.aqar", label: "IQAC → AQAR Reports" },
   { value: "iqac.survey", label: "IQAC → Student Survey" },
-  { value: "iqac.apex", label: "IQAC → Apex Bodies" },
   { value: "iqac", label: "IQAC → Other Documents" },
   { value: "naac", label: "NAAC" },
   { value: "alumni", label: "Alumni" },

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import CmsText from "@/components/CmsText";
+import CmsText, { usePageTextValue } from "@/components/CmsText";
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api";
 import { getTransportRoutesPublic, TransportRoute } from "@/lib/transport-routes-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -24,6 +24,34 @@ const routes = [
   { no: "R7", from: "Chintachintala", via: "KSRMCE Gate", dep: "7:45 AM", ret: "5:00 PM", fee: "₹2,000/month" },
   { no: "R8", from: "Palamaner", via: "Madanapalle → Gangavalli → KSRMCE Gate", dep: "6:15 AM", ret: "4:45 PM", fee: "₹4,200/month" },
 ];
+
+/**
+ * One row of the built-in route list.
+ *
+ * A row whose "From" has been blanked in Page Content is dropped rather than
+ * printed empty. The college publishes six routes and had cleared the last two
+ * that way, which left two rows reading "R7"/"R8" against three empty cells -
+ * emptying a field was the only way to remove a route, so it has to mean that.
+ */
+function FallbackRouteRow({
+  route,
+  index,
+}: {
+  route: { no: string; from: string; via: string; dep: string; ret: string };
+  index: number;
+}) {
+  const from = usePageTextValue("transport", `routes.${index}.from`).trim();
+  if (!from) return null;
+  return (
+    <tr>
+      <td className="trn-route-no">{route.no}</td>
+      <td>{from}</td>
+      <td className="trn-via"><CmsText section="transport" slot={`routes.${index}.via`} /></td>
+      <td>{route.dep}</td>
+      <td>{route.ret}</td>
+    </tr>
+  );
+}
 
 const rules = [
   "Valid bus pass is mandatory for boarding. Display it clearly to the conductor.",
@@ -166,7 +194,11 @@ export default function TransportPage() {
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="transport" slot="bus-routes" /></h2>
           <div className="trn-table-wrapper">
             <table className="trn-table">
-              <thead><tr><th>Route</th><th>From</th><th>Via (Stops)</th><th>Departure</th><th>Return</th><th>Fee</th></tr></thead>
+              {/* No Fee column, at the college's request. The fee is still
+                  held per route in Admin -> Transport Routes - it is simply
+                  not published here, so removing the column loses no data and
+                  putting it back is one cell. */}
+              <thead><tr><th>Route</th><th>From</th><th>Via (Stops)</th><th>Departure</th><th>Return</th></tr></thead>
               <tbody>
                 {cmsRoutes.length > 0
                   ? cmsRoutes.map((r) => (
@@ -176,21 +208,11 @@ export default function TransportPage() {
                         <td className="trn-via">{r.via || "—"}</td>
                         <td>{r.departTime || "—"}</td>
                         <td>{r.returnTime || "—"}</td>
-                        <td style={{ fontWeight: 700, color: "#2B3490" }}>{r.fee || "—"}</td>
                       </tr>
                     ))
                   : /* Only until routes are added in the CMS, or if the API is
                        unreachable - the table is never empty. */
-                    routes.map((r, _i) => (
-                      <tr key={r.no}>
-                        <td className="trn-route-no">{r.no}</td>
-                        <td><CmsText section="transport" slot={`routes.${_i}.from`} /></td>
-                        <td className="trn-via"><CmsText section="transport" slot={`routes.${_i}.via`} /></td>
-                        <td>{r.dep}</td>
-                        <td>{r.ret}</td>
-                        <td style={{ fontWeight: 700, color: "#2B3490" }}><CmsText section="transport" slot={`routes.${_i}.fee`} /></td>
-                      </tr>
-                    ))}
+                    routes.map((r, _i) => <FallbackRouteRow key={r.no} route={r} index={_i} />)}
               </tbody>
             </table>
           </div>

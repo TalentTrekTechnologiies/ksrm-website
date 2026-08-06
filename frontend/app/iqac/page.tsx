@@ -3,7 +3,6 @@
 import { mediaFile } from "@/lib/api-base";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
-import ApexBodies from "@/components/iqac/ApexBodies";
 import { getCommitteesPublic, Committee } from "@/lib/committees-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
@@ -119,14 +118,22 @@ function FeedbackFormLink({ index }: { index: number }) {
 }
 
 
+/**
+ * `slot` is the tab's permanent id in Page Content, not its position here.
+ *
+ * These labels are edited as tabs.N.label, and N used to be the array index.
+ * Removing the Apex Bodies tab therefore slid Contact up into Apex Bodies'
+ * wording - the tab row still read "Apex Bodies" with the section gone. Pinned
+ * ids mean a tab can be removed or reordered without disturbing the rest; 5,
+ * which was Apex Bodies, stays retired.
+ */
 const tabs = [
-  { label: "📋 About IQAC", id: "about" },
-  { label: "👥 Composition", id: "composition" },
-  { label: "📅 Minutes & Agenda", id: "minutes" },
-  { label: "📊 AQAR Reports", id: "aqar" },
-  { label: "📝 Student Survey", id: "survey" },
-  { label: "🏛️ Apex Bodies", id: "apex" },
-  { label: "📞 Contact", id: "contact" },
+  { slot: 0, label: "📋 About IQAC", id: "about" },
+  { slot: 1, label: "👥 Composition", id: "composition" },
+  { slot: 2, label: "📅 Minutes & Agenda", id: "minutes" },
+  { slot: 3, label: "📊 AQAR Reports", id: "aqar" },
+  { slot: 4, label: "📝 Student Survey", id: "survey" },
+  { slot: 6, label: "📞 Contact", id: "contact" },
 ];
 
 export default function IQACPage() {
@@ -181,14 +188,6 @@ export default function IQACPage() {
           background: #2B3490; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;
           font-size: 15px; font-weight: 600; display: inline-block;
         }
-        .iqac-apex-card {
-          background: white; border-radius: 12px; padding: 40px; text-align: center; border: 1px solid #e5e7eb;
-          text-decoration: none;
-        }
-        .iqac-apex-btn {
-          background: #2B3490; color: #D4A500; padding: 12px 28px; border-radius: 6px; text-decoration: none;
-          font-weight: 700; font-size: 15px; display: inline-block;
-        }
         .iqac-contact-link {
           display: flex; gap: 12px; padding: 10px 16px; background: rgba(255,230,25,0.1); border-radius: 4px;
           color: #2B3490; font-weight: 600; font-size: 15px; text-decoration: none; margin-bottom: 8px;
@@ -214,8 +213,8 @@ export default function IQACPage() {
       <div style={{ position: "sticky", top: 0, zIndex: 100, background: "white", boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: "16px 0", overflowX: "auto" }}>
         <div className="responsive-container">
           <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
-            {tabs.map((t, _i) => (
-              <button key={t.id} className="iqac-tab-btn" onClick={() => scrollTo(t.id)}><CmsText section="iqac" slot={`tabs.${_i}.label`} /></button>
+            {tabs.map((t) => (
+              <button key={t.id} className="iqac-tab-btn" onClick={() => scrollTo(t.id)}><CmsText section="iqac" slot={`tabs.${t.slot}.label`} /></button>
             ))}
           </div>
         </div>
@@ -379,17 +378,11 @@ export default function IQACPage() {
           <PageResources section="iqac.survey" embedded />
       </section>
 
-      {/* APEX */}
-      <section id="apex" style={{ padding: "80px 0", background: "#f4f3ef" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="apex-bodies" /></h2>
-          {/* Members come from Admin -> Committees; a body with no committee
-              record yet keeps its old-site link until one is added. */}
-          <ApexBodies />
-          {/* Anything uploaded to "IQAC -> Apex Bodies" in Documents. */}
-          <PageResources section="iqac.apex" embedded />
-        </div>
-      </section>
+      {/* The Governing Body, Academic Council and Finance Committee used to sit
+          here behind an "Apex Bodies" tab. They are the college's governance,
+          not its quality assurance, and now live on About - which is where the
+          menu had always pointed. The "IQAC -> Apex Bodies" upload target is
+          gone with the section; nothing had been filed under it. */}
 
       {/* CONTACT */}
       <section id="contact" style={{ padding: "80px 0", background: "white" }}>

@@ -1,5 +1,6 @@
 ﻿import Link from "next/link";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
+import AntiRaggingContacts from "@/components/campus/AntiRaggingContacts";
 import PageResources from "@/components/PageResources";
 import AntiRaggingCommittee from "@/components/campus-life/AntiRaggingCommittee";
 import CmsText from "@/components/CmsText";
@@ -10,14 +11,6 @@ export const metadata = {
     "K.S.R.M. College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
 };
 
-const helplines = [
-  { label: "National Helpline", number: "1800-5500-22" },
-  { label: "College Helpline", number: "+91-8554-233333" },
-  {
-    label: "Anti-Ragging Committee",
-    number: "+91-8554-233333 (Ext: 380)",
-  },
-];
 
 const whatConstitutes = [
   "Any conduct by which a student subjects another student to torture, physical abuse, or psychological harassment",
@@ -176,53 +169,7 @@ export default function AntiRaggingPage() {
               margin: "0 0 40px",
             }}
           ><CmsText section="anti-ragging" slot="helpline-numbers" /></h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: 20,
-            }}
-          >
-            {helplines.map((h) => (
-              <div
-                key={h.label}
-                style={{
-                  background: "#e74c3c",
-                  color: "#fff",
-                  borderRadius: 12,
-                  padding: 28,
-                  textAlign: "center",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                }}
-              >
-                <div style={{ fontSize: 28 }}>📞</div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-rajdhani), sans-serif",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                    opacity: 0.9,
-                  }}
-                >
-                  {h.label}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-rajdhani), sans-serif",
-                    fontSize: 24,
-                    fontWeight: 700,
-                    margin: 0,
-                  }}
-                >
-                  {h.number}
-                </div>
-              </div>
-            ))}
-          </div>
+          <AntiRaggingContacts />
         </div>
       </section>
 

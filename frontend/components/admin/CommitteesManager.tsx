@@ -15,6 +15,7 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import { getDepartmentsPublic, Department } from "@/lib/departments-api"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getCommitteesAdmin,
@@ -39,10 +40,19 @@ interface FormState {
   description: string
   /** "" means not shown on any page; the select's blank option. */
   placement: CommitteePlacement | ""
+  /** "" means institution-wide - not a particular department's committee. */
+  departmentId: string
   isActive: boolean
 }
 
-const emptyForm: FormState = { name: "", type: "OTHER", description: "", placement: "", isActive: true }
+const emptyForm: FormState = {
+  name: "",
+  type: "OTHER",
+  description: "",
+  placement: "",
+  departmentId: "",
+  isActive: true,
+}
 
 /**
  * Where a committee appears, when its Type has no section of its own.
@@ -71,6 +81,9 @@ const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [
   { value: "GOVERNING_BODY", label: "Governing Body" },
   // Renders as the IQAC page's Composition table.
   { value: "IQAC", label: "IQAC Composition" },
+  // Renders on the chosen department's own page. One per department, so the
+  // Department field below is required for this type and ignored for the rest.
+  { value: "BOARD_OF_STUDIES", label: "Board of Studies (department)" },
   { value: "OTHER", label: "Other" },
 ]
 
@@ -102,6 +115,16 @@ function CommitteesManagerInner() {
   // one. An id rather than a copy, for the same reason as managingMembersId.
   const [editingMemberId, setEditingMemberId] = useState<number | null>(null)
   const [reordering, setReordering] = useState(false)
+  // For the Department picker. Loaded once; a failure leaves the list empty,
+  // which shows the picker with only "Not a department committee" rather than
+  // blocking the whole screen over a field most committees do not use.
+  const [departments, setDepartments] = useState<Department[]>([])
+
+  useEffect(() => {
+    getDepartmentsPublic()
+      .then((d) => setDepartments(d.filter((x) => x.isActive)))
+      .catch(() => setDepartments([]))
+  }, [])
 
   const managingMembersOf = useMemo(
     () => items.find((c) => c.id === managingMembersId) ?? null,
@@ -160,6 +183,7 @@ function CommitteesManagerInner() {
       type: item.type,
       description: item.description ?? "",
       placement: item.placement ?? "",
+      departmentId: item.departmentId === null ? "" : String(item.departmentId),
       isActive: item.isActive,
     })
   }
@@ -181,6 +205,9 @@ function CommitteesManagerInner() {
         // null, never undefined: an omitted key leaves the column untouched,
         // so "Not shown on any page" would silently fail to clear it.
         placement: form.placement === "" ? null : form.placement,
+        // Same null-not-undefined rule as placement: an omitted key leaves the
+        // column as it was, so clearing the department would never take.
+        departmentId: form.departmentId === "" ? null : Number(form.departmentId),
         isActive: form.isActive,
       }
       if (editing) {
@@ -356,11 +383,42 @@ function CommitteesManagerInner() {
             section and appear there automatically. Use this for any other committee — an Internal Complaint
             Committee, an SC/ST Cell — to choose which page lists it.
           </p>
+
+          {/* Only for Board of Studies. Shown for that type alone rather than
+              always: every other committee is the institution's, and an extra
+              always-visible field invites someone to set it by accident. */}
+          {form.type === "BOARD_OF_STUDIES" && (
+            <>
+              <SelectField
+                label="Department"
+                value={form.departmentId}
+                onChange={(v) => setForm({ ...form, departmentId: v })}
+                options={[
+                  { value: "", label: "Choose a department…" },
+                  ...departments.map((d) => ({ value: String(d.id), label: d.name })),
+                ]}
+                required
+              />
+              <p className="-mt-2 text-xs text-slate-500">
+                The roster appears in the Board of Studies section of this department&rsquo;s page. Each
+                department has its own, so they can all simply be called &ldquo;Board of Studies&rdquo;.
+              </p>
+            </>
+          )}
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={2} />
           <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
           <FormActions>
             <SecondaryButton onClick={cancelForm}>Cancel</SecondaryButton>
-            <PrimaryButton onClick={handleSave} disabled={saving || !form.name}>
+            <PrimaryButton
+              onClick={handleSave}
+              disabled={
+                saving ||
+                !form.name ||
+                // A Board of Studies with no department belongs to no page and
+                // would render nowhere at all.
+                (form.type === "BOARD_OF_STUDIES" && !form.departmentId)
+              }
+            >
               {saving ? "Saving..." : "Save"}
             </PrimaryButton>
           </FormActions>
@@ -460,6 +518,10 @@ function CommitteesManagerInner() {
                 {" · "}
                 {c.members.length} {c.members.length === 1 ? "member" : "members"}
                 {c.placement && ` · on ${PLACEMENT_OPTIONS.find((p) => p.value === c.placement)?.label ?? c.placement}`}
+                {/* Which department, so nine rows all called "Board of
+                    Studies" are told apart at a glance. */}
+                {c.departmentId !== null &&
+                  ` · ${departments.find((d) => d.id === c.departmentId)?.name ?? `department ${c.departmentId}`}`}
               </p>
             </div>
             {!c.deletedAt && (

@@ -25,13 +25,18 @@ export class CommitteesService {
   private static readonly MEMBER_ORDER: Prisma.CommitteeMemberOrderByWithRelationInput[] =
     [{ sortOrder: 'asc' }, { id: 'asc' }];
 
-  async findAllPublic(type?: CommitteeType, placement?: CommitteePlacement) {
+  async findAllPublic(
+    type?: CommitteeType,
+    placement?: CommitteePlacement,
+    departmentId?: number,
+  ) {
     return this.prisma.committee.findMany({
       where: {
         isActive: true,
         deletedAt: null,
         ...(type && { type }),
         ...(placement && { placement }),
+        ...(departmentId !== undefined && { departmentId }),
       },
       include: {
         members: {
@@ -157,7 +162,37 @@ export class CommitteesService {
     return record;
   }
 
+  /**
+   * The duplicate check the database can no longer make on its own.
+   *
+   * The unique index is (type, name, departmentId) so that every department
+   * can have a committee called "Board of Studies". Postgres treats each NULL
+   * departmentId as distinct, which means the index stopped blocking two
+   * identically named institution-wide committees - the guarantee that held
+   * before Boards of Studies existed. This restores it, and says which one
+   * clashed rather than surfacing a constraint code.
+   */
+  private async assertNameFree(
+    type: CommitteeType,
+    name: string,
+    departmentId: number | null,
+    excludeId?: number,
+  ) {
+    const clash = await this.prisma.committee.findFirst({
+      where: { type, name, departmentId, ...(excludeId && { id: { not: excludeId } }) },
+      select: { id: true, name: true, deletedAt: true },
+    });
+    if (!clash) return;
+    throw new ConflictException(
+      clash.deletedAt
+        ? `A deleted committee named '${name}' already exists. Restore it from Recently deleted, or use a different name.`
+        : `A committee named '${name}' already exists for this type.`,
+    );
+  }
+
   async create(dto: CreateCommitteeDto, admin: RequestAdmin, requestId?: string) {
+    await this.assertNameFree(dto.type, dto.name, dto.departmentId ?? null);
+
     // A new committee goes to the bottom of the list, not to position 0 where
     // the column default would tie it with whatever already sits there.
     const last = await this.prisma.committee.findFirst({
@@ -208,6 +243,18 @@ export class CommitteesService {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Committee ${id}`);
+
+    // Same check as create, against what the row will look like after this
+    // edit - moving a committee to another department can collide just as a
+    // rename can.
+    if (rest.name !== undefined || rest.type !== undefined || rest.departmentId !== undefined) {
+      await this.assertNameFree(
+        rest.type ?? existing.type,
+        rest.name ?? existing.name,
+        rest.departmentId !== undefined ? (rest.departmentId ?? null) : existing.departmentId,
+        id,
+      );
+    }
 
     // Renaming onto a name a deleted committee still holds trips the same
     // constraint as create, so it gets the same explanation rather than a 500.

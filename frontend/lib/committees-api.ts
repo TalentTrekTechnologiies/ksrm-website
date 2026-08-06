@@ -1,6 +1,13 @@
 import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
 
-export type CommitteeType = "ANTI_RAGGING" | "GRIEVANCE_REDRESSAL" | "GOVERNING_BODY" | "IQAC" | "OTHER";
+export type CommitteeType =
+  | "ANTI_RAGGING"
+  | "GRIEVANCE_REDRESSAL"
+  | "GOVERNING_BODY"
+  | "IQAC"
+  /** A department's Board of Studies. Which department is `departmentId`. */
+  | "BOARD_OF_STUDIES"
+  | "OTHER";
 
 /**
  * Which public page lists a committee, chosen in the CMS.
@@ -33,6 +40,12 @@ export interface Committee {
   description: string | null;
   sortOrder: number;
   placement: CommitteePlacement | null;
+  /**
+   * The department this committee belongs to, for a committee that is a
+   * department's own rather than the institution's. null for every committee
+   * that is institution-wide, which is all of them except Boards of Studies.
+   */
+  departmentId: number | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -47,6 +60,8 @@ export interface CommitteeInput {
   type: CommitteeType;
   description?: string | null;
   placement?: CommitteePlacement | null;
+  /** null clears it - the committee becomes institution-wide again. */
+  departmentId?: number | null;
   isActive?: boolean;
 }
 
@@ -62,6 +77,20 @@ export interface CommitteeMemberInput {
 export function getCommitteesPublic(type?: CommitteeType): Promise<Committee[]> {
   const query = type ? `?type=${type}` : "";
   return apiGet<Committee[]>(`/committees${query}`);
+}
+
+/**
+ * One department's committees - its Board of Studies, in practice.
+ *
+ * Filtered by type as well as department so a department page cannot be
+ * emptied by someone renaming the committee in the CMS.
+ */
+export function getCommitteesByDepartment(
+  departmentId: number,
+  type?: CommitteeType,
+): Promise<Committee[]> {
+  const query = type ? `&type=${type}` : "";
+  return apiGet<Committee[]>(`/committees?departmentId=${departmentId}${query}`);
 }
 
 /** Every committee the CMS has pointed at one page, in drag order. */

@@ -337,6 +337,45 @@ export default function GrievanceRedressalPage() {
         </div>
       </section>
 
+      {/* Ombudsperson. The office was reachable only from the About menu, which
+          is not where a student with an unresolved complaint looks - it is the
+          step after this committee, so it is signposted from here. The page it
+          links to is unchanged. */}
+      <section id="ombudsperson" style={{ padding: "0 0 72px", background: "#ffffff" }}>
+        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
+          <Link
+            href="/about/ombudsman"
+            style={{
+              display: "block",
+              border: "2px solid #D4A500",
+              background: "#fffdf2",
+              borderRadius: 12,
+              padding: "28px 32px",
+              textDecoration: "none",
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: "var(--font-rajdhani), sans-serif",
+                fontSize: 22,
+                fontWeight: 800,
+                color: "#2B3490",
+                margin: "0 0 8px",
+              }}
+            >
+              Ombudsperson
+            </h3>
+            <p style={{ fontSize: 15, color: "#555", lineHeight: 1.7, margin: "0 0 10px", maxWidth: 900 }}>
+              A student whose grievance is not settled by the committee above may take it to the
+              Ombudsperson appointed under the UGC regulations.
+            </p>
+            <span style={{ color: "#2B3490", fontWeight: 700, fontSize: 14 }}>
+              Contact the Ombudsperson →
+            </span>
+          </Link>
+        </div>
+      </section>
+
       {/* Contact */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>

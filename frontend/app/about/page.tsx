@@ -2,6 +2,7 @@
 
 import { mediaFile, resolveFileUrl } from "@/lib/api-base";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
+import NamedCommittees from "@/components/committees/NamedCommittees";
 import Link from "next/link"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -368,6 +369,11 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* ACADEMIC COUNCIL and FINANCE COMMITTEE — moved here from the IQAC
+          page, where they sat behind an "Apex Bodies" tab. Both are ordinary
+          CMS committees (Admin -> Committees), matched by name. */}
+      <NamedCommittees names={["Academic Council", "Finance Committee"]} background="#F5EFE4" />
 
       {/* BOARD OF STUDIES */}
       <section className="k-section k-docs" id="jbos">

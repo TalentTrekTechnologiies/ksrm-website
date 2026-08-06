@@ -31,15 +31,26 @@ const mba = [
   { branch: "Master of Business Administration", fee: "₹2,50,000", admission: "₹10,000", notes: "Per annum for 2 years. Includes placement assistance." },
 ];
 
+/**
+ * `slot` is the card's own permanent id, not its position in this list.
+ *
+ * These cards are edited in Admin -> Page Content as scholarships.N.title, and
+ * the ids used to be array positions. Removing a card then shifted every card
+ * below it up one, quietly handing an admin's edit to the wrong scholarship.
+ * With the id pinned here, a card can be removed or reordered freely and the
+ * remaining ones keep their own wording. A new card takes the next unused
+ * number - never a gap left by a removed one.
+ *
+ * 4 (NRI/Foreign Student) and 7 (Parent-Teacher Association Assistance) were
+ * removed at the college's request; their numbers stay retired.
+ */
 const scholarships = [
-  { title: "Merit-based Scholarships", desc: "Scholarships up to 50% of annual fee for students with exceptional academic performance in entrance exams and board examinations." },
-  { title: "Management Quota Scholarships", desc: "Reduced fee structure and partial scholarships available for management quota students as per college policies." },
-  { title: "SC/ST/OBC Scholarships", desc: "As per government directives, eligible students from SC/ST/OBC categories receive fee concessions and scholarships." },
-  { title: "Sports Scholarships", desc: "Merit-based fee concessions for students selected to college sports teams and tournaments." },
-  { title: "NRI/Foreign Student Scholarships", desc: "Special fee structure and scholarship opportunities available for foreign students and NRI applicants." },
-  { title: "Economically Weaker Section (EWS)", desc: "Fee concessions up to 100% for students from economically weaker sections as per government norms." },
-  { title: "Government Scholarships", desc: "Students are encouraged to apply for state and central government scholarships for which they are eligible." },
-  { title: "Parent-Teacher Association Assistance", desc: "The college PTA provides additional financial assistance to deserving students on need basis." },
+  { slot: 0, title: "Merit-based Scholarships", desc: "Scholarships up to 50% of annual fee for students with exceptional academic performance in entrance exams and board examinations." },
+  { slot: 1, title: "Management Quota Scholarships", desc: "Reduced fee structure and partial scholarships available for management quota students as per college policies." },
+  { slot: 2, title: "SC/ST/OBC Scholarships", desc: "As per government directives, eligible students from SC/ST/OBC categories receive fee concessions and scholarships." },
+  { slot: 3, title: "Sports Scholarships", desc: "Merit-based fee concessions for students selected to college sports teams and tournaments." },
+  { slot: 5, title: "Economically Weaker Section (EWS)", desc: "Fee concessions up to 100% for students from economically weaker sections as per government norms." },
+  { slot: 6, title: "Government Scholarships", desc: "Students are encouraged to apply for state and central government scholarships for which they are eligible." },
 ];
 
 function AlertIcon() {
@@ -316,11 +327,11 @@ export default function FeeStructurePage() {
                 </p>
                 <span style={{ color: "#2B3490", fontWeight: 700, fontSize: 14 }}>Read more and register →</span>
               </Link>
-              {scholarships.map((s, _i) => (
-                <div className="fee-scholarship-card" key={s.title}>
+              {scholarships.map((s) => (
+                <div className="fee-scholarship-card" key={s.slot}>
                   <div className="fee-scholarship-icon"><AwardIcon /></div>
-                  <h3><CmsText section="academics.fee-structure" slot={`scholarships.${_i}.title`} /></h3>
-                  <p><CmsText section="academics.fee-structure" slot={`scholarships.${_i}.desc`} /></p>
+                  <h3><CmsText section="academics.fee-structure" slot={`scholarships.${s.slot}.title`} /></h3>
+                  <p><CmsText section="academics.fee-structure" slot={`scholarships.${s.slot}.desc`} /></p>
                 </div>
               ))}
             </div>

@@ -88,6 +88,10 @@ enum CommitteeType {
   /// shape as any other committee, so it is maintained in the same screen
   /// rather than being a hardcoded table only a developer can change.
   IQAC
+  /// A department's Board of Studies. Selected by type on the department page,
+  /// so renaming the committee in the CMS cannot empty that section; which
+  /// department it belongs to is Committee.departmentId.
+  BOARD_OF_STUDIES
   OTHER
 }
 
@@ -659,6 +663,7 @@ model Department {
   siteStatistics  SiteStatistic[]         @relation("SiteStatistic_Department")
   contactChannels ContactChannel[]        @relation("ContactChannel_Department")
   displaySettings DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_Department")
+  committees      Committee[]                @relation("Committee_Department")
 
   // Announcement Engine.
   announcementPlacements AnnouncementPlacement[] @relation("AnnouncementPlacement_Department")
@@ -821,6 +826,11 @@ model Committee {
   sortOrder   Int           @default(0)
   /// Which public page lists this committee. See CommitteePlacement.
   placement   CommitteePlacement?
+  /// The department this committee belongs to, for committees that are a
+  /// department's own rather than the institution's - a Board of Studies is
+  /// one per department. Null for institution-wide committees, which is every
+  /// committee that existed before this column.
+  departmentId Int?
   isActive    Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -829,12 +839,19 @@ model Committee {
   deletedBy Int?
   version   Int       @default(1)
 
-  deletedByAdmin Admin? @relation("Committee_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?      @relation("Committee_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  department     Department? @relation("Committee_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
   members CommitteeMember[] @relation("CommitteeMember_Committee")
 
-  @@unique([type, name])
+  /// Scoped by department so every department can have a committee simply
+  /// called "Board of Studies". Postgres treats each NULL departmentId as
+  /// distinct, so this alone would stop blocking duplicate institution-wide
+  /// committees - CommitteesService re-checks that case explicitly before
+  /// writing, which also gives a better message than a raw constraint error.
+  @@unique([type, name, departmentId])
   @@index([deletedAt])
+  @@index([departmentId])
 }
 
 model CommitteeMember {

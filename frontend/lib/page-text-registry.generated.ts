@@ -757,7 +757,7 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "scholarships (8 items)",
+        label: "scholarships (6 items)",
         slots: [
           {
             id: "scholarships.0.desc",
@@ -808,52 +808,28 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "Sports Scholarships",
           },
           {
-            id: "scholarships.4.desc",
-            label: "5. desc - Special fee structure and scholarship opport...",
-            kind: "paragraph",
-            default: "Special fee structure and scholarship opportunities available for foreign students and NRI applicants.",
-          },
-          {
-            id: "scholarships.4.title",
-            label: "5. title - NRI/Foreign Student Scholarships",
-            kind: "line",
-            default: "NRI/Foreign Student Scholarships",
-          },
-          {
             id: "scholarships.5.desc",
-            label: "6. desc - Fee concessions up to 100% for students from...",
+            label: "5. desc - Fee concessions up to 100% for students from...",
             kind: "paragraph",
             default: "Fee concessions up to 100% for students from economically weaker sections as per government norms.",
           },
           {
             id: "scholarships.5.title",
-            label: "6. title - Economically Weaker Section (EWS)",
+            label: "5. title - Economically Weaker Section (EWS)",
             kind: "line",
             default: "Economically Weaker Section (EWS)",
           },
           {
             id: "scholarships.6.desc",
-            label: "7. desc - Students are encouraged to apply for state a...",
+            label: "6. desc - Students are encouraged to apply for state a...",
             kind: "paragraph",
             default: "Students are encouraged to apply for state and central government scholarships for which they are eligible.",
           },
           {
             id: "scholarships.6.title",
-            label: "7. title - Government Scholarships",
+            label: "6. title - Government Scholarships",
             kind: "line",
             default: "Government Scholarships",
-          },
-          {
-            id: "scholarships.7.desc",
-            label: "8. desc - The college PTA provides additional financia...",
-            kind: "paragraph",
-            default: "The college PTA provides additional financial assistance to deserving students on need basis.",
-          },
-          {
-            id: "scholarships.7.title",
-            label: "8. title - Parent-Teacher Association Assistance",
-            kind: "line",
-            default: "Parent-Teacher Association Assistance",
           },
         ],
       },
@@ -4124,17 +4100,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "Apex Bodies",
-        slots: [
-          {
-            id: "apex-bodies",
-            label: "Apex Bodies",
-            kind: "line",
-            default: "Apex Bodies",
-          },
-        ],
-      },
-      {
         label: "Contact IQAC",
         slots: [
           {
@@ -4662,14 +4627,8 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "📝 Student Survey",
           },
           {
-            id: "tabs.5.label",
-            label: "6. label - 🏛️ Apex Bodies",
-            kind: "line",
-            default: "🏛️ Apex Bodies",
-          },
-          {
             id: "tabs.6.label",
-            label: "7. label - 📞 Contact",
+            label: "6. label - 📞 Contact",
             kind: "line",
             default: "📞 Contact",
           },
@@ -6094,7 +6053,7 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "facilities (8 items)",
+        label: "facilities (7 items)",
         slots: [
           {
             id: "facilities.0.desc",
@@ -6179,18 +6138,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "7. title - Table Tennis Hall",
             kind: "line",
             default: "Table Tennis Hall",
-          },
-          {
-            id: "facilities.7.desc",
-            label: "8. desc - Olympic-size swimming pool with dedicated co...",
-            kind: "line",
-            default: "Olympic-size swimming pool with dedicated coaching staff.",
-          },
-          {
-            id: "facilities.7.title",
-            label: "8. title - Swimming Pool",
-            kind: "line",
-            default: "Swimming Pool",
           },
         ],
       },
@@ -6627,12 +6574,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         label: "routes (8 items)",
         slots: [
           {
-            id: "routes.0.fee",
-            label: "1. fee - ₹3,000/month",
-            kind: "line",
-            default: "₹3,000/month",
-          },
-          {
             id: "routes.0.from",
             label: "1. from - Kadapa Railway Station",
             kind: "line",
@@ -6643,12 +6584,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "1. via - Clock Tower → Tirupati Road → KSRMCE Gate",
             kind: "line",
             default: "Clock Tower → Tirupati Road → KSRMCE Gate",
-          },
-          {
-            id: "routes.1.fee",
-            label: "2. fee - ₹2,500/month",
-            kind: "line",
-            default: "₹2,500/month",
           },
           {
             id: "routes.1.from",
@@ -6663,12 +6598,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "Ambapuram → Piler Road → KSRMCE Gate",
           },
           {
-            id: "routes.2.fee",
-            label: "3. fee - ₹4,000/month",
-            kind: "line",
-            default: "₹4,000/month",
-          },
-          {
             id: "routes.2.from",
             label: "3. from - Srikalahasthi",
             kind: "line",
@@ -6679,12 +6608,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "3. via - Hayathnagar → Chandragiri Road → KSRMCE Gate",
             kind: "line",
             default: "Hayathnagar → Chandragiri Road → KSRMCE Gate",
-          },
-          {
-            id: "routes.3.fee",
-            label: "4. fee - ₹4,500/month",
-            kind: "line",
-            default: "₹4,500/month",
           },
           {
             id: "routes.3.from",
@@ -6699,12 +6622,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "Arani → Kodur → KSRMCE Gate",
           },
           {
-            id: "routes.4.fee",
-            label: "5. fee - ₹3,500/month",
-            kind: "line",
-            default: "₹3,500/month",
-          },
-          {
             id: "routes.4.from",
             label: "5. from - Naidupet",
             kind: "line",
@@ -6715,12 +6632,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "5. via - Proddatur → Chakrayapet → KSRMCE Gate",
             kind: "line",
             default: "Proddatur → Chakrayapet → KSRMCE Gate",
-          },
-          {
-            id: "routes.5.fee",
-            label: "6. fee - ₹3,800/month",
-            kind: "line",
-            default: "₹3,800/month",
           },
           {
             id: "routes.5.from",
@@ -6735,12 +6646,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "Jammalamadugu → Mydukur → KSRMCE Gate",
           },
           {
-            id: "routes.6.fee",
-            label: "7. fee - ₹2,000/month",
-            kind: "line",
-            default: "₹2,000/month",
-          },
-          {
             id: "routes.6.from",
             label: "7. from - Chintachintala",
             kind: "line",
@@ -6751,12 +6656,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "7. via - KSRMCE Gate",
             kind: "line",
             default: "KSRMCE Gate",
-          },
-          {
-            id: "routes.7.fee",
-            label: "8. fee - ₹4,200/month",
-            kind: "line",
-            default: "₹4,200/month",
           },
           {
             id: "routes.7.from",

@@ -43,14 +43,22 @@ const navItems: NavItem[] = [
       // Renamed at the college's request. The section it jumps to keeps the
       // trust's full name as its heading; only the menu entry is shorter.
       { label: "Sponsoring Body", href: "/about#charities" },
+      // Governance, top down: the body that governs, the people who lead, then
+      // the two councils under them. The Academic Council and Finance
+      // Committee were on the IQAC page behind an "Apex Bodies" tab until the
+      // college asked for them here.
       { label: "Governing Body", href: "/about#governing-body" },
       { label: "Leadership", href: "/about#leadership" },
       { label: "  ↳ Correspondent and Secretary", href: "/about/correspondent" },
       { label: "  ↳ Chairman", href: "/about/chairman" },
       { label: "  ↳ Vice Chairman & MD", href: "/about/managing-director" },
       { label: "  ↳ Principal", href: "/about/principal" },
-      { label: "Ombudsperson", href: "/about/ombudsman" },
+      { label: "Academic Council", href: "/about#academic-council" },
+      { label: "Finance Committee", href: "/about#finance-committee" },
       { label: "Finance Officer", href: "/about/finance-officer" },
+      // Ombudsperson is not on this menu: the office exists to settle student
+      // grievances, so it sits under Grievance Redressal where a student
+      // looking for it would actually go. The page itself is unchanged.
       { label: "Board of Studies", href: "/about#jbos" },
       { label: "Strategic Plan", href: "/about#strategic" },
       { label: "Policy Documents", href: "/about#policies" },
@@ -61,11 +69,11 @@ const navItems: NavItem[] = [
     href: "/departments",
     children: [
       { label: "Civil Engineering", href: "/departments/civil" },
-      { label: "Computer Science & Engineering", href: "/departments/cse" },
-      { label: "Electrical & Electronics", href: "/departments/eee" },
-      { label: "Electronics & Communication", href: "/departments/ece" },
+      { label: "Computer Science and Engineering", href: "/departments/cse" },
+      { label: "Electrical and Electronics", href: "/departments/eee" },
+      { label: "Electronics and Communication Engineering ", href: "/departments/ece" },
       { label: "Mechanical Engineering", href: "/departments/mechanical" },
-      { label: "Humanities & Sciences", href: "/departments/hs" },
+      { label: "Humanities and Sciences", href: "/departments/hs" },
       { label: "Management Studies (MBA)", href: "/departments/mba" },
     ],
   },
@@ -134,6 +142,9 @@ const navItems: NavItem[] = [
       { label: "Startup Cell", href: "/campus-life/startup-cell" },
       { label: "Anti-Ragging", href: "/campus-life/anti-ragging" },
       { label: "Grievance Redressal", href: "/campus-life/grievance" },
+      // Moved off the About menu. A student with a complaint looks here, not
+      // under the college's governance pages.
+      { label: "  ↳ Ombudsperson", href: "/about/ombudsman" },
       { label: "Cultural Club", href: "/campus-life/cultural" },
       { label: "Professional Chapters", href: "/campus-life/professional-chapters" },
     ],

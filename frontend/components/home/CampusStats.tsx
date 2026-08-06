@@ -21,6 +21,13 @@ function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suf
   const [hasStarted, setHasStarted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
+  // A statistic can carry decimals - the campus is 35.23 acres - and the
+  // count-up used to floor every frame, so 35.23 counted up to 35 and editing
+  // the figure in Admin -> Statistics appeared to do nothing at all. Step to
+  // whatever precision the target itself has: a whole number still counts as
+  // a whole number and shows no trailing ".00".
+  const decimals = (target.toString().split(".")[1] ?? "").length
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -44,15 +51,19 @@ function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suf
         setCount(target)
         clearInterval(interval)
       } else {
-        setCount(Math.floor(start))
+        setCount(Number(start.toFixed(decimals)))
       }
     }, 1000 / 60)
     return () => clearInterval(interval)
-  }, [hasStarted, target, duration])
+  }, [hasStarted, target, duration, decimals])
 
   return (
     <div ref={ref} className="stat-number">
-      {count.toLocaleString()}{suffix}
+      {count.toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+      {suffix}
     </div>
   )
 }
