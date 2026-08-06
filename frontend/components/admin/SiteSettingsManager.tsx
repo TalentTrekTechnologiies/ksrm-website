@@ -5,6 +5,7 @@ import { AlertTriangle, CheckCircle2, Mail, Send } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTableSkeleton from "@/components/admin/cms/CmsTableSkeleton"
 import MediaField from "@/components/admin/cms/MediaField"
+import { formatAcademicYear } from "@/lib/academic-year"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import { TextField, TextAreaField, ToggleField, PrimaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
@@ -156,6 +157,10 @@ function SiteSettingsManagerInner() {
       cancelled = true
     }
   }, [])
+
+  // Shown as the placeholder so an admin can see what the site will use if
+  // they leave the field empty, rather than guessing what "blank" means.
+  const derivedAcademicYear = formatAcademicYear()
 
   function setValue(key: string, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }))
@@ -359,12 +364,19 @@ function SiteSettingsManagerInner() {
         title="Contact Information"
         description="The college's general contact details (shown in the footer and contact pages)."
         onSave={() =>
-          saveGroup("contact", ["site.contactEmail", "site.contactPhone", "site.contactAddress", "site.googleMapsEmbedUrl"])
+          saveGroup("contact", ["site.contactEmail", "site.contactPhone", "site.contactAddress", "site.googleMapsEmbedUrl", "site.academicYear"])
         }
         saving={savingGroup === "contact"}
         saved={savedGroup === "contact"}
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextField
+            label="Academic year"
+            value={v("site.academicYear")}
+            onChange={(val) => setValue("site.academicYear", val)}
+            placeholder={derivedAcademicYear}
+            helperText={`Leave blank and the site works it out from the date - currently ${derivedAcademicYear}. Fill it in only to override that.`}
+          />
           <TextField label="Email" value={v("site.contactEmail")} onChange={(val) => setValue("site.contactEmail", val)} />
           <TextField label="Phone" value={v("site.contactPhone")} onChange={(val) => setValue("site.contactPhone", val)} />
         </div>
