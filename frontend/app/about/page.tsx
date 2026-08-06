@@ -453,7 +453,7 @@ export default function About() {
             <div className="k-contact-box k-contact-other k-contact-contact">
               <h3><CmsText section="about" slot="contact-us" /></h3>
               <div className="k-contact-text"><a href="tel:+919000073434" className="k-contact-link">+91-9000073434</a></div>
-              <div className="k-contact-text"><a href="tel:+918143731980" className="k-contact-link">+91-8143731960</a></div>
+              <div className="k-contact-text"><a href="tel:+918143731960" className="k-contact-link">+91-8143731980</a></div>
               <div className="k-contact-text"><a href="tel:+918562295972" className="k-contact-link">08562-295972</a></div>
               <div className="k-contact-text"><a href="mailto:ksrmcengg@yahoo.co.in" className="k-contact-link">ksrmcengg@yahoo.co.in</a></div>
               <div className="k-contact-text"><a href="mailto:principal@ksrmce.ac.in" className="k-contact-link">principal@ksrmce.ac.in</a></div>

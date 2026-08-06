@@ -137,7 +137,7 @@ export const admissions: AdmissionsData = {
   ],
   contact: {
     office: "Admissions Office, K.S.R.M. College of Engineering, Kadapa – 516003",
-    phone: "+91 8143731980 / 08562 295972 / +91 9000073434",
+    phone: "+91 8143731960 / 08562 295972 / +91 9000073434",
     email: "ksrmcengg@yahoo.co.in / principal@ksrmce.ac.in",
   },
 }

@@ -106,7 +106,7 @@ export const academicCalendar: AcademicCalendarData = {
   note: "Academic calendars are issued by the Examination Section. Dates are subject to revision by JNTUA. Please check college notices regularly for any amendments or changes to the schedule.",
   contact: {
     section: "Examination Section",
-    phone: "+91 8143731980 / 08562 295972",
+    phone: "+91 8143731960 / 08562 295972",
     email: "principal@ksrmce.ac.in",
   },
 }

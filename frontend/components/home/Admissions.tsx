@@ -24,7 +24,7 @@ const FALLBACK_ADMISSIONS: AdmissionsContent = {
   subtitle: "EAPCET Code: K.S.R.M. | Kadapa, Andhra Pradesh",
   helplinePhones: [
     { display: "+91-9000073434", href: "tel:+919000073434" },
-    { display: "+91-8143731980", href: "tel:+918143731980" },
+    { display: "+91-8143731960", href: "tel:+918143731960" },
   ],
   helplineEmail: "ksrmcengg@yahoo.co.in",
 }

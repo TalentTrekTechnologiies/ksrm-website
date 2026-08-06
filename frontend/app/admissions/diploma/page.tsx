@@ -242,12 +242,13 @@ export default function DiplomaAdmissionsPage() {
               <h2><CmsText section="admissions.diploma" slot="ready-to-enroll" /></h2>
               <p style={{ margin: "0 0 16px", opacity: 0.9 }}><CmsText section="admissions.diploma" slot="contact-us-for-more-information" /></p>
               {/*
-                NOTE: The deployed site's raw page text concatenated multiple phone
-                numbers together without separators ("8143731980994810198099482019809948301980"),
-                so the exact individual numbers couldn't be reliably parsed. Verify the
-                real contact numbers with the college and replace below.
+                The old site ran several numbers together with no separators
+                ("8143731980994810198099482019809948301980"), so no individual
+                number could be read out of it reliably. The college has since
+                confirmed this one - and confirmed the last four digits are
+                1960, not the 1980 that string starts with.
               */}
-              <div className="dip-contact-item">+91 8143731980 (verify — see note in source)</div>
+              <div className="dip-contact-item">+91 8143731960</div>
             </div>
           </div>
         </section>
