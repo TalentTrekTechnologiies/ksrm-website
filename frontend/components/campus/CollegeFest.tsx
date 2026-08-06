@@ -50,7 +50,12 @@ function formatRange(start: string, end: string | null): string {
   return sameMonth ? `${fmt(s, false, false)} – ${fmt(e)}` : `${fmt(s)} – ${fmt(e)}`;
 }
 
-export default function CollegeFest() {
+export default function CollegeFest({
+  /** null on the fest's own page, which already carries the heading. */
+  heading = "College Fest",
+}: {
+  heading?: string | null;
+} = {}) {
   const events = useLiveData<EventItem[]>(
     () => getEventsPublic().catch(() => [] as EventItem[]),
     [],
@@ -62,7 +67,7 @@ export default function CollegeFest() {
 
   return (
     <section style={{ padding: "64px 0", background: "#F5EFE4" }}>
-      <div className="cl-container">
+      <div style={{ width: "100%", maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
         <style>{`
           .fest-card { background: #fff; border: 1px solid #eef0f3; border-left: 5px solid #D4A500; border-radius: 12px; padding: 32px; }
           .fest-card + .fest-card { margin-top: 20px; }
@@ -78,9 +83,11 @@ export default function CollegeFest() {
           .fest-img { width: 100%; max-width: 420px; border-radius: 10px; margin-top: 20px; display: block; }
         `}</style>
 
-        <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 800, color: "#1a1a2e", margin: "0 0 24px" }}>
-          College Fest
-        </h2>
+        {heading && (
+          <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 800, color: "#1a1a2e", margin: "0 0 24px" }}>
+            {heading}
+          </h2>
+        )}
 
         {fests.length > 0 ? (
           fests.map((e) => (

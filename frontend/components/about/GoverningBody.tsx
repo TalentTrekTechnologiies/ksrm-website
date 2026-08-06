@@ -40,7 +40,13 @@ export default function GoverningBody() {
           .k-gb-table tbody tr:last-child td { border-bottom: none; }
           .k-gb-name { color: #1a1a2e; font-weight: 600; }
           .k-gb-role { color: #2B3490; font-weight: 600; white-space: nowrap; }
-          .k-gb-no { color: #999; width: 44px; }
+          /* nowrap and a min-width, not width alone: width is a hint a
+             squeezed table ignores, and the number then breaks across two
+             lines once it reaches double digits. */
+          .k-gb-no {
+            color: #999; width: 44px; min-width: 44px; white-space: nowrap;
+            text-align: right; padding-right: 14px; font-variant-numeric: tabular-nums;
+          }
           .k-gb-desc { color: #666; font-size: 15px; line-height: 1.7; margin: 0 0 20px; max-width: 1100px; }
           .k-gb-sub { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #2B3490; margin: 28px 0 12px; }
           /* Below 700px the four columns crush; the table scrolls instead of wrapping mid-name. */

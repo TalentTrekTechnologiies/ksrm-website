@@ -567,6 +567,16 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         .dept-faculty-table tbody tr:last-child td { border-bottom: none; }
         .dept-faculty-table tbody tr:nth-child(even) { background: #f7f8fa; }
         .dept-faculty-table .name { font-weight: 700; color: #1a1a2e; white-space: nowrap; }
+        /* The serial number, kept on one line.
+           width:48 on the <th> is only a hint - a table this wide squeezes the
+           column below it, and with nothing stopping the cell from wrapping,
+           "27" broke across two lines as "2" over "7" from row 10 onward. A
+           min-width the browser must honour, and no wrapping. */
+        .dept-faculty-table thead th:first-child,
+        .dept-faculty-table tbody td:first-child {
+          white-space: nowrap; min-width: 44px; width: 44px; text-align: right;
+          padding-right: 14px; color: #999; font-variant-numeric: tabular-nums;
+        }
         .dept-faculty-table a { color: #2B3490; text-decoration: none; }
         .dept-faculty-table a:hover { text-decoration: underline; }
 
@@ -1042,7 +1052,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
               <table className="dept-faculty-table">
                 <thead>
                   <tr>
-                    <th style={{ width: 48 }}>#</th>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Designation</th>
                     {isVisible("faculty.showQualification") && <th>Qualification</th>}

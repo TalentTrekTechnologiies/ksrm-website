@@ -2724,6 +2724,18 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "Anti-Ragging",
           },
           {
+            id: "SECTIONS.12.label",
+            label: "13. label - College Fest",
+            kind: "line",
+            default: "College Fest",
+          },
+          {
+            id: "SECTIONS.12.blurb",
+            label: "13. blurb - KONNECT and the KSNR Trophy...",
+            kind: "line",
+            default: "KONNECT and the KSNR Trophy - the annual techno-cultural fest and sports championship.",
+          },
+          {
             id: "SECTIONS.10.blurb",
             label: "11. blurb - Raise and track student grievances.",
             kind: "line",

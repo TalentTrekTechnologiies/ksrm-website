@@ -404,6 +404,39 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
     ],
   },
 
+  // The fest's own page. Its dates, convener and prize pool come from
+  // Admin -> Events; only the page's framing wording is here.
+  "college-fest": {
+    label: "Campus Life → College Fest",
+    path: "/campus-life/college-fest",
+    groups: [
+      {
+        label: "Header",
+        slots: [
+          { id: "hero.title", label: "Page title", kind: "line", default: "College Fest" },
+          {
+            id: "hero.subtitle",
+            label: "Page subtitle",
+            kind: "line",
+            default: "KONNECT and the KSNR Trophy — a national-level techno-cultural fest and sports championship, held every year at K.S.R.M.",
+          },
+        ],
+      },
+      {
+        label: "Introduction",
+        slots: [
+          {
+            id: "intro",
+            label: "Opening paragraph",
+            kind: "paragraph",
+            default:
+              "Every year K.S.R.M. College of Engineering opens its campus to students from across the region for a fest that runs technical competitions, cultural performances and sporting championships side by side. Entries are invited from engineering colleges everywhere, and the events, dates and prizes for the current year are below.",
+          },
+        ],
+      },
+    ],
+  },
+
   library: {
     label: "Library",
     path: "/campus-life/library",

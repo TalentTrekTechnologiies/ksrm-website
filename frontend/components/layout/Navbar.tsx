@@ -146,6 +146,7 @@ const navItems: NavItem[] = [
       // under the college's governance pages.
       { label: "  ↳ Ombudsperson", href: "/about/ombudsman" },
       { label: "Cultural Club", href: "/campus-life/cultural" },
+      { label: "College Fest", href: "/campus-life/college-fest" },
       { label: "Professional Chapters", href: "/campus-life/professional-chapters" },
     ],
   },

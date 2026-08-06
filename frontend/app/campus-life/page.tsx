@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
-import CollegeFest from "@/components/campus/CollegeFest";
 
 export const metadata: Metadata = {
   title: "Campus Life | K.S.R.M. College of Engineering",
@@ -16,19 +15,25 @@ export const metadata: Metadata = {
  * all eleven of its child pages exist and are linked from the navbar, so the
  * section's landing page looked unfinished. It now lists those children.
  */
+/**
+ * `slot` is the card's permanent id in Page Content, not its position here.
+ * Removing or reordering a card must not hand its wording to its neighbour.
+ * A new card takes the next unused number - 12 below, never a reused one.
+ */
 const SECTIONS = [
-  { label: "Campus Facilities", href: "/campus-life/campus-facilities", blurb: "Classrooms, laboratories, auditorium and amenities across the campus." },
-  { label: "Central Library", href: "/campus-life/library", blurb: "Books, journals, digital resources and reading halls." },
-  { label: "Hostels", href: "/campus-life/hostels", blurb: "Separate hostel accommodation for boys and girls." },
-  { label: "Transport", href: "/campus-life/transport", blurb: "Bus routes and parking across Kadapa and nearby towns." },
-  { label: "Sports", href: "/campus-life/sports", blurb: "Grounds, indoor courts, gymnasium and tournaments." },
-  { label: "Cultural", href: "/campus-life/cultural", blurb: "Cultural club, fests and student performances." },
-  { label: "Professional Chapters", href: "/campus-life/professional-chapters", blurb: "Department-led student associations and technical chapters." },
-  { label: "NSS", href: "/campus-life/nss", blurb: "National Service Scheme activities and community outreach." },
-  { label: "EDC", href: "/campus-life/edc", blurb: "Entrepreneurship Development Cell programmes." },
-  { label: "Startup Cell", href: "/campus-life/startup-cell", blurb: "Incubation support for student and faculty startups." },
-  { label: "Anti-Ragging", href: "/campus-life/anti-ragging", blurb: "Anti-ragging committee, affidavits and helpline." },
-  { label: "Grievance Redressal", href: "/campus-life/grievance", blurb: "Raise and track student grievances." },
+  { slot: 0, label: "Campus Facilities", href: "/campus-life/campus-facilities", blurb: "Classrooms, laboratories, auditorium and amenities across the campus." },
+  { slot: 1, label: "Central Library", href: "/campus-life/library", blurb: "Books, journals, digital resources and reading halls." },
+  { slot: 2, label: "Hostels", href: "/campus-life/hostels", blurb: "Separate hostel accommodation for boys and girls." },
+  { slot: 3, label: "Transport", href: "/campus-life/transport", blurb: "Bus routes and parking across Kadapa and nearby towns." },
+  { slot: 4, label: "Sports", href: "/campus-life/sports", blurb: "Grounds, indoor courts, gymnasium and tournaments." },
+  { slot: 5, label: "Cultural", href: "/campus-life/cultural", blurb: "Cultural club, fests and student performances." },
+  { slot: 6, label: "Professional Chapters", href: "/campus-life/professional-chapters", blurb: "Department-led student associations and technical chapters." },
+  { slot: 7, label: "NSS", href: "/campus-life/nss", blurb: "National Service Scheme activities and community outreach." },
+  { slot: 8, label: "EDC", href: "/campus-life/edc", blurb: "Entrepreneurship Development Cell programmes." },
+  { slot: 9, label: "Startup Cell", href: "/campus-life/startup-cell", blurb: "Incubation support for student and faculty startups." },
+  { slot: 10, label: "Anti-Ragging", href: "/campus-life/anti-ragging", blurb: "Anti-ragging committee, affidavits and helpline." },
+  { slot: 11, label: "Grievance Redressal", href: "/campus-life/grievance", blurb: "Raise and track student grievances." },
+  { slot: 12, label: "College Fest", href: "/campus-life/college-fest", blurb: "KONNECT and the KSNR Trophy - the annual techno-cultural fest and sports championship." },
 ];
 
 export default function CampusLifeIndexPage() {
@@ -55,20 +60,16 @@ export default function CampusLifeIndexPage() {
       <section style={{ padding: "64px 0" }}>
         <div className="cl-container">
           <div className="cl-grid">
-            {SECTIONS.map((s, _i) => (
+            {SECTIONS.map((s) => (
               <Link key={s.href} href={s.href} className="cl-card">
-                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="campus-life" slot={`SECTIONS.${_i}.label`} /></h2>
-                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="campus-life" slot={`SECTIONS.${_i}.blurb`} /></p>
+                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 20, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="campus-life" slot={`SECTIONS.${s.slot}.label`} /></h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="campus-life" slot={`SECTIONS.${s.slot}.blurb`} /></p>
                 <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>Open →</span>
               </Link>
             ))}
           </div>
         </div>
       </section>
-      {/* The college fest. Driven by Admin -> Events (category "Fest"), with
-          this year's announcement built in until one is added there. */}
-      <CollegeFest />
-
       {/* Any committee the CMS points at this page - see PlacedCommittees.
           Renders nothing until one is pointed here. */}
       <PlacedCommittees placement="CAMPUS_LIFE" heading="Committees" />
