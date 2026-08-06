@@ -18,6 +18,7 @@ import GalleryTab from "./GalleryTab"
 import VideosTab from "./VideosTab"
 import DownloadsTab from "./DownloadsTab"
 import ChapterTab from "./ChapterTab"
+import BoardOfStudiesTab from "./BoardOfStudiesTab"
 import ContactTab from "./ContactTab"
 import StatisticsTab from "./StatisticsTab"
 import DisplaySettingsTab from "./DisplaySettingsTab"
@@ -33,8 +34,11 @@ const TABS: { key: string; label: string; permission: string }[] = [
   { key: "gallery", label: "Gallery", permission: "gallery.view" },
   { key: "videos", label: "Videos", permission: "homepage.view" },
   { key: "downloads", label: "Documents", permission: "downloads.view" },
-  // Chapter items are downloads too, so they need no permission of their own.
+  // Chapter and BoS items are downloads too, so they need no permission of
+  // their own. The BoS MEMBERS live in Admin -> Committees; this tab is only
+  // the papers that go with them.
   { key: "chapter", label: "Professional Chapter", permission: "downloads.view" },
+  { key: "board-of-studies", label: "Board of Studies", permission: "downloads.view" },
   { key: "contact", label: "Contact Information", permission: "contact.view" },
   { key: "statistics", label: "Statistics", permission: "homepage.view" },
   { key: "display-settings", label: "Display Settings", permission: "department_display_settings.view" },
@@ -137,6 +141,7 @@ function DepartmentWorkspaceInner() {
         {tab === "videos" && <VideosTab departmentId={department.id} />}
         {tab === "downloads" && <DownloadsTab departmentId={department.id} />}
         {tab === "chapter" && <ChapterTab departmentId={department.id} />}
+        {tab === "board-of-studies" && <BoardOfStudiesTab departmentId={department.id} />}
         {tab === "contact" && <ContactTab departmentId={department.id} />}
         {tab === "statistics" && <StatisticsTab departmentId={department.id} />}
         {tab === "display-settings" && <DisplaySettingsTab departmentId={department.id} />}

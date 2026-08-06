@@ -3,6 +3,8 @@
 import { getCommitteesByDepartment, Committee } from "@/lib/committees-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CommitteeRosterTable from "@/components/committees/CommitteeRosterTable";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import { resolveFileUrl } from "@/lib/api-base";
 
 /**
  * A department's Board of Studies, on its own page.
@@ -31,13 +33,32 @@ export default function BoardOfStudies({ departmentId }: { departmentId: number 
     [departmentId],
   );
 
+  // Minutes, agendas and resolutions, uploaded on the department's Board of
+  // Studies tab. Fetched separately from the members because the two are
+  // maintained in different places - the roster in Committees, the papers in
+  // the department workspace - and a department may well have one without the
+  // other for a while.
+  const papers = useLiveData<Download[]>(
+    () =>
+      departmentId === null
+        ? Promise.resolve([] as Download[])
+        : getDownloadsPublic(undefined, departmentId)
+            .then((all) => all.filter((d) => d.pageSection === "board-of-studies"))
+            .catch(() => [] as Download[]),
+    [departmentId],
+  );
+  const docs = papers ?? [];
+
   // The department id is resolved from the API a moment after the page loads,
   // so null here means "not known yet" as much as it means "no department".
   const boards = (committees ?? [])
     .map((c) => ({ ...c, members: (c.members ?? []).filter((m) => m.isActive !== false) }))
     .filter((c) => c.members.length > 0);
 
-  if (boards.length === 0) return null;
+  // Shown when there is either a roster or a paper - a department that has
+  // published its minutes but not yet entered its members should not have the
+  // section vanish, and vice versa.
+  if (boards.length === 0 && docs.length === 0) return null;
 
   return (
     <section id="board-of-studies" style={{ padding: "72px 0", background: "#ffffff" }}>
@@ -87,6 +108,52 @@ export default function BoardOfStudies({ departmentId }: { departmentId: number 
             </div>
           ))}
         </div>
+
+        {docs.length > 0 && (
+          <div style={{ marginTop: boards.length > 0 ? 36 : 20 }}>
+            <h3
+              style={{
+                fontFamily: "var(--font-rajdhani), sans-serif",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#2B3490",
+                margin: "0 0 14px",
+              }}
+            >
+              Minutes &amp; Agendas
+            </h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
+              {docs.map((d) => (
+                <a
+                  key={d.id}
+                  href={resolveFileUrl(d.fileUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "block",
+                    background: "#f7f8fa",
+                    border: "1px solid #eef0f3",
+                    borderRadius: 8,
+                    padding: "14px 16px",
+                    textDecoration: "none",
+                  }}
+                >
+                  <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, color: "#1a1a2e" }}>
+                    {d.title}
+                  </span>
+                  {d.description && (
+                    <span style={{ display: "block", fontSize: 13, color: "#666", marginTop: 3 }}>
+                      {d.description}
+                    </span>
+                  )}
+                  <span style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#2B3490", marginTop: 6 }}>
+                    Open →
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
