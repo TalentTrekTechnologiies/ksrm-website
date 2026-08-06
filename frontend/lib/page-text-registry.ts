@@ -104,6 +104,7 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
         label: "Participation & applying",
         slots: [
           { id: "participation-heading", label: "Table heading", kind: "line", default: "Participation year by year" },
+          { id: "gallery-heading", label: "Gallery heading", kind: "line", default: "From past KGCET events" },
           { id: "apply-heading", label: "Apply heading", kind: "line", default: "How to apply" },
           {
             id: "apply-body",

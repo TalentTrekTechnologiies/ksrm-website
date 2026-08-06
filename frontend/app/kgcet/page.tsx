@@ -32,6 +32,23 @@ const HIGHLIGHTS = [
   { icon: "⚖️", title: "Merit, not means alone", desc: "Set up to widen access for deserving students who would struggle with fees." },
 ];
 
+/**
+ * Photographs from past KGCET events, carried across from the scheme's page on
+ * the sister college's site.
+ *
+ * Only the event photographs. The three posters on that page each carry a
+ * registration deadline that has passed - 30-04-2023, 14-06-2022, 30-04-2025 -
+ * and one carries the sister college's phone numbers and a dead bit.ly
+ * registration link. An expired deadline on the page whose job is to get
+ * students to register would mislead them; a photograph of a past event does
+ * not have that problem, provided it says which year it is from.
+ */
+const GALLERY = [
+  { src: "/kgcet/joh03094.webp", caption: "KGCET & KGPGCET 2K24 results, at KSRMCE" },
+  { src: "/kgcet/joh03099.webp", caption: "KGCET 2K22 — the top rank holder with her family, at KSRMCE" },
+  { src: "/kgcet/joh03106.webp", caption: "A KGCET rank holder felicitated at KLM College of Engineering for Women, Orientation Day 2024" },
+];
+
 /** Rendered only once the college sets a link, so it is never a dead button. */
 function RegisterButton() {
   const href = usePageTextValue("kgcet", "register.href").trim();
@@ -92,6 +109,13 @@ export default function KgcetPage() {
         }
         .kg-cta:hover { background: #b71c1c; }
         .kg-phone { display: inline-block; color: #2B3490; font-weight: 700; text-decoration: none; font-size: 16px; }
+
+        .kg-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .kg-shot { margin: 0; background: #fff; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; }
+        .kg-shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+        /* Below the photo rather than over it: these captions name a year and a
+           college, so they have to be readable, not decorative. */
+        .kg-shot figcaption { padding: 14px 16px; font-size: 13.5px; line-height: 1.5; color: #555; }
         .kg-phone:hover { text-decoration: underline; }
       `}</style>
 
@@ -153,6 +177,21 @@ export default function KgcetPage() {
           </p>
           <RegisterButton />
           <div style={{ marginTop: 24 }}><EnquiryPhone /></div>
+        </div>
+      </section>
+
+      <section style={{ padding: "64px 0", background: "#f4f3ef" }}>
+        <div className="kg-container">
+          <h2 className="kg-h2"><CmsText section="kgcet" slot="gallery-heading" /></h2>
+          <div className="kg-gallery">
+            {GALLERY.map((g) => (
+              <figure className="kg-shot" key={g.src}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
+                <img src={g.src} alt={g.caption} loading="lazy" />
+                <figcaption>{g.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 
