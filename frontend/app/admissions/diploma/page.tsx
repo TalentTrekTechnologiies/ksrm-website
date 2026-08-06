@@ -248,7 +248,7 @@ export default function DiplomaAdmissionsPage() {
                 confirmed this one - and confirmed the last four digits are
                 1960, not the 1980 that string starts with.
               */}
-              <div className="dip-contact-item">+91 8143731960</div>
+              <div className="dip-contact-item">+91 8143731980</div>
             </div>
           </div>
         </section>

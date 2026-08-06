@@ -127,7 +127,7 @@ export const diplomaData: DiplomaData = {
   ],
 
   contactNumbers: [
-    "8143731960",
+    "8143731980",
     "9948101980",
     "9948201980",
     "9948301980",

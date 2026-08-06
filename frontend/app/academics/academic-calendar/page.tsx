@@ -339,7 +339,7 @@ export default function AcademicCalendarPage() {
               </div>
               <div className="ac-contact-item">
                 <h4><CmsText section="academics.calendar" slot="phone" /></h4>
-                <p><a href="tel:+918143731960">+91 8143731960 / 08562 295972</a></p>
+                <p><a href="tel:+918143731980">+91 8143731980 / 08562 295972</a></p>
               </div>
               <div className="ac-contact-item">
                 <h4><CmsText section="academics.calendar" slot="email" /></h4>

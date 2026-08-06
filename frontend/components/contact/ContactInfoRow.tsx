@@ -23,7 +23,7 @@ const fallbackCards = [
   { icon: "map-pin", title: "Address", content: "K.S.R.M. College of Engineering, Kadapa – 516 003, Andhra Pradesh, India" },
   { icon: "phone", title: "Phone", content: "+91 9000073434", href: "tel:+91 9000073434" },
   { icon: "phone", title: "Alternate", content: "08562 295972", href: "tel:08562 295972" },
-  { icon: "phone", title: "Alternate", content: "+91 8143731960", href: "tel:+91 8143731960" },
+  { icon: "phone", title: "Alternate", content: "+91 8143731980", href: "tel:+91 8143731980" },
   { icon: "mail", title: "Email", content: "ksrmcengg@yahoo.co.in", href: "mailto:ksrmcengg@yahoo.co.in" },
   { icon: "mail", title: "Alternate", content: "principal@ksrmce.ac.in", href: "mailto:principal@ksrmce.ac.in" },
 ]

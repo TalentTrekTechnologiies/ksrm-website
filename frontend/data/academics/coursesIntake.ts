@@ -132,7 +132,7 @@ export const coursesIntake: CoursesIntakeData = {
   ],
   contactAdmissions: {
     office: "Admissions Office",
-    phone: "+91 8143731960 / 08562 295972",
+    phone: "+91 8143731980 / 08562 295972",
     email: "principal@ksrmce.ac.in",
   },
 }

@@ -109,7 +109,7 @@ export const aboutData = {
   // Contact section
   contact: {
     findUs: "K.S.R.M. College of Engineering, Kadapa – 516003, Andhra Pradesh, India. 7 KM from Kadapa town on Kadapa–Pulivendula Highway",
-    phone: ["+91-9000073434", "+91-8143731960", "08562-295972"],
+    phone: ["+91-9000073434", "+91-8143731980", "08562-295972"],
     email: ["ksrmcengg@yahoo.co.in", "principal@ksrmce.ac.in"],
     website: "www.ksrmce.ac.in",
     social: {

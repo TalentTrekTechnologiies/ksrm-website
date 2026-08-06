@@ -400,7 +400,7 @@ export default function CoursesIntakePage() {
               </div>
               <div className="ci-contact-item">
                 <h4><CmsText section="academics.courses-intake" slot="phone" /></h4>
-                <p><a href="tel:+918143731960">+91 8143731960 / 08562 295972</a></p>
+                <p><a href="tel:+918143731980">+91 8143731980 / 08562 295972</a></p>
               </div>
               <div className="ci-contact-item">
                 <h4><CmsText section="academics.courses-intake" slot="email" /></h4>
