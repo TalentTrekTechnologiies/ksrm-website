@@ -75,6 +75,18 @@ function MailIcon() {
 /** Renders a CMS-managed table. Columns and rows are free-form, so a fee
  *  revision is an admin edit rather than a code change. */
 function CmsTable({ table, first }: { table: PageTable; first?: boolean }) {
+  /**
+   * A note, a remark or a duration - commentary rather than a figure.
+   *
+   * Cells used to be shrunk to 13px whenever they were LAST in the row, on the
+   * assumption that the last column is always a note. It is not: in most of
+   * these tables the last column is a fee, so that figure rendered smaller and
+   * greyer than the fee beside it and the tables disagreed with each other
+   * down the page. Sized by what the column is now.
+   */
+  const isNoteColumn = (heading: string | undefined) =>
+    /note|remark|duration|eligib|detail/i.test(heading ?? "")
+
   return (
     <div>
       <h3 className="fee-programme-title" style={first ? { marginTop: 0 } : undefined}>{table.title}</h3>
@@ -87,7 +99,16 @@ function CmsTable({ table, first }: { table: PageTable; first?: boolean }) {
             {table.rows.map((row, ri) => (
               <tr key={ri}>
                 {row.map((cell, ci) => (
-                  <td key={ci} style={ci === 0 ? { fontWeight: 600 } : ci === row.length - 1 ? { fontSize: 13, color: "#666" } : undefined}>
+                  <td
+                    key={ci}
+                    style={
+                      ci === 0
+                        ? { fontWeight: 600 }
+                        : isNoteColumn(table.columns[ci])
+                          ? { fontSize: 13, color: "#666" }
+                          : undefined
+                    }
+                  >
                     {cell}
                   </td>
                 ))}

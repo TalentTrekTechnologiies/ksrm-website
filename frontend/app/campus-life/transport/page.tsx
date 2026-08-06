@@ -3,9 +3,10 @@
 import { useState } from "react";
 
 import CmsText from "@/components/CmsText";
+import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api";
 import { getTransportRoutesPublic, TransportRoute } from "@/lib/transport-routes-api";
 import { useLiveData } from "@/lib/use-live-data";
-﻿import PageResources from "@/components/PageResources";
+import PageResources from "@/components/PageResources";
 const stats = [
   { icon: "🚌", value: "15", label: "Total Buses" },
   { icon: "📍", value: "8", label: "Routes" },
@@ -39,7 +40,41 @@ const rules = [
 
 const towns = ["Vempalli", "Yerraguntla", "Badvel", "Mydukur", "Proddutur", "Ontimitta", "Kadapa", "Rayachoti"];
 
+/**
+ * The people who actually run transport, as the college gave them.
+ *
+ * This card carried one number: "+91-8554-233333 (Ext: 330)". No phone can
+ * dial an extension from a tel: link - tapping it reached the switchboard and
+ * dropped the 330 - so the one contact the page offered did not work.
+ *
+ * Names are shown with the role, because a parent ringing about a bus route
+ * wants to know who they are calling.
+ */
+const TRANSPORT_CONTACTS = [
+  { role: "Transport In-charge", name: "Mr Siva Krishna Reddy", phone: "9160993030" },
+  { role: "Advisor", name: "Mr Lakshumaiah", phone: "9160993050" },
+  { role: "Supervisor", name: "Mr Bhavaji", phone: "9676236261" },
+];
+
+/** "9160993030" -> "+91 91609 93030" */
+function pretty(p: string): string {
+  const d = p.replace(/\D/g, "");
+  return d.length === 10 ? `+91 ${d.slice(0, 5)} ${d.slice(5)}` : p;
+}
+
 export default function TransportPage() {
+  // Contact rows named for transport in Admin -> Contacts take over when the
+  // college adds them; until then the three above show. One place to edit,
+  // and no code change when somebody moves on.
+  const cms = useLiveData<ContactChannel[]>(
+    () => getContactChannelsPublic().catch(() => [] as ContactChannel[]),
+    [],
+  );
+  const fromCms = (cms ?? [])
+    .filter((c) => /transport/i.test(c.name) && (c.phones ?? []).length)
+    .map((c) => ({ role: c.name, name: "", phone: (c.phones ?? [])[0] }));
+  const contacts = fromCms.length ? fromCms : TRANSPORT_CONTACTS;
+
   // Routes come from the CMS (Admin -> Transport), so adding a route, changing
   // a fee or assigning a driver needs no code change. The fetcher never
   // rejects: an unreachable API falls back to the built-in table below.
@@ -231,10 +266,16 @@ export default function TransportPage() {
           <div className="trn-contact-card">
             <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 24, fontWeight: 700, margin: 0 }}><CmsText section="transport" slot="transport-officer" /></h3>
             <div className="trn-contact-info">
-              <div className="trn-contact-item">
-                <h4><CmsText section="transport" slot="phone" /></h4>
-                <p><a href="tel:+91-8554-233333 (Ext: 330)">+91-8554-233333 (Ext: 330)</a></p>
-              </div>
+              {contacts.map((c) => (
+                <div className="trn-contact-item" key={c.phone}>
+                  <h4>{c.role}</h4>
+                  <p>
+                    {c.name}
+                    <br />
+                    <a href={`tel:+91${c.phone.replace(/\D/g, "")}`}>{pretty(c.phone)}</a>
+                  </p>
+                </div>
+              ))}
               <div className="trn-contact-item">
                 <h4><CmsText section="transport" slot="email" /></h4>
                 <p><a href="mailto:transport@ksrmce.ac.in">transport@ksrmce.ac.in</a></p>
