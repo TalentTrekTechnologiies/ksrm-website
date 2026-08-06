@@ -88,10 +88,26 @@ export default function NewsAndEvents() {
         }
         .ne-box-link:hover { color: #fff; }
         .ne-viewport { height: 430px; overflow: hidden; position: relative; }
-        .ne-viewport.scrollable { overflow-y: auto; }
         .ne-track { display: flex; flex-direction: column; }
-        .ne-track.anim { animation: neScroll var(--dur, 30s) linear infinite; }
-        .ne-viewport:hover .ne-track.anim { animation-play-state: paused; }
+        .ne-track.anim { animation: neScroll var(--dur, 30s) linear infinite; will-change: transform; }
+
+        /* Pause on hover only where there is a real pointer to hover with.
+           On a touchscreen :hover sticks after a tap, so tapping a headline
+           froze the list permanently - and since the viewport is overflow
+           hidden there was no way to scroll it by hand either. That is the
+           "events are not scrolling" report: it scrolls until you touch it. */
+        @media (hover: hover) and (pointer: fine) {
+          .ne-viewport:hover .ne-track.anim { animation-play-state: paused; }
+        }
+
+        /* No animation for anyone who has asked for less motion - and the
+           duplicated half is hidden, since it only exists to make the loop
+           seamless. The list becomes an ordinary scrollable one. */
+        @media (prefers-reduced-motion: reduce) {
+          .ne-track.anim { animation: none; }
+          .ne-track.anim .ne-clone { display: none; }
+          .ne-viewport { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        }
         @keyframes neScroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
         .ne-item {
           display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px;
@@ -158,8 +174,11 @@ export default function NewsAndEvents() {
                 >
                   {newsItems.map((n, i) => {
                     const desc = snippet(n.content)
+                    // The second copy exists only so the loop can wrap without
+                    // a visible jump; it is hidden when the animation is off.
+                    const clone = newsScrolls && i >= state.news.length
                     return (
-                      <Link key={`${n.id}-${i}`} href="/news" className="ne-item">
+                      <Link key={`${n.id}-${i}`} href="/news" className={`ne-item${clone ? " ne-clone" : ""}`}>
                         {n.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
                           <img src={n.imageUrl} alt="" loading="lazy" className="ne-thumb" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
@@ -198,8 +217,9 @@ export default function NewsAndEvents() {
                   {eventItems.map((e, i) => {
                     const desc = snippet(e.description)
                     const c = dayMon(e.eventDate)
+                    const clone = eventsScroll && i >= state.events.length
                     return (
-                      <Link key={`${e.id}-${i}`} href="/events" className="ne-item">
+                      <Link key={`${e.id}-${i}`} href="/events" className={`ne-item${clone ? " ne-clone" : ""}`}>
                         {e.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
                           <img src={e.imageUrl} alt="" loading="lazy" className="ne-thumb" onError={(ev) => (ev.currentTarget.style.visibility = "hidden")} />

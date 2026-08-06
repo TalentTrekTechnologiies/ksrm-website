@@ -4,6 +4,14 @@ import Container from "@/components/ui/Container"
 import { recruitersData } from "@/data/home"
 
 export default function Recruiters() {
+  // Tolerates both shapes this has been given over time - { recruiters: [...] }
+  // and a bare array - rather than repeating the check inside the JSX.
+  const logos: { logo: string; name: string }[] = Array.isArray(recruitersData?.recruiters)
+    ? recruitersData.recruiters
+    : Array.isArray(recruitersData)
+      ? recruitersData
+      : []
+
   return (
     <section
       className="recruiters-section"
@@ -74,11 +82,29 @@ export default function Recruiters() {
           display: flex;
           gap: 20px;
           width: max-content;
-          animation: marquee-scroll 25s linear infinite;
+          /* Proportional to how many logos there are, so the speed stays the
+             same as recruiters are added. A fixed 25s meant the strip crawled
+             with a few logos and raced with many. */
+          animation: marquee-scroll var(--dur, 25s) linear infinite;
+          will-change: transform;
         }
 
-        .recruiter-marquee:hover .recruiter-track {
-          animation-play-state: paused;
+        /* Only where there is a real pointer. On a touchscreen :hover sticks
+           after a tap, so touching the logos froze the strip for good - which
+           is what "the logos are not scrolling" on a phone actually was. */
+        @media (hover: hover) and (pointer: fine) {
+          .recruiter-marquee:hover .recruiter-track {
+            animation-play-state: paused;
+          }
+        }
+
+        /* Someone who has asked for less motion gets a strip they scroll
+           themselves; the duplicated half exists only to make the loop
+           seamless, so it goes. */
+        @media (prefers-reduced-motion: reduce) {
+          .recruiter-track { animation: none; }
+          .recruiter-track .recruiter-clone { display: none; }
+          .recruiter-marquee { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         }
 
         .recruiter-item {
@@ -143,9 +169,12 @@ export default function Recruiters() {
 
         {/* RECRUITER LOGOS MARQUEE */}
         <div className="recruiter-marquee" style={{ overflow: "hidden", width: "100%" }}>
-          <div className="recruiter-track">
-            {(Array.isArray(recruitersData?.recruiters) ? [...recruitersData.recruiters, ...recruitersData.recruiters] : Array.isArray(recruitersData) ? [...recruitersData, ...recruitersData] : []).map((recruiter, i) => (
-              <div key={i} className="recruiter-item">
+          <div
+            className="recruiter-track"
+            style={{ ["--dur" as string]: `${Math.max(20, logos.length * 3)}s` } as React.CSSProperties}
+          >
+            {[...logos, ...logos].map((recruiter, i) => (
+              <div key={i} className={`recruiter-item${i >= logos.length ? " recruiter-clone" : ""}`}>
                 <img
                   src={recruiter.logo}
                   alt={recruiter.name}
