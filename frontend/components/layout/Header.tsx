@@ -7,7 +7,7 @@ import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
 import FlowerShower from "@/components/layout/FlowerShower"
 
-const FALLBACK_LOGO_URL = "/header.png"
+const FALLBACK_LOGO_URL = "/header.webp"
 
 export default function Header() {
   // Fallback shown immediately (and kept if the CMS hasn't set a custom

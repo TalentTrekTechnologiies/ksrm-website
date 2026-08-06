@@ -11,7 +11,7 @@ export default function TrainingsPage() {
 
         .trainings-hero {
           position: relative;
-          background-image: url('/site-images/seminar.jpg');
+          background-image: url('/site-images/seminar.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

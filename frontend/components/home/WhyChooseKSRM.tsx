@@ -20,19 +20,19 @@ const HIGHLIGHTS: Highlight[] = [
   {
     title: "UGC Autonomous",
     desc: "Affiliated to JNTUA with academic autonomy and a modern, industry-aligned curriculum.",
-    image: "/campus/main-building.jpg",
+    image: "/campus/main-building.webp",
     icon: (<><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></>),
   },
   {
     title: "NAAC A+ Accredited",
     desc: "Among the region's top-graded institutions, with NBA Tier-1 accredited programs.",
-    image: "/campus/aerial-campus.jpg",
+    image: "/campus/aerial-campus.webp",
     icon: (<><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" /></>),
   },
   {
     title: "1200+ Students Placed",
     desc: "200+ recruiting companies and a dedicated Training & Placement cell backing every student.",
-    image: "/campus/seminar-hall.jpg",
+    image: "/campus/seminar-hall.webp",
     icon: (<><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></>),
   },
   {
@@ -44,13 +44,13 @@ const HIGHLIGHTS: Highlight[] = [
   {
     title: "Modern Infrastructure",
     desc: "State-of-the-art laboratories, a central library, seminar halls and a 25-acre green campus.",
-    image: "/campus/central-library.jpg",
+    image: "/campus/central-library.webp",
     icon: (<><path d="M3 21h18" /><path d="M5 21V7l8-4v18" /><path d="M19 21V11l-6-4" /></>),
   },
   {
     title: "Research & Innovation",
     desc: "Active R&D, funded projects, patents and a thriving innovation and entrepreneurship cell.",
-    image: "/campus/robotics-lab.jpg",
+    image: "/campus/robotics-lab.webp",
     icon: (<><path d="M9 18h6" /><path d="M10 22h4" /><path d="M15 2a7 7 0 0 0-4 12.7V17h2v-2.3A7 7 0 0 0 15 2Z" /></>),
   },
 ]

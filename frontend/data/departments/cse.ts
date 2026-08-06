@@ -76,7 +76,7 @@ export const cse: Department = {
     { name: "J. Mohan", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/ramprakash-reddy-arava.jpg", specialization: "AI Algorithms" },
     { name: "K. Niranjan", designation: "Assistant Professor", qualification: "M.Tech.", photo: "", specialization: "Software Testing" },
     { name: "L. Prakash", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/riyaz-banu.jpg", specialization: "Network Design" },
-    { name: "M. Ramesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/gouri.jpg", specialization: "Systems Analysis" },
+    { name: "M. Ramesh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/gouri.webp", specialization: "Systems Analysis" },
     { name: "N. Santosh", designation: "Assistant Professor", qualification: "M.Tech.", photo: "/images/departments/cse/faculty/sujana.jpg", specialization: "DevOps" },
   ],
   // AI & ML and Data Science are specialisations offered under CSE, not
@@ -99,7 +99,7 @@ export const cse: Department = {
     { name: "Software Engineering Laboratory", description: "Software development methodologies, project management, and DevOps", imageUrl: "/Labs/CSE/9.webp" },
     { name: "IoT & Embedded Systems Laboratory", description: "Embedded systems programming, IoT devices, and sensor networks", imageUrl: "/Labs/CSE/10.webp" }
   ],
-  heroImage: "/departments/cse.jpg"
+  heroImage: "/departments/cse.webp"
 };
 
 export default cse;

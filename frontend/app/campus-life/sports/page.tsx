@@ -34,9 +34,9 @@ const achievements: Achievement[] = [
 const badgeColors: Record<AchievementBadge, string> = { state: "#3498db", national: "#e74c3c", university: "#27ae60" };
 
 const achievementImages = [
-  { src: "/site-images/volleyball.jpg", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },
-  { src: "/site-images/sportsg3.jpg", alt: "Indoor badminton court", caption: "Indoor games - Badminton facility" },
-  { src: "/site-images/sportsground.jpg", alt: "Basketball court", caption: "Basketball court - Outdoor sports" },
+  { src: "/site-images/volleyball.webp", alt: "Volleyball match", caption: "Volleyball - Team sport excellence" },
+  { src: "/site-images/sportsg3.webp", alt: "Indoor badminton court", caption: "Indoor games - Badminton facility" },
+  { src: "/site-images/sportsground.webp", alt: "Basketball court", caption: "Basketball court - Outdoor sports" },
 ];
 
 const upcomingEvents = [

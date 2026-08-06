@@ -25,7 +25,7 @@ interface Accred {
 
 const FALLBACK_ACCREDITATIONS: Accred[] = [
   { shortName: "NAAC", grade: "A+",        name: "NAAC Accredited", sub: "3.60 CGPA",              link: "/accreditation", linkText: "View Certificate", colorClass: "naac", image: "/naac.png"  },
-  { shortName: "NBA",  grade: "Tier-1",     name: "NBA Accredited",  sub: "CE, ECE, CSE, EEE, ME",  link: "/accreditation", linkText: "View Programs",    colorClass: "nba",  image: "/nba.png"   },
+  { shortName: "NBA",  grade: "Tier-1",     name: "NBA Accredited",  sub: "CE, ECE, CSE, EEE, ME",  link: "/accreditation", linkText: "View Programs",    colorClass: "nba",  image: "/nba.webp"   },
   { shortName: "NIRF", grade: "Ranked",     name: "NIRF India",      sub: "Engineering Category",   link: "/accreditation", linkText: "View Ranking",     colorClass: "nirf", image: "/nirf.jpg"  },
   { shortName: "UGC",  grade: "Autonomous", name: "UGC Status",      sub: "Affiliated to JNTUA",    link: "/accreditation", linkText: "Learn More",        colorClass: "ugc",  image: "/ugc.webp"  },
 ]

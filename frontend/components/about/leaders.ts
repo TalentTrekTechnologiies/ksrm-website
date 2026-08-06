@@ -17,7 +17,7 @@ export const leaders: Record<string, Leader> = {
     honorific: "Hon'ble Correspondent",
     name: "Smt. K. Rajeswari",
     email: "ksrmcekadapa@gmail.com",
-    photo: "/images/leadership/correspondent.jpg",
+    photo: "/images/leadership/correspondent.webp",
     message: [
       "The college was started with a noble cause to provide technical education to people of the Rayalaseema region, one of the backward regions of Andhra Pradesh, and has been doing well per its founding motivation. KSRMCE has produced noteworthy alumni since 1980, aiming to produce mature, professionally equipped graduates with values, morals and ethics through academics and co-curricular activities.",
       "We believe in academic excellence by upholding teaching-learning standards through capable human resources and adopting contemporary technologies. Our faculty and infrastructure are designed to nurture critical thinking and problem-solving abilities in our students.",
@@ -30,7 +30,7 @@ export const leaders: Record<string, Leader> = {
     role: "Managing Director",
     name: "Dr. K. Chandra Obul Reddy",
     credentials: "Managing Director & Vice Chairman, Kandula Group of Institutions",
-    photo: "/images/leadership/correspondent.jpg",
+    photo: "/images/leadership/correspondent.webp",
     message: [
       "I am the youngest and most energetic Managing Director of the Kandula Group of Institutions and Vice Chairman of KSRMCE. As an entrepreneur who founded KOR Ginning & Oil Mills Pvt Ltd, I understand the importance of innovation and excellence in every endeavor.",
       "I serve as Director of three organizations: Kandula Group of Institutions, KOR Ginning and Oil Mills Pvt Ltd, and Kandula Ginning and Pressing Mills Pvt Ltd. Taking over to continue the legacy of my father and grandfather is both a responsibility and a privilege that I cherish deeply.",
@@ -44,7 +44,7 @@ export const leaders: Record<string, Leader> = {
     name: "Sri. K. Madan Mohan Reddy",
     credentials: "Master of Science (USA)",
     email: "ksrmcekadapa@gmail.com",
-    photo: "/images/leadership/correspondent.jpg",
+    photo: "/images/leadership/correspondent.webp",
     message: [
       "The institute is dedicated to helping students flourish with advanced technological knowledge in their fields. We have invested in state-of-the-art laboratories and facilities to convert theory into experimental outcomes, ensuring our students gain practical expertise alongside theoretical understanding.",
       "Our motive is not only to prepare technocrats but to make them ideal people who serve society and the nation with regularity, responsibility and dedication. Education, in our view, is a holistic process that develops both mind and character.",
@@ -58,7 +58,7 @@ export const leaders: Record<string, Leader> = {
     credentials: "M.Tech., Ph.D.",
     phone: "+91 90003 32294",
     email: "principal@ksrmce.ac.in",
-    photo: "/images/leadership/correspondent.jpg",
+    photo: "/images/leadership/correspondent.webp",
     message: [
       "Welcome to KSRMCE, an institution of excellence under Kandula Obula Reddy Charities. Since 1980, we have produced quality technical graduates for the country and the world, maintaining our commitment to academic rigor and ethical development.",
       "Over four decades, we have become a premier hub of learning blending state-of-the-art infrastructure with committed faculty, fostering knowledge while instilling human values and social responsibility. Our campus is a vibrant ecosystem where innovation thrives alongside tradition.",

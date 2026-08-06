@@ -13,13 +13,13 @@ const CATEGORY = "Campus Life"
 // Shown immediately on first paint and kept if the API is unreachable, so
 // the section never renders empty. Mirrors the real seeded gallery records.
 const FALLBACK: { id: number; title: string; imageUrl: string }[] = [
-  { id: -1, title: "Aerial Campus View", imageUrl: "/campus/aerial-campus.jpg" },
-  { id: -2, title: "Main Academic Building", imageUrl: "/campus/main-building.jpg" },
-  { id: -3, title: "Central Library", imageUrl: "/campus/central-library.jpg" },
-  { id: -4, title: "Robotics & 3D Printing Lab", imageUrl: "/campus/robotics-lab.jpg" },
-  { id: -5, title: "Seminar Hall", imageUrl: "/campus/seminar-hall.jpg" },
-  { id: -6, title: "Sports Ground", imageUrl: "/campus/sports-ground.jpg" },
-  { id: -7, title: "Cultural Fest", imageUrl: "/campus/cultural-fest.jpg" },
+  { id: -1, title: "Aerial Campus View", imageUrl: "/campus/aerial-campus.webp" },
+  { id: -2, title: "Main Academic Building", imageUrl: "/campus/main-building.webp" },
+  { id: -3, title: "Central Library", imageUrl: "/campus/central-library.webp" },
+  { id: -4, title: "Robotics & 3D Printing Lab", imageUrl: "/campus/robotics-lab.webp" },
+  { id: -5, title: "Seminar Hall", imageUrl: "/campus/seminar-hall.webp" },
+  { id: -6, title: "Sports Ground", imageUrl: "/campus/sports-ground.webp" },
+  { id: -7, title: "Cultural Fest", imageUrl: "/campus/cultural-fest.webp" },
   { id: -8, title: "Founder's Day", imageUrl: "/campus/founders-day.webp" },
 ]
 

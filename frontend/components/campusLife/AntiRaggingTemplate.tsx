@@ -249,7 +249,7 @@ export default function AntiRaggingTemplate() {
       <section
         className="arr-hero"
         style={{
-          backgroundImage: `url('/images/campus/02.jpg')`,
+          backgroundImage: `url('/images/campus/02.webp')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'relative',

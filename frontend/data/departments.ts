@@ -305,7 +305,7 @@ export const departments: Record<string, Department> = {
       { name: "Web & Mobile Application Development Lab", description: "Full-stack web and mobile development" },
       { name: "Project & Research Lab", description: "Capstone projects and research initiatives" },
     ],
-    heroImage: "/departments/cse.jpg",
+    heroImage: "/departments/cse.webp",
   },
   ece: {
     slug: "ece",
@@ -373,14 +373,14 @@ export const departments: Record<string, Department> = {
         name: "T. Umamaheswari",
         designation: "Associate Professor",
         qualification: "M.Tech.",
-        photo: "/faculty/ece/t.-umamaheswari.jpg",
+        photo: "/faculty/ece/t.-umamaheswari.webp",
         specialization: "Embedded Systems",
       },
       {
         name: "P. Swetha",
         designation: "Assistant Professor",
         qualification: "M.Tech.",
-        photo: "/faculty/ece/p.swetha.jpg",
+        photo: "/faculty/ece/p.swetha.webp",
         specialization: "Communications",
       },
       {
@@ -410,7 +410,7 @@ export const departments: Record<string, Department> = {
       { name: "Embedded Systems Lab" },
       { name: "Microprocessors & Microcontrollers Lab" },
     ],
-    heroImage: "/departments/ece.jpg",
+    heroImage: "/departments/ece.webp",
   },
   eee: {
     slug: "eee",
@@ -620,7 +620,7 @@ export const departments: Record<string, Department> = {
       { name: "Electrical Measurements Lab", description: "Precision measurements", imageUrl: "/images/departments/eee/labs/measurements-lab.jpg" },
       { name: "Simulation Lab", description: "PSCAD and MATLAB simulations", imageUrl: "/images/departments/eee/labs/simulation-lab.jpg" },
     ],
-    heroImage: "/departments/eee.jpg",
+    heroImage: "/departments/eee.webp",
   },
   civil: {
     slug: "civil",
@@ -776,14 +776,14 @@ export const departments: Record<string, Department> = {
       { name: "Fluid Mechanics Laboratory", description: "Hydraulics and flow analysis", imageUrl: "/images/departments/civil/labs/lab8.jpg" },
     ],
     gallery: [
-      "/images/departments/civil/gallery/g1.jpg",
-      "/images/departments/civil/gallery/g2.jpg",
-      "/images/departments/civil/gallery/g3.jpg",
-      "/images/departments/civil/gallery/g4.jpg",
-      "/images/departments/civil/gallery/g5.jpg",
-      "/images/departments/civil/gallery/g6.jpg",
+      "/images/departments/civil/gallery/g1.webp",
+      "/images/departments/civil/gallery/g2.webp",
+      "/images/departments/civil/gallery/g3.webp",
+      "/images/departments/civil/gallery/g4.webp",
+      "/images/departments/civil/gallery/g5.webp",
+      "/images/departments/civil/gallery/g6.webp",
     ],
-    heroImage: "/departments/civil.jpg",
+    heroImage: "/departments/civil.webp",
   },
   mechanical: {
     slug: "mechanical",
@@ -889,7 +889,7 @@ export const departments: Record<string, Department> = {
       { name: "Metrology & Measurements Lab" },
       { name: "Strength of Materials Lab" },
     ],
-    heroImage: "/departments/mech.jpg",
+    heroImage: "/departments/mech.webp",
   },
   "humanities-sciences": {
     slug: "humanities-sciences",
@@ -992,7 +992,7 @@ export const departments: Record<string, Department> = {
       { name: "English Language Communication Skills Lab" },
       { name: "Mathematics / Computational Lab" },
     ],
-    heroImage: "/departments/hs.jpg",
+    heroImage: "/departments/hs.webp",
   },
   mba: {
     slug: "mba",
@@ -1092,7 +1092,7 @@ export const departments: Record<string, Department> = {
       { name: "Computer & Analytics Lab" },
       { name: "Business Simulation Lab" },
     ],
-    heroImage: "/departments/mba.jpg",
+    heroImage: "/departments/mba.webp",
   },
 }
 

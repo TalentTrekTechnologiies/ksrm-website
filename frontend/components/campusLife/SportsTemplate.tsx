@@ -284,7 +284,7 @@ export default function SportsTemplate() {
       <section
         className="spo-hero"
         style={{
-          backgroundImage: `url('/images/campus/indoor1.png')`,
+          backgroundImage: `url('/images/campus/indoor1.webp')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'relative',

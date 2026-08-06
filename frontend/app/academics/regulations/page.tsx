@@ -185,7 +185,7 @@ export default function RegulationsPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .reg-hero {
-          position: relative; background-image: url('/site-images/library.jpg');
+          position: relative; background-image: url('/site-images/library.webp');
           background-size: cover; background-position: center;
           background-color: #2B3490; min-height: 320px; display: flex;
           align-items: flex-end; overflow: hidden; padding-bottom: 40px;

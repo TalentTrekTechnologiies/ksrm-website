@@ -34,7 +34,7 @@ const FALLBACK_PROGRAMS: AdmissionProgram[] = [
     id: -1,
     section: "homepage_admission_programs",
     icon: "B.Tech Programmes",
-    imageUrl: "/b-tech-banner.png",
+    imageUrl: "/b-tech-banner.webp",
     mediaId: null,
     title: "B.Tech Engineering",
     description: "750+ Seats | 8 Branches | 4 Years",
@@ -53,7 +53,7 @@ const FALLBACK_PROGRAMS: AdmissionProgram[] = [
     id: -2,
     section: "homepage_admission_programs",
     icon: "Diploma / Polytechnic",
-    imageUrl: "/diploma-banner.png",
+    imageUrl: "/diploma-banner.webp",
     mediaId: null,
     title: "Diploma Programmes",
     description: "Lateral Entry Available | 3 Years | EAPCET Eligible",
@@ -102,7 +102,7 @@ function normalizeProgram(program: AdmissionProgram): AdmissionProgram {
 
   return {
     ...program,
-    imageUrl: program.imageUrl?.trim() || "/b-tech-banner.png",
+    imageUrl: program.imageUrl?.trim() || "/b-tech-banner.webp",
     title: title || "Admission Programme",
     description: program.description?.trim() || null,
     tags: program.tags.filter((tag) => tag.trim()).map((tag) => tag.trim()),
@@ -423,7 +423,7 @@ export default function Admissions({
         {/* CARDS GRID — poster + programme cards, all three side by side */}
         <div className="admissions-grid">
           <a
-            href="/admissions-2026-poster.jpg"
+            href="/admissions-2026-poster.webp"
             target="_blank"
             rel="noopener noreferrer"
             title="View full Admissions 2026-27 details"
@@ -431,7 +431,7 @@ export default function Admissions({
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- static admissions poster */}
             <img
-              src="/admissions-2026-poster.jpg"
+              src="/admissions-2026-poster.webp"
               alt="K.S.R.M. College of Engineering — Admissions Open 2026-27"
               loading="lazy"
             />

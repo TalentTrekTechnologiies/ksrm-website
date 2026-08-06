@@ -235,12 +235,12 @@ function ProgramsManager() {
             onChange={(imageUrl, mediaId) => setForm({ ...form, imageUrl, mediaId })}
             accept={["IMAGE"]}
             required
-            urlPlaceholder="/b-tech-banner.png"
+            urlPlaceholder="/b-tech-banner.webp"
           />
           <TextField label="Info line" value={form.description} onChange={(description) => setForm({ ...form, description })} placeholder="750+ Seats | 8 Branches | 4 Years" />
           <CmsChipList label="Branches" items={form.tags} onChange={(tags) => setForm({ ...form, tags })} placeholder="Add a branch, e.g. AI & DS" />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <TextField label="Button link" value={form.linkUrl} onChange={(linkUrl) => setForm({ ...form, linkUrl })} required placeholder="/b-tech-banner.png" />
+            <TextField label="Button link" value={form.linkUrl} onChange={(linkUrl) => setForm({ ...form, linkUrl })} required placeholder="/b-tech-banner.webp" />
             <TextField label="Button text" value={form.linkText} onChange={(linkText) => setForm({ ...form, linkText })} placeholder="View Brochure ↗" />
           </div>
           <FormActions>

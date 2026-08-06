@@ -61,7 +61,7 @@ export const hs: Department = {
     { name: "B.Tech Support Courses", level: "Undergraduate", intake: "All" }
   ],
   labs: [],
-  heroImage: "/departments/hs.jpg"
+  heroImage: "/departments/hs.webp"
 };
 
 export default hs;

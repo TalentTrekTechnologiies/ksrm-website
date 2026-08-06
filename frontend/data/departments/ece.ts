@@ -118,7 +118,7 @@ export const ece: Department = {
     { name: "Devices & Circuits Laboratory", description: "Electronic devices, transistor circuits, and analog electronics", imageUrl: "/Labs/ECE/ece7.webp" },
     { name: "Communications Laboratory", description: "Digital and analog communication systems, signal processing", imageUrl: "/Labs/ECE/ece8.webp" }
   ],
-  heroImage: "/departments/ece.jpg"
+  heroImage: "/departments/ece.webp"
 };
 
 export default ece;

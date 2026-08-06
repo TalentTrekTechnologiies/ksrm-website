@@ -31,7 +31,7 @@ const FALLBACK_ABOUT: AboutContent = {
     { num: "UGC", label: "Autonomous" },
   ],
   foundingYear: 1980,
-  image: { url: "/topview (1).jpg", alt: "K.S.R.M. Campus", caption: "Aerial View of K.S.R.M. College Campus" },
+  image: { url: "/topview (1).webp", alt: "K.S.R.M. Campus", caption: "Aerial View of K.S.R.M. College Campus" },
   badgeLabel: "YEARS OF TRUST",
   cta: { text: "Read Our Story →", href: "/about" },
 }

@@ -26,7 +26,7 @@ export default function MandatoryDisclosurePage() {
       <style>{`
         .md-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .md-container { padding: 0 20px; } }
-        .md-hero { position: relative; background-image: url('/site-images/blocktop.jpg'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
+        .md-hero { position: relative; background-image: url('/site-images/blocktop.webp'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
         .md-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,26,74,0.74) 0%, rgba(20,26,74,0.88) 100%); }
         .md-hero > * { position: relative; z-index: 2; }
         .md-note { background: #f7f8fa; border-left: 4px solid #2B3490; border-radius: 0 10px 10px 0; padding: 18px 22px; margin: 40px 0 0; color: #555; font-size: 15px; line-height: 1.7; }

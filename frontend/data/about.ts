@@ -38,7 +38,7 @@ export const aboutData = {
   // Leadership (4 cards)
   leadership: [
     {
-      photo: "/images/leadership/correspondent.jpg",
+      photo: "/images/leadership/correspondent.webp",
       name: "Smt. K. Rajeswari",
       title: "Secretary cum Correspondent",
       bio: "Hon'ble Secretary cum Correspondent of K.S.R.M. College of Engineering, guiding the institution with unwavering dedication and a vision for quality technical education in the Rayalaseema region of Andhra Pradesh. With her administrative acumen and commitment to academic excellence, she plays a pivotal role in the institution's strategic planning and governance. Under her stewardship, K.S.R.M. continues to uphold the values of the Kandula family legacy while fostering innovation, research, and holistic student development. Her leadership ensures that the institution remains at the forefront of technical education, empowering students to become responsible citizens and global contributors.",
@@ -60,7 +60,7 @@ export const aboutData = {
       link: "/about/managing-director",
     },
     {
-      photo: "/images/leadership/principal.png",
+      photo: "/images/leadership/principal.webp",
       name: "Dr. T. Nageswara Prasad",
       title: "Principal",
       email: "principal@ksrmce.ac.in",

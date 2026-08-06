@@ -29,7 +29,7 @@ import { useLiveData } from "@/lib/use-live-data"
 const LOGOS: { match: RegExp; src: string; alt: string }[] = [
   { match: /\bUGC\b|autonom/i, src: "/ugc.webp", alt: "University Grants Commission" },
   { match: /\bNAAC\b/i, src: "/naac.png", alt: "NAAC" },
-  { match: /\bNBA\b/i, src: "/nba.png", alt: "National Board of Accreditation" },
+  { match: /\bNBA\b/i, src: "/nba.webp", alt: "National Board of Accreditation" },
   { match: /\bNIRF\b/i, src: "/nirf.jpg", alt: "NIRF" },
   // A typographic wordmark, not AICTE's official emblem - see public/aicte.svg.
   { match: /\bAICTE\b|\bEOA\b/i, src: "/aicte.svg", alt: "AICTE Approved" },

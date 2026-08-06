@@ -47,7 +47,7 @@ export const LEADERSHIP: Leader[] = [
     // Published as "Secretary cum Correspondent"; the college asked for "and"
     // in place of "cum", keeping both titles.
     role: "Correspondent and Secretary",
-    photo: "/images/leadership/correspondent.jpg",
+    photo: "/images/leadership/correspondent.webp",
     messageHeading: "Correspondent's Message",
     paragraphs: [
       "The college was started with a noble cause to provide Technical Education to the people in the Rayalaseema region, one of the backward regions, of Andhra Pradesh. The college has been doing well in accordance with the motivation behind it's establishment. KSRMCE has produced noteworthy alumni since it's existence from 1980. The institute aims to produce potentially matured, professionally equipped graduates with values, morals and ethics and has been striving to achieve through the academics, extra and co-curricular activities.",
@@ -84,7 +84,7 @@ export const LEADERSHIP: Leader[] = [
     slug: "principal",
     name: "Dr. T. Nageswara Prasad",
     role: "Principal",
-    photo: "/images/leadership/principal.png",
+    photo: "/images/leadership/principal.webp",
     messageHeading: "Principal's Message",
     paragraphs: [
       "It is my pleasure to welcome you to K.S.R.M. College of Engineering (KSRMCE), an institution of excellence under the Kandula Obula Reddy Charities. Since its inception, in 1980, KSRMCE has shown its impact on producing quality technical graduates not only to the country but also the world.",

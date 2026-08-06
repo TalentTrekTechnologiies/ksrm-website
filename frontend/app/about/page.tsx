@@ -29,7 +29,7 @@ const TRUSTEES = [
   // back to their initials; a missing photo should read as deliberate, not
   // as a broken image.
   { name: "Sri. K. Madan Mohan Reddy", role: "President", photo: "/images/leadership/chairman.webp" },
-  { name: "Smt. K. Rajeswari", role: "Vice-President & Treasurer", photo: "/images/leadership/correspondent.jpg" },
+  { name: "Smt. K. Rajeswari", role: "Vice-President & Treasurer", photo: "/images/leadership/correspondent.webp" },
   { name: "Sri. K. Chandra Obul Reddy", role: "Secretary", photo: "/images/leadership/managing-director.webp" },
   { name: "Sri. K. Raja Mohan Reddy", role: "Member", photo: "" },
   { name: "Sri. S. Venkata Siva Reddy", role: "Member", photo: "" },
@@ -108,7 +108,7 @@ export default function About() {
         h2 { color: #2B3490; font-size: 40.8px; font-weight: 700; margin-bottom: 48px; text-align: left; }
         h3 { color: #2B3490; font-size: 19px; font-weight: 700; }
 
-        .k-hero { position: relative; background-image: url('/site-images/topview.jpg'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; overflow: hidden; }
+        .k-hero { position: relative; background-image: url('/site-images/topview.webp'); background-size: cover; background-position: center; background-color: #f5f5f5; min-height: 320px; padding: 80px 0; display: flex; align-items: center; color: white; overflow: hidden; }
         .k-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%); z-index: 1; }
         .k-hero-content { position: relative; z-index: 2; }
         .k-hero-content { }
@@ -321,7 +321,7 @@ export default function About() {
             </div>
             <figure className="k-charities-figure">
               {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
-              <img src="/images/leadership/correspondent.jpg" alt="Smt. K. Rajeswari, Correspondent" />
+              <img src="/images/leadership/correspondent.webp" alt="Smt. K. Rajeswari, Correspondent" />
             </figure>
           </div>
 

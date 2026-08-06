@@ -89,7 +89,7 @@ export default function VisionMissionTabs({
           position: relative;
           width: 100%;
           padding: 38px 0 44px;
-          background: url('/campus/aerial-campus.jpg') center center / cover no-repeat;
+          background: url('/campus/aerial-campus.webp') center center / cover no-repeat;
           overflow: hidden;
         }
         .vm-overlay {

@@ -52,39 +52,39 @@ const exploreSections = [
   {
     title: "🔬 Laboratories",
     images: [
-      { src: "/site-images/lab.jpg", alt: "Robotics laboratory with ABB robotic arm" },
-      { src: "/site-images/roboticslab.jpg", alt: "Robotic 3D printing lab" },
-      { src: "/site-images/ab.jpg", alt: "Computer laboratory" },
+      { src: "/site-images/lab.webp", alt: "Robotics laboratory with ABB robotic arm" },
+      { src: "/site-images/roboticslab.webp", alt: "Robotic 3D printing lab" },
+      { src: "/site-images/ab.webp", alt: "Computer laboratory" },
     ],
   },
   {
     title: "📚 Library",
     images: [
-      { src: "/site-images/library.jpg", alt: "Central Library building" },
-      { src: "/site-images/studentsinlib.jpg", alt: "Students reading in library" },
-      { src: "/site-images/studentsinlib2.jpg", alt: "Students studying in library" },
+      { src: "/site-images/library.webp", alt: "Central Library building" },
+      { src: "/site-images/studentsinlib.webp", alt: "Students reading in library" },
+      { src: "/site-images/studentsinlib2.webp", alt: "Students studying in library" },
     ],
   },
   {
     title: "🏆 Sports & Grounds",
     images: [
-      { src: "/site-images/volleyball.jpg", alt: "Volleyball match" },
-      { src: "/site-images/sportsg3.jpg", alt: "Indoor badminton court" },
-      { src: "/site-images/sportsground.jpg", alt: "Basketball court" },
-      { src: "/site-images/sportsground2.jpg", alt: "Sports ground aerial view" },
+      { src: "/site-images/volleyball.webp", alt: "Volleyball match" },
+      { src: "/site-images/sportsg3.webp", alt: "Indoor badminton court" },
+      { src: "/site-images/sportsground.webp", alt: "Basketball court" },
+      { src: "/site-images/sportsground2.webp", alt: "Sports ground aerial view" },
     ],
   },
   {
     title: "🎉 Events & Activities",
     images: [
-      { src: "/site-images/fest.jpg", alt: "Award ceremony" },
-      { src: "/site-images/fest2.jpg", alt: "Cultural fest performance" },
-      { src: "/site-images/event.jpg", alt: "KGCET poster launch" },
+      { src: "/site-images/fest.webp", alt: "Award ceremony" },
+      { src: "/site-images/fest2.webp", alt: "Cultural fest performance" },
+      { src: "/site-images/event.webp", alt: "KGCET poster launch" },
     ],
   },
   {
     title: "🚌 Transportation",
-    images: [{ src: "/site-images/buses.jpg", alt: "K.S.R.M. college bus fleet" }],
+    images: [{ src: "/site-images/buses.webp", alt: "K.S.R.M. college bus fleet" }],
   },
 ];
 
