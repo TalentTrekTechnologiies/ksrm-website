@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import CollegeFest from "@/components/campus/CollegeFest";
 
 export const metadata: Metadata = {
   title: "Campus Life | K.S.R.M. College of Engineering",
@@ -64,6 +65,10 @@ export default function CampusLifeIndexPage() {
           </div>
         </div>
       </section>
+      {/* The college fest. Driven by Admin -> Events (category "Fest"), with
+          this year's announcement built in until one is added there. */}
+      <CollegeFest />
+
       {/* Any committee the CMS points at this page - see PlacedCommittees.
           Renders nothing until one is pointed here. */}
       <PlacedCommittees placement="CAMPUS_LIFE" heading="Committees" />

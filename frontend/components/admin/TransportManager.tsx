@@ -228,7 +228,8 @@ function TransportManagerInner() {
             <Bus className="h-5 w-5 text-admin-primary" /> Transport — Bus Routes
           </h1>
           <p className="text-sm text-slate-500">
-            Routes, timings, fees and crew shown on Campus Life → Transport.
+            Routes, timings and crew shown on Campus Life → Transport. The fee is kept here but
+            is no longer published on that page.
           </p>
         </div>
         {!isFormOpen && (
