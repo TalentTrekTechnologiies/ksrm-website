@@ -95,7 +95,7 @@ export default function CampusGallery() {
             Campus Gallery
           </h2>
           <p style={{ color: "#777", fontSize: "17px", margin: "8px auto 0", maxWidth: "560px" }}>
-            A glimpse of our 25-acre campus — modern labs, a well-stocked library, vibrant events and sporting spirit.
+            A glimpse of our 35-acre campus — modern labs, a well-stocked library, vibrant events and sporting spirit.
           </p>
         </div>
 

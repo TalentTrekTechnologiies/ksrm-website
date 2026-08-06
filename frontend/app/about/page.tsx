@@ -64,11 +64,11 @@ export default function About() {
 
   const statsData = [
     { number: "45+", label: "Years of Excellence" },
-    { number: "35", label: "Acres Campus" },
-    { number: "26,700 sqm", label: "Built-up Area" },
+    { number: "35.23", label: "Acres Campus" },
+    { number: "27,864 sq.m", label: "Built-up Area" },
     { number: "1,000+", label: "Students Intake" },
     { number: "8", label: "Departments" },
-    { number: "4", label: "Hostels" },
+    { number: "2", label: "Hostels" },
   ]
 
   const strategicDocs = [

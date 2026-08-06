@@ -2620,7 +2620,7 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             id: "facilities-activities-and-student-support",
             label: "Facilities, activities and student support across a green 25...",
             kind: "line",
-            default: "Facilities, activities and student support across a green 25-acre campus.",
+            default: "Facilities, activities and student support across a green 35-acre campus.",
           },
         ],
       },
