@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { resolveFileUrl } from "@/lib/api-base";
 import { ArrowRight, MapPin, Clock } from "lucide-react"
@@ -47,23 +48,68 @@ function snippet(content: string | null | undefined) {
   return content.replace(/<[^>]+>/g, " ").replace(/[#*_>`]/g, "").replace(/\s+/g, " ").trim()
 }
 
+/**
+ * Does this list actually overflow its viewport?
+ *
+ * The two lists used to animate only at four items or more - a guess at when
+ * the content would exceed the 430px box. It was wrong in both directions, and
+ * wrong in a way nobody could see: the Upcoming Events box holds only the
+ * events still ahead, which was three, so it silently never scrolled while
+ * News beside it did. That is the whole of the "events are not scrolling"
+ * report.
+ *
+ * Measured instead of counted, so it is right for any number of items, any
+ * item height and any screen width. Once the clones are in, the content is
+ * twice its natural height, so the natural height is what gets compared.
+ */
+function useOverflows(itemCount: number) {
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const [overflows, setOverflows] = useState(false)
+
+  // itemCount is a dependency, not decoration. The list is fetched after
+  // mount, so on the first run there is no viewport to measure yet; without
+  // this the effect bailed once and never looked again, and nothing ever
+  // animated.
+  useEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+    const check = () => {
+      const natural = el.scrollHeight / (el.dataset.cloned === "true" ? 2 : 1)
+      // A few pixels of slack: a list one pixel too tall is not worth animating.
+      setOverflows(natural > el.clientHeight + 8)
+    }
+    check()
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    if (el.firstElementChild) ro.observe(el.firstElementChild)
+    return () => ro.disconnect()
+  }, [itemCount])
+
+  return { viewportRef, overflows }
+}
+
 export default function NewsAndEvents() {
   const state = useLiveData(fetchNewsAndEvents, [])
+  // Called before the early return below, so the hook order never changes
+  // between renders - the lists are simply zero-length until the fetch lands.
+  const news = useOverflows(state?.news.length ?? 0)
+  const events = useOverflows(state?.events.length ?? 0)
 
   if (!state) return null
   const showNews = state.newsVisible && state.news.length > 0
   const showEvents = state.events.length > 0
   if (!showNews && !showEvents) return null
 
-  // Auto-scroll the news list only when there are enough items to overflow the
-  // fixed-height viewport; otherwise show them statically.
-  const newsScrolls = state.news.length >= 4
+  // Auto-scroll a list only when it really does overflow its viewport - see
+  // useOverflows. Both lists travel at the same speed whatever they hold, so a
+  // three-item list does not crawl next to a ten-item one.
+  const newsScrolls = news.overflows
   const newsItems = newsScrolls ? [...state.news, ...state.news] : state.news
-  const newsDuration = Math.max(24, state.news.length * 6)
+  const newsDuration = Math.max(20, state.news.length * 5)
 
-  const eventsScroll = state.events.length >= 4
+  const eventsScroll = events.overflows
   const eventItems = eventsScroll ? [...state.events, ...state.events] : state.events
-  const eventsDuration = Math.max(24, state.events.length * 6)
+  const eventsDuration = Math.max(20, state.events.length * 5)
 
   return (
     <section style={{ width: "100%", background: "#f7f8fa", padding: "44px 0", borderTop: "1px solid #eef0f3" }}>
@@ -88,7 +134,10 @@ export default function NewsAndEvents() {
           text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
         }
         .ne-box-link:hover { color: #fff; }
-        .ne-viewport { height: 430px; overflow: hidden; position: relative; }
+        /* max-height, not height: a short list sits at its own height instead
+           of leaving empty space under it, which is what the Upcoming Events
+           box did with three events in a 430px well. */
+        .ne-viewport { max-height: 430px; overflow: hidden; position: relative; }
         .ne-track { display: flex; flex-direction: column; }
         .ne-track.anim { animation: neScroll var(--dur, 30s) linear infinite; will-change: transform; }
 
@@ -101,13 +150,27 @@ export default function NewsAndEvents() {
           .ne-viewport:hover .ne-track.anim { animation-play-state: paused; }
         }
 
-        /* No animation for anyone who has asked for less motion - and the
-           duplicated half is hidden, since it only exists to make the loop
-           seamless. The list becomes an ordinary scrollable one. */
-        @media (prefers-reduced-motion: reduce) {
+        /* On a touchscreen the list does not auto-scroll at all: it becomes an
+           ordinary one you swipe.
+
+           Gating the hover-pause was not enough. The viewport is overflow
+           hidden, so the ONLY thing moving the list was the animation - and a
+           phone stops CSS animations whenever it feels like it: iOS Low Power
+           Mode, Android battery saver, a backgrounded tab. When that happened
+           the list froze with no way to scroll it by hand, which is the
+           "events are not scrolling" report. It was never about how many items
+           there were; it was that the reader had no control.
+
+           A marquee is the wrong thing on a phone regardless - you cannot read
+           a list that moves under your thumb.
+
+           Same rule for anyone who has asked for less motion. The duplicated
+           half is hidden in both cases, since it exists only to make the loop
+           seamless. */
+        @media (prefers-reduced-motion: reduce), (hover: none) {
           .ne-track.anim { animation: none; }
           .ne-track.anim .ne-clone { display: none; }
-          .ne-viewport { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+          .ne-viewport { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
         }
         @keyframes neScroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
         .ne-item {
@@ -168,7 +231,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">Latest News</h3>
                 <Link href="/news" className="ne-box-link">View All News <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport">
+              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls}>
                 <div
                   className={`ne-track ${newsScrolls ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${newsDuration}s` } as React.CSSProperties}
@@ -182,7 +245,7 @@ export default function NewsAndEvents() {
                       <Link key={`${n.id}-${i}`} href="/news" className={`ne-item${clone ? " ne-clone" : ""}`}>
                         {n.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
-                          <img src={n.imageUrl} alt="" loading="lazy" className="ne-thumb" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
+                          <img src={resolveFileUrl(n.imageUrl)} alt="" loading="lazy" className="ne-thumb" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
                         ) : (
                           <span className="ne-thumb" aria-hidden />
                         )}
@@ -210,7 +273,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">Upcoming Events</h3>
                 <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport">
+              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll}>
                 <div
                   className={`ne-track ${eventsScroll ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${eventsDuration}s` } as React.CSSProperties}

@@ -51,6 +51,15 @@ export default function Placements() {
   const recruitersHidden = liveRecruiters?.hidden ?? false
   const recruiters = liveRecruiters?.recruiters ?? INITIAL_RECRUITERS
 
+  // Both strips move at a constant ~26px per second whatever they hold. A
+  // fixed duration crawled with four posters and blurred with forty, which is
+  // the "placements scrolling slowly" report on a strip that happened to be
+  // short. The floor keeps a two-item strip from whipping past.
+  const posters: string[] = Array.isArray(homeData?.placements?.posters) ? homeData.placements.posters : []
+  const posterStrip = [...posters, ...posters]
+  const photoDuration = Math.max(18, Math.round((posters.length * 296) / 26))
+  const recruiterDuration = Math.max(18, Math.round((recruiters.length * 180) / 26))
+
   return (
     <section style={{ width: "100%", background: "#f8f9fa", padding: "48px 0" }}>
       <style>{`
@@ -100,7 +109,7 @@ export default function Placements() {
         .photo-track {
           display: flex;
           gap: 16px;
-          animation: scroll 15s linear infinite;
+          animation: scroll var(--dur, 30s) linear infinite;
           will-change: transform;
         }
 
@@ -182,7 +191,7 @@ export default function Placements() {
         .recruiter-track {
           display: flex;
           gap: 20px;
-          animation: scroll 12s linear infinite;
+          animation: scroll var(--dur, 30s) linear infinite;
           will-change: transform;
         }
 
@@ -211,11 +220,31 @@ export default function Placements() {
           }
         }
 
-        /* Reduced motion: no animation, and the strips become ones the reader
-           scrolls themselves. */
-        @media (prefers-reduced-motion: reduce) {
+        .strip-viewport { overflow: hidden; }
+
+        /* On a touchscreen the strips do not animate; they are swiped.
+
+           This rule existed before and did nothing, because it unclipped
+           .photo-carousel / .recruiter-carousel while the element actually
+           clipping was an inner div with overflow:hidden set inline - and an
+           inline style beats a stylesheet rule. So the strip stopped moving
+           and still could not be scrolled. That is "placements scrolling
+           slowly" on a phone: the animation is throttled by the battery saver
+           and there is no way to move it yourself.
+
+           The clipped half is dropped too - the duplicate exists only to make
+           the loop seamless, and swiping through the same logos twice is
+           just confusing. */
+        @media (prefers-reduced-motion: reduce), (hover: none) {
           .photo-track, .recruiter-track { animation: none; }
-          .photo-carousel, .recruiter-carousel { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+          .strip-viewport {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+            scroll-snap-type: x proximity;
+          }
+          .photo-item, .recruiter-logo { scroll-snap-align: start; }
+          .strip-clone { display: none; }
         }
 
         @media (max-width: 1024px) {
@@ -270,10 +299,10 @@ export default function Placements() {
         {/* PHOTO CAROUSEL */}
         <div className="photo-carousel">
           <div className="carousel-title">2025 Placements</div>
-          <div style={{ overflow: "hidden" }}>
-            <div className="photo-track">
-              {(Array.isArray(homeData?.placements?.posters) ? [...homeData.placements.posters, ...homeData.placements.posters] : []).map((poster, i) => (
-                <div key={i} className="photo-item">
+          <div className="strip-viewport">
+            <div className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
+              {posterStrip.map((poster, i) => (
+                <div key={i} className={`photo-item${i >= posters.length ? " strip-clone" : ""}`}>
                   <img src={poster} alt={`Placement ${i}`} />
                 </div>
               ))}
@@ -292,14 +321,15 @@ export default function Placements() {
               </div>
             </div>
 
-            <div className="recruiter-carousel" style={{ overflow: "hidden" }}>
-              <div className="recruiter-track">
+            <div className="recruiter-carousel strip-viewport">
+              <div className="recruiter-track" style={{ ["--dur" as string]: `${recruiterDuration}s` } as React.CSSProperties}>
                 {[...recruiters, ...recruiters].map((recruiter, i) => {
+                  const isClone = i >= recruiters.length;
                   const logo = recruiter?.logo ?? '';
                   const filename = logo.split('/').pop() || '';
                   const encodedPath = `/recruiters/${encodeURIComponent(filename)}`;
                   return (
-                    <div key={i} className="recruiter-logo">
+                    <div key={i} className={`recruiter-logo${isClone ? " strip-clone" : ""}`}>
                       <img
                         src={encodedPath}
                         alt={recruiter?.name ?? ''}

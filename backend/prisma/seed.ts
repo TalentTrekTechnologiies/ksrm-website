@@ -90,6 +90,7 @@ const MODULE_ACTIONS: Record<string, readonly string[]> = {
   learning_outcomes: [...CRUD_ACTIONS, 'restore'],
   department_programmes: [...CRUD_ACTIONS, 'restore'],
   transport_routes: [...CRUD_ACTIONS, 'restore'],
+  kgcet: ['view', 'create', 'update', 'delete', 'restore'],
   department_highlights: [...CRUD_ACTIONS, 'restore'],
   // No create/delete/restore: display settings are toggles on a fixed,
   // code-defined catalog (see DEPARTMENT_DISPLAY_SETTINGS_CATALOG), not

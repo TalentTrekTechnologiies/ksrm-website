@@ -444,6 +444,8 @@ model Admin {
   // Media Library.
   uploadedMedia           Media[]        @relation("Media_UploadedBy")
   deletedTransportRoutes TransportRoute[] @relation("TransportRoute_DeletedBy")
+  deletedKgcetParticipation KgcetParticipation[] @relation("KgcetParticipation_DeletedBy")
+  deletedKgcetHighlights    KgcetHighlight[]     @relation("KgcetHighlight_DeletedBy")
   deletedMedia            Media[]        @relation("Media_DeletedBy")
   mediaVersionsReplacedBy MediaVersion[] @relation("MediaVersion_ReplacedBy")
 
@@ -2085,6 +2087,59 @@ model TransportRoute {
   version   Int       @default(1)
 
   deletedByAdmin Admin? @relation("TransportRoute_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([deletedAt])
+  @@index([sortOrder])
+}
+
+/// KGCET - the Kandula Group's scholarship entrance test.
+///
+/// The KGCET page's two tables lived in the page's own source, editable only
+/// as loose text slots in Page Content: an admin publishing this year's turnout
+/// had to find "participation.4.attended" among sixty text boxes and type a
+/// number into it. These are numbers and belong in a screen of their own.
+model KgcetParticipation {
+  id         Int    @id @default(autoincrement())
+  /// The exam year as displayed, e.g. "2026". Text, not an integer, so a
+  /// combined year ("2025-26") needs no schema change.
+  year       String
+  registered Int    @default(0)
+  attended   Int    @default(0)
+  qualified  Int    @default(0)
+
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("KgcetParticipation_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([deletedAt])
+  @@index([sortOrder])
+}
+
+/// The three cards above the participation table on the KGCET page.
+model KgcetHighlight {
+  id          Int     @id @default(autoincrement())
+  /// A single emoji shown on the card. Optional - a card without one is fine.
+  icon        String?
+  title       String
+  description String?
+
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  deletedByAdmin Admin? @relation("KgcetHighlight_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
   @@index([deletedAt])
   @@index([sortOrder])
