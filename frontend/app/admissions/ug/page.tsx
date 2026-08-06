@@ -1,6 +1,7 @@
 "use client";
 
 import PageResources from "@/components/PageResources";
+import AdmissionsContact from "@/components/admissions/AdmissionsContact";
 import CmsText from "@/components/CmsText";
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -172,6 +173,7 @@ export default function UGAdmissionsPage() {
           </div>
         </section>
       
+      <AdmissionsContact />
       <PageResources section="admissions.ug" />
       </main>
     </>

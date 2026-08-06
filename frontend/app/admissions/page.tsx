@@ -1,6 +1,7 @@
 "use client";
 
 import CmsText from "@/components/CmsText";
+import AdmissionsContact from "@/components/admissions/AdmissionsContact";
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
 ﻿import PageResources from "@/components/PageResources";
@@ -172,7 +173,8 @@ export default function AdmissionsPage() {
           </div>
         </section>
 
-        <PageResources section="admissions" />
+        <AdmissionsContact />
+      <PageResources section="admissions" />
       </main>
     </>
   );

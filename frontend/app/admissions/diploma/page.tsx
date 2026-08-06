@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
+import AdmissionsContact from "@/components/admissions/AdmissionsContact";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
@@ -236,22 +237,7 @@ export default function DiplomaAdmissionsPage() {
           </div>
         </section>
 
-        <section className="dip-section">
-          <div className="responsive-container">
-            <div className="dip-contact">
-              <h2><CmsText section="admissions.diploma" slot="ready-to-enroll" /></h2>
-              <p style={{ margin: "0 0 16px", opacity: 0.9 }}><CmsText section="admissions.diploma" slot="contact-us-for-more-information" /></p>
-              {/*
-                The old site ran several numbers together with no separators
-                ("8143731980994810198099482019809948301980"), so no individual
-                number could be read out of it reliably. The college has since
-                confirmed this one - and confirmed the last four digits are
-                1960, not the 1980 that string starts with.
-              */}
-              <div className="dip-contact-item">+91 8143731980</div>
-            </div>
-          </div>
-        </section>
+        <AdmissionsContact />
       
       <PageResources section="admissions.diploma" />
       </main>
