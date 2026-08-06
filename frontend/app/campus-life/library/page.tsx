@@ -1,7 +1,7 @@
 import PageResources from "@/components/PageResources";
-import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import CmsVideos from "@/components/CmsVideos";
 import LibraryStaff from "@/components/library/LibraryStaff";
+import LibraryCommittee from "@/components/library/LibraryCommittee";
 import LibrarianProfile, { LibrarianName } from "@/components/library/LibrarianProfile";
 import CmsText, { CmsTextProvider } from "@/components/CmsText";
 
@@ -181,6 +181,7 @@ const journalTotals = journals.reduce(
 );
 
 export default function LibraryPage() {
+
   return (
     <CmsTextProvider section="library">
     <main style={{ background: "#ffffff" }}>
@@ -337,7 +338,7 @@ export default function LibraryPage() {
             <div className="lib-vm-card">
               <h3>Goals</h3>
               <ul className="lib-goals">
-                {goals.map((g) => <li key={g}>{g}</li>)}
+                {goals.map((g, i) => <li key={g}><CmsText section="library" slot={`goals.${i}`} /></li>)}
               </ul>
             </div>
           </div>
@@ -532,7 +533,7 @@ export default function LibraryPage() {
                 Newspapers Received
               </h3>
               <div className="lib-chip-wrap">
-                {newspapers.map((n) => <span className="lib-chip" key={n}>{n}</span>)}
+                {newspapers.map((n, i) => <span className="lib-chip" key={n}><CmsText section="library" slot={`newspapers.${i}`} /></span>)}
               </div>
               <p style={{ color: "#777", fontSize: 14, lineHeight: 1.7, margin: "16px 0 0" }}>
                 Along with 22 magazines, Employment News and Assignment Abroad Times.
@@ -577,15 +578,7 @@ export default function LibraryPage() {
                 <tr><th>S. No.</th><th>Name</th><th>Department</th><th>Designation</th><th>Role</th></tr>
               </thead>
               <tbody>
-                {committee.map((c, i) => (
-                  <tr key={c.name}>
-                    <td>{String(i + 1).padStart(2, "0")}</td>
-                    <td><CmsText section="library" slot={`committee.${i}.name`} /></td>
-                    <td><CmsText section="library" slot={`committee.${i}.dept`} /></td>
-                    <td><CmsText section="library" slot={`committee.${i}.desig`} /></td>
-                    <td><CmsText section="library" slot={`committee.${i}.role`} /></td>
-                  </tr>
-                ))}
+                <LibraryCommittee fallback={committee} />
               </tbody>
             </table>
           </div>
@@ -601,14 +594,14 @@ export default function LibraryPage() {
           <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 14px" }}>Borrowing Rules</h3>
           <div className="lib-rules">
             {rules.map((r, i) => (
-              <div className="lib-rule" key={r}><strong>{i + 1}.</strong> {r}</div>
+              <div className="lib-rule" key={r}><strong>{i + 1}.</strong> <CmsText section="library" slot={`rules.${i}`} /></div>
             ))}
           </div>
 
           <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "36px 0 14px" }}>General Guidelines</h3>
           <div className="lib-rules">
             {guidelines.map((g, i) => (
-              <div className="lib-rule alt" key={g}><strong>{i + 1}.</strong> {g}</div>
+              <div className="lib-rule alt" key={g}><strong>{i + 1}.</strong> <CmsText section="library" slot={`guidelines.${i}`} /></div>
             ))}
           </div>
 
@@ -659,10 +652,6 @@ export default function LibraryPage() {
           </div>
         </div>
       </section>
-
-      {/* The Library Committee, and anything else pointed at this page in
-          Admin -> Committees. Renders nothing until one is. */}
-      <PlacedCommittees placement="LIBRARY" heading="Library Committee" />
 
       <PageResources section="library" hideVideos />
     </main>
