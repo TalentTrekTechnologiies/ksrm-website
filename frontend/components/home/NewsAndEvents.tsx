@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { resolveFileUrl } from "@/lib/api-base";
 import { ArrowRight, MapPin, Clock } from "lucide-react"
 import Container from "@/components/ui/Container"
 import { getLatestNewsForHomepage, NewsArticle } from "@/lib/news-api"
@@ -222,7 +223,7 @@ export default function NewsAndEvents() {
                       <Link key={`${e.id}-${i}`} href="/events" className={`ne-item${clone ? " ne-clone" : ""}`}>
                         {e.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
-                          <img src={e.imageUrl} alt="" loading="lazy" className="ne-thumb" onError={(ev) => (ev.currentTarget.style.visibility = "hidden")} />
+                          <img src={resolveFileUrl(e.imageUrl)} alt="" loading="lazy" className="ne-thumb" onError={(ev) => (ev.currentTarget.style.visibility = "hidden")} />
                         ) : (
                           <span className="ne-thumb ne-thumb-date" aria-hidden>
                             <span className="ne-chip-day">{c.day}</span>

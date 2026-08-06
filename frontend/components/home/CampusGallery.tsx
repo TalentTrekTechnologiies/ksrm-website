@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { resolveFileUrl } from "@/lib/api-base";
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import Container from "@/components/ui/Container"
@@ -26,7 +27,7 @@ const FALLBACK: { id: number; title: string; imageUrl: string }[] = [
 async function fetchGallery() {
   const data = await getGalleryPublic(CATEGORY)
   if (!data.length) return FALLBACK
-  return data.map((g: GalleryImage) => ({ id: g.id, title: g.title, imageUrl: g.imageUrl }))
+  return data.map((g: GalleryImage) => ({ id: g.id, title: g.title, imageUrl: resolveFileUrl(g.imageUrl) }))
 }
 
 const containerVariants = {

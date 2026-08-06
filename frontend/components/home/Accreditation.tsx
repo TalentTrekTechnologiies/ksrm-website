@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { resolveFileUrl } from "@/lib/api-base";
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
@@ -71,7 +72,7 @@ async function fetchAccreditations(): Promise<AccreditationState> {
       link: b.linkUrl ?? "/accreditation",
       linkText: b.linkText ?? "Learn More",
       colorClass: COLOR_ROTATION[i % COLOR_ROTATION.length],
-      image: b.imageUrl,
+      image: resolveFileUrl(b.imageUrl),
     })),
   }
 }

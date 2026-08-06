@@ -1,6 +1,7 @@
 "use client"
 
 import { useLibrarian } from "@/lib/use-library-librarian"
+import { resolveFileUrl } from "@/lib/api-base";
 import CmsText from "@/components/CmsText"
 
 // Kept only for the identity fields Faculty has no column for. Everything
@@ -35,7 +36,7 @@ export default function LibrarianProfile() {
   const qualification = librarian?.qualification ?? FALLBACK.qualification
   const specialization = librarian?.specialization ?? FALLBACK.specialization
   const experience = librarian?.experience ?? FALLBACK.experience
-  const photoUrl = librarian?.photoUrl ?? FALLBACK.photoUrl
+  const photoUrl = resolveFileUrl(librarian?.photoUrl ?? "") || FALLBACK.photoUrl
 
   return (
     <section style={{ padding: "72px 0", background: "#f4f3ef" }}>

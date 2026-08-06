@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { resolveFileUrl } from "@/lib/api-base";
 import { getGalleryPublic } from "@/lib/gallery-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
@@ -109,7 +110,17 @@ const FALLBACK_IMAGES: GalleryImageDisplay[] = [
   { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM (1).jpeg", alt: "Campus gathering", cat: "Campus" },
 ];
 
-const filters = ["All", "Campus", "Labs", "Sports", "Library", "Events", "Transport", "Videos"];
+/**
+ * The filter buttons used to be this fixed list, which meant a category the
+ * college actually used had no button unless it happened to be named here.
+ * Thirteen "Campus Life" photographs were reachable only under "All" - there
+ * was no tab that could show them.
+ *
+ * The tabs are built from the categories present now, so uploading a photo
+ * under a new category creates its tab. These are the order the known ones
+ * appear in; anything else follows, alphabetically.
+ */
+const FILTER_ORDER = ["Campus", "Campus Life", "Labs", "Sports", "Library", "Events", "Transport", "Videos"];
 // Gallery rows tagged with this category hold a video, not a photo.
 const VIDEO_CATEGORY = "__video__";
 
@@ -142,8 +153,8 @@ export default function GalleryPage() {
           // never shown as a category label.
           const cmsImages = items.map((i) =>
             i.category === VIDEO_CATEGORY
-              ? { src: i.imageUrl, alt: i.title, cat: "Videos", isVideo: true }
-              : { src: i.imageUrl, alt: i.title, cat: i.category || "Campus" },
+              ? { src: resolveFileUrl(i.imageUrl), alt: i.title, cat: "Videos", isVideo: true }
+              : { src: resolveFileUrl(i.imageUrl), alt: i.title, cat: i.category || "Campus" },
           )
           const existingSrcs = new Set(cmsImages.map((i) => i.src))
           return [...cmsImages, ...FALLBACK_IMAGES.filter((i) => !existingSrcs.has(i.src))]
@@ -151,6 +162,15 @@ export default function GalleryPage() {
       [],
       { initialValue: FALLBACK_IMAGES },
     ) ?? FALLBACK_IMAGES;
+
+  // Built from what is actually in the gallery, so no photo can end up in a
+  // category with no tab to reach it by.
+  const filters = useMemo(() => {
+    const present = new Set(images.map((i) => i.cat).filter(Boolean));
+    const known = FILTER_ORDER.filter((f) => present.has(f));
+    const extra = [...present].filter((c) => !FILTER_ORDER.includes(c)).sort();
+    return ["All", ...known, ...extra];
+  }, [images]);
 
   const filteredImages = activeFilter === "All"
     ? images

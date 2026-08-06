@@ -1,6 +1,7 @@
 "use client"
 
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
+import { resolveFileUrl } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data"
 
 /**
@@ -53,7 +54,7 @@ export default function CmsVideos({
 
   const items =
     cms && cms.length > 0
-      ? cms.map((g) => ({ key: String(g.id), src: g.imageUrl, title: g.title }))
+      ? cms.map((g) => ({ key: String(g.id), src: resolveFileUrl(g.imageUrl), title: g.title }))
       : fallback.map((f) =>
           typeof f === "string"
             ? { key: f, src: f, title: "" }

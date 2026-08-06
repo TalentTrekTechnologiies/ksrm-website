@@ -378,7 +378,7 @@ export default function ResearchPage() {
                       }}
                       style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}
                     >
-                      <source src={v.imageUrl} type="video/mp4" />
+                      <source src={resolveFileUrl(v.imageUrl)} type="video/mp4" />
                     </video>
                   </div>
                   {v.title && (

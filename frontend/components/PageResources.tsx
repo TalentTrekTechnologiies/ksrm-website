@@ -325,7 +325,7 @@ export default function PageResources({
                         __video__ row whose Media file was deleted) so the page
                         never shows a broken black box. */}
                     <video
-                      src={v.imageUrl}
+                      src={resolveFileUrl(v.imageUrl)}
                       controls
                       preload="metadata"
                       onError={(e) => {
@@ -351,7 +351,7 @@ export default function PageResources({
               {images.slice(0, 8).map((img) => (
                 <div key={img.id} className="pr-tile">
                   {/* eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL */}
-                  <img src={img.imageUrl} alt={img.title} loading="lazy" onError={(e) => ((e.currentTarget.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} />
+                  <img src={resolveFileUrl(img.imageUrl)} alt={img.title} loading="lazy" onError={(e) => ((e.currentTarget.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} />
                   <div className="pr-cap"><span>{img.title}</span></div>
                 </div>
               ))}

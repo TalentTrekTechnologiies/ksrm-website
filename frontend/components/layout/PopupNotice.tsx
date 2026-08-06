@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { resolveFileUrl } from "@/lib/api-base";
 import { usePathname } from "next/navigation"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { INTRO_DONE_EVENT } from "@/components/layout/IntroSplash"
@@ -80,7 +81,7 @@ export default function PopupNotice() {
   const img = (
     // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary poster URL
     <img
-      src={poster.imageUrl}
+      src={resolveFileUrl(poster.imageUrl)}
       alt={poster.title || "Announcement"}
       style={{ display: "block", width: "100%", height: "auto", borderRadius: 8 }}
       onError={close}

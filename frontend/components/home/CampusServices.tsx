@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { resolveFileUrl } from "@/lib/api-base";
 import Container from "@/components/ui/Container"
 import { getQuickLinksPublic, QuickLink } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
@@ -25,7 +26,7 @@ function normalizeService(service: QuickLink) {
 
   return {
     id: service.id,
-    poster: service.imageUrl?.trim() || fallback?.poster || "/posters/admissions.jpg",
+    poster: resolveFileUrl(service.imageUrl?.trim() || "") || fallback?.poster || "/posters/admissions.jpg",
     title: service.title.trim() || fallback?.title || "Campus Service",
     desc: service.description?.trim() || fallback?.desc || "",
     link: service.linkUrl?.trim() || fallback?.link || "/",

@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { resolveFileUrl } from "@/lib/api-base";
 import { NewsArticle } from "@/lib/news-api"
 
 /**
@@ -107,7 +108,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
                 <div className="ng-media">
                   {n.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                    <img src={n.imageUrl} alt={n.title} loading="lazy" onError={(e) => (e.currentTarget.style.display = "none")} />
+                    <img src={resolveFileUrl(n.imageUrl)} alt={n.title} loading="lazy" onError={(e) => (e.currentTarget.style.display = "none")} />
                   ) : n.videoUrl ? (
                     <video src={n.videoUrl} preload="metadata" muted />
                   ) : (
@@ -137,7 +138,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
                 <video src={open.videoUrl} controls autoPlay />
               ) : open.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                <img src={open.imageUrl} alt={open.title} />
+                <img src={resolveFileUrl(open.imageUrl)} alt={open.title} />
               ) : null}
             </div>
             <div className="ng-modal-body">

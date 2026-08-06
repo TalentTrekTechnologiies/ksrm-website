@@ -1,6 +1,7 @@
 "use client";
 
 import PageResources from "@/components/PageResources";
+import { resolveFileUrl } from "@/lib/api-base";
 import CmsText from "@/components/CmsText";
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -56,7 +57,7 @@ function NssEmblem() {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- SVG asset / admin upload
     <img
-      src={uploaded ? uploaded.imageUrl : "/nss-logo.svg"}
+      src={uploaded ? resolveFileUrl(uploaded.imageUrl) : "/nss-logo.svg"}
       alt="The NSS emblem: the Rath wheel of the Konark Sun Temple"
       style={{
         // Deliberately smaller than the column it sits in. At full width the

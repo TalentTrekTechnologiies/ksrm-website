@@ -242,7 +242,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
       if (labsRes.status === "fulfilled" && labsRes.value.length > 0) {
         setDepartment((prev) => ({
           ...prev,
-          labs: labsRes.value.map((l) => ({ name: l.name, description: l.description, imageUrl: l.imageUrl ?? "", equipment: l.equipment ?? [] })),
+          labs: labsRes.value.map((l) => ({ name: l.name, description: l.description, imageUrl: resolveFileUrl(l.imageUrl ?? ""), equipment: l.equipment ?? [] })),
         }))
       }
 
@@ -279,7 +279,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         // through an <img> gives a broken tile.
         setDepartment((prev) => ({
           ...prev,
-          gallery: galleryRes.value.filter((g) => g.category !== "__video__").map((g) => g.imageUrl),
+          gallery: galleryRes.value.filter((g) => g.category !== "__video__").map((g) => resolveFileUrl(g.imageUrl)),
         }))
       }
       if (videosRes.status === "fulfilled") setVideos(videosRes.value)

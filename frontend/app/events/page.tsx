@@ -1,6 +1,7 @@
 "use client";
 
 import { getEventsPublic, EventItem } from "@/lib/events-api";
+import { resolveFileUrl } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
@@ -63,7 +64,7 @@ export default function EventsPage() {
                   {ev.imageUrl && (
                     <div className="evt-card-image">
                       <img
-                        src={ev.imageUrl}
+                        src={resolveFileUrl(ev.imageUrl)}
                         alt={ev.title}
                         loading="lazy"
                         onError={(e) => { e.currentTarget.style.display = "none" }}

@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { resolveFileUrl } from "@/lib/api-base";
 import Container from "@/components/ui/Container"
 import {
   getSectionPublic,
@@ -102,7 +103,7 @@ function normalizeProgram(program: AdmissionProgram): AdmissionProgram {
 
   return {
     ...program,
-    imageUrl: program.imageUrl?.trim() || "/b-tech-banner.webp",
+    imageUrl: resolveFileUrl(program.imageUrl?.trim() || "") || "/b-tech-banner.webp",
     title: title || "Admission Programme",
     description: program.description?.trim() || null,
     tags: program.tags.filter((tag) => tag.trim()).map((tag) => tag.trim()),

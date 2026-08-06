@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { resolveFileUrl } from "@/lib/api-base";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
@@ -66,7 +67,7 @@ function Gallery() {
     [],
   );
   const shots = (uploaded ?? []).length
-    ? (uploaded ?? []).map((g) => ({ src: g.imageUrl, caption: g.title ?? "" }))
+    ? (uploaded ?? []).map((g) => ({ src: resolveFileUrl(g.imageUrl), caption: g.title ?? "" }))
     : GALLERY;
 
   if (shots.length === 0) return null;
