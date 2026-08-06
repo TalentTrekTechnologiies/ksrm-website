@@ -190,7 +190,11 @@ export default function LibraryPage() {
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
         .lib-hero { position: relative; background-image: url('/banners/library.webp'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 320px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
-        .lib-hero::before { content: ''; position: absolute; inset: 0; background-color: rgba(43,52,144,0.85); }
+        /* Was rgba(43,52,144,0.85) - the brand navy at 85%, which buried the
+           photograph of the library behind a flat blue panel. A bottom-weighted
+           neutral darkening keeps the title readable and lets the building show,
+           matching every other hero on the site. */
+        .lib-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%); }
         .lib-hero > * { position: relative; z-index: 2; }
         .lib-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }
 

@@ -78,7 +78,13 @@ export default function KgcetPage() {
         @media (max-width: 768px) { .kg-container { padding: 0 20px; } }
 
         .kg-hero {
-          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          position: relative;
+          /* The 2K24 results photograph, darkened enough for the text to hold.
+             It is the one page here with a photograph of its own subject. */
+          background-image: linear-gradient(180deg, rgba(30,37,112,0.86) 0%, rgba(30,37,112,0.94) 100%), url('/kgcet/joh03094.webp');
+          background-size: cover;
+          background-position: center;
+          background-color: #2B3490;
           color: #fff; padding: 72px 0;
         }
         .kg-hero h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 800; margin: 0 0 10px; line-height: 1.1; }

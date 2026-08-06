@@ -119,6 +119,9 @@ export default function AcademicCalendarPage() {
 
         .ac-hero {
           position: relative;
+          /* The banner existed in /banners all along and was never referenced,
+             so this hero rendered as a flat navy block. */
+          background-image: url('/banners/academic-calendar.webp');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;

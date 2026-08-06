@@ -135,7 +135,9 @@ export default function CoursesIntakePage() {
 
         .ci-hero {
           position: relative;
-          background-image: url('/site-images/classroom2.jpg');
+          /* Was /site-images/classroom2.jpg, which has never existed in this
+             project - the hero fell back to the flat navy behind it. */
+          background-image: url('/banners/courses-intake.webp');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;

@@ -101,6 +101,7 @@ export default function Placements() {
           display: flex;
           gap: 16px;
           animation: scroll 15s linear infinite;
+          will-change: transform;
         }
 
         .photo-item {
@@ -122,8 +123,15 @@ export default function Placements() {
           100% { transform: translateX(-50%); }
         }
 
-        .photo-carousel:hover .photo-track {
-          animation-play-state: paused;
+        /* Pause on hover only where there is a pointer to hover with. On a
+           touchscreen :hover sticks after a tap, so touching the strip paused
+           it for good - and it is overflow:hidden, so it could not be scrolled
+           by hand either. That is "the logos are not scrolling" on a phone:
+           they scroll until you touch them. */
+        @media (hover: hover) and (pointer: fine) {
+          .photo-carousel:hover .photo-track {
+            animation-play-state: paused;
+          }
         }
 
         .recruiter-section {
@@ -175,6 +183,7 @@ export default function Placements() {
           display: flex;
           gap: 20px;
           animation: scroll 12s linear infinite;
+          will-change: transform;
         }
 
         .recruiter-logo {
@@ -196,8 +205,17 @@ export default function Placements() {
           object-fit: contain;
         }
 
-        .recruiter-carousel:hover .recruiter-track {
-          animation-play-state: paused;
+        @media (hover: hover) and (pointer: fine) {
+          .recruiter-carousel:hover .recruiter-track {
+            animation-play-state: paused;
+          }
+        }
+
+        /* Reduced motion: no animation, and the strips become ones the reader
+           scrolls themselves. */
+        @media (prefers-reduced-motion: reduce) {
+          .photo-track, .recruiter-track { animation: none; }
+          .photo-carousel, .recruiter-carousel { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         }
 
         @media (max-width: 1024px) {
