@@ -7,6 +7,7 @@ import { MapPin, Phone, Mail, ArrowRight } from "lucide-react"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api"
+import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api"
 
 /**
  * Site Settings override the built-in defaults below, but only when actually
@@ -24,6 +25,49 @@ function useSiteSettings() {
     { initialValue: {} },
   )
   return (key: string, fallback: string) => settings?.[key]?.trim() || fallback
+}
+
+/**
+ * The three programme columns, grouped by level.
+ *
+ * Each row carries its department, so a programme links to that department's
+ * page; anything without one falls back to Courses & Intake rather than
+ * becoming a dead link. Names are shortened for the column - the CMS holds
+ * "B.Tech - Computer Science & Engineering", which does not fit a footer.
+ */
+function useProgrammeColumns() {
+  const rows = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
+    [],
+  )
+
+  // The level is already the column heading, so it comes off the name, and
+  // "Engineering" is abbreviated - a footer column is roughly 200px wide and
+  // "Electronics & Communication Engineering" wraps to three lines in it.
+  const shorten = (name: string) => {
+    const trimmed = name
+      .replace(/^\s*(B\.?\s*Tech|M\.?\s*Tech|MTech|Diploma)\s*(-|in|)\s*/i, "")
+      .replace(/\bEngineering\b/gi, "Engg.")
+      .replace(/\band\b/gi, "&")
+      .replace(/\s+/g, " ")
+      .trim()
+    return trimmed || name
+  }
+
+  const columnFor = (level: string, fallback: { label: string; href: string }[]) => {
+    const forLevel = (rows ?? []).filter((r) => r.level === level)
+    if (forLevel.length === 0) return fallback
+    return forLevel.map((r) => ({
+      label: shorten(r.name),
+      href: r.department?.slug ? `/departments/${r.department.slug}` : "/academics/courses-intake",
+    }))
+  }
+
+  return {
+    ug: columnFor("UG", FALLBACK_UG),
+    pg: columnFor("PG", FALLBACK_PG),
+    diploma: columnFor("DIPLOMA", FALLBACK_DIPLOMA),
+  }
 }
 
 /**
@@ -96,8 +140,21 @@ const EASE = [0.22, 1, 0.36, 1] as const
 
 const currentYear = new Date().getFullYear()
 
-// ---- LINK DATA (matches screenshot) ----
-const ugPrograms = [
+/**
+ * The programme columns, from Admin -> Academics.
+ *
+ * These were three hand-written lists and they had drifted from what the
+ * college actually offers: the footer advertised BCA, M.Tech CSE, M.Tech Power
+ * Electronics and M.Tech Thermal - none of which are in the programme list -
+ * while omitting CSE (Data Science), AIML, M.Tech AIDS, Geotechnical, Power
+ * Systems and Diploma in AIML, which are. Same facts in two places, and only
+ * one of them maintained.
+ *
+ * Read from the same source as Academics -> Courses & Intake now, so adding a
+ * programme there puts it in the footer too, and the two can no longer
+ * disagree. The lists below remain only for an unreachable API.
+ */
+const FALLBACK_UG = [
   { label: "CSE",          href: "/departments/cse"   },
   { label: "CSE (AI & ML)", href: "/departments/cse"  },
   { label: "ECE",          href: "/departments/ece"   },
@@ -107,7 +164,7 @@ const ugPrograms = [
   { label: "BCA",          href: "/departments/cse"   },
 ]
 
-const pgPrograms = [
+const FALLBACK_PG = [
   { label: "M.Tech – CSE",              href: "/departments/cse"  },
   { label: "M.Tech – VLSI & ES",        href: "/departments/ece"  },
   { label: "M.Tech – Power Electronics", href: "/departments/eee" },
@@ -116,7 +173,7 @@ const pgPrograms = [
   { label: "MBA",                       href: "/departments/mba"  },
 ]
 
-const diplomaPrograms = [
+const FALLBACK_DIPLOMA = [
   { label: "Diploma in Civil",          href: "/admissions/diploma" },
   { label: "Diploma in Mechanical",     href: "/admissions/diploma" },
   { label: "Diploma in EEE",            href: "/admissions/diploma" },
@@ -217,6 +274,7 @@ function SocialBtn({ Icon, href }: { Icon: (props: SvgIconProps) => React.ReactE
 export default function Footer() {
   const s = useSiteSettings()
   const contact = useFooterContact()
+  const programmes = useProgrammeColumns()
   const footerEmail = contact.email ?? s("site.contactEmail", "info@ksrmce.ac.in")
   const socials = [
     { Icon: IconFacebook, href: s("site.socialFacebook", "https://facebook.com/ksrmceofficial") },
@@ -231,13 +289,18 @@ export default function Footer() {
   return (
     <footer style={{ width: "100%", background: "#1e2570", color: "#ffffff", paddingTop: "56px" }}>
       <style>{`
+        /* Six columns, sized for what each actually holds: the college block
+           and the contact block carry a logo and a map, the four link columns
+           only need room for a programme name. The old ratios were tuned when
+           those lists were hand-written and shorter. */
         .footer-grid {
           display: grid;
-          grid-template-columns: 1.6fr 1fr 1.2fr 1.1fr 1fr 1.5fr;
-          gap: 32px;
+          grid-template-columns: 1.5fr 1fr 1fr 1fr 0.85fr 1.35fr;
+          gap: 28px;
           max-width: 1760px;
           margin: 0 auto;
           padding: 0 40px;
+          align-items: start;
         }
         .footer-bottom-inner {
           display: flex;
@@ -247,18 +310,23 @@ export default function Footer() {
           margin: 0 auto;
           padding: 0 40px;
         }
-        @media (max-width: 1100px) {
-          .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 32px 28px; padding: 0 28px; }
+        /* Ordered widest-first. These used to read 1100 -> 720 -> 768, and
+           because 768 comes after 720 and both match below 720px, the two
+           column layout never applied at all: the footer jumped straight from
+           three columns to one, which is the gap of empty space at tablet
+           width. */
+        @media (max-width: 1180px) {
+          .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 30px 26px; padding: 0 28px; }
         }
-        @media (max-width: 720px) {
-          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 24px; padding: 0 20px; }
+        @media (max-width: 860px) {
+          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 26px 22px; padding: 0 20px; }
         }
-        @media (max-width: 768px) {
-          .footer-grid { grid-template-columns: 1fr; padding: 0 16px; gap: 32px; }
+        @media (max-width: 560px) {
+          .footer-grid { grid-template-columns: 1fr; padding: 0 16px; gap: 28px; }
         }
 
         @media (max-width: 460px) {
-          .footer-grid         { grid-template-columns: 1fr; padding: 0 14px; gap: 28px; }
+          .footer-grid         { padding: 0 14px; gap: 24px; }
           .footer-bottom-inner {
             flex-direction: column;
             align-items: center;
@@ -333,13 +401,13 @@ export default function Footer() {
         </motion.div>
 
         {/* COL 2 — UG Programs */}
-        <LinkColumn heading="UG Programs" links={ugPrograms} />
+        <LinkColumn heading="UG Programs" links={programmes.ug} />
 
         {/* COL 3 — PG Programs */}
-        <LinkColumn heading="PG Programs" links={pgPrograms} />
+        <LinkColumn heading="PG Programs" links={programmes.pg} />
 
         {/* COL 4 — Diploma */}
-        <LinkColumn heading="Diploma" links={diplomaPrograms} />
+        <LinkColumn heading="Diploma" links={programmes.diploma} />
 
         {/* COL 5 — Quick Links */}
         <LinkColumn heading="Quick Links" links={quickLinks} />
