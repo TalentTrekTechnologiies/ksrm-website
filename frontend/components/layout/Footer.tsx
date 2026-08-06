@@ -41,24 +41,50 @@ function useProgrammeColumns() {
     [],
   )
 
-  // The level is already the column heading, so it comes off the name, and
-  // "Engineering" is abbreviated - a footer column is roughly 200px wide and
-  // "Electronics & Communication Engineering" wraps to three lines in it.
-  const shorten = (name: string) => {
-    const trimmed = name
-      .replace(/^\s*(B\.?\s*Tech|M\.?\s*Tech|MTech|Diploma)\s*(-|in|)\s*/i, "")
-      .replace(/\bEngineering\b/gi, "Engg.")
-      .replace(/\band\b/gi, "&")
-      .replace(/\s+/g, " ")
-      .trim()
-    return trimmed || name
+  const DEGREE = /^\s*(B\.?\s*Tech|M\.?\s*Tech|MTech|MBA|MCA|Diploma)\s*(-|in|)\s*/i
+
+  /** "MTech - Geotechnical" and "M.Tech-Geotechnical" both read M.Tech. */
+  const tidyDegree = (d: string) => (/^m\.?\s*tech$/i.test(d) ? "M.Tech" : /^b\.?\s*tech$/i.test(d) ? "B.Tech" : d)
+
+  /**
+   * Shortened for a ~200px column: "Engineering" abbreviates, and the degree
+   * prefix is dropped ONLY when every course in the column carries the same
+   * one - true of UG (all B.Tech) and Diploma.
+   *
+   * PG is not like that: it mixes M.Tech with MBA. Dropping the prefix there
+   * turned "M.Tech - Structural Engineering" into "Structural Engg." and the
+   * M.Tech courses stopped saying M.Tech at all, which is exactly how they
+   * became impossible to find in that column.
+   */
+  const labelsFor = (names: string[]) => {
+    const degrees = new Set(names.map((n) => n.match(DEGREE)?.[1]?.replace(/\s+/g, "").toLowerCase() ?? ""))
+    const uniform = degrees.size === 1 && !degrees.has("")
+
+    return names.map((n) => {
+      const m = n.match(DEGREE)
+      // Strip the degree in both cases, then put a tidied one back when the
+      // column needs it. Stripping only in the uniform case produced
+      // "M.Tech M.Tech - AIDS", because the degree was prepended to a string
+      // that still carried it.
+      const rest = (m ? n.slice(m[0].length) : n)
+        .replace(/\bEngineering\b/gi, "Engg.")
+        .replace(/\band\b/gi, "&")
+        .replace(/\s+/g, " ")
+        .trim()
+      if (uniform || !m) return rest || n
+      // Keep the degree, normalised, so "MTech - X" and "M.Tech-X" match.
+      // No dash - "M.Tech Structural Engg." is two characters shorter than
+      // "M.Tech – Structural Engg." and reads the same.
+      return `${tidyDegree(m[1].replace(/\s+/g, ""))} ${rest}`.trim()
+    })
   }
 
   const columnFor = (level: string, fallback: { label: string; href: string }[]) => {
     const forLevel = (rows ?? []).filter((r) => r.level === level)
     if (forLevel.length === 0) return fallback
-    return forLevel.map((r) => ({
-      label: shorten(r.name),
+    const labels = labelsFor(forLevel.map((r) => r.name))
+    return forLevel.map((r, i) => ({
+      label: labels[i],
       href: r.department?.slug ? `/departments/${r.department.slug}` : "/academics/courses-intake",
     }))
   }
@@ -293,13 +319,20 @@ export default function Footer() {
            and the contact block carry a logo and a map, the four link columns
            only need room for a programme name. The old ratios were tuned when
            those lists were hand-written and shorter. */
+        /* Three blocks: the college, the four link columns, the contact card. */
         .footer-grid {
           display: grid;
-          grid-template-columns: 1.5fr 1fr 1fr 1fr 0.85fr 1.35fr;
+          grid-template-columns: 1.15fr 3.2fr 1.25fr;
           gap: 28px;
           max-width: 1760px;
           margin: 0 auto;
           padding: 0 40px;
+          align-items: start;
+        }
+        .footer-links {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 24px;
           align-items: start;
         }
         .footer-bottom-inner {
@@ -315,14 +348,20 @@ export default function Footer() {
            column layout never applied at all: the footer jumped straight from
            three columns to one, which is the gap of empty space at tablet
            width. */
+        /* Widest-first. The college block and the contact card pair up on the
+           top row and the four link columns take the full width below, so
+           nothing short ever shares a row with something tall. */
         @media (max-width: 1180px) {
-          .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 30px 26px; padding: 0 28px; }
+          .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 26px; padding: 0 28px; }
+          .footer-links { grid-column: 1 / -1; }
         }
         @media (max-width: 860px) {
-          .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 26px 22px; padding: 0 20px; }
+          .footer-grid { grid-template-columns: 1fr; gap: 28px; padding: 0 20px; }
+          .footer-links { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
         }
-        @media (max-width: 560px) {
-          .footer-grid { grid-template-columns: 1fr; padding: 0 16px; gap: 28px; }
+        @media (max-width: 420px) {
+          .footer-grid { padding: 0 16px; gap: 24px; }
+          .footer-links { grid-template-columns: 1fr; gap: 22px; }
         }
 
         @media (max-width: 460px) {
@@ -400,17 +439,19 @@ export default function Footer() {
           </div>
         </motion.div>
 
-        {/* COL 2 — UG Programs */}
-        <LinkColumn heading="UG Programs" links={programmes.ug} />
-
-        {/* COL 3 — PG Programs */}
-        <LinkColumn heading="PG Programs" links={programmes.pg} />
-
-        {/* COL 4 — Diploma */}
-        <LinkColumn heading="Diploma" links={programmes.diploma} />
-
-        {/* COL 5 — Quick Links */}
-        <LinkColumn heading="Quick Links" links={quickLinks} />
+        {/* The four link columns are one group.
+            They used to be four siblings of the college block and the contact
+            block, which are far taller - a logo, five accreditations and the
+            socials on one side, an address and an embedded map on the other.
+            A grid row is as tall as its tallest cell, so every short link
+            column got a band of empty space underneath it. Grouped, the four
+            sit in their own row and are all much the same height. */}
+        <motion.div className="footer-links" variants={colVariants}>
+          <LinkColumn heading="UG Programs" links={programmes.ug} />
+          <LinkColumn heading="PG Programs" links={programmes.pg} />
+          <LinkColumn heading="Diploma" links={programmes.diploma} />
+          <LinkColumn heading="Quick Links" links={quickLinks} />
+        </motion.div>
 
         {/* COL 6 — Contact + Map */}
         <motion.div variants={colVariants}>
