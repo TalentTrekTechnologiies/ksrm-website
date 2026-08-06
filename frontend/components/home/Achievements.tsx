@@ -6,6 +6,8 @@ import Container from '@/components/ui/Container'
 
 function CountUpNumber({ target, suffix = '' }: { target: number; suffix?: string }) {
   const [count, setCount] = useState(0)
+  // Match the target's precision, so 35.23 counts to 35.23 rather than 35.
+  const decimals = (target.toString().split('.')[1] ?? '').length
 
   useEffect(() => {
     let start = 0
@@ -16,7 +18,7 @@ function CountUpNumber({ target, suffix = '' }: { target: number; suffix?: strin
         setCount(target)
         clearInterval(timer)
       } else {
-        setCount(Math.floor(start))
+        setCount(Number(start.toFixed(decimals)))
       }
     }, 16)
     return () => clearInterval(timer)
@@ -34,7 +36,7 @@ const Achievements = () => {
 
   const achievements = [
     { target: 46, label: 'Years of Excellence' },
-    { target: 50, label: 'Acres Campus Area' },
+    { target: 35.23, label: 'Acres Campus Area' },
     { target: 2500, label: 'Students Intake', suffix: '+' },
     { target: 150, label: 'Faculty Members', suffix: '+' },
     { target: 7, label: 'Departments' },

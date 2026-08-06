@@ -21,7 +21,7 @@ const tourVideos = [
 ];
 
 const stats = [
-  { icon: "📍", value: "25 Acres", label: "Campus Area" },
+  { icon: "📍", value: "35.23 Acres", label: "Campus Area" },
   { icon: "🏢", value: "12", label: "Buildings" },
   { icon: "🔬", value: "60+", label: "Labs" },
   { icon: "🏫", value: "80+", label: "Classrooms" },

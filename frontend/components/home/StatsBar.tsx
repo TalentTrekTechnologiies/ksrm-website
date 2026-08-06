@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react"
 import { statsData } from "@/data/home"
 
 const stats = (Array.isArray(statsData) ? statsData : []).map(stat => ({
-  value: parseInt((stat?.number ?? 0).toString()),
+  // parseFloat, not parseInt: a statistic like 35.23 acres came through as 35,
+  // so editing it in the CMS appeared to do nothing to the decimal.
+  value: parseFloat((stat?.number ?? 0).toString()) || 0,
+  // How many decimals to show while counting, taken from the value itself, so
+  // a whole number still counts up as a whole number.
+  decimals: ((stat?.number ?? "").toString().split(".")[1] ?? "").length,
   suffix: stat?.suffix || "",
   label: stat?.label || ""
 }))
@@ -33,7 +38,7 @@ export default function StatsBar() {
           const elapsed = now - startTime
           const progress = Math.min(elapsed / duration, 1)
           const eased = easeOut(progress)
-          setCounts(stats.map((s) => Math.floor(s.value * eased)))
+          setCounts(stats.map((s) => Number((s.value * eased).toFixed(s.decimals))))
           if (progress < 1) requestAnimationFrame(tick)
           else setCounts(stats.map((s) => s.value))
         }

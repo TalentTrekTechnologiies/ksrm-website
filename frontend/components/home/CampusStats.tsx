@@ -7,7 +7,7 @@ import { useLiveData } from "@/lib/use-live-data"
 
 const FALLBACK_STATS = [
   { id: -1, number: 46, suffix: "+", label: "Years of Excellence" },
-  { id: -2, number: 25, suffix: "", label: "Acres Campus Area" },
+  { id: -2, number: 35.23, suffix: "", label: "Acres Campus Area" },
   { id: -3, number: 1200, suffix: "+", label: "Students Intake" },
   { id: -4, number: 150, suffix: "+", label: "Faculty Members" },
   { id: -5, number: 7, suffix: "", label: "Departments" },

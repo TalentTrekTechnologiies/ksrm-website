@@ -40,7 +40,9 @@ const navItems: NavItem[] = [
     children: [
       { label: "About KSRMCE", href: "/about#about-ksrmce" },
       { label: "Vision & Mission", href: "/about#vision" },
-      { label: "Sri Kandula Obula Reddy Charities", href: "/about#charities" },
+      // Renamed at the college's request. The section it jumps to keeps the
+      // trust's full name as its heading; only the menu entry is shorter.
+      { label: "Sponsoring Body", href: "/about#charities" },
       { label: "Governing Body", href: "/about#governing-body" },
       { label: "Leadership", href: "/about#leadership" },
       { label: "  ↳ Correspondent and Secretary", href: "/about/correspondent" },
