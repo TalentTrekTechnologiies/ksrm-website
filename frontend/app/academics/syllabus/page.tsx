@@ -128,7 +128,7 @@ export default function SyllabusPage() {
 
         .syl-hero {
           position: relative;
-          background-image: url('/banners/syllabus.png');
+          background-image: url('/banners/syllabus.webp');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;

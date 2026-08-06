@@ -37,7 +37,7 @@ export default function PlacementsOverviewPage() {
 
         .overview-hero {
           position: relative;
-          background-image: url('/banners/placements-training.png');
+          background-image: url('/banners/placements-training.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

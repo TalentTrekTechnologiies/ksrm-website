@@ -326,7 +326,7 @@ export default function CoursesIntakePage() {
         {/* HERO */}
         <section
           className="ci-hero"
-          style={{ backgroundImage: "url('/banners/courses-intake.png')", position: "relative" }}
+          style={{ backgroundImage: "url('/banners/courses-intake.webp')", position: "relative" }}
         >
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>

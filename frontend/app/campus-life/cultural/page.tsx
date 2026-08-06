@@ -92,7 +92,7 @@ export default function CulturalClubPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: "url('/banners/cultural.png')",
+          backgroundImage: "url('/banners/cultural.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           padding: "60px 40px",

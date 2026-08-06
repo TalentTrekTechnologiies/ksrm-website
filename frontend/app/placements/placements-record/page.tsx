@@ -25,7 +25,7 @@ export default function PlacementsRecordPage() {
 
         .record-hero {
           position: relative;
-          background-image: url('/banners/placement-records.png');
+          background-image: url('/banners/placement-records.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

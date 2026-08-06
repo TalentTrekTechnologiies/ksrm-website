@@ -9,6 +9,7 @@ import {
   AdmissionProgram,
 } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { formatAcademicYearShort } from "@/lib/academic-year"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -18,7 +19,7 @@ const fadeUp = {
 }
 
 const FALLBACK_ADMISSIONS: AdmissionsContent = {
-  badge: "ADMISSIONS 2025-26",
+  badge: `ADMISSIONS ${formatAcademicYearShort()}`,
   heading: "Begin Your Engineering Journey",
   subtitle: "EAPCET Code: K.S.R.M. | Kadapa, Andhra Pradesh",
   helplinePhones: [

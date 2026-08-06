@@ -80,7 +80,7 @@ export default function DiplomaAdmissionsPage() {
 
         .dip-hero {
           position: relative;
-          background-image: url('/banners/ug-admissions.png');
+          background-image: url('/banners/ug-admissions.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

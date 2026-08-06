@@ -36,7 +36,7 @@ export default function ExaminationsPage() {
         @media (max-width: 1024px) { .exam-results-grid { grid-template-columns: 1fr; gap: 24px; } }
       `}</style>
 
-      <section style={{ position: "relative", backgroundImage: "url('/banners/examinations.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+      <section style={{ position: "relative", backgroundImage: "url('/banners/examinations.webp')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)", pointerEvents: "none" }} />
         <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
           <div className="responsive-container">

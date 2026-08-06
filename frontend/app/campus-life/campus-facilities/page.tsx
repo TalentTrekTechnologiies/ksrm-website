@@ -97,7 +97,7 @@ export default function CampusFacilitiesPage() {
         @media (max-width: 768px) { .responsive-container { padding: 0 20px; } }
         @media (max-width: 480px) { .responsive-container { padding: 0 14px; } }
 
-        .cf-hero { position: relative; background-image: url('/banners/campus-facilities.png'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
+        .cf-hero { position: relative; background-image: url('/banners/campus-facilities.webp'); background-size: cover; background-position: center; background-color: #2B3490; min-height: 280px; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 40px; }
         .cf-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%); pointer-events: none; }
         .cf-hero > * { position: relative; z-index: 2; }
         .cf-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #D4A500; }

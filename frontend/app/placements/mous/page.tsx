@@ -32,7 +32,7 @@ export default function MoUsPage() {
 
         .mous-hero {
           position: relative;
-          background-image: url('/banners/mous.png');
+          background-image: url('/banners/mous.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

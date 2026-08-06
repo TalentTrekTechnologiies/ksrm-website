@@ -32,7 +32,7 @@ export default function AcademicsIndexPage() {
       <style>{`
         .hb-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .hb-container { padding: 0 20px; } }
-        .hb-hero { position: relative; background-image: url('/banners/courses-intake.png'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
+        .hb-hero { position: relative; background-image: url('/banners/courses-intake.webp'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
         .hb-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,26,74,0.72) 0%, rgba(20,26,74,0.86) 100%); }
         .hb-hero > * { position: relative; z-index: 2; }
         .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }

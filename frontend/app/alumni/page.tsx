@@ -123,7 +123,7 @@ export default function AlumniPage() {
         .alumni-top-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 48px; }
       `}</style>
 
-      <section style={{ backgroundImage: "url('/banners/alumni.png')", backgroundSize: "cover", backgroundPosition: "center", padding: "80px 0", color: "white", position: "relative", overflow: "hidden" }}>
+      <section style={{ backgroundImage: "url('/banners/alumni.webp')", backgroundSize: "cover", backgroundPosition: "center", padding: "80px 0", color: "white", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)" }} />
         <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>🎓 Alumni Association</div>

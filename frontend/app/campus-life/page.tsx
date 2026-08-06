@@ -36,7 +36,7 @@ export default function CampusLifeIndexPage() {
       <style>{`
         .cl-container { width: 100%; max-width: 1760px; margin: 0 auto; padding: 0 40px; }
         @media (max-width: 768px) { .cl-container { padding: 0 20px; } }
-        .cl-hero { position: relative; background-image: url('/banners/campus-facilities.png'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
+        .cl-hero { position: relative; background-image: url('/banners/campus-facilities.webp'); background-size: cover; background-position: center; background-color: #2B3490; padding: 92px 0; overflow: hidden; }
         .cl-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,26,74,0.72) 0%, rgba(20,26,74,0.86) 100%); }
         .cl-hero > * { position: relative; z-index: 2; }
         .cl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }

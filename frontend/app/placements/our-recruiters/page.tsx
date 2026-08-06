@@ -25,7 +25,7 @@ export default function OurRecruitersPage() {
 
         .recruiters-hero {
           position: relative;
-          background-image: url('/banners/recruiters.png');
+          background-image: url('/banners/recruiters.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

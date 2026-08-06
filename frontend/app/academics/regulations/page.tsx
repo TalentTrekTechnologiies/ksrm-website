@@ -264,7 +264,7 @@ export default function RegulationsPage() {
       `}</style>
 
       <main style={{ background: "#ffffff" }}>
-        <section className="reg-hero" style={{ backgroundImage: "url('/banners/regulations.png')", position: "relative" }}>
+        <section className="reg-hero" style={{ backgroundImage: "url('/banners/regulations.webp')", position: "relative" }}>
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="reg-eyebrow" style={{ marginBottom: 16 }}>Academics</div>

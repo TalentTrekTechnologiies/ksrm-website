@@ -196,7 +196,7 @@ export default function IQACPage() {
       `}</style>
 
       {/* HERO */}
-      <section style={{ backgroundImage: "url('/banners/iqac.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", position: "relative", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+      <section style={{ backgroundImage: "url('/banners/iqac.webp')", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#2B3490", padding: "80px 0", color: "white", position: "relative", minHeight: 320, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)", pointerEvents: "none" }} />
         <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
           <div className="responsive-container">

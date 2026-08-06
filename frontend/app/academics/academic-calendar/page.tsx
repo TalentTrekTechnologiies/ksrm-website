@@ -6,6 +6,7 @@ import CmsText from "@/components/CmsText";
 import { useMemo } from "react";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { formatAcademicYear } from "@/lib/academic-year";
 
 /**
  * The calendars listed here were invented rows: eleven of them, every single
@@ -282,14 +283,14 @@ export default function AcademicCalendarPage() {
       <main style={{ background: "#ffffff" }}>
         <section
           className="ac-hero"
-          style={{ backgroundImage: "url('/banners/academic-calendar.png')", position: "relative" }}
+          style={{ backgroundImage: "url('/banners/academic-calendar.webp')", position: "relative" }}
         >
           <div className="responsive-container" style={{ position: "relative", zIndex: 1 }}>
             <div style={{ padding: "72px 0" }}>
               <div className="ac-eyebrow" style={{ marginBottom: 16 }}>Academics</div>
               <h1 className="ac-hero-title"><CmsText section="academics.calendar" slot="academic-calendar" /></h1>
               <p className="ac-hero-tagline"><CmsText section="academics.calendar" slot="stay-on-track-with-semester" /></p>
-              <div className="ac-year-badge">Current AY: 2025–2026</div>
+              <div className="ac-year-badge">Current AY: {formatAcademicYear()}</div>
               <a href="https://www.jemexam.com/ksrmresult/results_notifications.php" target="_blank" rel="noopener noreferrer" className="ac-cta-button">
                 <ExternalLinkIcon />View Exam Results
               </a>

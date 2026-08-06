@@ -27,7 +27,7 @@ export interface AdmissionData {
 export const admissionData: AdmissionData = {
   title: "Admissions",
   tagline: "Pathway to Excellence",
-  banner: "/banners/academic.png",
+  banner: "/banners/academic.webp",
 
   ugEligibility:
     "A candidate should possess 10+2 qualification from the Board of Intermediate, Government of Andhra Pradesh with Mathematics, Physics and Chemistry, or any equivalent examination. Admission to the four-year B.Tech programme (except NRI quota) requires qualifying the AP EAPCET, a state-level entrance test conducted by the Government of Andhra Pradesh. Candidates are admitted strictly on merit.",

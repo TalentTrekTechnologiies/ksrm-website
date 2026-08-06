@@ -38,7 +38,7 @@ export default function EDCPage() {
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
         .edc-hero {
-          position: relative; background-image: url('/banners/edc.png'); background-size: cover;
+          position: relative; background-image: url('/banners/edc.webp'); background-size: cover;
           background-position: center; background-color: #f5f5f5; min-height: 320px; display: flex;
           align-items: flex-end; padding-bottom: 40px; overflow: hidden;
         }

@@ -12,7 +12,7 @@ export default function InternshipsPage() {
 
         .internships-hero {
           position: relative;
-          background-image: url('/banners/internships.png');
+          background-image: url('/banners/internships.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

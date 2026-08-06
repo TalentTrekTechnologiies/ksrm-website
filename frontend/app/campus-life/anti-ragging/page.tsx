@@ -72,7 +72,7 @@ export default function AntiRaggingPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: "url('/banners/anti-ragging.png')",
+          backgroundImage: "url('/banners/anti-ragging.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           padding: "60px 40px",

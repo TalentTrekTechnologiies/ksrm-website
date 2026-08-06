@@ -44,7 +44,7 @@ export default function PGAdmissionsPage() {
 
         .pg-hero {
           position: relative;
-          background-image: url('/banners/pg-admissions.png');
+          background-image: url('/banners/pg-admissions.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

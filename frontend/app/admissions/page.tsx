@@ -69,7 +69,7 @@ export default function AdmissionsPage() {
 
         .adm-hero {
           position: relative;
-          background-image: url('/banners/admissions.png');
+          background-image: url('/banners/admissions.webp');
           background-size: cover;
           background-position: center;
           background-color: #f5f5f5;

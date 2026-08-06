@@ -35,7 +35,7 @@ export interface CoursesData {
 export const coursesData: CoursesData = {
   title: "Courses & Intake",
   tagline: "Wide Range of UG and PG Programmes",
-  banner: "/banners/academic.png",
+  banner: "/banners/academic.webp",
   intro:
     "KSRMCE offers a wide range of UG and PG programmes approved by AICTE and affiliated to JNTUA. Our programmes are designed to develop technically proficient and ethically sound professionals.",
   eapcetCode: "K.S.R.M.",

@@ -152,7 +152,7 @@ export default function FeeStructurePage() {
 
         .fee-hero {
           position: relative;
-          background-image: url('/banners/fee-structure.png');
+          background-image: url('/banners/fee-structure.webp');
           background-size: cover;
           background-position: center;
           background-color: #2B3490;

@@ -6,6 +6,7 @@ import { useState } from "react"
 import { MapPin, Phone, Mail, ArrowRight } from "lucide-react"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api"
 
 /**
  * Site Settings override the built-in defaults below, but only when actually
@@ -23,6 +24,38 @@ function useSiteSettings() {
     { initialValue: {} },
   )
   return (key: string, fallback: string) => settings?.[key]?.trim() || fallback
+}
+
+/**
+ * The phone and email in the footer, from Admin -> Contacts.
+ *
+ * The footer read site.contactPhone out of Site Settings - a key that has
+ * never been set - so it always showed its own built-in default. Editing the
+ * number in Contacts updated the Contact page while the footer, which appears
+ * on every page, went on showing the old one. Two places held the same fact
+ * and only one of them was the screen an admin would think to use.
+ *
+ * Contacts wins now, because that is where the college edits. Site Settings is
+ * still honoured if the key is ever set, and the built-in default remains for
+ * an unreachable API.
+ */
+function useFooterContact() {
+  const channels = useLiveData<ContactChannel[]>(
+    () => getContactChannelsPublic(undefined, "info").catch(() => [] as ContactChannel[]),
+    [],
+  )
+  const pick = (matches: RegExp, field: "phones" | "emails") => {
+    for (const c of channels ?? []) {
+      if (!matches.test(c.name)) continue
+      const values = (c[field] ?? []).map((v) => v.trim()).filter(Boolean)
+      if (values.length) return values
+    }
+    return [] as string[]
+  }
+  return {
+    phones: pick(/phone|mobile/i, "phones"),
+    email: pick(/^e-?mail$/i, "emails")[0] ?? pick(/alternate|info/i, "emails")[0] ?? null,
+  }
 }
 
 type SvgIconProps = { size?: number; color?: string }
@@ -183,6 +216,8 @@ function SocialBtn({ Icon, href }: { Icon: (props: SvgIconProps) => React.ReactE
 
 export default function Footer() {
   const s = useSiteSettings()
+  const contact = useFooterContact()
+  const footerEmail = contact.email ?? s("site.contactEmail", "info@ksrmce.ac.in")
   const socials = [
     { Icon: IconFacebook, href: s("site.socialFacebook", "https://facebook.com/ksrmceofficial") },
     { Icon: IconTwitterX, href: s("site.socialTwitter", "https://twitter.com/ksrmceofficial") },
@@ -323,14 +358,16 @@ export default function Footer() {
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <Phone size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
             <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, whiteSpace: "pre-line" }}>
-              {s("site.contactPhone", "+91 9000073434\n08562 295972")}
+              {contact.phones.length
+                ? contact.phones.join("\n")
+                : s("site.contactPhone", "+91 9000073434\n08562 295972")}
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
             <Mail size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0 }} />
-            <a href={`mailto:${s("site.contactEmail", "info@ksrmce.ac.in")}`} style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
-              {s("site.contactEmail", "info@ksrmce.ac.in")}
+            <a href={`mailto:${footerEmail}`} style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>
+              {footerEmail}
             </a>
           </div>
 

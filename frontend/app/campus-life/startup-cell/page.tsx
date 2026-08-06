@@ -69,7 +69,7 @@ export default function StartupCellPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: "url('/banners/startup-cell.png')",
+          backgroundImage: "url('/banners/startup-cell.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           padding: "60px 40px",
