@@ -132,6 +132,7 @@ const MODULE_LABELS: Record<string, string> = {
   learning_outcomes: 'department PEO/PO/PSO learning outcome records',
   department_programmes: 'department academic programme records',
   transport_routes: 'college bus routes, timings and crew',
+  kgcet: 'KGCET participation figures and highlight cards',
   department_highlights: 'department highlight and achievement records',
   department_display_settings: 'department page section visibility toggles',
   career_applications: 'job applications submitted through the Careers page',
