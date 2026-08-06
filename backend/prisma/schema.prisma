@@ -446,6 +446,7 @@ model Admin {
   deletedTransportRoutes TransportRoute[] @relation("TransportRoute_DeletedBy")
   deletedKgcetParticipation KgcetParticipation[] @relation("KgcetParticipation_DeletedBy")
   deletedKgcetHighlights    KgcetHighlight[]     @relation("KgcetHighlight_DeletedBy")
+  updatedContentStyles      ContentStyle[]       @relation("ContentStyle_UpdatedBy")
   deletedMedia            Media[]        @relation("Media_DeletedBy")
   mediaVersionsReplacedBy MediaVersion[] @relation("MediaVersion_ReplacedBy")
 
@@ -2143,6 +2144,43 @@ model KgcetHighlight {
 
   @@index([deletedAt])
   @@index([sortOrder])
+}
+
+/// Per-field size and colour for content that lives in an ordinary CMS module.
+///
+/// Page Content already lets an admin set the size and colour of one piece of
+/// wording, because PageText carries those two columns itself. Every other
+/// module stores plain strings in its own table, so giving News, Events or the
+/// Gallery the same control would have meant adding two columns to each of
+/// them - and two more to the next module, forever.
+///
+/// Keyed loosely by (module, recordId, field) instead, the same shape
+/// AuditLogService and MediaUsage already use here. No foreign key on purpose:
+/// this table must never be the reason a module cannot delete a row, and a
+/// leftover style for a deleted record is harmless - it is read by key, so
+/// nothing ever looks it up.
+model ContentStyle {
+  id       Int    @id @default(autoincrement())
+  /// Matches the module's audit-log name, e.g. "news", "events", "gallery".
+  module   String
+  recordId Int
+  /// Which field of that record, e.g. "title", "description".
+  field    String
+
+  /// Both nullable: a slot may have a colour set and no size. Empty means
+  /// "not set" and must be stored as NULL, never "", or it would be written
+  /// into the style attribute verbatim.
+  fontSize String?
+  color    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  updatedBy Int?
+
+  updatedByAdmin Admin? @relation("ContentStyle_UpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([module, recordId, field])
+  @@index([module])
 }
 
 /// What kind of exam record this is.

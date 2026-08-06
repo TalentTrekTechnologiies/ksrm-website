@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { Loader2, Plus, AlertTriangle } from "lucide-react"
+import StyleControls from "@/components/admin/cms/StyleControls"
 import type { ColumnDef } from "@tanstack/react-table"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTable from "@/components/admin/cms/CmsTable"
@@ -268,6 +269,11 @@ function EventsManagerInner() {
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit event" : "New event"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={200} />
+          {/* Size and colour for this event's title, on the public page. Saves
+              itself rather than joining this form's payload - appearance is
+              not part of the event record, so it stays out of its version
+              check. See StyleControls. */}
+          <StyleControls module="events" recordId={editing?.id ?? 0} field="title" label="Title appearance" />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <TextField label="Event date" value={form.eventDate} onChange={(v) => setForm({ ...form, eventDate: v })} required placeholder="YYYY-MM-DD" />
             <TextField label="Location" value={form.location} onChange={(v) => setForm({ ...form, location: v })} />
@@ -299,6 +305,7 @@ function EventsManagerInner() {
             accept={["DOCUMENT"]}
           />
           <TextAreaField label="Description" value={form.description} onChange={(v) => setForm({ ...form, description: v })} rows={3} />
+          <StyleControls module="events" recordId={editing?.id ?? 0} field="description" label="Description appearance" />
           <ToggleField label="Active" checked={form.isActive} onChange={(v) => setForm({ ...form, isActive: v })} />
           <FormActions>
             <SecondaryButton onClick={cancelForm}>Cancel</SecondaryButton>

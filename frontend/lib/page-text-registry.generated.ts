@@ -2724,6 +2724,18 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "Anti-Ragging",
           },
           {
+            id: "SECTIONS.13.label",
+            label: "14. label - Health Facilities",
+            kind: "line",
+            default: "Health Facilities",
+          },
+          {
+            id: "SECTIONS.13.blurb",
+            label: "14. blurb - Campus health centre, first aid...",
+            kind: "line",
+            default: "Campus health centre, first aid, ambulance and tie-ups with nearby hospitals.",
+          },
+          {
             id: "SECTIONS.12.label",
             label: "13. label - College Fest",
             kind: "line",

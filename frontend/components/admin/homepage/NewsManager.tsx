@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { Plus, AlertTriangle, Star } from "lucide-react"
+import StyleControls from "@/components/admin/cms/StyleControls"
 import type { ColumnDef } from "@tanstack/react-table"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTable from "@/components/admin/cms/CmsTable"
@@ -315,6 +316,11 @@ function NewsManagerInner() {
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit article" : "New article"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
+          {/* Size and colour for this item, on the public News page. Saves
+              itself rather than joining this form's payload - appearance is
+              not part of the article record, so it stays out of its version
+              check. See StyleControls. */}
+          <StyleControls module="news" recordId={editing?.id ?? 0} field="title" label="Title appearance" />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} options={CATEGORY_OPTIONS} required />
             <TextField label="Publish date" value={form.date} onChange={(v) => setForm({ ...form, date: v })} required placeholder="YYYY-MM-DD" />
@@ -345,6 +351,7 @@ function NewsManagerInner() {
             accept={["DOCUMENT"]}
           />
           <TextAreaField label="Content" value={form.content} onChange={(v) => setForm({ ...form, content: v })} required rows={5} />
+          <StyleControls module="news" recordId={editing?.id ?? 0} field="content" label="Content appearance" />
           <div className="flex flex-wrap gap-6">
             <ToggleField label="Published" checked={form.isPublished} onChange={(v) => setForm({ ...form, isPublished: v })} />
             <ToggleField label="Featured" checked={form.isFeatured} onChange={(v) => setForm({ ...form, isFeatured: v })} />

@@ -137,6 +137,7 @@ const navItems: NavItem[] = [
       { label: "Central Library", href: "/campus-life/library" },
       { label: "Hostels", href: "/campus-life/hostels" },
       { label: "Transport", href: "/campus-life/transport" },
+      { label: "Health Facilities", href: "/campus-life/health-facilities" },
       { label: "Sports", href: "/campus-life/sports" },
       { label: "NSS", href: "/campus-life/nss" },
       { label: "Startup Cell", href: "/campus-life/startup-cell" },

@@ -437,6 +437,62 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
     ],
   },
 
+  // Health facilities. Every emergency value below ships EMPTY on purpose: a
+  // placeholder phone number on a health page is worse than a blank one,
+  // because somebody would dial it. CmsText renders nothing for an empty
+  // value, so the card simply has no number until an admin puts the real one
+  // in.
+  "health-facilities": {
+    label: "Campus Life \u2192 Health Facilities",
+    path: "/campus-life/health-facilities",
+    groups: [
+      {
+        label: "Header",
+        slots: [
+          { id: "hero.title", label: "Page title", kind: "line", default: "Health Facilities" },
+          { id: "hero.subtitle", label: "Page subtitle", kind: "line", default: "Medical care, first aid and emergency support on campus" },
+        ],
+      },
+      {
+        label: "Introduction",
+        slots: [
+          {
+            id: "intro",
+            label: "Opening paragraph",
+            kind: "paragraph",
+            default: "K.S.R.M. College of Engineering keeps a health centre on campus for its students and staff, with first aid across the academic blocks and hostels, an ambulance for emergencies, and arrangements with hospitals in Kadapa for anything that needs more than the centre can provide.",
+          },
+        ],
+      },
+      {
+        label: "Facilities",
+        slots: [
+          { id: "facilities.0.title", label: "1. Title - Campus Health Centre", kind: "line", default: "Campus Health Centre" },
+          { id: "facilities.0.desc", label: "1. Description", kind: "paragraph", default: "A health centre on campus for students and staff, staffed during college hours for consultation and basic treatment." },
+          { id: "facilities.1.title", label: "2. Title - First Aid", kind: "line", default: "First Aid" },
+          { id: "facilities.1.desc", label: "2. Description", kind: "paragraph", default: "First-aid points in the academic blocks, hostels and the sports ground, checked and restocked regularly." },
+          { id: "facilities.2.title", label: "3. Title - Ambulance", kind: "line", default: "Ambulance" },
+          { id: "facilities.2.desc", label: "3. Description", kind: "paragraph", default: "An ambulance is available for emergencies and for transfer to hospital in Kadapa." },
+          { id: "facilities.3.title", label: "4. Title - Hospital Tie-ups", kind: "line", default: "Hospital Tie-ups" },
+          { id: "facilities.3.desc", label: "4. Description", kind: "paragraph", default: "Arrangements with hospitals in Kadapa so a student needing more than the campus centre can provide is seen quickly." },
+          { id: "facilities.4.title", label: "5. Title - Student Counselling", kind: "line", default: "Student Counselling" },
+          { id: "facilities.4.desc", label: "5. Description", kind: "paragraph", default: "Confidential counselling for students, alongside the mentoring every student has through their department." },
+          { id: "facilities.5.title", label: "6. Title - Sanitation & Drinking Water", kind: "line", default: "Sanitation & Drinking Water" },
+          { id: "facilities.5.desc", label: "6. Description", kind: "paragraph", default: "RO drinking water across the campus and hostels, with cleaning and water testing on a regular schedule." },
+        ],
+      },
+      {
+        label: "Emergency contacts",
+        slots: [
+          { id: "emergency.heading", label: "Heading", kind: "line", default: "In an emergency" },
+          { id: "emergency.centre", label: "Health centre number", kind: "line", default: "", help: "Leave blank until confirmed - an unchecked number is worse than none." },
+          { id: "emergency.ambulance", label: "Ambulance number", kind: "line", default: "", help: "Leave blank until confirmed." },
+          { id: "emergency.hours", label: "Opening hours", kind: "line", default: "" },
+        ],
+      },
+    ],
+  },
+
   library: {
     label: "Library",
     path: "/campus-life/library",

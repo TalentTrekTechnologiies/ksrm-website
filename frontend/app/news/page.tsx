@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { mediaFile } from "@/lib/api-base";
+import StyledText from "@/components/StyledText";
 import { useState } from "react";
 import { getNewsPublic } from "@/lib/news-api";
 import NewsGrid, { toNewsItem, NewsItem } from "@/components/news/NewsGrid";
@@ -10,6 +11,10 @@ import CmsText from "@/components/CmsText";
 const filters = ["All", "Examinations", "Events", "Accreditation", "Rankings", "Placements"];
 
 interface NewsDisplay {
+  /** The CMS record's id, absent on the built-in fallback articles below -
+   *  which is why every use of it is guarded. Carried so a card's size and
+   *  colour can be set per item in Admin -> News. */
+  id?: number;
   badge: string;
   badgeBg: string;
   badgeColor: string;
@@ -59,6 +64,9 @@ export default function NewsPage() {
             : items.map((n) => {
                 const style = CATEGORY_STYLES[n.category] ?? DEFAULT_CATEGORY_STYLE
                 return {
+                  // Carried through so each card can be styled individually;
+                  // it was dropped here and the card had no id at all.
+                  id: n.id,
                   badge: n.category,
                   badgeBg: style.bg,
                   badgeColor: style.color,
@@ -140,13 +148,28 @@ export default function NewsPage() {
               </div>
               <div className="news-grid">
                 {filteredNews.map((n) => (
-                  <div className="news-card" key={n.title}>
+                  <div className="news-card" key={n.id ?? n.title}>
                     <div className="news-badge" style={{ background: n.badgeBg, color: n.badgeColor }}>{n.badge}</div>
                     {n.isNew && <div className="news-new-badge">🆕 NEW</div>}
                     <div className="news-content">
                       <span className="news-date">{n.date}</span>
-                      <h3 className="news-title">{n.title}</h3>
-                      <p className="news-description">{n.desc}</p>
+                      {/* Size and colour for this one item, set in
+                          Admin -> News. The built-in fallback articles have no
+                          id, so they simply render unstyled. */}
+                      <h3 className="news-title">
+                        {n.id ? (
+                          <StyledText module="news" recordId={n.id} field="title">{n.title}</StyledText>
+                        ) : (
+                          n.title
+                        )}
+                      </h3>
+                      <p className="news-description">
+                        {n.id ? (
+                          <StyledText module="news" recordId={n.id} field="content">{n.desc}</StyledText>
+                        ) : (
+                          n.desc
+                        )}
+                      </p>
                       <a href={n.href} className="news-read-more">Read More →</a>
                     </div>
                   </div>

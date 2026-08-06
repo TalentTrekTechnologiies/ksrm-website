@@ -25,6 +25,9 @@ const SECTIONS = [
   { slot: 1, label: "Central Library", href: "/campus-life/library", blurb: "Books, journals, digital resources and reading halls." },
   { slot: 2, label: "Hostels", href: "/campus-life/hostels", blurb: "Separate hostel accommodation for boys and girls." },
   { slot: 3, label: "Transport", href: "/campus-life/transport", blurb: "Bus routes and parking across Kadapa and nearby towns." },
+  // Slot 13, not 4.5 - ids are permanent, so a card inserted in the middle
+  // takes the next unused number and only its POSITION here changes.
+  { slot: 13, label: "Health Facilities", href: "/campus-life/health-facilities", blurb: "Campus health centre, first aid, ambulance and tie-ups with nearby hospitals." },
   { slot: 4, label: "Sports", href: "/campus-life/sports", blurb: "Grounds, indoor courts, gymnasium and tournaments." },
   { slot: 5, label: "Cultural", href: "/campus-life/cultural", blurb: "Cultural club, fests and student performances." },
   { slot: 6, label: "Professional Chapters", href: "/campus-life/professional-chapters", blurb: "Department-led student associations and technical chapters." },

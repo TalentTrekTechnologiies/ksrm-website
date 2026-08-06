@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { resolveFileUrl } from "@/lib/api-base";
 import { getGalleryPublic } from "@/lib/gallery-api";
+import { getCampusVideosPublic } from "@/lib/homepage-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
 
@@ -124,15 +125,43 @@ const FILTER_ORDER = ["Campus", "Campus Life", "Labs", "Sports", "Library", "Eve
 // Gallery rows tagged with this category hold a video, not a photo.
 const VIDEO_CATEGORY = "__video__";
 
-const videos = [
-  "/videos/flash-mob.mp4",
-  "/videos/3d-robo.mp4",
-  "/videos/sports-winners.mp4",
-  "/videos/sivananda-smaranam-night-event.mp4",
+/**
+ * The four clips this page shipped with, shown only until the CMS has videos.
+ *
+ * They are files committed to the repo, so nobody could add a fifth or remove
+ * one without a deployment - and meanwhile the videos the college DID add,
+ * through Campus Videos, appeared on the homepage and on department pages but
+ * never in the Gallery, which is the one page a visitor goes to looking for
+ * them.
+ */
+const FALLBACK_VIDEOS = [
+  { title: "", url: "/videos/flash-mob.mp4" },
+  { title: "", url: "/videos/3d-robo.mp4" },
+  { title: "", url: "/videos/sports-winners.mp4" },
+  { title: "", url: "/videos/sivananda-smaranam-night-event.mp4" },
 ];
+
+/** A YouTube watch/share link becomes its embeddable form; anything else is
+ *  a file URL and is played directly. */
+function youtubeEmbed(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{6,})/);
+  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+}
 
 export default function GalleryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
+
+  // Every video the college has added through Admin -> Campus Videos, so the
+  // Gallery is where all of them are - not just the ones uploaded as gallery
+  // rows. The built-in clips show only while there are none.
+  const cmsVideos = useLiveData<{ title: string; url: string }[]>(
+    () =>
+      getCampusVideosPublic()
+        .then((r) => (r.visible ? r.items.map((v) => ({ title: v.title, url: v.youtubeUrl })) : []))
+        .catch(() => [] as { title: string; url: string }[]),
+    [],
+  );
+  const videos = (cmsVideos ?? []).length ? (cmsVideos ?? []) : FALLBACK_VIDEOS;
 
   // Polled, so an image published in the admin appears here without a refresh.
   // On an empty list or a failed fetch the fallback images stay - useLiveData
@@ -250,13 +279,35 @@ export default function GalleryPage() {
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="gallery-page" slot="campus-videos" /></h2>
           <div className="gal-video-grid">
-            {videos.map((v) => (
-              <div className="gal-video-wrap" key={v}>
-                <video autoPlay loop muted playsInline>
-                  <source src={v} type="video/mp4" />
-                </video>
-              </div>
-            ))}
+            {videos.map((v) => {
+              const embed = youtubeEmbed(v.url);
+              return (
+                <div className="gal-video-wrap" key={v.url}>
+                  {embed ? (
+                    <iframe
+                      src={embed}
+                      title={v.title || "Campus video"}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ width: "100%", aspectRatio: "16 / 9", border: 0, display: "block" }}
+                    />
+                  ) : (
+                    /* Not autoplaying a CMS video: the built-in clips are
+                       short silent loops, but a video the college uploads can
+                       be anything, and four of them playing at once is not a
+                       gallery. */
+                    <video controls playsInline preload="metadata">
+                      <source src={resolveFileUrl(v.url)} />
+                    </video>
+                  )}
+                  {v.title && (
+                    <p style={{ fontSize: 14, fontWeight: 600, color: "#1a1a2e", margin: "10px 0 0" }}>
+                      {v.title}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

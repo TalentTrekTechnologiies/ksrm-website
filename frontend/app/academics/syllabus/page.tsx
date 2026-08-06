@@ -4,6 +4,11 @@ import { useState } from "react";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
+import {
+  getDepartmentProgrammesPublic,
+  DepartmentProgramme,
+  ProgrammeLevel,
+} from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
 
@@ -14,21 +19,21 @@ const btechRegs = [
   // R26 applies to the batch admitted in AY 2026-27, so it leads the list.
   // R23 stays here rather than being retired: the three senior years are still
   // studying under it.
-  { code: "R26", name: "R26UG (AY 2026-27 intake)", branches: "All B.Tech Branches" },
-  { code: "R23", name: "R23UG", branches: "Computer Science & Engineering, CSE (AI & ML), CSE (Data Science), CSE (AI & ML Specialisation), Electronics & Communication Engineering, Electrical & Electronics Engineering, Civil Engineering, Mechanical Engineering" },
-  { code: "R20", name: "R20UG", branches: "All B.Tech Branches" },
-  { code: "R18", name: "R18UG", branches: "All B.Tech Branches" },
-  { code: "R15", name: "R15UG (Archive)", branches: "All B.Tech Branches" },
+  { code: "R26", name: "R26 (AY 2026-27 intake)" },
+  { code: "R23", name: "R23" },
+  { code: "R20", name: "R20" },
+  { code: "R18", name: "R18" },
+  { code: "R15", name: "R15 (Archive)" },
 ];
 
 const mtechRegs = [
-  { code: "R22", name: "R22PG (Current)", branches: "All Specialisations" },
-  { code: "R18PG", name: "R18PG", branches: "All Specialisations" },
+  { code: "R22", name: "R22 (Current)" },
+  { code: "R18PG", name: "R18PG" },
 ];
 
 const mbaRegs = [
-  { code: "R25", name: "R25 (Current)", branches: "Management Studies" },
-  { code: "R19", name: "R19 (Archive)", branches: "Management Studies" },
+  { code: "R25", name: "R25 (Current)" },
+  { code: "R19", name: "R19 (Archive)" },
 ];
 
 function DownloadIcon() {
@@ -49,14 +54,138 @@ function ChevronDown() {
   );
 }
 
-function AccordionItem({
+/**
+ * The branches a programme is offered in, from Admin -> Academics.
+ *
+ * Not a hardcoded list: the college adds and retires specialisations, and a
+ * syllabus page that has to be redeployed to show a new branch is a syllabus
+ * page that will be wrong. The names come from the same programme rows that
+ * drive Courses & Intake, so the two pages can never disagree.
+ *
+ * The short form is what appears in a filename - the college names these
+ * "Computer Science and Engineering(R23)" - so it is what a document is
+ * matched on.
+ */
+function branchAliases(name: string): string[] {
+  const n = name.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+  const aliases = [n];
+  const known: Record<string, string[]> = {
+    "Computer Science & Engineering": ["Computer Science and Engineering", "CSE"],
+    "Electronics & Communication Engineering": ["Electronics and Communication Engineering", "ECE"],
+    "Electrical & Electronics Engineering": ["Electrical and Electronics Engineering", "EEE"],
+    "Mechanical Engineering": ["Mechanical", "ME"],
+    "Civil Engineering": ["Civil", "CE"],
+    "CSE (AIML)": ["AIML", "AI & ML", "Artificial Intelligence and Machine Learning"],
+    "CSE (Data Science)": ["Data Science", "AIDS"],
+    "AIML": ["Artificial Intelligence and Machine Learning", "AI & ML"],
+    "AIDS": ["Artificial Intelligence and Data Science", "Data Science"],
+    "Power Systems": ["PS", "Power System"],
+    "VLSI & Embedded Systems": ["VLSI", "Embedded Systems"],
+    "Structural Engineering": ["Structural"],
+    "Geotechnical Engineering": ["Geotechnical", "GE"],
+  };
+  return [...aliases, ...(known[n] ?? [])];
+}
+
+/** Does this document belong to this branch? Matched on the filename wording. */
+function docMatchesBranch(title: string, name: string): boolean {
+  const t = title.toLowerCase();
+  return branchAliases(name).some((a) => a.length > 1 && t.includes(a.toLowerCase()));
+}
+
+/**
+ * One branch, with its syllabus for each regulation.
+ *
+ * The page used to list regulations only, each card naming its branches in a
+ * sentence - so a CSE student hunting for their syllabus read five paragraphs
+ * of branch names to find which regulation mentioned theirs, then scanned an
+ * undifferentiated pile of PDFs. Branch first, regulation second, which is the
+ * order a student actually knows the answers in.
+ */
+function BranchPanel({
+  branch,
+  regs,
+  docs,
+}: {
+  branch: string;
+  regs: { code: string; name: string }[];
+  docs: Download[];
+}) {
+  const mine = docs.filter((d) => docMatchesBranch(d.title, branch));
+  const label = branch.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+
+  return (
+    <div style={{ background: "#fff", border: "1px solid #eef0f3", borderRadius: 8, padding: 16 }}>
+      <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 12px" }}>
+        {label}
+      </h4>
+
+      {mine.length === 0 ? (
+        <p style={{ fontSize: 12, color: "#888", fontStyle: "italic", margin: 0 }}>
+          Syllabus not published yet.
+        </p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {regs.map((r) => {
+            // \\b, not \b: inside a template literal \b is the backspace
+            // character, so the regex became /\x08R23\x08/ and matched nothing.
+            const forReg = mine.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
+            if (forReg.length === 0) return null;
+            return (
+              <div key={r.code}>
+                <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", color: "#999", margin: "0 0 6px" }}>
+                  {r.name}
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {forReg.map((d) => (
+                    <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
+                      <DownloadIcon />{d.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* A syllabus whose filename names no regulation still has to be
+              reachable, or uploading one with a different naming convention
+              would make it silently vanish. */}
+          {(() => {
+            const unmatched = mine.filter(
+              (d) => !regs.some((r) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title)),
+            );
+            if (unmatched.length === 0) return null;
+            return (
+              <div>
+                <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", color: "#999", margin: "0 0 6px" }}>
+                  Other
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {unmatched.map((d) => (
+                    <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
+                      <DownloadIcon />{d.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProgrammeAccordion({
   title,
+  branches,
   regs,
   docs,
   defaultOpen,
 }: {
   title: string;
-  regs: { code: string; name: string; branches: string }[];
+  branches: string[];
+  regs: { code: string; name: string }[];
   docs: Download[];
   defaultOpen?: boolean;
 }) {
@@ -68,38 +197,17 @@ function AccordionItem({
         <div className="syl-chevron"><ChevronDown /></div>
       </button>
       <div className="syl-accordion-content">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
-          {regs.map((r) => {
-            // Matched on the regulation code in the document title, which is
-            // how the college names these files - "Computer Science and
-            // Engineering(R23)". A regulation with nothing uploaded says so,
-            // instead of offering a button that does nothing.
-            // \\b, not \b: inside a template literal \b is the backspace
-            // character, so the regex became /\x08R23\x08/ and matched nothing.
-            const forReg = docs.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
-            return (
-              <div key={r.name} style={{ background: "#fff", border: "1px solid #eef0f3", borderRadius: 8, padding: 16 }}>
-                <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 12px" }}>{r.name}</h4>
-                <p style={{ fontSize: 13, color: "#555", margin: "0 0 12px", lineHeight: 1.6 }}>
-                  <strong>Branches:</strong><br />{r.branches}
-                </p>
-                {forReg.length === 0 ? (
-                  <p style={{ fontSize: 12, color: "#888", fontStyle: "italic", margin: 0 }}>
-                    Syllabus not published yet.
-                  </p>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {forReg.map((d) => (
-                      <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                        <DownloadIcon />{d.title}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {branches.length === 0 ? (
+          <p style={{ fontSize: 13, color: "#888", fontStyle: "italic", marginTop: 16 }}>
+            Branches will appear here once they are added in Admin &rarr; Academics.
+          </p>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
+            {branches.map((b) => (
+              <BranchPanel key={b} branch={b} regs={regs} docs={docs} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -111,6 +219,28 @@ export default function SyllabusPage() {
     [],
   );
   const syllabi = docs ?? [];
+
+  // Branches come from the same programme rows that drive Courses & Intake, so
+  // adding a specialisation there puts it on this page too - no deployment,
+  // and the two pages cannot disagree about what the college offers.
+  const programmes = useLiveData<DepartmentProgramme[]>(
+    () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
+    [],
+  );
+  const named = (level: ProgrammeLevel, match: RegExp) =>
+    [
+      ...new Set(
+        (programmes ?? [])
+          .filter((p) => p.level === level && p.isActive !== false && match.test(p.name))
+          .map((p) => p.name),
+      ),
+    ].sort();
+
+  const btechBranches = named("UG", /./);
+  // MBA is a PG programme but has its own regulations and no specialisations,
+  // so it is listed separately rather than as an M.Tech branch.
+  const mtechBranches = named("PG", /tech/i);
+  const mbaBranches = named("PG", /mba/i);
 
   return (
     <>
@@ -218,9 +348,9 @@ export default function SyllabusPage() {
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="syllabus" slot="download-syllabus-by-programme" /></h2>
             <div className="syl-accordion">
-              <AccordionItem title="B.Tech" regs={btechRegs} docs={syllabi} defaultOpen />
-              <AccordionItem title="M.Tech" regs={mtechRegs} docs={syllabi} />
-              <AccordionItem title="MBA" regs={mbaRegs} docs={syllabi} />
+              <ProgrammeAccordion title="B.Tech (UG)" branches={btechBranches} regs={btechRegs} docs={syllabi} defaultOpen />
+              <ProgrammeAccordion title="M.Tech (PG)" branches={mtechBranches} regs={mtechRegs} docs={syllabi} />
+              <ProgrammeAccordion title="MBA" branches={mbaBranches} regs={mbaRegs} docs={syllabi} />
             </div>
           </div>
         </section>

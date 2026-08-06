@@ -75,7 +75,10 @@ describe('DashboardService', () => {
   describe('getOverview', () => {
     it('includes every widget for a super admin, regardless of permissions', async () => {
       const result = await service.getOverview({ id: 1, isSuperAdmin: true });
-      expect(result.widgets.length).toBe(21);
+      // 22 since KGCET got a screen of its own - the sidebar filters on
+      // widget keys, so a module without one is built and invisible.
+      expect(result.widgets.length).toBe(22);
+      expect(result.widgets.map((w) => w.key)).toContain('kgcet');
       expect(result.widgets.map((w) => w.key)).toContain('admins');
       expect(result.widgets.map((w) => w.key)).toContain('roles');
       expect(result.widgets.map((w) => w.key)).toContain('careers');

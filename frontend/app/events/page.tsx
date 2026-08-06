@@ -1,6 +1,7 @@
 "use client";
 
 import { getEventsPublic, EventItem } from "@/lib/events-api";
+import StyledText from "@/components/StyledText";
 import { resolveFileUrl } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data";
 import PageResources from "@/components/PageResources";
@@ -75,9 +76,20 @@ export default function EventsPage() {
                     <span className="evt-date">
                       {new Date(ev.eventDate).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}
                     </span>
-                    <h3 className="evt-title">{ev.title}</h3>
+                    {/* Size and colour for this one event, set in
+                        Admin -> Events. Renders as a bare text node until
+                        somebody sets one - see StyledText. */}
+                    <h3 className="evt-title">
+                      <StyledText module="events" recordId={ev.id} field="title">{ev.title}</StyledText>
+                    </h3>
                     {ev.location && <p className="evt-location">📍 {ev.location}</p>}
-                    {ev.description && <p className="evt-desc">{ev.description}</p>}
+                    {ev.description && (
+                      <p className="evt-desc">
+                        <StyledText module="events" recordId={ev.id} field="description">
+                          {ev.description}
+                        </StyledText>
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}

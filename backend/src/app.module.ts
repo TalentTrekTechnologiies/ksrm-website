@@ -30,6 +30,7 @@ import { DepartmentHighlightsModule } from './department-highlights/department-h
 import { ContactChannelsModule } from './contact-channels/contact-channels.module';
 import { TransportRoutesModule } from './transport-routes/transport-routes.module';
 import { KgcetModule } from './kgcet/kgcet.module';
+import { ContentStylesModule } from './content-styles/content-styles.module';
 import { ResearchModule } from './research/research.module';
 import { PageTablesModule } from './page-tables/page-tables.module';
 import { PageTextModule } from './page-text/page-text.module';
@@ -79,6 +80,7 @@ import { AdminNotificationsModule } from './admin-notifications/admin-notificati
     ContactChannelsModule,
     TransportRoutesModule,
     KgcetModule,
+    ContentStylesModule,
     ResearchModule,
     PageTablesModule,
     PageTextModule,
