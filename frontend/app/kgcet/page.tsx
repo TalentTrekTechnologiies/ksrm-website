@@ -1,6 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import {
+  getKgcetParticipationPublic,
+  getKgcetHighlightsPublic,
+  KgcetParticipation,
+  KgcetHighlight,
+} from "@/lib/kgcet-api";
 import { resolveFileUrl } from "@/lib/api-base";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
@@ -21,7 +27,7 @@ import { useLiveData } from "@/lib/use-live-data";
  * change every admission season, and neither should need a deployment.
  */
 
-const PARTICIPATION = [
+const FALLBACK_PARTICIPATION = [
   { year: "2021", registered: 135, attended: 84, qualified: 52 },
   { year: "2022", registered: 492, attended: 221, qualified: 114 },
   { year: "2023", registered: 586, attended: 278, qualified: 178 },
@@ -30,7 +36,7 @@ const PARTICIPATION = [
   { year: "2026", registered: 672, attended: 339, qualified: 222 },
 ];
 
-const HIGHLIGHTS = [
+const FALLBACK_HIGHLIGHTS = [
   { icon: "🎓", title: "Scholarships of ₹6,000 to ₹40,000", desc: "Awarded against B.Tech admission, on the rank secured in the test." },
   { icon: "🗓️", title: "Running since 2021", desc: "Conducted every year by the Kandula Group of Institutions." },
   { icon: "⚖️", title: "Merit, not means alone", desc: "Set up to widen access for deserving students who would struggle with fees." },
@@ -112,6 +118,36 @@ function EnquiryPhone() {
 }
 
 export default function KgcetPage() {
+  // Both come from Admin -> KGCET. The built-in lists below are what shows
+  // until rows are added there, so the page is never blank and shipping the
+  // module changed nothing on the day it landed.
+  const cmsParticipation = useLiveData<KgcetParticipation[]>(
+    () => getKgcetParticipationPublic().catch(() => [] as KgcetParticipation[]),
+    [],
+  );
+  const cmsHighlights = useLiveData<KgcetHighlight[]>(
+    () => getKgcetHighlightsPublic().catch(() => [] as KgcetHighlight[]),
+    [],
+  );
+
+  const participation = (cmsParticipation ?? []).length
+    ? (cmsParticipation ?? []).map((r) => ({
+        year: r.year,
+        registered: r.registered,
+        attended: r.attended,
+        qualified: r.qualified,
+      }))
+    : FALLBACK_PARTICIPATION;
+
+  const highlights = (cmsHighlights ?? []).length
+    ? (cmsHighlights ?? []).map((h) => ({
+        icon: h.icon ?? "",
+        title: h.title,
+        desc: h.description ?? "",
+        fromCms: true,
+      }))
+    : FALLBACK_HIGHLIGHTS.map((h) => ({ ...h, fromCms: false }));
+
   return (
     <main style={{ background: "#ffffff" }}>
       <style>{`
@@ -182,11 +218,23 @@ export default function KgcetPage() {
       <section style={{ padding: "64px 0" }}>
         <div className="kg-container">
           <div className="kg-grid">
-            {HIGHLIGHTS.map((h, i) => (
+            {highlights.map((h, i) => (
               <div className="kg-card" key={h.title}>
                 <div className="kg-ico">{h.icon}</div>
-                <h3><CmsText section="kgcet" slot={`highlights.${i}.title`} /></h3>
-                <p><CmsText section="kgcet" slot={`highlights.${i}.desc`} /></p>
+                {/* A card entered in Admin -> KGCET shows what was typed there.
+                    Only the three built-in cards keep their Page Content slots,
+                    so an edit made before this module existed is not lost. */}
+                {h.fromCms ? (
+                  <>
+                    <h3>{h.title}</h3>
+                    <p>{h.desc}</p>
+                  </>
+                ) : (
+                  <>
+                    <h3><CmsText section="kgcet" slot={`highlights.${i}.title`} /></h3>
+                    <p><CmsText section="kgcet" slot={`highlights.${i}.desc`} /></p>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -202,7 +250,7 @@ export default function KgcetPage() {
                 <tr><th>Year</th><th>Registered</th><th>Attended</th><th>Qualified</th></tr>
               </thead>
               <tbody>
-                {PARTICIPATION.map((r) => (
+                {participation.map((r) => (
                   <tr key={r.year}>
                     <td>{r.year}</td>
                     <td>{r.registered.toLocaleString("en-IN")}</td>

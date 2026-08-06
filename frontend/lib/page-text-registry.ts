@@ -678,7 +678,7 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "floors (3 items)",
+        label: "floors (2 items)",
         slots: [
           {
             id: "floors.0.floor",
@@ -691,12 +691,6 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
             label: "2. floor - First Floor",
             kind: "line",
             default: "First Floor",
-          },
-          {
-            id: "floors.2.floor",
-            label: "3. floor - Second Floor",
-            kind: "line",
-            default: "Second Floor",
           },
         ],
       },

@@ -96,6 +96,10 @@ const NAV_ITEMS: NavItem[] = [
   // department - so they get a top-level screen of their own.
   { widgetKey: "department_programmes", label: "Academics", href: "/admin/academics" },
   { widgetKey: "transport_routes", label: "Transport", href: "/admin/transport" },
+  // KGCET has structured content of its own - the yearly participation
+  // figures and the highlight cards - so it gets a screen rather than sixty
+  // text boxes in Page Content.
+  { widgetKey: "kgcet", label: "KGCET", href: "/admin/kgcet" },
   // Labelled "Documents" for admins - the model/route stay `downloads`, this is
   // wording only (a visitor still clicks a "Download" button on the public site).
   { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },

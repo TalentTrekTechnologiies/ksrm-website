@@ -52,10 +52,45 @@ const seating = [
   { section: "Digital Library", capacity: 30 },
 ];
 
+/**
+ * `slot` is the card's permanent id in Page Content, not its position here.
+ *
+ * The library is over two floors, not three. Rather than delete the second
+ * floor's card and its five sections with it, those sections move up to the
+ * first floor - the college still holds the reference collection, the
+ * periodicals and the back volumes, they are simply not on a floor of their
+ * own. The first-floor card was nearly empty beside the other two anyway.
+ *
+ * Slot 2 was the Second Floor heading and stays retired, so nobody's edit to
+ * the first-floor heading is quietly reassigned.
+ */
 const floors = [
-  { floor: "Ground Floor", items: ["Text Book Section", "Circulation Section", "Digital Library", "Reprographic Services", "Old Question Papers", "Newspaper Clipping Service", "OPAC"] },
-  { floor: "First Floor", items: ["Text Book Section", "OPAC"] },
-  { floor: "Second Floor", items: ["Reference Section", "Periodicals Section", "Journals and Magazines Section", "Project Reports", "Back Volumes of Journals"] },
+  {
+    slot: 0,
+    floor: "Ground Floor",
+    items: [
+      "Text Book Section",
+      "Circulation Section",
+      "Digital Library",
+      "Reprographic Services",
+      "Old Question Papers",
+      "Newspaper Clipping Service",
+      "OPAC",
+    ],
+  },
+  {
+    slot: 1,
+    floor: "First Floor",
+    items: [
+      "Text Book Section",
+      "OPAC",
+      "Reference Section",
+      "Periodicals Section",
+      "Journals and Magazines Section",
+      "Project Reports",
+      "Back Volumes of Journals",
+    ],
+  },
 ];
 
 const reprographics = [
@@ -423,11 +458,11 @@ export default function LibraryPage() {
       <section style={{ padding: "72px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <h2 className="lib-h2">What is on Each Floor</h2>
-          <p className="lib-lead">The Central Library is spread over three floors.</p>
+          <p className="lib-lead">The Central Library is spread over two floors.</p>
           <div className="lib-floor-grid">
-            {floors.map((f, _i) => (
-              <div className="lib-floor-card" key={f.floor}>
-                <h3><CmsText section="library" slot={`floors.${_i}.floor`} /></h3>
+            {floors.map((f) => (
+              <div className="lib-floor-card" key={f.slot}>
+                <h3><CmsText section="library" slot={`floors.${f.slot}.floor`} /></h3>
                 <ul>{f.items.map((i) => <li key={i}>{i}</li>)}</ul>
               </div>
             ))}

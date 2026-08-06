@@ -38,6 +38,14 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     label: 'Bus Routes',
     count: (p) => p.transportRoute.count({ where: { deletedAt: null } }),
   },
+  // KGCET's own screen. The count is the participation years, which is what an
+  // admin actually maintains year to year; the highlight cards are edited on
+  // the same screen and change once in a blue moon.
+  {
+    key: 'kgcet',
+    label: 'KGCET Years',
+    count: (p) => p.kgcetParticipation.count({ where: { deletedAt: null } }),
+  },
   // Programmes are edited per-department too, but they drive the college-wide
   // Academics pages (Courses & Intake, UG/PG/Diploma admissions), so they get
   // their own screen listing every programme across every department.
