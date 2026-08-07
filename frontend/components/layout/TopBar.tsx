@@ -24,6 +24,14 @@ const socials = [
   { Icon: YT, href: "http://youtube.com/ksrmceofficialmedia", label: "YouTube" },
 ]
 
+// One line, scrolling continuously - the codes + full programme list is too
+// much text to fit a thin bar statically without either wrapping to extra
+// rows (grows the bar) or shrinking past readable (still looked cramped).
+// Same scrolling-strip approach already used for the homepage's placements/
+// recruiters strips: a doubled track looping via translateX, so it reads as
+// an unbroken loop rather than snapping back to the start.
+const codesText = "EAPCET / ECET / ICET / POLYCET Code: KSRM  •  PGECET Code: KSRM1  •  Diploma: CE, EEE, ME, ECE, CSE, AIML  •  B.Tech: CE, EEE, ME, ECE, CSE, CSD, CSM, AIML  •  M.Tech: GTE, SE, PS, ES&VLSI, AIDS  •  MBA"
+
 export default function TopBar() {
   const [loaded, setLoaded] = useState(false)
   useEffect(() => { setLoaded(true) }, [])
@@ -33,15 +41,22 @@ export default function TopBar() {
       <style>{`
         .topbar-inner { width: 100%; margin: 0 auto; padding: 5px 5%; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
         .topbar-left { display: flex; gap: 18px; font-size: 13px; align-items: center; font-weight: 500; flex-shrink: 0; }
-        .topbar-center { font-size: 13px; font-weight: 600; text-align: center; flex: 1; }
         .topbar-right { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
         .topbar-social { color: #fff; display: flex; align-items: center; transition: color 0.2s; }
         .topbar-social:hover { color: #FFE619; }
 
+        .topbar-codes-viewport { flex: 1; overflow: hidden; min-width: 0; }
+        .topbar-codes-track { display: flex; width: max-content; white-space: nowrap; gap: 60px; animation: topbar-scroll 34s linear infinite; }
+        .topbar-codes-track span { font-size: 12.5px; font-weight: 600; color: #FFE619; }
+        @keyframes topbar-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @media (hover: hover) and (pointer: fine) {
+          .topbar-codes-viewport:hover .topbar-codes-track { animation-play-state: paused; }
+        }
+
         @media (max-width: 768px) {
-          .topbar-inner { padding: 4px 14px; justify-content: space-between; gap: 8px; }
+          .topbar-inner { padding: 4px 14px; gap: 8px; }
           .topbar-left { font-size: 11px; gap: 10px; flex-direction: row; align-items: center; }
-          .topbar-center { display: none; }
+          .topbar-codes-viewport { display: none; }
           .topbar-right { gap: 12px; }
         }
         @media (max-width: 380px) {
@@ -56,11 +71,11 @@ export default function TopBar() {
           <span>📞 +91 8143731980</span>
           <span>📞 08562 295972</span>
         </div>
-        <div className="topbar-center">
-          EAPCET/ECET/ICET/POLYCET CODE: KSRM; PGECET CODE: KSRM1; &nbsp;|&nbsp;
-          Diploma – CE, EEE, ME, ECE, CSE, AIML; &nbsp;|&nbsp;
-          B.Tech - CE, EEE, ME, ECE, CSE, CSD, CSM, AIML; &nbsp;|&nbsp;
-          M.TECH - GTE, SE, PS, ES&amp;VLSI, AIDS; &nbsp;|&nbsp; MBA
+        <div className="topbar-codes-viewport">
+          <div className="topbar-codes-track">
+            <span>{codesText}</span>
+            <span>{codesText}</span>
+          </div>
         </div>
         <div className="topbar-right">
           {socials.map(({ Icon, href, label }) => (
