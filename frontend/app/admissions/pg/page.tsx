@@ -8,8 +8,7 @@ import { useLiveData } from "@/lib/use-live-data";
 
 // Fallback shown until/unless M.Tech programmes are added in the CMS
 // (Departments -> Programmes -> level "PG"), matching the built-in list
-// exactly so nothing changes visually until a real one is added. The MBA
-// table below is a single fixed program, not a list, and is left as-is.
+// exactly so nothing changes visually until a real one is added.
 const mtechPrograms = [
   { name: "Geotechnical Engineering", dept: "Civil Engineering", intake: 18 },
   { name: "Power Systems", dept: "Electrical & Electronics", intake: 18 },
@@ -17,6 +16,13 @@ const mtechPrograms = [
   { name: "Renewable Energy Engineering", dept: "Mechanical Engineering", intake: 18 },
   { name: "AI & Data Science", dept: "Computer Science & Engineering", intake: 18 },
 ];
+
+// Same fallback rule as mtechPrograms above - shown only until the CMS has an
+// MBA row. This used to be hardcoded permanently at 120 seats regardless of
+// what Admin -> Academics said, which had drifted from the real intake of 60
+// (the number Courses & Intake, reading the same CMS row, already showed) -
+// the two admissions pages disagreed about the college's own MBA seat count.
+const mbaFallback = { name: "Master of Business Administration", intake: 60 };
 
 export default function PGAdmissionsPage() {
   // Every PG programme across all departments. The fetcher never rejects, so
@@ -26,14 +32,21 @@ export default function PGAdmissionsPage() {
     () => getDepartmentProgrammesPublic(undefined, "PG").catch(() => [] as DepartmentProgramme[]),
     [],
   );
+  // MBA is a PG programme too, so it comes from the same fetch - split out by
+  // name rather than a second API call.
+  const mba = (cmsPg ?? []).find((p) => /\bmba\b|business administration/i.test(p.name));
+  const mtech = (cmsPg ?? []).filter((p) => p !== mba);
+
   const programs =
-    cmsPg && cmsPg.length > 0
-      ? cmsPg.map((p) => ({
+    mtech.length > 0
+      ? mtech.map((p) => ({
           name: p.name,
           dept: p.department?.name || p.department?.shortName || "—",
           intake: p.intake,
         }))
       : mtechPrograms;
+
+  const mbaIntake = mba?.intake ?? mbaFallback.intake;
 
   return (
     <>
@@ -134,7 +147,14 @@ export default function PGAdmissionsPage() {
               </div>
               <div className="pg-summary-box">
                 <h3><CmsText section="admissions.pg" slot="mba-program" /></h3>
-                <p style={{ margin: "8px 0 0" }}><CmsText section="admissions.pg" slot="120-seats" /></p>
+                {/* Derived from the same CMS row as the table below, not a
+                    separate Page Content line - the slot this used to be
+                    (admissions.pg.120-seats) still said "120 Seats" by
+                    default, correct only where an admin had manually
+                    overridden it to match the real number. Two places
+                    holding the same fact independently is how they drifted
+                    apart in the first place. */}
+                <p style={{ margin: "8px 0 0" }}>{mbaIntake} Seats</p>
               </div>
             </div>
 
@@ -160,9 +180,9 @@ export default function PGAdmissionsPage() {
                 <thead><tr><th>Program</th><th>Duration</th><th>Annual Intake</th></tr></thead>
                 <tbody>
                   <tr>
-                    <td className="pg-program-name">Master of Business Administration</td>
+                    <td className="pg-program-name">{mba?.name ?? mbaFallback.name}</td>
                     <td style={{ color: "#666" }}>2 Years</td>
-                    <td className="pg-intake-badge">120</td>
+                    <td className="pg-intake-badge">{mbaIntake}</td>
                   </tr>
                 </tbody>
               </table>

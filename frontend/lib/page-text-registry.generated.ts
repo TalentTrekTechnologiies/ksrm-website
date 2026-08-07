@@ -1403,12 +1403,6 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             kind: "line",
             default: "MBA Program",
           },
-          {
-            id: "120-seats",
-            label: "120 Seats",
-            kind: "line",
-            default: "120 Seats",
-          },
         ],
       },
       {
