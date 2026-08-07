@@ -43,8 +43,8 @@ const emptyForm: FormState = {
 export default function ChapterTab({ departmentId }: { departmentId: number }) {
   return (
     <DepartmentDragListManager<Download, FormState>
-      title="Professional Chapter"
-      description="Activities, events and reports from this department's student chapter. These appear in their own section on the department's public page."
+      title="Activity Reports & Documents"
+      description="Photos, reports and certificates from this chapter's activities. Committee, events and About text are above."
       departmentId={departmentId}
       emptyForm={emptyForm}
       // Only this department's chapter items, never its general documents.

@@ -19,6 +19,7 @@ import { getCampusVideosForDepartment, getStatisticsPublic, SiteStatistic, Campu
 import { getPublicSiteSettings } from "@/lib/site-settings-api";
 import { useLiveData, DEFAULT_POLL_INTERVAL_MS } from "@/lib/use-live-data";
 import BoardOfStudies from "@/components/departments/BoardOfStudies";
+import StudentChapter from "@/components/departments/StudentChapter";
 
 const NAV_ITEMS = [
   { id: "about", label: "About" },
@@ -32,6 +33,9 @@ const NAV_ITEMS = [
   // The section this points at renders only when the department has a Board of
   // Studies in the CMS. The link is harmless without it: nothing to scroll to.
   { id: "board-of-studies", label: "Board of Studies" },
+  // Same rule as Board of Studies above: renders only once the department
+  // actually has a chapter.
+  { id: "student-chapter", label: "Student Chapter" },
 ];
 
 const LEVEL_LABEL: Record<string, string> = { UG: "Undergraduate", PG: "Postgraduate", PHD: "Ph.D.", DIPLOMA: "Diploma" };
@@ -1147,6 +1151,11 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
             being forced to show an empty one. */}
         <BoardOfStudies departmentId={resolvedDepartmentId} />
 
+        {/* Student Chapter - Admin -> Committees (type "Student Chapter",
+            this department) for the roster, the department workspace for its
+            events and documents. */}
+        <StudentChapter departmentId={resolvedDepartmentId} />
+
         {/* OUTCOMES: PEOs / PSOs / POs */}
         <section id="outcomes" style={{ padding: "72px 0", background: "#f7f8fa" }}>
           <div className="responsive-container">
@@ -1303,15 +1312,19 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           </section>
         )}
 
-        {/* PROFESSIONAL CHAPTER ACTIVITIES
+        {/* STUDENT CHAPTER ACTIVITIES
             Anything the department's chapter uploads - filed under Documents
             with this department and the "Campus Life -> Professional Chapters"
-            section. Split out from the general Downloads block below so a
-            chapter's event reports are not buried among syllabi and forms. */}
+            section (slug kept as-is; every already-uploaded document stays
+            findable under it). Split out from the general Downloads block
+            below so a chapter's event reports are not buried among syllabi
+            and forms. About/Committee/Events for the same chapter are in
+            the Student Chapter section above - see components/departments/
+            StudentChapter.tsx. */}
         {chapterDocs.length > 0 && (
           <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
             <div className="responsive-container">
-              <h2 className="dept-section-title" style={{ marginBottom: 8 }}>Professional Chapter</h2>
+              <h2 className="dept-section-title" style={{ marginBottom: 8 }}>Student Chapter — Activity Reports</h2>
               <p style={{ color: "#666", fontSize: 15, margin: "0 0 32px" }}>
                 Activities, events and reports from this department&apos;s student chapter.
               </p>

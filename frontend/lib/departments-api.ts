@@ -8,6 +8,9 @@ export interface Department {
   tagline: string | null;
   intro: string | null;
   about: string;
+  /** The Student Chapter's own "About Us" text - distinct from `about`,
+   *  which describes the department itself. */
+  studentChapterAbout: string | null;
   aboutVideoUrl: string | null;
   heroImageUrl: string | null;
   /** Media Library reference for heroImageUrl, or null when using a
@@ -35,6 +38,7 @@ export interface DepartmentInput {
   tagline?: string | null;
   intro?: string;
   about: string;
+  studentChapterAbout?: string | null;
   /** Video shown beside the About text on the department page. */
   aboutVideoUrl?: string | null;
   heroImageUrl?: string | null;

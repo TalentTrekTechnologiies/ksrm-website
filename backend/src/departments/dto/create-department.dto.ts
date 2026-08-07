@@ -44,6 +44,12 @@ export class CreateDepartmentDto {
   @IsString()
   about: string;
 
+  /** The Student Chapter's own "About Us" text - distinct from `about`
+   *  above, which describes the department itself. */
+  @IsOptional()
+  @IsString()
+  studentChapterAbout?: string;
+
   @IsOptional()
   @IsString()
   aboutVideoUrl?: string;

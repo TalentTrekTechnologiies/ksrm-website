@@ -7,6 +7,8 @@ export type CommitteeType =
   | "IQAC"
   /** A department's Board of Studies. Which department is `departmentId`. */
   | "BOARD_OF_STUDIES"
+  /** A department's Student Chapter committee. Which department is `departmentId`. */
+  | "STUDENT_CHAPTER"
   | "OTHER";
 
 /**

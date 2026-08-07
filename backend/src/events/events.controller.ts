@@ -26,15 +26,23 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  findAllPublic() {
-    return this.eventsService.findAllPublic();
+  findAllPublic(@Query('departmentId') departmentId?: string) {
+    const deptId = departmentId ? Number(departmentId) : undefined;
+    return this.eventsService.findAllPublic(Number.isFinite(deptId) ? deptId : undefined);
   }
 
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('events.view')
-  findAllAdmin(@Query('includeDeleted') includeDeleted?: string) {
-    return this.eventsService.findAllAdmin(includeDeleted === 'true');
+  findAllAdmin(
+    @Query('includeDeleted') includeDeleted?: string,
+    @Query('departmentId') departmentId?: string,
+  ) {
+    const deptId = departmentId ? Number(departmentId) : undefined;
+    return this.eventsService.findAllAdmin(
+      includeDeleted === 'true',
+      Number.isFinite(deptId) ? deptId : undefined,
+    );
   }
 
   @Post()

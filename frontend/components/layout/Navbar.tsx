@@ -67,14 +67,27 @@ const navItems: NavItem[] = [
   {
     label: "Departments",
     href: "/departments",
+    // Every department gets its own "  ↳ Student Chapter" link right under
+    // it - same indentation convention as the sub-links under About - rather
+    // than clubs living as a separate, generic Campus Life page. The section
+    // it jumps to (components/departments/StudentChapter.tsx) renders
+    // nothing until that department actually has one, so the link is
+    // harmless for a department whose chapter has not been entered yet.
     children: [
       { label: "Civil Engineering", href: "/departments/civil" },
+      { label: "  ↳ Student Chapter", href: "/departments/civil#student-chapter" },
       { label: "Computer Science and Engineering", href: "/departments/cse" },
+      { label: "  ↳ Student Chapter", href: "/departments/cse#student-chapter" },
       { label: "Electrical and Electronics", href: "/departments/eee" },
+      { label: "  ↳ Student Chapter", href: "/departments/eee#student-chapter" },
       { label: "Electronics and Communication Engineering ", href: "/departments/ece" },
+      { label: "  ↳ Student Chapter", href: "/departments/ece#student-chapter" },
       { label: "Mechanical Engineering", href: "/departments/mechanical" },
+      { label: "  ↳ Student Chapter", href: "/departments/mechanical#student-chapter" },
       { label: "Humanities and Sciences", href: "/departments/hs" },
+      { label: "  ↳ Student Chapter", href: "/departments/hs#student-chapter" },
       { label: "Management Studies (MBA)", href: "/departments/mba" },
+      { label: "  ↳ Student Chapter", href: "/departments/mba#student-chapter" },
     ],
   },
   {
@@ -148,7 +161,11 @@ const navItems: NavItem[] = [
       { label: "  ↳ Ombudsperson", href: "/about/ombudsman" },
       { label: "Cultural Club", href: "/campus-life/cultural" },
       { label: "College Fest", href: "/campus-life/college-fest" },
-      { label: "Professional Chapters", href: "/campus-life/professional-chapters" },
+      // Was here as five hardcoded club names, all linking out to a
+      // department page with nothing chapter-specific on it. Real chapters
+      // now live under Departments, one "  ↳ Student Chapter" link per
+      // department, next to the pages an admin already edits for that
+      // department - not a separate generic list to keep in sync with them.
     ],
   },
   {

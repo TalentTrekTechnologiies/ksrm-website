@@ -17,7 +17,8 @@ import ResearchTab from "./ResearchTab"
 import GalleryTab from "./GalleryTab"
 import VideosTab from "./VideosTab"
 import DownloadsTab from "./DownloadsTab"
-import ChapterTab from "./ChapterTab"
+import StudentChapterTab from "./StudentChapterTab"
+import EventsTab from "./EventsTab"
 import BoardOfStudiesTab from "./BoardOfStudiesTab"
 import ContactTab from "./ContactTab"
 import StatisticsTab from "./StatisticsTab"
@@ -32,12 +33,13 @@ const TABS: { key: string; label: string; permission: string }[] = [
   { key: "highlights", label: "Highlights & Achievements", permission: "department_highlights.view" },
   { key: "research", label: "Research", permission: "research.view" },
   { key: "gallery", label: "Gallery", permission: "gallery.view" },
+  { key: "events", label: "Events", permission: "events.view" },
   { key: "videos", label: "Videos", permission: "homepage.view" },
   { key: "downloads", label: "Documents", permission: "downloads.view" },
-  // Chapter and BoS items are downloads too, so they need no permission of
-  // their own. The BoS MEMBERS live in Admin -> Committees; this tab is only
-  // the papers that go with them.
-  { key: "chapter", label: "Professional Chapter", permission: "downloads.view" },
+  // Student Chapter and BoS both gate on downloads.view - their own content
+  // (committee members, events, gallery) is edited on the screens that
+  // already own those, linked from the tab rather than duplicated here.
+  { key: "student-chapter", label: "Student Chapter", permission: "downloads.view" },
   { key: "board-of-studies", label: "Board of Studies", permission: "downloads.view" },
   { key: "contact", label: "Contact Information", permission: "contact.view" },
   { key: "statistics", label: "Statistics", permission: "homepage.view" },
@@ -140,7 +142,8 @@ function DepartmentWorkspaceInner() {
         {tab === "gallery" && <GalleryTab departmentId={department.id} />}
         {tab === "videos" && <VideosTab departmentId={department.id} />}
         {tab === "downloads" && <DownloadsTab departmentId={department.id} />}
-        {tab === "chapter" && <ChapterTab departmentId={department.id} />}
+        {tab === "events" && <EventsTab departmentId={department.id} />}
+        {tab === "student-chapter" && <StudentChapterTab department={department} onSaved={setDepartment} />}
         {tab === "board-of-studies" && <BoardOfStudiesTab departmentId={department.id} />}
         {tab === "contact" && <ContactTab departmentId={department.id} />}
         {tab === "statistics" && <StatisticsTab departmentId={department.id} />}

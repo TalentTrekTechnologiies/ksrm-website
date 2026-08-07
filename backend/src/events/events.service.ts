@@ -25,9 +25,17 @@ export class EventsService {
 
   // Upcoming events first - the public listing's whole purpose is "what's
   // coming up", so ascending eventDate (not sortOrder) drives the order.
-  async findAllPublic() {
+  //
+  // departmentId undefined (the default) returns every event regardless of
+  // department, matching the public site-wide Events page. A Student
+  // Chapter's own section passes its department's id to see only its events.
+  async findAllPublic(departmentId?: number) {
     return this.prisma.event.findMany({
-      where: { isActive: true, deletedAt: null },
+      where: {
+        isActive: true,
+        deletedAt: null,
+        ...(departmentId !== undefined && { departmentId }),
+      },
       orderBy: { eventDate: 'asc' },
     });
   }
@@ -36,9 +44,12 @@ export class EventsService {
   // admin UI can actually offer a restore action - excluded by default
   // since most callers (including reorder's own re-fetch) want the live
   // working set only.
-  async findAllAdmin(includeDeleted = false) {
+  async findAllAdmin(includeDeleted = false, departmentId?: number) {
     return this.prisma.event.findMany({
-      where: { ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(!includeDeleted && { deletedAt: null }),
+        ...(departmentId !== undefined && { departmentId }),
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }

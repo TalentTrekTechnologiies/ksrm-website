@@ -92,6 +92,9 @@ enum CommitteeType {
   /// so renaming the committee in the CMS cannot empty that section; which
   /// department it belongs to is Committee.departmentId.
   BOARD_OF_STUDIES
+  /// A department's student professional chapter committee (e.g. CSE's CSI
+  /// chapter). Same departmentId-scoped shape as BOARD_OF_STUDIES.
+  STUDENT_CHAPTER
   OTHER
 }
 
@@ -667,6 +670,11 @@ model Department {
   contactChannels ContactChannel[]        @relation("ContactChannel_Department")
   displaySettings DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_Department")
   committees      Committee[]                @relation("Committee_Department")
+  events          Event[]                    @relation("Event_Department")
+  /// The department's Student Chapter "About Us" text. Separate from `about`
+  /// (the department itself) on purpose - the chapter is a distinct, mostly
+  /// student-run body with its own description.
+  studentChapterAbout String?
 
   // Announcement Engine.
   announcementPlacements AnnouncementPlacement[] @relation("AnnouncementPlacement_Department")
@@ -1182,11 +1190,18 @@ model Event {
   documentUrl     String?
   documentMediaId Int?
 
-  deletedByAdmin Admin? @relation("Event_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  /// Department scope, optional - null is a college-wide event on the public
+  /// Events page, matching CampusVideo's departmentId. A Student Chapter's own
+  /// events set this and are additionally read filtered to that department.
+  departmentId Int?
+
+  deletedByAdmin Admin?      @relation("Event_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  departmentRef  Department? @relation("Event_Department", fields: [departmentId], references: [id], onDelete: SetNull)
 
   @@index([isActive])
   @@index([deletedAt])
   @@index([eventDate])
+  @@index([departmentId])
 }
 
 model Category {

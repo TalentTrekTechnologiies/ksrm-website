@@ -30,7 +30,9 @@ const SECTIONS = [
   { slot: 13, label: "Health Facilities", href: "/campus-life/health-facilities", blurb: "Campus health centre, first aid, ambulance and tie-ups with nearby hospitals." },
   { slot: 4, label: "Sports", href: "/campus-life/sports", blurb: "Grounds, indoor courts, gymnasium and tournaments." },
   { slot: 5, label: "Cultural", href: "/campus-life/cultural", blurb: "Cultural club, fests and student performances." },
-  { slot: 6, label: "Professional Chapters", href: "/campus-life/professional-chapters", blurb: "Department-led student associations and technical chapters." },
+  // Slot 6 (Professional Chapters) retired, not reused - chapters moved to
+  // Departments, one "Student Chapter" section per department page, rather
+  // than a single generic card here linking to five hardcoded club names.
   { slot: 7, label: "NSS", href: "/campus-life/nss", blurb: "National Service Scheme activities and community outreach." },
   { slot: 8, label: "EDC", href: "/campus-life/edc", blurb: "Entrepreneurship Development Cell programmes." },
   { slot: 9, label: "Startup Cell", href: "/campus-life/startup-cell", blurb: "Incubation support for student and faculty startups." },

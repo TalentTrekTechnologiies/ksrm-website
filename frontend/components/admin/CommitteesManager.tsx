@@ -84,6 +84,7 @@ const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [
   // Renders on the chosen department's own page. One per department, so the
   // Department field below is required for this type and ignored for the rest.
   { value: "BOARD_OF_STUDIES", label: "Board of Studies (department)" },
+  { value: "STUDENT_CHAPTER", label: "Student Chapter (department)" },
   { value: "OTHER", label: "Other" },
 ]
 
@@ -387,7 +388,7 @@ function CommitteesManagerInner() {
           {/* Only for Board of Studies. Shown for that type alone rather than
               always: every other committee is the institution's, and an extra
               always-visible field invites someone to set it by accident. */}
-          {form.type === "BOARD_OF_STUDIES" && (
+          {(form.type === "BOARD_OF_STUDIES" || form.type === "STUDENT_CHAPTER") && (
             <>
               <SelectField
                 label="Department"
@@ -416,7 +417,7 @@ function CommitteesManagerInner() {
                 !form.name ||
                 // A Board of Studies with no department belongs to no page and
                 // would render nowhere at all.
-                (form.type === "BOARD_OF_STUDIES" && !form.departmentId)
+                ((form.type === "BOARD_OF_STUDIES" || form.type === "STUDENT_CHAPTER") && !form.departmentId)
               }
             >
               {saving ? "Saving..." : "Save"}

@@ -32,6 +32,11 @@ export class CreateEventDto {
   @IsString()
   category?: string;
 
+  /** Null is a college-wide event; a Student Chapter's own events set this. */
+  @IsOptional()
+  @IsInt()
+  departmentId?: number | null;
+
   @IsOptional()
   @IsInt()
   @Min(0)

@@ -24,7 +24,9 @@ export interface EventItem {
   videoMediaId: number | null;
   documentUrl: string | null;
   documentMediaId: number | null;
-
+  /** Null is a college-wide event, shown on the public Events page. A Student
+   *  Chapter's own events set this to that department's id. */
+  departmentId: number | null;
 }
 
 export interface EventInput {
@@ -44,16 +46,20 @@ export interface EventInput {
   videoMediaId?: number | null;
   documentUrl?: string | null;
   documentMediaId?: number | null;
-
+  departmentId?: number | null;
 }
 
-export function getEventsPublic(): Promise<EventItem[]> {
-  return apiGet<EventItem[]>("/events");
+export function getEventsPublic(departmentId?: number): Promise<EventItem[]> {
+  const query = departmentId !== undefined ? `?departmentId=${departmentId}` : "";
+  return apiGet<EventItem[]>(`/events${query}`);
 }
 
-export function getEventsAdmin(includeDeleted = false): Promise<EventItem[]> {
-  const query = includeDeleted ? "?includeDeleted=true" : "";
-  return apiGet<EventItem[]>(`/events/admin${query}`);
+export function getEventsAdmin(includeDeleted = false, departmentId?: number): Promise<EventItem[]> {
+  const params = new URLSearchParams();
+  if (includeDeleted) params.set("includeDeleted", "true");
+  if (departmentId !== undefined) params.set("departmentId", String(departmentId));
+  const query = params.toString();
+  return apiGet<EventItem[]>(`/events/admin${query ? `?${query}` : ""}`);
 }
 
 export function createEvent(dto: EventInput): Promise<EventItem> {
@@ -73,4 +79,14 @@ export function deleteEvent(id: number): Promise<EventItem> {
 
 export function restoreEvent(id: number): Promise<EventItem> {
   return apiPost<EventItem>(`/events/${id}/restore`);
+}
+
+/**
+ * Reorders a set of events by sortOrder. The endpoint validates against every
+ * event, not just these, and returns the whole site-wide list - which is not
+ * what a department-scoped caller wants back, so callers here should re-fetch
+ * their own scoped list afterward rather than trust this call's return value.
+ */
+export function reorderEvents(items: { id: number; sortOrder: number }[]): Promise<EventItem[]> {
+  return apiPatch<EventItem[]>("/events/reorder", { items });
 }
