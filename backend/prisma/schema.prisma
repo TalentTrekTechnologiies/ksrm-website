@@ -1162,12 +1162,23 @@ model AdminNotification {
 model Event {
   id          Int       @id @default(autoincrement())
   title       String
+  /// Short byline under the title, e.g. "Part of SIVANANDA SMARANAM 2K26".
+  /// Optional - most events don't need one.
+  subtitle    String?
   description String?
   eventDate   DateTime
   endDate     DateTime?
   location    String?
   imageUrl    String?
   category    String?
+  /// Pill tags shown under the byline, e.g. ["Technical Competitions",
+  /// "Cultural Performances"] for a multi-strand fest. Optional, empty for
+  /// a plain event.
+  tags        String[]  @default([])
+  /// A prize pool figure, if the event has one (fests, hackathons).
+  prizePool   String?
+  /// The event's convener/organizer, shown as a fact alongside dates/venue.
+  organizerName String?
   sortOrder   Int       @default(0)
   isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
@@ -1360,6 +1371,15 @@ model SiteSetting {
 
   @@index([group])
   @@index([isPublic])
+}
+
+/// One row per calendar day of public-site traffic, for the footer's live
+/// visitor counter. No admin CRUD, no soft-delete/version - this is an
+/// automatic tally, not editable content.
+model SiteVisitDay {
+  id    Int      @id @default(autoincrement())
+  date  DateTime @unique @db.Date
+  count Int      @default(0)
 }
 
 // =============================================================================

@@ -8,6 +8,7 @@ import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTable from "@/components/admin/cms/CmsTable"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
+import CmsChipList from "@/components/admin/cms/CmsChipList"
 import {
   TextField,
   TextAreaField,
@@ -29,12 +30,16 @@ import {
 
 interface FormState {
   title: string
+  subtitle: string
   description: string
   eventDate: string
   location: string
   imageUrl: string
   mediaId: number | null
   category: string
+  tags: string[]
+  prizePool: string
+  organizerName: string
   isActive: boolean
   videoUrl: string
   videoMediaId: number | null
@@ -49,12 +54,16 @@ function todayIso() {
 
 const emptyForm: FormState = {
   title: "",
+  subtitle: "",
   description: "",
   eventDate: todayIso(),
   location: "",
   imageUrl: "",
   mediaId: null,
   category: "",
+  tags: [],
+  prizePool: "",
+  organizerName: "",
   isActive: true,
   videoUrl: "",
   videoMediaId: null,
@@ -113,6 +122,7 @@ function EventsManagerInner() {
     setCreating(false)
     setForm({
       title: item.title,
+      subtitle: item.subtitle ?? "",
       description: item.description ?? "",
       eventDate: item.eventDate.slice(0, 10),
       location: item.location ?? "",
@@ -123,6 +133,9 @@ function EventsManagerInner() {
       documentMediaId: item.documentMediaId,
       mediaId: item.mediaId,
       category: item.category ?? "",
+      tags: item.tags,
+      prizePool: item.prizePool ?? "",
+      organizerName: item.organizerName ?? "",
       isActive: item.isActive,
     })
   }
@@ -139,6 +152,7 @@ function EventsManagerInner() {
     try {
       const dto = {
         title: form.title,
+        subtitle: form.subtitle || null,
         description: form.description || null,
         eventDate: form.eventDate,
         location: form.location || null,
@@ -149,6 +163,9 @@ function EventsManagerInner() {
         documentMediaId: form.documentMediaId,
         mediaId: form.mediaId,
         category: form.category || null,
+        tags: form.tags,
+        prizePool: form.prizePool || null,
+        organizerName: form.organizerName || null,
         isActive: form.isActive,
       }
       if (editing) {
@@ -269,6 +286,7 @@ function EventsManagerInner() {
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit event" : "New event"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={200} />
+          <TextField label="Subtitle (optional)" value={form.subtitle} onChange={(v) => setForm({ ...form, subtitle: v })} maxLength={200} placeholder="A short byline shown under the title" />
           {/* Size and colour for this event's title, on the public page. Saves
               itself rather than joining this form's payload - appearance is
               not part of the event record, so it stays out of its version
@@ -277,7 +295,12 @@ function EventsManagerInner() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <TextField label="Event date" value={form.eventDate} onChange={(v) => setForm({ ...form, eventDate: v })} required placeholder="YYYY-MM-DD" />
             <TextField label="Location" value={form.location} onChange={(v) => setForm({ ...form, location: v })} />
-            <TextField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} />
+            <TextField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} placeholder="Fest, Workshop, ..." />
+          </div>
+          <CmsChipList label="Tags (optional)" items={form.tags} onChange={(tags) => setForm({ ...form, tags })} placeholder="Add a tag, e.g. Technical Competitions..." />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <TextField label="Prize pool (optional)" value={form.prizePool} onChange={(v) => setForm({ ...form, prizePool: v })} placeholder="₹3,00,000" />
+            <TextField label="Convener / organizer (optional)" value={form.organizerName} onChange={(v) => setForm({ ...form, organizerName: v })} />
           </div>
           <MediaField
             label="Image"

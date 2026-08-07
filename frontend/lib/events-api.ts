@@ -3,6 +3,8 @@ import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
 export interface EventItem {
   id: number;
   title: string;
+  /** Short byline under the title, e.g. "Part of SIVANANDA SMARANAM 2K26". */
+  subtitle: string | null;
   description: string | null;
   eventDate: string;
   endDate: string | null;
@@ -12,6 +14,10 @@ export interface EventItem {
    * (legacy path, still supported). */
   mediaId: number | null;
   category: string | null;
+  /** Pill tags, e.g. competition strands for a multi-strand fest. */
+  tags: string[];
+  prizePool: string | null;
+  organizerName: string | null;
   sortOrder: number;
   isActive: boolean;
   createdAt: string;
@@ -31,6 +37,7 @@ export interface EventItem {
 
 export interface EventInput {
   title: string;
+  subtitle?: string | null;
   description?: string | null;
   eventDate: string;
   endDate?: string | null;
@@ -40,6 +47,9 @@ export interface EventInput {
    * unlink and fall back to manually editing imageUrl. */
   mediaId?: number | null;
   category?: string | null;
+  tags?: string[];
+  prizePool?: string | null;
+  organizerName?: string | null;
   sortOrder?: number;
   isActive?: boolean;
   videoUrl?: string | null;

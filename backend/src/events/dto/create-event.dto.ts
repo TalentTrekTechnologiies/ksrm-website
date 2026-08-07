@@ -1,9 +1,14 @@
-import { IsBoolean, IsDateString, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsDateString, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 export class CreateEventDto {
   @IsString()
   @MaxLength(200)
   title: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  subtitle?: string;
 
   @IsOptional()
   @IsString()
@@ -31,6 +36,21 @@ export class CreateEventDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  prizePool?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(150)
+  organizerName?: string;
 
   /** Null is a college-wide event; a Student Chapter's own events set this. */
   @IsOptional()

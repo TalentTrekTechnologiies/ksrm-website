@@ -94,7 +94,15 @@ export default function CollegeFest({
             <div className="fest-card" key={e.id}>
               {e.category && <div className="fest-kicker">{e.category}</div>}
               <h3 className="fest-name">{e.title}</h3>
+              {e.subtitle && <p className="fest-umbrella">{e.subtitle}</p>}
               {e.description && <p className="fest-blurb">{e.description}</p>}
+              {e.tags.length > 0 && (
+                <ul className="fest-strands">
+                  {e.tags.map((t) => (
+                    <li key={t}>{t}</li>
+                  ))}
+                </ul>
+              )}
               <dl className="fest-facts">
                 <div>
                   <dt>Dates</dt>
@@ -104,6 +112,18 @@ export default function CollegeFest({
                   <div>
                     <dt>Venue</dt>
                     <dd>{e.location}</dd>
+                  </div>
+                )}
+                {e.prizePool && (
+                  <div>
+                    <dt>Total prize pool</dt>
+                    <dd>{e.prizePool}</dd>
+                  </div>
+                )}
+                {e.organizerName && (
+                  <div>
+                    <dt>Convener</dt>
+                    <dd>{e.organizerName}</dd>
                   </div>
                 )}
               </dl>
