@@ -3468,7 +3468,7 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "quickLinks (6 items)",
+        label: "quickLinks (7 items)",
         slots: [
           {
             id: "quickLinks.0.label",
@@ -3505,6 +3505,12 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "6. label - Contact Exam Cell",
             kind: "line",
             default: "Contact Exam Cell",
+          },
+          {
+            id: "quickLinks.6.label",
+            label: "7. label - Syllabus",
+            kind: "line",
+            default: "Syllabus",
           },
         ],
       },

@@ -18,6 +18,7 @@ const quickLinks = [
   { icon: "📊", label: "Exam Results", href: "https://www.jemexam.com/ksrmresult/results_notifications.php", external: true },
   { icon: "💳", label: "SBI Challan Form", href: mediaFile(204), external: true},
   { icon: "📞", label: "Contact Exam Cell", href: "#contact" },
+  { icon: "📘", label: "Syllabus", href: "/academics/syllabus" },
 ];
 
 export default function ExaminationsPage() {
@@ -91,6 +92,23 @@ export default function ExaminationsPage() {
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="exam-time-tables" /></h2>
           <ExamNotificationsList type="TIMETABLE" emptyText="No time tables published yet." />
           <PageResources section="examinations.timetables" embedded maxVisible={8} />
+        </div>
+      </section>
+
+      {/* Every SYLLABUS document, regardless of which page it was routed to -
+          matches the inclusion the dedicated Syllabus page already uses, so a
+          document uploaded once shows in both places without extra admin
+          work. The branch/regulation breakdown only exists on the dedicated
+          page, so this links there for anyone who wants that view. */}
+      <section id="syllabus" style={{ padding: "80px 0", background: "white" }}>
+        <div className="responsive-container">
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 16, textAlign: "center" }}>Syllabus</h2>
+          <p style={{ textAlign: "center", margin: "0 0 32px" }}>
+            <a href="/academics/syllabus" style={{ color: "#2B3490", fontWeight: 700, fontSize: 15, textDecoration: "none" }}>
+              View full branch &amp; regulation-wise syllabus →
+            </a>
+          </p>
+          <PageResources section="examinations.syllabus" docsCategory="SYLLABUS" embedded maxVisible={8} />
         </div>
       </section>
 
