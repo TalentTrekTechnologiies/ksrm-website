@@ -32,26 +32,30 @@ export default function OfficeDirectory() {
       ? rows.map((c) => ({
           key: String(c.id),
           title: c.name,
-          phone: c.phones[0] ?? null,
-          email: c.emails[0] ?? null,
+          phones: c.phones,
+          emails: c.emails,
         }))
-      : fallbackOffices.map((o) => ({ key: o.title, title: o.title, phone: o.phone, email: o.email }))
+      : fallbackOffices.map((o) => ({ key: o.title, title: o.title, phones: o.phone ? [o.phone] : [], emails: o.email ? [o.email] : [] }))
 
   return (
     <>
       {offices.map((d) => (
         <div className="contact-dept-card" key={d.key}>
           <h3>{d.title}</h3>
-          {d.phone && (
+          {d.phones.length > 0 && (
             <>
               <p>Phone:</p>
-              <a href={`tel:${d.phone}`}>{d.phone}</a>
+              {d.phones.map((p) => (
+                <a key={p} href={`tel:${p}`} style={{ display: "block" }}>{p}</a>
+              ))}
             </>
           )}
-          {d.email && (
+          {d.emails.length > 0 && (
             <>
               <p>Email:</p>
-              <a href={`mailto:${d.email}`}>{d.email}</a>
+              {d.emails.map((e) => (
+                <a key={e} href={`mailto:${e}`} style={{ display: "block" }}>{e}</a>
+              ))}
             </>
           )}
         </div>
