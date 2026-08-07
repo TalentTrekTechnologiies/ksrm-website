@@ -8,6 +8,7 @@ import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api"
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api"
+import VisitorCounter from "./VisitorCounter"
 
 /**
  * Site Settings override the built-in defaults below, but only when actually
@@ -514,6 +515,7 @@ export default function Footer() {
             <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
               A unit of Sri Kandula Obula Reddy Charities
             </span>
+            <VisitorCounter />
           </div>
 
           {/* RIGHT: Powered by - no nowrap so it wraps instead of overflowing

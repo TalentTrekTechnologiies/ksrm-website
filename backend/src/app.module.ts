@@ -41,6 +41,7 @@ import { MailerModule } from './mailer/mailer.module';
 import { CareerApplicationsModule } from './career-applications/career-applications.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { AdminNotificationsModule } from './admin-notifications/admin-notifications.module';
+import { SiteStatsModule } from './site-stats/site-stats.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { AdminNotificationsModule } from './admin-notifications/admin-notificati
     CareerApplicationsModule,
     AnnouncementsModule,
     AdminNotificationsModule,
+    SiteStatsModule,
   ],
   controllers: [AppController],
   providers: [
