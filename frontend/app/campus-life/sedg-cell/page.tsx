@@ -2,6 +2,7 @@
 
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import NamedCommittees from "@/components/committees/NamedCommittees";
 
 export default function SedgCellPage() {
   return (
@@ -32,6 +33,10 @@ export default function SedgCellPage() {
           <p className="sedg-text"><CmsText section="sedg-cell" slot="about-body" multiline /></p>
         </div>
       </section>
+
+      {/* Committee - created and edited from Admin -> Committees, matched by
+          name. Renders nothing until the committee has members. */}
+      <NamedCommittees names={["SEDG Cell Committee"]} background="#F5EFE4" />
 
       <PageResources
         section="sedg-cell"

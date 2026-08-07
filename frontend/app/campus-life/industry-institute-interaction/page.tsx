@@ -2,6 +2,7 @@
 
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import NamedCommittees from "@/components/committees/NamedCommittees";
 
 export default function IndustryInstituteInteractionPage() {
   return (
@@ -32,6 +33,11 @@ export default function IndustryInstituteInteractionPage() {
           <p className="iii-text"><CmsText section="industry-institute-interaction" slot="about-body" multiline /></p>
         </div>
       </section>
+
+      {/* Committee - created and edited from Admin -> Committees, matched by
+          name (same mechanism as Academic Council / Finance Committee /
+          Startup Cell). Renders nothing until the committee has members. */}
+      <NamedCommittees names={["Industry Institute Interaction Committee"]} background="#F5EFE4" />
 
       {/* MoUs & academic collaborations - documents uploaded via Admin ->
           Downloads, routed to this page section, grouped by year/partner

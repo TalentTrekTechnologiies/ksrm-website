@@ -2,6 +2,7 @@
 
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import NamedCommittees from "@/components/committees/NamedCommittees";
 
 export default function FacilitiesForDifferentlyAbledPage() {
   return (
@@ -32,6 +33,11 @@ export default function FacilitiesForDifferentlyAbledPage() {
           <p className="dab-text"><CmsText section="facilities-for-differently-abled" slot="about-body" multiline /></p>
         </div>
       </section>
+
+      {/* Nodal officer / committee - created and edited from Admin ->
+          Committees, matched by name. Works for a single nodal officer too:
+          a committee with one member renders as one row. */}
+      <NamedCommittees names={["Facilities for Differently-Abled Committee"]} background="#F5EFE4" />
 
       {/* Documents and images (barrier-free environment evidence) - the same
           Admin -> Downloads / Gallery upload every other page's

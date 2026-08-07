@@ -2,6 +2,7 @@
 
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import NamedCommittees from "@/components/committees/NamedCommittees";
 
 export default function EqualOpportunityCellPage() {
   return (
@@ -32,6 +33,10 @@ export default function EqualOpportunityCellPage() {
           <p className="eoc-text"><CmsText section="equal-opportunity-cell" slot="about-body" multiline /></p>
         </div>
       </section>
+
+      {/* Committee - created and edited from Admin -> Committees, matched by
+          name. Renders nothing until the committee has members. */}
+      <NamedCommittees names={["Equal Opportunity Cell Committee"]} background="#F5EFE4" />
 
       <PageResources
         section="equal-opportunity-cell"
