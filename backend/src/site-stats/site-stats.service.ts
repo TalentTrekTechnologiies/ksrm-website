@@ -1,41 +1,76 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
-/** Midnight of today, in the server's local timezone - matches the `@db.Date`
- *  column, which stores a calendar date with no time component. */
-function todayDateOnly(): Date {
+export type SiteStatsRange = 'today' | 'yesterday' | '7d';
+
+const LIVE_WINDOW_MS = 90_000;
+const PRESENCE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+/** Midnight of a given day (default today), in the server's local timezone -
+ *  matches the `@db.Date` column, which stores a calendar date with no time
+ *  component. */
+function dateOnly(offsetDays = 0): Date {
   const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() + offsetDays);
 }
 
 @Injectable()
 export class SiteStatsService {
   constructor(private prisma: PrismaService) {}
 
-  private async totalAndToday() {
-    const today = todayDateOnly();
-    const [{ _sum }, todayRow] = await Promise.all([
-      this.prisma.siteVisitDay.aggregate({ _sum: { count: true } }),
-      this.prisma.siteVisitDay.findUnique({ where: { date: today } }),
-    ]);
-    return { total: _sum.count ?? 0, today: todayRow?.count ?? 0 };
-  }
-
-  /** Called once per browser session by the public site. Upserts today's row
-   *  rather than always creating, so a busy day is one row, not thousands. */
-  async recordVisit() {
-    const today = todayDateOnly();
-    await this.prisma.siteVisitDay.upsert({
+  private async upsertToday(field: 'count' | 'hits') {
+    const today = dateOnly();
+    const row = await this.prisma.siteVisitDay.upsert({
       where: { date: today },
-      create: { date: today, count: 1 },
-      update: { count: { increment: 1 } },
+      create: { date: today, [field]: 1 },
+      update: { [field]: { increment: 1 } },
     });
-    return this.totalAndToday();
+    return { visits: row.count, hits: row.hits };
   }
 
-  /** Read-only - used for the counter's periodic "live" refresh, which must
-   *  not itself count as another visit. */
-  async getStats() {
-    return this.totalAndToday();
+  /** Called once per browser tab session. */
+  async recordVisit() {
+    return this.upsertToday('count');
+  }
+
+  /** Called on every page load/navigation. */
+  async recordHit() {
+    return this.upsertToday('hits');
+  }
+
+  async getSummary(range: SiteStatsRange) {
+    if (range === '7d') {
+      const from = dateOnly(-6);
+      const { _sum } = await this.prisma.siteVisitDay.aggregate({
+        where: { date: { gte: from } },
+        _sum: { count: true, hits: true },
+      });
+      return { visits: _sum.count ?? 0, hits: _sum.hits ?? 0 };
+    }
+    const date = range === 'yesterday' ? dateOnly(-1) : dateOnly();
+    const row = await this.prisma.siteVisitDay.findUnique({ where: { date } });
+    return { visits: row?.count ?? 0, hits: row?.hits ?? 0 };
+  }
+
+  /** Upserts this tab's presence row and, opportunistically, prunes rows
+   *  stale enough that they can never count as "live" again - cheaper than a
+   *  scheduled cleanup job for a table this small. */
+  async heartbeat(id: string) {
+    await this.prisma.sitePresence.upsert({
+      where: { id },
+      create: { id },
+      update: { lastSeenAt: new Date() },
+    });
+    await this.prisma.sitePresence.deleteMany({
+      where: { lastSeenAt: { lt: new Date(Date.now() - PRESENCE_MAX_AGE_MS) } },
+    });
+    return this.getLive();
+  }
+
+  async getLive() {
+    const live = await this.prisma.sitePresence.count({
+      where: { lastSeenAt: { gte: new Date(Date.now() - LIVE_WINDOW_MS) } },
+    });
+    return { live };
   }
 }

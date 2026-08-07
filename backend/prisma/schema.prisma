@@ -1373,13 +1373,25 @@ model SiteSetting {
   @@index([isPublic])
 }
 
-/// One row per calendar day of public-site traffic, for the footer's live
-/// visitor counter. No admin CRUD, no soft-delete/version - this is an
-/// automatic tally, not editable content.
+/// One row per calendar day of public-site traffic, for the site's live
+/// visitor widget. `count` is visits (one per browser tab session); `hits`
+/// is page views (one per page load, several per visit). No admin CRUD, no
+/// soft-delete/version - this is an automatic tally, not editable content.
 model SiteVisitDay {
   id    Int      @id @default(autoincrement())
   date  DateTime @unique @db.Date
   count Int      @default(0)
+  hits  Int      @default(0)
+}
+
+/// One row per open browser tab, refreshed by a periodic heartbeat while the
+/// tab stays open. "Live" is the count of rows seen in the last ~90 seconds -
+/// there is no session end event on the web, so presence is inferred from
+/// recency rather than tracked explicitly. Rows are pruned opportunistically
+/// (see SiteStatsService.heartbeat) rather than by a scheduled job.
+model SitePresence {
+  id         String   @id
+  lastSeenAt DateTime @default(now()) @updatedAt
 }
 
 // =============================================================================

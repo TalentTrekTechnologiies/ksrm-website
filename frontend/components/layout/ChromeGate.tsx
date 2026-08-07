@@ -8,6 +8,7 @@ import Header from "@/components/layout/Header"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import BackToTop from "@/components/layout/BackToTop"
+import VisitorCounter from "@/components/layout/VisitorCounter"
 import AnnouncementTicker from "@/components/layout/AnnouncementTicker"
 
 /**
@@ -48,6 +49,7 @@ export default function ChromeGate({ children }: { children: React.ReactNode }) 
       {children}
       <Footer />
       <BackToTop />
+      <VisitorCounter />
     </>
   )
 }
