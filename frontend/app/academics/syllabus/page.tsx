@@ -54,6 +54,14 @@ function ChevronDown() {
   );
 }
 
+function ChevronRight() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  );
+}
+
 /**
  * The branches a programme is offered in, from Admin -> Academics.
  *
@@ -67,7 +75,11 @@ function ChevronDown() {
  * matched on.
  */
 function branchAliases(name: string): string[] {
-  const n = name.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+  // MBA has no specialisation text after the prefix - stripping it left
+  // nothing to match a document against, so no MBA syllabus could ever be
+  // found regardless of what was uploaded. Fall back to the full name.
+  const stripped = name.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+  const n = stripped || name.trim();
   const aliases = [n];
   const known: Record<string, string[]> = {
     "Computer Science & Engineering": ["Computer Science and Engineering", "CSE"],
@@ -115,15 +127,16 @@ function BranchPanel({
   const label = branch.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
 
   return (
-    <div style={{ background: "#fff", border: "1px solid #eef0f3", borderRadius: 8, padding: 16 }}>
+    <div className="syl-branch-card">
       <h4 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 15, fontWeight: 700, color: "#2B3490", margin: "0 0 12px" }}>
         {label}
       </h4>
 
       {mine.length === 0 ? (
-        <p style={{ fontSize: 12, color: "#888", fontStyle: "italic", margin: 0 }}>
+        <div className="syl-empty-state">
+          <DownloadIcon />
           Syllabus not published yet.
-        </p>
+        </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {regs.map((r) => {
@@ -139,7 +152,9 @@ function BranchPanel({
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {forReg.map((d) => (
                     <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                      <DownloadIcon />{d.title}
+                      <span className="syl-doc-icon"><DownloadIcon /></span>
+                      <span className="syl-doc-title">{d.title}</span>
+                      <span className="syl-doc-arrow"><ChevronRight /></span>
                     </a>
                   ))}
                 </div>
@@ -163,7 +178,9 @@ function BranchPanel({
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {unmatched.map((d) => (
                     <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                      <DownloadIcon />{d.title}
+                      <span className="syl-doc-icon"><DownloadIcon /></span>
+                      <span className="syl-doc-title">{d.title}</span>
+                      <span className="syl-doc-arrow"><ChevronRight /></span>
                     </a>
                   ))}
                 </div>
@@ -309,12 +326,30 @@ export default function SyllabusPage() {
         }
         .syl-accordion-item.expanded .syl-accordion-content { max-height: 2000px; padding: 24px; }
         .syl-download-btn {
-          display: inline-flex; align-items: center; gap: 6px;
-          background: #D4A500; color: #2B3490; padding: 8px 14px; border-radius: 6px;
-          font-size: 13px; font-weight: 700; font-family: 'Rajdhani', sans-serif;
-          text-decoration: none; border: none; cursor: pointer; transition: all 0.2s;
+          display: flex; align-items: center; gap: 10px;
+          background: #fff; color: #1a1a2e; padding: 9px 12px; border-radius: 8px;
+          font-size: 13.5px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+          text-decoration: none; border: 1px solid #eef0f3; cursor: pointer; transition: all 0.15s;
         }
-        .syl-download-btn:hover { background: #ffd700; transform: translateY(-2px); }
+        .syl-download-btn:hover { border-color: #D4A500; background: #fffaf0; }
+        .syl-doc-icon {
+          width: 26px; height: 26px; border-radius: 6px; background: #eef1ff; color: #2B3490;
+          display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .syl-doc-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .syl-doc-arrow { color: #D4A500; flex-shrink: 0; opacity: 0; transform: translateX(-3px); transition: all 0.15s; }
+        .syl-download-btn:hover .syl-doc-arrow { opacity: 1; transform: translateX(0); }
+
+        .syl-branch-card {
+          background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 18px;
+          transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .syl-branch-card:hover { box-shadow: 0 6px 20px rgba(43, 52, 144, 0.08); border-color: #dfe3f5; }
+        .syl-empty-state {
+          display: flex; align-items: center; gap: 10px;
+          background: #f9f9f7; border: 1px dashed #e2e0d8; border-radius: 8px;
+          padding: 12px 14px; color: #999; font-size: 12.5px;
+        }
 
         .syl-note {
           background: #f4f3ef; border-left: 4px solid #2B3490; padding: 24px;
