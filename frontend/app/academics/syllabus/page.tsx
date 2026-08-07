@@ -114,6 +114,8 @@ function docMatchesBranch(title: string, name: string): boolean {
  * undifferentiated pile of PDFs. Branch first, regulation second, which is the
  * order a student actually knows the answers in.
  */
+const BRANCH_CARD_MAX_VISIBLE = 4;
+
 function BranchPanel({
   branch,
   regs,
@@ -123,8 +125,34 @@ function BranchPanel({
   regs: { code: string; name: string }[];
   docs: Download[];
 }) {
+  const [expanded, setExpanded] = useState(false);
   const mine = docs.filter((d) => docMatchesBranch(d.title, branch));
   const label = branch.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+
+  // Every card the same height regardless of how many files a branch has -
+  // flatten regulation-then-other into one ordered list, cap it, and let
+  // "View more" reveal the rest rather than the card growing to fit
+  // whatever's uploaded (a branch with 20 files made its row's neighbours
+  // tower over branches with 2).
+  const groups: { label: string; items: Download[] }[] = [];
+  for (const r of regs) {
+    const forReg = mine.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
+    if (forReg.length > 0) groups.push({ label: r.name, items: forReg });
+  }
+  const unmatched = mine.filter((d) => !regs.some((r) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title)));
+  if (unmatched.length > 0) groups.push({ label: "Other", items: unmatched });
+
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
+  let remaining = expanded ? Infinity : BRANCH_CARD_MAX_VISIBLE;
+  const visibleGroups = groups
+    .map((g) => {
+      if (remaining <= 0) return null;
+      const items = g.items.slice(0, remaining);
+      remaining -= items.length;
+      return { ...g, items };
+    })
+    .filter((g): g is { label: string; items: Download[] } => g !== null);
+  const hiddenCount = total - visibleGroups.reduce((n, g) => n + g.items.length, 0);
 
   return (
     <div className="syl-branch-card">
@@ -139,54 +167,33 @@ function BranchPanel({
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {regs.map((r) => {
-            // \\b, not \b: inside a template literal \b is the backspace
-            // character, so the regex became /\x08R23\x08/ and matched nothing.
-            const forReg = mine.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
-            if (forReg.length === 0) return null;
-            return (
-              <div key={r.code}>
-                <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", color: "#999", margin: "0 0 6px" }}>
-                  {r.name}
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {forReg.map((d) => (
-                    <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                      <span className="syl-doc-icon"><DownloadIcon /></span>
-                      <span className="syl-doc-title">{d.title}</span>
-                      <span className="syl-doc-arrow"><ChevronRight /></span>
-                    </a>
-                  ))}
-                </div>
+          {visibleGroups.map((g) => (
+            <div key={g.label}>
+              <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", color: "#999", margin: "0 0 6px" }}>
+                {g.label}
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {g.items.map((d) => (
+                  <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
+                    <span className="syl-doc-icon"><DownloadIcon /></span>
+                    <span className="syl-doc-title">{d.title}</span>
+                    <span className="syl-doc-arrow"><ChevronRight /></span>
+                  </a>
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
 
-          {/* A syllabus whose filename names no regulation still has to be
-              reachable, or uploading one with a different naming convention
-              would make it silently vanish. */}
-          {(() => {
-            const unmatched = mine.filter(
-              (d) => !regs.some((r) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title)),
-            );
-            if (unmatched.length === 0) return null;
-            return (
-              <div>
-                <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", color: "#999", margin: "0 0 6px" }}>
-                  Other
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {unmatched.map((d) => (
-                    <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                      <span className="syl-doc-icon"><DownloadIcon /></span>
-                      <span className="syl-doc-title">{d.title}</span>
-                      <span className="syl-doc-arrow"><ChevronRight /></span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
+          {hiddenCount > 0 && (
+            <button type="button" className="syl-view-more" onClick={() => setExpanded(true)}>
+              View {hiddenCount} more ↓
+            </button>
+          )}
+          {expanded && total > BRANCH_CARD_MAX_VISIBLE && (
+            <button type="button" className="syl-view-more" onClick={() => setExpanded(false)}>
+              Show less
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -219,7 +226,7 @@ function ProgrammeAccordion({
             Branches will appear here once they are added in Admin &rarr; Academics.
           </p>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
+          <div className="syl-branch-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
             {branches.map((b) => (
               <BranchPanel key={b} branch={b} regs={regs} docs={docs} />
             ))}
@@ -350,6 +357,13 @@ export default function SyllabusPage() {
           background: #f9f9f7; border: 1px dashed #e2e0d8; border-radius: 8px;
           padding: 12px 14px; color: #999; font-size: 12.5px;
         }
+        .syl-view-more {
+          align-self: flex-start; background: none; border: none; cursor: pointer;
+          color: #2B3490; font-size: 12.5px; font-weight: 700; font-family: 'Rajdhani', sans-serif;
+          padding: 4px 0; letter-spacing: .3px;
+        }
+        .syl-view-more:hover { color: #D4A500; }
+        .syl-branch-grid { align-items: start; }
 
         .syl-note {
           background: #f4f3ef; border-left: 4px solid #2B3490; padding: 24px;

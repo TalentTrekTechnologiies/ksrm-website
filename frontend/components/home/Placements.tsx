@@ -51,14 +51,16 @@ export default function Placements() {
   const recruitersHidden = liveRecruiters?.hidden ?? false
   const recruiters = liveRecruiters?.recruiters ?? INITIAL_RECRUITERS
 
-  // Both strips move at a constant ~26px per second whatever they hold. A
-  // fixed duration crawled with four posters and blurred with forty, which is
-  // the "placements scrolling slowly" report on a strip that happened to be
+  // Both strips move at a constant ~48px per second whatever they hold (was
+  // 26 - a real recruiter list of 17 logos took nearly two minutes for one
+  // pass at that rate, which read as barely moving). A fixed duration
+  // crawled with four posters and blurred with forty, which is the
+  // "placements scrolling slowly" report on a strip that happened to be
   // short. The floor keeps a two-item strip from whipping past.
   const posters: string[] = Array.isArray(homeData?.placements?.posters) ? homeData.placements.posters : []
   const posterStrip = [...posters, ...posters]
-  const photoDuration = Math.max(18, Math.round((posters.length * 296) / 26))
-  const recruiterDuration = Math.max(18, Math.round((recruiters.length * 180) / 26))
+  const photoDuration = Math.max(12, Math.round((posters.length * 296) / 48))
+  const recruiterDuration = Math.max(12, Math.round((recruiters.length * 180) / 48))
 
   return (
     <section style={{ width: "100%", background: "#f8f9fa", padding: "48px 0" }}>
@@ -235,7 +237,7 @@ export default function Placements() {
            The clipped half is dropped too - the duplicate exists only to make
            the loop seamless, and swiping through the same logos twice is
            just confusing. */
-        @media (prefers-reduced-motion: reduce), (hover: none) {
+        @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
           .photo-track, .recruiter-track { animation: none; }
           .strip-viewport {
             overflow-x: auto;
