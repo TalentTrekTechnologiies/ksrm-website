@@ -24,6 +24,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "iqac.minutes", label: "IQAC → Minutes & Agenda" },
   { value: "iqac.aqar", label: "IQAC → AQAR Reports" },
   { value: "iqac.survey", label: "IQAC → Student Survey" },
+  { value: "iqac.annualreports", label: "IQAC → Annual Reports" },
   { value: "iqac", label: "IQAC → Other Documents" },
   { value: "naac", label: "NAAC" },
   { value: "alumni", label: "Alumni" },
@@ -50,6 +51,9 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   // matching <PageResources section="..."/> on its public page, so anything
   // uploaded here actually renders there.
   { value: "about", label: "About Us" },
+  { value: "about.organogram", label: "About → Organogram" },
+  { value: "about.newsletters", label: "About → Newsletters" },
+  { value: "about.financecommittee", label: "About → Finance Committee (Annual Accounts)" },
   { value: "accreditation", label: "Accreditation" },
   { value: "mandatory-disclosure", label: "Mandatory Disclosure" },
   { value: "events", label: "Events" },
@@ -65,7 +69,11 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "admissions.diploma", label: "Admissions → Diploma" },
   { value: "campus-facilities", label: "Campus Facilities" },
   { value: "grievance", label: "Grievance Redressal" },
-  { value: "startup-cell", label: "Startup Cell" },
+  { value: "startup-cell", label: "Campus Life → Startup Cell" },
+  { value: "campus-life.industry-institute-interaction", label: "Campus Life → Industry Institute Interaction" },
+  { value: "equal-opportunity-cell", label: "Campus Life → Equal Opportunity Cell" },
+  { value: "sedg-cell", label: "Campus Life → SEDG Cell" },
+  { value: "facilities-for-differently-abled", label: "Campus Life → Facilities for Differently-Abled" },
   { value: "placements.internships", label: "Placements → Internships" },
   { value: "placements.mous", label: "Placements → MoUs" },
   { value: "placements.recruiters", label: "Placements → Our Recruiters" },
@@ -198,6 +206,7 @@ export const GROUP_SUGGESTIONS: Record<string, string[]> = {
     "Policy Documents",
   ],
   alumni: ["Alumni Meets", "Activity Reports"],
+  "about.financecommittee": ["2025-26", "2024-25", "2023-24", "2022-23", "2021-22"],
   "mandatory-disclosure": [
     "Accreditation Status",
     "UGC Autonomous",
