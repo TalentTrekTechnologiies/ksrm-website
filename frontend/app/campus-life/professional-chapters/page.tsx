@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Student Chapters | K.S.R.M. College of Engineering",
-  description: "Department student chapters have moved to each department's own page.",
+  title: "Professional Chapters | K.S.R.M. College of Engineering",
+  description:
+    "Department student professional chapters at K.S.R.M. College of Engineering, Kadapa - committee, events and activity reports for each department's own chapter.",
   alternates: { canonical: "/campus-life/professional-chapters" },
 };
 
@@ -17,18 +18,19 @@ const DEPARTMENTS = [
 ];
 
 /**
- * This page used to list five hardcoded club names, each linking out to a
- * department page with nothing chapter-specific on it. Real chapters - About,
- * Committee, Events, activity reports - now live in a Student Chapter section
- * on each department's own page (components/departments/StudentChapter.tsx),
- * reachable from the navbar's Departments menu.
+ * Professional Chapters - the landing page for every department's student
+ * chapter. This used to list five hardcoded club names as dead-end cards,
+ * each linking to a department page with nothing chapter-specific on it.
  *
- * This route is kept as a plain notice rather than deleted, so a bookmarked
- * or search-indexed link does not 404 - this is a static export, so an actual
- * HTTP redirect is not available; a page that tells a visitor where to go is
- * the honest equivalent here.
+ * The real content - About, Committee, Events, activity reports - lives in a
+ * Student Chapter section on each department's own page
+ * (components/departments/StudentChapter.tsx), department-scoped in the CMS
+ * so each department's coordinators edit only their own. This page is the
+ * one place that lists all of them together, matching the navbar's
+ * "Professional Chapters" entry, which points here and then lists the same
+ * departments as indented links directly in the dropdown.
  */
-export default function ProfessionalChaptersMovedPage() {
+export default function ProfessionalChaptersPage() {
   return (
     <main style={{ background: "#ffffff", minHeight: "60vh" }}>
       <section style={{ padding: "96px 0 88px" }}>
@@ -42,11 +44,11 @@ export default function ProfessionalChaptersMovedPage() {
               margin: "0 0 16px",
             }}
           >
-            Student Chapters have moved
+            Professional Chapters
           </h1>
           <p style={{ fontSize: 16, color: "#555", lineHeight: 1.8, margin: "0 0 40px" }}>
-            Each department&rsquo;s student chapter - its committee, events and activity reports - is
-            now on that department&rsquo;s own page.
+            Each department runs its own student professional chapter - committee, events and
+            activity reports below, on that department&rsquo;s page.
           </p>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12, textAlign: "left" }}>

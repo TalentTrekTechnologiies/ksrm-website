@@ -67,27 +67,19 @@ const navItems: NavItem[] = [
   {
     label: "Departments",
     href: "/departments",
-    // Every department gets its own "  ↳ Student Chapter" link right under
-    // it - same indentation convention as the sub-links under About - rather
-    // than clubs living as a separate, generic Campus Life page. The section
-    // it jumps to (components/departments/StudentChapter.tsx) renders
-    // nothing until that department actually has one, so the link is
-    // harmless for a department whose chapter has not been entered yet.
+    // Student Chapter links do NOT live here - moved to the "Professional
+    // Chapters" entry under Campus Life instead, at the college's request.
+    // The section itself (components/departments/StudentChapter.tsx) is
+    // still part of each department's own page either way; this is only
+    // about which menu points at it.
     children: [
       { label: "Civil Engineering", href: "/departments/civil" },
-      { label: "  ↳ Student Chapter", href: "/departments/civil#student-chapter" },
       { label: "Computer Science and Engineering", href: "/departments/cse" },
-      { label: "  ↳ Student Chapter", href: "/departments/cse#student-chapter" },
       { label: "Electrical and Electronics", href: "/departments/eee" },
-      { label: "  ↳ Student Chapter", href: "/departments/eee#student-chapter" },
       { label: "Electronics and Communication Engineering ", href: "/departments/ece" },
-      { label: "  ↳ Student Chapter", href: "/departments/ece#student-chapter" },
       { label: "Mechanical Engineering", href: "/departments/mechanical" },
-      { label: "  ↳ Student Chapter", href: "/departments/mechanical#student-chapter" },
       { label: "Humanities and Sciences", href: "/departments/hs" },
-      { label: "  ↳ Student Chapter", href: "/departments/hs#student-chapter" },
       { label: "Management Studies (MBA)", href: "/departments/mba" },
-      { label: "  ↳ Student Chapter", href: "/departments/mba#student-chapter" },
     ],
   },
   {
@@ -161,6 +153,22 @@ const navItems: NavItem[] = [
       { label: "  ↳ Ombudsperson", href: "/about/ombudsman" },
       { label: "Cultural Club", href: "/campus-life/cultural" },
       { label: "College Fest", href: "/campus-life/college-fest" },
+      // Department-wise, at the college's request - not nested under
+      // Departments. The navbar only goes one dropdown deep, so this follows
+      // the same flat "heading, then indented ↳ links" convention already
+      // used for Ombudsperson under Grievance Redressal and for Leadership's
+      // own sub-pages under About. Each link jumps straight to that
+      // department's Student Chapter section
+      // (components/departments/StudentChapter.tsx), which renders nothing
+      // until that department actually has one entered.
+      { label: "Professional Chapters", href: "/campus-life/professional-chapters" },
+      { label: "  ↳ Civil Engineering Student Chapter", href: "/departments/civil#student-chapter" },
+      { label: "  ↳ CSE Student Chapter", href: "/departments/cse#student-chapter" },
+      { label: "  ↳ EEE Student Chapter", href: "/departments/eee#student-chapter" },
+      { label: "  ↳ ECE Student Chapter", href: "/departments/ece#student-chapter" },
+      { label: "  ↳ Mechanical Student Chapter", href: "/departments/mechanical#student-chapter" },
+      { label: "  ↳ H&S Student Chapter", href: "/departments/hs#student-chapter" },
+      { label: "  ↳ MBA Student Chapter", href: "/departments/mba#student-chapter" },
       // Was here as five hardcoded club names, all linking out to a
       // department page with nothing chapter-specific on it. Real chapters
       // now live under Departments, one "  ↳ Student Chapter" link per
