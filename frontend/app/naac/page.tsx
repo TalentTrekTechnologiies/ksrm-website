@@ -56,7 +56,7 @@ function NaacBadge() {
   const inner = (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
-      <img src="/naac.png" alt="NAAC" className="naac-logo" />
+      <img src="/naac.png" alt="NAAC" className="naac-logo" loading="lazy" />
       <div className="naac-grade">A+</div>
       <div className="naac-badge-detail">Accredited 25-10-2024</div>
       <div className="naac-badge-detail">Valid for 5 years, until 2029</div>

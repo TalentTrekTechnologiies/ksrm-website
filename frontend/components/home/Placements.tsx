@@ -305,7 +305,7 @@ export default function Placements() {
             <div className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
               {posterStrip.map((poster, i) => (
                 <div key={i} className={`photo-item${i >= posters.length ? " strip-clone" : ""}`}>
-                  <img src={poster} alt={`Placement ${i}`} />
+                  <img src={poster} alt={`Placement ${i}`} loading="lazy" />
                 </div>
               ))}
             </div>
@@ -336,6 +336,7 @@ export default function Placements() {
                         src={encodedPath}
                         alt={recruiter?.name ?? ''}
                         title={recruiter?.name ?? ''}
+                        loading="lazy"
                         style={{ filter: 'brightness(1.2) contrast(1.1)' }}
                         onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                           const target = e.currentTarget;

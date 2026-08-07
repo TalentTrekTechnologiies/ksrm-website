@@ -203,7 +203,7 @@ export default function FacultyProfileModal({
           <div className="fp-photo">
             {showPhoto && faculty.photoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-              <img src={faculty.photoUrl} alt={faculty.name} onError={(e) => { e.currentTarget.style.display = "none" }} />
+              <img src={faculty.photoUrl} alt={faculty.name} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} />
             ) : (
               <span className="fp-initials">{initials(faculty.name)}</span>
             )}

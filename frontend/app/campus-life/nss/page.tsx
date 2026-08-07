@@ -59,6 +59,7 @@ function NssEmblem() {
     <img
       src={uploaded ? resolveFileUrl(uploaded.imageUrl) : "/nss-logo.svg"}
       alt="The NSS emblem: the Rath wheel of the Konark Sun Temple"
+      loading="lazy"
       style={{
         // Deliberately smaller than the column it sits in. At full width the
         // emblem outweighed the text beside it and the section read as a logo

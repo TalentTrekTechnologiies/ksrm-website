@@ -179,7 +179,7 @@ export default function SportsPage() {
             <div>
               {achievementImages.map((img, _i) => (
                 <div key={img.src}>
-                  <div className="spo-achievements-image"><img src={img.src} alt={img.alt} /></div>
+                  <div className="spo-achievements-image"><img src={img.src} alt={img.alt} loading="lazy" /></div>
                   <p style={{ fontSize: 13, color: "#555", margin: "8px 0 0", fontWeight: 500 }}><CmsText section="sports" slot={`achievementImages.${_i}.caption`} /></p>
                 </div>
               ))}

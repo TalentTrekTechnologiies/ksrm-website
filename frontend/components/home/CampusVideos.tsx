@@ -179,6 +179,7 @@ export default function CampusVideos() {
                       <img
                         src={thumbnailUrl}
                         alt={video?.title}
+                        loading="lazy"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${videoId}/default.jpg`
                         }}

@@ -444,6 +444,7 @@ export default function Admissions({
                   src={program.imageUrl}
                   alt={program.title}
                   className="admissions-card-image"
+                  loading="lazy"
                   onError={(e) => {
                     const img = e.currentTarget as HTMLImageElement
                     img.style.background = "#e5e5e5"

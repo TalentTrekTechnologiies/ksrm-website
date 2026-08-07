@@ -138,7 +138,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
                 <video src={open.videoUrl} controls autoPlay />
               ) : open.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                <img src={resolveFileUrl(open.imageUrl)} alt={open.title} />
+                <img src={resolveFileUrl(open.imageUrl)} alt={open.title} loading="lazy" />
               ) : null}
             </div>
             <div className="ng-modal-body">

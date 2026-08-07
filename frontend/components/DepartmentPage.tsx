@@ -994,7 +994,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 }}>
                   {department.hod.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={department.hod.photo} alt={department.hod.name}
+                    <img src={department.hod.photo} alt={department.hod.name} loading="lazy"
                       style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
                   ) : null}
                 </div>

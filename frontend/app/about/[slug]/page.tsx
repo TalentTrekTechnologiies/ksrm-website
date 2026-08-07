@@ -92,7 +92,7 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
       <section className="k-section">
         <div className="k-container">
           <div className="k-profile-header">
-            <img src={leader.photo} alt={leader.name} className="k-profile-photo" />
+            <img src={leader.photo} alt={leader.name} className="k-profile-photo" loading="lazy" />
             <div className="k-profile-info">
               <div className="k-profile-name">{leader.name}</div>
               <div className="k-profile-role">{leader.role}</div>

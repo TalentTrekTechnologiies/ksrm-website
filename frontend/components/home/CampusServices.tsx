@@ -112,6 +112,7 @@ export default function CampusServices() {
                   <img
                     src={service.poster}
                     alt={service.title ?? "Service"}
+                    loading="lazy"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none'
                     }}

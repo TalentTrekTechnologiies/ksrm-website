@@ -50,6 +50,7 @@ export default function LibrarianProfile() {
               <img
                 src={photoUrl}
                 alt={`${name}, Librarian`}
+                loading="lazy"
                 onError={(e) => {
                   e.currentTarget.style.display = "none"
                 }}

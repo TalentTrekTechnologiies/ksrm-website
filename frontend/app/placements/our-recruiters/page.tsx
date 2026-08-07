@@ -103,6 +103,7 @@ export default function OurRecruitersPage() {
                         src={r.logoUrl}
                         alt={r.name}
                         title={r.name}
+                        loading="lazy"
                         onError={(e) => { e.currentTarget.style.display = "none" }}
                       />
                     </div>

@@ -322,7 +322,7 @@ export default function About() {
             </div>
             <figure className="k-charities-figure">
               {/* eslint-disable-next-line @next/next/no-img-element -- static asset */}
-              <img src="/images/leadership/correspondent.webp" alt="Smt. K. Rajeswari, Correspondent" />
+              <img src="/images/leadership/correspondent.webp" alt="Smt. K. Rajeswari, Correspondent" loading="lazy" />
             </figure>
           </div>
 
@@ -334,7 +334,7 @@ export default function About() {
               <div key={i} className="k-trustee">
                 {t.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element -- static asset, same as the Leadership cards
-                  <img src={t.photo} alt={t.name} className="k-trustee-photo" />
+                  <img src={t.photo} alt={t.name} className="k-trustee-photo" loading="lazy" />
                 ) : (
                   <span className="k-trustee-photo k-trustee-initials">{trusteeInitials(t.name)}</span>
                 )}
@@ -358,7 +358,7 @@ export default function About() {
             {LEADERSHIP.map((leader, i) => (
               <Link key={i} href={`/about/${leader.slug}`} className="k-leader-link">
                 <div className="k-leadership-card" style={{ cursor: "pointer" }}>
-                  <img src={leader.photo} alt={leader.name} className="k-leader-photo" />
+                  <img src={leader.photo} alt={leader.name} className="k-leader-photo" loading="lazy" />
                   <div className="k-leader-name">{leader.name}</div>
                   <div className="k-leader-role">{leader.role}</div>
                   <div className="k-leader-bio">{leader.paragraphs[0]}</div>

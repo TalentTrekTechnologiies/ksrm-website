@@ -129,7 +129,7 @@ export default function CollegeFest({
               </dl>
               {e.imageUrl && (
                 // eslint-disable-next-line @next/next/no-img-element -- CMS-supplied
-                <img className="fest-img" src={resolveFileUrl(e.imageUrl)} alt={e.title} />
+                <img className="fest-img" src={resolveFileUrl(e.imageUrl)} alt={e.title} loading="lazy" />
               )}
             </div>
           ))
