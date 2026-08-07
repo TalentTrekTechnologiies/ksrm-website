@@ -252,6 +252,8 @@ export default function About() {
           <a href="#stats" className="nav-link active" style={{ background: "#2B3490", color: "white" }}>About</a>
           <a href="#vision-mission" className="nav-link">Vision & Mission</a>
           <a href="#leadership" className="nav-link">Leadership</a>
+          <a href="#organogram" className="nav-link">Organogram</a>
+          <a href="#newsletters" className="nav-link">Newsletters</a>
           <a href="#jbos" className="nav-link">Board of Studies</a>
           <a href="#strategic" className="nav-link">Strategic Plan</a>
           <a href="#policies" className="nav-link">Policies</a>
@@ -305,7 +307,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* SRI KANDULA OBULA REDDY CHARITIES — the founding trust. Sits before
+      {/* SRI KANDULA OBUL REDDY CHARITIES — the founding trust. Sits before
           Leadership so the institution's origin and its trustees introduce the
           people who lead it, rather than following them. */}
       <section className="k-section" id="charities" style={{ background: "#F5EFE4" }}>
@@ -355,7 +357,10 @@ export default function About() {
         <div className="k-container">
           <h2><CmsText section="about" slot="leadership" /></h2>
           <div className="k-leadership-grid">
-            {LEADERSHIP.map((leader, i) => (
+            {/* Finance Officer hidden from public listing at the college's
+                request - the profile page itself is untouched (not deleted),
+                just not linked from here. */}
+            {LEADERSHIP.filter((leader) => leader.slug !== "finance-officer").map((leader, i) => (
               <Link key={i} href={`/about/${leader.slug}`} className="k-leader-link">
                 <div className="k-leadership-card" style={{ cursor: "pointer" }}>
                   <img src={leader.photo} alt={leader.name} className="k-leader-photo" loading="lazy" />
@@ -370,10 +375,49 @@ export default function About() {
         </div>
       </section>
 
+      {/* NEWSLETTERS - the old site's "Magazines" tab under About. The 13
+          real issues found during migration (2015-2021, previously sitting
+          unrouted under a generic "Legacy uploads" bucket) were moved to
+          this pageSection so they show here automatically. */}
+      <PageResources
+        section="about.newsletters"
+        anchorId="newsletters"
+        heading="Newsletters"
+        background="#ffffff"
+        docsTitle="Newsletters"
+      />
+
+      {/* ORGANOGRAM - the college's academic leadership structure (Dean/HoD
+          of Schools, Departments, Centres), as a chart image and/or PDF.
+          PageResources already renders both an image gallery and a document
+          list from the same admin upload screen, so "provision to add
+          image/pdf" needs no new upload UI - just this block. */}
+      <PageResources
+        section="about.organogram"
+        anchorId="organogram"
+        heading="Organogram"
+        background="#F5EFE4"
+        galleryTitle="Organogram"
+        docsTitle="Organogram (PDF)"
+      />
+
       {/* ACADEMIC COUNCIL and FINANCE COMMITTEE — moved here from the IQAC
           page, where they sat behind an "Apex Bodies" tab. Both are ordinary
           CMS committees (Admin -> Committees), matched by name. */}
       <NamedCommittees names={["Academic Council", "Finance Committee"]} background="#F5EFE4" />
+
+      {/* FINANCE COMMITTEE - ANNUAL ACCOUNTS. Year-wise: an admin uploads each
+          document (Balance Sheet, Income & Expenditure Account, Receipts &
+          Payments Account, Audit Report) under Downloads with the academic
+          year as the Group Label (e.g. "2023-24") - PageResources groups by
+          that label automatically, the same mechanism every other year-wise
+          document list on the site already uses. No new upload UI needed. */}
+      <PageResources
+        section="about.financecommittee"
+        heading="Annual Accounts (Finance Committee)"
+        background="#ffffff"
+        docsTitle="Balance Sheet, Income & Expenditure, Receipts & Payments and Audit Reports, by year"
+      />
 
       {/* BOARD OF STUDIES */}
       <section className="k-section k-docs" id="jbos">
@@ -453,12 +497,12 @@ export default function About() {
           <div className="k-contact-grid">
             <div className="k-contact-box k-contact-find">
               <h3><CmsText section="about" slot="find-us" /></h3>
-              <div className="k-contact-text">K.S.R.M. College of Engineering, Kadapa – 516003, Andhra Pradesh, India.</div>
+              <div className="k-contact-text">K.S.R.M. College of Engineering, Kadapa – 516005, Andhra Pradesh, India.</div>
               <div className="k-contact-text" style={{ fontSize: "14px" }}>7 KM from Kadapa town on Kadapa–Pulivendula Highway.</div>
             </div>
             <div className="k-contact-box k-contact-other k-contact-contact">
               <h3><CmsText section="about" slot="contact-us" /></h3>
-              <div className="k-contact-text"><a href="tel:+919000073434" className="k-contact-link">+91-9000073434</a></div>
+              <div className="k-contact-text"><a href="tel:+919000073434" className="k-contact-link">+91- 9000332294</a></div>
               <div className="k-contact-text"><a href="tel:+918143731980" className="k-contact-link">+91-8143731980</a></div>
               <div className="k-contact-text"><a href="tel:+918562295972" className="k-contact-link">08562-295972</a></div>
               <div className="k-contact-text"><a href="mailto:ksrmcengg@yahoo.co.in" className="k-contact-link">ksrmcengg@yahoo.co.in</a></div>

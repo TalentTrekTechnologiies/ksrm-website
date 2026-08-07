@@ -502,7 +502,7 @@ export default function ResearchPage() {
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px", textAlign: "center" }}>
           <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", fontFamily: "'Rajdhani', sans-serif", margin: "0 0 32px" }}><CmsText section="research" slot="contact-rdc" /></h2>
           <div style={{ background: "#eef1ff", borderRadius: 8, padding: "16px 24px", marginBottom: 24, fontSize: 14, color: "#2B3490", fontWeight: 600, display: "inline-block" }}>
-            📍 K.S.R.M. College of Engineering, Cuddapah – 516003, Andhra Pradesh
+            📍 K.S.R.M. College of Engineering, Cuddapah – 516005, Andhra Pradesh
           </div>
           <div style={{ background: "#f9f9f9", border: "2px solid #D4A500", borderRadius: 8, padding: 32, maxWidth: 600, margin: "0 auto" }}>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2B3490", margin: "0 0 8px" }}><CmsText section="research" slot="dr-m-venkatanarayana" /></h3>

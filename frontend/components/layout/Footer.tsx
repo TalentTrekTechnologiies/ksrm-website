@@ -460,7 +460,7 @@ export default function Footer() {
           <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
             <MapPin size={15} color="#FFE619" strokeWidth={1.8} style={{ flexShrink: 0, marginTop: "1px" }} />
             <span style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.55, whiteSpace: "pre-line" }}>
-              {s("site.contactAddress", "K.S.R.M. College of Engineering,\nKadapa, AP – 516003")}
+              {s("site.contactAddress", "K.S.R.M. College of Engineering,\nKadapa, AP – 516005")}
             </span>
           </div>
 
@@ -512,7 +512,7 @@ export default function Footer() {
               {s("site.footerCopyright", `© ${currentYear} K.S.R.M. College of Engineering. All Rights Reserved.`)}
             </span>
             <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.4px" }}>
-              A unit of Sri Kandula Obula Reddy Charities
+              A unit of Sri Kandula Obul Reddy Charities
             </span>
           </div>
 

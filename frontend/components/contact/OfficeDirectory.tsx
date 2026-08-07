@@ -15,10 +15,10 @@ import { useLiveData } from "@/lib/use-live-data"
  */
 
 const fallbackOffices = [
-  { title: "Principal Office", phone: "+91 9000073434", email: "principal@ksrmce.ac.in" },
+  { title: "Principal Office", phone: "+91 9000332294", email: "principal@ksrmce.ac.in" },
   { title: "Admissions Office", phone: "+91 8143731980", email: "dean.admissions@ksrmce.ac.in" },
   { title: "Examination Section", phone: "08562 295972", email: "principal@ksrmce.ac.in" },
-  { title: "Training & Placement", phone: "+91 9000073434", email: "principal@ksrmce.ac.in" },
+  { title: "Training & Placement", phone: "+91 9000332294", email: "principal@ksrmce.ac.in" },
 ]
 
 export default function OfficeDirectory() {

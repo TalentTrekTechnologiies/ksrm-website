@@ -93,7 +93,7 @@ export default function RootLayout({
       streetAddress: "K.S.R.M. College of Engineering, Kadapa",
       addressLocality: "Kadapa",
       addressRegion: "Andhra Pradesh",
-      postalCode: "516003",
+      postalCode: "516005",
       addressCountry: "IN",
     },
     contactPoint: {

@@ -55,7 +55,9 @@ const navItems: NavItem[] = [
       { label: "  ↳ Principal", href: "/about/principal" },
       { label: "Academic Council", href: "/about#academic-council" },
       { label: "Finance Committee", href: "/about#finance-committee" },
-      { label: "Finance Officer", href: "/about/finance-officer" },
+      // Finance Officer hidden at the college's request - removed from here
+      // and from the About page's Leadership grid. The profile page itself
+      // still exists (not deleted), just unlinked.
       // Ombudsperson is not on this menu: the office exists to settle student
       // grievances, so it sits under Grievance Redressal where a student
       // looking for it would actually go. The page itself is unchanged.
@@ -146,6 +148,10 @@ const navItems: NavItem[] = [
       { label: "Sports", href: "/campus-life/sports" },
       { label: "NSS", href: "/campus-life/nss" },
       { label: "Startup Cell", href: "/campus-life/startup-cell" },
+      { label: "Industry Institute Interaction", href: "/campus-life/industry-institute-interaction" },
+      { label: "Equal Opportunity Cell", href: "/campus-life/equal-opportunity-cell" },
+      { label: "SEDG Cell", href: "/campus-life/sedg-cell" },
+      { label: "Facilities for Differently-Abled", href: "/campus-life/facilities-for-differently-abled" },
       { label: "Anti-Ragging", href: "/campus-life/anti-ragging" },
       { label: "Grievance Redressal", href: "/campus-life/grievance" },
       // Moved off the About menu. A student with a complaint looks here, not

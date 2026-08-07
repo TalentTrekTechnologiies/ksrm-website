@@ -4107,6 +4107,17 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
+        label: "Annual Reports",
+        slots: [
+          {
+            id: "annual-reports-heading",
+            label: "Annual Reports",
+            kind: "line",
+            default: "Annual Reports",
+          },
+        ],
+      },
+      {
         label: "Student Satisfaction Survey",
         slots: [
           {
@@ -4618,7 +4629,7 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
         ],
       },
       {
-        label: "tabs (7 items)",
+        label: "tabs (8 items)",
         slots: [
           {
             id: "tabs.0.label",
@@ -4651,8 +4662,14 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             default: "📝 Student Survey",
           },
           {
+            id: "tabs.7.label",
+            label: "6. label - 📄 Annual Reports",
+            kind: "line",
+            default: "📄 Annual Reports",
+          },
+          {
             id: "tabs.6.label",
-            label: "6. label - 📞 Contact",
+            label: "7. label - 📞 Contact",
             kind: "line",
             default: "📞 Contact",
           },
@@ -6692,6 +6709,106 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
             label: "8. via - Madanapalle → Gangavalli → KSRMCE Gate",
             kind: "line",
             default: "Madanapalle → Gangavalli → KSRMCE Gate",
+          },
+        ],
+      },
+    ],
+  },
+  "industry-institute-interaction": {
+    label: "Industry Institute Interaction",
+    path: "/campus-life/industry-institute-interaction",
+    groups: [
+      {
+        label: "Industry Institute Interaction",
+        slots: [
+          { id: "industry-institute-interaction", label: "Industry Institute Interaction", kind: "line", default: "Industry Institute Interaction" },
+          { id: "academic-collaborations-with-industry", label: "Academic collaborations with industry", kind: "line", default: "Academic collaborations, MoUs and industry partnerships" },
+        ],
+      },
+      {
+        label: "About",
+        slots: [
+          { id: "about", label: "About", kind: "line", default: "About" },
+          {
+            id: "about-body",
+            label: "About body",
+            kind: "paragraph",
+            default: "K.S.R.M. College of Engineering actively pursues academic collaborations with industry to strengthen teaching, research and student employability. These partnerships bring in guest lectures, internships, joint projects, certification programs and access to the latest tools and practices used in the field.",
+          },
+        ],
+      },
+    ],
+  },
+  "equal-opportunity-cell": {
+    label: "Equal Opportunity Cell",
+    path: "/campus-life/equal-opportunity-cell",
+    groups: [
+      {
+        label: "Equal Opportunity Cell",
+        slots: [
+          { id: "equal-opportunity-cell", label: "Equal Opportunity Cell", kind: "line", default: "Equal Opportunity Cell" },
+          { id: "ensuring-equity-and-inclusion", label: "Ensuring equity and inclusion", kind: "line", default: "Ensuring equity and inclusion for every student and staff member" },
+        ],
+      },
+      {
+        label: "About",
+        slots: [
+          { id: "about", label: "About", kind: "line", default: "About" },
+          {
+            id: "about-body",
+            label: "About body",
+            kind: "paragraph",
+            default: "The Equal Opportunity Cell works to ensure that students and staff from all backgrounds - regardless of caste, gender, religion, disability or economic status - have equal access to the college's academic and campus life, and a channel to raise any concern about discrimination.",
+          },
+        ],
+      },
+    ],
+  },
+  "sedg-cell": {
+    label: "SEDG Cell",
+    path: "/campus-life/sedg-cell",
+    groups: [
+      {
+        label: "SEDG Cell",
+        slots: [
+          { id: "socio-economically-disadvantaged-groups-cell", label: "Socio-Economically Disadvantaged Groups Cell", kind: "line", default: "Socio-Economically Disadvantaged Groups Cell (SEDG)" },
+          { id: "support-for-socio-economically-disadvantaged", label: "Support for socio-economically disadvantaged students", kind: "line", default: "Support for socio-economically disadvantaged students" },
+        ],
+      },
+      {
+        label: "About",
+        slots: [
+          { id: "about", label: "About", kind: "line", default: "About" },
+          {
+            id: "about-body",
+            label: "About body",
+            kind: "paragraph",
+            default: "The Socio-Economically Disadvantaged Groups (SEDG) Cell identifies and supports students from economically weaker sections and disadvantaged communities, helping them access scholarships, fee concessions and academic support so that financial hardship is not a barrier to their education.",
+          },
+        ],
+      },
+    ],
+  },
+  "facilities-for-differently-abled": {
+    label: "Facilities for Differently-Abled",
+    path: "/campus-life/facilities-for-differently-abled",
+    groups: [
+      {
+        label: "Facilities for Differently-Abled",
+        slots: [
+          { id: "facilities-for-differently-abled", label: "Facilities for Differently-Abled", kind: "line", default: "Facilities for Differently-Abled" },
+          { id: "a-barrier-free-campus", label: "A barrier-free campus", kind: "line", default: "A barrier-free environment for every student" },
+        ],
+      },
+      {
+        label: "About",
+        slots: [
+          { id: "about", label: "About", kind: "line", default: "About" },
+          {
+            id: "about-body",
+            label: "About body",
+            kind: "paragraph",
+            default: "K.S.R.M. College of Engineering provides a barrier-free campus environment for differently-abled students and staff, including accessible pathways, ramps and washrooms, and academic support so that a disability is never an obstacle to a student's education here.",
           },
         ],
       },

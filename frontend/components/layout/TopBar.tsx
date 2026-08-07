@@ -57,7 +57,10 @@ export default function TopBar() {
           <span>📞 08562 295972</span>
         </div>
         <div className="topbar-center">
-          EAPCET CODE: K.S.R.M. &nbsp;|&nbsp; Programs: CSE, AIML, CSE(DS), ECE, EEE, CIVIL, MECH, MBA
+          EAPCET/ECET/ICET/POLYCET CODE: KSRM; PGECET CODE: KSRM1; &nbsp;|&nbsp;
+          Diploma – CE, EEE, ME, ECE, CSE, AIML; &nbsp;|&nbsp;
+          B.Tech - CE, EEE, ME, ECE, CSE, CSD, CSM, AIML; &nbsp;|&nbsp;
+          M.TECH - GTE, SE, PS, ES&amp;VLSI, AIDS; &nbsp;|&nbsp; MBA
         </div>
         <div className="topbar-right">
           {socials.map(({ Icon, href, label }) => (

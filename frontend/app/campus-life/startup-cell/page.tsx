@@ -1,5 +1,6 @@
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
+import NamedCommittees from "@/components/committees/NamedCommittees";
 
 ﻿import Link from "next/link";
 
@@ -8,51 +9,6 @@ export const metadata = {
   description:
     "K.S.R.M. College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
 };
-
-const committee = [
-  {
-    name: "Dr. V.S.S. Murthy",
-    role: "Professor & Principal",
-    position: "Chairman",
-    focus: "Administration",
-  },
-  {
-    name: "Dr. M. Venkata Narayana",
-    role: "Professor, ECE",
-    position: "Convenor",
-    focus: "Electronics & Communication",
-  },
-  {
-    name: "Dr. T. Mariprasath",
-    role: "Associate Professor, CSE",
-    position: "Coordinator",
-    focus: "Computer Science",
-  },
-  {
-    name: "Dr. P. Kishore",
-    role: "Assistant Professor, ECE",
-    position: "Co-Coordinator",
-    focus: "Electronics & Communication",
-  },
-  {
-    name: "Dr. S. Nageswara Rao",
-    role: "Associate Professor, ME",
-    position: "Member",
-    focus: "Mechanical Engineering",
-  },
-  {
-    name: "Sri V. Gopi Tilak",
-    role: "Assistant Professor, EEE",
-    position: "Member",
-    focus: "Electrical & Electronics",
-  },
-  {
-    name: "Dr. P. Lokeshwara Reddy",
-    role: "Assistant Professor, CSE",
-    position: "Member",
-    focus: "Computer Science",
-  },
-];
 
 const objectives = [
   "Identify and nurture startup ideas among students and faculty",
@@ -117,67 +73,12 @@ export default function StartupCellPage() {
         </div>
       </section>
 
-      {/* Committee */}
-      <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
-        <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
-          <h2
-            style={{
-              fontFamily: "var(--font-rajdhani), sans-serif",
-              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
-              fontWeight: 700,
-              color: "#2B3490",
-              margin: "0 0 48px",
-              textAlign: "center",
-            }}
-          ><CmsText section="startup-cell" slot="committee-members" /></h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: 24,
-              marginTop: 40,
-            }}
-          >
-            {committee.map((member, _i) => (
-              <div
-                key={member.name}
-                style={{
-                  background:
-                    "linear-gradient(135deg, #2B3490 0%, #1e2570 100%)",
-                  color: "#fff",
-                  padding: 24,
-                  borderRadius: 8,
-                  textAlign: "center",
-                }}
-              >
-                <h4
-                  style={{
-                    fontFamily: "var(--font-rajdhani), sans-serif",
-                    fontSize: 15,
-                    fontWeight: 700,
-                    margin: 0,
-                  }}
-                >
-                  {member.name}
-                </h4>
-                <p style={{ fontSize: 12, margin: "6px 0", opacity: 0.9 }}>
-                  {member.role}
-                </p>
-                <p
-                  style={{
-                    fontSize: 11,
-                    marginTop: 8,
-                    color: "#D4A500",
-                  }}
-                >
-                  {member.position}
-                </p>
-                <p style={{ fontSize: 11 }}><CmsText section="startup-cell" slot={`committee.${_i}.focus`} /></p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Committee - was a hardcoded array (7 names baked into the page, no
+          way to edit them without a code change). Now an ordinary CMS
+          committee like every other one on the site (Admin -> Committees),
+          matched by name - so the client can add/remove/rename members
+          themselves. */}
+      <NamedCommittees names={["Innovation & Startup Cell Committee"]} background="#F5EFE4" />
 
       {/* Objectives */}
       <section style={{ padding: "72px 0", background: "#ffffff" }}>

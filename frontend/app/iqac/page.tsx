@@ -133,6 +133,7 @@ const tabs = [
   { slot: 2, label: "📅 Minutes & Agenda", id: "minutes" },
   { slot: 3, label: "📊 AQAR Reports", id: "aqar" },
   { slot: 4, label: "📝 Student Survey", id: "survey" },
+  { slot: 7, label: "📄 Annual Reports", id: "annual-reports" },
   { slot: 6, label: "📞 Contact", id: "contact" },
 ];
 
@@ -376,6 +377,19 @@ export default function IQACPage() {
         </div>
           {/* Anything uploaded to "IQAC -> Survey" in Documents. */}
           <PageResources section="iqac.survey" embedded />
+      </section>
+
+      {/* ANNUAL REPORTS - separate from AQAR Reports above (Annual Quality
+          Assurance Report is a distinct, NAAC-specific document from the
+          institution's general Annual Report). Three documents that had been
+          filed under AQAR by title-guessing during migration were moved here
+          to this pageSection ("iqac.annualreports") since that is what they
+          actually are. */}
+      <section id="annual-reports" style={{ padding: "80px 0", background: "white" }}>
+        <div className="responsive-container">
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="annual-reports-heading" /></h2>
+          <PageResources section="iqac.annualreports" embedded maxVisible={10} />
+        </div>
       </section>
 
       {/* The Governing Body, Academic Council and Finance Committee used to sit
