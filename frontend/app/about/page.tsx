@@ -385,6 +385,7 @@ export default function About() {
         heading="Newsletters"
         background="#ffffff"
         docsTitle="Newsletters"
+        emptyText="Newsletters will be published here shortly."
       />
 
       {/* ORGANOGRAM - the college's academic leadership structure (Dean/HoD
@@ -399,6 +400,7 @@ export default function About() {
         background="#F5EFE4"
         galleryTitle="Organogram"
         docsTitle="Organogram (PDF)"
+        emptyText="The organogram will be published here shortly."
       />
 
       {/* ACADEMIC COUNCIL and FINANCE COMMITTEE — moved here from the IQAC
@@ -417,6 +419,7 @@ export default function About() {
         heading="Annual Accounts (Finance Committee)"
         background="#ffffff"
         docsTitle="Balance Sheet, Income & Expenditure, Receipts & Payments and Audit Reports, by year"
+        emptyText="Annual accounts will be published here shortly."
       />
 
       {/* BOARD OF STUDIES */}

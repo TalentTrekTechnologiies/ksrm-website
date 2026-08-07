@@ -223,6 +223,7 @@ export default function PageResources({
   heading,
   hideVideos = false,
   hideDocs = false,
+  emptyText,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -259,6 +260,15 @@ export default function PageResources({
    * in the block at the foot of the page.
    */
   hideDocs?: boolean
+  /**
+   * Shown in place of the section's normal content when nothing has been
+   * uploaded yet, instead of the section disappearing entirely - for a page
+   * whose other hand-built sections always show (with their own "will be
+   * published shortly" message), where a block that vanishes until first
+   * upload reads as broken rather than empty. Ignored when embedded, since
+   * an embedded block has no section/heading of its own to show it in.
+   */
+  emptyText?: string
 }) {
   const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
 
@@ -266,7 +276,8 @@ export default function PageResources({
   const { images, tables } = data
   const videos = hideVideos ? [] : data.videos
   const docs = hideDocs ? [] : data.docs
-  if (docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0) return null
+  const isEmpty = docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0
+  if (isEmpty && !(emptyText && !embedded)) return null
 
   const docsList =
     docs.length > 0 ? (
@@ -308,6 +319,10 @@ export default function PageResources({
             {heading}
           </h2>
         )}
+        {isEmpty ? (
+          <p style={{ color: "#666", fontSize: 15, fontStyle: "italic", margin: 0 }}>{emptyText}</p>
+        ) : (
+          <>
         {/* TABLES - built in Page Content, shown before documents. */}
         {tablesList}
 
@@ -367,6 +382,8 @@ export default function PageResources({
               <h2 className="pr-title">{docsTitle}</h2>
             </div>
             {docsList}
+          </>
+        )}
           </>
         )}
       </div>

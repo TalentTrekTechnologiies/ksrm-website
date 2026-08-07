@@ -33,7 +33,12 @@ export default function EqualOpportunityCellPage() {
         </div>
       </section>
 
-      <PageResources section="equal-opportunity-cell" background="#f4f3ef" />
+      <PageResources
+        section="equal-opportunity-cell"
+        heading="Documents & Photos"
+        background="#f4f3ef"
+        emptyText="Documents and photos will be published here shortly."
+      />
     </main>
   );
 }

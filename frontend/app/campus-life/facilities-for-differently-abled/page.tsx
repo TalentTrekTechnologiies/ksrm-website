@@ -36,7 +36,12 @@ export default function FacilitiesForDifferentlyAbledPage() {
       {/* Documents and images (barrier-free environment evidence) - the same
           Admin -> Downloads / Gallery upload every other page's
           PageResources block already uses. */}
-      <PageResources section="facilities-for-differently-abled" background="#f4f3ef" />
+      <PageResources
+        section="facilities-for-differently-abled"
+        heading="Documents & Photos"
+        background="#f4f3ef"
+        emptyText="Documents and photos will be published here shortly."
+      />
     </main>
   );
 }

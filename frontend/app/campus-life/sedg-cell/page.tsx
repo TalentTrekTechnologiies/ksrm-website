@@ -33,7 +33,12 @@ export default function SedgCellPage() {
         </div>
       </section>
 
-      <PageResources section="sedg-cell" background="#f4f3ef" />
+      <PageResources
+        section="sedg-cell"
+        heading="Documents & Photos"
+        background="#f4f3ef"
+        emptyText="Documents and photos will be published here shortly."
+      />
     </main>
   );
 }

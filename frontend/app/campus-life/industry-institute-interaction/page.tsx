@@ -42,6 +42,7 @@ export default function IndustryInstituteInteractionPage() {
         heading="MoUs & Academic Collaborations"
         background="#f4f3ef"
         docsTitle="Memoranda of Understanding"
+        emptyText="MoUs and collaboration documents will be published here shortly."
       />
     </main>
   );
