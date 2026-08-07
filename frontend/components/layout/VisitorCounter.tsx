@@ -52,9 +52,11 @@ export default function VisitorCounter() {
   const rangeRef = useRef(range)
   rangeRef.current = range
 
-  // Hidden over the hero banner - its "Apply Now" button sits in roughly the
-  // same bottom-left area this widget occupies. Appears once scrolled past
-  // it, the same threshold/pattern BackToTop already uses.
+  // Always visible - but the home page's hero banner has its "Apply Now"
+  // button in the bottom-left of the hero's left column, so this sits on the
+  // right instead while the hero is in view, then moves to the left once
+  // scrolled past it (matching the college's stated preference for the
+  // ordinary sections below, none of which have anything in that corner).
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 500)
     onScroll()
@@ -111,7 +113,7 @@ export default function VisitorCounter() {
     return () => clearInterval(interval)
   }, [])
 
-  if (!summary || !scrolled) return null
+  if (!summary) return null
 
   function toggleRange(next: SiteStatsRange) {
     setRange((prev) => (prev === next ? "today" : next))
@@ -134,9 +136,11 @@ export default function VisitorCounter() {
         className="visitor-counter-widget"
         style={{
           position: "fixed",
-          left: "20px",
+          left: scrolled ? "20px" : "auto",
+          right: scrolled ? "auto" : "20px",
           bottom: "20px",
           zIndex: 998,
+          transition: "left 0.3s ease, right 0.3s ease",
           display: "flex",
           alignItems: "center",
           gap: "14px",
