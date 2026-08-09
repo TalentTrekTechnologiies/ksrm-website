@@ -221,7 +221,7 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
   about: {
     ...GENERATED_PAGE_TEXT.about,
     groups: [
-      ...GENERATED_PAGE_TEXT.about.groups,
+      ...GENERATED_PAGE_TEXT.about.groups.filter((group) => group.label !== "Board of Studies"),
       {
         label: "Ombudsperson",
         slots: [
@@ -579,6 +579,32 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
             kind: "line",
             default: "09:00 am to 05:00 pm on all working days",
           },
+        ],
+      },
+      {
+        label: "Rules & Regulations",
+        slots: [
+          { id: "rules.0", label: "Borrowing rule 1", kind: "line", default: "Transaction hours: 09:00 am to 05:00 pm on all working days." },
+          { id: "rules.1", label: "Borrowing rule 2", kind: "line", default: "Each student is allowed to loan three (03) books at any time for a loan period of 15 days." },
+          { id: "rules.2", label: "Borrowing rule 3", kind: "line", default: "A student can extend a loan for two consecutive times, each of 15 days duration." },
+          { id: "rules.3", label: "Borrowing rule 4", kind: "line", default: "A loan can be extended if the renewal request is made within the due date. A loan cannot be extended after the due date." },
+          { id: "rules.4", label: "Borrowing rule 5", kind: "line", default: "A loan is extended if there is no hold on that title." },
+          { id: "rules.5", label: "Borrowing rule 6", kind: "line", default: "Late returns will be levied a late return fine of one rupee per day per book. After 30 days, two rupees per day per book will be collected." },
+          { id: "rules.6", label: "Borrowing rule 7", kind: "line", default: "A student can request a hold on a book. The book will be reserved for the student for three days after its immediate availability. After the reserve period the book goes to the general pool and the hold becomes void." },
+        ],
+      },
+      {
+        label: "Guidelines for readers",
+        slots: [
+          { id: "guidelines.0", label: "Guideline 1", kind: "line", default: "Identity card is a must for entering the Library and using the Library facilities." },
+          { id: "guidelines.1", label: "Guideline 2", kind: "line", default: "All readers must sign the gate register kept at the entry point of the Library." },
+          { id: "guidelines.2", label: "Guideline 3", kind: "line", default: "Maintain silence in the Library." },
+          { id: "guidelines.3", label: "Guideline 4", kind: "line", default: "Do not displace books in racks. Each book has a designated location." },
+          { id: "guidelines.4", label: "Guideline 5", kind: "line", default: "Members shall not engage in conversation in any part of the Library, so as to avoid disturbance to other readers." },
+          { id: "guidelines.5", label: "Guideline 6", kind: "line", default: "Members shall not write upon, damage or mark any book belonging to the Central Library." },
+          { id: "guidelines.6", label: "Guideline 7", kind: "line", default: "Members are responsible for any damage caused by them to books or any other property belonging to the Central Library." },
+          { id: "guidelines.7", label: "Guideline 8", kind: "line", default: "Members leaving the Library shall stop at the exit point so that materials borrowed or taken out of the Library can be checked." },
+          { id: "guidelines.8", label: "Guideline 9", kind: "line", default: "Members caught tearing pages or stealing books will be suspended forthwith from Central Library facilities, and further disciplinary action will be initiated by the college authority." },
         ],
       },
       {

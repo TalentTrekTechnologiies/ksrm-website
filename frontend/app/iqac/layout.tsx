@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "IQAC | K.S.R.M. College of Engineering",
-  description: "Internal Quality Assurance Cell (IQAC) - reports, minutes and documents - at K.S.R.M. College of Engineering, Kadapa.",
+  title: "Quality Assurance Cell | K.S.R.M. College of Engineering",
+  description: "Quality Assurance Cell - reports, minutes and documents - at K.S.R.M. College of Engineering, Kadapa.",
   alternates: { canonical: "/iqac" },
-  openGraph: { title: "IQAC | K.S.R.M. College of Engineering", description: "Internal Quality Assurance Cell (IQAC) - reports, minutes and documents - at K.S.R.M. College of Engineering, Kadapa.", url: "/iqac" },
+  openGraph: { title: "Quality Assurance Cell | K.S.R.M. College of Engineering", description: "Quality Assurance Cell - reports, minutes and documents - at K.S.R.M. College of Engineering, Kadapa.", url: "/iqac" },
 }
 
 export default function RouteLayout({ children }: { children: React.ReactNode }) {

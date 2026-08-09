@@ -108,9 +108,10 @@ function SortableRow<T extends CmsDragListItem>({
                 type="button"
                 onClick={() => onEdit(item)}
                 aria-label="Edit"
-                className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-admin-primary"
+                className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-500 hover:bg-admin-bg hover:text-admin-primary"
               >
                 <Pencil className="h-4 w-4" />
+                Edit
               </button>
             )}
             {onDelete && (
@@ -118,9 +119,10 @@ function SortableRow<T extends CmsDragListItem>({
                 type="button"
                 onClick={() => onDelete(item)}
                 aria-label="Delete"
-                className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600"
               >
                 <Trash2 className="h-4 w-4" />
+                Delete
               </button>
             )}
           </>

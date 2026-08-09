@@ -14,10 +14,6 @@ import GoverningBody from "@/components/about/GoverningBody";
 /** Group headings the About page's document sections are stored under, so an
  *  admin can add/remove documents in Page Content -> About and have them land
  *  in the right designed section rather than a generic list at the bottom. */
-// The label 8 existing documents are already filed under, here and on the live
-// site. It is a data key, not a caption - the heading and nav now read "Board
-// of Studies", but renaming this would orphan every one of those documents.
-const GROUP_JBOS = "Joint Board of Studies";
 const GROUP_STRATEGIC = "Strategic Plan & Deployment Documents";
 const GROUP_POLICY = "Policy Documents";
 
@@ -87,17 +83,6 @@ export default function About() {
     { title: "Faculty Evaluation System", url: mediaFile(171), icon: "📈" },
     { title: "Code of Ethics in Research and Innovation", url: mediaFile(172), icon: "🔬" },
   ]
-
-  // Empty on purpose. This held eight links to /demo1/JBoSMeeting/*.pdf,
-  // every one of which now returns the site's own HTML shell with a 200 - the
-  // files did not survive the move off the old site. A fallback whose whole
-  // job is to keep the section populated is worse than an empty section when
-  // every entry in it is dead: the visitor clicks and gets the homepage back.
-  //
-  // The section fills itself from Page Content -> About, group
-  // "Joint Board of Studies", as soon as the PDFs are uploaded there.
-  const jbosDocuments: { title: string; url: string; icon: string }[] = []
-
 
   return (
     <main style={{ backgroundColor: "#F5EFE4", fontFamily: "Arimo, Arial, Helvetica, sans-serif", color: "#1F2937" }}>
@@ -254,7 +239,6 @@ export default function About() {
           <a href="#leadership" className="nav-link">Leadership</a>
           <a href="#organogram" className="nav-link">Organogram</a>
           <a href="#newsletters" className="nav-link">Newsletters</a>
-          <a href="#jbos" className="nav-link">Board of Studies</a>
           <a href="#strategic" className="nav-link">Strategic Plan</a>
           <a href="#policies" className="nav-link">Policies</a>
           <a href="#contact" className="nav-link">Contact</a>
@@ -367,7 +351,7 @@ export default function About() {
                   <div className="k-leader-name">{leader.name}</div>
                   <div className="k-leader-role">{leader.role}</div>
                   <div className="k-leader-bio">{leader.paragraphs[0]}</div>
-                  <div className="k-leader-btn">View Profile →</div>
+                  <div className="k-leader-btn">View message →</div>
                 </div>
               </Link>
             ))}
@@ -421,32 +405,6 @@ export default function About() {
         docsTitle="Balance Sheet, Income & Expenditure, Receipts & Payments and Audit Reports, by year"
         emptyText="Annual accounts will be published here shortly."
       />
-
-      {/* BOARD OF STUDIES */}
-      <section className="k-section k-docs" id="jbos">
-        <div className="k-container">
-          <h2><CmsText section="about" slot="joint-board-of-studies" /></h2>
-          <div className="k-docs-grid">
-            {docsForGroup(GROUP_JBOS, jbosDocuments).length === 0 && (
-              <p style={{ color: "#666", fontSize: 15, fontStyle: "italic", gridColumn: "1 / -1" }}>
-                Board of Studies minutes will be published here shortly.
-              </p>
-            )}
-            {docsForGroup(GROUP_JBOS, jbosDocuments).map((doc, i) => (
-              <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-                <div className="k-doc-card">
-                  <div className="k-doc-icon">{doc.icon}</div>
-                  <div className="k-doc-content">
-                    <div className="k-doc-title">{doc.title}</div>
-                    <div className="k-doc-subtitle">Download PDF →</div>
-                  </div>
-                  <div className="k-doc-link">↗</div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* STRATEGIC PLAN & DEPLOYMENT DOCUMENTS */}
       <section className="k-section k-docs" id="strategic" style={{ background: "#F5EFE4" }}>

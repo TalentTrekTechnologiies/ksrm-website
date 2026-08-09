@@ -61,7 +61,6 @@ const navItems: NavItem[] = [
       // Ombudsperson is not on this menu: the office exists to settle student
       // grievances, so it sits under Grievance Redressal where a student
       // looking for it would actually go. The page itself is unchanged.
-      { label: "Board of Studies", href: "/about#jbos" },
       { label: "Strategic Plan", href: "/about#strategic" },
       { label: "Policy Documents", href: "/about#policies" },
     ],
@@ -77,7 +76,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "Civil Engineering", href: "/departments/civil" },
       { label: "Computer Science and Engineering", href: "/departments/cse" },
-      { label: "Electrical and Electronics", href: "/departments/eee" },
+      { label: "Electrical and Electronics Engineering", href: "/departments/eee" },
       { label: "Electronics and Communication Engineering ", href: "/departments/ece" },
       { label: "Mechanical Engineering", href: "/departments/mechanical" },
       { label: "Humanities and Sciences", href: "/departments/hs" },

@@ -4010,13 +4010,13 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
     path: "/iqac",
     groups: [
       {
-        label: "Internal Quality Assurance Cell",
+        label: "Quality Assurance Cell",
         slots: [
           {
             id: "internal-quality-assurance-cell",
-            label: "Internal Quality Assurance Cell",
+            label: "Quality Assurance Cell",
             kind: "line",
-            default: "Internal Quality Assurance Cell",
+            default: "Quality Assurance Cell",
           },
           {
             id: "iqac-k-s-r-m",

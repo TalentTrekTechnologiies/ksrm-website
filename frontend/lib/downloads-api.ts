@@ -201,7 +201,6 @@ export function reorderDownloads(items: { id: number; sortOrder: number }[]): Pr
  */
 export const GROUP_SUGGESTIONS: Record<string, string[]> = {
   about: [
-    "Joint Board of Studies",
     "Strategic Plan & Deployment Documents",
     "Policy Documents",
   ],

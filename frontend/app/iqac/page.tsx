@@ -1,10 +1,9 @@
-﻿"use client";
+"use client";
 
+import { Fragment } from "react";
 import { mediaFile } from "@/lib/api-base";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
-import { getCommitteesPublic, Committee } from "@/lib/committees-api";
-import { useLiveData } from "@/lib/use-live-data";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
 
 const missionFunctions = [
@@ -36,41 +35,51 @@ const qualityPolicy = [
 
 const composition = [
   { name: "Prof. T. Nageswara Prasad", designation: "Principal", role: "Chairperson" },
-  { name: "Sri K. Madan Mohan Reddy", designation: "Vice-Chairman", role: "Management" },
+  { name: "Mr. K. Madan Mohan Reddy", designation: "Vice-Chairman", role: "Management" },
   { name: "Prof. T. Nageswara Prasad", designation: "Dean, Academics", role: "Member" },
-  { name: "Dr. M. Venkatanarayana", designation: "Dean, R&D", role: "Member" },
+  { name: "Dr. M. Venkatanarayana", designation: "Dean, Research & Development", role: "Member" },
   { name: "Mr. A. Ramprakash Reddy", designation: "Dean, Faculty Affairs", role: "Member" },
-  { name: "Mrs. B. Manorama Devi", designation: "Dean, Student Affairs", role: "Member" },
-  { name: "Mr. R. Nagaraju", designation: "Dean, Training & Placements", role: "Member" },
+  { name: "Dr. C. Ravindra Murthy", designation: "Dean, Students Affairs", role: "Member" },
+  { name: "Mr. R. Nagaraju", designation: "Dean, Training and Placements", role: "Member" },
   { name: "Dr. N. Amaranatha Reddy", designation: "Dean, Alumni", role: "Member" },
   { name: "Dr. M. Venugopal", designation: "Dean, Industry Relations", role: "Member" },
-  { name: "Dr. V. Giridhar", designation: "Dean, Industry Institution Cell", role: "Member" },
-  { name: "Dr. T. Elia", designation: "Dean, Innovation & Entrepreneurship", role: "Member" },
+  { name: "Dr. V. Giridhar", designation: "Dean, Industry Institution Interaction cell", role: "Member" },
+  { name: "Dr. T. Elia", designation: "Dean, Innovation and Entrepreneurship", role: "Member" },
   { name: "Dr. M. V. Ravi Kishore Reddy", designation: "Controller of Examinations", role: "Member" },
-  { name: "Dr. G. Chennakesava Reddy", designation: "HoD, Civil", role: "Member" },
-  { name: "Dr. M.S. Priyadarshini", designation: "HoD, EEE", role: "Member" },
-  { name: "Mr. K. Suresh Kumar", designation: "HoD, Mechanical", role: "Member" },
-  { name: "Dr. M. Venkatanarayana", designation: "HoD, ECE", role: "Member" },
+  { name: "Dr. G. Chennakesava Reddy", designation: "HoD, CE", role: "Member" },
+  { name: "Dr. A. Sudhakar", designation: "HoD, EEE", role: "Member" },
+  { name: "Dr. D. Ravikanth", designation: "HoD, ME", role: "Member" },
+  { name: "Dr. B. Bhaskar Reddy", designation: "HoD, ECE", role: "Member" },
   { name: "Dr. V. Lokeswara Reddy", designation: "HoD, CSE", role: "Member" },
   { name: "Dr. V. Ramachandra Reddy", designation: "HoD, H&S", role: "Member" },
   { name: "Dr. N. Suhasini", designation: "HoD, MBA", role: "Member" },
-  { name: "Mrs. G. Sireesha", designation: "Manager, Broadcom", role: "Member" },
-  { name: "Mr. S. Guru Sankar", designation: "MD, Chaitanya Chemicals", role: "Member" },
-  { name: "Mr. K. Subramanyam", designation: "Health Coordinator", role: "Member" },
-  { name: "Mr. M. Vara Prasad Reddy", designation: "Deputy Executive Engineer", role: "Member" },
-  { name: "Mr. M. Obul Das", designation: "DAS Educational & Welfare NGO", role: "Member" },
+  { name: "Mrs. G. Sireesha", designation: "Manager, Broadcom, Bangalore", role: "Member" },
+  { name: "Mr. S. Guru Sankar", designation: "MD, Chaitanya Chemicals, Kadapa (Industry)", role: "Member" },
+  { name: "Mr. K. Subramanyam", designation: "Adolescent Health Coordinator, Mydukur, Kadapa (Dist.) (Parent)", role: "Member" },
+  { name: "Mr. M. Vara Prasad Reddy", designation: "Deputy Executive Engineer, M.I Subdivision, Kadapa. (Alumni)", role: "Member" },
+  { name: "Mr. M. Obul Das", designation: "DAS Educational & Welfare Society (NGO)", role: "Member" },
   { name: "Ms. K. Shanmukhi Lasya", designation: "Student", role: "Member" },
-  { name: "Mr. B. Bala Subramanyam", designation: "Student", role: "Member" },
+  { name: "Mr. B Bala Subramanyam", designation: "Student", role: "Member" },
   { name: "Mrs. K. HarshaVardhini", designation: "Student", role: "Member" },
-  { name: "Dr. V. Vijaya Kishore", designation: "Prof., ECE", role: "Coordinator" },
+  { name: "Dr. V. Vijaya Kishore", designation: "Prof., ECE", role: "Dean / Coordinator" },
   { name: "Dr. I. Srinivasula Reddy", designation: "Asso. Prof., CE", role: "Dy. Dean" },
-  { name: "Mr. P. Suresh Praveen Kumar", designation: "Asst. Prof., CE", role: "Asso. Dean" },
-  { name: "Dr. C. Kumar Reddy", designation: "Asso. Prof., EEE", role: "Asso. Dean" },
+  { name: "Mr. P. Suresh Praveen Kumar", designation: "Asst.  Prof., CE", role: "Asso. Dean" },
+  { name: "Dr. G. Srihari", designation: "Prof., ECE", role: "Asso. Dean" },
   { name: "Mr. A. HariKrishna", designation: "Asst. Prof., ME", role: "Asso. Dean" },
   { name: "Dr. K. Pavan Kumar", designation: "Asso. Prof., ECE", role: "Asso. Dean" },
   { name: "Mrs. B. Swetha", designation: "Asst. Prof., CSE", role: "Asso. Dean" },
-  { name: "Dr. M. Vijaya Bhaskar Reddy", designation: "Asso. Prof., H&S", role: "Asso. Dean" },
+  { name: "Dr. M. Vijaya Bhaskar Reddy", designation: "Asst. Prof., H&S", role: "Asso. Dean" },
 ];
+
+const compositionGroups: Record<number, string> = {
+  0: "Chairperson: Head of the Institution",
+  1: "Management Members",
+  2: "Senior Administrative Officers",
+  12: "Senior Teachers",
+  19: "Employer / Industry / Stake holder / Members",
+  22: "Alumni / Local Society/ Student",
+  27: "IQAC Core Team",
+};
 
 const minutesYears = ["2022-23", "2021-22", "2020-21", "2019-20", "2018-19", "2017-18", "2016-17", "2015-16", "2014-15", "2013-14"];
 
@@ -128,28 +137,17 @@ function FeedbackFormLink({ index }: { index: number }) {
  * which was Apex Bodies, stays retired.
  */
 const tabs = [
-  { slot: 0, label: "📋 About IQAC", id: "about" },
-  { slot: 1, label: "👥 Composition", id: "composition" },
-  { slot: 2, label: "📅 Minutes & Agenda", id: "minutes" },
-  { slot: 3, label: "📊 AQAR Reports", id: "aqar" },
-  { slot: 4, label: "📝 Student Survey", id: "survey" },
-  { slot: 7, label: "📄 Annual Reports", id: "annual-reports" },
-  { slot: 6, label: "📞 Contact", id: "contact" },
+  { slot: 0, label: "About IQAC", id: "about" },
+  { slot: 1, label: "Composition", id: "composition" },
+  { slot: 2, label: "Minutes & Agenda", id: "minutes" },
+  { slot: 3, label: "AQAR Reports", id: "aqar" },
+  { slot: 4, label: "Student Survey", id: "survey" },
+  { slot: 7, label: "Annual Reports", id: "annual-reports" },
+  { slot: 6, label: "Contact", id: "contact" },
 ];
 
 export default function IQACPage() {
-  // The IQAC's own composition is a committee like any other, kept in
-  // Admin -> Committees under the "IQAC Composition" type. Falls back to the
-  // built-in table while none exists, so the page is never empty.
-  const iqacCommittees = useLiveData<Committee[]>(
-    () => getCommitteesPublic("IQAC").catch(() => [] as Committee[]),
-    [],
-  );
-  const cmsMembers = (iqacCommittees ?? []).flatMap((c) => c.members ?? []);
-  const fromCms = cmsMembers.length > 0;
-  const rows = fromCms
-    ? cmsMembers.map((m) => ({ name: m.name, designation: m.designation, role: m.role }))
-    : composition;
+  const rows = composition;
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -174,6 +172,10 @@ export default function IQACPage() {
         .iqac-table thead tr { background: #2B3490; color: white; }
         .iqac-table th { padding: 14px 16px; text-align: left; font-size: 14px; font-weight: 700; }
         .iqac-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
+        .iqac-group-row td {
+          background: #eef1ff; color: #2B3490; font-weight: 800; font-size: 14px;
+          font-family: var(--font-rajdhani), sans-serif; letter-spacing: .2px;
+        }
         @media (max-width: 640px) { .iqac-table th, .iqac-table td { padding: 10px 12px; font-size: 13px; } }
 
         .iqac-minutes-btn {
@@ -201,7 +203,7 @@ export default function IQACPage() {
         <div style={{ position: "relative", zIndex: 2, width: "100%" }}>
           <div className="responsive-container">
             <div style={{ display: "inline-block", background: "#D4A500", color: "#2B3490", padding: "8px 20px", borderRadius: 6, fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>
-              ⭐ Quality Assurance
+              Quality Assurance
             </div>
             <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", margin: "0 0 8px" }}><CmsText section="iqac" slot="internal-quality-assurance-cell" /></h1>
             <p style={{ fontSize: 20, fontWeight: 600, color: "#D4A500", margin: "0 0 24px" }}><CmsText section="iqac" slot="iqac-k-s-r-m" /></p>
@@ -286,26 +288,33 @@ export default function IQACPage() {
           <div className="iqac-table-wrapper">
             <table className="iqac-table">
               <thead>
-                <tr><th>S.No</th><th>Name</th><th>Designation</th><th>Role</th></tr>
+                <tr><th>S.No</th><th>Name</th><th>Designation</th><th>Designation in IQAC</th></tr>
               </thead>
               <tbody>
                 {rows.map((c, i) => (
-                  <tr key={i} style={{ background: i % 2 === 0 ? "white" : "#f9f9f9" }}>
-                    <td style={{ color: "#2B3490", fontWeight: 600 }}>{i + 1}</td>
-                    <td style={{ color: "#333" }}>
-                      {fromCms ? c.name : <CmsText section="iqac" slot={`composition.${i}.name`} />}
-                    </td>
-                    <td style={{ color: "#666" }}>
-                      {fromCms ? c.designation : <CmsText section="iqac" slot={`composition.${i}.designation`} />}
-                    </td>
-                    <td>
-                      {c.role === "Chairperson" || c.role === "Coordinator" ? (
-                        <span style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
-                          {c.role}
-                        </span>
-                      ) : c.role}
-                    </td>
-                  </tr>
+                  <Fragment key={i}>
+                    {compositionGroups[i] && (
+                      <tr className="iqac-group-row" key={`group-${i}`}>
+                        <td colSpan={4}>{compositionGroups[i]}</td>
+                      </tr>
+                    )}
+                    <tr style={{ background: i % 2 === 0 ? "white" : "#f9f9f9" }}>
+                      <td style={{ color: "#2B3490", fontWeight: 600 }}>{i + 1}</td>
+                      <td style={{ color: "#333" }}>
+                        {c.name}
+                      </td>
+                      <td style={{ color: "#666" }}>
+                        {c.designation}
+                      </td>
+                      <td>
+                        {c.role === "Chairperson" || c.role === "Dean / Coordinator" ? (
+                          <span style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
+                            {c.role}
+                          </span>
+                        ) : c.role}
+                      </td>
+                    </tr>
+                  </Fragment>
                 ))}
               </tbody>
             </table>
@@ -322,7 +331,7 @@ export default function IQACPage() {
           <div style={{ maxWidth: 800, margin: "0 auto" }}>
             {minutesYears.map((y) => (
               <div key={y} style={{ marginBottom: 8 }}>
-                <button className="iqac-minutes-btn">{y}<span style={{ fontSize: 12 }}>▼</span></button>
+                <button className="iqac-minutes-btn">{y}<span style={{ fontSize: 12 }}>v</span></button>
               </div>
             ))}
           </div>
@@ -338,12 +347,12 @@ export default function IQACPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
             {aqarReports.map((r) => (
               <a href={r.href} target="_blank" rel="noopener noreferrer" className="iqac-doc-link" key={r.label}>
-                <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>📊</div>
+                <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#2B3490", flexShrink: 0 }}>PDF</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, color: "#2B3490", fontSize: 14, marginBottom: 4 }}>AQAR Report {r.label}</div>
                   <div style={{ fontSize: 12, color: "#999" }}>Annual Quality Assurance Report</div>
                 </div>
-                <div style={{ fontSize: 18, color: "#D4A500" }}>⬇</div>
+                <div style={{ fontSize: 18, color: "#D4A500" }}>Download</div>
               </a>
             ))}
           </div>
@@ -359,12 +368,12 @@ export default function IQACPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16, marginBottom: 48 }}>
             {surveys.map((s) => (
               <a href={s.href} target="_blank" rel="noopener noreferrer" className="iqac-doc-link" key={s.label}>
-                <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>📝</div>
+                <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#2B3490", flexShrink: 0 }}>PDF</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, color: "#2B3490", fontSize: 14, marginBottom: 4 }}>Survey {s.label}</div>
                   <div style={{ fontSize: 12, color: "#999" }}>Student Satisfaction Report</div>
                 </div>
-                <div style={{ fontSize: 18, color: "#D4A500" }}>⬇</div>
+                <div style={{ fontSize: 18, color: "#D4A500" }}>Download</div>
               </a>
             ))}
           </div>
@@ -406,10 +415,10 @@ export default function IQACPage() {
             <div style={{ fontWeight: 700, fontSize: 20, color: "#2B3490", marginBottom: 8 }}>Internal Quality Assurance Cell (IQAC)</div>
             <div style={{ fontSize: 15, color: "#666", marginBottom: 32 }}>K.S.R.M. College of Engineering (Autonomous)</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <a href="mailto:dean.iqac@ksrmce.ac.in" className="iqac-contact-link"><span>📧</span><span>dean.iqac@ksrmce.ac.in</span></a>
-              <a href="mailto:iqac@ksrmce.ac.in" className="iqac-contact-link"><span>📧</span><span>iqac@ksrmce.ac.in</span></a>
-              <a href="tel:+918499918303" className="iqac-contact-link"><span>📞</span><span>+91 8499918303</span></a>
-              <a href="tel:+918985717578" className="iqac-contact-link"><span>📞</span><span>+91 8985717578</span></a>
+              <a href="mailto:dean.iqac@ksrmce.ac.in" className="iqac-contact-link"><span>Email</span><span>dean.iqac@ksrmce.ac.in</span></a>
+              <a href="mailto:iqac@ksrmce.ac.in" className="iqac-contact-link"><span>Email</span><span>iqac@ksrmce.ac.in</span></a>
+              <a href="tel:+918499918303" className="iqac-contact-link"><span>Phone</span><span>+91 8499918303</span></a>
+              <a href="tel:+918985717578" className="iqac-contact-link"><span>Phone</span><span>+91 8985717578</span></a>
             </div>
           </div>
         </div>

@@ -531,7 +531,7 @@ function CommitteesManagerInner() {
                 onClick={() => { setManagingMembersId(c.id); cancelMemberEdit() }}
                 className="flex shrink-0 items-center gap-1 text-xs font-semibold text-admin-primary hover:underline"
               >
-                <Users className="h-3.5 w-3.5" /> Members
+                <Users className="h-3.5 w-3.5" /> Edit members
               </button>
             )}
           </div>
