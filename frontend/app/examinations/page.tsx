@@ -21,6 +21,12 @@ const quickLinks = [
   { icon: "📘", label: "Syllabus", href: "/academics/syllabus" },
 ];
 
+const EXAM_FALLBACK_SECTIONS = ["examinations"];
+const CALENDAR_TITLE = /calendar/i;
+const TIMETABLE_TITLE = /time\s*table|timetable/i;
+const RESULT_TITLE = /result/i;
+const QUESTION_PAPER_TITLE = /question\s*paper|qp\b/i;
+
 export default function ExaminationsPage() {
   return (
     <main style={{ background: "#ffffff" }}>
@@ -82,16 +88,28 @@ export default function ExaminationsPage() {
           {/* Entries added under Exam Notifications with type "Academic
               Calendar", grouped by academic year. The Downloads block below
               stays so anything uploaded the old way still shows. */}
-          <ExamNotificationsList type="CALENDAR" emptyText="No academic calendars published yet." />
-          <PageResources section="examinations.calendars" embedded maxVisible={8} />
+          <ExamNotificationsList type="CALENDAR" hideEmpty />
+          <PageResources
+            section="examinations.calendars"
+            embedded
+            maxVisible={8}
+            fallbackSections={EXAM_FALLBACK_SECTIONS}
+            fallbackTitlePattern={CALENDAR_TITLE}
+          />
         </div>
       </section>
 
       <section id="timetables" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="exam-time-tables" /></h2>
-          <ExamNotificationsList type="TIMETABLE" emptyText="No time tables published yet." />
-          <PageResources section="examinations.timetables" embedded maxVisible={8} />
+          <ExamNotificationsList type="TIMETABLE" hideEmpty />
+          <PageResources
+            section="examinations.timetables"
+            embedded
+            maxVisible={8}
+            fallbackSections={EXAM_FALLBACK_SECTIONS}
+            fallbackTitlePattern={TIMETABLE_TITLE}
+          />
         </div>
       </section>
 
@@ -117,7 +135,15 @@ export default function ExaminationsPage() {
       <section id="question-papers" style={{ padding: "80px 0", background: "#ffffff" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Question Papers</h2>
-          <ExamNotificationsList type="QUESTION_PAPER" emptyText="No question papers published yet." />
+          <ExamNotificationsList type="QUESTION_PAPER" hideEmpty />
+          <PageResources
+            section="examinations"
+            docsCategory="QUESTION_PAPER"
+            embedded
+            maxVisible={8}
+            fallbackSections={EXAM_FALLBACK_SECTIONS}
+            fallbackTitlePattern={QUESTION_PAPER_TITLE}
+          />
         </div>
       </section>
 
@@ -151,8 +177,13 @@ export default function ExaminationsPage() {
           </div>
           {/* Result sheets uploaded from the admin (e.g. "Exam Results AY 2025-26")
               land here, grouped by their AY heading. */}
-          <ExamNotificationsList type="RESULT" emptyText="No results published yet." />
-          <PageResources section="examinations.results" embedded />
+          <ExamNotificationsList type="RESULT" hideEmpty />
+          <PageResources
+            section="examinations.results"
+            embedded
+            fallbackSections={EXAM_FALLBACK_SECTIONS}
+            fallbackTitlePattern={RESULT_TITLE}
+          />
         </div>
       </section>
 

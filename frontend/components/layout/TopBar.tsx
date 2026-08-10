@@ -69,7 +69,7 @@ export default function TopBar() {
       <div className="topbar-inner" style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(-15px)", transition: "all 0.7s ease" }}>
         <div className="topbar-left">
           <span>📞 +91 8143731980</span>
-          <span>📞 08562 295972</span>
+          <span>📞 8142838241</span>
         </div>
         <div className="topbar-codes-viewport">
           <div className="topbar-codes-track">
@@ -88,3 +88,4 @@ export default function TopBar() {
     </div>
   )
 }
+

@@ -20,16 +20,6 @@ import FacultyGrid from "@/components/faculty/FacultyGrid"
  */
 const SECTION = "Central Library"
 
-function initials(name: string) {
-  return name
-    .replace(/^(Dr\.|Sri\.|Smt\.|Mr\.|Ms\.|Prof\.)\s*/i, "")
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-}
-
 export default function LibraryStaff() {
   const staff = useLiveData<Faculty[]>(
     () => getFacultyPublic(SECTION).catch(() => [] as Faculty[]),
@@ -37,10 +27,11 @@ export default function LibraryStaff() {
   )
   // One switch controls faculty photos across the whole site; honour it here so
   // this page never disagrees with the department pages.
-  const settings = useLiveData<Record<string, string>>(() => getPublicSiteSettings(), [], { initialValue: {} })
-  const showPhotos = (settings?.["faculty_show_photos"] ?? "true") !== "false"
+  const settings = useLiveData<Record<string, string>>(() => getPublicSiteSettings(), [])
+  const settingsLoaded = settings !== null
+  const showPhotos = settings?.["faculty_show_photos"] === "true"
 
-  if (!staff || staff.length === 0) return null
+  if (!staff || staff.length === 0 || !settingsLoaded) return null
 
   return (
     <section style={{ width: "100%", background: "#ffffff", padding: "72px 0" }}>

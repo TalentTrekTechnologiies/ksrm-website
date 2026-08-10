@@ -86,13 +86,22 @@ function groupDocs(docs: Download[]): DocGroup[] {
   return groups
 }
 
-async function fetchSection(section: string, docsCategory?: DownloadCategory): Promise<SectionData> {
-  const [routed, byCategory, images, tables] = await Promise.all([
+async function fetchSection(
+  section: string,
+  docsCategory?: DownloadCategory,
+  fallback?: { sections?: string[]; titlePattern?: RegExp },
+): Promise<SectionData> {
+  const [routed, byCategory, fallbackDocs, images, tables] = await Promise.all([
     getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
     // Category-driven inclusion (e.g. every SYLLABUS doc shows on the
     // Syllabus page regardless of explicit page routing) - matches the
     // natural admin mental model "I set the category, it shows there".
     docsCategory ? getDownloadsPublic(docsCategory).catch(() => [] as Download[]) : Promise.resolve([] as Download[]),
+    fallback?.sections?.length
+      ? Promise.all(fallback.sections.map((s) => getDownloadsPublic(undefined, undefined, s).catch(() => [] as Download[]))).then((groups) =>
+          groups.flat().filter((d) => !fallback.titlePattern || fallback.titlePattern.test(d.title)),
+        )
+      : Promise.resolve([] as Download[]),
     getGalleryPublic(undefined, undefined, section).catch(() => [] as GalleryImage[]),
     getPageTablesPublic(section).catch(() => [] as PageTable[]),
   ])
@@ -106,7 +115,7 @@ async function fetchSection(section: string, docsCategory?: DownloadCategory): P
   // shows only once on the public page.
   const seenId = new Set<number>()
   const seenFile = new Set<string>()
-  const docs = [...routed, ...byCategoryUnrouted].filter((d) => {
+  const docs = [...routed, ...byCategoryUnrouted, ...fallbackDocs].filter((d) => {
     if (seenId.has(d.id)) return false
     const fileKey = (d.fileUrl || "").trim().toLowerCase()
     if (fileKey && seenFile.has(fileKey)) return false
@@ -224,6 +233,8 @@ export default function PageResources({
   hideVideos = false,
   hideDocs = false,
   emptyText,
+  fallbackSections,
+  fallbackTitlePattern,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -269,8 +280,18 @@ export default function PageResources({
    * an embedded block has no section/heading of its own to show it in.
    */
   emptyText?: string
+  /**
+   * Extra page sections to scan when admins bulk-uploaded documents to a broad
+   * page route instead of the exact subsection. Used sparingly on Examinations,
+   * where filenames/titles usually say "calendar", "timetable", or "result".
+   */
+  fallbackSections?: string[]
+  fallbackTitlePattern?: RegExp
 }) {
-  const data = useLiveData<SectionData>(() => fetchSection(section, docsCategory), [section, docsCategory])
+  const data = useLiveData<SectionData>(
+    () => fetchSection(section, docsCategory, { sections: fallbackSections, titlePattern: fallbackTitlePattern }),
+    [section, docsCategory, fallbackSections, fallbackTitlePattern],
+  )
 
   if (!data) return null
   const { images, tables } = data

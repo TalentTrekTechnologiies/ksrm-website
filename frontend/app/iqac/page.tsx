@@ -60,7 +60,7 @@ const composition = [
   { name: "Mr. M. Obul Das", designation: "DAS Educational & Welfare Society (NGO)", role: "Member" },
   { name: "Ms. K. Shanmukhi Lasya", designation: "Student", role: "Member" },
   { name: "Mr. B Bala Subramanyam", designation: "Student", role: "Member" },
-  { name: "Mrs. K. HarshaVardhini", designation: "Student", role: "Member" },
+  { name: "Ms. P. Sharmila", designation: "Student", role: "Member" },
   { name: "Dr. V. Vijaya Kishore", designation: "Prof., ECE", role: "Dean / Coordinator" },
   { name: "Dr. I. Srinivasula Reddy", designation: "Asso. Prof., CE", role: "Dy. Dean" },
   { name: "Mr. P. Suresh Praveen Kumar", designation: "Asst.  Prof., CE", role: "Asso. Dean" },

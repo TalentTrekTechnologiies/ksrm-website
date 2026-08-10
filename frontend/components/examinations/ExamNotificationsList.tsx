@@ -46,9 +46,11 @@ export default function ExamNotificationsList({
    */
   type,
   emptyText,
+  hideEmpty = false,
 }: {
   type?: ExamNotificationType
   emptyText?: string
+  hideEmpty?: boolean
 } = {}) {
   const items = useLiveData<ExamNoticeItem[]>(
     async () => {
@@ -74,6 +76,7 @@ export default function ExamNotificationsList({
   }
 
   if (items.length === 0) {
+    if (hideEmpty) return null
     return <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "24px 0" }}>{emptyText ?? "No active notifications right now."}</p>
   }
 

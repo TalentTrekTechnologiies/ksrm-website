@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
+import { apiGet, apiPost, apiPatch, apiDelete, apiFetch } from "./api-client";
 
 export type SiteSettingType = "STRING" | "NUMBER" | "BOOLEAN" | "JSON" | "URL" | "EMAIL" | "IMAGE_URL";
 
@@ -51,7 +51,10 @@ export function deleteSiteSetting(id: number): Promise<SiteSetting> {
  * so none of it needs a login. */
 export function getPublicSiteSettings(group?: string): Promise<Record<string, string>> {
   const query = group ? `?group=${encodeURIComponent(group)}` : "";
-  return apiGet<Record<string, string>>(`/site-settings/public${query}`);
+  return apiFetch<Record<string, string>>(`/site-settings/public${query}`, {
+    method: "GET",
+    cache: "no-store",
+  });
 }
 
 export interface SystemInfo {
