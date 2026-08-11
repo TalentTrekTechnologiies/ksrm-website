@@ -14,8 +14,22 @@ interface WidgetDefinition {
   key: string;
   label: string;
   /** `<key>.view` is assumed for every widget below - see isWidgetVisible. */
-  count: (prisma: PrismaService) => Promise<number>;
+  count: (prisma: PrismaService, departmentId?: number | null) => Promise<number>;
+  /**
+   * Whether this widget's model carries a departmentId and can therefore be
+   * narrowed to one department. Widgets without it are college-wide, so a
+   * department-scoped admin is not shown them at all rather than being shown a
+   * site-wide number they have no access to act on.
+   */
+  departmentScoped?: boolean;
 }
+
+/**
+ * `where` fragment narrowing a count to one department, or `{}` for an
+ * unscoped admin. Kept in one place so every widget narrows identically.
+ */
+const byDept = (departmentId?: number | null) =>
+  departmentId == null ? {} : { departmentId };
 
 /**
  * One widget per RBAC module (see prisma/seed.ts's MODULE_ACTIONS) so that
@@ -27,11 +41,18 @@ interface WidgetDefinition {
  * all of them.
  */
 const WIDGET_DEFINITIONS: WidgetDefinition[] = [
-  { key: 'faculty', label: 'Faculty', count: (p) => p.faculty.count() },
+  {
+    key: 'faculty',
+    label: 'Faculty',
+    departmentScoped: true,
+    count: (p, d) => p.faculty.count({ where: byDept(d) }),
+  },
   {
     key: 'departments',
     label: 'Departments',
-    count: (p) => p.department.count(),
+    departmentScoped: true,
+    // A scoped admin has exactly one department, so this reads 1 rather than 11.
+    count: (p, d) => p.department.count({ where: d == null ? {} : { id: d } }),
   },
   {
     key: 'transport_routes',
@@ -58,29 +79,39 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   {
     key: 'gallery',
     label: 'Gallery Images',
-    count: (p) => p.galleryImage.count(),
+    departmentScoped: true,
+    count: (p, d) => p.galleryImage.count({ where: byDept(d) }),
   },
   {
     key: 'placements',
     label: 'Placement Records',
-    count: (p) => p.placement.count(),
+    departmentScoped: true,
+    count: (p, d) => p.placement.count({ where: byDept(d) }),
   },
   {
     key: 'exam_notifications',
     label: 'Exam Notifications',
-    count: (p) => p.examNotification.count(),
+    departmentScoped: true,
+    count: (p, d) => p.examNotification.count({ where: byDept(d) }),
   },
   {
     key: 'research',
     label: 'Research Records',
-    count: (p) => p.research.count(),
+    departmentScoped: true,
+    count: (p, d) => p.research.count({ where: byDept(d) }),
   },
   // Admin-facing label only - the key/model stay `downloads`.
-  { key: 'downloads', label: 'Documents', count: (p) => p.download.count() },
+  {
+    key: 'downloads',
+    label: 'Documents',
+    departmentScoped: true,
+    count: (p, d) => p.download.count({ where: byDept(d) }),
+  },
   {
     key: 'committees',
     label: 'Committees',
-    count: (p) => p.committee.count(),
+    departmentScoped: true,
+    count: (p, d) => p.committee.count({ where: byDept(d) }),
   },
   {
     key: 'page_content',
@@ -118,7 +149,12 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     count: (p) => p.careerApplication.count(),
   },
   { key: 'careers', label: 'Job Openings', count: (p) => p.career.count() },
-  { key: 'events', label: 'Events', count: (p) => p.event.count() },
+  {
+    key: 'events',
+    label: 'Events',
+    departmentScoped: true,
+    count: (p, d) => p.event.count({ where: byDept(d) }),
+  },
   {
     key: 'announcements',
     label: 'Announcements',
@@ -155,11 +191,12 @@ export class DashboardService {
    * 500 the whole dashboard.
    */
   private async safeCount(
-    fn: (prisma: PrismaService) => Promise<number>,
+    fn: (prisma: PrismaService, departmentId?: number | null) => Promise<number>,
     widgetKey: string,
+    departmentId?: number | null,
   ): Promise<{ count: number; available: boolean }> {
     try {
-      const count = await fn(this.prisma);
+      const count = await fn(this.prisma, departmentId);
       return { count, available: true };
     } catch (error) {
       this.logger.warn(
@@ -177,8 +214,17 @@ export class DashboardService {
       await this.effectivePermissions.getEffectivePermissions(admin);
     const canSeeAll = admin.isSuperAdmin;
 
+    // A department-scoped admin gets their department's numbers, not the
+    // college's. Widgets whose model has no departmentId are dropped entirely
+    // rather than shown site-wide: a Civil admin seeing "Faculty 299" is
+    // reporting on 10 departments they cannot open, and a count they cannot
+    // act on is worse than no tile.
+    const scopeDepartmentId = canSeeAll ? null : (admin.departmentId ?? null);
+
     const visibleWidgets = WIDGET_DEFINITIONS.filter(
-      (widget) => canSeeAll || permissions.has(`${widget.key}.view`),
+      (widget) =>
+        (canSeeAll || permissions.has(`${widget.key}.view`)) &&
+        (scopeDepartmentId == null || widget.departmentScoped === true),
     );
 
     const widgets = await Promise.all(
@@ -186,6 +232,7 @@ export class DashboardService {
         const { count, available } = await this.safeCount(
           widget.count,
           widget.key,
+          scopeDepartmentId,
         );
         return {
           key: widget.key,

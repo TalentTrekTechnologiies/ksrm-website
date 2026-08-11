@@ -4,6 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 export interface PermissionSubjectAdmin {
   id: number;
   isSuperAdmin: boolean;
+  /** Set for a department-scoped account; the dashboard narrows its counts to it. */
+  departmentId?: number | null;
 }
 
 /**
