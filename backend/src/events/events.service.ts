@@ -10,6 +10,7 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ReorderEventsDto } from './dto/reorder-events.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { assertMayReorderAll } from '../auth/reorder-ownership.util';
 import { MediaLinkService } from '../media/media-link.service';
 
 const MEDIA_MODULE = 'events';
@@ -201,11 +202,16 @@ export class EventsService {
     const ids = dto.items.map((i) => i.id);
     const existingRows = await this.prisma.event.findMany({
       where: { id: { in: ids }, deletedAt: null },
-      select: { id: true },
+      select: { id: true, departmentId: true },
     });
     if (existingRows.length !== ids.length) {
       throw new BadRequestException('One or more events do not exist');
     }
+
+    // Same reasoning as downloads: the guards authorize one target, this
+    // payload carries many. Event has no pageSection, so only the department
+    // rule can bite here.
+    assertMayReorderAll(existingRows, admin);
 
     await this.prisma.$transaction(
       dto.items.map((item) =>

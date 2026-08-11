@@ -6,4 +6,11 @@ export interface RequestAdmin {
   email: string;
   isSuperAdmin?: boolean;
   departmentId?: number | null;
+  /**
+   * Role-resolved permission keys, as attached by JwtStrategy. Needed by the
+   * bulk-reorder ownership check, which cannot use PageSectionOwnershipGuard:
+   * that guard authorizes one target per request, and a reorder payload
+   * carries many.
+   */
+  permissions?: string[];
 }

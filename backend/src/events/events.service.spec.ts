@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
@@ -225,6 +226,61 @@ describe('EventsService', () => {
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'REORDER', requestId: 'req-3' }),
       );
+    });
+
+    // Reorder takes an arbitrary id list, which no ownership guard can cover -
+    // they authorize one target per request. Checked in the service instead.
+    const payload = { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 1 }] };
+    const deptAdmin = { ...admin, isSuperAdmin: false, departmentId: 5 };
+
+    it('lets a department admin reorder events that are all their own', async () => {
+      prisma.event.findMany
+        .mockResolvedValueOnce([
+          { id: 1, departmentId: 5 },
+          { id: 2, departmentId: 5 },
+        ])
+        .mockResolvedValueOnce([{ id: 1 }, { id: 2 }]);
+      prisma.$transaction.mockResolvedValue(undefined);
+
+      await expect(service.reorder(payload, deptAdmin, undefined)).resolves.toBeDefined();
+      expect(prisma.$transaction).toHaveBeenCalled();
+    });
+
+    it('403s a department admin reordering another department\'s events', async () => {
+      prisma.event.findMany.mockResolvedValueOnce([
+        { id: 1, departmentId: 5 },
+        { id: 2, departmentId: 6 },
+      ]);
+      await expect(
+        service.reorder(payload, deptAdmin, undefined),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('403s a department admin reordering unowned/global events', async () => {
+      prisma.event.findMany.mockResolvedValueOnce([
+        { id: 1, departmentId: null },
+        { id: 2, departmentId: null },
+      ]);
+      await expect(
+        service.reorder(payload, deptAdmin, undefined),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('never restricts a super admin', async () => {
+      prisma.event.findMany
+        .mockResolvedValueOnce([
+          { id: 1, departmentId: 6 },
+          { id: 2, departmentId: null },
+        ])
+        .mockResolvedValueOnce([{ id: 1 }, { id: 2 }]);
+      prisma.$transaction.mockResolvedValue(undefined);
+
+      await expect(
+        service.reorder(payload, { ...admin, isSuperAdmin: true, departmentId: 5 }, undefined),
+      ).resolves.toBeDefined();
+      expect(prisma.$transaction).toHaveBeenCalled();
     });
   });
 });

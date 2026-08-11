@@ -486,7 +486,10 @@ async function seedSiteSettings() {
 
 async function seedPermissions() {
   const permissionsByKey = new Map<string, { id: number }>();
-  for (const permission of PERMISSIONS) {
+  // PERMISSIONS_WITH_SECTIONS, not PERMISSIONS: the pages.* keys have to
+  // exist as Permission rows before seedRoles() looks them up, or every role
+  // carrying one aborts the seed with "references unknown permission key".
+  for (const permission of PERMISSIONS_WITH_SECTIONS) {
     const row = await prisma.permission.upsert({
       where: { key: permission.key },
       update: { description: permission.description },
@@ -654,7 +657,7 @@ async function main() {
   const permissionsByKey = await seedPermissions();
   await seedRoles(permissionsByKey);
   console.log(
-    `✅ Seeded ${PERMISSIONS.length} permissions and ${ROLES.length} system roles`,
+    `✅ Seeded ${PERMISSIONS_WITH_SECTIONS.length} permissions and ${ROLES.length} system roles`,
   );
 
   console.log('\n🌱 Seeding Site Settings (global configuration)...');

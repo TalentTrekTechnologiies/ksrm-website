@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { DownloadsService } from './downloads.service';
@@ -169,6 +170,80 @@ describe('DownloadsService', () => {
         ),
       ).rejects.toBeInstanceOf(BadRequestException);
       expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    // Reorder takes an arbitrary list of ids, so neither ownership guard can
+    // cover it - both authorize a single target per request. Without the
+    // service-level check these were the one write path a scoped admin could
+    // use to touch another department's or another page's records.
+    const payload = { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 1 }] };
+    const deptAdmin = { ...admin, isSuperAdmin: false, departmentId: 5 };
+    const examAdmin = {
+      ...admin,
+      isSuperAdmin: false,
+      permissions: ['downloads.update', 'pages.examinations'],
+    };
+
+    it('lets a department admin reorder rows that are all their own', async () => {
+      prisma.download.findMany.mockResolvedValue([
+        { id: 1, departmentId: 5, pageSection: null },
+        { id: 2, departmentId: 5, pageSection: null },
+      ]);
+      await expect(service.reorder(payload, deptAdmin, undefined)).resolves.toBeDefined();
+      expect(prisma.$transaction).toHaveBeenCalled();
+    });
+
+    it('403s a department admin reordering another department\'s rows', async () => {
+      prisma.download.findMany.mockResolvedValue([
+        { id: 1, departmentId: 5, pageSection: null },
+        { id: 2, departmentId: 6, pageSection: null },
+      ]);
+      await expect(
+        service.reorder(payload, deptAdmin, undefined),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('403s a department admin reordering unowned/global rows', async () => {
+      prisma.download.findMany.mockResolvedValue([
+        { id: 1, departmentId: null, pageSection: 'examinations.results' },
+        { id: 2, departmentId: null, pageSection: 'examinations.results' },
+      ]);
+      await expect(
+        service.reorder(payload, deptAdmin, undefined),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('lets a page-scoped admin reorder rows on their own page', async () => {
+      prisma.download.findMany.mockResolvedValue([
+        { id: 1, departmentId: null, pageSection: 'examinations' },
+        { id: 2, departmentId: null, pageSection: 'examinations.timetables' },
+      ]);
+      await expect(service.reorder(payload, examAdmin, undefined)).resolves.toBeDefined();
+      expect(prisma.$transaction).toHaveBeenCalled();
+    });
+
+    it('403s a page-scoped admin when one row belongs to another page', async () => {
+      prisma.download.findMany.mockResolvedValue([
+        { id: 1, departmentId: null, pageSection: 'examinations' },
+        { id: 2, departmentId: null, pageSection: 'naac' },
+      ]);
+      await expect(
+        service.reorder(payload, examAdmin, undefined),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('never restricts a super admin', async () => {
+      prisma.download.findMany.mockResolvedValue([
+        { id: 1, departmentId: 6, pageSection: 'naac' },
+        { id: 2, departmentId: null, pageSection: null },
+      ]);
+      await expect(
+        service.reorder(payload, { ...admin, isSuperAdmin: true, departmentId: 5 }, undefined),
+      ).resolves.toBeDefined();
+      expect(prisma.$transaction).toHaveBeenCalled();
     });
   });
 });

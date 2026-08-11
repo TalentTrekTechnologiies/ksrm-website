@@ -12,6 +12,7 @@ import { ReorderDownloadsDto } from './dto/reorder-downloads.dto';
 import { BulkCreateDownloadsDto } from './dto/bulk-create-downloads.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { assertMayReorderAll } from '../auth/reorder-ownership.util';
 import { MediaLinkService } from '../media/media-link.service';
 
 const MEDIA_MODULE = 'downloads';
@@ -290,11 +291,16 @@ export class DownloadsService {
     const ids = dto.items.map((i) => i.id);
     const existingRows = await this.prisma.download.findMany({
       where: { id: { in: ids }, deletedAt: null },
-      select: { id: true },
+      select: { id: true, departmentId: true, pageSection: true },
     });
     if (existingRows.length !== ids.length) {
       throw new BadRequestException('One or more downloads do not exist');
     }
+
+    // Neither ownership guard can cover this endpoint - both authorize one
+    // target per request, and this payload carries many - so the same rules
+    // are applied here over every row.
+    assertMayReorderAll(existingRows, admin);
 
     await this.prisma.$transaction(
       dto.items.map((item) =>
