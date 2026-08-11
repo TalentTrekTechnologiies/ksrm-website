@@ -570,7 +570,12 @@ export default function AdminSidebar({
           it is always shown when configured rather than gated on a widget that
           will never be reported.
       */}
-      {examAdminUrl && (
+      {/* Hidden from department-scoped admins: the online exam system is a
+          college-wide application, not part of any one department's remit, and
+          a Civil admin clicking through to its login screen has nothing to do
+          there. "Always shown when configured" above was written before
+          department-scoped accounts existed. */}
+      {examAdminUrl && !isDeptScoped && (
         <>
           <div className={`my-2 border-t border-white/10 ${collapsed ? "mx-1" : ""}`} />
           <ExternalNavLink

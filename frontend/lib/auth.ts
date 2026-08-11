@@ -84,5 +84,14 @@ export function hasPermission(admin: StoredAdmin | null, permission: string): bo
 }
 
 export function isDepartmentScopedAdmin(admin: StoredAdmin | null): boolean {
-  return !!admin && !admin.isSuperAdmin && admin.departmentId !== null;
+  // `!= null`, deliberately loose: it must catch undefined as well as null.
+  //
+  // A strict `!== null` treated a MISSING departmentId as "scoped", because
+  // `undefined !== null` is true. Any session stored before the login response
+  // carried departmentId - or any session against a backend that predates it -
+  // then looked department-scoped with an undefined department, so the sidebar
+  // filtered its department tree on `d.id === undefined`, matched nothing, and
+  // hid every flat nav item. The admin was left with an empty sidebar and no
+  // way in.
+  return !!admin && !admin.isSuperAdmin && admin.departmentId != null;
 }
