@@ -70,6 +70,7 @@ ksrm-site-updated.zip
 !fix-media-urls.sql
 !deploy-committees.sql
 !import-library-exam-staff.sql
+!import-nss-activities.sql
 
 # Media Library uploads - user-uploaded files, served from the backend's own
 # storage root. Reproducible from the running instance, not source.
