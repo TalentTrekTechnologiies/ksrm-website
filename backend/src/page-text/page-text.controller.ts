@@ -15,6 +15,8 @@ import { UpsertPageTextDto } from './dto/upsert-page-text.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
+import { PageSectionOwnershipGuard } from '../auth/page-section-ownership.guard';
+import { PageSectionScoped } from '../auth/page-section.decorator';
 
 /**
  * Page text overrides. Gated on the `downloads.*` permissions rather than a
@@ -42,16 +44,18 @@ export class PageTextController {
 
   /** Saves a page's edits in one request. */
   @Put()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, PageSectionOwnershipGuard)
   @RequirePermission('downloads.update')
+  @PageSectionScoped({ source: 'bodyItems', field: 'items' })
   upsert(@Body() dto: UpsertPageTextDto, @Request() req) {
     return this.service.upsert(dto, req.user, req.requestId);
   }
 
   /** Removes one override, restoring the page's built-in wording. */
   @Delete(':key')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, PageSectionOwnershipGuard)
   @RequirePermission('downloads.update')
+  @PageSectionScoped({ source: 'lookupKey', model: 'pageText' })
   reset(@Param('key') key: string, @Request() req) {
     return this.service.reset(key, req.user, req.requestId);
   }

@@ -8,7 +8,7 @@ import AdminSidebar from "@/components/admin/AdminSidebar"
 import AdminNavbar from "@/components/admin/AdminNavbar"
 import CmsConfirmProvider from "@/components/admin/cms/CmsConfirmProvider"
 import CmsIntroTour from "@/components/admin/cms/CmsIntroTour"
-import { isLoggedIn } from "@/lib/auth"
+import { isLoggedIn, updateStoredAdmin } from "@/lib/auth"
 import { getProfile } from "@/lib/auth-api"
 import { SESSION_EXPIRED_EVENT } from "@/lib/api-client"
 
@@ -72,10 +72,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // page shells.)
   useEffect(() => {
     if (skipChrome || !authChecked) return
-    getProfile().catch(() => {
-      // 401 is handled via the event; transient network errors shouldn't
-      // log a working admin out.
-    })
+    getProfile()
+      .then(updateStoredAdmin)
+      .catch(() => {
+        // 401 is handled via the event; transient network errors shouldn't
+        // log a working admin out.
+      })
   }, [skipChrome, authChecked])
 
   // Sign out an unattended session. Wired here because this layout is the one

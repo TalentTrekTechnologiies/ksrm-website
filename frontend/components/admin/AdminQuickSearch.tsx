@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Search, CornerDownLeft } from "lucide-react"
-import { getStoredAdmin, hasPermission } from "@/lib/auth"
-import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
+import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin } from "@/lib/auth"
+import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
 
 /**
  * The navbar search, made real: a quick-jump. Type what you want to do -
@@ -138,19 +138,30 @@ export default function AdminQuickSearch() {
   const [departments, setDepartments] = useState<Department[] | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const admin = getStoredAdmin()
+  const isDeptScoped = isDepartmentScopedAdmin(admin)
 
   // Lazy department fetch, once, on first open - and only for admins who can
   // see departments at all.
   useEffect(() => {
     if (!open || departments !== null) return
-    if (!hasPermission(getStoredAdmin(), "departments.view")) {
+    if (!hasPermission(admin, "departments.view")) {
       setDepartments([])
       return
     }
     getDepartmentsAdmin()
-      .then((all) => setDepartments(all.filter((d) => d.isActive)))
+      .then((all) =>
+        setDepartments(
+          // Same rule as the sidebar: a scoped admin always reaches their own
+          // department, academic or not.
+          all.filter((d) =>
+            d.isActive &&
+            (isDeptScoped ? d.id === admin?.departmentId : isAcademicDepartment(d)),
+          ),
+        ),
+      )
       .catch(() => setDepartments([]))
-  }, [open, departments])
+  }, [open, departments, admin, isDeptScoped])
 
   useEffect(() => {
     function onOutside(e: MouseEvent) {
@@ -168,8 +179,11 @@ export default function AdminQuickSearch() {
         keywords: `${(d.shortName ?? "").toLowerCase()} ${d.name.toLowerCase()} ${tab.keywords}`,
       })),
     )
-    return [...STATIC_TARGETS, ...dyn]
-  }, [departments])
+    const staticTargets = isDeptScoped
+      ? STATIC_TARGETS.filter((t) => t.href === "/admin/dashboard" || t.href === "/admin/departments")
+      : STATIC_TARGETS
+    return [...staticTargets, ...dyn]
+  }, [departments, isDeptScoped])
 
   const results = useMemo(() => {
     const tokens = query.toLowerCase().split(/\s+/).filter(Boolean)

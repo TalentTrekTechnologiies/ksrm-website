@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { resolveFileUrl } from "@/lib/api-base";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
@@ -286,11 +286,26 @@ export default function PageResources({
    * where filenames/titles usually say "calendar", "timetable", or "result".
    */
   fallbackSections?: string[]
-  fallbackTitlePattern?: RegExp
+  /**
+   * Case-insensitive regex SOURCE, as a string (e.g. "time\\s*table|timetable")
+   * - not a RegExp. This is a client component, and the Examinations page that
+   * passes this is a server component: a RegExp is not one of the plain types
+   * React can serialize across that boundary, so passing one fails the
+   * production build ("Only plain objects... can be passed to Client
+   * Components"). The pattern is compiled below instead.
+   */
+  fallbackTitlePattern?: string
 }) {
+  // Recompiled only when the source string changes, so the identity stays
+  // stable for the fetch dependency below.
+  const titlePattern = useMemo(
+    () => (fallbackTitlePattern ? new RegExp(fallbackTitlePattern, "i") : undefined),
+    [fallbackTitlePattern],
+  )
+
   const data = useLiveData<SectionData>(
-    () => fetchSection(section, docsCategory, { sections: fallbackSections, titlePattern: fallbackTitlePattern }),
-    [section, docsCategory, fallbackSections, fallbackTitlePattern],
+    () => fetchSection(section, docsCategory, { sections: fallbackSections, titlePattern }),
+    [section, docsCategory, fallbackSections, titlePattern],
   )
 
   if (!data) return null

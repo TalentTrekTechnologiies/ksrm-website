@@ -22,6 +22,8 @@ import { ReorderCommitteesDto } from './dto/reorder-committees.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
+import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
+import { DepartmentScoped } from '../auth/department-scope.decorator';
 
 @ApiTags('committees')
 @Controller('committees')
@@ -52,8 +54,9 @@ export class CommitteesController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('committees.create')
+  @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreateCommitteeDto, @Request() req) {
     return this.committeesService.create(dto, req.user, req.requestId);
   }
@@ -79,22 +82,25 @@ export class CommitteesController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('committees.update')
+  @DepartmentScoped({ source: 'lookup', model: 'committee' })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCommitteeDto, @Request() req) {
     return this.committeesService.update(id, dto, req.user, req.requestId);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('committees.delete')
+  @DepartmentScoped({ source: 'lookup', model: 'committee' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.committeesService.softDelete(id, req.user, req.requestId);
   }
 
   @Post(':id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('committees.restore')
+  @DepartmentScoped({ source: 'lookup', model: 'committee' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.committeesService.restore(id, req.user, req.requestId);
   }

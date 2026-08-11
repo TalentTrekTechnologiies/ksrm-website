@@ -93,10 +93,45 @@ describe('DepartmentOwnershipGuard', () => {
     await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
   });
 
-  it('(source: lookup) allows editing an unassigned (departmentId: null) record rather than blocking it', async () => {
+  // Reversed deliberately. An unassigned row is college-wide content (exam
+  // documents, the general gallery), which belongs to a Super Admin or to a
+  // college-wide role - not to whichever department admin reaches it first.
+  it('(source: lookup) 403s a scoped admin on an unassigned (departmentId: null) record', async () => {
     reflector.get.mockReturnValue({ source: 'lookup', model: 'faculty' });
     prisma.faculty.findUnique.mockResolvedValue({ departmentId: null });
     const ctx = makeContext({ isSuperAdmin: false, departmentId: 5 }, {}, { id: '42' });
+    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('still lets an unscoped (departmentId: null) admin manage unassigned records', async () => {
+    reflector.get.mockReturnValue({ source: 'lookup', model: 'faculty' });
+    prisma.faculty.findUnique.mockResolvedValue({ departmentId: null });
+    const ctx = makeContext({ isSuperAdmin: false, departmentId: null }, {}, { id: '42' });
+    await expect(guard.canActivate(ctx)).resolves.toBe(true);
+  });
+
+  // The escape the guard previously missed: it authorized against the stored
+  // row only, so a body carrying a different departmentId moved the record
+  // out of the admin's own department.
+  it('(source: lookup) 403s an update that reassigns its own record to another department', async () => {
+    reflector.get.mockReturnValue({ source: 'lookup', model: 'faculty' });
+    prisma.faculty.findUnique.mockResolvedValue({ departmentId: 5 });
+    const ctx = makeContext(
+      { isSuperAdmin: false, departmentId: 5 },
+      { departmentId: 6 },
+      { id: '42' },
+    );
+    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('(source: lookup) allows an update that repeats its own departmentId unchanged', async () => {
+    reflector.get.mockReturnValue({ source: 'lookup', model: 'faculty' });
+    prisma.faculty.findUnique.mockResolvedValue({ departmentId: 5 });
+    const ctx = makeContext(
+      { isSuperAdmin: false, departmentId: 5 },
+      { departmentId: 5 },
+      { id: '42' },
+    );
     await expect(guard.canActivate(ctx)).resolves.toBe(true);
   });
 });

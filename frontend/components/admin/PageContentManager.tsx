@@ -31,7 +31,7 @@ import {
   deleteGalleryImage,
   GalleryImage,
 } from "@/lib/gallery-api"
-import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
+import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
 
 /**
  * "Pick a place → manage everything on it." One screen listing every public
@@ -100,7 +100,7 @@ function PageContentInner() {
 
   useEffect(() => {
     getDepartmentsAdmin()
-      .then((d) => setDepartments(d.filter((x) => x.isActive)))
+      .then((d) => setDepartments(d.filter((x) => x.isActive && isAcademicDepartment(x))))
       .catch(() => setDepartments([]))
   }, [])
 

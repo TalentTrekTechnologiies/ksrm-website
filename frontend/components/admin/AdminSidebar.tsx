@@ -16,10 +16,10 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
-import { getStoredAdmin, hasPermission } from "@/lib/auth"
+import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin } from "@/lib/auth"
 import { PAGE_SECTIONS } from "@/lib/downloads-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
-import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
+import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
 import { Building2 } from "lucide-react"
 
 /**
@@ -212,6 +212,7 @@ export default function AdminSidebar({
   const pathname = useRoutePath()
   const [visibleKeys, setVisibleKeys] = useState<Set<string> | null>(null)
   const admin = getStoredAdmin()
+  const isDeptScoped = isDepartmentScopedAdmin(admin)
   const isOnHomepageSection = pathname?.startsWith("/admin/homepage") ?? false
   const [homepageExpanded, setHomepageExpanded] = useState(isOnHomepageSection)
   const isOnDepartmentsSection =
@@ -258,7 +259,22 @@ export default function AdminSidebar({
     let cancelled = false
     getDepartmentsAdmin()
       .then((all) => {
-        if (!cancelled) setDepartments(all.filter((d) => d.isActive).sort((a, b) => a.name.localeCompare(b.name)))
+        if (!cancelled) {
+          setDepartments(
+            all
+              // A department-scoped admin sees exactly their own department,
+              // even when it is one of the non-academic offices (Central
+              // Library, Examination Section). Filtering on
+              // isAcademicDepartment first would strip their own department
+              // out and leave them staring at an empty Departments tree with
+              // no way to reach the workspace they were created to manage.
+              .filter((d) =>
+                d.isActive &&
+                (isDeptScoped ? d.id === admin?.departmentId : isAcademicDepartment(d)),
+              )
+              .sort((a, b) => a.name.localeCompare(b.name)),
+          )
+        }
       })
       .catch(() => {
         if (!cancelled) setDepartments([])
@@ -267,7 +283,7 @@ export default function AdminSidebar({
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [admin?.departmentId, isDeptScoped])
 
   return (
     <nav
@@ -304,7 +320,7 @@ export default function AdminSidebar({
         />
       </div>
 
-      {hasPermission(admin, "homepage.view") && (
+      {hasPermission(admin, "homepage.view") && !isDeptScoped && (
         <>
           {collapsed ? (
             <div onClick={onNavigate}>
@@ -362,7 +378,11 @@ export default function AdminSidebar({
           {collapsed ? (
             <div onClick={onNavigate}>
               <NavLink
-                href="/admin/departments"
+                href={
+                  isDeptScoped && admin?.departmentId
+                    ? `/admin/departments/workspace?id=${admin.departmentId}&tab=profile`
+                    : "/admin/departments"
+                }
                 label="Departments"
                 icon={Building2}
                 active={isOnDepartmentsSection}
@@ -418,32 +438,34 @@ export default function AdminSidebar({
                           </Link>
                         )
                       })}
-                      <div onClick={onNavigate} className="mt-1 border-t border-white/10 pt-1">
-                        <Link
-                          href="/admin/departments"
-                          className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 hover:text-white"
-                        >
-                          Manage Departments
-                        </Link>
-                        <Link
-                          href="/admin/faculty"
-                          className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
-                        >
-                          All Faculty (unassigned)
-                        </Link>
-                        <Link
-                          href="/admin/gallery"
-                          className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
-                        >
-                          All Gallery (unassigned)
-                        </Link>
-                        <Link
-                          href="/admin/downloads"
-                          className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
-                        >
-                          All Documents (unassigned)
-                        </Link>
-                      </div>
+                      {!isDeptScoped && (
+                        <div onClick={onNavigate} className="mt-1 border-t border-white/10 pt-1">
+                          <Link
+                            href="/admin/departments"
+                            className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 hover:text-white"
+                          >
+                            Manage Departments
+                          </Link>
+                          <Link
+                            href="/admin/faculty"
+                            className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
+                          >
+                            All Faculty (unassigned)
+                          </Link>
+                          <Link
+                            href="/admin/gallery"
+                            className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
+                          >
+                            All Gallery (unassigned)
+                          </Link>
+                          <Link
+                            href="/admin/downloads"
+                            className="block rounded-lg px-3 py-2 text-xs text-slate-500 hover:text-white"
+                          >
+                            All Documents (unassigned)
+                          </Link>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
@@ -457,7 +479,7 @@ export default function AdminSidebar({
           NAAC, ...), mirroring the Departments dropdown above. Picking one
           opens that page's existing uploads plus its add document/image/video
           options. */}
-      {hasPermission(admin, "downloads.view") && (
+      {hasPermission(admin, "downloads.view") && !isDeptScoped && (
         collapsed ? (
           <div onClick={onNavigate}>
             <NavLink
@@ -527,7 +549,7 @@ export default function AdminSidebar({
         </div>
       ) : (
         <div onClick={onNavigate} className="contents">
-          {NAV_ITEMS.filter((item) => visibleKeys.has(item.widgetKey)).map((item) => (
+          {NAV_ITEMS.filter((item) => visibleKeys.has(item.widgetKey) && !isDeptScoped).map((item) => (
             <NavLink
               key={item.href}
               href={item.href}

@@ -22,10 +22,14 @@ const quickLinks = [
 ];
 
 const EXAM_FALLBACK_SECTIONS = ["examinations"];
-const CALENDAR_TITLE = /calendar/i;
-const TIMETABLE_TITLE = /time\s*table|timetable/i;
-const RESULT_TITLE = /result/i;
-const QUESTION_PAPER_TITLE = /question\s*paper|qp\b/i;
+// Regex SOURCES, not RegExp objects: this is a server component and
+// PageResources is a client one, so a compiled RegExp cannot cross that
+// boundary - it fails the production build rather than degrading at runtime.
+// PageResources compiles these case-insensitively.
+const CALENDAR_TITLE = "calendar";
+const TIMETABLE_TITLE = "time\\s*table|timetable";
+const RESULT_TITLE = "result";
+const QUESTION_PAPER_TITLE = "question\\s*paper|qp\\b";
 
 export default function ExaminationsPage() {
   return (

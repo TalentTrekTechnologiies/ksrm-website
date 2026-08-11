@@ -28,6 +28,7 @@ import {
   restoreDepartment,
   Department,
 } from "@/lib/departments-api"
+import { getStoredAdmin, isDepartmentScopedAdmin } from "@/lib/auth"
 
 interface FormState {
   slug: string
@@ -67,6 +68,8 @@ function DepartmentsManagerInner() {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState("")
+  const admin = getStoredAdmin()
+  const isDeptScoped = isDepartmentScopedAdmin(admin)
 
   async function refresh() {
     try {
@@ -83,7 +86,7 @@ function DepartmentsManagerInner() {
       setError(null)
       try {
         const all = await getDepartmentsAdmin(true)
-        if (!cancelled) setItems(all)
+        if (!cancelled) setItems(isDeptScoped ? all.filter((d) => d.id === admin?.departmentId) : all)
       } catch (err) {
         if (!cancelled) setError(err instanceof ApiError ? err.message : "Failed to load departments")
       } finally {
@@ -94,7 +97,7 @@ function DepartmentsManagerInner() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [admin?.departmentId, isDeptScoped])
 
   function startCreate() {
     setCreating(true)
@@ -180,9 +183,10 @@ function DepartmentsManagerInner() {
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return items
-    return items.filter((i) => i.name.toLowerCase().includes(q) || i.slug.toLowerCase().includes(q))
-  }, [items, search])
+    const visible = isDeptScoped ? items.filter((i) => i.id === admin?.departmentId) : items
+    if (!q) return visible
+    return visible.filter((i) => i.name.toLowerCase().includes(q) || i.slug.toLowerCase().includes(q))
+  }, [items, search, admin?.departmentId, isDeptScoped])
 
   const columns: ColumnDef<Department>[] = [
     {
@@ -224,12 +228,16 @@ function DepartmentsManagerInner() {
             >
               <LayoutGrid className="h-3.5 w-3.5" /> Manage content
             </Link>
-            <button type="button" onClick={() => startEdit(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">
-              Edit
-            </button>
-            <button type="button" onClick={() => handleDelete(row.original)} className="text-xs font-semibold text-red-600 hover:underline">
-              Delete
-            </button>
+            {!isDeptScoped && (
+              <>
+                <button type="button" onClick={() => startEdit(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">
+                  Edit
+                </button>
+                <button type="button" onClick={() => handleDelete(row.original)} className="text-xs font-semibold text-red-600 hover:underline">
+                  Delete
+                </button>
+              </>
+            )}
           </div>
         ),
     },
@@ -298,6 +306,7 @@ function DepartmentsManagerInner() {
         onSearchChange={setSearch}
         searchPlaceholder="Search departments..."
         filters={
+          !isDeptScoped &&
           <button
             type="button"
             onClick={startCreate}

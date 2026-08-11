@@ -4,4 +4,6 @@ export interface RequestAdmin {
   id: number;
   name: string;
   email: string;
+  isSuperAdmin?: boolean;
+  departmentId?: number | null;
 }

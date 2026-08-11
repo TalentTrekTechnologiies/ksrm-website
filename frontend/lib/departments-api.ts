@@ -55,6 +55,23 @@ export function getDepartmentsPublic(): Promise<Department[]> {
   return apiGet<Department[]>("/departments");
 }
 
+/**
+ * Department rows that are real offices rather than teaching departments, and
+ * so are left out of "pick a department" lists on the academic screens.
+ *
+ * Keyed on slug, which is stable and unique - the previous check tested for a
+ * slug of "library" (the real one is "central-library", so that half never
+ * matched anything) and otherwise relied on the display name being exactly
+ * "Central Library", meaning renaming the department in the CMS would quietly
+ * put it back in the academic lists. It also missed the Examination Section
+ * entirely, which was the bug this helper existed to prevent.
+ */
+const NON_ACADEMIC_DEPARTMENT_SLUGS = new Set(["central-library", "examination-section"]);
+
+export function isAcademicDepartment(department: Department): boolean {
+  return !NON_ACADEMIC_DEPARTMENT_SLUGS.has(department.slug.trim().toLowerCase());
+}
+
 export function getDepartmentsAdmin(includeDeleted = false): Promise<Department[]> {
   const query = includeDeleted ? "?includeDeleted=true" : "";
   return apiGet<Department[]>(`/departments/admin${query}`);

@@ -36,15 +36,15 @@ export class DepartmentsController {
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('departments.view')
-  findAllAdmin(@Query('includeDeleted') includeDeleted?: string) {
-    return this.departmentsService.findAllAdmin(includeDeleted === 'true');
+  findAllAdmin(@Query('includeDeleted') includeDeleted: string | undefined, @Request() req) {
+    return this.departmentsService.findAllAdmin(includeDeleted === 'true', req.user);
   }
 
   @Get('admin/:id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('departments.view')
-  findByIdAdmin(@Param('id', ParseIntPipe) id: number) {
-    return this.departmentsService.findByIdAdmin(id);
+  findByIdAdmin(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.departmentsService.findByIdAdmin(id, req.user);
   }
 
   @Get(':slug')

@@ -33,9 +33,12 @@ export class DepartmentsService {
 
   // includeDeleted surfaces soft-deleted rows too so the admin UI can offer
   // a restore action - excluded by default.
-  async findAllAdmin(includeDeleted = false) {
+  async findAllAdmin(includeDeleted = false, admin?: RequestAdmin) {
     return this.prisma.department.findMany({
-      where: { ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(!includeDeleted && { deletedAt: null }),
+        ...(admin && !admin.isSuperAdmin && admin.departmentId != null && { id: admin.departmentId }),
+      },
       orderBy: { name: 'asc' },
     });
   }
@@ -55,7 +58,10 @@ export class DepartmentsService {
   // Admin single-record fetch by id, regardless of isActive/deletedAt - the
   // Department Workspace UI needs to open an inactive or soft-deleted
   // department's profile tab, unlike findBySlug (public, active-only).
-  async findByIdAdmin(id: number) {
+  async findByIdAdmin(id: number, admin?: RequestAdmin) {
+    if (admin && !admin.isSuperAdmin && admin.departmentId != null && id !== admin.departmentId) {
+      throw new NotFoundException(`Department ${id} not found`);
+    }
     const record = await this.prisma.department.findUnique({ where: { id } });
     if (!record) {
       throw new NotFoundException(`Department ${id} not found`);

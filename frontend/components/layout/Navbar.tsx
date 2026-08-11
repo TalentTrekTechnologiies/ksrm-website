@@ -78,7 +78,7 @@ const navItems: NavItem[] = [
       { label: "Computer Science and Engineering", href: "/departments/cse" },
       { label: "Electrical and Electronics Engineering", href: "/departments/eee" },
       { label: "Electronics and Communication Engineering ", href: "/departments/ece" },
-      { label: "Mechanical Engineering", href: "/departments/mechanical" },
+      { label: "Mechanical Engineering", href: "/departments/mech" },
       { label: "Humanities and Sciences", href: "/departments/hs" },
       { label: "Management Studies (MBA)", href: "/departments/mba" },
     ],
@@ -171,7 +171,7 @@ const navItems: NavItem[] = [
       { label: "  ↳ CSE Student Chapter", href: "/departments/cse#student-chapter" },
       { label: "  ↳ EEE Student Chapter", href: "/departments/eee#student-chapter" },
       { label: "  ↳ ECE Student Chapter", href: "/departments/ece#student-chapter" },
-      { label: "  ↳ Mechanical Student Chapter", href: "/departments/mechanical#student-chapter" },
+      { label: "  ↳ Mechanical Student Chapter", href: "/departments/mech#student-chapter" },
       { label: "  ↳ H&S Student Chapter", href: "/departments/hs#student-chapter" },
       { label: "  ↳ MBA Student Chapter", href: "/departments/mba#student-chapter" },
       // Was here as five hardcoded club names, all linking out to a

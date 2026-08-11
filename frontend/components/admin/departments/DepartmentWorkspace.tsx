@@ -7,6 +7,7 @@ import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsLoadingState from "@/components/admin/cms/CmsLoadingState"
 import { ApiError } from "@/lib/api-client"
 import { getDepartmentAdmin, Department } from "@/lib/departments-api"
+import { getStoredAdmin, isDepartmentScopedAdmin } from "@/lib/auth"
 import ProfileTab from "./ProfileTab"
 import FacultyTab from "./FacultyTab"
 import ProgrammesTab from "./ProgrammesTab"
@@ -52,6 +53,8 @@ function DepartmentWorkspaceInner() {
   const idParam = searchParams.get("id")
   const tab = searchParams.get("tab") ?? "profile"
   const id = idParam ? parseInt(idParam) : NaN
+  const admin = getStoredAdmin()
+  const isDeptScoped = isDepartmentScopedAdmin(admin)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -63,6 +66,10 @@ function DepartmentWorkspaceInner() {
       setLoading(false)
       return
     }
+    if (isDeptScoped && admin?.departmentId && id !== admin.departmentId) {
+      router.replace(`/admin/departments/workspace?id=${admin.departmentId}&tab=${tab}`)
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -72,7 +79,7 @@ function DepartmentWorkspaceInner() {
     } finally {
       setLoading(false)
     }
-  }, [id])
+  }, [admin?.departmentId, id, isDeptScoped, router, tab])
 
   useEffect(() => {
     load()
@@ -102,9 +109,11 @@ function DepartmentWorkspaceInner() {
   return (
     <div className="space-y-6">
       <div>
-        <a href="/admin/departments" className="mb-2 flex w-fit items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-admin-primary">
-          <ArrowLeft className="h-3.5 w-3.5" /> Departments
-        </a>
+        {!isDeptScoped && (
+          <a href="/admin/departments" className="mb-2 flex w-fit items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-admin-primary">
+            <ArrowLeft className="h-3.5 w-3.5" /> Departments
+          </a>
+        )}
         <h1 style={{ fontFamily: "var(--font-admin-heading)" }} className="bg-gradient-to-r from-admin-primary via-admin-primary-light to-slate-700 bg-clip-text text-2xl font-bold text-transparent">
           {department.name}
         </h1>

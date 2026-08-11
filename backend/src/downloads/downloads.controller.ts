@@ -23,6 +23,8 @@ import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
 import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
 import { DepartmentScoped } from '../auth/department-scope.decorator';
+import { PageSectionOwnershipGuard } from '../auth/page-section-ownership.guard';
+import { PageSectionScoped } from '../auth/page-section.decorator';
 
 @ApiTags('downloads')
 @Controller('downloads')
@@ -58,9 +60,15 @@ export class DownloadsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    DepartmentOwnershipGuard,
+    PageSectionOwnershipGuard,
+  )
   @RequirePermission('downloads.create')
   @DepartmentScoped({ source: 'body' })
+  @PageSectionScoped({ source: 'body' })
   create(@Body() dto: CreateDownloadDto, @Request() req) {
     return this.downloadsService.create(dto, req.user, req.requestId);
   }
@@ -68,9 +76,17 @@ export class DownloadsController {
   // Declared before @Patch(':id')/@Post(':id/...') so "bulk" is never parsed
   // as a record id.
   @Post('bulk')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    DepartmentOwnershipGuard,
+    PageSectionOwnershipGuard,
+  )
   @RequirePermission('downloads.create')
   @DepartmentScoped({ source: 'body' })
+  // The batch shares one pageSection across every item, so the body-level
+  // value is authoritative for the whole request.
+  @PageSectionScoped({ source: 'body' })
   bulkCreate(@Body() dto: BulkCreateDownloadsDto, @Request() req) {
     return this.downloadsService.bulkCreate(dto, req.user, req.requestId);
   }
@@ -83,7 +99,13 @@ export class DownloadsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    DepartmentOwnershipGuard,
+    PageSectionOwnershipGuard,
+  )
+  @PageSectionScoped({ source: 'lookup', model: 'download' })
   @RequirePermission('downloads.update')
   @DepartmentScoped({ source: 'lookup', model: 'download' })
   update(
@@ -95,7 +117,13 @@ export class DownloadsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    DepartmentOwnershipGuard,
+    PageSectionOwnershipGuard,
+  )
+  @PageSectionScoped({ source: 'lookup', model: 'download' })
   @RequirePermission('downloads.delete')
   @DepartmentScoped({ source: 'lookup', model: 'download' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
@@ -103,7 +131,13 @@ export class DownloadsController {
   }
 
   @Post(':id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    DepartmentOwnershipGuard,
+    PageSectionOwnershipGuard,
+  )
+  @PageSectionScoped({ source: 'lookup', model: 'download' })
   @RequirePermission('downloads.restore')
   @DepartmentScoped({ source: 'lookup', model: 'download' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {

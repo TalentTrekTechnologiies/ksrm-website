@@ -164,7 +164,44 @@ const PERMISSIONS: { key: string; description: string }[] = Object.entries(
   })),
 );
 
-const ALL_PERMISSION_KEYS = PERMISSIONS.map((p) => p.key);
+// Page ownership: a role owns the pages that belong to it, rather than every
+// row of a module site-wide. Four models already carry the same dotted
+// `pageSection` string - GalleryImage, Download, PageTable and PageText -
+// which together are every piece of page-driven content in the CMS. Its root
+// ("examinations.timetables" -> "examinations") IS the grouping key, so page
+// ownership needs no new column and no new table: it is exactly the
+// `pages.<page>` extension DATA_MODEL_DESIGN.md §3.16 promises fits the
+// plain-String Permission.key column with no migration.
+//
+// Holding ANY pages.* key makes an admin page-restricted to those roots
+// across all four models (enforced by PageSectionOwnershipGuard). Holding
+// none leaves them unrestricted, so a Super Admin and the college-wide roles
+// are unaffected. This is the module-level analogue of what
+// Admin.departmentId + DepartmentOwnershipGuard already do for departments.
+const PAGE_SECTION_ROOTS: Record<string, string> = {
+  examinations: 'Examinations (calendars, notifications, time tables, results)',
+  academics: 'Academics (calendar, courses & intake, fee structure, regulations)',
+  syllabus: 'Syllabus',
+  admissions: 'Admissions',
+  iqac: 'IQAC',
+  naac: 'NAAC',
+  research: 'Research',
+  library: 'Library',
+  placements: 'Placements',
+  alumni: 'Alumni',
+  about: 'About Us',
+  'campus-life': 'Campus Life',
+};
+
+const PERMISSIONS_WITH_SECTIONS = [
+  ...PERMISSIONS,
+  ...Object.entries(PAGE_SECTION_ROOTS).map(([root, label]) => ({
+    key: `pages.${root}`,
+    description: `Limit page content (documents, images, tables, text) to the ${label} page`,
+  })),
+];
+
+const ALL_PERMISSION_KEYS = PERMISSIONS_WITH_SECTIONS.map((p) => p.key);
 
 function permissionsFor(...modules: string[]): string[] {
   return ALL_PERMISSION_KEYS.filter((key) =>
@@ -172,15 +209,25 @@ function permissionsFor(...modules: string[]): string[] {
   );
 }
 
-function viewOnlyPermissions(): string[] {
-  return ALL_PERMISSION_KEYS.filter((key) => key.endsWith('.view'));
+// Like permissionsFor, but for the cases where a role needs only *some* of a
+// module's actions - e.g. a Department Administrator may view and update the
+// department they own, but must never create or delete a department.
+function actionsFor(module: string, ...actions: string[]): string[] {
+  return actions.map((action) => {
+    const key = `${module}.${action}`;
+    if (!ALL_PERMISSION_KEYS.includes(key)) {
+      throw new Error(`Unknown permission key "${key}" in actionsFor()`);
+    }
+    return key;
+  });
 }
 
-// Every content module except admins/roles themselves - i.e. everything a
-// "CMS Administrator" should touch, but not admin-account or RBAC management.
-const CONTENT_MODULES = Object.keys(MODULE_ACTIONS).filter(
-  (m) => m !== 'admins' && m !== 'roles',
-);
+// Uploading is not a module of its own: every image and document in the CMS
+// is created through POST /media/upload, which requires media.create. A role
+// without these three keys cannot add a faculty photo, a gallery image, or a
+// PDF - it can only edit rows that already exist. Every role that creates
+// content therefore needs them.
+const MEDIA_UPLOAD = actionsFor('media', 'view', 'create', 'update');
 
 // Proposed default role -> permission mapping. This is a starting point for
 // review, not a claim that it exactly matches every real-world admin's
@@ -209,85 +256,128 @@ const ROLES: {
     isSystemRole: true,
     permissionKeys: ALL_PERMISSION_KEYS,
   },
-  {
-    name: 'CMS Administrator',
-    description:
-      'Full content management (view/create/update/delete) across every content module, excluding admin-account management and RBAC self-management.',
-    isSystemRole: true,
-    permissionKeys: permissionsFor(...CONTENT_MODULES),
-  },
+  // ONE department role, not one per department. Which department an admin
+  // may touch is data (Admin.departmentId), never a separate role - so the
+  // same role serves all eleven Department rows: the nine academic
+  // departments plus Examination Section and Central Library. This is why
+  // there is no separate "Examination Cell" or "Librarian" role: the exam
+  // officer is this role with departmentId = examination-section, and every
+  // module below is then narrowed to that department by
+  // DepartmentOwnershipGuard. Per DATA_MODEL_DESIGN.md §14.1, nothing
+  // anywhere branches on this role's *name* - the guard reads
+  // Admin.departmentId and the permission keys below, nothing else.
+  //
+  // The module list is derived from the Department Workspace's own tab list
+  // (frontend DepartmentWorkspace.tsx TABS), so every tab an admin can see
+  // is a tab they can actually use - the previous seeding predated that
+  // screen and left seven of its sixteen tabs unreachable.
   {
     name: 'Department Administrator',
     description:
-      'Full department-content and faculty management (profile, faculty, labs, learning outcomes, programmes, highlights/achievements, research, contact information, and display settings), typically scoped to their own department via Admin.departmentId (scoping enforced in application code, not by this role alone).',
+      "Manages one department's entire workspace - profile, faculty, programmes, labs, learning outcomes, highlights, research, gallery, events, documents, committees (Student Chapter / Board of Studies), contact information, exam notifications and display settings. Which department is set per admin account via Admin.departmentId; DepartmentOwnershipGuard then restricts every module below to that department's own records. Cannot create or delete departments, and cannot touch college-wide content.",
     isSystemRole: true,
-    permissionKeys: permissionsFor(
-      'departments',
-      'faculty',
-      'labs',
-      'learning_outcomes',
-      'department_programmes',
-      'transport_routes',
-      'department_highlights',
-      'department_display_settings',
-      'research',
-      'contact',
-    ),
+    permissionKeys: [
+      // The department's own profile row: editable, never creatable or
+      // deletable - creating and removing departments stays with a Super
+      // Admin.
+      ...actionsFor('departments', 'view', 'update'),
+      ...permissionsFor(
+        'faculty',
+        'labs',
+        'learning_outcomes',
+        'department_programmes',
+        'department_highlights',
+        'research',
+        'gallery',
+        'events',
+        'downloads',
+        'committees',
+        'contact',
+        'exam_notifications',
+      ),
+      // Toggles only - the catalog is code-defined, so there is nothing to
+      // create or delete here.
+      ...actionsFor('department_display_settings', 'view', 'update'),
+      // The workspace's Videos and Statistics tabs gate on homepage.view.
+      // View only: this must not become a way to edit the public homepage.
+      ...actionsFor('homepage', 'view'),
+      ...MEDIA_UPLOAD,
+    ],
   },
+  // The two college-wide roles below deliberately overlap with the
+  // department role's modules (gallery, events, committees). That is not a
+  // conflict, it is the point: these accounts leave Admin.departmentId null,
+  // so DepartmentOwnershipGuard never narrows them and they see every row,
+  // while a department admin holding the same permission key sees only their
+  // own department's. Separating *what* (permissions) from *where*
+  // (departmentId) is what keeps this at one department role instead of one
+  // per department.
   {
-    name: 'Department Editor',
+    name: 'Gallery Manager',
     description:
-      'Edits department profile content (about/vision/labs/outcomes/programmes/highlights/research/display settings) but not the faculty roster or the contact office directory.',
+      'Manages the photo and video gallery across the whole college, every department included. Leave Admin.departmentId unset for this role - setting it would restrict the account to a single department\'s gallery.',
     isSystemRole: true,
-    permissionKeys: permissionsFor(
-      'departments',
-      'labs',
-      'learning_outcomes',
-      'department_programmes',
-      'department_highlights',
-      'department_display_settings',
-      'research',
-    ),
+    permissionKeys: [...permissionsFor('gallery'), ...MEDIA_UPLOAD],
   },
   {
-    name: 'Faculty Manager',
+    name: 'Communications',
     description:
-      'Institution-wide faculty directory management, not tied to one department.',
+      'College-wide news, events, committees and the announcement ticker. Does not include the public homepage, page content or site settings, which stay with a Super Admin. Leave Admin.departmentId unset for this role.',
     isSystemRole: true,
-    permissionKeys: permissionsFor('faculty'),
+    permissionKeys: [
+      ...permissionsFor('news', 'events', 'committees', 'announcements'),
+      ...MEDIA_UPLOAD,
+    ],
   },
+  // The two page-owning roles. Both hold the same page-content modules as
+  // each other and differ ONLY by which pages.* key they carry - that key is
+  // what PageSectionOwnershipGuard reads to decide which rows they may touch.
+  // Adding a third page owner (IQAC, NAAC, Admissions...) is one entry here
+  // plus the matching pages.* key above; no new module, guard or column.
   {
-    name: 'Placements Officer',
-    description: 'Manages placement records.',
-    isSystemRole: true,
-    permissionKeys: permissionsFor('placements'),
-  },
-  {
-    name: 'Examination Cell',
-    description: 'Manages exam notifications.',
-    isSystemRole: true,
-    permissionKeys: permissionsFor('exam_notifications'),
-  },
-  {
-    name: 'Content Editor',
+    name: 'Examination',
     description:
-      'General content and communications: news, gallery, announcements, page-driven marketing content (banners, statistics, testimonials, videos, FAQs, leadership profiles), and the public homepage. Does not include the contact office directory, which is kept more restricted.',
+      "Owns the Examinations pages: exam notifications, plus the documents, images, tables and text on Examinations → Academic Calendars / Notifications / Time Tables / Exam Results. The pages.examinations key restricts every one of those modules to that page's own rows - this role cannot touch IQAC, NAAC, Academics or any department's content.",
     isSystemRole: true,
-    permissionKeys: permissionsFor(
-      'news',
-      'gallery',
-      'announcements',
-      'page_content',
-      'homepage',
-    ),
+    permissionKeys: [
+      ...permissionsFor('exam_notifications'),
+      // downloads.* is the permission module behind all four page-content
+      // models - Download, GalleryImage's page uploads, PageTable and
+      // PageText all gate on it - so this one module plus the pages.* key
+      // below is the whole Examinations page. Deliberately NOT page_content,
+      // which is site-wide marketing content (banners, testimonials,
+      // recruiters) and belongs to nobody scoped to a single page.
+      ...permissionsFor('downloads', 'gallery'),
+      'pages.examinations',
+      ...MEDIA_UPLOAD,
+    ],
   },
   {
-    name: 'Viewer',
+    name: 'Academics',
     description:
-      'Read-only across every module, including admin-panel views the public site does not expose (e.g. unpublished/draft content). No create/update/delete permissions, and no admin-account or RBAC visibility beyond what "view" grants elsewhere.',
+      'Owns the Academics pages: the college-wide programme/course list, plus the documents, images, tables and text on Academics → Academic Calendar / Courses & Intake / Fee Structure / Regulations, and the Syllabus page. Restricted to those pages by the pages.academics and pages.syllabus keys.',
     isSystemRole: true,
-    permissionKeys: viewOnlyPermissions(),
+    permissionKeys: [
+      ...permissionsFor('department_programmes'),
+      ...permissionsFor('downloads', 'gallery'),
+      'pages.academics',
+      'pages.syllabus',
+      ...MEDIA_UPLOAD,
+    ],
   },
+];
+
+// Roles seeded by earlier versions of this file that are no longer part of
+// the design. seedRoles() removes them, but refuses to remove one that still
+// has an admin assigned - reassign that admin first, then reseed.
+const RETIRED_ROLE_NAMES = [
+  'CMS Administrator',
+  'Department Editor',
+  'Faculty Manager',
+  'Placements Officer',
+  'Examination Cell',
+  'Content Editor',
+  'Viewer',
 ];
 
 // Site Settings scope, per explicit user direction: "only global
@@ -407,7 +497,16 @@ async function seedPermissions() {
   return permissionsByKey;
 }
 
+// Reconciles each role's grants to exactly what ROLES declares - adding what
+// is missing AND revoking what is no longer listed. An earlier version only
+// ever added, which meant a permission could be taken out of a role here and
+// still be live in the database forever. Every change is printed, because
+// silently widening or narrowing what a live account can do is exactly the
+// kind of change that should never happen unseen.
 async function seedRoles(permissionsByKey: Map<string, { id: number }>) {
+  const idToKey = new Map<number, string>();
+  for (const [key, row] of permissionsByKey) idToKey.set(row.id, key);
+
   for (const role of ROLES) {
     const roleRow = await prisma.role.upsert({
       where: { name: role.name },
@@ -422,6 +521,7 @@ async function seedRoles(permissionsByKey: Map<string, { id: number }>) {
       },
     });
 
+    const desiredIds = new Set<number>();
     for (const key of role.permissionKeys) {
       const permission = permissionsByKey.get(key);
       if (!permission) {
@@ -429,17 +529,71 @@ async function seedRoles(permissionsByKey: Map<string, { id: number }>) {
           `Role "${role.name}" references unknown permission key "${key}"`,
         );
       }
-      await prisma.rolePermission.upsert({
-        where: {
-          roleId_permissionId: {
-            roleId: roleRow.id,
-            permissionId: permission.id,
-          },
-        },
-        update: {},
-        create: { roleId: roleRow.id, permissionId: permission.id },
+      desiredIds.add(permission.id);
+    }
+
+    const existing = await prisma.rolePermission.findMany({
+      where: { roleId: roleRow.id },
+      select: { permissionId: true },
+    });
+    const existingIds = new Set(existing.map((r) => r.permissionId));
+
+    const toGrant = [...desiredIds].filter((id) => !existingIds.has(id));
+    const toRevoke = [...existingIds].filter((id) => !desiredIds.has(id));
+
+    if (toGrant.length) {
+      await prisma.rolePermission.createMany({
+        data: toGrant.map((permissionId) => ({
+          roleId: roleRow.id,
+          permissionId,
+        })),
+        skipDuplicates: true,
       });
     }
+    if (toRevoke.length) {
+      await prisma.rolePermission.deleteMany({
+        where: { roleId: roleRow.id, permissionId: { in: toRevoke } },
+      });
+    }
+
+    const label = (ids: number[]) =>
+      ids
+        .map((id) => idToKey.get(id) ?? `#${id}`)
+        .sort()
+        .join(', ');
+    if (toGrant.length || toRevoke.length) {
+      console.log(`\n  ${role.name}`);
+      if (toGrant.length) console.log(`    + ${label(toGrant)}`);
+      if (toRevoke.length) console.log(`    - ${label(toRevoke)}`);
+    } else {
+      console.log(`\n  ${role.name} (unchanged)`);
+    }
+  }
+
+  await retireObsoleteRoles();
+}
+
+// Removes roles dropped from the design. Deleting a Role cascades to
+// AdminRole, which would silently strip a live admin of all their access, so
+// a role that still has holders is reported and left alone rather than
+// deleted out from under them.
+async function retireObsoleteRoles() {
+  for (const name of RETIRED_ROLE_NAMES) {
+    const role = await prisma.role.findUnique({
+      where: { name },
+      select: { id: true, _count: { select: { admins: true } } },
+    });
+    if (!role) continue;
+
+    if (role._count.admins > 0) {
+      console.log(
+        `\n  ⚠️  "${name}" is retired but still assigned to ${role._count.admins} admin(s) - left in place. Reassign them, then reseed.`,
+      );
+      continue;
+    }
+
+    await prisma.role.delete({ where: { id: role.id } });
+    console.log(`\n  - Retired role "${name}" (no admins assigned)`);
   }
 }
 

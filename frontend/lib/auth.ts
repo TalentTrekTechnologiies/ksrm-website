@@ -18,6 +18,7 @@ export interface StoredAdmin {
   name: string;
   email: string;
   isSuperAdmin: boolean;
+  departmentId: number | null;
   permissions: string[];
 }
 
@@ -58,6 +59,12 @@ export function setStoredAdmin(admin: StoredAdmin, rememberMe: boolean): void {
   store.setItem(ADMIN_KEY, JSON.stringify(admin));
 }
 
+export function updateStoredAdmin(admin: StoredAdmin): void {
+  if (!isBrowser()) return;
+  const store = window.localStorage.getItem(TOKEN_KEY) ? window.localStorage : window.sessionStorage;
+  store.setItem(ADMIN_KEY, JSON.stringify(admin));
+}
+
 export function clearSession(): void {
   if (!isBrowser()) return;
   window.localStorage.removeItem(TOKEN_KEY);
@@ -74,4 +81,8 @@ export function isLoggedIn(): boolean {
 export function hasPermission(admin: StoredAdmin | null, permission: string): boolean {
   if (!admin) return false;
   return admin.isSuperAdmin || admin.permissions.includes(permission);
+}
+
+export function isDepartmentScopedAdmin(admin: StoredAdmin | null): boolean {
+  return !!admin && !admin.isSuperAdmin && admin.departmentId !== null;
 }

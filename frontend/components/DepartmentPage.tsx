@@ -119,6 +119,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
   const [contacts, setContacts] = useState<ContactChannel[]>([]);
   const [statistics, setStatistics] = useState<SiteStatistic[]>([]);
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});
+  // Whether the display-settings request has SETTLED - fulfilled or rejected,
+  // not merely started. Toggleable sections stay unrendered until it has, so a
+  // section switched off in the CMS is never shown first and pulled away.
+  const [visibilityReady, setVisibilityReady] = useState(false);
   const [resolvedDepartmentId, setResolvedDepartmentId] = useState<number | null>(null);
   // Global switch (Site Settings -> Department Pages), not per-department: one
   // flip changes every department. Polled rather than fetched once, so flipping
@@ -295,6 +299,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
       if (contactRes.status === "fulfilled") setContacts(contactRes.value)
       if (statisticsRes.status === "fulfilled") setStatistics(statisticsRes.value)
       if (visibilityRes.status === "fulfilled") setVisibility(visibilityRes.value)
+      // Set even when the request failed: `visibility` then stays empty and
+      // every section falls back to visible, so an API outage degrades to
+      // "shows everything" rather than a blank department page.
+      setVisibilityReady(true)
     }
 
     // Re-run the whole load on an interval, not just once on mount: an edit
@@ -311,7 +319,13 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
 
   // Absence of a key means "visible" by default - matches the backend
   // catalog's default (see DEPARTMENT_DISPLAY_SETTINGS_CATALOG).
-  const isVisible = (key: string) => visibility[key] !== false
+  //
+  // Gated on visibilityReady because this is a static export: the page's HTML
+  // is prerendered with no settings at all, and they only arrive from the API
+  // once JS runs. Without the gate every section rendered immediately and a
+  // section toggled off in the CMS stayed on screen for the whole of that
+  // window - and permanently if the request never completed.
+  const isVisible = (key: string) => visibilityReady && visibility[key] !== false
 
   const scrollTo = (id: string) => {
     setActiveTab(id);

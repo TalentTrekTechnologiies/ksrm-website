@@ -66,6 +66,7 @@ export class AuthService {
         email: admin.email,
         isSuperAdmin: admin.isSuperAdmin,
         permissions,
+        departmentId: admin.departmentId,
       },
     };
   }
@@ -79,6 +80,7 @@ export class AuthService {
         email: true,
         isSuperAdmin: true,
         department: true,
+        departmentId: true,
       },
     });
 

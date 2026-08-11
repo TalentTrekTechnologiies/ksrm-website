@@ -12,7 +12,7 @@ const DEPARTMENTS = [
   { name: "Computer Science and Engineering", href: "/departments/cse" },
   { name: "Electrical and Electronics", href: "/departments/eee" },
   { name: "Electronics and Communication Engineering", href: "/departments/ece" },
-  { name: "Mechanical Engineering", href: "/departments/mechanical" },
+  { name: "Mechanical Engineering", href: "/departments/mech" },
   { name: "Humanities and Sciences", href: "/departments/hs" },
   { name: "Management Studies (MBA)", href: "/departments/mba" },
 ];

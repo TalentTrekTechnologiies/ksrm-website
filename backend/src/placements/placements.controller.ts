@@ -18,6 +18,8 @@ import { UpdatePlacementDto } from './dto/update-placement.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
+import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
+import { DepartmentScoped } from '../auth/department-scope.decorator';
 
 @ApiTags('placements')
 @Controller('placements')
@@ -42,15 +44,17 @@ export class PlacementsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('placements.create')
+  @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreatePlacementDto, @Request() req) {
     return this.placementsService.create(dto, req.user, req.requestId);
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('placements.update')
+  @DepartmentScoped({ source: 'lookup', model: 'placement' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdatePlacementDto,
@@ -60,15 +64,17 @@ export class PlacementsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('placements.delete')
+  @DepartmentScoped({ source: 'lookup', model: 'placement' })
   delete(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.placementsService.softDelete(id, req.user, req.requestId);
   }
 
   @Post(':id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('placements.restore')
+  @DepartmentScoped({ source: 'lookup', model: 'placement' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.placementsService.restore(id, req.user, req.requestId);
   }
