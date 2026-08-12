@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { UpsertPageTextDto } from './dto/upsert-page-text.dto';
 import { RequestAdmin } from '../homepage/types';
@@ -33,8 +34,17 @@ export class PageTextService {
     });
   }
 
-  findAllAdmin(pageSection?: string) {
-    return this.findAllPublic(pageSection);
+  // Its own query rather than delegating to findAllPublic: the public feed
+  // must stay unscoped (it is published site content), while the admin list
+  // has to narrow to what the caller owns.
+  findAllAdmin(pageSection?: string, admin?: RequestAdmin) {
+    return this.prisma.pageText.findMany({
+      where: {
+        ...(pageSection && { pageSection }),
+        ...adminScopeWhere(admin, { page: true }),
+      },
+      orderBy: { key: 'asc' },
+    });
   }
 
   /**

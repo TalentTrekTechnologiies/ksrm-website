@@ -38,8 +38,8 @@ export class PageTextController {
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('downloads.view')
-  findAllAdmin(@Query('pageSection') pageSection?: string) {
-    return this.service.findAllAdmin(pageSection);
+  findAllAdmin(@Query('pageSection') pageSection?: string, @Request() req?) {
+    return this.service.findAllAdmin(pageSection, req?.user);
   }
 
   /** Saves a page's edits in one request. */

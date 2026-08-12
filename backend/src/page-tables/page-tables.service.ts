@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreatePageTableDto } from './dto/create-page-table.dto';
 import { UpdatePageTableDto } from './dto/update-page-table.dto';
@@ -43,9 +44,13 @@ export class PageTablesService {
     });
   }
 
-  findAllAdmin(pageSection?: string) {
+  findAllAdmin(pageSection?: string, admin?: RequestAdmin) {
     return this.prisma.pageTable.findMany({
-      where: { ...(pageSection && { pageSection }) },
+      where: {
+        ...(pageSection && { pageSection }),
+        // Scope from the caller - a page-owning admin lists only their pages.
+        ...adminScopeWhere(admin, { page: true }),
+      },
       orderBy: [{ pageSection: 'asc' }, { sortOrder: 'asc' }],
     });
   }
