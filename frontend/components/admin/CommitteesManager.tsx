@@ -71,6 +71,7 @@ const PLACEMENT_OPTIONS: { value: string; label: string }[] = [
   { value: "CAMPUS_LIFE", label: "Campus Life page" },
   { value: "LIBRARY", label: "Central Library page" },
   { value: "KGCET", label: "KGCET page" },
+  { value: "NSS", label: "Campus Life → NSS page" },
 ]
 
 const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [

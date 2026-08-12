@@ -19,7 +19,7 @@ export type CommitteeType =
  * to have nowhere to go: it saved as OTHER and rendered on no page. null means
  * "not published on a page yet".
  */
-export type CommitteePlacement = "ABOUT" | "IQAC" | "GRIEVANCE" | "ANTI_RAGGING" | "CAMPUS_LIFE" | "LIBRARY" | "KGCET";
+export type CommitteePlacement = "ABOUT" | "IQAC" | "GRIEVANCE" | "ANTI_RAGGING" | "CAMPUS_LIFE" | "LIBRARY" | "KGCET" | "NSS";
 
 export interface CommitteeMember {
   id: number;

@@ -74,6 +74,10 @@ enum CommitteePlacement {
   CAMPUS_LIFE
   LIBRARY
   KGCET
+  /// The NSS programme committee, on the Campus Life -> NSS page. Its own
+  /// placement rather than CAMPUS_LIFE, which is shared across every campus
+  /// life page and would surface NSS staff on unrelated ones.
+  NSS
 }
 
 enum CommitteeType {

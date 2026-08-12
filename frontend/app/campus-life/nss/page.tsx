@@ -1,6 +1,7 @@
 "use client";
 
 import PageResources from "@/components/PageResources";
+import NssCommittee from "@/components/nss/NssCommittee";
 import { resolveFileUrl } from "@/lib/api-base";
 import CmsText from "@/components/CmsText";
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
@@ -186,6 +187,7 @@ export default function NSSPage() {
           </div>
         </div>
       </section>
+      <NssCommittee />
       <PageResources section="nss" />
     </main>
   );
