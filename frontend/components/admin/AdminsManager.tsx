@@ -84,7 +84,13 @@ function AdminsManagerInner() {
   const [page, setPage] = useState(1)
   const pageSize = 15
   const [search, setSearch] = useState("")
-  const [status, setStatus] = useState<AdminStatusFilter>("active")
+  // "all", not "active": disabling an admin under an Active-only default made
+  // the row vanish the instant it was disabled, taking its own Enable button
+  // with it - so a disabled account looked unrecoverable and there was no hint
+  // that a filter was hiding it. Every row carries an Active/Disabled/Deleted
+  // badge already, and the list is small, so showing all of them costs nothing
+  // and keeps Enable/Restore reachable where the change was just made.
+  const [status, setStatus] = useState<AdminStatusFilter>("all")
   const [roles, setRoles] = useState<Role[]>([])
   const [departments, setDepartments] = useState<Department[]>([])
 

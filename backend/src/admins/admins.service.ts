@@ -149,6 +149,51 @@ export class AdminsService {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const { roleIds, password, ...rest } = dto;
 
+    // Soft delete keeps the row, and Admin.email is unique - so a deleted
+    // admin holds their address forever and re-creating them failed with a
+    // bare "already in use" that never said a DELETED account was the blocker.
+    // Recreating the same person is a normal thing to want, so the deleted row
+    // is revived in place rather than orphaned beside a duplicate.
+    const deletedSameEmail = await this.prisma.admin.findFirst({
+      where: { email: dto.email, NOT: { deletedAt: null } },
+      select: { id: true },
+    });
+
+    if (deletedSameEmail) {
+      const revived = await this.prisma.$transaction(async (tx) => {
+        // Roles are REPLACED, never merged: reusing an address must not
+        // silently reinstate whatever the old account could do.
+        await tx.adminRole.deleteMany({ where: { adminId: deletedSameEmail.id } });
+        return tx.admin.update({
+          where: { id: deletedSameEmail.id },
+          data: {
+            ...rest,
+            password: hashedPassword,
+            permissions: [],
+            isActive: true,
+            deletedAt: null,
+            deletedBy: null,
+            ...(roleIds?.length && {
+              roles: { create: roleIds.map((roleId) => ({ roleId })) },
+            }),
+          },
+          select: ADMIN_LIST_SELECT,
+        });
+      });
+
+      await this.auditLog.log({
+        adminId: actor.id,
+        adminName: actor.name,
+        adminEmail: actor.email,
+        action: 'CREATE',
+        module: 'admins',
+        targetId: revived.id,
+        details: { email: dto.email, revivedDeletedAccount: true },
+        requestId,
+      });
+      return revived;
+    }
+
     let created;
     try {
       created = await this.prisma.admin.create({
