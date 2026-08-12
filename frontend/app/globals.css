@@ -103,7 +103,17 @@
 
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;   /* prevent horizontal scroll on all devices */
+    /* Prevent horizontal scroll on all devices.
+       `clip`, not `hidden`: on the root element `overflow: hidden` does not
+       merely clip, it turns html into a SCROLL CONTAINER - and on iOS Safari
+       and several Android webviews that takes vertical scrolling away from the
+       viewport, so pages simply refuse to scroll on a phone while working
+       perfectly on desktop. `clip` clips the overflow without establishing a
+       scroll container, which is exactly what was wanted here.
+       The `hidden` line is kept first as a fallback for browsers predating
+       `clip` (Safari < 16); they ignore the second declaration. */
+    overflow-x: hidden;
+    overflow-x: clip;
     /* Stop mobile browsers (esp. iOS Safari on rotate, and some Android
        webviews) from auto-inflating font sizes - the "text suddenly became
        very big" effect. Fonts then render at the sizes we actually set. */
@@ -117,7 +127,10 @@
     -webkit-font-smoothing: antialiased;
     color: #1F2937;
     background: #F5EFE4;
+    /* Same reasoning as html above - body is the other half of the pair that
+       made the page a nested scroll container on mobile. */
     overflow-x: hidden;
+    overflow-x: clip;
     min-width: 0;
   }
 
