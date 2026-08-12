@@ -188,15 +188,12 @@ const navItems: NavItem[] = [
       { label: "NAAC", href: "/naac" },
     ],
   },
-  {
-    label: "Mandatory Disclosure",
-    href: "/mandatory-disclosure",
-    children: [
-      { label: "Accreditation", href: "/accreditation" },
-      { label: "UGC Autonomous", href: "/mandatory-disclosure#doc-ugc-autonomous" },
-      { label: "Other Statutory Documents", href: "/mandatory-disclosure#doc-other-statutory-documents" },
-    ],
-  },
+  // Gallery and Careers are on the row itself rather than buried in More:
+  // both are destinations a visitor arrives looking for, unlike the statutory
+  // documents they traded places with, which are consulted deliberately by
+  // people who know to go looking. No children - they are single pages.
+  { label: "Gallery", href: "/gallery" },
+  { label: "Careers", href: "/careers" },
   {
     label: "Contact",
     href: "/contact",
@@ -214,10 +211,14 @@ const navItems: NavItem[] = [
       { label: "IIC", href: "/iic" },
       { label: "EDC", href: "/edc" },
       { label: "Alumni", href: "/alumni" },
-      { label: "Gallery", href: "/gallery" },
-      { label: "Careers", href: "/careers" },
       { label: "Degree Verification", href: "/degree-verification" },
       { label: "News & Events", href: "/news" },
+      // Moved off the top row. Its own sub-links are kept rather than dropped,
+      // so nothing that was reachable before became unreachable.
+      { label: "Mandatory Disclosure", href: "/mandatory-disclosure" },
+      { label: "Accreditation", href: "/accreditation" },
+      { label: "UGC Autonomous", href: "/mandatory-disclosure#doc-ugc-autonomous" },
+      { label: "Other Statutory Documents", href: "/mandatory-disclosure#doc-other-statutory-documents" },
     ],
   },
 ]

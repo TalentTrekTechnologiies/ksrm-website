@@ -174,7 +174,7 @@ export default function ExaminationsPage() {
               </div>
               <div style={{ color: "#555", fontSize: 15, lineHeight: 1.7, margin: "12px 0 24px" }}>Pay tuition and exam fee via SBI Collect or download the SBI Challan Form for offline payment.</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <a href="https://www.onlinesbi.sbi/sbicollect/icollecthome.htm" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Pay Online (SBI Collect)</a>
+                <a href="https://sbcollect.sbi.bank.in/sbicollect/icollecthome.htm" target="_blank" rel="noopener noreferrer" style={{ background: "#2B3490", color: "white", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Pay Online (SBI Collect)</a>
                 <a href={mediaFile(204)} style={{ background: "white", color: "#2B3490", border: "2px solid #2B3490", padding: "14px 28px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "block", textAlign: "center" }}>Download Challan Form</a>
               </div>
             </div>
