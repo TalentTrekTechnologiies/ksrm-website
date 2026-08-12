@@ -10,6 +10,7 @@ import { UpdateGalleryImageDto } from './dto/update-gallery-image.dto';
 import { ReorderGalleryImagesDto } from './dto/reorder-gallery-images.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 import { MediaLinkService } from '../media/media-link.service';
 import { MediaType } from '@prisma/client';
 
@@ -60,12 +61,19 @@ export class GalleryService {
   // admin UI can actually offer a restore action - excluded by default
   // since most callers (including reorder's own re-fetch) want the live
   // working set only.
-  async findAllAdmin(includeDeleted = false, departmentId?: number, mediaId?: number) {
+  async findAllAdmin(
+    includeDeleted = false,
+    departmentId?: number,
+    mediaId?: number,
+    admin?: RequestAdmin,
+  ) {
     return this.prisma.galleryImage.findMany({
       where: {
         ...(!includeDeleted && { deletedAt: null }),
         ...(departmentId !== undefined && { departmentId }),
         ...(mediaId !== undefined && { mediaId }),
+        // Scope from the caller, not the query string - see adminScopeWhere.
+        ...adminScopeWhere(admin, { department: true, page: true }),
       },
       orderBy: { sortOrder: 'asc' },
     });

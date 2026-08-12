@@ -47,11 +47,13 @@ export class GalleryController {
     @Query('includeDeleted') includeDeleted?: string,
     @Query('departmentId') departmentId?: string,
     @Query('mediaId') mediaId?: string,
+    @Request() req?,
   ) {
     return this.galleryService.findAllAdmin(
       includeDeleted === 'true',
       departmentId ? parseInt(departmentId) : undefined,
       mediaId ? parseInt(mediaId) : undefined,
+      req?.user,
     );
   }
 

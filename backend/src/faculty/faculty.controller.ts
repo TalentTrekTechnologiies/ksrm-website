@@ -44,10 +44,12 @@ export class FacultyController {
   findAllAdmin(
     @Query('includeDeleted') includeDeleted?: string,
     @Query('departmentId') departmentId?: string,
+    @Request() req?,
   ) {
     return this.facultyService.findAllAdmin(
       includeDeleted === 'true',
       departmentId ? parseInt(departmentId) : undefined,
+      req?.user,
     );
   }
 

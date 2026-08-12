@@ -49,8 +49,8 @@ export class CommitteesController {
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('committees.view')
-  findAllAdmin(@Query('includeDeleted') includeDeleted?: string) {
-    return this.committeesService.findAllAdmin(includeDeleted === 'true');
+  findAllAdmin(@Query('includeDeleted') includeDeleted?: string, @Request() req?) {
+    return this.committeesService.findAllAdmin(includeDeleted === 'true', req?.user);
   }
 
   @Post()

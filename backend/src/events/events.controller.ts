@@ -39,11 +39,13 @@ export class EventsController {
   findAllAdmin(
     @Query('includeDeleted') includeDeleted?: string,
     @Query('departmentId') departmentId?: string,
+    @Request() req?,
   ) {
     const deptId = departmentId ? Number(departmentId) : undefined;
     return this.eventsService.findAllAdmin(
       includeDeleted === 'true',
       Number.isFinite(deptId) ? deptId : undefined,
+      req?.user,
     );
   }
 

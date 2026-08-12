@@ -10,6 +10,7 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ReorderEventsDto } from './dto/reorder-events.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 import { assertMayReorderAll } from '../auth/reorder-ownership.util';
 import { MediaLinkService } from '../media/media-link.service';
 
@@ -45,11 +46,16 @@ export class EventsService {
   // admin UI can actually offer a restore action - excluded by default
   // since most callers (including reorder's own re-fetch) want the live
   // working set only.
-  async findAllAdmin(includeDeleted = false, departmentId?: number) {
+  async findAllAdmin(
+    includeDeleted = false,
+    departmentId?: number,
+    admin?: RequestAdmin,
+  ) {
     return this.prisma.event.findMany({
       where: {
         ...(!includeDeleted && { deletedAt: null }),
         ...(departmentId !== undefined && { departmentId }),
+        ...adminScopeWhere(admin, { department: true }),
       },
       orderBy: { sortOrder: 'asc' },
     });

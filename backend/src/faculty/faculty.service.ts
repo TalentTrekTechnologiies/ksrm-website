@@ -6,6 +6,7 @@ import { ReorderFacultyDto } from './dto/reorder-faculty.dto';
 import { UpdateFacultyDto } from './dto/update-faculty.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 import { MediaLinkService } from '../media/media-link.service';
 
 const MEDIA_MODULE = 'faculty';
@@ -33,11 +34,17 @@ export class FacultyService {
     });
   }
 
-  async findAllAdmin(includeDeleted = false, departmentId?: number) {
+  async findAllAdmin(
+    includeDeleted = false,
+    departmentId?: number,
+    admin?: RequestAdmin,
+  ) {
     return this.prisma.faculty.findMany({
       where: {
         ...(!includeDeleted && { deletedAt: null }),
         ...(departmentId !== undefined && { departmentId }),
+        // Faculty has no pageSection, so only the department rule applies.
+        ...adminScopeWhere(admin, { department: true }),
       },
       // Must match findAll's ordering. This used to sort by name alone, so
       // Move up/down saved a new sortOrder that the admin list then ignored -

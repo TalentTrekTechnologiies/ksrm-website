@@ -8,6 +8,7 @@ import { CreateCommitteeMemberDto } from './dto/create-committee-member.dto';
 import { UpdateCommitteeMemberDto } from './dto/update-committee-member.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 
 @Injectable()
 export class CommitteesService {
@@ -48,9 +49,12 @@ export class CommitteesService {
     });
   }
 
-  async findAllAdmin(includeDeleted = false) {
+  async findAllAdmin(includeDeleted = false, admin?: RequestAdmin) {
     return this.prisma.committee.findMany({
-      where: { ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(!includeDeleted && { deletedAt: null }),
+        ...adminScopeWhere(admin, { department: true }),
+      },
       include: {
         members: { where: { deletedAt: null }, orderBy: CommitteesService.MEMBER_ORDER },
       },
