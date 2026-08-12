@@ -191,6 +191,7 @@ const PAGE_SECTION_ROOTS: Record<string, string> = {
   alumni: 'Alumni',
   about: 'About Us',
   'campus-life': 'Campus Life',
+  kgcet: 'KGCET',
 };
 
 const PERMISSIONS_WITH_SECTIONS = [
@@ -365,7 +366,97 @@ const ROLES: {
       ...MEDIA_UPLOAD,
     ],
   },
+  // Same shape as Examination above - identical modules, different pages.* key.
+  // Library is deliberately a PAGE owner, not a department-scoped admin: the
+  // Central Library department row would only give them the department
+  // workspace, while the public Library page's documents carry
+  // pageSection 'library' with departmentId null - which a department-scoped
+  // admin is denied by design. Owning the page is what the job actually needs.
+  {
+    name: 'Library',
+    description:
+      'Owns the Library page: its documents, images, tables and text. Restricted to that page by the pages.library key.',
+    isSystemRole: true,
+    permissionKeys: [
+      ...permissionsFor('downloads', 'gallery'),
+      'pages.library',
+      ...MEDIA_UPLOAD,
+    ],
+  },
+  {
+    name: 'Placements Officer',
+    description:
+      'Owns placement records, job openings and the applications pipeline, plus the Placements page content. Cannot see admin accounts or any department workspace.',
+    isSystemRole: true,
+    permissionKeys: [
+      ...permissionsFor('placements', 'careers', 'career_applications'),
+      ...permissionsFor('downloads', 'gallery'),
+      'pages.placements',
+      ...MEDIA_UPLOAD,
+    ],
+  },
+  {
+    name: 'Campus Services',
+    description:
+      'Owns the operational, non-teaching content: college bus routes and timings, and KGCET participation figures and highlights, including the KGCET page documents.',
+    isSystemRole: true,
+    permissionKeys: [
+      ...permissionsFor('transport_routes', 'kgcet'),
+      ...permissionsFor('downloads', 'gallery'),
+      'pages.kgcet',
+      ...MEDIA_UPLOAD,
+    ],
+  },
+  // The one role that edits the site's own shell rather than a page of
+  // content. Deliberately still NOT admins.* or roles.*: those two remain
+  // Super Admin only, because granting either lets the holder widen their own
+  // access (DATA_MODEL_DESIGN.md 3.16). That is the single intentional gap
+  // left in "every module has an owner".
+  {
+    name: 'Website Manager',
+    description:
+      'Owns the public homepage, the page-driven marketing content (banners, statistics, testimonials, videos, FAQs, leadership profiles, recruiters), the contact office directory, and global site settings. Does not include admin accounts or role management.',
+    isSystemRole: true,
+    permissionKeys: [
+      ...permissionsFor('homepage', 'page_content', 'site_settings', 'contact'),
+      ...MEDIA_UPLOAD,
+    ],
+  },
 ];
+
+// Every module must be editable by SOME role, not only by a Super Admin -
+// otherwise that part of the site is not really CMS-driven, since the only
+// account that can change it is the one account you cannot safely hand out.
+//
+// admins and roles are the deliberate exceptions: granting either lets the
+// holder widen their own access, so they stay Super Admin only
+// (DATA_MODEL_DESIGN.md 3.16).
+//
+// Checked at seed time rather than left to review, because the gap it catches
+// is invisible - a module with no owner looks exactly like a module that
+// works, right up until someone needs to edit it.
+const MODULES_RESERVED_TO_SUPER_ADMIN = ['admins', 'roles'];
+
+function assertEveryModuleHasAnOwner(): void {
+  const owned = new Set<string>();
+  for (const role of ROLES) {
+    if (role.name === 'Super Admin') continue;
+    for (const key of role.permissionKeys) {
+      owned.add(key.split('.')[0]);
+    }
+  }
+
+  const orphans = Object.keys(MODULE_ACTIONS).filter(
+    (module) =>
+      !owned.has(module) && !MODULES_RESERVED_TO_SUPER_ADMIN.includes(module),
+  );
+
+  if (orphans.length) {
+    throw new Error(
+      `No role can edit these modules, so they are Super-Admin-only and not CMS-driven: ${orphans.join(', ')}. Give them an owner in ROLES, or add them to MODULES_RESERVED_TO_SUPER_ADMIN deliberately.`,
+    );
+  }
+}
 
 // Roles seeded by earlier versions of this file that are no longer part of
 // the design. seedRoles() removes them, but refuses to remove one that still
@@ -374,7 +465,6 @@ const RETIRED_ROLE_NAMES = [
   'CMS Administrator',
   'Department Editor',
   'Faculty Manager',
-  'Placements Officer',
   'Examination Cell',
   'Content Editor',
   'Viewer',
@@ -507,6 +597,10 @@ async function seedPermissions() {
 // silently widening or narrowing what a live account can do is exactly the
 // kind of change that should never happen unseen.
 async function seedRoles(permissionsByKey: Map<string, { id: number }>) {
+  // Fails the seed before writing anything, so an orphaned module is caught
+  // here rather than by an admin who cannot do their job.
+  assertEveryModuleHasAnOwner();
+
   const idToKey = new Map<number, string>();
   for (const [key, row] of permissionsByKey) idToKey.set(row.id, key);
 
