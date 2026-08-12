@@ -13,6 +13,7 @@ import { BulkCreateDownloadsDto } from './dto/bulk-create-downloads.dto';
 import { assertVersionMatch } from '../homepage/optimistic-lock.util';
 import { RequestAdmin } from '../homepage/types';
 import { assertMayReorderAll } from '../auth/reorder-ownership.util';
+import { adminScopeWhere } from '../auth/admin-scope.util';
 import { MediaLinkService } from '../media/media-link.service';
 
 const MEDIA_MODULE = 'downloads';
@@ -61,12 +62,20 @@ export class DownloadsService {
   // includeDeleted surfaces soft-deleted rows too (deletedAt set) so the
   // admin UI can offer a restore action - excluded by default since most
   // callers want the live working set only.
-  async findAllAdmin(includeDeleted = false, departmentId?: number, mediaId?: number) {
+  async findAllAdmin(
+    includeDeleted = false,
+    departmentId?: number,
+    mediaId?: number,
+    admin?: RequestAdmin,
+  ) {
     return this.prisma.download.findMany({
       where: {
         ...(!includeDeleted && { deletedAt: null }),
         ...(departmentId !== undefined && { departmentId }),
         ...(mediaId !== undefined && { mediaId }),
+        // Derived from the caller, not the query string: a scoped admin sees
+        // only their own rows and cannot widen it by editing the URL.
+        ...adminScopeWhere(admin, { department: true, page: true }),
       },
       orderBy: { sortOrder: 'asc' },
     });

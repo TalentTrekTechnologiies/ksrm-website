@@ -51,11 +51,13 @@ export class DownloadsController {
     @Query('includeDeleted') includeDeleted?: string,
     @Query('departmentId') departmentId?: string,
     @Query('mediaId') mediaId?: string,
+    @Request() req?,
   ) {
     return this.downloadsService.findAllAdmin(
       includeDeleted === 'true',
       departmentId ? parseInt(departmentId) : undefined,
       mediaId ? parseInt(mediaId) : undefined,
+      req?.user,
     );
   }
 
