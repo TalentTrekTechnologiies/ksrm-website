@@ -104,9 +104,14 @@ function useOverflows(itemCount: number) {
 }
 
 /**
- * Touching an auto-scrolling list on a phone hands it over permanently: the
+ * SWIPING an auto-scrolling list on a phone hands it over permanently: the
  * animation drives `transform` while a swipe drives `scrollTop`, so resuming
  * would drag the list away from wherever the reader had put it.
+ *
+ * Bound to touchmove, not touchstart. On touchstart a single tap - including
+ * the one that starts an ordinary vertical page scroll while a finger happens
+ * to be over the list - stopped the animation for good. That is why News could
+ * sit still while Events beside it kept moving: one had been touched.
  */
 function takeManualControl(e: React.SyntheticEvent<HTMLDivElement>) {
   e.currentTarget.classList.add("manual")
@@ -271,7 +276,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">Latest News</h3>
                 <Link href="/news" className="ne-box-link">View All News <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls} onTouchStart={takeManualControl}>
+              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls} onTouchMove={takeManualControl}>
                 <div
                   className={`ne-track ${newsScrolls ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${newsDuration}s` } as React.CSSProperties}
@@ -313,7 +318,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">{state.eventsAllUpcoming ? "Upcoming Events" : "Events"}</h3>
                 <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll} onTouchStart={takeManualControl}>
+              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll} onTouchMove={takeManualControl}>
                 <div
                   className={`ne-track ${eventsScroll ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${eventsDuration}s` } as React.CSSProperties}

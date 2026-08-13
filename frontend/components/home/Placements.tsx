@@ -4,6 +4,7 @@ import Container from "@/components/ui/Container"
 import { homeData } from "@/data/home"
 import { getStatisticsPublic, getRecruitersPublic, SiteStatistic } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { useEffect, useRef, useState } from "react"
 
 const FALLBACK_STATS = [
   { id: -1, number: 1200, suffix: "+", label: "Students Placed" },
@@ -45,6 +46,41 @@ async function fetchRecruiters(): Promise<RecruitersState> {
   return { hidden: false, recruiters: items.map((r) => ({ logo: r.logoUrl, name: r.name })) }
 }
 
+/** How fast a strip travels, in CSS pixels per second. */
+const STRIP_PX_PER_SECOND = 72
+
+/**
+ * Seconds for one full loop of a doubled marquee track, derived from the width
+ * it actually renders at.
+ *
+ * The keyframes translate by -50%, i.e. exactly one copy of the list, so the
+ * distance travelled is half the track's scrollWidth. Dividing that by a fixed
+ * px/s gives a constant reading speed at every screen size - which a duration
+ * calculated from assumed item widths cannot do, because those widths change
+ * at each breakpoint.
+ *
+ * Re-measures on resize (and rotation) via ResizeObserver. Falls back to a
+ * sane duration until the first measurement lands.
+ */
+function useTrackDuration(ref: React.RefObject<HTMLDivElement | null>, itemCount: number) {
+  const [seconds, setSeconds] = useState(20)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const measure = () => {
+      const distance = el.scrollWidth / 2
+      if (distance > 0) setSeconds(Math.max(8, Math.round(distance / STRIP_PX_PER_SECOND)))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [ref, itemCount])
+
+  return seconds
+}
+
 export default function Placements() {
   const stats = useLiveData(fetchPlacementStats, [], { initialValue: INITIAL_STATS }) ?? INITIAL_STATS
   const liveRecruiters = useLiveData(fetchRecruiters, [])
@@ -55,27 +91,35 @@ export default function Placements() {
   const posterStrip = [...posters, ...posters]
 
   /**
-   * On a touch device the strips auto-scroll until the visitor touches one,
-   * at which point that strip becomes an ordinary swipeable carousel for the
-   * rest of the visit.
+   * A strip auto-scrolls until the visitor SWIPES it, at which point it becomes
+   * an ordinary swipeable carousel for the rest of the visit.
+   *
+   * Bound to touchmove, not touchstart. Handing over on touchstart meant a
+   * single tap - or even the touch that begins a vertical page scroll passing
+   * over the strip - permanently killed the animation, which is why a list
+   * could stop moving for no apparent reason.
    *
    * Handing over permanently rather than pausing-and-resuming is deliberate:
    * the animation drives `transform` while a swipe drives `scrollLeft`, so
    * resuming would yank the strip away from wherever the reader had put it.
-   * Once someone has taken hold of it, it is theirs.
    */
   const onStripInteract = (e: React.SyntheticEvent<HTMLDivElement>) => {
     e.currentTarget.classList.add("manual")
   }
 
   // Both strips move at a constant pixels-per-second rate whatever they hold.
-  // A fixed duration crawled with four posters and blurred with forty, which
-  // was the "placements scrolling slowly" report on a strip that happened to
-  // be short. Raised 48 -> 72 px/s at the college's request; the floor keeps a
-  // two-item strip from whipping past.
-  const STRIP_PX_PER_SECOND = 72
-  const photoDuration = Math.max(8, Math.round((posters.length * 296) / STRIP_PX_PER_SECOND))
-  const recruiterDuration = Math.max(8, Math.round((recruiters.length * 180) / STRIP_PX_PER_SECOND))
+  //
+  // The distance is MEASURED, not assumed. It used to be computed from
+  // hardcoded desktop item widths (296px posters, 180px logos), but those
+  // widths change at every breakpoint - 220px at 1024px, full-viewport at
+  // 640px - so the duration no longer matched the distance actually travelled
+  // and the strips ran at the wrong speed on a phone. Measuring the rendered
+  // track makes the speed correct at any width, and self-correcting on rotate
+  // or resize.
+  const photoTrack = useRef<HTMLDivElement>(null)
+  const recruiterTrack = useRef<HTMLDivElement>(null)
+  const photoDuration = useTrackDuration(photoTrack, posterStrip.length)
+  const recruiterDuration = useTrackDuration(recruiterTrack, recruiters.length * 2)
 
   return (
     <section style={{ width: "100%", background: "#f8f9fa", padding: "48px 0" }}>
@@ -348,8 +392,8 @@ export default function Placements() {
         {/* PHOTO CAROUSEL */}
         <div className="photo-carousel">
           <div className="carousel-title">2025 Placements</div>
-          <div className="strip-viewport" onTouchStart={onStripInteract}>
-            <div className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
+          <div className="strip-viewport" onTouchMove={onStripInteract}>
+            <div ref={photoTrack} className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
               {posterStrip.map((poster, i) => (
                 <div key={i} className={`photo-item${i >= posters.length ? " strip-clone" : ""}`}>
                   <img src={poster} alt={`Placement ${i}`} loading="lazy" decoding="async" />
@@ -370,8 +414,8 @@ export default function Placements() {
               </div>
             </div>
 
-            <div className="recruiter-carousel strip-viewport" onTouchStart={onStripInteract}>
-              <div className="recruiter-track" style={{ ["--dur" as string]: `${recruiterDuration}s` } as React.CSSProperties}>
+            <div className="recruiter-carousel strip-viewport" onTouchMove={onStripInteract}>
+              <div ref={recruiterTrack} className="recruiter-track" style={{ ["--dur" as string]: `${recruiterDuration}s` } as React.CSSProperties}>
                 {[...recruiters, ...recruiters].map((recruiter, i) => {
                   const isClone = i >= recruiters.length;
                   const logo = recruiter?.logo ?? '';
