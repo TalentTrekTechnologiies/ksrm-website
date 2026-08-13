@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Central Library",
+  description: "The Central Library at K.S.R.M. College of Engineering, Kadapa - collections, digital resources, library staff, timings and services for students.",
+  path: "/campus-life/library",
+})
+
 import PageResources from "@/components/PageResources";
 import CmsVideos from "@/components/CmsVideos";
 import LibraryStaff from "@/components/library/LibraryStaff";

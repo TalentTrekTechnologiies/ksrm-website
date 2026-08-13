@@ -86,7 +86,7 @@ function Gallery() {
           {shots.map((g) => (
             <figure className="kg-shot" key={g.src}>
               {/* eslint-disable-next-line @next/next/no-img-element -- static asset / admin upload */}
-              <img src={g.src} alt={g.caption} loading="lazy" />
+              <img src={g.src} alt={g.caption} loading="lazy" decoding="async" />
               {g.caption && <figcaption>{g.caption}</figcaption>}
             </figure>
           ))}
@@ -204,11 +204,12 @@ export default function KgcetPage() {
 
       <section className="kg-hero">
         <div className="kg-container">
-          <div className="kg-crumb">
+          {/* Labelled landmark so the trail is announced as breadcrumbs. */}
+          <nav className="kg-crumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link><span>/</span>
             <Link href="/academics/fee-structure">Scholarships</Link><span>/</span>
-            <span style={{ color: "rgba(255,255,255,0.75)" }}>KGCET</span>
-          </div>
+            <span style={{ color: "rgba(255,255,255,0.75)" }} aria-current="page">KGCET</span>
+          </nav>
           <h1><CmsText section="kgcet" slot="heading" /></h1>
           <p className="kg-sub"><CmsText section="kgcet" slot="subheading" /></p>
           <p><CmsText section="kgcet" slot="intro" multiline /></p>

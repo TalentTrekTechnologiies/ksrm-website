@@ -2,14 +2,15 @@ import PageResources from "@/components/PageResources";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import CmsText from "@/components/CmsText";
 import CommitteeRoster from "@/components/committees/CommitteeRoster";
+import { pageMetadata } from "@/lib/seo"
 
 ﻿import Link from "next/link";
 
-export const metadata = {
-  title: "Grievance Redressal | K.S.R.M. College of Engineering",
-  description:
-    "K.S.R.M. College of Engineering grievance redressal system with fair, transparent and timely resolution for student complaints.",
-};
+export const metadata = pageMetadata({
+  title: "Grievance Redressal",
+  description: "K.S.R.M. College of Engineering grievance redressal system with fair, transparent and timely resolution for student complaints.",
+  path: "/campus-life/grievance",
+});
 
 const grievanceTypes = [
   {

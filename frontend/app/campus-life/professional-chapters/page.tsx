@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "Professional Chapters | K.S.R.M. College of Engineering",
-  description:
-    "Department student professional chapters at K.S.R.M. College of Engineering, Kadapa - committee, events and activity reports for each department's own chapter.",
-  alternates: { canonical: "/campus-life/professional-chapters" },
-};
+export const metadata = pageMetadata({
+  title: "Professional Chapters",
+  description: "Department student professional chapters at K.S.R.M. College of Engineering, Kadapa - committee, events and activity reports for each department's own chapter.",
+  path: "/campus-life/professional-chapters",
+});
 
 const DEPARTMENTS = [
   { name: "Civil Engineering", href: "/departments/civil" },

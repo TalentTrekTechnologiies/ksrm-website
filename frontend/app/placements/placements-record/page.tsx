@@ -107,7 +107,7 @@ export default function PlacementsRecordPage() {
                     <div className="record-card" key={r.id}>
                       <div className="record-photo">
                         {r.imageUrl ? (
-                          <img src={resolveFileUrl(r.imageUrl)} alt={r.studentName} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} />
+                          <img src={resolveFileUrl(r.imageUrl)} alt={r.studentName} loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none" }} />
                         ) : (
                           r.studentName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()
                         )}

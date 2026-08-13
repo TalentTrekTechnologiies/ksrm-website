@@ -1,12 +1,13 @@
 ﻿import PageResources from "@/components/PageResources";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "Cultural Club | K.S.R.M. College of Engineering",
-  description:
-    "K.S.R.M. College of Engineering Cultural Club celebrating creativity, talent and the spirit of togetherness through KALAKRITI and cultural events.",
-};
+export const metadata = pageMetadata({
+  title: "Cultural Club",
+  description: "K.S.R.M. College of Engineering Cultural Club celebrating creativity, talent and the spirit of togetherness through KALAKRITI and cultural events.",
+  path: "/campus-life/cultural",
+});
 
 const events = [
   {

@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Campus Facilities",
+  description: "Campus facilities and infrastructure at K.S.R.M. College of Engineering, Kadapa - academic blocks, laboratories, amenities and campus tours.",
+  path: "/campus-life/campus-facilities",
+})
+
 import PageResources from "@/components/PageResources";
 import CmsVideos from "@/components/CmsVideos";
 import CmsText from "@/components/CmsText";
@@ -215,7 +224,7 @@ export default function CampusFacilitiesPage() {
               <div className="cf-explore-imggrid">
                 {sec.images.map((img) => (
                   <figure className="cf-explore-img" key={img.src}>
-                    <img src={img.src} alt={img.alt} loading="lazy" />
+                    <img src={img.src} alt={img.alt} loading="lazy" decoding="async" />
                     {/* The alt text already names the photo, so it doubles as
                         the caption - one string to keep right rather than two
                         that can drift apart. */}

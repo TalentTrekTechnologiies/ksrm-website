@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Sports",
+  description: "Sports facilities at K.S.R.M. College of Engineering, Kadapa - grounds, indoor and outdoor games, and student sporting achievements.",
+  path: "/campus-life/sports",
+})
+
 import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 /**
@@ -179,7 +188,7 @@ export default function SportsPage() {
             <div>
               {achievementImages.map((img, _i) => (
                 <div key={img.src}>
-                  <div className="spo-achievements-image"><img src={img.src} alt={img.alt} loading="lazy" /></div>
+                  <div className="spo-achievements-image"><img src={img.src} alt={img.alt} loading="lazy" decoding="async" /></div>
                   <p style={{ fontSize: 13, color: "#555", margin: "8px 0 0", fontWeight: 500 }}><CmsText section="sports" slot={`achievementImages.${_i}.caption`} /></p>
                 </div>
               ))}

@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "MoUs & Industry Collaborations",
+  description: "Memoranda of Understanding and industry collaborations at K.S.R.M. College of Engineering, Kadapa - technology and industry partners.",
+  path: "/placements/mous",
+})
+
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
 

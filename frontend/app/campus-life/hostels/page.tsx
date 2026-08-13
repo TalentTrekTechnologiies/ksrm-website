@@ -1,3 +1,13 @@
+import type { Metadata } from "next"
+import Link from "next/link"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Student Hostels",
+  description: "Boys' and girls' hostels at K.S.R.M. College of Engineering, Kadapa - accommodation, room options, mess facilities and hostel amenities.",
+  path: "/campus-life/hostels",
+})
+
 import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 const hostels = [
@@ -52,11 +62,17 @@ export default function HostelsPage() {
         <div className="responsive-container">
           <h1 className="hostels-title"><CmsText section="hostels" slot="student-hostels" /></h1>
           <p className="hostels-subtitle"><CmsText section="hostels" slot="safe-comfortable-living-on-campus" /></p>
-          <div style={{ display: "flex", gap: 8, fontSize: 14, marginTop: 16, color: "rgba(255,255,255,0.7)" }}>
-            <a style={{ color: "#D4A500" }} href="/">Home</a><span>/</span>
-            <a style={{ color: "#D4A500" }} href="/campus-life">Campus Life</a><span>/</span>
-            <span>Student Hostels</span>
-          </div>
+          {/*
+            Was a bare <div> of raw <a> tags: no landmark for screen readers,
+            and the anchors triggered a full page reload instead of a client-side
+            navigation. Now a labelled <nav>, matching the BreadcrumbList
+            structured data this route emits from its layout.
+          */}
+          <nav aria-label="Breadcrumb" style={{ display: "flex", gap: 8, fontSize: 14, marginTop: 16, color: "rgba(255,255,255,0.7)" }}>
+            <Link style={{ color: "#D4A500" }} href="/">Home</Link><span>/</span>
+            <Link style={{ color: "#D4A500" }} href="/campus-life">Campus Life</Link><span>/</span>
+            <span aria-current="page">Student Hostels</span>
+          </nav>
         </div>
       </section>
 

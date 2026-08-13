@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Placements | K.S.R.M. College of Engineering",
+export const metadata: Metadata = pageMetadata({
+  title: "Placements",
   description: "Training & Placements at K.S.R.M. College of Engineering - recruiters, placement records, internships, MoUs and training programmes.",
-  alternates: { canonical: "/placements" },
-};
+  path: "/placements",
+});
 
 /**
  * Placements index. This route previously held a scraped HTML dump of a redirect

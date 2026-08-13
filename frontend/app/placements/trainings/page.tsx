@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Training Programmes",
+  description: "Placement training and skill development programmes for students at K.S.R.M. College of Engineering, Kadapa.",
+  path: "/placements/trainings",
+})
+
 import PlacementsSubnav from "@/components/PlacementsSubnav";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";

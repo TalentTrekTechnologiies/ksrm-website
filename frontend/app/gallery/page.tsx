@@ -170,23 +170,29 @@ export default function GalleryPage() {
     useLiveData<GalleryImageDisplay[]>(
       () =>
         getGalleryPublic().then((items) => {
-          if (items.length === 0) return FALLBACK_IMAGES
-          // Merge, don't replace - the legacy fallback set (including every
-          // /Filtered photo) stays visible until an admin actually replaces
-          // that content through the CMS. A handful of real DB rows
-          // previously wiped out the entire fallback set here since this
-          // used to be a straight setImages(cmsOnly) - see the bug report.
+          // The CMS is authoritative once it has any content.
+          //
+          // This used to MERGE the built-in set into the CMS results, so that
+          // the legacy photos stayed up "until an admin actually replaces that
+          // content through the CMS". That transition has now happened: the
+          // gallery is curated in the admin, and appending the hardcoded set
+          // put uncurated legacy photos alongside the real ones with no way to
+          // remove them from the admin - deleting a hardcoded image is not
+          // something the CMS can express, because it does not own it.
+          //
+          // The fallback below now does what a fallback should: it covers an
+          // empty CMS or an unreachable API, and nothing else.
+          //
           // Videos are stored as Gallery rows tagged "__video__" (a Media URL
           // has no extension to sniff). They render as <video> tiles under a
           // "Videos" filter rather than being dropped - the raw sentinel is
           // never shown as a category label.
-          const cmsImages = items.map((i) =>
+          if (items.length === 0) return FALLBACK_IMAGES
+          return items.map((i) =>
             i.category === VIDEO_CATEGORY
               ? { src: resolveFileUrl(i.imageUrl), alt: i.title, cat: "Videos", isVideo: true }
               : { src: resolveFileUrl(i.imageUrl), alt: i.title, cat: i.category || "Campus" },
           )
-          const existingSrcs = new Set(cmsImages.map((i) => i.src))
-          return [...cmsImages, ...FALLBACK_IMAGES.filter((i) => !existingSrcs.has(i.src))]
         }),
       [],
       { initialValue: FALLBACK_IMAGES },
@@ -262,7 +268,7 @@ export default function GalleryPage() {
                   {img.isVideo ? (
                     <video src={img.src} controls preload="metadata" onError={(e) => { e.currentTarget.style.display = "none" }} />
                   ) : (
-                    <img src={img.src} alt={img.alt} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} />
+                    <img src={img.src} alt={img.alt} loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none" }} />
                   )}
                 </div>
                 <div className="gal-card-content">

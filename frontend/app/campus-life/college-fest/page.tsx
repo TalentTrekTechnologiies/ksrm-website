@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import CmsText from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
 import CollegeFest from "@/components/campus/CollegeFest";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "College Fest | K.S.R.M. College of Engineering",
-  description:
-    "KONNECT 2K26 and the KSNR Trophy - the annual national-level techno-cultural fest and sports championship at K.S.R.M. College of Engineering, Kadapa.",
-  alternates: { canonical: "/campus-life/college-fest" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "College Fest",
+  description: "KONNECT 2K26 and the KSNR Trophy - the annual national-level techno-cultural fest and sports championship at K.S.R.M. College of Engineering, Kadapa.",
+  path: "/campus-life/college-fest",
+});
 
 /**
  * The college fest, as its own Campus Life sub-page.

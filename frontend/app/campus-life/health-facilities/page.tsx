@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import CmsText from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Health Facilities | K.S.R.M. College of Engineering",
-  description:
-    "Health facilities at K.S.R.M. College of Engineering, Kadapa - campus health centre, first aid, ambulance and hospital tie-ups for students and staff.",
-  alternates: { canonical: "/campus-life/health-facilities" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Health Facilities",
+  description: "Health facilities at K.S.R.M. College of Engineering, Kadapa - campus health centre, first aid, ambulance and hospital tie-ups for students and staff.",
+  path: "/campus-life/health-facilities",
+});
 
 /**
  * Health facilities, under Campus Life.

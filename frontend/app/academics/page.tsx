@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Academics | K.S.R.M. College of Engineering",
+export const metadata: Metadata = pageMetadata({
+  title: "Academics",
   description: "Programmes, syllabus, regulations, fee structure, academic calendar and faculty at K.S.R.M. College of Engineering, Kadapa.",
-  alternates: { canonical: "/academics" },
-};
+  path: "/academics",
+});
 
 /**
  * Academics index. This route previously held a scraped HTML dump of a redirect
@@ -22,8 +23,10 @@ const LINKS = [
   { label: "Fee Structure", href: "/academics/fee-structure", blurb: "Programme-wise tuition and admission fees." },
   // Faculty deliberately absent: it duplicated the CMS-driven faculty already
   // on each department's page, from a separate hardcoded list that could drift.
-  { label: "Admissions", href: "/academics/admissions", blurb: "How to apply and eligibility." },
-  { label: "Diploma", href: "/academics/diploma", blurb: "Diploma programmes offered." },
+  // Point at the real admissions section rather than the thin /academics/*
+  // CMS shells, which are now noindexed as duplicates of these pages.
+  { label: "Admissions", href: "/admissions", blurb: "How to apply and eligibility." },
+  { label: "Diploma", href: "/admissions/diploma", blurb: "Diploma programmes offered." },
 ];
 
 export default function AcademicsIndexPage() {

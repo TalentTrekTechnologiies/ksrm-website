@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Entrepreneurship Development Cell (EDC)",
+  description: "The Entrepreneurship Development Cell at K.S.R.M. College of Engineering, Kadapa - vision, mission and support for student entrepreneurs.",
+  path: "/edc",
+})
+
 import CmsText from "@/components/CmsText";
 ﻿import PageResources from "@/components/PageResources";
 

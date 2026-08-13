@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Downloads | K.S.R.M. College of Engineering",
+export const metadata: Metadata = pageMetadata({
+  title: "Downloads",
   description: "Syllabi, question papers, brochures and forms - document downloads from K.S.R.M. College of Engineering.",
-  alternates: { canonical: "/downloads" },
-  openGraph: { title: "Downloads | K.S.R.M. College of Engineering", description: "Syllabi, question papers, brochures and forms - document downloads from K.S.R.M. College of Engineering.", url: "/downloads" },
-}
+  path: "/downloads",
+})
 
 export default function RouteLayout({ children }: { children: React.ReactNode }) {
   return children

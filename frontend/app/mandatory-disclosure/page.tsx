@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import PageResources from "@/components/PageResources";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Mandatory Disclosure | K.S.R.M. College of Engineering",
-  description:
-    "Statutory disclosures for K.S.R.M. College of Engineering, Kadapa - AICTE mandatory disclosure and EOA letters, NAAC and NBA accreditation status, UGC autonomy, governance policies and RTI information.",
-  alternates: { canonical: "/mandatory-disclosure" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Mandatory Disclosure",
+  description: "Statutory disclosures for K.S.R.M. College of Engineering, Kadapa - AICTE mandatory disclosure and EOA letters, NAAC and NBA accreditation status, UGC autonomy, governance policies and RTI information.",
+  path: "/mandatory-disclosure",
+});
 
 /**
  * Mandatory Disclosure.

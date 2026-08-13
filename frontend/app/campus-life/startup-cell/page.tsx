@@ -1,14 +1,15 @@
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
 import NamedCommittees from "@/components/committees/NamedCommittees";
+import { pageMetadata } from "@/lib/seo"
 
 ﻿import Link from "next/link";
 
-export const metadata = {
-  title: "Startup Cell | K.S.R.M. College of Engineering",
-  description:
-    "K.S.R.M. College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
-};
+export const metadata = pageMetadata({
+  title: "Startup Cell",
+  description: "K.S.R.M. College of Engineering Startup Cell supporting student entrepreneurs with incubation, mentorship, funding, and market access.",
+  path: "/campus-life/startup-cell",
+});
 
 const objectives = [
   "Identify and nurture startup ideas among students and faculty",

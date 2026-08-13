@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Degree Verification",
+  description: "How to verify a degree or certificate issued by K.S.R.M. College of Engineering, Kadapa, and how to contact the Examination Section.",
+  path: "/degree-verification",
+})
+
 import CmsText from "@/components/CmsText";
 ﻿const steps = [
   { n: 1, title: "Visit iCredify Portal", desc: "Go to the official verification portal at icredify.com" },

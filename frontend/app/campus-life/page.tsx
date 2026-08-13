@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Campus Life | K.S.R.M. College of Engineering",
-  description:
-    "Campus life at K.S.R.M. College of Engineering, Kadapa - library, hostels, sports, transport, cultural activities, NSS, startup cell and student support cells.",
-  alternates: { canonical: "/campus-life" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Campus Life",
+  description: "Campus life at K.S.R.M. College of Engineering, Kadapa - library, hostels, sports, transport, cultural activities, NSS, startup cell and student support cells.",
+  path: "/campus-life",
+});
 
 /**
  * Campus Life index. This route was a three-line "Coming Soon" stub even though
@@ -34,7 +34,10 @@ const SECTIONS = [
   // Departments, one "Student Chapter" section per department page, rather
   // than a single generic card here linking to five hardcoded club names.
   { slot: 7, label: "NSS", href: "/campus-life/nss", blurb: "National Service Scheme activities and community outreach." },
-  { slot: 8, label: "EDC", href: "/campus-life/edc", blurb: "Entrepreneurship Development Cell programmes." },
+  // Points at the full /edc page, not the thin /campus-life/edc CMS shell
+  // (now noindexed as a duplicate). Slot id stays 8 - it is the card's
+  // permanent CMS identity, not its position.
+  { slot: 8, label: "EDC", href: "/edc", blurb: "Entrepreneurship Development Cell programmes." },
   { slot: 9, label: "Startup Cell", href: "/campus-life/startup-cell", blurb: "Incubation support for student and faculty startups." },
   { slot: 10, label: "Anti-Ragging", href: "/campus-life/anti-ragging", blurb: "Anti-ragging committee, affidavits and helpline." },
   { slot: 11, label: "Grievance Redressal", href: "/campus-life/grievance", blurb: "Raise and track student grievances." },

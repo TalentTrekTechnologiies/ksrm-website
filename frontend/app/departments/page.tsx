@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Departments | K.S.R.M. College of Engineering",
-  description:
-    "Engineering departments at K.S.R.M. College of Engineering, Kadapa - Civil, CSE, ECE, EEE, Mechanical, Humanities & Sciences and Management Studies.",
-  alternates: { canonical: "/departments" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Departments",
+  description: "Engineering departments at K.S.R.M. College of Engineering, Kadapa - Civil, CSE, ECE, EEE, Mechanical, Humanities & Sciences and Management Studies.",
+  path: "/departments",
+});
 
 /**
  * Departments index. This route previously held a scraped HTML dump of a

@@ -1,5 +1,8 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { LEADERSHIP, leaderBySlug } from "@/data/leadership"
+import { pageMetadata } from "@/lib/seo"
+import RouteBreadcrumbs from "@/components/seo/RouteBreadcrumbs"
 
 /** "8919181206" -> "+91 89191 81206"; anything already formatted is left alone. */
 function prettyPhone(p: string): string {
@@ -18,6 +21,31 @@ function dialable(p: string): string {
 export function generateStaticParams() {
   // Driven by the data, so adding a leader cannot leave their page unbuilt.
   return LEADERSHIP.map((l) => ({ slug: l.slug }))
+}
+
+/**
+ * Without this, all five leadership profiles inherited app/about/layout.tsx -
+ * so every one of them was titled "About Us" AND canonicalised to /about,
+ * which tells Google they are duplicates of the About page and should be
+ * dropped from the index. Each profile now declares its own title, description
+ * and self-canonical.
+ */
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const leader = leaderBySlug(slug)
+  if (!leader) return { title: "Profile Not Found", robots: { index: false, follow: true } }
+
+  // The leader's own published words, trimmed to a description-sized excerpt at
+  // a sentence boundary so it never ends mid-word.
+  const source = leader.paragraphs[0] ?? ""
+  const excerpt = source.length > 155 ? `${source.slice(0, 155).replace(/[\s,;]+\S*$/, "")}…` : source
+
+  return pageMetadata({
+    title: `${leader.name} — ${leader.role}`,
+    description: excerpt || `${leader.name}, ${leader.role} at K.S.R.M. College of Engineering, Kadapa.`,
+    path: `/about/${leader.slug}`,
+    image: leader.photo || undefined,
+  })
 }
 
 /**
@@ -45,6 +73,9 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
   }
 
   return (
+    <>
+    {/* Final crumb is the person, not the slug: "Home > About > Smt. K. Rajeswari". */}
+    <RouteBreadcrumbs path={`/about/${leader.slug}`} currentLabel={leader.name} />
     <main style={{ backgroundColor: "#F5EFE4", fontFamily: "Arimo, Arial, Helvetica, sans-serif", color: "#1F2937" }}>
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -92,7 +123,7 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
       <section className="k-section">
         <div className="k-container">
           <div className="k-profile-header">
-            <img src={leader.photo} alt={leader.name} className="k-profile-photo" loading="lazy" />
+            <img src={leader.photo} alt={leader.name} className="k-profile-photo" loading="lazy" decoding="async" />
             <div className="k-profile-info">
               <div className="k-profile-name">{leader.name}</div>
               <div className="k-profile-role">{leader.role}</div>
@@ -123,5 +154,6 @@ export default async function LeadershipDetail({ params }: { params: Promise<{ s
         </div>
       </section>
     </main>
+    </>
   )
 }

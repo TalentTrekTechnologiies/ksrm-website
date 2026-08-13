@@ -4,6 +4,8 @@ import "./globals.css"
 import ChromeGate from "@/components/layout/ChromeGate"
 import DynamicFavicon from "@/components/layout/DynamicFavicon"
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics"
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd"
+import { pageMetadata, SITE_NAME, SITE_URL } from "@/lib/seo"
 
 const rajdhani = Rajdhani({
   subsets: ["latin"],
@@ -28,37 +30,23 @@ const inter = Inter({
   display: "swap",
 })
 
+// Defaults for the whole site AND the homepage's own metadata (the homepage has
+// no other file to declare it in). Every other route overrides title,
+// description and canonical via its own page/layout - verified at build by
+// scripts/seo-audit.mjs, which fails loudly if a route falls back to these.
 export const metadata: Metadata = {
-  title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
-  description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous | 7 Departments | 1200+ Students Placed",
-  keywords: ["engineering college", "K.S.R.M.", "Kadapa", "NAAC A+", "NBA accredited", "engineering education"],
-  authors: [{ name: "K.S.R.M. College of Engineering" }],
-  creator: "K.S.R.M. College of Engineering",
-  publisher: "K.S.R.M. College of Engineering",
-  robots: "index, follow",
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: "https://ksrmce.ac.in",
-    title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
-    description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous",
-    siteName: "K.S.R.M. College of Engineering",
-    images: [
-      {
-        url: "https://ksrmce.ac.in/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "K.S.R.M. College of Engineering Campus",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "K.S.R.M. College of Engineering | NAAC A+ | NBA Accredited",
-    description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence",
-    images: ["https://ksrmce.ac.in/og-image.jpg"],
-  },
-  metadataBase: new URL("https://ksrmce.ac.in"),
+  ...pageMetadata({
+    title: "",
+    fullTitle: `${SITE_NAME}, Kadapa | KSRMCE`,
+    description:
+      "K.S.R.M. College of Engineering, Kadapa - a UGC Autonomous, NAAC A+ accredited and NBA Tier-1 engineering college in Andhra Pradesh, offering B.Tech, M.Tech and MBA programmes.",
+    path: "/",
+  }),
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  metadataBase: new URL(SITE_URL),
   // Google Search Console ownership verification. Set
   // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION to the token Search Console gives you;
   // when unset, no tag is emitted (harmless).
@@ -75,45 +63,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "EducationalOrganization",
-    name: "K.S.R.M. College of Engineering",
-    alternateName: "KSRMCE",
-    url: "https://ksrmce.ac.in",
-    logo: "https://ksrmce.ac.in/logo.png",
-    description: "K.S.R.M. College of Engineering, Kadapa — 45+ years of engineering excellence. NAAC A+ | NBA Tier-1 | UGC Autonomous",
-    sameAs: [
-      "https://www.facebook.com/ksrmce",
-      "https://www.twitter.com/ksrmce",
-      "https://www.linkedin.com/company/ksrmce",
-    ],
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "K.S.R.M. College of Engineering, Kadapa",
-      addressLocality: "Kadapa",
-      addressRegion: "Andhra Pradesh",
-      postalCode: "516005",
-      addressCountry: "IN",
-    },
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "Admissions",
-      telephone: "+91-9000073434",
-      email: "ksrmcengg@yahoo.co.in",
-    },
-    foundingDate: "1980",
-    numberOfEmployees: "150+",
-    educationLevel: "Bachelor, Master",
-  }
-
   return (
     <html lang="en">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+        {/*
+          The institution and the site as entities. Previously this was one
+          inline EducationalOrganization object that asserted three social
+          profiles the college has not confirmed - and which disagreed with the
+          four different handles in the footer. `sameAs` is omitted until the
+          real profile URLs are supplied; an unverified sameAs risks binding the
+          wrong accounts to the college's Knowledge Graph entity.
+
+          `numberOfEmployees: "150+"` was also dropped: schema.org expects a
+          number or QuantitativeValue there, not a marketing string.
+        */}
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
       </head>
       <body className={`${rajdhani.variable} ${dmSans.variable} ${inter.variable} antialiased`}>
         <GoogleAnalytics />

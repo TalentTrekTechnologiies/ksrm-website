@@ -1,12 +1,18 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+import RouteBreadcrumbs from "@/components/seo/RouteBreadcrumbs"
 
-export const metadata: Metadata = {
-  title: "Diploma Admissions | K.S.R.M. College of Engineering",
+export const metadata: Metadata = pageMetadata({
+  title: "Diploma Admissions",
   description: "Diploma programme admissions at K.S.R.M. College of Engineering, Kadapa.",
-  alternates: { canonical: "/admissions/diploma" },
-  openGraph: { title: "Diploma Admissions | K.S.R.M. College of Engineering", description: "Diploma programme admissions at K.S.R.M. College of Engineering, Kadapa.", url: "/admissions/diploma" },
-}
+  path: "/admissions/diploma",
+})
 
 export default function RouteLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      <RouteBreadcrumbs path="/admissions/diploma" />
+      {children}
+    </>
+  )
 }

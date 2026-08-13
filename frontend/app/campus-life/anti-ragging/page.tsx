@@ -4,12 +4,13 @@ import AntiRaggingContacts from "@/components/campus/AntiRaggingContacts";
 import PageResources from "@/components/PageResources";
 import AntiRaggingCommittee from "@/components/campus-life/AntiRaggingCommittee";
 import CmsText from "@/components/CmsText";
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "Anti-Ragging | K.S.R.M. College of Engineering",
-  description:
-    "K.S.R.M. College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
-};
+export const metadata = pageMetadata({
+  title: "Anti-Ragging",
+  description: "K.S.R.M. College of Engineering anti-ragging policy with zero tolerance, helpline numbers, and support for students.",
+  path: "/campus-life/anti-ragging",
+});
 
 
 const whatConstitutes = [
