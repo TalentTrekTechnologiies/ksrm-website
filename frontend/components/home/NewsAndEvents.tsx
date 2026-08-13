@@ -103,6 +103,15 @@ function useOverflows(itemCount: number) {
   return { viewportRef, overflows }
 }
 
+/**
+ * Touching an auto-scrolling list on a phone hands it over permanently: the
+ * animation drives `transform` while a swipe drives `scrollTop`, so resuming
+ * would drag the list away from wherever the reader had put it.
+ */
+function takeManualControl(e: React.SyntheticEvent<HTMLDivElement>) {
+  e.currentTarget.classList.add("manual")
+}
+
 export default function NewsAndEvents() {
   const state = useLiveData(fetchNewsAndEvents, [])
   // Called before the early return below, so the hook order never changes
@@ -182,7 +191,23 @@ export default function NewsAndEvents() {
            Same rule for anyone who has asked for less motion. The duplicated
            half is hidden in both cases, since it exists only to make the loop
            seamless. */
-        @media (prefers-reduced-motion: reduce), (hover: none) {
+        /* Touch devices auto-scroll too now, per the college's request, but
+           keep the manual escape hatch that was the reason it was disabled.
+
+           The original failure was not the animation - it was that stopping it
+           left nothing behind: the viewport is overflow hidden, so when a phone
+           throttled the animation the list froze with no way to move it. Both
+           run together now, so a throttled animation degrades to an ordinary
+           scroller. Touching the list hands it over for good (.manual), rather
+           than the animation fighting the reader's thumb for scroll position. */
+        @media (hover: none) {
+          .ne-viewport { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+          .ne-viewport.manual .ne-track.anim { animation: none; }
+          .ne-viewport.manual .ne-clone { display: none; }
+        }
+
+        /* Reduced motion still gets a plain, unanimated list. */
+        @media (prefers-reduced-motion: reduce) {
           .ne-track.anim { animation: none; }
           .ne-track.anim .ne-clone { display: none; }
           .ne-viewport { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
@@ -246,7 +271,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">Latest News</h3>
                 <Link href="/news" className="ne-box-link">View All News <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls}>
+              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls} onTouchStart={takeManualControl}>
                 <div
                   className={`ne-track ${newsScrolls ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${newsDuration}s` } as React.CSSProperties}
@@ -288,7 +313,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">{state.eventsAllUpcoming ? "Upcoming Events" : "Events"}</h3>
                 <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll}>
+              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll} onTouchStart={takeManualControl}>
                 <div
                   className={`ne-track ${eventsScroll ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${eventsDuration}s` } as React.CSSProperties}

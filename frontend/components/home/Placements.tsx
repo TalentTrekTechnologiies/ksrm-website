@@ -51,16 +51,31 @@ export default function Placements() {
   const recruitersHidden = liveRecruiters?.hidden ?? false
   const recruiters = liveRecruiters?.recruiters ?? INITIAL_RECRUITERS
 
-  // Both strips move at a constant ~48px per second whatever they hold (was
-  // 26 - a real recruiter list of 17 logos took nearly two minutes for one
-  // pass at that rate, which read as barely moving). A fixed duration
-  // crawled with four posters and blurred with forty, which is the
-  // "placements scrolling slowly" report on a strip that happened to be
-  // short. The floor keeps a two-item strip from whipping past.
   const posters: string[] = Array.isArray(homeData?.placements?.posters) ? homeData.placements.posters : []
   const posterStrip = [...posters, ...posters]
-  const photoDuration = Math.max(12, Math.round((posters.length * 296) / 48))
-  const recruiterDuration = Math.max(12, Math.round((recruiters.length * 180) / 48))
+
+  /**
+   * On a touch device the strips auto-scroll until the visitor touches one,
+   * at which point that strip becomes an ordinary swipeable carousel for the
+   * rest of the visit.
+   *
+   * Handing over permanently rather than pausing-and-resuming is deliberate:
+   * the animation drives `transform` while a swipe drives `scrollLeft`, so
+   * resuming would yank the strip away from wherever the reader had put it.
+   * Once someone has taken hold of it, it is theirs.
+   */
+  const onStripInteract = (e: React.SyntheticEvent<HTMLDivElement>) => {
+    e.currentTarget.classList.add("manual")
+  }
+
+  // Both strips move at a constant pixels-per-second rate whatever they hold.
+  // A fixed duration crawled with four posters and blurred with forty, which
+  // was the "placements scrolling slowly" report on a strip that happened to
+  // be short. Raised 48 -> 72 px/s at the college's request; the floor keeps a
+  // two-item strip from whipping past.
+  const STRIP_PX_PER_SECOND = 72
+  const photoDuration = Math.max(8, Math.round((posters.length * 296) / STRIP_PX_PER_SECOND))
+  const recruiterDuration = Math.max(8, Math.round((recruiters.length * 180) / STRIP_PX_PER_SECOND))
 
   return (
     <section style={{ width: "100%", background: "#f8f9fa", padding: "48px 0" }}>
@@ -237,7 +252,39 @@ export default function Placements() {
            The clipped half is dropped too - the duplicate exists only to make
            the loop seamless, and swiping through the same logos twice is
            just confusing. */
-        @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+        /* Touch devices now auto-scroll TOO, per the college's request - but
+           they keep the manual escape hatch that was the whole reason it was
+           switched off here.
+
+           The original problem was not the animation, it was that stopping it
+           left no alternative: the viewport was overflow hidden, so when a
+           phone throttled the animation (Low Power Mode, battery saver,
+           backgrounded tab) the strip froze and could not be moved by hand.
+
+           Both are on now. The strip animates, AND the viewport stays
+           swipeable, so a throttled animation degrades to an ordinary
+           scroller instead of a dead one. Touching it hands control over
+           permanently (see onStripInteract) rather than fighting the user's
+           finger for the scroll position.
+
+           The duplicated half stays visible here, because with the animation
+           running the loop needs it to be seamless. */
+        @media (hover: none), (pointer: coarse) {
+          .strip-viewport {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+          }
+          .strip-viewport.manual .photo-track,
+          .strip-viewport.manual .recruiter-track { animation: none; }
+          .strip-viewport.manual { scroll-snap-type: x proximity; }
+          .strip-viewport.manual .photo-item,
+          .strip-viewport.manual .recruiter-logo { scroll-snap-align: start; }
+          .strip-viewport.manual .strip-clone { display: none; }
+        }
+
+        /* Anyone who asked for less motion still gets a plain scroller. */
+        @media (prefers-reduced-motion: reduce) {
           .photo-track, .recruiter-track { animation: none; }
           .strip-viewport {
             overflow-x: auto;
@@ -301,7 +348,7 @@ export default function Placements() {
         {/* PHOTO CAROUSEL */}
         <div className="photo-carousel">
           <div className="carousel-title">2025 Placements</div>
-          <div className="strip-viewport">
+          <div className="strip-viewport" onTouchStart={onStripInteract}>
             <div className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
               {posterStrip.map((poster, i) => (
                 <div key={i} className={`photo-item${i >= posters.length ? " strip-clone" : ""}`}>
@@ -323,7 +370,7 @@ export default function Placements() {
               </div>
             </div>
 
-            <div className="recruiter-carousel strip-viewport">
+            <div className="recruiter-carousel strip-viewport" onTouchStart={onStripInteract}>
               <div className="recruiter-track" style={{ ["--dur" as string]: `${recruiterDuration}s` } as React.CSSProperties}>
                 {[...recruiters, ...recruiters].map((recruiter, i) => {
                   const isClone = i >= recruiters.length;

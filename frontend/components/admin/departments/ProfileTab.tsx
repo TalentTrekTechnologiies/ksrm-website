@@ -27,6 +27,12 @@ export default function ProfileTab({
     mission: department.mission,
     establishedYear: department.establishedYear ?? NaN,
     isActive: department.isActive,
+    // SEO overrides. These columns and their API have existed since the
+    // department module was built, but nothing ever wrote them (no field here)
+    // and nothing read them - so they were dead storage. Blank means "use the
+    // page's own heading and intro", which is what every department does today.
+    metaTitle: department.metaTitle ?? "",
+    metaDescription: department.metaDescription ?? "",
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -49,6 +55,8 @@ export default function ProfileTab({
         mission: form.mission,
         establishedYear: Number.isNaN(form.establishedYear) ? undefined : form.establishedYear,
         isActive: form.isActive,
+        metaTitle: form.metaTitle.trim() || null,
+        metaDescription: form.metaDescription.trim() || null,
         version: department.version,
       })
       onSaved(updated)
@@ -109,6 +117,33 @@ export default function ProfileTab({
           onChange={(mission) => { setForm({ ...form, mission }); setSaved(false) }}
           placeholder="Add a mission point..."
         />
+        {/* Search-result appearance. Optional: left blank, the page falls back
+            to the department name and its About text, which is what it has
+            always used. */}
+        <div className="rounded-xl border border-admin-border bg-admin-bg/40 p-4">
+          <p className="text-sm font-semibold text-slate-800">Search result appearance (optional)</p>
+          <p className="mb-3 text-xs text-slate-500">
+            How this department appears in Google. Leave blank to use the department name and
+            About text.
+          </p>
+          <TextField
+            label="SEO title"
+            value={form.metaTitle}
+            onChange={(v) => { setForm({ ...form, metaTitle: v }); setSaved(false) }}
+            placeholder={`${form.name} | K.S.R.M. College of Engineering`}
+          />
+          <TextAreaField
+            label="SEO description"
+            value={form.metaDescription}
+            onChange={(v) => { setForm({ ...form, metaDescription: v }); setSaved(false) }}
+            rows={2}
+          />
+          <p className="mt-1 text-xs text-slate-400">
+            Around 155 characters shows in full; longer is trimmed by Google.
+            {form.metaDescription ? ` Currently ${form.metaDescription.trim().length}.` : ""}
+          </p>
+        </div>
+
         <ToggleField label="Active" checked={form.isActive} onChange={(v) => { setForm({ ...form, isActive: v }); setSaved(false) }} />
         <FormActions>
           <PrimaryButton onClick={handleSave} disabled={saving || !form.name || !form.about}>

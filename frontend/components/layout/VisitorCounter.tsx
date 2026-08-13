@@ -126,10 +126,35 @@ export default function VisitorCounter() {
           0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
           70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
         }
-        .visitor-counter-widget { animation: ksrm-fade-in 0.4s ease-out; }
+        /* The bottom offset lives here, NOT in the inline style object below:
+           an inline style beats a stylesheet rule, so the mobile override
+           would never apply. (Only left/right stay inline - they move on
+           scroll.) */
+        .visitor-counter-widget { animation: ksrm-fade-in 0.4s ease-out; bottom: 20px; }
+        .vc-ranges { display: inline-flex; }
         @keyframes ksrm-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        /* Shown on phones too, in a compact form.
+           It used to be display:none below 640px, so the live count - the one
+           thing on it that is actually live - was invisible to the majority of
+           visitors, who are on a phone.
+           Rather than shrink the full widget (five items on one line does not
+           fit a 360px screen at a legible size), the secondary figures and the
+           range toggles are dropped and only the pulsing live count and the
+           visit total remain. Nothing is lost: the range toggles change a
+           number that is itself hidden here. */
         @media (max-width: 640px) {
-          .visitor-counter-widget { display: none; }
+          .visitor-counter-widget {
+            gap: 9px;
+            padding: 7px 12px;
+            font-size: 12px;
+            /* Clears the Back-to-Top button, which also pins bottom-right. */
+            bottom: max(14px, env(safe-area-inset-bottom, 0px));
+          }
+          .vc-secondary { display: none; }
+        }
+        /* Very narrow phones: the live count alone. */
+        @media (max-width: 380px) {
+          .vc-visits { display: none; }
         }
       `}</style>
       <div
@@ -138,7 +163,6 @@ export default function VisitorCounter() {
           position: "fixed",
           left: scrolled ? "20px" : "auto",
           right: scrolled ? "auto" : "20px",
-          bottom: "20px",
           zIndex: 998,
           transition: "left 0.3s ease, right 0.3s ease",
           display: "flex",
@@ -168,9 +192,12 @@ export default function VisitorCounter() {
           />
           Live {live ?? "…"}
         </span>
-        <span style={{ opacity: 0.6 }}>{summary.visits.toLocaleString("en-IN")} visits</span>
-        <span style={{ opacity: 0.6 }}>{summary.hits.toLocaleString("en-IN")} hits</span>
-        <span style={{ display: "inline-flex", gap: "6px" }}>
+        <span className="vc-visits" style={{ opacity: 0.6 }}>{summary.visits.toLocaleString("en-IN")} visits</span>
+        <span className="vc-secondary" style={{ opacity: 0.6 }}>{summary.hits.toLocaleString("en-IN")} hits</span>
+        {/* display lives in .vc-ranges, not inline: an inline `display:
+            inline-flex` outranks the .vc-secondary { display: none } rule and
+            the range toggles stayed on screen at phone widths. */}
+        <span className="vc-secondary vc-ranges" style={{ gap: "6px" }}>
           {(["yesterday", "7d"] as SiteStatsRange[]).map((r) => (
             <button
               key={r}

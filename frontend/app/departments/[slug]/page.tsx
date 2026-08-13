@@ -12,6 +12,7 @@ import { hs } from "@/data/departments/hs";
 import { CourseListJsonLd } from "@/components/seo/JsonLd";
 import RouteBreadcrumbs from "@/components/seo/RouteBreadcrumbs";
 import { pageMetadata } from "@/lib/seo";
+import { getDepartmentsPublic } from "@/lib/departments-api";
 
 // MCA launches as an empty CMS record (per the Department CMS phase decision);
 // DepartmentPage's own client-side fetch fills it in from the backend.
@@ -100,10 +101,35 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const department = (departments as Record<string, typeof civil>)[slug];
   if (!department) return {};
 
-  // A tagline is marketing copy, often under 60 characters - too thin to earn a
-  // click on its own. Prefer it, but top up from the department's About text so
-  // the snippet actually describes the department, and always name the college
-  // and city, which is how these are searched for ("KSRM CSE department Kadapa").
+  // CMS overrides, read at BUILD time (this is a static export, so there is no
+  // request-time server to consult). Wrapped so the build never depends on the
+  // API being up: if it is unreachable, or has no row for this slug, the
+  // hardcoded values below are used exactly as before.
+  //
+  // Editing these in Admin -> Departments -> Profile therefore takes effect on
+  // the next site build, not instantly - the same constraint every other
+  // CMS-driven value on this statically exported site has.
+  const cms = await getDepartmentsPublic()
+    .then((list) => list.find((d) => d.slug === slug) ?? null)
+    .catch(() => null);
+
+  if (cms?.metaTitle?.trim() || cms?.metaDescription?.trim()) {
+    return pageMetadata({
+      title: cms.metaTitle?.trim() || department.name,
+      description:
+        cms.metaDescription?.trim() ||
+        department.tagline?.trim() ||
+        `${department.name} at K.S.R.M. College of Engineering, Kadapa.`,
+      path: `/departments/${slug}`,
+      image: cms.ogImageUrl?.trim() || department.heroImage || undefined,
+    });
+  }
+
+  // No override set: build the description from the page's own content. A
+  // tagline is marketing copy, often under 60 characters - too thin to earn a
+  // click on its own - so it is topped up from the About text, and the college
+  // and city are always named, which is how these are searched for
+  // ("KSRM CSE department Kadapa").
   const tagline = department.tagline?.trim();
   const about = department.about?.trim().replace(/\s+/g, " ");
   let description = [tagline, about].filter(Boolean).join(" ");

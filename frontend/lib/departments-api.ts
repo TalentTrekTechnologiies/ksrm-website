@@ -49,6 +49,15 @@ export interface DepartmentInput {
   mission?: string[];
   establishedYear?: number;
   isActive?: boolean;
+  /**
+   * Optional search-result overrides, edited in the department's Profile tab.
+   * The columns and the backend DTO already accepted these; the input type
+   * omitted them, so the admin form had no way to send them and they stayed
+   * permanently empty. Null clears an override and restores the page default.
+   */
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  ogImageUrl?: string | null;
 }
 
 export function getDepartmentsPublic(): Promise<Department[]> {
