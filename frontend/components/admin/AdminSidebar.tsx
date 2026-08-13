@@ -11,8 +11,6 @@ import {
   ChevronsRight,
   ChevronDown,
   Globe,
-  GraduationCap,
-  ExternalLink,
   type LucideIcon,
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
@@ -21,37 +19,6 @@ import { PAGE_SECTIONS } from "@/lib/downloads-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 import { Building2 } from "lucide-react"
-
-/**
- * Where the online exam module lives.
- *
- * Read at RUNTIME from /site-config.json, deliberately NOT from
- * NEXT_PUBLIC_EXAM_ADMIN_URL. This is a static export: any NEXT_PUBLIC_ value
- * is inlined into the compiled bundle at build time and frozen there, so
- * changing it would mean rebuilding and re-uploading the entire site just to
- * edit one link. site-config.json instead lands as a plain file at the root of
- * public_html, editable directly in hPanel's file manager - no rebuild, ever,
- * just to point this at a different address.
- *
- * Unset (or the fetch failing) means the link stays hidden: an admin seeing no
- * entry is far better than one clicking through to a dead address on exam
- * morning.
- */
-function useExamAdminUrl(): string {
-  const [url, setUrl] = useState("")
-  useEffect(() => {
-    fetch("/site-config.json", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((cfg) => {
-        const value = cfg?.examAdminUrl?.replace(/\/$/, "") ?? ""
-        if (value) setUrl(value)
-      })
-      .catch(() => {
-        // No config file, or it's unreachable — link stays hidden, same as unset.
-      })
-  }, [])
-  return url
-}
 
 const HOMEPAGE_SUB_ITEMS = [
   { href: "/admin/homepage/hero", label: "Hero Banner" },
@@ -160,46 +127,6 @@ function NavLink({
   )
 }
 
-/**
- * A sidebar entry pointing at a different application rather than a CMS route.
- *
- * Kept separate from NavLink for two reasons: it needs a plain anchor, since
- * next/link is for in-app navigation and this URL belongs to another origin; and
- * it opens in a new tab so an admin never loses the CMS - or, more importantly,
- * never navigates away from an exam they are invigilating. It is never "active",
- * because no CMS pathname can match it.
- */
-function ExternalNavLink({
-  href,
-  label,
-  icon: Icon,
-  collapsed,
-}: {
-  href: string
-  label: string
-  icon: LucideIcon
-  collapsed: boolean
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={collapsed ? label : undefined}
-      className="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:translate-x-0.5 hover:bg-admin-sidebar-hover hover:text-white"
-    >
-      <Icon className="h-[18px] w-[18px] shrink-0" />
-      {!collapsed && (
-        <>
-          <span className="truncate">{label}</span>
-          {/* Signals up front that this leaves the CMS. */}
-          <ExternalLink className="ml-auto h-3.5 w-3.5 shrink-0 opacity-50" />
-        </>
-      )}
-    </a>
-  )
-}
-
 export default function AdminSidebar({
   onNavigate,
   collapsed = false,
@@ -233,7 +160,6 @@ export default function AdminSidebar({
     () => [...PAGE_SECTIONS].sort((a, b) => a.label.localeCompare(b.label)),
     [],
   )
-  const examAdminUrl = useExamAdminUrl()
 
   useEffect(() => {
     let cancelled = false
@@ -594,28 +520,15 @@ export default function AdminSidebar({
       )}
 
       {/*
-          The online exam module. Deliberately outside the NAV_ITEMS list above:
-          that list is filtered by the dashboard's widget keys, which only exist
-          for modules living inside this CMS. This one is another application, so
-          it is always shown when configured rather than gated on a widget that
-          will never be reported.
+          The "Online Examinations" link used to sit here - an ExternalNavLink to
+          the separate exam application's login screen. Removed at the college's
+          request: it is a different system with its own accounts, and putting it
+          in this sidebar implied it was part of this CMS. Anyone who needs it
+          goes to that application directly.
+
+          examAdminUrl (site-config.json -> examAdminUrl) is left in place; only
+          the sidebar entry is gone, so nothing else that reads it breaks.
       */}
-      {/* Hidden from department-scoped admins: the online exam system is a
-          college-wide application, not part of any one department's remit, and
-          a Civil admin clicking through to its login screen has nothing to do
-          there. "Always shown when configured" above was written before
-          department-scoped accounts existed. */}
-      {examAdminUrl && !isDeptScoped && (
-        <>
-          <div className={`my-2 border-t border-white/10 ${collapsed ? "mx-1" : ""}`} />
-          <ExternalNavLink
-            href={`${examAdminUrl}/admin/login`}
-            label="Online Examinations"
-            icon={GraduationCap}
-            collapsed={collapsed}
-          />
-        </>
-      )}
 
       {admin?.isSuperAdmin && (
         <>
