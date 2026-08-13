@@ -422,6 +422,9 @@ function SiteSettingsManagerInner() {
             "site.announcementTickerSpeedSeconds",
             "site.announcementPauseOnHover",
             "site.announcementMaxVisible",
+            // Must be listed here or the slider would appear to work and then
+            // silently not persist - saveGroup only writes the keys it is given.
+            "site.heroPanelSecondsPerItem",
           ])
         }
         saving={savingGroup === "announcements"}
@@ -457,7 +460,27 @@ function SiteSettingsManagerInner() {
             onChange={(e) => setValue("site.announcementTickerSpeedSeconds", e.target.value)}
             className="w-full max-w-md accent-admin-primary"
           />
-          <p className="mt-1 text-xs text-slate-400">Lower is faster.</p>
+          <p className="mt-1 text-xs text-slate-400">
+            Lower is faster. This is the time one notice takes to cross the bar, so the speed stays
+            the same however many are published.
+          </p>
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+            Homepage &ldquo;Latest Updates&rdquo; Speed - {v("site.heroPanelSecondsPerItem") || 4}s per item
+          </label>
+          <input
+            type="range"
+            min={2}
+            max={12}
+            step={1}
+            value={Number(v("site.heroPanelSecondsPerItem")) || 4}
+            onChange={(e) => setValue("site.heroPanelSecondsPerItem", e.target.value)}
+            className="w-full max-w-md accent-admin-primary"
+          />
+          <p className="mt-1 text-xs text-slate-400">
+            Controls the scrolling panel in the homepage hero. Lower is faster.
+          </p>
         </div>
         <div className="max-w-[200px]">
           <TextField
@@ -465,6 +488,10 @@ function SiteSettingsManagerInner() {
             value={v("site.announcementMaxVisible")}
             onChange={(val) => setValue("site.announcementMaxVisible", val.replace(/\D/g, ""))}
           />
+          <p className="mt-1 text-xs text-slate-400">
+            How many notices the header bar cycles through. Newest first, so a new notice appears at
+            the front and the oldest drops off.
+          </p>
         </div>
       </SectionCard>
 

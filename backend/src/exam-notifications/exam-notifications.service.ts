@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ExamNotificationType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateExamNotificationDto } from './dto/create-exam-notification.dto';
 import { UpdateExamNotificationDto } from './dto/update-exam-notification.dto';
+import { ReorderExamNotificationsDto } from './dto/reorder-exam-notifications.dto';
 import { RequestAdmin } from '../homepage/types';
 
 const AUDIT_MODULE = 'exam_notifications';
@@ -31,26 +36,37 @@ export class ExamNotificationsService {
         OR: [{ endDate: null }, { endDate: { gte: now } }],
         ...(type && { type }),
       },
-      orderBy: { startDate: 'desc' },
+      // Manual order first, date second. Every row defaults to sortOrder 0, so
+      // until someone drags something the whole list is tied and this behaves
+      // exactly as the previous date-only ordering did.
+      orderBy: [{ sortOrder: 'asc' }, { startDate: 'desc' }],
     });
   }
 
   async findAllAdmin(type?: ExamNotificationType) {
     return this.prisma.examNotification.findMany({
       where: { ...(type && { type }) },
-      orderBy: { createdAt: 'desc' },
+      // Must match findAllPublic, or the order an admin arranges by dragging
+      // would not be the order visitors see.
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
   }
 
   private async findOrThrow(id: number) {
-    const record = await this.prisma.examNotification.findUnique({ where: { id } });
+    const record = await this.prisma.examNotification.findUnique({
+      where: { id },
+    });
     if (!record) {
       throw new NotFoundException(`Exam notification ${id} not found`);
     }
     return record;
   }
 
-  async create(dto: CreateExamNotificationDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateExamNotificationDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const { startDate, endDate, ...rest } = dto;
     const created = await this.prisma.examNotification.create({
       data: {
@@ -88,7 +104,9 @@ export class ExamNotificationsService {
       data: {
         ...rest,
         ...(startDate && { startDate: new Date(startDate) }),
-        ...(endDate !== undefined && { endDate: endDate ? new Date(endDate) : null }),
+        ...(endDate !== undefined && {
+          endDate: endDate ? new Date(endDate) : null,
+        }),
       },
     });
 
@@ -99,7 +117,11 @@ export class ExamNotificationsService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(dto) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(dto),
+      },
       requestId,
     });
 
@@ -141,7 +163,9 @@ export class ExamNotificationsService {
   async delete(id: number, admin: RequestAdmin, requestId?: string) {
     const existing = await this.findOrThrow(id);
 
-    const deleted = await this.prisma.examNotification.delete({ where: { id } });
+    const deleted = await this.prisma.examNotification.delete({
+      where: { id },
+    });
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -155,5 +179,56 @@ export class ExamNotificationsService {
     });
 
     return deleted;
+  }
+
+  /**
+   * Drag-to-reorder. Mirrors FacultyService.reorder so both behave identically:
+   * the whole list arrives in its new order, is validated as a set, and is
+   * written in one transaction so a partial failure cannot leave the list half
+   * reordered.
+   */
+  async reorder(
+    dto: ReorderExamNotificationsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    const sortOrders = dto.items.map((i) => i.sortOrder);
+    if (new Set(sortOrders).size !== sortOrders.length) {
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
+    }
+
+    const ids = dto.items.map((i) => i.id);
+    const existingRows = await this.prisma.examNotification.findMany({
+      where: { id: { in: ids } },
+      select: { id: true },
+    });
+    if (existingRows.length !== ids.length) {
+      throw new BadRequestException(
+        'One or more exam notifications do not exist',
+      );
+    }
+
+    await this.prisma.$transaction(
+      dto.items.map((item) =>
+        this.prisma.examNotification.update({
+          where: { id: item.id },
+          data: { sortOrder: item.sortOrder },
+        }),
+      ),
+    );
+
+    await this.auditLog.log({
+      adminId: admin.id,
+      adminName: admin.name,
+      adminEmail: admin.email,
+      action: 'REORDER',
+      module: AUDIT_MODULE,
+      details: { items: dto.items },
+      requestId,
+    });
+
+    return this.findAllAdmin();
   }
 }

@@ -58,8 +58,33 @@ const CATEGORY_OPTIONS = [
  * ever needing an attachment - so the two are merged. Without this, those
  * pages' text panels would exist but be unreachable from the dropdown.
  */
+/**
+ * Examination document sub-sections are managed in Admin -> Exam Notifications,
+ * which has a purpose-built bulk-upload flow for them (a semester's results
+ * arrive as a folder of PDFs, not one at a time). They also appeared here,
+ * giving two separate places to do the same job - the reported duplication.
+ *
+ * Only the four DOCUMENT sub-sections are hidden. The plain "examinations"
+ * entry stays: it carries the page's editable text (the "Examination Portal"
+ * heading, "Latest Notifications", and so on), which Exam Notifications does
+ * not manage, so removing it would leave that wording uneditable.
+ *
+ * They remain in PAGE_SECTIONS deliberately - Documents, Gallery and the bulk
+ * uploader all still need them as routing targets. This hides them from this
+ * screen only.
+ */
+const SECTIONS_MANAGED_ELSEWHERE = new Set([
+  "examinations.results",
+  "examinations.notifications",
+  "examinations.timetables",
+  "examinations.calendars",
+  "examinations.rules",
+])
+
 const ALL_PAGES = (() => {
-  const byValue = new Map(PAGE_SECTIONS.map((s) => [s.value, s]))
+  const byValue = new Map(
+    PAGE_SECTIONS.filter((s) => !SECTIONS_MANAGED_ELSEWHERE.has(s.value)).map((s) => [s.value, s]),
+  )
   for (const p of pagesWithText()) if (!byValue.has(p.value)) byValue.set(p.value, p)
   return [...byValue.values()].sort((a, b) => a.label.localeCompare(b.label))
 })()

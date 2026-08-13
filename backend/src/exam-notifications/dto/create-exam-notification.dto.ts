@@ -1,5 +1,13 @@
 import { ExamNotificationType } from '@prisma/client';
-import { IsString, IsOptional, IsDateString, IsBoolean, IsEnum, IsInt, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsDateString,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  MaxLength,
+} from 'class-validator';
 
 // Deliberately simple - this module publishes important links (Hall
 // Ticket, Results, Registration, Exam Schedule, Important Notice), it is

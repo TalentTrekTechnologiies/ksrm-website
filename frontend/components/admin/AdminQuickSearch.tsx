@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Search, CornerDownLeft } from "lucide-react"
 import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin } from "@/lib/auth"
-import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
+import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 
 /**
  * The navbar search, made real: a quick-jump. Type what you want to do -
@@ -156,7 +156,11 @@ export default function AdminQuickSearch() {
           // department, academic or not.
           all.filter((d) =>
             d.isActive &&
-            (isDeptScoped ? d.id === admin?.departmentId : isAcademicDepartment(d)),
+            // Offices (Central Library, Examination Section) are searchable
+            // too - they are real department workspaces, and the sidebar now
+            // lists them. Leaving them out here would make them findable in
+            // one place and invisible in the other.
+            (isDeptScoped ? d.id === admin?.departmentId : true),
           ),
         ),
       )

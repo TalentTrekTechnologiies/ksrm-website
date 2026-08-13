@@ -92,3 +92,12 @@ export function deleteNewsArticle(id: number): Promise<NewsArticle> {
 export function restoreNewsArticle(id: number): Promise<NewsArticle> {
   return apiPost<NewsArticle>(`/news/${id}/restore`);
 }
+
+/**
+ * Permanently removes an ALREADY-deleted article. The backend rejects anything
+ * that is not already in the deleted items, so this can never bypass the
+ * soft-delete step.
+ */
+export function purgeNewsArticle(id: number): Promise<NewsArticle> {
+  return apiDelete<NewsArticle>(`/news/${id}/permanent`);
+}

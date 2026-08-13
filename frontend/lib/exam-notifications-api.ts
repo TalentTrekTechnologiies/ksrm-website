@@ -39,6 +39,8 @@ export interface ExamNotification {
   endDate: string | null;
   isPublished: boolean;
   isActive: boolean;
+  /** Manual display order, lowest first. Ties fall back to date. */
+  sortOrder: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -85,4 +87,14 @@ export function unpublishExamNotification(id: number): Promise<ExamNotification>
 
 export function deleteExamNotification(id: number): Promise<ExamNotification> {
   return apiDelete<ExamNotification>(`/exam-notifications/${id}`);
+}
+
+/**
+ * Drag-to-reorder: send the whole list in its new order.
+ * Same contract as reorderFaculty / reorderDownloads.
+ */
+export function reorderExamNotifications(
+  items: { id: number; sortOrder: number }[],
+): Promise<ExamNotification[]> {
+  return apiPatch<ExamNotification[]>("/exam-notifications/reorder", { items });
 }

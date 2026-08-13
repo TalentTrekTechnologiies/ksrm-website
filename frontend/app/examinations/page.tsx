@@ -117,6 +117,35 @@ export default function ExaminationsPage() {
         </div>
       </section>
 
+      {/* Examination rules and the student code of conduct.
+          Its own section (not the catch-all) so conduct rules sit where
+          students look for them, and deliberately WITHOUT a fallbackSections /
+          fallbackTitlePattern pair: those cause a block to pull in documents
+          routed elsewhere whose titles happen to match, which is how the other
+          sections ended up mixing content. Only documents an admin explicitly
+          routes to "Examinations -> Rules & Regulations" appear here. */}
+      <section id="rules" style={{ padding: "80px 0", background: "#ffffff" }}>
+        <div className="responsive-container">
+          {/* Plain text, matching the Syllabus section above. A <CmsText> here
+              would render NOTHING until an admin happened to fill that slot -
+              CmsText returns null when unset - leaving an empty <h2>. The
+              editable content in this section is the documents themselves. */}
+          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 16, textAlign: "center" }}>
+            Rules &amp; Regulations
+          </h2>
+          <p style={{ textAlign: "center", color: "#666", fontSize: 15, margin: "0 0 32px", maxWidth: 760, marginLeft: "auto", marginRight: "auto", lineHeight: 1.7 }}>
+            Examination rules and the student code of conduct. Published by the Office of the
+            Controller of Examinations.
+          </p>
+          {/* `embedded` keeps this inside the section above rather than opening
+              its own. Note emptyText is deliberately omitted: PageResources
+              ignores it when embedded, so it would be dead config - the
+              paragraph above carries the section on its own until the first
+              document is published. */}
+          <PageResources section="examinations.rules" embedded maxVisible={8} />
+        </div>
+      </section>
+
       {/* Every SYLLABUS document, regardless of which page it was routed to -
           matches the inclusion the dedicated Syllabus page already uses, so a
           document uploaded once shows in both places without extra admin

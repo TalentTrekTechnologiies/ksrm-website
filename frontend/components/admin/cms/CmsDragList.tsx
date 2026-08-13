@@ -34,12 +34,14 @@ function SortableRow<T extends CmsDragListItem>({
   onEdit,
   onDelete,
   onRestore,
+  onDeleteForever,
 }: {
   item: T
   children: ReactNode
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
   onRestore?: (item: T) => void
+  onDeleteForever?: (item: T) => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
@@ -91,16 +93,31 @@ function SortableRow<T extends CmsDragListItem>({
 
       <div className="flex shrink-0 items-center gap-1" onPointerDown={(e) => e.stopPropagation()}>
         {isDeleted ? (
-          onRestore && (
-            <button
-              type="button"
-              onClick={() => onRestore(item)}
-              aria-label="Restore"
-              className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-emerald-600"
-            >
-              <RotateCcw className="h-4 w-4" />
-            </button>
-          )
+          <>
+            {onRestore && (
+              <button
+                type="button"
+                onClick={() => onRestore(item)}
+                aria-label="Restore"
+                className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-emerald-600"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
+            )}
+            {/* Permanent removal - see the note in CmsCardGrid. Only rendered
+                for rows that are already soft-deleted. */}
+            {onDeleteForever && (
+              <button
+                type="button"
+                onClick={() => onDeleteForever(item)}
+                aria-label="Delete permanently"
+                title="Delete permanently"
+                className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+          </>
         ) : (
           <>
             {onEdit && (
@@ -139,6 +156,7 @@ export default function CmsDragList<T extends CmsDragListItem>({
   onEdit,
   onDelete,
   onRestore,
+  onDeleteForever,
   emptyLabel = "Nothing here yet.",
 }: {
   items: T[]
@@ -147,6 +165,8 @@ export default function CmsDragList<T extends CmsDragListItem>({
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
   onRestore?: (item: T) => void
+  /** Shown only on already-deleted rows. Omit to keep a module restore-only. */
+  onDeleteForever?: (item: T) => void
   emptyLabel?: string
 }) {
   const sensors = useSensors(
@@ -174,7 +194,7 @@ export default function CmsDragList<T extends CmsDragListItem>({
       <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
         <ul className="space-y-2">
           {items.map((item) => (
-            <SortableRow key={item.id} item={item} onEdit={onEdit} onDelete={onDelete} onRestore={onRestore}>
+            <SortableRow key={item.id} item={item} onEdit={onEdit} onDelete={onDelete} onRestore={onRestore} onDeleteForever={onDeleteForever}>
               {renderRow(item)}
             </SortableRow>
           ))}

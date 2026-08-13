@@ -28,6 +28,7 @@ export default function CmsCardGrid<T extends CmsCardGridItem>({
   onEdit,
   onDelete,
   onRestore,
+  onDeleteForever,
   selectedIds,
   onToggleSelect,
   emptyTitle = "No items yet",
@@ -38,6 +39,8 @@ export default function CmsCardGrid<T extends CmsCardGridItem>({
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
   onRestore?: (item: T) => void
+  /** Shown only on already-deleted rows. Omit to keep a module restore-only. */
+  onDeleteForever?: (item: T) => void
   selectedIds?: Set<number>
   onToggleSelect?: (id: number) => void
   emptyTitle?: string
@@ -98,16 +101,34 @@ export default function CmsCardGrid<T extends CmsCardGridItem>({
 
             <div className="flex items-center justify-end gap-1 border-t border-admin-border px-2 py-1.5">
               {isDeleted ? (
-                onRestore && (
-                  <button
-                    type="button"
-                    onClick={() => onRestore(item)}
-                    aria-label="Restore"
-                    className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-emerald-600"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                  </button>
-                )
+                <>
+                  {onRestore && (
+                    <button
+                      type="button"
+                      onClick={() => onRestore(item)}
+                      aria-label="Restore"
+                      className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-emerald-600"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </button>
+                  )}
+                  {/* Deleted rows previously offered ONLY "Restore", so an
+                      admin who deleted something by mistake - or deliberately -
+                      could never get it out of the recycle view. This is the
+                      permanent removal, deliberately styled as destructive and
+                      only ever shown on already-soft-deleted rows. */}
+                  {onDeleteForever && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteForever(item)}
+                      aria-label="Delete permanently"
+                      title="Delete permanently"
+                      className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+                </>
               ) : (
                 <>
                   {onEdit && (

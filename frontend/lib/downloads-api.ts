@@ -36,6 +36,11 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "examinations.notifications", label: "Examinations → Notifications" },
   { value: "examinations.timetables", label: "Examinations → Time Tables" },
   { value: "examinations.results", label: "Examinations → Exam Results" },
+  // Examination rules and the student code of conduct. Its own section rather
+  // than the catch-all so the college can publish conduct rules where students
+  // look for them, and so those documents cannot be swept into another block
+  // by a title match.
+  { value: "examinations.rules", label: "Examinations → Rules & Regulations" },
   { value: "examinations", label: "Examinations → Other Documents" },
   { value: "research", label: "Research" },
   { value: "library", label: "Library" },

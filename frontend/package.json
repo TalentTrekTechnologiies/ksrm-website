@@ -10,6 +10,9 @@
     "export": "npm run build:static && next export",
     "zip": "next build && tar -a -c -f ../ksrm-site.zip -C out .",
     "lint": "eslint",
+    "seo:audit": "node scripts/seo-audit.mjs",
+    "seo:og-image": "node scripts/make-og-image.mjs",
+    "images:compress": "node scripts/compress-public-images.mjs",
     "build:prod": "node -e \"process.env.NEXT_PUBLIC_API_URL='/api';require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\""
   },
   "dependencies": {
@@ -38,7 +41,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5.15.12",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

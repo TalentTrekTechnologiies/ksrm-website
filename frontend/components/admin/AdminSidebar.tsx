@@ -19,7 +19,7 @@ import { getDashboardOverview } from "@/lib/dashboard-api"
 import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin } from "@/lib/auth"
 import { PAGE_SECTIONS } from "@/lib/downloads-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
-import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
+import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 import { Building2 } from "lucide-react"
 
 /**
@@ -268,10 +268,23 @@ export default function AdminSidebar({
               // isAcademicDepartment first would strip their own department
               // out and leave them staring at an empty Departments tree with
               // no way to reach the workspace they were created to manage.
-              .filter((d) =>
-                d.isActive &&
-                (isDeptScoped ? d.id === admin?.departmentId : isAcademicDepartment(d)),
-              )
+              // A super admin now sees the non-academic offices (Central
+              // Library, Examination Section) here too, not just the academic
+              // departments.
+              //
+              // They are real Department records with their own workspace -
+              // staff, documents, profile - but isAcademicDepartment() filtered
+              // them out of this tree, so the ONLY place a super admin could
+              // reach Library was the Page Content dropdown, which manages its
+              // wording and nothing else. Their staff and committee were
+              // effectively unreachable without logging in as a
+              // department-scoped admin for that office.
+              //
+              // isAcademicDepartment is still used unchanged everywhere it
+              // matters (Page Content's department list, the public academic
+              // listings) - offices genuinely are not academic departments;
+              // they just need to be reachable from the admin.
+              .filter((d) => d.isActive && (isDeptScoped ? d.id === admin?.departmentId : true))
               .sort((a, b) => a.name.localeCompare(b.name)),
           )
         }
@@ -549,7 +562,24 @@ export default function AdminSidebar({
         </div>
       ) : (
         <div onClick={onNavigate} className="contents">
-          {NAV_ITEMS.filter((item) => visibleKeys.has(item.widgetKey) && !isDeptScoped).map((item) => (
+          {/*
+            Filtered by widget key ALONE - the `&& !isDeptScoped` that used to
+            be here hid every module link from any department-scoped admin,
+            whatever their permissions, leaving them with nothing but the
+            Dashboard and no way to reach the modules whose counts it was
+            showing them. An admin created for Examinations could see an "Exam
+            Notifications" tile with a number on it and had no link to open it.
+            (A previous fix to isDepartmentScopedAdmin addressed a different
+            cause of the same empty-sidebar symptom; this blanket filter was
+            the remaining one.)
+
+            Dropping it grants nothing extra: visibleKeys comes from the
+            dashboard overview, which the backend already restricts to widgets
+            that are BOTH permitted for this admin and marked
+            departmentScoped - so a scoped admin only ever gets keys for the
+            nine modules that are meaningful within a department.
+          */}
+          {NAV_ITEMS.filter((item) => visibleKeys.has(item.widgetKey)).map((item) => (
             <NavLink
               key={item.href}
               href={item.href}

@@ -120,6 +120,7 @@ const navItems: NavItem[] = [
       { label: "Exam Time Tables", href: "/examinations#timetables" },
       { label: "Question Papers", href: "/examinations#question-papers" },
       { label: "Results & Fee Payment", href: "/examinations#results" },
+      { label: "Rules & Regulations", href: "/examinations#rules" },
       { label: "Contact the COE", href: "/examinations#contact" },
     ],
   },

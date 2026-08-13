@@ -83,4 +83,16 @@ export class NewsController {
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.newsService.restore(id, req.user, req.requestId);
   }
+
+  /**
+   * Permanent removal of an already-deleted article. Gated on the DELETE
+   * permission rather than a new one, so anyone trusted to delete can also
+   * empty the bin - and nobody else gains a capability they did not have.
+   */
+  @Delete(':id/permanent')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('news.delete')
+  purge(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.newsService.purge(id, req.user, req.requestId);
+  }
 }

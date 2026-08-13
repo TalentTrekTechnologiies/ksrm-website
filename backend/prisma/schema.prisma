@@ -554,6 +554,15 @@ model ExamNotification {
   /// Which list on the Examinations page this appears under.
   type ExamNotificationType @default(NOTIFICATION)
 
+  /// Manual display order within a list, lowest first, set by dragging in
+  /// Admin -> Exam Notifications.
+  ///
+  /// Both the public and admin lists previously sorted by date alone, so the
+  /// office had no way to pin an important notice above a newer one. Defaults
+  /// to 0, which leaves every existing row tied - the date then decides, so
+  /// adding this column changes nothing until someone actually drags something.
+  sortOrder Int @default(0)
+
   /// The attached file (result sheet, timetable, question paper). mediaId is
   /// the Media Library link; fileUrl stays for a plain external URL and for
   /// the rows that predate the Media Library.

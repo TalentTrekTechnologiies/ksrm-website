@@ -66,7 +66,11 @@ describe('ExamNotificationsService', () => {
       prisma.examNotification.create.mockResolvedValue({ id: 5 });
 
       await service.create(
-        { title: 'Hall Ticket', startDate: '2026-08-01', endDate: '2026-08-15' } as any,
+        {
+          title: 'Hall Ticket',
+          startDate: '2026-08-01',
+          endDate: '2026-08-15',
+        },
         admin,
         undefined,
       );
@@ -75,14 +79,21 @@ describe('ExamNotificationsService', () => {
       expect(data.startDate).toBeInstanceOf(Date);
       expect(data.endDate).toBeInstanceOf(Date);
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'CREATE', module: 'exam_notifications' }),
+        expect.objectContaining({
+          action: 'CREATE',
+          module: 'exam_notifications',
+        }),
       );
     });
 
     it('leaves endDate undefined (open-ended) when not provided', async () => {
       prisma.examNotification.create.mockResolvedValue({ id: 5 });
 
-      await service.create({ title: 'Results', startDate: '2026-08-01' } as any, admin, undefined);
+      await service.create(
+        { title: 'Results', startDate: '2026-08-01' },
+        admin,
+        undefined,
+      );
 
       const data = prisma.examNotification.create.mock.calls[0][0].data;
       expect(data.endDate).toBeUndefined();
@@ -99,21 +110,32 @@ describe('ExamNotificationsService', () => {
     });
 
     it('leaves endDate untouched when not provided in the update payload', async () => {
-      prisma.examNotification.findUnique.mockResolvedValue({ id: 1, endDate: new Date() });
+      prisma.examNotification.findUnique.mockResolvedValue({
+        id: 1,
+        endDate: new Date(),
+      });
       prisma.examNotification.update.mockResolvedValue({ id: 1 });
 
-      await service.update(1, { title: 'Updated title' } as any, admin, undefined);
+      await service.update(1, { title: 'Updated title' }, admin, undefined);
 
       expect(prisma.examNotification.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ endDate: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ endDate: expect.anything() }),
+        }),
       );
     });
   });
 
   describe('setPublished', () => {
     it('publishes and logs PUBLISH', async () => {
-      prisma.examNotification.findUnique.mockResolvedValue({ id: 1, isPublished: false });
-      prisma.examNotification.update.mockResolvedValue({ id: 1, isPublished: true });
+      prisma.examNotification.findUnique.mockResolvedValue({
+        id: 1,
+        isPublished: false,
+      });
+      prisma.examNotification.update.mockResolvedValue({
+        id: 1,
+        isPublished: true,
+      });
 
       await service.setPublished(1, true, admin, undefined);
 
@@ -127,8 +149,14 @@ describe('ExamNotificationsService', () => {
     });
 
     it('unpublishes and logs UNPUBLISH', async () => {
-      prisma.examNotification.findUnique.mockResolvedValue({ id: 1, isPublished: true });
-      prisma.examNotification.update.mockResolvedValue({ id: 1, isPublished: false });
+      prisma.examNotification.findUnique.mockResolvedValue({
+        id: 1,
+        isPublished: true,
+      });
+      prisma.examNotification.update.mockResolvedValue({
+        id: 1,
+        isPublished: false,
+      });
 
       await service.setPublished(1, false, admin, undefined);
 
@@ -153,9 +181,14 @@ describe('ExamNotificationsService', () => {
 
       await service.delete(1, admin, undefined);
 
-      expect(prisma.examNotification.delete).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(prisma.examNotification.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'DELETE', module: 'exam_notifications' }),
+        expect.objectContaining({
+          action: 'DELETE',
+          module: 'exam_notifications',
+        }),
       );
     });
   });

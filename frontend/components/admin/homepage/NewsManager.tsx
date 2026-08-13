@@ -29,6 +29,7 @@ import {
   updateNewsArticle,
   deleteNewsArticle,
   restoreNewsArticle,
+  purgeNewsArticle,
   NewsArticle,
 } from "@/lib/news-api"
 
@@ -196,6 +197,33 @@ function NewsManagerInner() {
     }
   }
 
+  /**
+   * Permanent removal. Deleted rows previously offered only "Restore", so
+   * anything deleted stayed in the list forever with no way to clear it.
+   *
+   * The confirmation spells out that this one is not reversible - the ordinary
+   * Delete above deliberately reassures ("You can restore it afterwards"), so
+   * this one has to say the opposite just as plainly.
+   */
+  async function handlePurge(item: NewsArticle) {
+    if (
+      !(await confirm({
+        title: "Delete permanently?",
+        message: `Permanently delete "${item.title}"? This cannot be undone and it will NOT be restorable.`,
+        confirmLabel: "Delete permanently",
+        destructive: true,
+      }))
+    )
+      return
+    try {
+      await purgeNewsArticle(item.id)
+      await refresh()
+      notifySaved("The article has been permanently deleted.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to permanently delete article")
+    }
+  }
+
   async function toggleFeatured(item: NewsArticle) {
     try {
       await updateNewsArticle(item.id, { isFeatured: !item.isFeatured, version: item.version })
@@ -270,9 +298,14 @@ function NewsManagerInner() {
       header: "",
       cell: ({ row }) =>
         row.original.deletedAt ? (
-          <button type="button" onClick={() => handleRestore(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">
-            Restore
-          </button>
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={() => handleRestore(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">
+              Restore
+            </button>
+            <button type="button" onClick={() => handlePurge(row.original)} className="text-xs font-semibold text-red-600 hover:underline">
+              Delete permanently
+            </button>
+          </div>
         ) : (
           <div className="flex items-center gap-3">
             <button type="button" onClick={() => startEdit(row.original)} className="text-xs font-semibold text-admin-primary hover:underline">

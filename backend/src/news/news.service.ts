@@ -64,7 +64,12 @@ export class NewsService {
       },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -150,6 +155,46 @@ export class NewsService {
     return deleted;
   }
 
+  /**
+   * Permanent removal of an ALREADY soft-deleted record.
+   *
+   * Until now the recycle view offered only "Restore": once something was
+   * deleted there was no way to get rid of it, so deleted rows accumulated
+   * forever and an admin who deleted something by mistake could not tidy up.
+   *
+   * Two deliberate safety properties:
+   *  - it refuses anything that is not already soft-deleted, so this can never
+   *    be a one-click destroy on live content - a record must be deleted first,
+   *    which makes permanent removal a two-step, two-decision action;
+   *  - the full row is written into the audit log before it goes, since after
+   *    this there is nothing left to inspect.
+   */
+  async purge(id: number, admin: RequestAdmin, requestId?: string) {
+    const existing = await this.prisma.news.findFirst({
+      where: { id, NOT: { deletedAt: null } },
+    });
+    if (!existing) {
+      throw new NotFoundException(
+        `News article ${id} is not in the deleted items - only already-deleted records can be permanently removed`,
+      );
+    }
+
+    await this.prisma.news.delete({ where: { id } });
+
+    await this.auditLog.log({
+      adminId: admin.id,
+      adminName: admin.name,
+      adminEmail: admin.email,
+      action: 'PURGE',
+      module: MEDIA_MODULE,
+      targetId: id,
+      details: { before: existing, permanent: true },
+      requestId,
+    });
+
+    return existing;
+  }
+
   async restore(id: number, admin: RequestAdmin, requestId?: string) {
     const existing = await this.prisma.news.findFirst({
       where: { id, NOT: { deletedAt: null } },
@@ -164,7 +209,12 @@ export class NewsService {
     });
 
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({

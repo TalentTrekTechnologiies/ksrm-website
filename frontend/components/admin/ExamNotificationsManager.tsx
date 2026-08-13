@@ -7,6 +7,8 @@ import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
 import FacultyTab from "@/components/admin/departments/FacultyTab"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
+import CmsDragList from "@/components/admin/cms/CmsDragList"
+import { getDownloadsAdmin, reorderDownloads, type Download } from "@/lib/downloads-api"
 import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
@@ -29,6 +31,7 @@ import {
   ExamNotification,
   ExamNotificationType,
   EXAM_TYPES,
+  reorderExamNotifications,
 } from "@/lib/exam-notifications-api"
 
 interface FormState {
@@ -322,6 +325,8 @@ function ExamNotificationsManagerInner() {
         }
       />
 
+      {items.length > 0 && <ExamNotificationOrder onSaved={refresh} />}
+
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center rounded-xl border border-dashed border-admin-border bg-admin-bg py-12 text-center">
           <p className="text-sm font-semibold text-slate-600">No exam notifications yet</p>
@@ -411,6 +416,7 @@ const EXAM_PAGE_SECTIONS = [
   { value: "examinations.timetables", label: "Time Tables" },
   { value: "examinations.notifications", label: "Notifications" },
   { value: "examinations.calendars", label: "Academic Calendars" },
+  { value: "examinations.rules", label: "Rules & Regulations" },
   { value: "examinations", label: "Other Exam Documents" },
 ]
 
@@ -454,14 +460,241 @@ function ExamResultsTab() {
         }}
       />
 
+      <ExamDocumentOrder key={`order-${refreshKey}`} />
+
       <p className="text-xs text-slate-500">
-        Already-published documents are listed under{" "}
+        Renaming and removing documents is done under{" "}
         <a href="/admin/downloads" className="font-semibold text-admin-primary hover:underline">
           Documents
         </a>
-        , where they can be renamed, reordered or removed.
+        .
       </p>
     </div>
+  )
+}
+
+/**
+ * Drag-and-drop priority ordering for the documents in one examinations
+ * section, matching how Faculty is ordered.
+ *
+ * There was no way to order documents anywhere in the admin: the public page
+ * sorts by sortOrder, but nothing ever set it, and the note here used to tell
+ * admins that documents "can be reordered" under Documents - which was not
+ * true, that screen has no reordering either. reorderDownloads() and its
+ * PATCH /downloads/reorder endpoint already existed and were simply unused.
+ *
+ * Scoped to one section at a time on purpose: sortOrder is only meaningful
+ * within the list a visitor actually sees, and these sections hold hundreds of
+ * documents each - one flat list of 2,000 rows would be unusable.
+ */
+/**
+ * Drag-to-reorder for exam notifications, one list at a time.
+ *
+ * Scoped per type because that is how the public page displays them - Latest
+ * Notifications, Exam Results, Time Tables and so on are separate lists, so an
+ * order that spanned all of them would be meaningless.
+ *
+ * Kept as its own panel rather than making the card grid above sortable: the
+ * grid is a three-column layout, and dragging cards between columns reads as
+ * a two-dimensional arrangement when the underlying order is a single list.
+ */
+function ExamNotificationOrder({ onSaved }: { onSaved: () => void | Promise<void> }) {
+  const [type, setType] = useState<ExamNotificationType>("NOTIFICATION")
+
+  return (
+    <div className="space-y-3 rounded-xl border border-admin-border bg-white p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-slate-800">Display order</p>
+          <p className="text-sm text-slate-500">
+            Drag to choose which notice appears first on the Examinations page. Saved automatically.
+          </p>
+        </div>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value as ExamNotificationType)}
+          className="rounded-lg border border-admin-border bg-white px-3 py-2 text-sm"
+          aria-label="Notification list to reorder"
+        >
+          {EXAM_TYPES.map((t) => (
+            <option key={t.value} value={t.value}>
+              {t.plural}
+            </option>
+          ))}
+        </select>
+      </div>
+      {/* Keyed by type so switching lists remounts clean - see the note on
+          ExamDocumentOrderList for why this is not done with a reset effect. */}
+      <ExamNotificationOrderList key={type} type={type} onSaved={onSaved} />
+    </div>
+  )
+}
+
+function ExamNotificationOrderList({
+  type,
+  onSaved,
+}: {
+  type: ExamNotificationType
+  onSaved: () => void | Promise<void>
+}) {
+  const [rows, setRows] = useState<ExamNotification[] | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    getExamNotificationsAdmin(type)
+      .then((list) => {
+        if (!cancelled) setRows(list)
+      })
+      .catch(() => {
+        if (!cancelled) setError("Could not load this list.")
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [type])
+
+  const handleReorder = (next: ExamNotification[]) => {
+    const previous = rows
+    setRows(next)
+    setSaving(true)
+    setError(null)
+    reorderExamNotifications(next.map((n, i) => ({ id: n.id, sortOrder: i })))
+      .then(async () => {
+        setSaving(false)
+        // Refresh the card grid above so it reflects the new order too.
+        await onSaved()
+      })
+      .catch(() => {
+        setRows(previous)
+        setSaving(false)
+        setError("Could not save the new order. Nothing was changed.")
+      })
+  }
+
+  return (
+    <>
+      {saving && <p className="text-xs text-slate-500">Saving order...</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      {rows === null ? (
+        <p className="text-sm text-slate-500">Loading...</p>
+      ) : (
+        <CmsDragList
+          items={rows.map((r) => ({ ...r, deletedAt: null }))}
+          onReorder={(next) => handleReorder(next)}
+          emptyLabel="Nothing in this list yet."
+          renderRow={(n) => (
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-slate-800">{n.title}</span>
+              <span className="text-xs text-slate-500">
+                {n.academicYear ? `${n.academicYear} · ` : ""}
+                {new Date(n.startDate).toLocaleDateString()}
+                {n.isPublished ? "" : " · draft"}
+              </span>
+            </span>
+          )}
+        />
+      )}
+    </>
+  )
+}
+
+function ExamDocumentOrder() {
+  const [section, setSection] = useState(EXAM_PAGE_SECTIONS[0].value)
+
+  return (
+    <div className="space-y-3 rounded-xl border border-admin-border bg-white p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-slate-800">Display order</p>
+          <p className="text-sm text-slate-500">
+            Drag to set the order these appear in on the Examinations page. Saved automatically.
+          </p>
+        </div>
+        <select
+          value={section}
+          onChange={(e) => setSection(e.target.value)}
+          className="rounded-lg border border-admin-border bg-white px-3 py-2 text-sm"
+          aria-label="Section to reorder"
+        >
+          {EXAM_PAGE_SECTIONS.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      {/* Keyed by section so switching remounts with a clean slate. The
+          alternative - clearing state at the top of the effect - is a
+          synchronous setState inside an effect, which triggers a second render
+          pass for every section change. */}
+      <ExamDocumentOrderList key={section} section={section} />
+    </div>
+  )
+}
+
+function ExamDocumentOrderList({ section }: { section: string }) {
+  const [docs, setDocs] = useState<Download[] | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    getDownloadsAdmin()
+      .then((all) => {
+        if (cancelled) return
+        setDocs(
+          all
+            .filter((d) => d.pageSection === section && !d.deletedAt)
+            .sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title)),
+        )
+      })
+      .catch(() => {
+        if (!cancelled) setError("Could not load documents for this section.")
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [section])
+
+  const handleReorder = (next: Download[]) => {
+    // Optimistic: the list is already in the new order on screen, so reflect
+    // it immediately and reconcile if the save fails.
+    const previous = docs
+    setDocs(next)
+    setSaving(true)
+    setError(null)
+    reorderDownloads(next.map((d, i) => ({ id: d.id, sortOrder: i })))
+      .then(() => setSaving(false))
+      .catch(() => {
+        setDocs(previous)
+        setSaving(false)
+        setError("Could not save the new order. Nothing was changed.")
+      })
+  }
+
+  return (
+    <>
+      {saving && <p className="text-xs text-slate-500">Saving order...</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
+
+      {docs === null ? (
+        <p className="text-sm text-slate-500">Loading documents...</p>
+      ) : (
+        <CmsDragList
+          items={docs}
+          onReorder={handleReorder}
+          emptyLabel="No documents in this section yet."
+          renderRow={(d) => (
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-slate-800">{d.title}</span>
+              {d.groupLabel && <span className="text-xs text-slate-500">{d.groupLabel}</span>}
+            </span>
+          )}
+        />
+      )}
+    </>
   )
 }
 
