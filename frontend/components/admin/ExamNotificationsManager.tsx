@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Loader2, Plus, AlertTriangle, CheckCircle2 } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
@@ -110,7 +110,22 @@ function ExamNotificationsManagerInner() {
   const [creating, setCreating] = useState(false)
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
+  /** Newly saved but still a draft - the list scrolls to it and prompts. */
+  const [unpublishedId, setUnpublishedId] = useState<number | null>(null)
+  const draftRef = useRef<HTMLDivElement>(null)
   const [search, setSearch] = useState("")
+
+  // Brings the just-saved draft into view. Runs after `items` updates, so the
+  // card exists by the time we scroll.
+  //
+  // Scrolls only - it deliberately does not clear the highlight here. Calling
+  // setState inside an effect triggers a second render pass for every list
+  // update; the highlight is cleared where it is actually resolved instead
+  // (handleTogglePublish, and on the next save).
+  useEffect(() => {
+    if (unpublishedId == null) return
+    draftRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, [items, unpublishedId])
 
   async function refresh() {
     try {
@@ -169,7 +184,19 @@ function ExamNotificationsManagerInner() {
   }
 
   async function handleSave() {
-    if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
+    // The old wording promised these "go live on the public site straight
+    // away", which is the opposite of what happens: a notification saves as a
+    // draft and needs publishing. Editing a live one does take effect at once.
+    if (
+      !(await confirm({
+        title: "Save changes?",
+        message: editing
+          ? "Save your changes? If this notification is published, they appear on the site straight away."
+          : "Save this notification? It is saved as a draft - you will need to publish it before it appears on the site.",
+        confirmLabel: "Save",
+      }))
+    )
+      return
     setSaving(true)
     setError(null)
     try {
@@ -184,14 +211,25 @@ function ExamNotificationsManagerInner() {
         endDate: form.endDate || null,
         isActive: form.isActive,
       }
-      if (editing) {
-        await updateExamNotification(editing.id, dto)
-      } else {
-        await createExamNotification(dto)
-      }
+      // A new notification is created as a DRAFT (isPublished defaults to
+      // false), so saving it does not put it on the site. That is easy to
+      // miss - the form closes, the card appears, and nothing tells you the
+      // public page is unchanged. Remember the new record so the list can
+      // scroll to it and say so plainly.
+      const saved = editing
+        ? await updateExamNotification(editing.id, dto)
+        : await createExamNotification(dto)
+
       cancelForm()
       await refresh()
-      notifySaved("Your changes have been saved.")
+
+      if (!saved.isPublished) {
+        setUnpublishedId(saved.id)
+        notifySaved("Saved as a draft - it is not on the website yet.")
+      } else {
+        setUnpublishedId(null)
+        notifySaved("Your changes have been saved.")
+      }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save exam notification")
     } finally {
@@ -206,6 +244,9 @@ function ExamNotificationsManagerInner() {
         await unpublishExamNotification(item.id)
       } else {
         await publishExamNotification(item.id)
+        // Publishing resolves the "not on the website yet" prompt, so the
+        // highlight comes off here rather than in an effect.
+        if (item.id === unpublishedId) setUnpublishedId(null)
       }
       await refresh()
     } catch (err) {
@@ -337,9 +378,28 @@ function ExamNotificationsManagerInner() {
           {filtered.map((item) => (
             <div
               key={item.id}
+              ref={item.id === unpublishedId ? draftRef : undefined}
               style={{ boxShadow: "var(--shadow-admin-card)" }}
-              className="flex flex-col rounded-2xl border border-admin-border bg-white p-4"
+              className={`flex flex-col rounded-2xl border bg-white p-4 ${
+                item.id === unpublishedId ? "border-amber-400 ring-2 ring-amber-200" : "border-admin-border"
+              }`}
             >
+              {/* Shown on the record just saved, while it is still a draft.
+                  Saving does NOT publish - without this the form simply closes
+                  and nothing indicates the public page is unchanged. */}
+              {item.id === unpublishedId && !item.isPublished && (
+                <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span className="flex-1">Saved, but not on the website yet.</span>
+                  <button
+                    type="button"
+                    onClick={() => handleTogglePublish(item)}
+                    className="rounded-lg bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700"
+                  >
+                    Publish now
+                  </button>
+                </div>
+              )}
               <div className="mb-2 flex items-center justify-between">
                 <StatusBadge item={item} />
                 <button

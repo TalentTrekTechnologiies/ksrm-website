@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useId } from "react"
+import { ReactNode, useEffect, useId, useRef } from "react"
 import type { LucideIcon } from "lucide-react"
 
 function HelperRow({
@@ -320,8 +320,55 @@ export function ImageUrlField({
   )
 }
 
+/**
+ * The button row at the foot of every CMS form - and the hook that brings the
+ * form into view when it opens.
+ *
+ * Clicking Edit rendered the form wherever it happened to sit on the page,
+ * usually above a long list, leaving the admin to scroll and find it. On the
+ * longer screens (Documents, Faculty) it looked as though nothing had happened
+ * at all.
+ *
+ * This lives here, in the one component all 41 managers already render, rather
+ * than being repeated in each of them. On mount it walks up to the enclosing
+ * form panel and scrolls that into view, then focuses its first input so
+ * keyboard and screen-reader users land in the same place - focus is what
+ * actually moves for them; scrolling alone would not.
+ *
+ * Nothing happens if the panel cannot be found, so a manager with a different
+ * layout is unaffected rather than mis-scrolled.
+ */
 export function FormActions({ children }: { children: ReactNode }) {
-  return <div className="flex flex-wrap items-center justify-end gap-3 border-t border-admin-border pt-4">{children}</div>
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const panel = ref.current?.closest<HTMLElement>(".rounded-2xl")
+    if (!panel) return
+
+    // Already fully visible (a short form on a short page) - moving the
+    // viewport then would be a jolt with no purpose.
+    const box = panel.getBoundingClientRect()
+    if (box.top >= 0 && box.bottom <= window.innerHeight) return
+
+    panel.scrollIntoView({ behavior: "smooth", block: "start" })
+
+    // After the scroll, not before: focusing first makes the browser jump the
+    // element into view instantly and fight the smooth scroll.
+    const timer = setTimeout(() => {
+      panel
+        .querySelector<HTMLElement>(
+          "input:not([type=hidden]):not([disabled]), textarea:not([disabled]), select:not([disabled])",
+        )
+        ?.focus({ preventScroll: true })
+    }, 350)
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <div ref={ref} className="flex flex-wrap items-center justify-end gap-3 border-t border-admin-border pt-4">
+      {children}
+    </div>
+  )
 }
 
 interface ButtonProps {
