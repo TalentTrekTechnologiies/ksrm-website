@@ -14,7 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
-import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin } from "@/lib/auth"
+import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin, allowedPageRoots, pageSectionRoot } from "@/lib/auth"
 import { PAGE_SECTIONS } from "@/lib/downloads-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
@@ -156,10 +156,18 @@ export default function AdminSidebar({
   // Alphabetical rather than the order they happen to be declared in. The
   // "Area → Sub-page" labels keep each area's entries together, so this groups
   // as well as sorts.
-  const sortedPageSections = useMemo(
-    () => [...PAGE_SECTIONS].sort((a, b) => a.label.localeCompare(b.label)),
-    [],
-  )
+  // Restricted to the pages this admin owns, so a page-scoped admin sees their
+  // own pages rather than all fifty and a string of 403s. Mirrors the backend's
+  // PageSectionOwnershipGuard - null means unrestricted, which is what keeps
+  // super admins and the college-wide roles seeing everything.
+  const sortedPageSections = useMemo(() => {
+    const allowed = allowedPageRoots(admin)
+    const list =
+      allowed === null
+        ? PAGE_SECTIONS
+        : PAGE_SECTIONS.filter((s) => allowed.has(pageSectionRoot(s.value)))
+    return [...list].sort((a, b) => a.label.localeCompare(b.label))
+  }, [admin])
 
   useEffect(() => {
     let cancelled = false

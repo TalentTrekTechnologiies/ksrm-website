@@ -7,6 +7,7 @@ import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
 import FacultyTab from "@/components/admin/departments/FacultyTab"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
+import PageTextEditor from "@/components/admin/PageTextEditor"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
 import { getDownloadsAdmin, reorderDownloads, type Download } from "@/lib/downloads-api"
 import { getDepartmentsAdmin } from "@/lib/departments-api"
@@ -759,7 +760,7 @@ function ExamDocumentOrderList({ section }: { section: string }) {
 }
 
 export default function ExamNotificationsManager() {
-  const [tab, setTab] = useState<"notifications" | "results" | "staff">("notifications")
+  const [tab, setTab] = useState<"notifications" | "results" | "staff" | "text">("notifications")
   const tabClass = (on: boolean) =>
     `rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
       on ? "bg-admin-primary text-white" : "border border-admin-border bg-white text-slate-600 hover:bg-admin-bg"
@@ -778,10 +779,30 @@ export default function ExamNotificationsManager() {
           <button type="button" className={tabClass(tab === "staff")} onClick={() => setTab("staff")}>
             Examination Section Staff
           </button>
+          <button type="button" className={tabClass(tab === "text")} onClick={() => setTab("text")}>
+            Page Text
+          </button>
         </div>
         {tab === "notifications" && <ExamNotificationsManagerInner />}
         {tab === "results" && <ExamResultsTab />}
         {tab === "staff" && <ExamStaffTab />}
+        {/* The Examinations page's own wording - headings, intro paragraph,
+            quick-link labels. It used to live under Page Content, which meant
+            an examinations admin needed two screens and could see 50 pages
+            that were not theirs. Same editor, moved to where the rest of the
+            examinations content already is. */}
+        {tab === "text" && (
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Examinations page wording</p>
+              <p className="text-sm text-slate-500">
+                Headings and intro text shown on the public Examinations page. Documents and
+                notifications are managed in the other tabs.
+              </p>
+            </div>
+            <PageTextEditor section="examinations" />
+          </div>
+        )}
       </div>
     </PermissionGate>
   )

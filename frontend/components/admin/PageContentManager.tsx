@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon, Type } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
@@ -32,6 +32,7 @@ import {
   GalleryImage,
 } from "@/lib/gallery-api"
 import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
+import { getStoredAdmin, allowedPageRoots, pageSectionRoot } from "@/lib/auth"
 
 /**
  * "Pick a place → manage everything on it." One screen listing every public
@@ -64,10 +65,8 @@ const CATEGORY_OPTIONS = [
  * arrive as a folder of PDFs, not one at a time). They also appeared here,
  * giving two separate places to do the same job - the reported duplication.
  *
- * Only the four DOCUMENT sub-sections are hidden. The plain "examinations"
- * entry stays: it carries the page's editable text (the "Examination Portal"
- * heading, "Latest Notifications", and so on), which Exam Notifications does
- * not manage, so removing it would leave that wording uneditable.
+ * The Examinations page and all its sub-sections are hidden here; everything
+ * exam-related, wording included, now lives on that one screen.
  *
  * They remain in PAGE_SECTIONS deliberately - Documents, Gallery and the bulk
  * uploader all still need them as routing targets. This hides them from this
@@ -79,6 +78,11 @@ const SECTIONS_MANAGED_ELSEWHERE = new Set([
   "examinations.timetables",
   "examinations.calendars",
   "examinations.rules",
+  // The Examinations page itself, too. Its wording is now edited in
+  // Admin -> Exam Notifications -> Page Text, beside the notifications and
+  // documents it belongs with, so an examinations admin has one screen rather
+  // than two. Leaving it here as well would recreate the split this removes.
+  "examinations",
 ])
 
 const ALL_PAGES = (() => {
@@ -107,6 +111,19 @@ function parseTarget(v: string): Target | null {
 type AddKind = "doc" | "image" | "video" | null
 
 function PageContentInner() {
+  // Restrict the page list to what this admin actually owns. The backend's
+  // PageSectionOwnershipGuard rejects a write to anything else, so offering
+  // the full list would just hand them a 403 after they had filled the form.
+  const admin = getStoredAdmin()
+  const allowedRoots = allowedPageRoots(admin)
+  const pages = useMemo(
+    () =>
+      allowedRoots === null
+        ? ALL_PAGES
+        : ALL_PAGES.filter((p) => allowedRoots.has(pageSectionRoot(p.value))),
+    [allowedRoots],
+  )
+
   const { confirm, notifySaved } = useCmsConfirm()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -292,7 +309,7 @@ function PageContentInner() {
         >
           <option value="">Select…</option>
           <optgroup label="Pages">
-            {ALL_PAGES.map((s) => (
+            {pages.map((s) => (
               <option key={s.value} value={`page:${s.value}`}>{s.label}</option>
             ))}
           </optgroup>

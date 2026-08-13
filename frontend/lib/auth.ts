@@ -83,6 +83,31 @@ export function hasPermission(admin: StoredAdmin | null, permission: string): bo
   return admin.isSuperAdmin || admin.permissions.includes(permission);
 }
 
+/**
+ * Page sections this admin is allowed to edit, or `null` for "no restriction".
+ *
+ * Mirrors PageSectionOwnershipGuard on the backend, which is what actually
+ * enforces this - holding ANY `pages.*` permission turns that set into an
+ * allow-list, and holding none means unrestricted. Super admins are never
+ * restricted.
+ *
+ * This exists so the UI stops OFFERING pages the server will refuse to save:
+ * without it a restricted admin picks a page, fills the form and only then
+ * gets a 403. It is a convenience, never the control - the guard is.
+ */
+export function allowedPageRoots(admin: StoredAdmin | null): Set<string> | null {
+  if (!admin || admin.isSuperAdmin) return null
+  const roots = admin.permissions
+    .filter((p) => p.startsWith("pages."))
+    .map((p) => p.slice("pages.".length))
+  return roots.length > 0 ? new Set(roots) : null
+}
+
+/** "examinations.timetables" -> "examinations" - sub-sections share an owner. */
+export function pageSectionRoot(section: string): string {
+  return section.split(".")[0]
+}
+
 export function isDepartmentScopedAdmin(admin: StoredAdmin | null): boolean {
   // `!= null`, deliberately loose: it must catch undefined as well as null.
   //
