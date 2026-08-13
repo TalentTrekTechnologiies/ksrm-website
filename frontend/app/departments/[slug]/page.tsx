@@ -96,6 +96,26 @@ export function generateStaticParams() {
 const CMS_LOOKUP_TIMEOUT_MS = 4000;
 
 /**
+ * Absolute URL for the build-time CMS lookup.
+ *
+ * API_BASE is whatever NEXT_PUBLIC_API_URL says, and in production that is the
+ * RELATIVE "/api" - correct for the browser, which resolves it against the page
+ * it was served from. This code runs in Node during `next build`, where there
+ * is no page and therefore no origin, so fetch("/api/departments") throws
+ * "Failed to parse URL" and every override was silently skipped on the server.
+ *
+ * When API_BASE is relative we point at the API on the build machine itself.
+ * The VPS runs the backend beside the build (nginx proxies /api to it), so
+ * localhost:4000 is the same API the relative path would reach at runtime.
+ * Override with BUILD_API_ORIGIN if it lives elsewhere.
+ */
+function cmsEndpoint(): string {
+  if (/^https?:\/\//i.test(API_BASE)) return `${API_BASE}/departments`;
+  const origin = (process.env.BUILD_API_ORIGIN ?? "http://localhost:4000").replace(/\/$/, "");
+  return `${origin}${API_BASE}/departments`;
+}
+
+/**
  * The departments as the CMS knows them, fetched ONCE per build.
  *
  * Two things this has to get right, both learned the hard way when the first
@@ -129,7 +149,8 @@ function loadCmsDepartments(): Promise<Map<string, DepartmentRecord>> {
   // dynamic - Next then refuses to render it statically and the lookup fails
   // every time with "couldn't be rendered statically". Caching is right here
   // anyway: this runs once at build, and the result is baked into the HTML.
-  cmsDepartmentsPromise ??= fetch(`${API_BASE}/departments`, {
+  const endpoint = cmsEndpoint();
+  cmsDepartmentsPromise ??= fetch(endpoint, {
     signal: AbortSignal.timeout(CMS_LOOKUP_TIMEOUT_MS),
     cache: "force-cache",
   })
@@ -144,7 +165,7 @@ function loadCmsDepartments(): Promise<Map<string, DepartmentRecord>> {
       // very different fixes, and without it the message is a dead end.
       console.warn(
         `[departments] CMS metadata lookup failed - using built-in metadata. ` +
-          `URL: ${API_BASE}/departments - ${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}`,
+          `URL: ${endpoint} - ${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}`,
       );
       return new Map<string, DepartmentRecord>();
     });
