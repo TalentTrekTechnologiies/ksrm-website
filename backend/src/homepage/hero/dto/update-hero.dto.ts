@@ -11,7 +11,9 @@ import { CreateHeroDto } from './create-hero.dto';
 // re-declared below with a wider `number | null` type - PartialType alone
 // would keep it `number | undefined` (inherited from CreateHeroDto), which
 // can't express "explicitly unlink".
-export class UpdateHeroDto extends PartialType(OmitType(CreateHeroDto, ['mediaId'] as const)) {
+export class UpdateHeroDto extends PartialType(
+  OmitType(CreateHeroDto, ['mediaId'] as const),
+) {
   // Required on every update - the optimistic-lock check needs the version
   // the client last saw. See homepage/optimistic-lock.util.ts.
   @IsInt()

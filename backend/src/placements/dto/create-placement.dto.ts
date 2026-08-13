@@ -1,4 +1,10 @@
-import { IsBoolean, IsString, IsNumber, IsOptional, IsInt } from 'class-validator';
+import {
+  IsBoolean,
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsInt,
+} from 'class-validator';
 
 export class CreatePlacementDto {
   @IsString()

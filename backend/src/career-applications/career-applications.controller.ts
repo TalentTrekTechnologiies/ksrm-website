@@ -83,23 +83,35 @@ export class CareerApplicationsController {
   @Get('admin/export/csv')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('career_applications.export')
-  async exportCsv(@Query() query: QueryCareerApplicationsDto, @Res() res: Response) {
+  async exportCsv(
+    @Query() query: QueryCareerApplicationsDto,
+    @Res() res: Response,
+  ) {
     const csv = await this.careerApplicationsService.exportCsv(query);
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename="career-applications.csv"');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="career-applications.csv"',
+    );
     res.send(csv);
   }
 
   @Get('admin/export/excel')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('career_applications.export')
-  async exportExcel(@Query() query: QueryCareerApplicationsDto, @Res() res: Response) {
+  async exportExcel(
+    @Query() query: QueryCareerApplicationsDto,
+    @Res() res: Response,
+  ) {
     const buffer = await this.careerApplicationsService.exportExcel(query);
     res.setHeader(
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
-    res.setHeader('Content-Disposition', 'attachment; filename="career-applications.xlsx"');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="career-applications.xlsx"',
+    );
     res.send(buffer);
   }
 
@@ -118,11 +130,19 @@ export class CareerApplicationsController {
   @Get('admin/:id/resume')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('career_applications.view')
-  async downloadResume(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-    const application = await this.prisma.careerApplication.findUnique({ where: { id } });
-    if (!application) throw new NotFoundException(`Application ${id} not found`);
+  async downloadResume(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
+    const application = await this.prisma.careerApplication.findUnique({
+      where: { id },
+    });
+    if (!application)
+      throw new NotFoundException(`Application ${id} not found`);
 
-    const media = await this.prisma.media.findUnique({ where: { id: application.resumeMediaId } });
+    const media = await this.prisma.media.findUnique({
+      where: { id: application.resumeMediaId },
+    });
     if (!media) throw new NotFoundException('Resume file no longer exists');
 
     const variant = await this.prisma.mediaVariant.findFirst({
@@ -151,7 +171,12 @@ export class CareerApplicationsController {
     @Body() dto: UpdateApplicationNotesDto,
     @Request() req,
   ) {
-    return this.careerApplicationsService.updateNotes(id, dto, req.user, req.requestId);
+    return this.careerApplicationsService.updateNotes(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post('admin/:id/status')
@@ -162,7 +187,12 @@ export class CareerApplicationsController {
     @Body() dto: UpdateApplicationStatusDto,
     @Request() req,
   ) {
-    return this.careerApplicationsService.updateStatus(id, dto, req.user, req.requestId);
+    return this.careerApplicationsService.updateStatus(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post('admin/:id/assign-hr')
@@ -173,6 +203,11 @@ export class CareerApplicationsController {
     @Body() dto: AssignHrDto,
     @Request() req,
   ) {
-    return this.careerApplicationsService.assignHr(id, dto, req.user, req.requestId);
+    return this.careerApplicationsService.assignHr(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 }

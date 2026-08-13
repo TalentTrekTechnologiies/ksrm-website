@@ -1,7 +1,15 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from '../prisma/prisma.service';
-import { DEPARTMENT_SCOPE_KEY, DepartmentScopeConfig } from './department-scope.decorator';
+import {
+  DEPARTMENT_SCOPE_KEY,
+  DepartmentScopeConfig,
+} from './department-scope.decorator';
 
 /**
  * Enforces department ownership on write endpoints marked with
@@ -33,7 +41,10 @@ export class DepartmentOwnershipGuard implements CanActivate {
     if (user.isSuperAdmin) return true;
     if (user.departmentId == null) return true;
 
-    const targetDepartmentId = await this.resolveTargetDepartmentId(config, req);
+    const targetDepartmentId = await this.resolveTargetDepartmentId(
+      config,
+      req,
+    );
 
     // A department-scoped admin owns their department's rows and nothing
     // else. An unowned row (departmentId: null) is college-wide content -
@@ -78,9 +89,9 @@ export class DepartmentOwnershipGuard implements CanActivate {
     if (config.source === 'self') {
       return Number(req.params.id);
     }
-    const delegate = (this.prisma as unknown as Record<string, { findUnique: Function }>)[
-      config.model
-    ];
+    const delegate = (
+      this.prisma as unknown as Record<string, { findUnique: Function }>
+    )[config.model];
     const record = await delegate.findUnique({
       where: { id: Number(req.params.id) },
       select: { departmentId: true },

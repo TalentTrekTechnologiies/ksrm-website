@@ -111,13 +111,20 @@ export class CareerApplicationsService {
     // keeps it off the unauthenticated /media/file route and out of the Media
     // Library picker; staff read it through the permission-gated
     // GET /career-applications/admin/:id/resume instead.
-    await this.prisma.media.update({ where: { id: mediaId }, data: { isPrivate: true } });
+    await this.prisma.media.update({
+      where: { id: mediaId },
+      data: { isPrivate: true },
+    });
     // Not resolveUrl() - the ORIGINAL/SOURCE MediaVariant row for this
     // upload is created asynchronously by the processing queue moments
     // after upload() returns; resolveUrl() would lose that race and
     // return null. Documents always get exactly this one variant, so the
     // URL is safe to build deterministically here.
-    const resumeUrl = this.mediaResolver.buildFileUrl(mediaId, 'ORIGINAL', 'SOURCE');
+    const resumeUrl = this.mediaResolver.buildFileUrl(
+      mediaId,
+      'ORIGINAL',
+      'SOURCE',
+    );
 
     const { skills, dateOfBirth, careerId, ...rest } = dto;
 
@@ -139,7 +146,12 @@ export class CareerApplicationsService {
       return application;
     });
 
-    await this.mediaLink.syncUsage(AUDIT_MODULE, created.id, MEDIA_FIELD, mediaId);
+    await this.mediaLink.syncUsage(
+      AUDIT_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      mediaId,
+    );
 
     await this.auditLog.log({
       adminId: systemAdmin.id,
@@ -154,15 +166,23 @@ export class CareerApplicationsService {
 
     // Best-effort - NotificationService swallows send failures so a broken
     // email provider never fails an application that's already saved.
-    await this.sendHrNotification(created, career, resumeBuffer, resumeFilename);
+    await this.sendHrNotification(
+      created,
+      career,
+      resumeBuffer,
+      resumeFilename,
+    );
     await this.sendApplicantConfirmation(created, career);
 
-    await this.adminNotifications.notifyByPermission('career_applications.view', {
-      type: 'CAREER_APPLICATION_RECEIVED',
-      title: 'New job application received',
-      message: `${created.fullName} applied${career ? ` for ${career.title}` : ''}`,
-      link: `/admin/careers/applications`,
-    });
+    await this.adminNotifications.notifyByPermission(
+      'career_applications.view',
+      {
+        type: 'CAREER_APPLICATION_RECEIVED',
+        title: 'New job application received',
+        message: `${created.fullName} applied${career ? ` for ${career.title}` : ''}`,
+        link: `/admin/careers/applications`,
+      },
+    );
 
     return created;
   }
@@ -270,7 +290,9 @@ export class CareerApplicationsService {
     return {
       ...(query.status && { status: query.status }),
       ...(query.careerId !== undefined && { careerId: query.careerId }),
-      ...(query.assignedHrId !== undefined && { assignedHrId: query.assignedHrId }),
+      ...(query.assignedHrId !== undefined && {
+        assignedHrId: query.assignedHrId,
+      }),
       ...((query.from || query.to) && {
         createdAt: {
           ...(query.from && { gte: new Date(query.from) }),
@@ -279,7 +301,9 @@ export class CareerApplicationsService {
       }),
       ...(query.search && {
         OR: [
-          { fullName: { contains: query.search, mode: 'insensitive' as const } },
+          {
+            fullName: { contains: query.search, mode: 'insensitive' as const },
+          },
           { email: { contains: query.search, mode: 'insensitive' as const } },
           { mobile: { contains: query.search, mode: 'insensitive' as const } },
         ],
@@ -306,7 +330,9 @@ export class CareerApplicationsService {
   }
 
   private async findOrThrow(id: number) {
-    const application = await this.prisma.careerApplication.findUnique({ where: { id } });
+    const application = await this.prisma.careerApplication.findUnique({
+      where: { id },
+    });
     if (!application) {
       throw new NotFoundException(`Application ${id} not found`);
     }
@@ -333,7 +359,11 @@ export class CareerApplicationsService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: { notes: existing.notes }, after: { notes: updated.notes }, changedFields: ['notes'] },
+      details: {
+        before: { notes: existing.notes },
+        after: { notes: updated.notes },
+        changedFields: ['notes'],
+      },
       requestId,
     });
 
@@ -384,14 +414,21 @@ export class CareerApplicationsService {
     return updated;
   }
 
-  async assignHr(id: number, dto: AssignHrDto, admin: RequestAdmin, requestId?: string) {
+  async assignHr(
+    id: number,
+    dto: AssignHrDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findOrThrow(id);
 
     const hr = await this.prisma.admin.findFirst({
       where: { id: dto.adminId, isActive: true, deletedAt: null },
     });
     if (!hr) {
-      throw new BadRequestException(`Admin ${dto.adminId} does not exist or is not active.`);
+      throw new BadRequestException(
+        `Admin ${dto.adminId} does not exist or is not active.`,
+      );
     }
 
     const updated = await this.prisma.careerApplication.update({
@@ -421,23 +458,47 @@ export class CareerApplicationsService {
     const where = this.buildWhere(query);
     const rows = await this.prisma.careerApplication.findMany({
       where,
-      include: { career: { select: { title: true } }, assignedHr: { select: { name: true } } },
+      include: {
+        career: { select: { title: true } },
+        assignedHr: { select: { name: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take: 10000,
     });
 
     const header = [
-      'id', 'fullName', 'email', 'mobile', 'qualification', 'specialization',
-      'yearsOfExperience', 'currentCompany', 'noticePeriod', 'position',
-      'status', 'assignedHr', 'source', 'submittedAt',
+      'id',
+      'fullName',
+      'email',
+      'mobile',
+      'qualification',
+      'specialization',
+      'yearsOfExperience',
+      'currentCompany',
+      'noticePeriod',
+      'position',
+      'status',
+      'assignedHr',
+      'source',
+      'submittedAt',
     ];
     const lines = [header.join(',')];
     for (const r of rows) {
       lines.push(
         [
-          r.id, r.fullName, r.email, r.mobile, r.qualification, r.specialization ?? '',
-          r.yearsOfExperience ?? '', r.currentCompany ?? '', r.noticePeriod ?? '',
-          r.career?.title ?? '', r.status, r.assignedHr?.name ?? '', r.source,
+          r.id,
+          r.fullName,
+          r.email,
+          r.mobile,
+          r.qualification,
+          r.specialization ?? '',
+          r.yearsOfExperience ?? '',
+          r.currentCompany ?? '',
+          r.noticePeriod ?? '',
+          r.career?.title ?? '',
+          r.status,
+          r.assignedHr?.name ?? '',
+          r.source,
           r.createdAt.toISOString(),
         ]
           .map(csvEscape)
@@ -451,7 +512,10 @@ export class CareerApplicationsService {
     const where = this.buildWhere(query);
     const rows = await this.prisma.careerApplication.findMany({
       where,
-      include: { career: { select: { title: true } }, assignedHr: { select: { name: true } } },
+      include: {
+        career: { select: { title: true } },
+        assignedHr: { select: { name: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take: 10000,
     });
@@ -500,19 +564,32 @@ export class CareerApplicationsService {
 
   async getDashboardCounts() {
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
     const startOfWeek = new Date(startOfToday);
     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
 
-    const [today, thisWeek, pendingReview, shortlisted, selected] = await Promise.all([
-      this.prisma.careerApplication.count({ where: { createdAt: { gte: startOfToday } } }),
-      this.prisma.careerApplication.count({ where: { createdAt: { gte: startOfWeek } } }),
-      this.prisma.careerApplication.count({
-        where: { status: { in: ['APPLIED', 'UNDER_REVIEW'] as ApplicationStatus[] } },
-      }),
-      this.prisma.careerApplication.count({ where: { status: 'SHORTLISTED' } }),
-      this.prisma.careerApplication.count({ where: { status: 'SELECTED' } }),
-    ]);
+    const [today, thisWeek, pendingReview, shortlisted, selected] =
+      await Promise.all([
+        this.prisma.careerApplication.count({
+          where: { createdAt: { gte: startOfToday } },
+        }),
+        this.prisma.careerApplication.count({
+          where: { createdAt: { gte: startOfWeek } },
+        }),
+        this.prisma.careerApplication.count({
+          where: {
+            status: { in: ['APPLIED', 'UNDER_REVIEW'] as ApplicationStatus[] },
+          },
+        }),
+        this.prisma.careerApplication.count({
+          where: { status: 'SHORTLISTED' },
+        }),
+        this.prisma.careerApplication.count({ where: { status: 'SELECTED' } }),
+      ]);
 
     return {
       applicationsToday: today,

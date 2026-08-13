@@ -23,7 +23,11 @@ describe('EventsService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -40,11 +44,15 @@ describe('EventsService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -95,13 +103,21 @@ describe('EventsService', () => {
   describe('softDelete / restore', () => {
     it('soft-deletes and untracks Media usage', async () => {
       prisma.event.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.event.update.mockResolvedValue({ id: 1, deletedAt: new Date(), deletedBy: 1 });
+      prisma.event.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+        deletedBy: 1,
+      });
 
       await service.softDelete(1, admin, undefined);
 
       expect(prisma.event.update).toHaveBeenCalledWith({
         where: { id: 1 },
-        data: { deletedAt: expect.any(Date), deletedBy: 1, version: { increment: 1 } },
+        data: {
+          deletedAt: expect.any(Date),
+          deletedBy: 1,
+          version: { increment: 1 },
+        },
       });
       expect(mediaLink.untrackAll).toHaveBeenCalledWith('events', 1);
       expect(auditLog.log).toHaveBeenCalledWith(
@@ -118,20 +134,39 @@ describe('EventsService', () => {
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.event.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.event.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.event.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.event.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('events', 1, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'events',
+        1,
+        'imageUrl',
+        9,
+      );
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'RESTORE' }),
       );
     });
 
     it('does not re-track on restore when the row has no mediaId', async () => {
-      prisma.event.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.event.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: null });
+      prisma.event.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.event.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -145,7 +180,11 @@ describe('EventsService', () => {
       prisma.event.create.mockResolvedValue({ id: 5 });
 
       await service.create(
-        { title: 'Annual Day', eventDate: '2026-08-01', endDate: '2026-08-02' } as any,
+        {
+          title: 'Annual Day',
+          eventDate: '2026-08-01',
+          endDate: '2026-08-02',
+        },
         admin,
         undefined,
       );
@@ -159,7 +198,12 @@ describe('EventsService', () => {
       prisma.event.findFirst.mockResolvedValue({ id: 1, version: 1 });
       prisma.event.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { eventDate: '2026-09-01', version: 1 } as any, admin, undefined);
+      await service.update(
+        1,
+        { eventDate: '2026-09-01', version: 1 },
+        admin,
+        undefined,
+      );
 
       const data = prisma.event.update.mock.calls[0][0].data;
       expect(data.eventDate).toBeInstanceOf(Date);
@@ -173,27 +217,50 @@ describe('EventsService', () => {
       prisma.event.create.mockResolvedValue({ id: 5 });
 
       await service.create(
-        { title: 'Annual Day', eventDate: '2026-08-01', imageUrl: '/fallback.jpg', mediaId: 9 } as any,
+        {
+          title: 'Annual Day',
+          eventDate: '2026-08-01',
+          imageUrl: '/fallback.jpg',
+          mediaId: 9,
+        },
         admin,
         undefined,
       );
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.event.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('events', 5, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'events',
+        5,
+        'imageUrl',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching imageUrl', async () => {
-      prisma.event.findFirst.mockResolvedValue({ id: 1, version: 1, imageUrl: '/existing.jpg' });
+      prisma.event.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        imageUrl: '/existing.jpg',
+      });
       prisma.event.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { mediaId: null, version: 1 } as any, admin, undefined);
+      await service.update(1, { mediaId: null, version: 1 }, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('events', 1, 'imageUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'events',
+        1,
+        'imageUrl',
+        null,
+      );
       expect(prisma.event.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ imageUrl: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ imageUrl: expect.anything() }),
+        }),
       );
     });
   });
@@ -202,7 +269,12 @@ describe('EventsService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),
@@ -217,7 +289,12 @@ describe('EventsService', () => {
       prisma.$transaction.mockResolvedValue(undefined);
 
       await service.reorder(
-        { items: [{ id: 1, sortOrder: 1 }, { id: 2, sortOrder: 0 }] },
+        {
+          items: [
+            { id: 1, sortOrder: 1 },
+            { id: 2, sortOrder: 0 },
+          ],
+        },
         admin,
         'req-3',
       );
@@ -230,7 +307,12 @@ describe('EventsService', () => {
 
     // Reorder takes an arbitrary id list, which no ownership guard can cover -
     // they authorize one target per request. Checked in the service instead.
-    const payload = { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 1 }] };
+    const payload = {
+      items: [
+        { id: 1, sortOrder: 0 },
+        { id: 2, sortOrder: 1 },
+      ],
+    };
     const deptAdmin = { ...admin, isSuperAdmin: false, departmentId: 5 };
 
     it('lets a department admin reorder events that are all their own', async () => {
@@ -242,11 +324,13 @@ describe('EventsService', () => {
         .mockResolvedValueOnce([{ id: 1 }, { id: 2 }]);
       prisma.$transaction.mockResolvedValue(undefined);
 
-      await expect(service.reorder(payload, deptAdmin, undefined)).resolves.toBeDefined();
+      await expect(
+        service.reorder(payload, deptAdmin, undefined),
+      ).resolves.toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
     });
 
-    it('403s a department admin reordering another department\'s events', async () => {
+    it("403s a department admin reordering another department's events", async () => {
       prisma.event.findMany.mockResolvedValueOnce([
         { id: 1, departmentId: 5 },
         { id: 2, departmentId: 6 },
@@ -278,7 +362,11 @@ describe('EventsService', () => {
       prisma.$transaction.mockResolvedValue(undefined);
 
       await expect(
-        service.reorder(payload, { ...admin, isSuperAdmin: true, departmentId: 5 }, undefined),
+        service.reorder(
+          payload,
+          { ...admin, isSuperAdmin: true, departmentId: 5 },
+          undefined,
+        ),
       ).resolves.toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
     });

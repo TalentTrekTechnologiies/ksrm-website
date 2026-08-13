@@ -44,7 +44,11 @@ export class MediaFoldersService {
     return folder;
   }
 
-  async create(dto: CreateMediaFolderDto, admin?: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateMediaFolderDto,
+    admin?: RequestAdmin,
+    requestId?: string,
+  ) {
     const parent = dto.parentId ? await this.findOrThrow(dto.parentId) : null;
     const path = parent
       ? `${parent.path}/${slugify(dto.name)}`
@@ -80,7 +84,12 @@ export class MediaFoldersService {
     }
   }
 
-  async update(id: number, dto: UpdateMediaFolderDto, admin?: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateMediaFolderDto,
+    admin?: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findOrThrow(id);
 
     const nextName = dto.name ?? existing.name;

@@ -76,17 +76,35 @@ describe('DepartmentDisplaySettingsService', () => {
 
   describe('set', () => {
     it('upserts one toggle and logs UPDATE', async () => {
-      prisma.departmentDisplaySetting.upsert.mockResolvedValue({ id: 1, key: 'labs.showEquipment', value: false });
+      prisma.departmentDisplaySetting.upsert.mockResolvedValue({
+        id: 1,
+        key: 'labs.showEquipment',
+        value: false,
+      });
 
-      await service.set({ departmentId: 3, key: 'labs.showEquipment', value: false }, admin, undefined);
+      await service.set(
+        { departmentId: 3, key: 'labs.showEquipment', value: false },
+        admin,
+        undefined,
+      );
 
       expect(prisma.departmentDisplaySetting.upsert).toHaveBeenCalledWith({
-        where: { departmentId_key: { departmentId: 3, key: 'labs.showEquipment' } },
-        create: { departmentId: 3, key: 'labs.showEquipment', value: false, updatedBy: 1 },
+        where: {
+          departmentId_key: { departmentId: 3, key: 'labs.showEquipment' },
+        },
+        create: {
+          departmentId: 3,
+          key: 'labs.showEquipment',
+          value: false,
+          updatedBy: 1,
+        },
         update: { value: false, updatedBy: 1 },
       });
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'UPDATE', module: 'department_display_settings' }),
+        expect.objectContaining({
+          action: 'UPDATE',
+          module: 'department_display_settings',
+        }),
       );
     });
   });

@@ -1,4 +1,11 @@
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { SiteSettingType } from '@prisma/client';
 
 export class CreateSiteSettingDto {

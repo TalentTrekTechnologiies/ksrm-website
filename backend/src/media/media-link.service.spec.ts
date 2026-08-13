@@ -6,12 +6,18 @@ import { MediaUsageService } from './media-usage.service';
 describe('MediaLinkService', () => {
   let service: MediaLinkService;
   let mediaResolver: { assertUsable: jest.Mock; buildFileUrl: jest.Mock };
-  let mediaUsage: { track: jest.Mock; untrack: jest.Mock; untrackAll: jest.Mock };
+  let mediaUsage: {
+    track: jest.Mock;
+    untrack: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   beforeEach(async () => {
     mediaResolver = {
       assertUsable: jest.fn().mockResolvedValue(undefined),
-      buildFileUrl: jest.fn().mockReturnValue('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
+      buildFileUrl: jest
+        .fn()
+        .mockReturnValue('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
     };
     mediaUsage = {
       track: jest.fn().mockResolvedValue(undefined),
@@ -32,7 +38,9 @@ describe('MediaLinkService', () => {
 
   describe('prepareLink', () => {
     it('returns undefined without touching the resolver when mediaId is undefined (field not part of this request)', async () => {
-      await expect(service.prepareLink(undefined, 'IMAGE')).resolves.toBeUndefined();
+      await expect(
+        service.prepareLink(undefined, 'IMAGE'),
+      ).resolves.toBeUndefined();
       expect(mediaResolver.assertUsable).not.toHaveBeenCalled();
     });
 
@@ -44,13 +52,19 @@ describe('MediaLinkService', () => {
     it('validates the type and builds the URL deterministically when a real mediaId is given', async () => {
       const url = await service.prepareLink(9, 'IMAGE');
       expect(mediaResolver.assertUsable).toHaveBeenCalledWith(9, 'IMAGE');
-      expect(mediaResolver.buildFileUrl).toHaveBeenCalledWith(9, 'ORIGINAL', 'SOURCE');
+      expect(mediaResolver.buildFileUrl).toHaveBeenCalledWith(
+        9,
+        'ORIGINAL',
+        'SOURCE',
+      );
       expect(url).toBe('http://localhost:4000/media/file/9/ORIGINAL/SOURCE');
     });
 
     it('propagates a rejection (e.g. wrong type) from assertUsable', async () => {
       mediaResolver.assertUsable.mockRejectedValue(new Error('wrong type'));
-      await expect(service.prepareLink(9, 'VIDEO')).rejects.toThrow('wrong type');
+      await expect(service.prepareLink(9, 'VIDEO')).rejects.toThrow(
+        'wrong type',
+      );
     });
   });
 
@@ -69,7 +83,12 @@ describe('MediaLinkService', () => {
 
     it('tracks when mediaId is a real id', async () => {
       await service.syncUsage('gallery', 5, 'imageUrl', 9);
-      expect(mediaUsage.track).toHaveBeenCalledWith(9, 'gallery', 5, 'imageUrl');
+      expect(mediaUsage.track).toHaveBeenCalledWith(
+        9,
+        'gallery',
+        5,
+        'imageUrl',
+      );
       expect(mediaUsage.untrack).not.toHaveBeenCalled();
     });
   });

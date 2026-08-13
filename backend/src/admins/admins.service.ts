@@ -130,7 +130,9 @@ export class AdminsService {
     // Admin.isSuperAdmin, so it gets the same hard gate (see CreateAdminDto's
     // isSuperAdmin note) rather than being reachable via any admins.update
     // permission holder.
-    const grantsSuperAdmin = roles.some((r) => r.name === SUPER_ADMIN_ROLE_NAME);
+    const grantsSuperAdmin = roles.some(
+      (r) => r.name === SUPER_ADMIN_ROLE_NAME,
+    );
     if (grantsSuperAdmin && !actor.isSuperAdmin) {
       throw new ForbiddenException(
         'Only a super admin can assign the Super Admin role.',
@@ -138,9 +140,15 @@ export class AdminsService {
     }
   }
 
-  async create(dto: CreateAdminDto, actor: RequestAdminWithSuper, requestId?: string) {
+  async create(
+    dto: CreateAdminDto,
+    actor: RequestAdminWithSuper,
+    requestId?: string,
+  ) {
     if (dto.isSuperAdmin && !actor.isSuperAdmin) {
-      throw new ForbiddenException('Only a super admin can create another super admin.');
+      throw new ForbiddenException(
+        'Only a super admin can create another super admin.',
+      );
     }
     if (dto.roleIds?.length) {
       await this.assertRoleIdsAssignable(dto.roleIds, actor);
@@ -163,7 +171,9 @@ export class AdminsService {
       const revived = await this.prisma.$transaction(async (tx) => {
         // Roles are REPLACED, never merged: reusing an address must not
         // silently reinstate whatever the old account could do.
-        await tx.adminRole.deleteMany({ where: { adminId: deletedSameEmail.id } });
+        await tx.adminRole.deleteMany({
+          where: { adminId: deletedSameEmail.id },
+        });
         return tx.admin.update({
           where: { id: deletedSameEmail.id },
           data: {
@@ -208,7 +218,10 @@ export class AdminsService {
         select: ADMIN_LIST_SELECT,
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
         throw new ConflictException(`Email '${dto.email}' is already in use`);
       }
       throw err;
@@ -253,7 +266,10 @@ export class AdminsService {
         select: ADMIN_LIST_SELECT,
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
         throw new ConflictException(`Email '${rest.email}' is already in use`);
       }
       throw err;
@@ -266,7 +282,11 @@ export class AdminsService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: this.toResponse(updated), changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: this.toResponse(updated),
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -397,7 +417,11 @@ export class AdminsService {
     return updated;
   }
 
-  async softDelete(id: number, actor: RequestAdminWithSuper, requestId?: string) {
+  async softDelete(
+    id: number,
+    actor: RequestAdminWithSuper,
+    requestId?: string,
+  ) {
     if (id === actor.id) {
       throw new BadRequestException('You cannot delete your own account.');
     }
@@ -408,13 +432,19 @@ export class AdminsService {
         where: { isSuperAdmin: true, deletedAt: null },
       });
       if (activeSuperAdmins <= 1) {
-        throw new BadRequestException('Cannot delete the last remaining super admin.');
+        throw new BadRequestException(
+          'Cannot delete the last remaining super admin.',
+        );
       }
     }
 
     const deleted = await this.prisma.admin.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: actor.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: actor.id,
+        version: { increment: 1 },
+      },
       select: ADMIN_LIST_SELECT,
     });
 

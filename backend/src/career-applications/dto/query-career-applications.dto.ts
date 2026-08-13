@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsDateString, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApplicationStatus } from '@prisma/client';
 
 export class QueryCareerApplicationsDto {

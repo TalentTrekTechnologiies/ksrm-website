@@ -49,18 +49,31 @@ export class LearningOutcomesService {
     return record;
   }
 
-  async create(dto: CreateLearningOutcomeDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateLearningOutcomeDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrder =
       dto.sortOrder ??
       (await this.prisma.learningOutcome.count({
-        where: { departmentId: dto.departmentId, type: dto.type, deletedAt: null },
+        where: {
+          departmentId: dto.departmentId,
+          type: dto.type,
+          deletedAt: null,
+        },
       }));
 
     let created;
     try {
-      created = await this.prisma.learningOutcome.create({ data: { ...dto, sortOrder } });
+      created = await this.prisma.learningOutcome.create({
+        data: { ...dto, sortOrder },
+      });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
         throw new ConflictException(
           `Code '${dto.code}' already exists for ${dto.type} in this department`,
         );
@@ -99,8 +112,13 @@ export class LearningOutcomesService {
         data: { ...rest, version: { increment: 1 } },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new ConflictException(`Code '${rest.code}' already exists for this type in this department`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Code '${rest.code}' already exists for this type in this department`,
+        );
       }
       throw err;
     }
@@ -112,7 +130,11 @@ export class LearningOutcomesService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -124,7 +146,11 @@ export class LearningOutcomesService {
 
     const deleted = await this.prisma.learningOutcome.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.auditLog.log({
@@ -168,10 +194,16 @@ export class LearningOutcomesService {
     return restored;
   }
 
-  async reorder(dto: ReorderLearningOutcomesDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderLearningOutcomesDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);
@@ -180,7 +212,9 @@ export class LearningOutcomesService {
       select: { id: true },
     });
     if (existingRows.length !== ids.length) {
-      throw new BadRequestException('One or more learning outcomes do not exist');
+      throw new BadRequestException(
+        'One or more learning outcomes do not exist',
+      );
     }
 
     await this.prisma.$transaction(

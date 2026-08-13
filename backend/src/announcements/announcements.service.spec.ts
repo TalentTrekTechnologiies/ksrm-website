@@ -36,7 +36,9 @@ describe('AnnouncementsService', () => {
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
-    adminNotifications = { notifyByPermission: jest.fn().mockResolvedValue(undefined) };
+    adminNotifications = {
+      notifyByPermission: jest.fn().mockResolvedValue(undefined),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -54,20 +56,23 @@ describe('AnnouncementsService', () => {
     it('filters by location, published/active, and the auto-expiry window', async () => {
       prisma.announcement.findMany.mockResolvedValue([]);
 
-      await service.findAllPublic('HEADER_TICKER' as any);
+      await service.findAllPublic('HEADER_TICKER');
 
       const callArg = prisma.announcement.findMany.mock.calls[0][0];
       expect(callArg.where.isActive).toBe(true);
       expect(callArg.where.isPublished).toBe(true);
       expect(callArg.where.deletedAt).toBeNull();
       expect(callArg.where.placements.some.location).toBe('HEADER_TICKER');
-      expect(callArg.orderBy).toEqual([{ priority: 'asc' }, { sortOrder: 'asc' }]);
+      expect(callArg.orderBy).toEqual([
+        { priority: 'asc' },
+        { sortOrder: 'asc' },
+      ]);
     });
 
     it('scopes DEPARTMENT_PAGE to global (null) or this department placements', async () => {
       prisma.announcement.findMany.mockResolvedValue([]);
 
-      await service.findAllPublic('DEPARTMENT_PAGE' as any, 5);
+      await service.findAllPublic('DEPARTMENT_PAGE', 5);
 
       const callArg = prisma.announcement.findMany.mock.calls[0][0];
       expect(callArg.where.placements.some).toEqual({
@@ -133,28 +138,47 @@ describe('AnnouncementsService', () => {
 
   describe('setPublished', () => {
     it('logs PUBLISH when publishing', async () => {
-      prisma.announcement.findFirst.mockResolvedValue({ id: 1, isPublished: false });
-      prisma.announcement.update.mockResolvedValue({ id: 1, isPublished: true });
+      prisma.announcement.findFirst.mockResolvedValue({
+        id: 1,
+        isPublished: false,
+      });
+      prisma.announcement.update.mockResolvedValue({
+        id: 1,
+        isPublished: true,
+      });
 
       await service.setPublished(1, true, admin, undefined);
 
-      expect(auditLog.log).toHaveBeenCalledWith(expect.objectContaining({ action: 'PUBLISH' }));
+      expect(auditLog.log).toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'PUBLISH' }),
+      );
     });
 
     it('logs UNPUBLISH when unpublishing', async () => {
-      prisma.announcement.findFirst.mockResolvedValue({ id: 1, isPublished: true });
-      prisma.announcement.update.mockResolvedValue({ id: 1, isPublished: false });
+      prisma.announcement.findFirst.mockResolvedValue({
+        id: 1,
+        isPublished: true,
+      });
+      prisma.announcement.update.mockResolvedValue({
+        id: 1,
+        isPublished: false,
+      });
 
       await service.setPublished(1, false, admin, undefined);
 
-      expect(auditLog.log).toHaveBeenCalledWith(expect.objectContaining({ action: 'UNPUBLISH' }));
+      expect(auditLog.log).toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'UNPUBLISH' }),
+      );
     });
   });
 
   describe('softDelete / restore', () => {
     it('soft-deletes and logs DELETE', async () => {
       prisma.announcement.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.announcement.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.announcement.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
@@ -166,7 +190,9 @@ describe('AnnouncementsService', () => {
     it('404s restoring a row that is not actually deleted', async () => {
       prisma.announcement.findFirst.mockResolvedValue(null);
 
-      await expect(service.restore(1, admin, undefined)).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.restore(1, admin, undefined)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 });

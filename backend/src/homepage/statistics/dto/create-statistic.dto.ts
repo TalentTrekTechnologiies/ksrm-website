@@ -1,10 +1,22 @@
-import { IsBoolean, IsIn, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 // The statistic groupings this codebase queries by. Restricted to a closed
 // set (not a free string) so a typo in `scope` can't silently create an
 // orphaned group the public site never queries. 'department' rows are
 // further disambiguated by departmentId below.
-export const STATISTIC_GROUPS = ['homepage', 'homepage_placements', 'department'] as const;
+export const STATISTIC_GROUPS = [
+  'homepage',
+  'homepage_placements',
+  'department',
+] as const;
 export type StatisticGroup = (typeof STATISTIC_GROUPS)[number];
 
 export class CreateStatisticDto {

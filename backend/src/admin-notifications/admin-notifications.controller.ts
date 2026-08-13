@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Param, ParseIntPipe, Query, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  ParseIntPipe,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AdminNotificationsService } from './admin-notifications.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -13,7 +22,11 @@ export class AdminNotificationsController {
   constructor(private readonly service: AdminNotificationsService) {}
 
   @Get()
-  async findForAdmin(@Request() req, @Query('unreadOnly') unreadOnly?: string, @Query('limit') limit?: string) {
+  async findForAdmin(
+    @Request() req,
+    @Query('unreadOnly') unreadOnly?: string,
+    @Query('limit') limit?: string,
+  ) {
     return this.service.findForAdmin(req.user.id, {
       unreadOnly: unreadOnly === 'true',
       limit: limit ? parseInt(limit) : undefined,

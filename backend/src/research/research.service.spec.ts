@@ -18,7 +18,11 @@ describe('ResearchService', () => {
     department: { findUnique: jest.Mock };
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -35,11 +39,15 @@ describe('ResearchService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -82,7 +90,9 @@ describe('ResearchService', () => {
 
   describe('create', () => {
     it('resolves the department label from departmentId and tracks Media usage', async () => {
-      prisma.department.findUnique.mockResolvedValue({ name: 'Computer Science' });
+      prisma.department.findUnique.mockResolvedValue({
+        name: 'Computer Science',
+      });
       prisma.research.create.mockResolvedValue({ id: 5 });
 
       await service.create(
@@ -93,7 +103,7 @@ describe('ResearchService', () => {
           departmentId: 3,
           type: 'Publication',
           mediaId: 9,
-        } as any,
+        },
         admin,
         undefined,
       );
@@ -105,14 +115,24 @@ describe('ResearchService', () => {
           attachmentUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
         }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('research', 5, 'attachmentUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'research',
+        5,
+        'attachmentUrl',
+        9,
+      );
     });
 
     it('falls back to "General" when neither departmentId nor department is given', async () => {
       prisma.research.create.mockResolvedValue({ id: 6 });
 
       await service.create(
-        { title: 'A Paper', authors: 'A. Author', year: 2026, type: 'Publication' } as any,
+        {
+          title: 'A Paper',
+          authors: 'A. Author',
+          year: 2026,
+          type: 'Publication',
+        },
         admin,
         undefined,
       );

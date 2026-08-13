@@ -1,4 +1,12 @@
-import { ArrayMinSize, IsArray, IsBoolean, IsInt, IsString, MaxLength, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class DisplaySettingItemDto {

@@ -25,14 +25,21 @@ describe('QuickLinksService (thin wrapper over ContentCardService)', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [QuickLinksService, { provide: ContentCardService, useValue: contentCards }],
+      providers: [
+        QuickLinksService,
+        { provide: ContentCardService, useValue: contentCards },
+      ],
     }).compile();
 
     service = module.get(QuickLinksService);
   });
 
   it('delegates create() with the homepage_quick_links audit module and "Quick link" label', async () => {
-    await service.create({ section: 'homepage_quick_links' } as any, admin, 'req-1');
+    await service.create(
+      { section: 'homepage_quick_links' } as any,
+      admin,
+      'req-1',
+    );
 
     expect(contentCards.create).toHaveBeenCalledWith(
       { section: 'homepage_quick_links' },
@@ -44,7 +51,7 @@ describe('QuickLinksService (thin wrapper over ContentCardService)', () => {
   });
 
   it('delegates update() unchanged', async () => {
-    await service.update(5, { version: 2 } as any, admin, 'req-2');
+    await service.update(5, { version: 2 }, admin, 'req-2');
 
     expect(contentCards.update).toHaveBeenCalledWith(
       5,
@@ -59,10 +66,26 @@ describe('QuickLinksService (thin wrapper over ContentCardService)', () => {
   it('delegates softDelete()/restore()/reorder() unchanged', async () => {
     await service.softDelete(1, admin, 'req-3');
     await service.restore(1, admin, 'req-4');
-    await service.reorder({ section: 'homepage_quick_links', items: [] } as any, admin, 'req-5');
+    await service.reorder(
+      { section: 'homepage_quick_links', items: [] } as any,
+      admin,
+      'req-5',
+    );
 
-    expect(contentCards.softDelete).toHaveBeenCalledWith(1, admin, 'homepage_quick_links', 'Quick link', 'req-3');
-    expect(contentCards.restore).toHaveBeenCalledWith(1, admin, 'homepage_quick_links', 'Quick link', 'req-4');
+    expect(contentCards.softDelete).toHaveBeenCalledWith(
+      1,
+      admin,
+      'homepage_quick_links',
+      'Quick link',
+      'req-3',
+    );
+    expect(contentCards.restore).toHaveBeenCalledWith(
+      1,
+      admin,
+      'homepage_quick_links',
+      'Quick link',
+      'req-4',
+    );
     expect(contentCards.reorder).toHaveBeenCalledWith(
       { section: 'homepage_quick_links', items: [] },
       admin,

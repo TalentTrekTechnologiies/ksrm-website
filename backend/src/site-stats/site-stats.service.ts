@@ -11,7 +11,11 @@ const PRESENCE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
  *  component. */
 function dateOnly(offsetDays = 0): Date {
   const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate() + offsetDays);
+  return new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + offsetDays,
+  );
 }
 
 @Injectable()

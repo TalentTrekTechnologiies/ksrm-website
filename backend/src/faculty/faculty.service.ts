@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
@@ -88,8 +92,15 @@ export class FacultyService {
     return hod;
   }
 
-  async create(createFacultyDto: CreateFacultyDto, admin: RequestAdmin, requestId?: string) {
-    const resolvedUrl = await this.mediaLink.prepareLink(createFacultyDto.mediaId, 'IMAGE');
+  async create(
+    createFacultyDto: CreateFacultyDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      createFacultyDto.mediaId,
+      'IMAGE',
+    );
 
     // Append to the end of the department's roster. Without this a new member
     // takes the default sortOrder of 0 and jumps to the top of a list somebody
@@ -117,7 +128,12 @@ export class FacultyService {
       },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, newFaculty.id, MEDIA_FIELD, createFacultyDto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      newFaculty.id,
+      MEDIA_FIELD,
+      createFacultyDto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -133,7 +149,12 @@ export class FacultyService {
     return newFaculty;
   }
 
-  async update(id: number, dto: UpdateFacultyDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateFacultyDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Faculty ${id}`);
@@ -158,7 +179,11 @@ export class FacultyService {
       action: 'UPDATE',
       module: 'faculty',
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -170,7 +195,11 @@ export class FacultyService {
 
     const deleted = await this.prisma.faculty.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.mediaLink.untrackAll(MEDIA_MODULE, id);
@@ -203,7 +232,12 @@ export class FacultyService {
     });
 
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({
@@ -225,10 +259,16 @@ export class FacultyService {
    * (isHod desc, sortOrder asc, name asc), so this controls the order staff
    * appear in after the HOD.
    */
-  async reorder(dto: ReorderFacultyDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderFacultyDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

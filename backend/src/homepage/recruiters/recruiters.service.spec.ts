@@ -22,7 +22,11 @@ describe('RecruitersService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -39,11 +43,15 @@ describe('RecruitersService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -133,11 +141,17 @@ describe('RecruitersService', () => {
 
     it('untracks Media usage on soft-delete', async () => {
       prisma.recruiter.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.recruiter.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.recruiter.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
-      expect(mediaLink.untrackAll).toHaveBeenCalledWith('homepage_recruiters', 1);
+      expect(mediaLink.untrackAll).toHaveBeenCalledWith(
+        'homepage_recruiters',
+        1,
+      );
     });
 
     it('404s restoring a row that is not actually deleted', async () => {
@@ -167,17 +181,36 @@ describe('RecruitersService', () => {
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.recruiter.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.recruiter.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.recruiter.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.recruiter.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_recruiters', 1, 'logoUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'homepage_recruiters',
+        1,
+        'logoUrl',
+        9,
+      );
     });
 
     it('does not re-track on restore when the row has no mediaId', async () => {
-      prisma.recruiter.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.recruiter.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: null });
+      prisma.recruiter.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.recruiter.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -191,27 +224,45 @@ describe('RecruitersService', () => {
       prisma.recruiter.create.mockResolvedValue({ id: 5 });
 
       await service.create(
-        { name: 'Acme Corp', logoUrl: '/fallback.png', mediaId: 9 } as any,
+        { name: 'Acme Corp', logoUrl: '/fallback.png', mediaId: 9 },
         admin,
         undefined,
       );
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.recruiter.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ logoUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          logoUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_recruiters', 5, 'logoUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'homepage_recruiters',
+        5,
+        'logoUrl',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching logoUrl', async () => {
-      prisma.recruiter.findFirst.mockResolvedValue({ id: 1, version: 1, logoUrl: '/existing.png' });
+      prisma.recruiter.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        logoUrl: '/existing.png',
+      });
       prisma.recruiter.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { mediaId: null, version: 1 } as any, admin, undefined);
+      await service.update(1, { mediaId: null, version: 1 }, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_recruiters', 1, 'logoUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'homepage_recruiters',
+        1,
+        'logoUrl',
+        null,
+      );
       expect(prisma.recruiter.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ logoUrl: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ logoUrl: expect.anything() }),
+        }),
       );
     });
   });

@@ -24,7 +24,9 @@ import { RequirePermission } from '../../auth/permission.decorator';
 @ApiTags('homepage-admission-programs')
 @Controller('homepage')
 export class AdmissionProgramsController {
-  constructor(private readonly admissionProgramsService: AdmissionProgramsService) {}
+  constructor(
+    private readonly admissionProgramsService: AdmissionProgramsService,
+  ) {}
 
   @Get('admission-programs')
   findAllPublic(@Query('section') section: AdmissionProgramSection) {
@@ -38,7 +40,10 @@ export class AdmissionProgramsController {
     @Query('section') section?: AdmissionProgramSection,
     @Query('includeDeleted') includeDeleted?: string,
   ) {
-    return this.admissionProgramsService.findAllAdmin(section, includeDeleted === 'true');
+    return this.admissionProgramsService.findAllAdmin(
+      section,
+      includeDeleted === 'true',
+    );
   }
 
   @Post('admin/admission-programs')
@@ -63,14 +68,23 @@ export class AdmissionProgramsController {
     @Body() dto: UpdateAdmissionProgramDto,
     @Request() req,
   ) {
-    return this.admissionProgramsService.update(id, dto, req.user, req.requestId);
+    return this.admissionProgramsService.update(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete('admin/admission-programs/:id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('homepage.delete')
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.admissionProgramsService.softDelete(id, req.user, req.requestId);
+    return this.admissionProgramsService.softDelete(
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post('admin/admission-programs/:id/restore')

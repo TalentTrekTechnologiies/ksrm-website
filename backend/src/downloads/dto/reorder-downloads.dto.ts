@@ -1,4 +1,10 @@
-import { ArrayMinSize, IsArray, IsInt, Min, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsInt,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class ReorderDownloadItemDto {

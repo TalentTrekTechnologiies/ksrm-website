@@ -51,7 +51,11 @@ export class PageTablesController {
   @UseGuards(JwtAuthGuard, PermissionsGuard, PageSectionOwnershipGuard)
   @RequirePermission('downloads.update')
   @PageSectionScoped({ source: 'lookup', model: 'pageTable' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdatePageTableDto, @Request() req) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdatePageTableDto,
+    @Request() req,
+  ) {
     return this.service.update(id, dto, req.user, req.requestId);
   }
 

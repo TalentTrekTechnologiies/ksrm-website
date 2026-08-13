@@ -1,4 +1,12 @@
-import { ArrayMinSize, IsArray, IsIn, IsInt, IsOptional, Min, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsIn,
+  IsInt,
+  IsOptional,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { STATISTIC_GROUPS } from './create-statistic.dto';
 import type { StatisticGroup } from './create-statistic.dto';

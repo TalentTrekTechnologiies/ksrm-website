@@ -19,7 +19,11 @@ describe('SiteSettingsService', () => {
     };
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
   let mediaStats: { getStats: jest.Mock };
   let notification: { send: jest.Mock };
 
@@ -37,15 +41,23 @@ describe('SiteSettingsService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
-    mediaStats = { getStats: jest.fn().mockResolvedValue({ counts: {}, totalSizeBytes: '12345' }) };
+    mediaStats = {
+      getStats: jest
+        .fn()
+        .mockResolvedValue({ counts: {}, totalSizeBytes: '12345' }),
+    };
     notification = { send: jest.fn().mockResolvedValue(undefined) };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -65,15 +77,28 @@ describe('SiteSettingsService', () => {
   describe('findAllPublic', () => {
     it('only queries isPublic:true rows, excludes homepage_visibility, and collapses to a key/value map', async () => {
       prisma.siteSetting.findMany.mockResolvedValue([
-        { key: 'site.collegeName', value: 'KSRM College', type: 'STRING', group: 'branding' },
-        { key: 'site.logoUrl', value: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE', type: 'IMAGE_URL', group: 'branding' },
+        {
+          key: 'site.collegeName',
+          value: 'KSRM College',
+          type: 'STRING',
+          group: 'branding',
+        },
+        {
+          key: 'site.logoUrl',
+          value: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+          type: 'IMAGE_URL',
+          group: 'branding',
+        },
       ]);
 
       const result = await service.findAllPublic();
 
       expect(prisma.siteSetting.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { isPublic: true, AND: [{ group: { notIn: ['homepage_visibility'] } }] },
+          where: {
+            isPublic: true,
+            AND: [{ group: { notIn: ['homepage_visibility'] } }],
+          },
         }),
       );
       expect(result).toEqual({
@@ -91,7 +116,10 @@ describe('SiteSettingsService', () => {
         expect.objectContaining({
           where: {
             isPublic: true,
-            AND: [{ group: { notIn: ['homepage_visibility'] } }, { group: 'branding' }],
+            AND: [
+              { group: { notIn: ['homepage_visibility'] } },
+              { group: 'branding' },
+            ],
           },
         }),
       );
@@ -119,7 +147,10 @@ describe('SiteSettingsService', () => {
       expect(prisma.siteSetting.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
-            AND: [{ group: { notIn: ['homepage_visibility'] } }, { group: 'branding' }],
+            AND: [
+              { group: { notIn: ['homepage_visibility'] } },
+              { group: 'branding' },
+            ],
           },
         }),
       );
@@ -138,12 +169,17 @@ describe('SiteSettingsService', () => {
 
   describe('delete', () => {
     it('is a real delete (no soft-delete columns) and untracks Media usage', async () => {
-      prisma.siteSetting.findUnique.mockResolvedValue({ id: 1, key: 'site.logo' });
+      prisma.siteSetting.findUnique.mockResolvedValue({
+        id: 1,
+        key: 'site.logo',
+      });
       prisma.siteSetting.delete.mockResolvedValue({ id: 1, key: 'site.logo' });
 
       await service.delete(1, admin, undefined);
 
-      expect(prisma.siteSetting.delete).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(prisma.siteSetting.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
       expect(mediaLink.untrackAll).toHaveBeenCalledWith('site_settings', 1);
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'DELETE', module: 'site_settings' }),
@@ -169,32 +205,64 @@ describe('SiteSettingsService', () => {
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.siteSetting.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ value: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          value: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('site_settings', 5, 'value', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'site_settings',
+        5,
+        'value',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching value', async () => {
-      prisma.siteSetting.findUnique.mockResolvedValue({ id: 1, value: '/existing.png' });
+      prisma.siteSetting.findUnique.mockResolvedValue({
+        id: 1,
+        value: '/existing.png',
+      });
       prisma.siteSetting.update.mockResolvedValue({ id: 1 });
 
-      await service.update(1, { mediaId: null } as any, admin, undefined);
+      await service.update(1, { mediaId: null }, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('site_settings', 1, 'value', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'site_settings',
+        1,
+        'value',
+        null,
+      );
       expect(prisma.siteSetting.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ value: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ value: expect.anything() }),
+        }),
       );
     });
 
     it('leaves value untouched on update when mediaId is not provided at all', async () => {
-      prisma.siteSetting.findUnique.mockResolvedValue({ id: 1, value: '/existing.txt' });
+      prisma.siteSetting.findUnique.mockResolvedValue({
+        id: 1,
+        value: '/existing.txt',
+      });
       prisma.siteSetting.update.mockResolvedValue({ id: 1 });
 
-      await service.update(1, { description: 'updated note' } as any, admin, undefined);
+      await service.update(
+        1,
+        { description: 'updated note' },
+        admin,
+        undefined,
+      );
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('site_settings', 1, 'value', undefined);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'site_settings',
+        1,
+        'value',
+        undefined,
+      );
       expect(prisma.siteSetting.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ value: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ value: expect.anything() }),
+        }),
       );
     });
   });
@@ -216,14 +284,24 @@ describe('SiteSettingsService', () => {
 
   describe('sendTestEmail', () => {
     it('sends via NotificationService and audit-logs the attempt', async () => {
-      const result = await service.sendTestEmail('recipient@ksrm.edu', admin, 'req-1');
+      const result = await service.sendTestEmail(
+        'recipient@ksrm.edu',
+        admin,
+        'req-1',
+      );
 
       expect(notification.send).toHaveBeenCalledWith(
-        expect.objectContaining({ to: 'recipient@ksrm.edu', subject: expect.any(String) }),
+        expect.objectContaining({
+          to: 'recipient@ksrm.edu',
+          subject: expect.any(String),
+        }),
       );
       expect(result).toEqual({ sent: true, to: 'recipient@ksrm.edu' });
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ module: 'site_settings', requestId: 'req-1' }),
+        expect.objectContaining({
+          module: 'site_settings',
+          requestId: 'req-1',
+        }),
       );
     });
   });

@@ -24,23 +24,67 @@ export class AdmissionProgramsService {
     return this.contentCards.findAllAdmin(section, includeDeleted);
   }
 
-  create(dto: CreateAdmissionProgramDto, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.create(dto, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+  create(
+    dto: CreateAdmissionProgramDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    return this.contentCards.create(
+      dto,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
-  update(id: number, dto: UpdateAdmissionProgramDto, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.update(id, dto, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+  update(
+    id: number,
+    dto: UpdateAdmissionProgramDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    return this.contentCards.update(
+      id,
+      dto,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
   softDelete(id: number, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.softDelete(id, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+    return this.contentCards.softDelete(
+      id,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
   restore(id: number, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.restore(id, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+    return this.contentCards.restore(
+      id,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
-  reorder(dto: ReorderAdmissionProgramsDto, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.reorder(dto, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+  reorder(
+    dto: ReorderAdmissionProgramsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    return this.contentCards.reorder(
+      dto,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 }

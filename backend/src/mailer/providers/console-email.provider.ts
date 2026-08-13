@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EmailProvider, SendEmailParams } from '../interfaces/email-provider.interface';
+import {
+  EmailProvider,
+  SendEmailParams,
+} from '../interfaces/email-provider.interface';
 
 // Zero-config default: logs instead of sending. Used whenever EMAIL_PROVIDER
 // is unset (local dev with no SMTP/SES credentials, CI, tests) so the app

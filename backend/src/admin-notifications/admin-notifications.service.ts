@@ -48,7 +48,10 @@ export class AdminNotificationsService {
     await this.notifyAdmins(eligibleIds, payload);
   }
 
-  async findForAdmin(adminId: number, options?: { unreadOnly?: boolean; limit?: number }) {
+  async findForAdmin(
+    adminId: number,
+    options?: { unreadOnly?: boolean; limit?: number },
+  ) {
     return this.prisma.adminNotification.findMany({
       where: {
         adminId,

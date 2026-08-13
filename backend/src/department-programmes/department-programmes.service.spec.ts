@@ -56,7 +56,9 @@ describe('DepartmentProgrammesService', () => {
 
       expect(prisma.departmentProgramme.findMany).toHaveBeenCalledWith({
         where: { departmentId: 3, isActive: true, deletedAt: null },
-        include: { department: { select: { name: true, shortName: true, slug: true } } },
+        include: {
+          department: { select: { name: true, shortName: true, slug: true } },
+        },
         orderBy: { sortOrder: 'asc' },
       });
     });
@@ -64,7 +66,10 @@ describe('DepartmentProgrammesService', () => {
 
   describe('update', () => {
     it('409s on stale version', async () => {
-      prisma.departmentProgramme.findFirst.mockResolvedValue({ id: 1, version: 2 });
+      prisma.departmentProgramme.findFirst.mockResolvedValue({
+        id: 1,
+        version: 2,
+      });
 
       await expect(
         service.update(1, { name: 'x', version: 1 } as any, admin, undefined),
@@ -82,13 +87,22 @@ describe('DepartmentProgrammesService', () => {
 
   describe('softDelete / restore', () => {
     it('soft-deletes and logs DELETE', async () => {
-      prisma.departmentProgramme.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.departmentProgramme.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.departmentProgramme.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+      });
+      prisma.departmentProgramme.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'DELETE', module: 'department_programmes' }),
+        expect.objectContaining({
+          action: 'DELETE',
+          module: 'department_programmes',
+        }),
       );
     });
 
@@ -101,8 +115,14 @@ describe('DepartmentProgrammesService', () => {
     });
 
     it('restores and logs RESTORE', async () => {
-      prisma.departmentProgramme.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.departmentProgramme.update.mockResolvedValue({ id: 1, deletedAt: null });
+      prisma.departmentProgramme.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.departmentProgramme.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -116,7 +136,12 @@ describe('DepartmentProgrammesService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),
@@ -131,7 +156,12 @@ describe('DepartmentProgrammesService', () => {
       prisma.$transaction.mockResolvedValue(undefined);
 
       await service.reorder(
-        { items: [{ id: 1, sortOrder: 1 }, { id: 2, sortOrder: 0 }] },
+        {
+          items: [
+            { id: 1, sortOrder: 1 },
+            { id: 2, sortOrder: 0 },
+          ],
+        },
         admin,
         'req-3',
       );

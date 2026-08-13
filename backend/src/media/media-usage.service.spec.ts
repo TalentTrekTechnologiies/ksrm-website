@@ -24,7 +24,10 @@ describe('MediaUsageService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MediaUsageService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        MediaUsageService,
+        { provide: PrismaService, useValue: prisma },
+      ],
     }).compile();
 
     service = module.get(MediaUsageService);
@@ -46,7 +49,12 @@ describe('MediaUsageService', () => {
           },
         },
         update: {},
-        create: { mediaId: 1, module: 'gallery', recordId: 5, field: 'imageUrl' },
+        create: {
+          mediaId: 1,
+          module: 'gallery',
+          recordId: 5,
+          field: 'imageUrl',
+        },
       });
     });
   });

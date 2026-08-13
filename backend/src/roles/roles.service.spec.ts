@@ -24,8 +24,18 @@ describe('RolesService', () => {
   };
   let auditLog: { log: jest.Mock };
 
-  const superAdmin = { id: 1, name: 'Super', email: 'super@ksrm.edu', isSuperAdmin: true };
-  const regularActor = { id: 2, name: 'Editor', email: 'editor@ksrm.edu', isSuperAdmin: false };
+  const superAdmin = {
+    id: 1,
+    name: 'Super',
+    email: 'super@ksrm.edu',
+    isSuperAdmin: true,
+  };
+  const regularActor = {
+    id: 2,
+    name: 'Editor',
+    email: 'editor@ksrm.edu',
+    isSuperAdmin: false,
+  };
 
   beforeEach(async () => {
     prisma = {
@@ -62,7 +72,10 @@ describe('RolesService', () => {
           isSystemRole: true,
           createdAt: new Date(),
           updatedAt: new Date(),
-          permissions: [{ permission: { key: 'news.view' } }, { permission: { key: 'news.update' } }],
+          permissions: [
+            { permission: { key: 'news.view' } },
+            { permission: { key: 'news.update' } },
+          ],
           _count: { admins: 3 },
         },
       ]);
@@ -81,7 +94,11 @@ describe('RolesService', () => {
   describe('create', () => {
     it('rejects a non-super-admin actor', async () => {
       await expect(
-        service.create({ name: 'X', permissionKeys: [] }, regularActor, undefined),
+        service.create(
+          { name: 'X', permissionKeys: [] },
+          regularActor,
+          undefined,
+        ),
       ).rejects.toBeInstanceOf(ForbiddenException);
       expect(prisma.role.create).not.toHaveBeenCalled();
     });
@@ -90,15 +107,29 @@ describe('RolesService', () => {
       prisma.permission.findMany.mockResolvedValue([]);
 
       await expect(
-        service.create({ name: 'X', permissionKeys: ['bogus.key'] }, superAdmin, undefined),
+        service.create(
+          { name: 'X', permissionKeys: ['bogus.key'] },
+          superAdmin,
+          undefined,
+        ),
       ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('creates a non-system role and logs CREATE', async () => {
-      prisma.permission.findMany.mockResolvedValue([{ id: 10, key: 'news.view' }]);
-      prisma.role.create.mockResolvedValue({ id: 20, name: 'Custom', isSystemRole: false });
+      prisma.permission.findMany.mockResolvedValue([
+        { id: 10, key: 'news.view' },
+      ]);
+      prisma.role.create.mockResolvedValue({
+        id: 20,
+        name: 'Custom',
+        isSystemRole: false,
+      });
 
-      await service.create({ name: 'Custom', permissionKeys: ['news.view'] }, superAdmin, undefined);
+      await service.create(
+        { name: 'Custom', permissionKeys: ['news.view'] },
+        superAdmin,
+        undefined,
+      );
 
       expect(prisma.role.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -121,7 +152,11 @@ describe('RolesService', () => {
       );
 
       await expect(
-        service.create({ name: 'Dup', permissionKeys: [] }, superAdmin, undefined),
+        service.create(
+          { name: 'Dup', permissionKeys: [] },
+          superAdmin,
+          undefined,
+        ),
       ).rejects.toBeInstanceOf(ConflictException);
     });
   });
@@ -154,23 +189,31 @@ describe('RolesService', () => {
     it('rejects deleting a system role', async () => {
       prisma.role.findUnique.mockResolvedValue({ id: 1, isSystemRole: true });
 
-      await expect(service.delete(1, superAdmin, undefined)).rejects.toBeInstanceOf(
-        BadRequestException,
-      );
+      await expect(
+        service.delete(1, superAdmin, undefined),
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('rejects deleting a role that still has admins assigned', async () => {
-      prisma.role.findUnique.mockResolvedValue({ id: 2, isSystemRole: false, name: 'Custom' });
+      prisma.role.findUnique.mockResolvedValue({
+        id: 2,
+        isSystemRole: false,
+        name: 'Custom',
+      });
       prisma.adminRole.count.mockResolvedValue(2);
 
-      await expect(service.delete(2, superAdmin, undefined)).rejects.toBeInstanceOf(
-        BadRequestException,
-      );
+      await expect(
+        service.delete(2, superAdmin, undefined),
+      ).rejects.toBeInstanceOf(BadRequestException);
       expect(prisma.role.delete).not.toHaveBeenCalled();
     });
 
     it('deletes an unused custom role and logs DELETE', async () => {
-      prisma.role.findUnique.mockResolvedValue({ id: 2, isSystemRole: false, name: 'Custom' });
+      prisma.role.findUnique.mockResolvedValue({
+        id: 2,
+        isSystemRole: false,
+        name: 'Custom',
+      });
       prisma.adminRole.count.mockResolvedValue(0);
       prisma.role.delete.mockResolvedValue({ id: 2 });
 

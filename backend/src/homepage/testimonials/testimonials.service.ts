@@ -68,7 +68,12 @@ export class TestimonialsService {
       data: { ...dto, photoUrl: resolvedUrl ?? dto.photoUrl, sortOrder },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -167,7 +172,12 @@ export class TestimonialsService {
     });
 
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({

@@ -55,8 +55,17 @@ export class KgcetController {
   @Post(':resource/reorder')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('kgcet.update')
-  reorder(@Param('resource') resource: string, @Body() dto: ReorderKgcetDto, @Request() req) {
-    return this.service.reorder(assertResource(resource), dto, req.user, req.requestId);
+  reorder(
+    @Param('resource') resource: string,
+    @Body() dto: ReorderKgcetDto,
+    @Request() req,
+  ) {
+    return this.service.reorder(
+      assertResource(resource),
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Get(':resource')
@@ -67,8 +76,14 @@ export class KgcetController {
   @Get(':resource/admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('kgcet.view')
-  findAllAdmin(@Param('resource') resource: string, @Query('includeDeleted') includeDeleted?: string) {
-    return this.service.findAllAdmin(assertResource(resource), includeDeleted === 'true');
+  findAllAdmin(
+    @Param('resource') resource: string,
+    @Query('includeDeleted') includeDeleted?: string,
+  ) {
+    return this.service.findAllAdmin(
+      assertResource(resource),
+      includeDeleted === 'true',
+    );
   }
 
   @Post(':resource')
@@ -79,7 +94,12 @@ export class KgcetController {
     @Body() dto: CreateKgcetParticipationDto & CreateKgcetHighlightDto,
     @Request() req,
   ) {
-    return this.service.create(assertResource(resource), dto, req.user, req.requestId);
+    return this.service.create(
+      assertResource(resource),
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch(':resource/:id')
@@ -91,20 +111,44 @@ export class KgcetController {
     @Body() dto: UpdateKgcetParticipationDto & UpdateKgcetHighlightDto,
     @Request() req,
   ) {
-    return this.service.update(assertResource(resource), id, dto, req.user, req.requestId);
+    return this.service.update(
+      assertResource(resource),
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete(':resource/:id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('kgcet.delete')
-  remove(@Param('resource') resource: string, @Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.service.remove(assertResource(resource), id, req.user, req.requestId);
+  remove(
+    @Param('resource') resource: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req,
+  ) {
+    return this.service.remove(
+      assertResource(resource),
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post(':resource/:id/restore')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('kgcet.restore')
-  restore(@Param('resource') resource: string, @Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.service.restore(assertResource(resource), id, req.user, req.requestId);
+  restore(
+    @Param('resource') resource: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req,
+  ) {
+    return this.service.restore(
+      assertResource(resource),
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 }

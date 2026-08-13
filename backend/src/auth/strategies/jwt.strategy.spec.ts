@@ -18,7 +18,10 @@ describe('JwtStrategy', () => {
       providers: [
         JwtStrategy,
         { provide: PrismaService, useValue: prisma },
-        { provide: EffectivePermissionsService, useValue: effectivePermissions },
+        {
+          provide: EffectivePermissionsService,
+          useValue: effectivePermissions,
+        },
         { provide: ConfigService, useValue: { get: () => 'test-secret' } },
       ],
     }).compile();
@@ -29,9 +32,9 @@ describe('JwtStrategy', () => {
   it('rejects a deactivated or missing admin', async () => {
     prisma.admin.findUnique.mockResolvedValue(null);
 
-    await expect(strategy.validate({ sub: 1, email: 'x@y.com' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(
+      strategy.validate({ sub: 1, email: 'x@y.com' }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   it('rejects a soft-deleted admin even if isActive is still true', async () => {
@@ -46,9 +49,9 @@ describe('JwtStrategy', () => {
       deletedAt: new Date(),
     });
 
-    await expect(strategy.validate({ sub: 3, email: 'gone@ksrm.edu' })).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(
+      strategy.validate({ sub: 3, email: 'gone@ksrm.edu' }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
   // This is the regression test for the RBAC bug: req.user.permissions must
@@ -69,7 +72,10 @@ describe('JwtStrategy', () => {
       new Set(['homepage.view', 'homepage.edit']),
     );
 
-    const result = await strategy.validate({ sub: 2, email: 'editor@ksrm.edu' });
+    const result = await strategy.validate({
+      sub: 2,
+      email: 'editor@ksrm.edu',
+    });
 
     expect(result.permissions).toEqual(
       expect.arrayContaining(['homepage.view', 'homepage.edit']),

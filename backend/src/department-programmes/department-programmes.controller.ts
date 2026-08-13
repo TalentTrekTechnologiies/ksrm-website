@@ -26,7 +26,9 @@ import { DepartmentScoped } from '../auth/department-scope.decorator';
 @ApiTags('department-programmes')
 @Controller('department-programmes')
 export class DepartmentProgrammesController {
-  constructor(private readonly departmentProgrammesService: DepartmentProgrammesService) {}
+  constructor(
+    private readonly departmentProgrammesService: DepartmentProgrammesService,
+  ) {}
 
   // departmentId is optional so a page can ask for one department's programmes
   // (a department page) OR every department's (the Diploma admissions page,
@@ -62,14 +64,22 @@ export class DepartmentProgrammesController {
   @RequirePermission('department_programmes.create')
   @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreateDepartmentProgrammeDto, @Request() req) {
-    return this.departmentProgrammesService.create(dto, req.user, req.requestId);
+    return this.departmentProgrammesService.create(
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch('reorder')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('department_programmes.update')
   reorder(@Body() dto: ReorderDepartmentProgrammesDto, @Request() req) {
-    return this.departmentProgrammesService.reorder(dto, req.user, req.requestId);
+    return this.departmentProgrammesService.reorder(
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch(':id')
@@ -81,7 +91,12 @@ export class DepartmentProgrammesController {
     @Body() dto: UpdateDepartmentProgrammeDto,
     @Request() req,
   ) {
-    return this.departmentProgrammesService.update(id, dto, req.user, req.requestId);
+    return this.departmentProgrammesService.update(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete(':id')
@@ -89,7 +104,11 @@ export class DepartmentProgrammesController {
   @RequirePermission('department_programmes.delete')
   @DepartmentScoped({ source: 'lookup', model: 'departmentProgramme' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.departmentProgrammesService.softDelete(id, req.user, req.requestId);
+    return this.departmentProgrammesService.softDelete(
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post(':id/restore')
@@ -97,6 +116,10 @@ export class DepartmentProgrammesController {
   @RequirePermission('department_programmes.restore')
   @DepartmentScoped({ source: 'lookup', model: 'departmentProgramme' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.departmentProgrammesService.restore(id, req.user, req.requestId);
+    return this.departmentProgrammesService.restore(
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 }

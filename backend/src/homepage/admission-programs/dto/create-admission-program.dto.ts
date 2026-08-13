@@ -11,8 +11,11 @@ import {
 } from 'class-validator';
 import { IsPathOrUrl } from '../../dto/is-path-or-url.validator';
 
-export const ADMISSION_PROGRAM_SECTIONS = ['homepage_admission_programs'] as const;
-export type AdmissionProgramSection = (typeof ADMISSION_PROGRAM_SECTIONS)[number];
+export const ADMISSION_PROGRAM_SECTIONS = [
+  'homepage_admission_programs',
+] as const;
+export type AdmissionProgramSection =
+  (typeof ADMISSION_PROGRAM_SECTIONS)[number];
 
 export class CreateAdmissionProgramDto {
   @IsIn(ADMISSION_PROGRAM_SECTIONS)

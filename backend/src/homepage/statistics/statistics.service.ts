@@ -34,7 +34,11 @@ export class StatisticsService {
   // admin UI can actually offer a restore action - excluded by default
   // since most callers (including reorder's own re-fetch) want the live
   // working set only.
-  async findAllAdmin(scope?: StatisticGroup, departmentId?: number, includeDeleted = false) {
+  async findAllAdmin(
+    scope?: StatisticGroup,
+    departmentId?: number,
+    includeDeleted = false,
+  ) {
     return this.prisma.siteStatistic.findMany({
       where: {
         ...(scope && { scope }),
@@ -55,16 +59,20 @@ export class StatisticsService {
     return record;
   }
 
-  async create(dto: CreateStatisticDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateStatisticDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrder =
       dto.sortOrder ??
-      ((await this.prisma.siteStatistic.count({
+      (await this.prisma.siteStatistic.count({
         where: {
           scope: dto.scope,
           ...(dto.scope === 'department' && { departmentId: dto.departmentId }),
           deletedAt: null,
         },
-      })) as number);
+      }));
 
     const created = await this.prisma.siteStatistic.create({
       data: { ...dto, sortOrder },
@@ -84,7 +92,12 @@ export class StatisticsService {
     return created;
   }
 
-  async update(id: number, dto: UpdateStatisticDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateStatisticDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Statistic ${id}`);
@@ -101,7 +114,11 @@ export class StatisticsService {
       action: 'UPDATE',
       module: 'homepage_statistics',
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -113,7 +130,11 @@ export class StatisticsService {
 
     const deleted = await this.prisma.siteStatistic.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.auditLog.log({
@@ -157,10 +178,16 @@ export class StatisticsService {
     return restored;
   }
 
-  async reorder(dto: ReorderStatisticsDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderStatisticsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

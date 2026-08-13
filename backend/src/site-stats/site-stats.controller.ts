@@ -34,7 +34,9 @@ export class SiteStatsController {
 
   @Get('summary')
   getSummary(@Query('range') range?: string) {
-    const resolved = RANGES.includes(range as SiteStatsRange) ? (range as SiteStatsRange) : 'today';
+    const resolved = RANGES.includes(range as SiteStatsRange)
+      ? (range as SiteStatsRange)
+      : 'today';
     return this.service.getSummary(resolved);
   }
 

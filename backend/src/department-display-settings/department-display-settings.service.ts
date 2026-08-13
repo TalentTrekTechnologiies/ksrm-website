@@ -23,7 +23,9 @@ export class DepartmentDisplaySettingsService {
   // Every catalog key defaults to true (visible); a stored row overrides it.
   // Absence of ANY rows for a department therefore means "everything on" -
   // a brand new department needs zero seeded rows.
-  async getEffectiveSettings(departmentId: number): Promise<Record<string, boolean>> {
+  async getEffectiveSettings(
+    departmentId: number,
+  ): Promise<Record<string, boolean>> {
     const rows = await this.prisma.departmentDisplaySetting.findMany({
       where: { departmentId },
     });
@@ -52,10 +54,21 @@ export class DepartmentDisplaySettingsService {
     }));
   }
 
-  async set(dto: SetDisplaySettingDto, admin: RequestAdmin, requestId?: string) {
+  async set(
+    dto: SetDisplaySettingDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const upserted = await this.prisma.departmentDisplaySetting.upsert({
-      where: { departmentId_key: { departmentId: dto.departmentId, key: dto.key } },
-      create: { departmentId: dto.departmentId, key: dto.key, value: dto.value, updatedBy: admin.id },
+      where: {
+        departmentId_key: { departmentId: dto.departmentId, key: dto.key },
+      },
+      create: {
+        departmentId: dto.departmentId,
+        key: dto.key,
+        value: dto.value,
+        updatedBy: admin.id,
+      },
       update: { value: dto.value, updatedBy: admin.id },
     });
 
@@ -73,11 +86,17 @@ export class DepartmentDisplaySettingsService {
     return upserted;
   }
 
-  async bulkSet(dto: BulkSetDisplaySettingsDto, admin: RequestAdmin, requestId?: string) {
+  async bulkSet(
+    dto: BulkSetDisplaySettingsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     await this.prisma.$transaction(
       dto.settings.map((item) =>
         this.prisma.departmentDisplaySetting.upsert({
-          where: { departmentId_key: { departmentId: dto.departmentId, key: item.key } },
+          where: {
+            departmentId_key: { departmentId: dto.departmentId, key: item.key },
+          },
           create: {
             departmentId: dto.departmentId,
             key: item.key,

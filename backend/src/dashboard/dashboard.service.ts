@@ -14,7 +14,10 @@ interface WidgetDefinition {
   key: string;
   label: string;
   /** `<key>.view` is assumed for every widget below - see isWidgetVisible. */
-  count: (prisma: PrismaService, departmentId?: number | null) => Promise<number>;
+  count: (
+    prisma: PrismaService,
+    departmentId?: number | null,
+  ) => Promise<number>;
   /**
    * Whether this widget's model carries a departmentId and can therefore be
    * narrowed to one department. Widgets without it are college-wide, so a
@@ -191,7 +194,10 @@ export class DashboardService {
    * 500 the whole dashboard.
    */
   private async safeCount(
-    fn: (prisma: PrismaService, departmentId?: number | null) => Promise<number>,
+    fn: (
+      prisma: PrismaService,
+      departmentId?: number | null,
+    ) => Promise<number>,
     widgetKey: string,
     departmentId?: number | null,
   ): Promise<{ count: number; available: boolean }> {
@@ -319,7 +325,9 @@ export class DashboardService {
     return {
       usedBytes: Number(stats.totalSizeBytes),
       totalBytes: 0,
-      breakdown: (Object.keys(stats.counts) as (keyof typeof stats.counts)[]).map((type) => ({
+      breakdown: (
+        Object.keys(stats.counts) as (keyof typeof stats.counts)[]
+      ).map((type) => ({
         type,
         count: stats.counts[type],
       })),

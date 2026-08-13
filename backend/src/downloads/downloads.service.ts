@@ -39,7 +39,13 @@ export class DownloadsService {
     // error to notice. mediaId is a plain Int by design (no Prisma relation),
     // so the live ids are gathered and filtered on rather than joined.
     const gone = await this.prisma.media.findMany({
-      where: { OR: [{ deletedAt: { not: null } }, { isActive: false }, { isPrivate: true }] },
+      where: {
+        OR: [
+          { deletedAt: { not: null } },
+          { isActive: false },
+          { isPrivate: true },
+        ],
+      },
       select: { id: true },
     });
 
@@ -47,7 +53,9 @@ export class DownloadsService {
       where: {
         isActive: true,
         deletedAt: null,
-        ...(gone.length > 0 && { NOT: { mediaId: { in: gone.map((m) => m.id) } } }),
+        ...(gone.length > 0 && {
+          NOT: { mediaId: { in: gone.map((m) => m.id) } },
+        }),
         ...(category && { category }),
         ...(departmentId !== undefined && { departmentId }),
         ...(pageSection && { pageSection }),
@@ -116,16 +124,28 @@ export class DownloadsService {
     return (lowest._min.sortOrder ?? 0) - 1;
   }
 
-  async create(dto: CreateDownloadDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateDownloadDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrder = dto.sortOrder ?? (await this.sortOrderForNewest());
 
-    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'DOCUMENT');
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      dto.mediaId,
+      'DOCUMENT',
+    );
 
     const created = await this.prisma.download.create({
       data: { ...dto, fileUrl: resolvedUrl ?? dto.fileUrl, sortOrder },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -155,7 +175,11 @@ export class DownloadsService {
    * publish must be as reviewable afterwards as forty single ones would have
    * been.
    */
-  async bulkCreate(dto: BulkCreateDownloadsDto, admin: RequestAdmin, requestId?: string) {
+  async bulkCreate(
+    dto: BulkCreateDownloadsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const { items, ...shared } = dto;
 
     // One starting point for the whole batch so the files keep the order they
@@ -164,10 +188,14 @@ export class DownloadsService {
     // first file listed stays first within the batch.
     let sortOrder = (await this.sortOrderForNewest()) - items.length + 1;
 
-    const created: Awaited<ReturnType<typeof this.prisma.download.create>>[] = [];
+    const created: Awaited<ReturnType<typeof this.prisma.download.create>>[] =
+      [];
 
     for (const item of items) {
-      const resolvedUrl = await this.mediaLink.prepareLink(item.mediaId, 'DOCUMENT');
+      const resolvedUrl = await this.mediaLink.prepareLink(
+        item.mediaId,
+        'DOCUMENT',
+      );
       const fileUrl = resolvedUrl ?? item.fileUrl;
       if (!fileUrl) {
         throw new BadRequestException(
@@ -185,7 +213,12 @@ export class DownloadsService {
         },
       });
 
-      await this.mediaLink.syncUsage(MEDIA_MODULE, row.id, MEDIA_FIELD, item.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        row.id,
+        MEDIA_FIELD,
+        item.mediaId,
+      );
 
       await this.auditLog.log({
         adminId: admin.id,
@@ -204,12 +237,20 @@ export class DownloadsService {
     return created;
   }
 
-  async update(id: number, dto: UpdateDownloadDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateDownloadDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Download ${id}`);
 
-    const resolvedUrl = await this.mediaLink.prepareLink(rest.mediaId, 'DOCUMENT');
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      rest.mediaId,
+      'DOCUMENT',
+    );
 
     const updated = await this.prisma.download.update({
       where: { id },
@@ -229,7 +270,11 @@ export class DownloadsService {
       action: 'UPDATE',
       module: 'downloads',
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -241,7 +286,11 @@ export class DownloadsService {
 
     const deleted = await this.prisma.download.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.mediaLink.untrackAll(MEDIA_MODULE, id);
@@ -274,7 +323,12 @@ export class DownloadsService {
     });
 
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({
@@ -291,10 +345,16 @@ export class DownloadsService {
     return restored;
   }
 
-  async reorder(dto: ReorderDownloadsDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderDownloadsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

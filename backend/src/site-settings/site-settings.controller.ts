@@ -53,7 +53,11 @@ export class SiteSettingsController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('site_settings.update')
   sendTestEmail(@Body() dto: SendTestEmailDto, @Request() req) {
-    return this.siteSettingsService.sendTestEmail(dto.to, req.user, req.requestId);
+    return this.siteSettingsService.sendTestEmail(
+      dto.to,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post()
@@ -66,7 +70,11 @@ export class SiteSettingsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('site_settings.update')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateSiteSettingDto, @Request() req) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSiteSettingDto,
+    @Request() req,
+  ) {
     return this.siteSettingsService.update(id, dto, req.user, req.requestId);
   }
 

@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
@@ -62,7 +66,11 @@ describe('StatisticsService', () => {
       prisma.siteStatistic.count.mockResolvedValue(2);
       prisma.siteStatistic.create.mockResolvedValue({ id: 3, sortOrder: 2 });
 
-      await service.create({ scope: 'homepage', label: 'x', value: 1 } as any, admin, undefined);
+      await service.create(
+        { scope: 'homepage', label: 'x', value: 1 } as any,
+        admin,
+        undefined,
+      );
 
       expect(prisma.siteStatistic.create).toHaveBeenCalledWith({
         data: expect.objectContaining({ sortOrder: 2 }),
@@ -91,25 +99,39 @@ describe('StatisticsService', () => {
   describe('softDelete / restore', () => {
     it('soft-deletes by setting deletedAt/deletedBy and logs DELETE', async () => {
       prisma.siteStatistic.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.siteStatistic.update.mockResolvedValue({ id: 1, deletedAt: new Date(), deletedBy: 1 });
+      prisma.siteStatistic.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+        deletedBy: 1,
+      });
 
       await service.softDelete(1, admin, undefined);
 
       expect(prisma.siteStatistic.update).toHaveBeenCalledWith({
         where: { id: 1 },
-        data: expect.objectContaining({ deletedBy: 1, version: { increment: 1 } }),
+        data: expect.objectContaining({
+          deletedBy: 1,
+          version: { increment: 1 },
+        }),
       });
-      expect(auditLog.log).toHaveBeenCalledWith(expect.objectContaining({ action: 'DELETE' }));
+      expect(auditLog.log).toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'DELETE' }),
+      );
     });
 
     it('404s restoring a row that is not actually deleted', async () => {
       prisma.siteStatistic.findFirst.mockResolvedValue(null);
 
-      await expect(service.restore(1, admin, undefined)).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.restore(1, admin, undefined)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
 
     it('restores by clearing deletedAt/deletedBy and logs RESTORE', async () => {
-      prisma.siteStatistic.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.siteStatistic.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
       prisma.siteStatistic.update.mockResolvedValue({ id: 1, deletedAt: null });
 
       await service.restore(1, admin, undefined);
@@ -118,7 +140,9 @@ describe('StatisticsService', () => {
         where: { id: 1 },
         data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
       });
-      expect(auditLog.log).toHaveBeenCalledWith(expect.objectContaining({ action: 'RESTORE' }));
+      expect(auditLog.log).toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'RESTORE' }),
+      );
     });
   });
 
@@ -126,7 +150,13 @@ describe('StatisticsService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { scope: 'homepage', items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            scope: 'homepage',
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),
@@ -139,7 +169,13 @@ describe('StatisticsService', () => {
 
       await expect(
         service.reorder(
-          { scope: 'homepage', items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 1 }] },
+          {
+            scope: 'homepage',
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 1 },
+            ],
+          },
           admin,
           undefined,
         ),
@@ -153,7 +189,13 @@ describe('StatisticsService', () => {
       prisma.$transaction.mockResolvedValue(undefined);
 
       await service.reorder(
-        { scope: 'homepage', items: [{ id: 1, sortOrder: 1 }, { id: 2, sortOrder: 0 }] },
+        {
+          scope: 'homepage',
+          items: [
+            { id: 1, sortOrder: 1 },
+            { id: 2, sortOrder: 0 },
+          ],
+        },
         admin,
         'req-3',
       );

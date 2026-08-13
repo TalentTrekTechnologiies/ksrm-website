@@ -40,7 +40,10 @@ describe('PageSectionOwnershipGuard', () => {
     guard = module.get(PageSectionOwnershipGuard);
   });
 
-  const examAdmin = { isSuperAdmin: false, permissions: ['downloads.update', 'pages.examinations'] };
+  const examAdmin = {
+    isSuperAdmin: false,
+    permissions: ['downloads.update', 'pages.examinations'],
+  };
 
   it('takes the root before the first dot as the owning page', () => {
     expect(pageSectionRoot('examinations.timetables')).toBe('examinations');
@@ -54,7 +57,10 @@ describe('PageSectionOwnershipGuard', () => {
 
   it('always allows a super admin', async () => {
     reflector.get.mockReturnValue({ source: 'body' });
-    const ctx = makeContext({ isSuperAdmin: true, permissions: [] }, { pageSection: 'iqac' });
+    const ctx = makeContext(
+      { isSuperAdmin: true, permissions: [] },
+      { pageSection: 'iqac' },
+    );
     await expect(guard.canActivate(ctx)).resolves.toBe(true);
   });
 
@@ -76,10 +82,12 @@ describe('PageSectionOwnershipGuard', () => {
     await expect(guard.canActivate(ctx)).resolves.toBe(true);
   });
 
-  it('(source: body) 403s creating on somebody else\'s page', async () => {
+  it("(source: body) 403s creating on somebody else's page", async () => {
     reflector.get.mockReturnValue({ source: 'body' });
     const ctx = makeContext(examAdmin, { pageSection: 'iqac.aqar' });
-    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(
+      ForbiddenException,
+    );
   });
 
   // Content tied to no page belongs to a Super Admin or an unrestricted role,
@@ -92,9 +100,11 @@ describe('PageSectionOwnershipGuard', () => {
     ).rejects.toBeInstanceOf(ForbiddenException);
   });
 
-  it('(source: lookup) reads the existing row\'s pageSection and allows a match', async () => {
+  it("(source: lookup) reads the existing row's pageSection and allows a match", async () => {
     reflector.get.mockReturnValue({ source: 'lookup', model: 'download' });
-    prisma.download.findUnique.mockResolvedValue({ pageSection: 'examinations.timetables' });
+    prisma.download.findUnique.mockResolvedValue({
+      pageSection: 'examinations.timetables',
+    });
     const ctx = makeContext(examAdmin, {}, { id: '7' });
     await expect(guard.canActivate(ctx)).resolves.toBe(true);
     expect(prisma.download.findUnique).toHaveBeenCalledWith({
@@ -107,12 +117,16 @@ describe('PageSectionOwnershipGuard', () => {
     reflector.get.mockReturnValue({ source: 'lookup', model: 'download' });
     prisma.download.findUnique.mockResolvedValue({ pageSection: 'syllabus' });
     const ctx = makeContext(examAdmin, {}, { id: '7' });
-    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(
+      ForbiddenException,
+    );
   });
 
   it('(source: lookupKey) resolves a string-keyed record', async () => {
     reflector.get.mockReturnValue({ source: 'lookupKey', model: 'pageText' });
-    prisma.pageText.findUnique.mockResolvedValue({ pageSection: 'examinations' });
+    prisma.pageText.findUnique.mockResolvedValue({
+      pageSection: 'examinations',
+    });
     const ctx = makeContext(examAdmin, {}, { key: 'examinations.intro.p1' });
     await expect(guard.canActivate(ctx)).resolves.toBe(true);
     expect(prisma.pageText.findUnique).toHaveBeenCalledWith({
@@ -139,7 +153,9 @@ describe('PageSectionOwnershipGuard', () => {
     const ctx = makeContext(examAdmin, {
       items: [{ pageSection: 'examinations' }, { pageSection: 'naac' }],
     });
-    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(guard.canActivate(ctx)).rejects.toBeInstanceOf(
+      ForbiddenException,
+    );
   });
 
   it('(source: bodyItems) 403s an empty batch rather than passing it through', async () => {

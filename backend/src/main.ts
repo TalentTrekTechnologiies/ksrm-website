@@ -25,7 +25,7 @@ function assertRequiredEnv() {
 // Media.sizeBytes/MediaVariant.sizeBytes are BigInt (an Int32 tops out at
 // ~2.1GB, right at this module's 2GB video ceiling) - Node's default JSON
 // serializer throws on BigInt without this.
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+
 (BigInt.prototype as unknown as { toJSON: () => string }).toJSON = function () {
   return this.toString();
 };

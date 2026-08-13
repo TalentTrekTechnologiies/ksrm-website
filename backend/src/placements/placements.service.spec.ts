@@ -16,7 +16,11 @@ describe('PlacementsService', () => {
     };
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -31,11 +35,15 @@ describe('PlacementsService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve(`http://localhost:4000/media/file/${mediaId}/ORIGINAL/SOURCE`),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                `http://localhost:4000/media/file/${mediaId}/ORIGINAL/SOURCE`,
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -55,7 +63,11 @@ describe('PlacementsService', () => {
   describe('softDelete / restore', () => {
     it('soft-deletes and untracks Media usage for both fields', async () => {
       prisma.placement.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.placement.update.mockResolvedValue({ id: 1, deletedAt: new Date(), deletedBy: 1 });
+      prisma.placement.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+        deletedBy: 1,
+      });
 
       await service.softDelete(1, admin, undefined);
 
@@ -71,7 +83,10 @@ describe('PlacementsService', () => {
     });
 
     it('re-tracks both media usages on restore when both ids are present', async () => {
-      prisma.placement.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.placement.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
       prisma.placement.update.mockResolvedValue({
         id: 1,
         deletedAt: null,
@@ -81,12 +96,25 @@ describe('PlacementsService', () => {
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('placements', 1, 'imageUrl', 9);
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('placements', 1, 'companyLogoUrl', 10);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'placements',
+        1,
+        'imageUrl',
+        9,
+      );
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'placements',
+        1,
+        'companyLogoUrl',
+        10,
+      );
     });
 
     it('does not re-track fields with no mediaId on restore', async () => {
-      prisma.placement.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.placement.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
       prisma.placement.update.mockResolvedValue({
         id: 1,
         deletedAt: null,
@@ -115,7 +143,7 @@ describe('PlacementsService', () => {
           mediaId: 9,
           companyLogoUrl: '/fallback-logo.png',
           companyLogoMediaId: 10,
-        } as any,
+        },
         admin,
         undefined,
       );
@@ -128,8 +156,18 @@ describe('PlacementsService', () => {
           companyLogoUrl: 'http://localhost:4000/media/file/10/ORIGINAL/SOURCE',
         }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('placements', 5, 'imageUrl', 9);
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('placements', 5, 'companyLogoUrl', 10);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'placements',
+        5,
+        'imageUrl',
+        9,
+      );
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'placements',
+        5,
+        'companyLogoUrl',
+        10,
+      );
     });
 
     it('on update with both mediaIds: null, unlinks both without touching either URL', async () => {
@@ -138,13 +176,23 @@ describe('PlacementsService', () => {
 
       await service.update(
         1,
-        { mediaId: null, companyLogoMediaId: null, version: 1 } as any,
+        { mediaId: null, companyLogoMediaId: null, version: 1 },
         admin,
         undefined,
       );
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('placements', 1, 'imageUrl', null);
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('placements', 1, 'companyLogoUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'placements',
+        1,
+        'imageUrl',
+        null,
+      );
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'placements',
+        1,
+        'companyLogoUrl',
+        null,
+      );
       expect(prisma.placement.update).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.not.objectContaining({

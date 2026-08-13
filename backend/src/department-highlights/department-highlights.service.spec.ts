@@ -22,7 +22,11 @@ describe('DepartmentHighlightsService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -39,11 +43,15 @@ describe('DepartmentHighlightsService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -64,10 +72,15 @@ describe('DepartmentHighlightsService', () => {
     it('scopes to one department and filters by kind when provided (e.g. only Achievements)', async () => {
       prisma.departmentHighlight.findMany.mockResolvedValue([]);
 
-      await service.findAllPublic(3, 'ACHIEVEMENT' as any);
+      await service.findAllPublic(3, 'ACHIEVEMENT');
 
       expect(prisma.departmentHighlight.findMany).toHaveBeenCalledWith({
-        where: { departmentId: 3, isActive: true, deletedAt: null, kind: 'ACHIEVEMENT' },
+        where: {
+          departmentId: 3,
+          isActive: true,
+          deletedAt: null,
+          kind: 'ACHIEVEMENT',
+        },
         orderBy: { sortOrder: 'asc' },
       });
     });
@@ -76,10 +89,18 @@ describe('DepartmentHighlightsService', () => {
   describe('create', () => {
     it('auto-assigns sortOrder scoped to department+kind independently', async () => {
       prisma.departmentHighlight.count.mockResolvedValue(1);
-      prisma.departmentHighlight.create.mockResolvedValue({ id: 5, sortOrder: 1 });
+      prisma.departmentHighlight.create.mockResolvedValue({
+        id: 5,
+        sortOrder: 1,
+      });
 
       await service.create(
-        { departmentId: 3, kind: 'HIGHLIGHT', title: 'AI Lab', description: 'desc' } as any,
+        {
+          departmentId: 3,
+          kind: 'HIGHLIGHT',
+          title: 'AI Lab',
+          description: 'desc',
+        } as any,
         admin,
         undefined,
       );
@@ -92,21 +113,42 @@ describe('DepartmentHighlightsService', () => {
 
   describe('softDelete / restore', () => {
     it('soft-deletes and untracks Media usage', async () => {
-      prisma.departmentHighlight.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.departmentHighlight.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.departmentHighlight.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+      });
+      prisma.departmentHighlight.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
-      expect(mediaLink.untrackAll).toHaveBeenCalledWith('department_highlights', 1);
+      expect(mediaLink.untrackAll).toHaveBeenCalledWith(
+        'department_highlights',
+        1,
+      );
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.departmentHighlight.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.departmentHighlight.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.departmentHighlight.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.departmentHighlight.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('department_highlights', 1, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'department_highlights',
+        1,
+        'imageUrl',
+        9,
+      );
     });
   });
 
@@ -130,15 +172,25 @@ describe('DepartmentHighlightsService', () => {
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.departmentHighlight.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('department_highlights', 5, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'department_highlights',
+        5,
+        'imageUrl',
+        9,
+      );
     });
   });
 
   describe('update', () => {
     it('409s on stale version', async () => {
-      prisma.departmentHighlight.findFirst.mockResolvedValue({ id: 1, version: 2 });
+      prisma.departmentHighlight.findFirst.mockResolvedValue({
+        id: 1,
+        version: 2,
+      });
 
       await expect(
         service.update(1, { title: 'x', version: 1 } as any, admin, undefined),
@@ -158,7 +210,12 @@ describe('DepartmentHighlightsService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),

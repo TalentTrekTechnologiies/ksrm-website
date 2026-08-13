@@ -1,4 +1,11 @@
-import { IsBoolean, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 // Deliberately simple, matching the existing Research table (schema.prisma):
 // no soft-delete columns, no optimistic-lock version - isActive is its

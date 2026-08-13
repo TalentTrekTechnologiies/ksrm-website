@@ -37,7 +37,9 @@ export class KgcetService {
   }
 
   private label(resource: 'participation' | 'highlights') {
-    return resource === 'participation' ? 'KGCET participation row' : 'KGCET highlight';
+    return resource === 'participation'
+      ? 'KGCET participation row'
+      : 'KGCET highlight';
   }
 
   findAllPublic(resource: 'participation' | 'highlights') {
@@ -47,18 +49,25 @@ export class KgcetService {
     });
   }
 
-  findAllAdmin(resource: 'participation' | 'highlights', includeDeleted = false) {
+  findAllAdmin(
+    resource: 'participation' | 'highlights',
+    includeDeleted = false,
+  ) {
     return (this.delegate(resource) as any).findMany({
       where: includeDeleted ? {} : { deletedAt: null },
       orderBy: ORDER,
     });
   }
 
-  private async findActiveOrThrow(resource: 'participation' | 'highlights', id: number) {
+  private async findActiveOrThrow(
+    resource: 'participation' | 'highlights',
+    id: number,
+  ) {
     const row = await (this.delegate(resource) as any).findFirst({
       where: { id, deletedAt: null },
     });
-    if (!row) throw new NotFoundException(`${this.label(resource)} ${id} not found`);
+    if (!row)
+      throw new NotFoundException(`${this.label(resource)} ${id} not found`);
     return row;
   }
 
@@ -72,7 +81,9 @@ export class KgcetService {
     // reshuffles the published order.
     const sortOrder =
       dto.sortOrder ??
-      (await (this.delegate(resource) as any).count({ where: { deletedAt: null } }));
+      (await (this.delegate(resource) as any).count({
+        where: { deletedAt: null },
+      }));
 
     const created = await (this.delegate(resource) as any).create({
       data: { ...dto, sortOrder },
@@ -115,7 +126,12 @@ export class KgcetService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { resource, before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        resource,
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -155,8 +171,11 @@ export class KgcetService {
     admin: RequestAdmin,
     requestId?: string,
   ) {
-    const existing = await (this.delegate(resource) as any).findUnique({ where: { id } });
-    if (!existing) throw new NotFoundException(`${this.label(resource)} ${id} not found`);
+    const existing = await (this.delegate(resource) as any).findUnique({
+      where: { id },
+    });
+    if (!existing)
+      throw new NotFoundException(`${this.label(resource)} ${id} not found`);
 
     const restored = await (this.delegate(resource) as any).update({
       where: { id },
@@ -192,7 +211,10 @@ export class KgcetService {
   ) {
     await this.prisma.$transaction(
       dto.ids.map((id, index) =>
-        (this.delegate(resource) as any).update({ where: { id }, data: { sortOrder: index } }),
+        (this.delegate(resource) as any).update({
+          where: { id },
+          data: { sortOrder: index },
+        }),
       ),
     );
 

@@ -48,7 +48,10 @@ export class ResearchService {
     return record;
   }
 
-  private async resolveDepartmentLabel(departmentId?: number, fallback?: string) {
+  private async resolveDepartmentLabel(
+    departmentId?: number,
+    fallback?: string,
+  ) {
     if (departmentId === undefined) return fallback;
     const department = await this.prisma.department.findUnique({
       where: { id: departmentId },
@@ -57,9 +60,19 @@ export class ResearchService {
     return department?.name ?? fallback;
   }
 
-  async create(dto: CreateResearchDto, admin: RequestAdmin, requestId?: string) {
-    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'DOCUMENT');
-    const department = await this.resolveDepartmentLabel(dto.departmentId, dto.department);
+  async create(
+    dto: CreateResearchDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      dto.mediaId,
+      'DOCUMENT',
+    );
+    const department = await this.resolveDepartmentLabel(
+      dto.departmentId,
+      dto.department,
+    );
 
     const created = await this.prisma.research.create({
       data: {
@@ -69,7 +82,12 @@ export class ResearchService {
       },
     });
 
-    await this.mediaLink.syncUsage(AUDIT_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      AUDIT_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -85,10 +103,18 @@ export class ResearchService {
     return created;
   }
 
-  async update(id: number, dto: UpdateResearchDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateResearchDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findOrThrow(id);
 
-    const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'DOCUMENT');
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      dto.mediaId,
+      'DOCUMENT',
+    );
     const department =
       dto.departmentId !== undefined
         ? await this.resolveDepartmentLabel(dto.departmentId, dto.department)
@@ -112,7 +138,11 @@ export class ResearchService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(dto) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(dto),
+      },
       requestId,
     });
 

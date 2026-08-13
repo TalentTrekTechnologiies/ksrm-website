@@ -63,10 +63,12 @@ describe('LearningOutcomesService', () => {
     it('filters by type when provided (e.g. only PEOs)', async () => {
       prisma.learningOutcome.findMany.mockResolvedValue([]);
 
-      await service.findAllPublic(3, 'PEO' as any);
+      await service.findAllPublic(3, 'PEO');
 
       expect(prisma.learningOutcome.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: expect.objectContaining({ type: 'PEO' }) }),
+        expect.objectContaining({
+          where: expect.objectContaining({ type: 'PEO' }),
+        }),
       );
     });
   });
@@ -127,12 +129,18 @@ describe('LearningOutcomesService', () => {
   describe('softDelete / restore', () => {
     it('soft-deletes and logs DELETE', async () => {
       prisma.learningOutcome.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.learningOutcome.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.learningOutcome.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'DELETE', module: 'learning_outcomes' }),
+        expect.objectContaining({
+          action: 'DELETE',
+          module: 'learning_outcomes',
+        }),
       );
     });
 
@@ -145,8 +153,14 @@ describe('LearningOutcomesService', () => {
     });
 
     it('restores and logs RESTORE', async () => {
-      prisma.learningOutcome.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.learningOutcome.update.mockResolvedValue({ id: 1, deletedAt: null });
+      prisma.learningOutcome.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.learningOutcome.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -160,7 +174,12 @@ describe('LearningOutcomesService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),
@@ -175,7 +194,12 @@ describe('LearningOutcomesService', () => {
       prisma.$transaction.mockResolvedValue(undefined);
 
       await service.reorder(
-        { items: [{ id: 1, sortOrder: 1 }, { id: 2, sortOrder: 0 }] },
+        {
+          items: [
+            { id: 1, sortOrder: 1 },
+            { id: 2, sortOrder: 0 },
+          ],
+        },
         admin,
         'req-3',
       );

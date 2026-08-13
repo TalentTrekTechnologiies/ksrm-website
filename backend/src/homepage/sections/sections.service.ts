@@ -53,7 +53,11 @@ export class SectionsService {
 
     const updated = await this.prisma.homepageSection.update({
       where: { id: existing.id },
-      data: { content: toJsonInput(content), status, version: { increment: 1 } },
+      data: {
+        content: toJsonInput(content),
+        status,
+        version: { increment: 1 },
+      },
     });
 
     // A status transition is logged as PUBLISH/UNPUBLISH (clearer audit

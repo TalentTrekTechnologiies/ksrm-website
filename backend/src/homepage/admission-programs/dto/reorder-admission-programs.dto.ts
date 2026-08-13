@@ -1,4 +1,11 @@
-import { ArrayMinSize, IsArray, IsIn, IsInt, Min, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsIn,
+  IsInt,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ADMISSION_PROGRAM_SECTIONS } from './create-admission-program.dto';
 import type { AdmissionProgramSection } from './create-admission-program.dto';

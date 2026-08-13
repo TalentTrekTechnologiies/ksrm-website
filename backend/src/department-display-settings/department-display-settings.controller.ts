@@ -31,7 +31,9 @@ export class DepartmentDisplaySettingsController {
   }
 
   @Get()
-  getEffectiveSettings(@Query('departmentId', ParseIntPipe) departmentId: number) {
+  getEffectiveSettings(
+    @Query('departmentId', ParseIntPipe) departmentId: number,
+  ) {
     return this.displaySettingsService.getEffectiveSettings(departmentId);
   }
 

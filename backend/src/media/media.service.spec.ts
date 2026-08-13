@@ -43,13 +43,27 @@ describe('MediaService', () => {
   };
   let auditLog: { log: jest.Mock };
   let validation: { validate: jest.Mock };
-  let usageService: { getUsagesForMedia: jest.Mock; isReferenced: jest.Mock; untrackAll: jest.Mock };
+  let usageService: {
+    getUsagesForMedia: jest.Mock;
+    isReferenced: jest.Mock;
+    untrackAll: jest.Mock;
+  };
   let storage: { save: jest.Mock; delete: jest.Mock };
   let imageProcessing: { deleteVariantsForMedia: jest.Mock };
   let processingQueue: { enqueue: jest.Mock };
 
-  const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu', isSuperAdmin: false };
-  const superAdmin = { id: 2, name: 'Super', email: 'super@ksrm.edu', isSuperAdmin: true };
+  const admin = {
+    id: 1,
+    name: 'Admin',
+    email: 'admin@ksrm.edu',
+    isSuperAdmin: false,
+  };
+  const superAdmin = {
+    id: 2,
+    name: 'Super',
+    email: 'super@ksrm.edu',
+    isSuperAdmin: true,
+  };
 
   beforeEach(async () => {
     prisma = {
@@ -63,13 +77,18 @@ describe('MediaService', () => {
         groupBy: jest.fn(),
       },
       mediaVariant: { findMany: jest.fn().mockResolvedValue([]) },
-      mediaVersion: { findFirst: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue({}) },
+      mediaVersion: {
+        findFirst: jest.fn().mockResolvedValue(null),
+        create: jest.fn().mockResolvedValue({}),
+      },
       galleryImage: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     validation = {
-      validate: jest.fn().mockResolvedValue({ type: 'IMAGE', extension: 'png' }),
+      validate: jest
+        .fn()
+        .mockResolvedValue({ type: 'IMAGE', extension: 'png' }),
     };
     usageService = {
       getUsagesForMedia: jest.fn().mockResolvedValue([]),
@@ -80,7 +99,9 @@ describe('MediaService', () => {
       save: jest.fn().mockResolvedValue({ storageKey: 'k', sizeBytes: 100 }),
       delete: jest.fn().mockResolvedValue(undefined),
     };
-    imageProcessing = { deleteVariantsForMedia: jest.fn().mockResolvedValue(undefined) };
+    imageProcessing = {
+      deleteVariantsForMedia: jest.fn().mockResolvedValue(undefined),
+    };
     processingQueue = { enqueue: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -93,7 +114,10 @@ describe('MediaService', () => {
         { provide: MediaProcessingQueueService, useValue: processingQueue },
         { provide: MediaUsageService, useValue: usageService },
         { provide: LocalDiskStorageAdapter, useValue: storage },
-        { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue(undefined) } },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn().mockReturnValue(undefined) },
+        },
       ],
     }).compile();
 
@@ -109,7 +133,10 @@ describe('MediaService', () => {
     } as Express.Multer.File;
 
     it('reuses the existing row and does not touch storage when the checksum already exists', async () => {
-      prisma.media.findFirst.mockResolvedValue({ id: 5, checksumSha256: 'abc' });
+      prisma.media.findFirst.mockResolvedValue({
+        id: 5,
+        checksumSha256: 'abc',
+      });
 
       const result = await service.upload(file, {}, admin);
 
@@ -130,7 +157,11 @@ describe('MediaService', () => {
         checksumSha256: 'abc',
         deletedAt: new Date('2026-01-01'),
       });
-      prisma.media.update.mockResolvedValue({ id: 7, deletedAt: null, version: 2 });
+      prisma.media.update.mockResolvedValue({
+        id: 7,
+        deletedAt: null,
+        version: 2,
+      });
 
       const result = await service.upload(file, {}, admin, 'req-2');
 
@@ -142,25 +173,49 @@ describe('MediaService', () => {
         data: { deletedAt: null, deletedBy: null, version: { increment: 1 } },
       });
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'RESTORE', module: 'media', targetId: 7, requestId: 'req-2' }),
+        expect.objectContaining({
+          action: 'RESTORE',
+          module: 'media',
+          targetId: 7,
+          requestId: 'req-2',
+        }),
       );
     });
 
     it('stores, creates a PENDING row, audits CREATE, and enqueues processing for a new file', async () => {
       prisma.media.findFirst.mockResolvedValue(null);
-      prisma.media.create.mockResolvedValue({ id: 9, processingStatus: 'PENDING' });
+      prisma.media.create.mockResolvedValue({
+        id: 9,
+        processingStatus: 'PENDING',
+      });
 
-      const result = await service.upload(file, { title: 'A Photo' }, admin, 'req-1');
+      const result = await service.upload(
+        file,
+        { title: 'A Photo' },
+        admin,
+        'req-1',
+      );
 
       expect(result.deduplicated).toBe(false);
-      expect(storage.save).toHaveBeenCalledWith(file.path, 'png', file.mimetype);
+      expect(storage.save).toHaveBeenCalledWith(
+        file.path,
+        'png',
+        file.mimetype,
+      );
       expect(prisma.media.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ processingStatus: 'PENDING', title: 'A Photo' }),
+          data: expect.objectContaining({
+            processingStatus: 'PENDING',
+            title: 'A Photo',
+          }),
         }),
       );
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'CREATE', module: 'media', requestId: 'req-1' }),
+        expect.objectContaining({
+          action: 'CREATE',
+          module: 'media',
+          requestId: 'req-1',
+        }),
       );
       expect(processingQueue.enqueue).toHaveBeenCalledWith(9);
     });
@@ -200,9 +255,14 @@ describe('MediaService', () => {
       // unhandled Prisma unique-constraint 500 - leaving the asset 404ing
       // with no way to recover the deleted variants. See media.service.ts
       // replace()'s collision-check comment for the full story.
-      prisma.media.findUnique.mockResolvedValue({ id: 29, originalFilename: 'other.png' });
+      prisma.media.findUnique.mockResolvedValue({
+        id: 29,
+        originalFilename: 'other.png',
+      });
 
-      await expect(service.replace(33, file, admin)).rejects.toBeInstanceOf(ConflictException);
+      await expect(service.replace(33, file, admin)).rejects.toBeInstanceOf(
+        ConflictException,
+      );
 
       expect(storage.save).not.toHaveBeenCalled();
       expect(prisma.media.update).not.toHaveBeenCalled();
@@ -210,7 +270,10 @@ describe('MediaService', () => {
     });
 
     it('does not treat matching its own current checksum as a collision (no-op re-upload of identical content)', async () => {
-      prisma.media.findUnique.mockResolvedValueOnce({ id: 33, originalFilename: 'new-photo.png' });
+      prisma.media.findUnique.mockResolvedValueOnce({
+        id: 33,
+        originalFilename: 'new-photo.png',
+      });
       prisma.media.update.mockResolvedValue({ id: 33 });
 
       await service.replace(33, file, admin);
@@ -225,16 +288,22 @@ describe('MediaService', () => {
       await service.replace(33, file, admin);
 
       const updateOrder = prisma.media.update.mock.invocationCallOrder[0];
-      const deleteOrder = imageProcessing.deleteVariantsForMedia.mock.invocationCallOrder[0];
+      const deleteOrder =
+        imageProcessing.deleteVariantsForMedia.mock.invocationCallOrder[0];
       expect(updateOrder).toBeLessThan(deleteOrder);
-      expect(imageProcessing.deleteVariantsForMedia).toHaveBeenCalledWith(33, existingMedia.storageKey);
+      expect(imageProcessing.deleteVariantsForMedia).toHaveBeenCalledWith(
+        33,
+        existingMedia.storageKey,
+      );
     });
 
     it('cleans up the newly-saved (now-orphaned) file and preserves the old variants when the update fails', async () => {
       prisma.media.findUnique.mockResolvedValue(null);
       prisma.media.update.mockRejectedValue(new Error('db exploded'));
 
-      await expect(service.replace(33, file, admin)).rejects.toThrow('db exploded');
+      await expect(service.replace(33, file, admin)).rejects.toThrow(
+        'db exploded',
+      );
 
       expect(storage.delete).toHaveBeenCalledWith('k');
       expect(imageProcessing.deleteVariantsForMedia).not.toHaveBeenCalled();
@@ -261,9 +330,9 @@ describe('MediaService', () => {
         { module: 'faculty', recordId: 5, field: 'photoUrl' },
       ]);
 
-      await expect(service.softDelete(1, admin, undefined, false)).rejects.toBeInstanceOf(
-        ConflictException,
-      );
+      await expect(
+        service.softDelete(1, admin, undefined, false),
+      ).rejects.toBeInstanceOf(ConflictException);
       expect(prisma.media.update).not.toHaveBeenCalled();
     });
 
@@ -272,9 +341,9 @@ describe('MediaService', () => {
         { module: 'faculty', recordId: 5, field: 'photoUrl' },
       ]);
 
-      await expect(service.softDelete(1, admin, undefined, true)).rejects.toBeInstanceOf(
-        ForbiddenException,
-      );
+      await expect(
+        service.softDelete(1, admin, undefined, true),
+      ).rejects.toBeInstanceOf(ForbiddenException);
     });
 
     it('allows a forced delete from a super admin even when referenced', async () => {
@@ -286,7 +355,10 @@ describe('MediaService', () => {
 
       expect(prisma.media.update).toHaveBeenCalled();
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'DELETE', details: expect.objectContaining({ forced: true }) }),
+        expect.objectContaining({
+          action: 'DELETE',
+          details: expect.objectContaining({ forced: true }),
+        }),
       );
     });
 

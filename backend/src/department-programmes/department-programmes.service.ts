@@ -33,7 +33,9 @@ export class DepartmentProgrammesService {
         isActive: true,
         deletedAt: null,
       },
-      include: { department: { select: { name: true, shortName: true, slug: true } } },
+      include: {
+        department: { select: { name: true, shortName: true, slug: true } },
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
@@ -58,7 +60,11 @@ export class DepartmentProgrammesService {
     return record;
   }
 
-  async create(dto: CreateDepartmentProgrammeDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateDepartmentProgrammeDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrder =
       dto.sortOrder ??
       (await this.prisma.departmentProgramme.count({
@@ -105,7 +111,11 @@ export class DepartmentProgrammesService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -117,7 +127,11 @@ export class DepartmentProgrammesService {
 
     const deleted = await this.prisma.departmentProgramme.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.auditLog.log({
@@ -139,7 +153,9 @@ export class DepartmentProgrammesService {
       where: { id, NOT: { deletedAt: null } },
     });
     if (!existing) {
-      throw new NotFoundException(`Deleted department programme ${id} not found`);
+      throw new NotFoundException(
+        `Deleted department programme ${id} not found`,
+      );
     }
 
     const restored = await this.prisma.departmentProgramme.update({
@@ -161,10 +177,16 @@ export class DepartmentProgrammesService {
     return restored;
   }
 
-  async reorder(dto: ReorderDepartmentProgrammesDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderDepartmentProgrammesDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

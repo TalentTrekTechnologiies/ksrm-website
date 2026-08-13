@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
 import {
@@ -42,27 +50,55 @@ export class SectionsController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('homepage.edit')
   updateVision(@Body() dto: UpdateVisionSectionDto, @Request() req) {
-    return this.sectionsService.update('vision', dto.content, dto.status, dto.version, req.user, req.requestId);
+    return this.sectionsService.update(
+      'vision',
+      dto.content,
+      dto.status,
+      dto.version,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch('admin/sections/mission')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('homepage.edit')
   updateMission(@Body() dto: UpdateMissionSectionDto, @Request() req) {
-    return this.sectionsService.update('mission', dto.content, dto.status, dto.version, req.user, req.requestId);
+    return this.sectionsService.update(
+      'mission',
+      dto.content,
+      dto.status,
+      dto.version,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch('admin/sections/about')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('homepage.edit')
   updateAbout(@Body() dto: UpdateAboutSectionDto, @Request() req) {
-    return this.sectionsService.update('about', dto.content, dto.status, dto.version, req.user, req.requestId);
+    return this.sectionsService.update(
+      'about',
+      dto.content,
+      dto.status,
+      dto.version,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch('admin/sections/admissions')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('homepage.edit')
   updateAdmissions(@Body() dto: UpdateAdmissionsSectionDto, @Request() req) {
-    return this.sectionsService.update('admissions', dto.content, dto.status, dto.version, req.user, req.requestId);
+    return this.sectionsService.update(
+      'admissions',
+      dto.content,
+      dto.status,
+      dto.version,
+      req.user,
+      req.requestId,
+    );
   }
 }

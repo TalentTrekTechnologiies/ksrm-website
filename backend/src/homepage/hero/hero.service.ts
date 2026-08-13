@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
@@ -72,7 +76,12 @@ export class HeroService {
       },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -122,7 +131,12 @@ export class HeroService {
       },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, updated.id, MEDIA_FIELD, rest.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      updated.id,
+      MEDIA_FIELD,
+      rest.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,

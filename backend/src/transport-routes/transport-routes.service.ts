@@ -52,7 +52,8 @@ export class TransportRoutesService {
     // A new route goes last unless told otherwise, so adding one never
     // silently reshuffles the published order.
     const sortOrder =
-      dto.sortOrder ?? (await this.prisma.transportRoute.count({ where: { deletedAt: null } }));
+      dto.sortOrder ??
+      (await this.prisma.transportRoute.count({ where: { deletedAt: null } }));
 
     const created = await this.prisma.transportRoute.create({
       data: { ...dto, sortOrder },
@@ -94,7 +95,11 @@ export class TransportRoutesService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -124,8 +129,11 @@ export class TransportRoutesService {
   }
 
   async restore(id: number, admin: RequestAdmin, requestId?: string) {
-    const existing = await this.prisma.transportRoute.findUnique({ where: { id } });
-    if (!existing) throw new NotFoundException(`Transport route ${id} not found`);
+    const existing = await this.prisma.transportRoute.findUnique({
+      where: { id },
+    });
+    if (!existing)
+      throw new NotFoundException(`Transport route ${id} not found`);
 
     const restored = await this.prisma.transportRoute.update({
       where: { id },

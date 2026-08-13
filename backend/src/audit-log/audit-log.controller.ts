@@ -8,15 +8,15 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
-} from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import type { Response } from "express";
-import { AuditLogService } from "./audit-log.service";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import type { Response } from 'express';
+import { AuditLogService } from './audit-log.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 function assertSuperAdmin(req): void {
   if (!req.user.isSuperAdmin) {
-    throw new ForbiddenException("Only super admins can view audit logs");
+    throw new ForbiddenException('Only super admins can view audit logs');
   }
 }
 
@@ -26,22 +26,22 @@ function parseDate(value?: string): Date | undefined {
   return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
-@ApiTags("audit-logs")
-@Controller("audit-logs")
+@ApiTags('audit-logs')
+@Controller('audit-logs')
 export class AuditLogController {
   constructor(private readonly auditLogService: AuditLogService) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async getAll(
-    @Query("module") module?: string,
-    @Query("adminId") adminId?: string,
-    @Query("action") action?: string,
-    @Query("search") search?: string,
-    @Query("from") from?: string,
-    @Query("to") to?: string,
-    @Query("page") page?: string,
-    @Query("pageSize") pageSize?: string,
+    @Query('module') module?: string,
+    @Query('adminId') adminId?: string,
+    @Query('action') action?: string,
+    @Query('search') search?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
     @Request() req?,
   ) {
     assertSuperAdmin(req);
@@ -61,15 +61,15 @@ export class AuditLogController {
   // Same filter set as getAll, but returns a CSV file instead of a paginated
   // JSON page - the "Export" action in the admin UI just links straight to
   // this route.
-  @Get("export")
+  @Get('export')
   @UseGuards(JwtAuthGuard)
   async export(
-    @Query("module") module?: string,
-    @Query("adminId") adminId?: string,
-    @Query("action") action?: string,
-    @Query("search") search?: string,
-    @Query("from") from?: string,
-    @Query("to") to?: string,
+    @Query('module') module?: string,
+    @Query('adminId') adminId?: string,
+    @Query('action') action?: string,
+    @Query('search') search?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
     @Request() req?,
     @Res() res?: Response,
   ) {
@@ -84,19 +84,19 @@ export class AuditLogController {
       to: parseDate(to),
     });
 
-    res!.setHeader("Content-Type", "text/csv");
+    res!.setHeader('Content-Type', 'text/csv');
     res!.setHeader(
-      "Content-Disposition",
+      'Content-Disposition',
       `attachment; filename="audit-logs-${new Date().toISOString().slice(0, 10)}.csv"`,
     );
     res!.send(csv);
   }
 
-  @Get("admin/:adminId")
+  @Get('admin/:adminId')
   @UseGuards(JwtAuthGuard)
   async getByAdminId(
-    @Param("adminId", ParseIntPipe) adminId: number,
-    @Query("limit") limit?: string,
+    @Param('adminId', ParseIntPipe) adminId: number,
+    @Query('limit') limit?: string,
     @Request() req?,
   ) {
     assertSuperAdmin(req);
@@ -107,11 +107,11 @@ export class AuditLogController {
     );
   }
 
-  @Get("module/:module")
+  @Get('module/:module')
   @UseGuards(JwtAuthGuard)
   async getByModule(
-    @Param("module") module: string,
-    @Query("limit") limit?: string,
+    @Param('module') module: string,
+    @Query('limit') limit?: string,
     @Request() req?,
   ) {
     assertSuperAdmin(req);
@@ -126,12 +126,12 @@ export class AuditLogController {
   // is scoped to one record's history, not the global cross-module log,
   // and the caller already needed `<module>.view` to reach whatever admin
   // page's "Audit History" button links here. See AuditLogService.getByTarget.
-  @Get("target")
+  @Get('target')
   @UseGuards(JwtAuthGuard)
   async getByTarget(
-    @Query("module") module: string,
-    @Query("targetId", ParseIntPipe) targetId: number,
-    @Query("limit") limit?: string,
+    @Query('module') module: string,
+    @Query('targetId', ParseIntPipe) targetId: number,
+    @Query('limit') limit?: string,
   ) {
     return this.auditLogService.getByTarget(
       module,
@@ -142,11 +142,11 @@ export class AuditLogController {
 
   // Same non-super-admin-gated reasoning as getByTarget above - backs
   // CmsRecordMeta's Created By/Updated By line.
-  @Get("target/creator-updater")
+  @Get('target/creator-updater')
   @UseGuards(JwtAuthGuard)
   async getCreatorAndUpdater(
-    @Query("module") module: string,
-    @Query("targetId", ParseIntPipe) targetId: number,
+    @Query('module') module: string,
+    @Query('targetId', ParseIntPipe) targetId: number,
   ) {
     return this.auditLogService.getCreatorAndUpdater(module, targetId);
   }

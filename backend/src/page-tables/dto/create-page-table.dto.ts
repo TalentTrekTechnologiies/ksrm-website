@@ -1,4 +1,11 @@
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreatePageTableDto {
   @IsString()

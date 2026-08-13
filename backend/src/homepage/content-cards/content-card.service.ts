@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
 import { assertVersionMatch } from '../optimistic-lock.util';
@@ -21,7 +25,9 @@ export interface ContentCardInput {
   isActive?: boolean;
 }
 
-export interface ContentCardUpdateInput extends Partial<Omit<ContentCardInput, 'mediaId'>> {
+export interface ContentCardUpdateInput extends Partial<
+  Omit<ContentCardInput, 'mediaId'>
+> {
   version: number;
   // Widened beyond ContentCardInput's `number | undefined` so callers can
   // send `mediaId: null` to explicitly unlink without touching imageUrl -
@@ -61,7 +67,10 @@ export class ContentCardService {
 
   async findAllAdmin(section: string | undefined, includeDeleted: boolean) {
     return this.prisma.contentCard.findMany({
-      where: { ...(section && { section }), ...(!includeDeleted && { deletedAt: null }) },
+      where: {
+        ...(section && { section }),
+        ...(!includeDeleted && { deletedAt: null }),
+      },
       orderBy: [{ section: 'asc' }, { sortOrder: 'asc' }],
     });
   }
@@ -85,7 +94,9 @@ export class ContentCardService {
   ) {
     const sortOrder =
       dto.sortOrder ??
-      ((await this.prisma.contentCard.count({ where: { section: dto.section, deletedAt: null } })) as number);
+      (await this.prisma.contentCard.count({
+        where: { section: dto.section, deletedAt: null },
+      }));
 
     const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
 
@@ -93,7 +104,12 @@ export class ContentCardService {
       data: { ...dto, imageUrl: resolvedUrl ?? dto.imageUrl, sortOrder },
     });
 
-    await this.mediaLink.syncUsage(auditModule, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      auditModule,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -141,19 +157,33 @@ export class ContentCardService {
       action: 'UPDATE',
       module: auditModule,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
     return updated;
   }
 
-  async softDelete(id: number, admin: RequestAdmin, auditModule: string, entityLabel: string, requestId?: string) {
+  async softDelete(
+    id: number,
+    admin: RequestAdmin,
+    auditModule: string,
+    entityLabel: string,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id, entityLabel);
 
     const deleted = await this.prisma.contentCard.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.mediaLink.untrackAll(auditModule, id);
@@ -172,12 +202,20 @@ export class ContentCardService {
     return deleted;
   }
 
-  async restore(id: number, admin: RequestAdmin, auditModule: string, entityLabel: string, requestId?: string) {
+  async restore(
+    id: number,
+    admin: RequestAdmin,
+    auditModule: string,
+    entityLabel: string,
+    requestId?: string,
+  ) {
     const existing = await this.prisma.contentCard.findFirst({
       where: { id, NOT: { deletedAt: null } },
     });
     if (!existing) {
-      throw new NotFoundException(`Deleted ${entityLabel.toLowerCase()} ${id} not found`);
+      throw new NotFoundException(
+        `Deleted ${entityLabel.toLowerCase()} ${id} not found`,
+      );
     }
 
     const restored = await this.prisma.contentCard.update({
@@ -186,7 +224,12 @@ export class ContentCardService {
     });
 
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(auditModule, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        auditModule,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({
@@ -212,7 +255,9 @@ export class ContentCardService {
   ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

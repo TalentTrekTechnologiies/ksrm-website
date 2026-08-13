@@ -45,7 +45,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
 
     if (!admin || !admin.isActive || admin.deletedAt) {
-      throw new UnauthorizedException('Account is inactive or no longer exists');
+      throw new UnauthorizedException(
+        'Account is inactive or no longer exists',
+      );
     }
 
     // The legacy `admin.permissions` string array predates the Role/Permission
@@ -53,9 +55,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // current permission set only exists via AdminRole -> Role ->
     // RolePermission. Resolve it here so every downstream guard check
     // reflects an admin's actual roles, not a stale/empty legacy column.
-    const effectivePermissions = await this.effectivePermissions.getEffectivePermissions(admin);
+    const effectivePermissions =
+      await this.effectivePermissions.getEffectivePermissions(admin);
 
-    const { isActive, deletedAt, permissions: _legacyPermissions, ...rest } = admin;
+    const {
+      isActive,
+      deletedAt,
+      permissions: _legacyPermissions,
+      ...rest
+    } = admin;
     return { ...rest, permissions: Array.from(effectivePermissions) };
   }
 }

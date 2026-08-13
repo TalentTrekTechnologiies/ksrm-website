@@ -81,7 +81,11 @@ export class RolesService {
     return permissions.map((p) => p.id);
   }
 
-  async create(dto: CreateRoleDto, actor: RequestAdminWithSuper, requestId?: string) {
+  async create(
+    dto: CreateRoleDto,
+    actor: RequestAdminWithSuper,
+    requestId?: string,
+  ) {
     this.assertSuperAdmin(actor);
     const permissionIds = await this.resolvePermissionIds(dto.permissionKeys);
 
@@ -92,12 +96,19 @@ export class RolesService {
           name: dto.name,
           description: dto.description,
           isSystemRole: false,
-          permissions: { create: permissionIds.map((permissionId) => ({ permissionId })) },
+          permissions: {
+            create: permissionIds.map((permissionId) => ({ permissionId })),
+          },
         },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new ConflictException(`Role name '${dto.name}' is already in use`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Role name '${dto.name}' is already in use`,
+        );
       }
       throw err;
     }
@@ -138,7 +149,9 @@ export class RolesService {
         where: { id },
         data: {
           ...(dto.name !== undefined && { name: dto.name }),
-          ...(dto.description !== undefined && { description: dto.description }),
+          ...(dto.description !== undefined && {
+            description: dto.description,
+          }),
           ...(permissionIds !== undefined && {
             permissions: {
               deleteMany: {},
@@ -148,8 +161,13 @@ export class RolesService {
         },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new ConflictException(`Role name '${dto.name}' is already in use`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Role name '${dto.name}' is already in use`,
+        );
       }
       throw err;
     }
@@ -161,7 +179,11 @@ export class RolesService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(dto) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(dto),
+      },
       requestId,
     });
 
@@ -175,7 +197,9 @@ export class RolesService {
       throw new BadRequestException('System roles cannot be deleted.');
     }
 
-    const assignedCount = await this.prisma.adminRole.count({ where: { roleId: id } });
+    const assignedCount = await this.prisma.adminRole.count({
+      where: { roleId: id },
+    });
     if (assignedCount > 0) {
       throw new BadRequestException(
         `Cannot delete role '${existing.name}' - ${assignedCount} admin(s) still assigned. Reassign them first.`,

@@ -7,7 +7,12 @@ import { MailerModule } from '../mailer/mailer.module';
 import { AdminNotificationsModule } from '../admin-notifications/admin-notifications.module';
 
 @Module({
-  imports: [AuditLogModule, MediaModule, MailerModule, AdminNotificationsModule],
+  imports: [
+    AuditLogModule,
+    MediaModule,
+    MailerModule,
+    AdminNotificationsModule,
+  ],
   controllers: [CareerApplicationsController],
   providers: [CareerApplicationsService],
 })

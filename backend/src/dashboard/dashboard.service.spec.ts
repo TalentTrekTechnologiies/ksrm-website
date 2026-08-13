@@ -64,7 +64,10 @@ describe('DashboardService', () => {
       providers: [
         DashboardService,
         { provide: PrismaService, useValue: prisma },
-        { provide: EffectivePermissionsService, useValue: effectivePermissions },
+        {
+          provide: EffectivePermissionsService,
+          useValue: effectivePermissions,
+        },
         { provide: MediaStatsService, useValue: mediaStats },
       ],
     }).compile();
@@ -87,7 +90,9 @@ describe('DashboardService', () => {
       expect(result.widgets.map((w) => w.key)).toContain('announcements');
       // Programmes drive the college-wide Academics and admissions pages, so
       // they get their own widget and sidebar entry, not just a department tab.
-      expect(result.widgets.map((w) => w.key)).toContain('department_programmes');
+      expect(result.widgets.map((w) => w.key)).toContain(
+        'department_programmes',
+      );
     });
 
     it('only includes widgets the admin has <key>.view permission for', async () => {
@@ -104,9 +109,7 @@ describe('DashboardService', () => {
     });
 
     it('returns no widgets when the admin has no view permissions at all', async () => {
-      effectivePermissions.getEffectivePermissions.mockResolvedValue(
-        new Set(),
-      );
+      effectivePermissions.getEffectivePermissions.mockResolvedValue(new Set());
 
       const result = await service.getOverview({ id: 3, isSuperAdmin: false });
 

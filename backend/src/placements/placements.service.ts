@@ -70,7 +70,11 @@ export class PlacementsService {
     return record;
   }
 
-  async create(dto: CreatePlacementDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreatePlacementDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const [resolvedImageUrl, resolvedLogoUrl] = await Promise.all([
       this.mediaLink.prepareLink(dto.mediaId, 'IMAGE'),
       this.mediaLink.prepareLink(dto.companyLogoMediaId, 'IMAGE'),
@@ -85,8 +89,18 @@ export class PlacementsService {
     });
 
     await Promise.all([
-      this.mediaLink.syncUsage(MEDIA_MODULE, created.id, 'imageUrl', dto.mediaId),
-      this.mediaLink.syncUsage(MEDIA_MODULE, created.id, 'companyLogoUrl', dto.companyLogoMediaId),
+      this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        created.id,
+        'imageUrl',
+        dto.mediaId,
+      ),
+      this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        created.id,
+        'companyLogoUrl',
+        dto.companyLogoMediaId,
+      ),
     ]);
 
     await this.auditLog.log({
@@ -103,7 +117,12 @@ export class PlacementsService {
     return created;
   }
 
-  async update(id: number, dto: UpdatePlacementDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdatePlacementDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Placement ${id}`);
@@ -118,14 +137,21 @@ export class PlacementsService {
       data: {
         ...rest,
         ...(resolvedImageUrl !== undefined && { imageUrl: resolvedImageUrl }),
-        ...(resolvedLogoUrl !== undefined && { companyLogoUrl: resolvedLogoUrl }),
+        ...(resolvedLogoUrl !== undefined && {
+          companyLogoUrl: resolvedLogoUrl,
+        }),
         version: { increment: 1 },
       },
     });
 
     await Promise.all([
       this.mediaLink.syncUsage(MEDIA_MODULE, id, 'imageUrl', rest.mediaId),
-      this.mediaLink.syncUsage(MEDIA_MODULE, id, 'companyLogoUrl', rest.companyLogoMediaId),
+      this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        'companyLogoUrl',
+        rest.companyLogoMediaId,
+      ),
     ]);
 
     await this.auditLog.log({
@@ -135,7 +161,11 @@ export class PlacementsService {
       action: 'UPDATE',
       module: 'placements',
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -147,7 +177,11 @@ export class PlacementsService {
 
     const deleted = await this.prisma.placement.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.mediaLink.untrackAll(MEDIA_MODULE, id);
@@ -181,10 +215,20 @@ export class PlacementsService {
 
     await Promise.all([
       restored.mediaId
-        ? this.mediaLink.syncUsage(MEDIA_MODULE, id, 'imageUrl', restored.mediaId)
+        ? this.mediaLink.syncUsage(
+            MEDIA_MODULE,
+            id,
+            'imageUrl',
+            restored.mediaId,
+          )
         : Promise.resolve(),
       restored.companyLogoMediaId
-        ? this.mediaLink.syncUsage(MEDIA_MODULE, id, 'companyLogoUrl', restored.companyLogoMediaId)
+        ? this.mediaLink.syncUsage(
+            MEDIA_MODULE,
+            id,
+            'companyLogoUrl',
+            restored.companyLogoMediaId,
+          )
         : Promise.resolve(),
     ]);
 

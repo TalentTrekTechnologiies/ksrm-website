@@ -1,4 +1,10 @@
-import { ArrayMinSize, IsArray, IsString, MaxLength, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class MissionItemDto {

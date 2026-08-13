@@ -42,7 +42,11 @@ export class ContactChannelsService {
   // department. This three-way distinction is why departmentId is typed
   // `number | null | undefined` rather than just optional - the controller
   // has to be able to ask for "global only", which "omitted" cannot express.
-  async findAllAdmin(departmentId?: number | null, includeDeleted = false, group?: string) {
+  async findAllAdmin(
+    departmentId?: number | null,
+    includeDeleted = false,
+    group?: string,
+  ) {
     return this.prisma.contactChannel.findMany({
       where: {
         ...(departmentId !== undefined && { departmentId }),
@@ -63,7 +67,11 @@ export class ContactChannelsService {
     return record;
   }
 
-  async create(dto: CreateContactChannelDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateContactChannelDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     // Scoped by group too, so a new office card doesn't inherit a sort
     // position from however many info-row cards already exist alongside it -
     // the two groups are separate visual lists on the page and should each
@@ -96,7 +104,12 @@ export class ContactChannelsService {
     return created;
   }
 
-  async update(id: number, dto: UpdateContactChannelDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateContactChannelDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Contact channel ${id}`);
@@ -113,7 +126,11 @@ export class ContactChannelsService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -125,7 +142,11 @@ export class ContactChannelsService {
 
     const deleted = await this.prisma.contactChannel.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.auditLog.log({
@@ -169,10 +190,16 @@ export class ContactChannelsService {
     return restored;
   }
 
-  async reorder(dto: ReorderContactChannelsDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderContactChannelsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);
@@ -181,7 +208,9 @@ export class ContactChannelsService {
       select: { id: true },
     });
     if (existingRows.length !== ids.length) {
-      throw new BadRequestException('One or more contact channels do not exist');
+      throw new BadRequestException(
+        'One or more contact channels do not exist',
+      );
     }
 
     await this.prisma.$transaction(

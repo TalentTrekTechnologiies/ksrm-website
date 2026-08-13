@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
-import { EmailProvider, SendEmailParams } from '../interfaces/email-provider.interface';
+import {
+  EmailProvider,
+  SendEmailParams,
+} from '../interfaces/email-provider.interface';
 
 // Works for both dev targets (Gmail SMTP and Mailpit) - both are plain SMTP,
 // the only difference is config (Mailpit needs no auth, a local host/port;

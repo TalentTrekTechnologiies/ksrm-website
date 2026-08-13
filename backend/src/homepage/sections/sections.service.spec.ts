@@ -46,7 +46,11 @@ describe('SectionsService', () => {
       await service.findPublicByKey('vision');
 
       expect(prisma.homepageSection.findFirst).toHaveBeenCalledWith({
-        where: { key: 'vision', status: SectionStatus.PUBLISHED, deletedAt: null },
+        where: {
+          key: 'vision',
+          status: SectionStatus.PUBLISHED,
+          deletedAt: null,
+        },
       });
     });
   });
@@ -55,7 +59,9 @@ describe('SectionsService', () => {
     it('404s for an unknown key', async () => {
       prisma.homepageSection.findFirst.mockResolvedValue(null);
 
-      await expect(service.findAdminByKey('bogus')).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.findAdminByKey('bogus')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 
@@ -69,7 +75,14 @@ describe('SectionsService', () => {
       });
 
       await expect(
-        service.update('vision', { text: 'x' }, SectionStatus.PUBLISHED, 1, admin, undefined),
+        service.update(
+          'vision',
+          { text: 'x' },
+          SectionStatus.PUBLISHED,
+          1,
+          admin,
+          undefined,
+        ),
       ).rejects.toBeInstanceOf(ConflictException);
     });
 
@@ -87,10 +100,21 @@ describe('SectionsService', () => {
         version: 2,
       });
 
-      await service.update('vision', { text: 'x' }, SectionStatus.PUBLISHED, 1, admin, 'req-1');
+      await service.update(
+        'vision',
+        { text: 'x' },
+        SectionStatus.PUBLISHED,
+        1,
+        admin,
+        'req-1',
+      );
 
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'PUBLISH', module: 'homepage_section_vision', requestId: 'req-1' }),
+        expect.objectContaining({
+          action: 'PUBLISH',
+          module: 'homepage_section_vision',
+          requestId: 'req-1',
+        }),
       );
     });
 
@@ -108,10 +132,20 @@ describe('SectionsService', () => {
         version: 3,
       });
 
-      await service.update('vision', { text: 'x' }, SectionStatus.DRAFT, 2, admin, undefined);
+      await service.update(
+        'vision',
+        { text: 'x' },
+        SectionStatus.DRAFT,
+        2,
+        admin,
+        undefined,
+      );
 
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'UNPUBLISH', module: 'homepage_section_vision' }),
+        expect.objectContaining({
+          action: 'UNPUBLISH',
+          module: 'homepage_section_vision',
+        }),
       );
     });
 
@@ -129,9 +163,18 @@ describe('SectionsService', () => {
         version: 3,
       });
 
-      await service.update('vision', { text: 'x' }, SectionStatus.PUBLISHED, 2, admin, undefined);
+      await service.update(
+        'vision',
+        { text: 'x' },
+        SectionStatus.PUBLISHED,
+        2,
+        admin,
+        undefined,
+      );
 
-      expect(auditLog.log).toHaveBeenCalledWith(expect.objectContaining({ action: 'UPDATE' }));
+      expect(auditLog.log).toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'UPDATE' }),
+      );
     });
   });
 });

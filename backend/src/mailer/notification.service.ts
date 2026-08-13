@@ -1,6 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EMAIL_PROVIDER_TOKEN } from './interfaces/email-provider.interface';
-import type { EmailProvider, SendEmailParams } from './interfaces/email-provider.interface';
+import type {
+  EmailProvider,
+  SendEmailParams,
+} from './interfaces/email-provider.interface';
 
 // The one thing application code depends on. It never imports a concrete
 // provider (SmtpEmailProvider/SesEmailProvider/ConsoleEmailProvider) -

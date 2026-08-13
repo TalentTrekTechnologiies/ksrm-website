@@ -20,14 +20,21 @@ describe('AdmissionProgramsService (thin wrapper over ContentCardService)', () =
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AdmissionProgramsService, { provide: ContentCardService, useValue: contentCards }],
+      providers: [
+        AdmissionProgramsService,
+        { provide: ContentCardService, useValue: contentCards },
+      ],
     }).compile();
 
     service = module.get(AdmissionProgramsService);
   });
 
   it('delegates create() with the homepage_admission_programs audit module and "Admission program" label', async () => {
-    await service.create({ section: 'homepage_admission_programs' } as any, admin, 'req-1');
+    await service.create(
+      { section: 'homepage_admission_programs' } as any,
+      admin,
+      'req-1',
+    );
 
     expect(contentCards.create).toHaveBeenCalledWith(
       { section: 'homepage_admission_programs' },
@@ -39,7 +46,11 @@ describe('AdmissionProgramsService (thin wrapper over ContentCardService)', () =
   });
 
   it('delegates reorder() unchanged', async () => {
-    await service.reorder({ section: 'homepage_admission_programs', items: [] } as any, admin, 'req-2');
+    await service.reorder(
+      { section: 'homepage_admission_programs', items: [] } as any,
+      admin,
+      'req-2',
+    );
 
     expect(contentCards.reorder).toHaveBeenCalledWith(
       { section: 'homepage_admission_programs', items: [] },

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { AnnouncementLocation, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
@@ -57,16 +61,27 @@ export class AnnouncementsService {
       ...(query.search && {
         OR: [
           { title: { contains: query.search, mode: 'insensitive' as const } },
-          { description: { contains: query.search, mode: 'insensitive' as const } },
+          {
+            description: {
+              contains: query.search,
+              mode: 'insensitive' as const,
+            },
+          },
         ],
       }),
-      ...(query.location && { placements: { some: { location: query.location } } }),
+      ...(query.location && {
+        placements: { some: { location: query.location } },
+      }),
     };
 
     const [items, total] = await Promise.all([
       this.prisma.announcement.findMany({
         where,
-        include: { placements: { include: { department: { select: { id: true, name: true } } } } },
+        include: {
+          placements: {
+            include: { department: { select: { id: true, name: true } } },
+          },
+        },
         orderBy: [{ priority: 'asc' }, { sortOrder: 'asc' }],
         skip: (page - 1) * pageSize,
         take: pageSize,
@@ -80,7 +95,11 @@ export class AnnouncementsService {
   async findOne(id: number) {
     const announcement = await this.prisma.announcement.findUnique({
       where: { id },
-      include: { placements: { include: { department: { select: { id: true, name: true } } } } },
+      include: {
+        placements: {
+          include: { department: { select: { id: true, name: true } } },
+        },
+      },
     });
     if (!announcement) {
       throw new NotFoundException(`Announcement ${id} not found`);
@@ -89,7 +108,9 @@ export class AnnouncementsService {
   }
 
   private async findActiveOrThrow(id: number) {
-    const record = await this.prisma.announcement.findFirst({ where: { id, deletedAt: null } });
+    const record = await this.prisma.announcement.findFirst({
+      where: { id, deletedAt: null },
+    });
     if (!record) {
       throw new NotFoundException(`Announcement ${id} not found`);
     }
@@ -98,22 +119,34 @@ export class AnnouncementsService {
 
   private dedupePlacements(placements: CreateAnnouncementDto['placements']) {
     const seen = new Set<string>();
-    const result: { location: AnnouncementLocation; departmentId: number | null }[] = [];
+    const result: {
+      location: AnnouncementLocation;
+      departmentId: number | null;
+    }[] = [];
     for (const p of placements ?? []) {
       const key = `${p.location}:${p.departmentId ?? 'null'}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      result.push({ location: p.location, departmentId: p.departmentId ?? null });
+      result.push({
+        location: p.location,
+        departmentId: p.departmentId ?? null,
+      });
     }
     return result;
   }
 
-  async create(dto: CreateAnnouncementDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateAnnouncementDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const { placements, startDate, endDate, ...rest } = dto;
     const dedupedPlacements = this.dedupePlacements(placements);
 
     if (dedupedPlacements.length === 0) {
-      throw new BadRequestException('At least one display location is required.');
+      throw new BadRequestException(
+        'At least one display location is required.',
+      );
     }
 
     const created = await this.prisma.$transaction(async (tx) => {
@@ -143,7 +176,12 @@ export class AnnouncementsService {
     return created;
   }
 
-  async update(id: number, dto: UpdateAnnouncementDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateAnnouncementDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, placements, startDate, endDate, ...rest } = dto;
     assertVersionMatch(existing, version, `Announcement ${id}`);
@@ -152,9 +190,13 @@ export class AnnouncementsService {
       if (placements !== undefined) {
         const dedupedPlacements = this.dedupePlacements(placements);
         if (dedupedPlacements.length === 0) {
-          throw new BadRequestException('At least one display location is required.');
+          throw new BadRequestException(
+            'At least one display location is required.',
+          );
         }
-        await tx.announcementPlacement.deleteMany({ where: { announcementId: id } });
+        await tx.announcementPlacement.deleteMany({
+          where: { announcementId: id },
+        });
         await tx.announcementPlacement.createMany({
           data: dedupedPlacements.map((p) => ({ ...p, announcementId: id })),
         });
@@ -164,8 +206,12 @@ export class AnnouncementsService {
         where: { id },
         data: {
           ...rest,
-          ...(startDate !== undefined && { startDate: startDate ? new Date(startDate) : null }),
-          ...(endDate !== undefined && { endDate: endDate ? new Date(endDate) : null }),
+          ...(startDate !== undefined && {
+            startDate: startDate ? new Date(startDate) : null,
+          }),
+          ...(endDate !== undefined && {
+            endDate: endDate ? new Date(endDate) : null,
+          }),
           version: { increment: 1 },
         },
         include: { placements: true },
@@ -179,14 +225,23 @@ export class AnnouncementsService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
     return updated;
   }
 
-  async setPublished(id: number, isPublished: boolean, admin: RequestAdmin, requestId?: string) {
+  async setPublished(
+    id: number,
+    isPublished: boolean,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
 
     const updated = await this.prisma.announcement.update({
@@ -229,7 +284,11 @@ export class AnnouncementsService {
 
     const deleted = await this.prisma.announcement.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.auditLog.log({
@@ -247,7 +306,9 @@ export class AnnouncementsService {
   }
 
   async restore(id: number, admin: RequestAdmin, requestId?: string) {
-    const existing = await this.prisma.announcement.findFirst({ where: { id, NOT: { deletedAt: null } } });
+    const existing = await this.prisma.announcement.findFirst({
+      where: { id, NOT: { deletedAt: null } },
+    });
     if (!existing) {
       throw new NotFoundException(`Deleted announcement ${id} not found`);
     }

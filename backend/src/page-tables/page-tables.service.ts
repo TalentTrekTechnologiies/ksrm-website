@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { adminScopeWhere } from '../auth/admin-scope.util';
@@ -29,9 +33,13 @@ export class PageTablesService {
     }
     return rows.map((row) => {
       if (!Array.isArray(row)) {
-        throw new BadRequestException('each row must be an array of cell values');
+        throw new BadRequestException(
+          'each row must be an array of cell values',
+        );
       }
-      const cells = row.map((c) => (c === null || c === undefined ? '' : String(c)));
+      const cells = row.map((c) =>
+        c === null || c === undefined ? '' : String(c),
+      );
       cells.length = columnCount;
       return Array.from(cells, (c) => c ?? '');
     });
@@ -61,11 +69,15 @@ export class PageTablesService {
     return row;
   }
 
-  async create(dto: CreatePageTableDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreatePageTableDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const rows = this.normaliseRows(dto.rows, dto.columns.length);
     try {
       const created = await this.prisma.pageTable.create({
-        data: { ...dto, rows: rows as unknown as Prisma.InputJsonValue },
+        data: { ...dto, rows: rows },
       });
       await this.auditLog.log({
         adminId: admin.id,
@@ -79,14 +91,24 @@ export class PageTablesService {
       });
       return created;
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new BadRequestException(`A table with the key "${dto.key}" already exists.`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new BadRequestException(
+          `A table with the key "${dto.key}" already exists.`,
+        );
       }
       throw err;
     }
   }
 
-  async update(id: number, dto: UpdatePageTableDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdatePageTableDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findOrThrow(id);
     const { version, rows, columns, ...rest } = dto;
     assertVersionMatch(existing, version, `Page table ${id}`);
@@ -98,10 +120,10 @@ export class PageTablesService {
       version: { increment: 1 },
     };
     if (rows !== undefined) {
-      data.rows = this.normaliseRows(rows, nextColumns.length) as unknown as Prisma.InputJsonValue;
+      data.rows = this.normaliseRows(rows, nextColumns.length);
     } else if (columns) {
       // Column count changed - reshape the stored rows to match.
-      data.rows = this.normaliseRows(existing.rows, nextColumns.length) as unknown as Prisma.InputJsonValue;
+      data.rows = this.normaliseRows(existing.rows, nextColumns.length);
     }
 
     const updated = await this.prisma.pageTable.update({ where: { id }, data });

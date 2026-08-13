@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ContentCardService } from './content-card.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditLogService } from '../../audit-log/audit-log.service';
@@ -18,7 +22,11 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
   const AUDIT_MODULE = 'homepage_quick_links';
@@ -37,11 +45,15 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -64,7 +76,11 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     await service.findAllPublic('homepage_quick_links');
 
     expect(prisma.contentCard.findMany).toHaveBeenCalledWith({
-      where: { section: 'homepage_quick_links', isActive: true, deletedAt: null },
+      where: {
+        section: 'homepage_quick_links',
+        isActive: true,
+        deletedAt: null,
+      },
       orderBy: { sortOrder: 'asc' },
     });
   });
@@ -73,7 +89,14 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     prisma.contentCard.findFirst.mockResolvedValue({ id: 1, version: 5 });
 
     await expect(
-      service.update(1, { title: 'x', version: 1 } as any, admin, AUDIT_MODULE, ENTITY_LABEL, undefined),
+      service.update(
+        1,
+        { title: 'x', version: 1 } as any,
+        admin,
+        AUDIT_MODULE,
+        ENTITY_LABEL,
+        undefined,
+      ),
     ).rejects.toBeInstanceOf(ConflictException);
   });
 
@@ -81,13 +104,23 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     prisma.contentCard.findFirst.mockResolvedValue(null);
 
     await expect(
-      service.update(1, { title: 'x', version: 1 } as any, admin, AUDIT_MODULE, ENTITY_LABEL, undefined),
+      service.update(
+        1,
+        { title: 'x', version: 1 } as any,
+        admin,
+        AUDIT_MODULE,
+        ENTITY_LABEL,
+        undefined,
+      ),
     ).rejects.toThrow('Quick link 1 not found');
   });
 
   it('soft-deletes and logs DELETE under the caller-provided audit module', async () => {
     prisma.contentCard.findFirst.mockResolvedValue({ id: 1, version: 1 });
-    prisma.contentCard.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+    prisma.contentCard.update.mockResolvedValue({
+      id: 1,
+      deletedAt: new Date(),
+    });
 
     await service.softDelete(1, admin, AUDIT_MODULE, ENTITY_LABEL, undefined);
 
@@ -97,18 +130,29 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
   });
 
   it('restores and logs RESTORE', async () => {
-    prisma.contentCard.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+    prisma.contentCard.findFirst.mockResolvedValue({
+      id: 1,
+      deletedAt: new Date(),
+    });
     prisma.contentCard.update.mockResolvedValue({ id: 1, deletedAt: null });
 
     await service.restore(1, admin, AUDIT_MODULE, ENTITY_LABEL, undefined);
 
-    expect(auditLog.log).toHaveBeenCalledWith(expect.objectContaining({ action: 'RESTORE' }));
+    expect(auditLog.log).toHaveBeenCalledWith(
+      expect.objectContaining({ action: 'RESTORE' }),
+    );
   });
 
   it('rejects a reorder payload with duplicate sortOrder values', async () => {
     await expect(
       service.reorder(
-        { section: 'homepage_quick_links', items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+        {
+          section: 'homepage_quick_links',
+          items: [
+            { id: 1, sortOrder: 0 },
+            { id: 2, sortOrder: 0 },
+          ],
+        },
         admin,
         AUDIT_MODULE,
         ENTITY_LABEL,
@@ -125,7 +169,13 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     prisma.$transaction.mockResolvedValue(undefined);
 
     await service.reorder(
-      { section: 'homepage_quick_links', items: [{ id: 1, sortOrder: 1 }, { id: 2, sortOrder: 0 }] },
+      {
+        section: 'homepage_quick_links',
+        items: [
+          { id: 1, sortOrder: 1 },
+          { id: 2, sortOrder: 0 },
+        ],
+      },
       admin,
       AUDIT_MODULE,
       ENTITY_LABEL,
@@ -140,10 +190,19 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
 
   it('reuses the exact same logic for a different section/module config (e.g. admission programs)', async () => {
     prisma.contentCard.count.mockResolvedValue(0);
-    prisma.contentCard.create.mockResolvedValue({ id: 9, section: 'homepage_admission_programs' });
+    prisma.contentCard.create.mockResolvedValue({
+      id: 9,
+      section: 'homepage_admission_programs',
+    });
 
     await service.create(
-      { section: 'homepage_admission_programs', imageUrl: '/x.png', title: 'B.Tech', linkUrl: '/x', tags: ['CSE'] },
+      {
+        section: 'homepage_admission_programs',
+        imageUrl: '/x.png',
+        title: 'B.Tech',
+        linkUrl: '/x',
+        tags: ['CSE'],
+      },
       admin,
       'homepage_admission_programs',
       'Admission program',
@@ -151,7 +210,10 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     );
 
     expect(auditLog.log).toHaveBeenCalledWith(
-      expect.objectContaining({ action: 'CREATE', module: 'homepage_admission_programs' }),
+      expect.objectContaining({
+        action: 'CREATE',
+        module: 'homepage_admission_programs',
+      }),
     );
   });
 
@@ -161,7 +223,14 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
       prisma.contentCard.create.mockResolvedValue({ id: 9 });
 
       await service.create(
-        { section: 'homepage_admission_programs', imageUrl: '/fallback.png', mediaId: 9, title: 'B.Tech', linkUrl: '/x', tags: ['CSE'] },
+        {
+          section: 'homepage_admission_programs',
+          imageUrl: '/fallback.png',
+          mediaId: 9,
+          title: 'B.Tech',
+          linkUrl: '/x',
+          tags: ['CSE'],
+        },
         admin,
         AUDIT_MODULE,
         ENTITY_LABEL,
@@ -170,26 +239,54 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.contentCard.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith(AUDIT_MODULE, 9, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        AUDIT_MODULE,
+        9,
+        'imageUrl',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching imageUrl', async () => {
-      prisma.contentCard.findFirst.mockResolvedValue({ id: 1, version: 1, imageUrl: '/existing.png' });
+      prisma.contentCard.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        imageUrl: '/existing.png',
+      });
       prisma.contentCard.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { mediaId: null, version: 1 }, admin, AUDIT_MODULE, ENTITY_LABEL, undefined);
+      await service.update(
+        1,
+        { mediaId: null, version: 1 },
+        admin,
+        AUDIT_MODULE,
+        ENTITY_LABEL,
+        undefined,
+      );
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith(AUDIT_MODULE, 1, 'imageUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        AUDIT_MODULE,
+        1,
+        'imageUrl',
+        null,
+      );
       expect(prisma.contentCard.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ imageUrl: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ imageUrl: expect.anything() }),
+        }),
       );
     });
 
     it('untracks Media usage on soft-delete', async () => {
       prisma.contentCard.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.contentCard.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.contentCard.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, AUDIT_MODULE, ENTITY_LABEL, undefined);
 
@@ -197,12 +294,24 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.contentCard.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.contentCard.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.contentCard.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.contentCard.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, AUDIT_MODULE, ENTITY_LABEL, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith(AUDIT_MODULE, 1, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        AUDIT_MODULE,
+        1,
+        'imageUrl',
+        9,
+      );
     });
   });
 });

@@ -89,7 +89,12 @@ export class EventsService {
       },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -137,7 +142,11 @@ export class EventsService {
       action: 'UPDATE',
       module: 'events',
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -149,7 +158,11 @@ export class EventsService {
 
     const deleted = await this.prisma.event.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.mediaLink.untrackAll(MEDIA_MODULE, id);
@@ -182,7 +195,12 @@ export class EventsService {
     });
 
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({
@@ -199,10 +217,16 @@ export class EventsService {
     return restored;
   }
 
-  async reorder(dto: ReorderEventsDto, admin: RequestAdmin, requestId?: string) {
+  async reorder(
+    dto: ReorderEventsDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

@@ -38,7 +38,10 @@ export class QuickLinksController {
     @Query('section') section?: QuickLinkSection,
     @Query('includeDeleted') includeDeleted?: string,
   ) {
-    return this.quickLinksService.findAllAdmin(section, includeDeleted === 'true');
+    return this.quickLinksService.findAllAdmin(
+      section,
+      includeDeleted === 'true',
+    );
   }
 
   @Post('admin/quick-links')

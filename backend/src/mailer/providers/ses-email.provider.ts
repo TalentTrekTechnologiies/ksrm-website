@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import * as nodemailer from 'nodemailer';
-import { EmailProvider, SendEmailParams } from '../interfaces/email-provider.interface';
+import {
+  EmailProvider,
+  SendEmailParams,
+} from '../interfaces/email-provider.interface';
 
 // Nodemailer's built-in SES transport handles MIME composition
 // (attachments, headers) the same way the SMTP provider does - only the

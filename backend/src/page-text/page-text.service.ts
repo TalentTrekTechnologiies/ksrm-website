@@ -52,7 +52,11 @@ export class PageTextService {
    * its slot; slots the admin left at their default are simply absent from
    * `items` and keep having no row.
    */
-  async upsert(dto: UpsertPageTextDto, admin: RequestAdmin, requestId?: string) {
+  async upsert(
+    dto: UpsertPageTextDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const saved: Awaited<ReturnType<typeof this.prisma.pageText.upsert>>[] = [];
 
     for (const item of dto.items) {

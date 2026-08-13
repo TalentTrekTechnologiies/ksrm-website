@@ -22,7 +22,11 @@ describe('GalleryService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -39,11 +43,15 @@ describe('GalleryService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -79,7 +87,7 @@ describe('GalleryService', () => {
       prisma.galleryImage.create.mockResolvedValue({ id: 5, sortOrder: 4 });
 
       await service.create(
-        { title: 'Campus', imageUrl: '/gallery/campus.jpg' } as any,
+        { title: 'Campus', imageUrl: '/gallery/campus.jpg' },
         admin,
         undefined,
       );
@@ -140,7 +148,10 @@ describe('GalleryService', () => {
     });
 
     it('restores by clearing deletedAt/deletedBy and logs RESTORE', async () => {
-      prisma.galleryImage.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.galleryImage.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
       prisma.galleryImage.update.mockResolvedValue({ id: 1, deletedAt: null });
 
       await service.restore(1, admin, undefined);
@@ -156,7 +167,10 @@ describe('GalleryService', () => {
 
     it('untracks Media usage on soft-delete', async () => {
       prisma.galleryImage.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.galleryImage.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.galleryImage.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
@@ -164,17 +178,36 @@ describe('GalleryService', () => {
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.galleryImage.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.galleryImage.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.galleryImage.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.galleryImage.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('gallery', 1, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'gallery',
+        1,
+        'imageUrl',
+        9,
+      );
     });
 
     it('does not re-track on restore when the row has no mediaId', async () => {
-      prisma.galleryImage.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.galleryImage.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: null });
+      prisma.galleryImage.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.galleryImage.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -188,27 +221,45 @@ describe('GalleryService', () => {
       prisma.galleryImage.create.mockResolvedValue({ id: 5 });
 
       await service.create(
-        { title: 'Campus', imageUrl: '/fallback.jpg', mediaId: 9 } as any,
+        { title: 'Campus', imageUrl: '/fallback.jpg', mediaId: 9 },
         admin,
         undefined,
       );
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.galleryImage.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          imageUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('gallery', 5, 'imageUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'gallery',
+        5,
+        'imageUrl',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching imageUrl', async () => {
-      prisma.galleryImage.findFirst.mockResolvedValue({ id: 1, version: 1, imageUrl: '/existing.jpg' });
+      prisma.galleryImage.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        imageUrl: '/existing.jpg',
+      });
       prisma.galleryImage.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { mediaId: null, version: 1 } as any, admin, undefined);
+      await service.update(1, { mediaId: null, version: 1 }, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('gallery', 1, 'imageUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'gallery',
+        1,
+        'imageUrl',
+        null,
+      );
       expect(prisma.galleryImage.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ imageUrl: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ imageUrl: expect.anything() }),
+        }),
       );
     });
   });

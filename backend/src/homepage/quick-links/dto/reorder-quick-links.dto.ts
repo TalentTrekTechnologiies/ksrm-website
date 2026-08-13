@@ -1,4 +1,11 @@
-import { ArrayMinSize, IsArray, IsIn, IsInt, Min, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsIn,
+  IsInt,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { QUICK_LINK_SECTIONS } from './create-quick-link.dto';
 import type { QuickLinkSection } from './create-quick-link.dto';

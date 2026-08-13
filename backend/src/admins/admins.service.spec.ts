@@ -22,13 +22,27 @@ describe('AdminsService', () => {
       update: jest.Mock;
     };
     role: { findMany: jest.Mock };
-    adminRole: { findMany: jest.Mock; deleteMany: jest.Mock; create: jest.Mock };
+    adminRole: {
+      findMany: jest.Mock;
+      deleteMany: jest.Mock;
+      create: jest.Mock;
+    };
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
 
-  const superAdmin = { id: 1, name: 'Super', email: 'super@ksrm.edu', isSuperAdmin: true };
-  const regularActor = { id: 2, name: 'Editor', email: 'editor@ksrm.edu', isSuperAdmin: false };
+  const superAdmin = {
+    id: 1,
+    name: 'Super',
+    email: 'super@ksrm.edu',
+    isSuperAdmin: true,
+  };
+  const regularActor = {
+    id: 2,
+    name: 'Editor',
+    email: 'editor@ksrm.edu',
+    isSuperAdmin: false,
+  };
 
   beforeEach(async () => {
     prisma = {
@@ -41,11 +55,17 @@ describe('AdminsService', () => {
         update: jest.fn(),
       },
       role: { findMany: jest.fn() },
-      adminRole: { findMany: jest.fn(), deleteMany: jest.fn(), create: jest.fn() },
+      adminRole: {
+        findMany: jest.fn(),
+        deleteMany: jest.fn(),
+        create: jest.fn(),
+      },
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
-    const adminNotifications = { notifyByPermission: jest.fn().mockResolvedValue(undefined) };
+    const adminNotifications = {
+      notifyByPermission: jest.fn().mockResolvedValue(undefined),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -117,7 +137,11 @@ describe('AdminsService', () => {
       });
 
       const result = await service.create(
-        { email: 'new@ksrm.edu', password: 'password123', name: 'New Admin' } as any,
+        {
+          email: 'new@ksrm.edu',
+          password: 'password123',
+          name: 'New Admin',
+        },
         superAdmin,
         undefined,
       );
@@ -138,7 +162,12 @@ describe('AdminsService', () => {
     it('rejects creating a super admin unless the actor is a real super admin', async () => {
       await expect(
         service.create(
-          { email: 'x@y.com', password: 'password123', name: 'X', isSuperAdmin: true } as any,
+          {
+            email: 'x@y.com',
+            password: 'password123',
+            name: 'X',
+            isSuperAdmin: true,
+          } as any,
           regularActor,
           undefined,
         ),
@@ -151,7 +180,12 @@ describe('AdminsService', () => {
 
       await expect(
         service.create(
-          { email: 'x@y.com', password: 'password123', name: 'X', roleIds: [9] } as any,
+          {
+            email: 'x@y.com',
+            password: 'password123',
+            name: 'X',
+            roleIds: [9],
+          } as any,
           regularActor,
           undefined,
         ),
@@ -168,7 +202,11 @@ describe('AdminsService', () => {
 
       await expect(
         service.create(
-          { email: 'dup@ksrm.edu', password: 'password123', name: 'Dup' } as any,
+          {
+            email: 'dup@ksrm.edu',
+            password: 'password123',
+            name: 'Dup',
+          } as any,
           superAdmin,
           undefined,
         ),
@@ -181,7 +219,12 @@ describe('AdminsService', () => {
       prisma.admin.findFirst.mockResolvedValue({ id: 1, version: 2 });
 
       await expect(
-        service.update(1, { name: 'x', version: 1 } as any, superAdmin, undefined),
+        service.update(
+          1,
+          { name: 'x', version: 1 } as any,
+          superAdmin,
+          undefined,
+        ),
       ).rejects.toBeInstanceOf(ConflictException);
     });
 
@@ -189,7 +232,12 @@ describe('AdminsService', () => {
       prisma.admin.findFirst.mockResolvedValue(null);
 
       await expect(
-        service.update(99, { name: 'x', version: 1 } as any, superAdmin, undefined),
+        service.update(
+          99,
+          { name: 'x', version: 1 } as any,
+          superAdmin,
+          undefined,
+        ),
       ).rejects.toBeInstanceOf(NotFoundException);
     });
   });
@@ -203,7 +251,11 @@ describe('AdminsService', () => {
     });
 
     it('rejects disabling the last remaining active super admin', async () => {
-      prisma.admin.findFirst.mockResolvedValue({ id: 5, isSuperAdmin: true, isActive: true });
+      prisma.admin.findFirst.mockResolvedValue({
+        id: 5,
+        isSuperAdmin: true,
+        isActive: true,
+      });
       prisma.admin.count.mockResolvedValue(1);
 
       await expect(
@@ -212,14 +264,24 @@ describe('AdminsService', () => {
     });
 
     it('allows disabling a super admin when another active super admin exists', async () => {
-      prisma.admin.findFirst.mockResolvedValue({ id: 5, isSuperAdmin: true, isActive: true });
+      prisma.admin.findFirst.mockResolvedValue({
+        id: 5,
+        isSuperAdmin: true,
+        isActive: true,
+      });
       prisma.admin.count.mockResolvedValue(2);
-      prisma.admin.update.mockResolvedValue({ id: 5, isActive: false, roles: [] });
+      prisma.admin.update.mockResolvedValue({
+        id: 5,
+        isActive: false,
+        roles: [],
+      });
 
       await service.setStatus(5, false, superAdmin, undefined);
 
       expect(prisma.admin.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.objectContaining({ isActive: false }) }),
+        expect.objectContaining({
+          data: expect.objectContaining({ isActive: false }),
+        }),
       );
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'DISABLE' }),
@@ -232,11 +294,18 @@ describe('AdminsService', () => {
       prisma.admin.findFirst.mockResolvedValue({ id: 5 });
       prisma.admin.update.mockResolvedValue({ id: 5 });
 
-      await service.resetPassword(5, { newPassword: 'newpassword123' }, superAdmin, undefined);
+      await service.resetPassword(
+        5,
+        { newPassword: 'newpassword123' },
+        superAdmin,
+        undefined,
+      );
 
       expect(prisma.admin.update).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ password: expect.not.stringMatching('newpassword123') }),
+          data: expect.objectContaining({
+            password: expect.not.stringMatching('newpassword123'),
+          }),
         }),
       );
       const auditCall = auditLog.log.mock.calls[0][0];
@@ -267,7 +336,9 @@ describe('AdminsService', () => {
 
     it('replaces roles in a transaction and logs ASSIGN_ROLES', async () => {
       prisma.admin.findFirst.mockResolvedValue({ id: 5 }); // findActiveOrThrow
-      prisma.role.findMany.mockResolvedValue([{ id: 3, name: 'Content Editor' }]);
+      prisma.role.findMany.mockResolvedValue([
+        { id: 3, name: 'Content Editor' },
+      ]);
       prisma.adminRole.findMany.mockResolvedValue([]);
       prisma.$transaction.mockResolvedValue(undefined);
       prisma.admin.findUnique.mockResolvedValue({ id: 5, roles: [] }); // findOne() at the end
@@ -283,23 +354,27 @@ describe('AdminsService', () => {
 
   describe('softDelete', () => {
     it('rejects deleting your own account', async () => {
-      await expect(service.softDelete(2, regularActor, undefined)).rejects.toBeInstanceOf(
-        BadRequestException,
-      );
+      await expect(
+        service.softDelete(2, regularActor, undefined),
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('rejects deleting the last remaining super admin', async () => {
       prisma.admin.findFirst.mockResolvedValue({ id: 5, isSuperAdmin: true });
       prisma.admin.count.mockResolvedValue(1);
 
-      await expect(service.softDelete(5, superAdmin, undefined)).rejects.toBeInstanceOf(
-        BadRequestException,
-      );
+      await expect(
+        service.softDelete(5, superAdmin, undefined),
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('soft-deletes and logs DELETE', async () => {
       prisma.admin.findFirst.mockResolvedValue({ id: 5, isSuperAdmin: false });
-      prisma.admin.update.mockResolvedValue({ id: 5, deletedAt: new Date(), roles: [] });
+      prisma.admin.update.mockResolvedValue({
+        id: 5,
+        deletedAt: new Date(),
+        roles: [],
+      });
 
       await service.softDelete(5, superAdmin, undefined);
 
@@ -318,14 +393,21 @@ describe('AdminsService', () => {
     it('404s restoring an admin that is not actually deleted', async () => {
       prisma.admin.findFirst.mockResolvedValue(null);
 
-      await expect(service.restore(5, superAdmin, undefined)).rejects.toBeInstanceOf(
-        NotFoundException,
-      );
+      await expect(
+        service.restore(5, superAdmin, undefined),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('restores and logs RESTORE', async () => {
-      prisma.admin.findFirst.mockResolvedValue({ id: 5, deletedAt: new Date() });
-      prisma.admin.update.mockResolvedValue({ id: 5, deletedAt: null, roles: [] });
+      prisma.admin.findFirst.mockResolvedValue({
+        id: 5,
+        deletedAt: new Date(),
+      });
+      prisma.admin.update.mockResolvedValue({
+        id: 5,
+        deletedAt: null,
+        roles: [],
+      });
 
       await service.restore(5, superAdmin, undefined);
 

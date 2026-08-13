@@ -22,7 +22,11 @@ describe('TestimonialsService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -39,11 +43,15 @@ describe('TestimonialsService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -138,11 +146,17 @@ describe('TestimonialsService', () => {
 
     it('untracks Media usage on soft-delete', async () => {
       prisma.testimonial.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.testimonial.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.testimonial.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
-      expect(mediaLink.untrackAll).toHaveBeenCalledWith('homepage_testimonials', 1);
+      expect(mediaLink.untrackAll).toHaveBeenCalledWith(
+        'homepage_testimonials',
+        1,
+      );
     });
 
     it('404s restoring a row that is not actually deleted', async () => {
@@ -172,17 +186,36 @@ describe('TestimonialsService', () => {
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.testimonial.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.testimonial.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.testimonial.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.testimonial.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_testimonials', 1, 'photoUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'homepage_testimonials',
+        1,
+        'photoUrl',
+        9,
+      );
     });
 
     it('does not re-track on restore when the row has no mediaId', async () => {
-      prisma.testimonial.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.testimonial.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: null });
+      prisma.testimonial.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.testimonial.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -203,27 +236,45 @@ describe('TestimonialsService', () => {
           rating: 5,
           photoUrl: '/fallback.jpg',
           mediaId: 9,
-        } as any,
+        },
         admin,
         undefined,
       );
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'IMAGE');
       expect(prisma.testimonial.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ photoUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          photoUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_testimonials', 5, 'photoUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'homepage_testimonials',
+        5,
+        'photoUrl',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching photoUrl', async () => {
-      prisma.testimonial.findFirst.mockResolvedValue({ id: 1, version: 1, photoUrl: '/existing.jpg' });
+      prisma.testimonial.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        photoUrl: '/existing.jpg',
+      });
       prisma.testimonial.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { mediaId: null, version: 1 } as any, admin, undefined);
+      await service.update(1, { mediaId: null, version: 1 }, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('homepage_testimonials', 1, 'photoUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'homepage_testimonials',
+        1,
+        'photoUrl',
+        null,
+      );
       expect(prisma.testimonial.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ photoUrl: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ photoUrl: expect.anything() }),
+        }),
       );
     });
   });

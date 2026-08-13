@@ -36,7 +36,9 @@ describe('MediaImageProcessingService', () => {
 
       expect(storage.delete).toHaveBeenCalledWith('a.webp');
       expect(storage.delete).toHaveBeenCalledWith('b.webp');
-      expect(prisma.mediaVariant.deleteMany).toHaveBeenCalledWith({ where: { mediaId: 1 } });
+      expect(prisma.mediaVariant.deleteMany).toHaveBeenCalledWith({
+        where: { mediaId: 1 },
+      });
     });
 
     it('does NOT delete the file when a variant shares the archival storageKey (VIDEO/DOCUMENT/SVG case)', async () => {
@@ -45,12 +47,16 @@ describe('MediaImageProcessingService', () => {
       // deleting it here would destroy the file a just-taken MediaVersion
       // snapshot still references (this was a real crash-causing bug: the
       // file-serving route then 500s/crashes trying to read a missing file).
-      prisma.mediaVariant.findMany.mockResolvedValue([{ storageKey: 'archival-original.mp4' }]);
+      prisma.mediaVariant.findMany.mockResolvedValue([
+        { storageKey: 'archival-original.mp4' },
+      ]);
 
       await service.deleteVariantsForMedia(1, 'archival-original.mp4');
 
       expect(storage.delete).not.toHaveBeenCalled();
-      expect(prisma.mediaVariant.deleteMany).toHaveBeenCalledWith({ where: { mediaId: 1 } });
+      expect(prisma.mediaVariant.deleteMany).toHaveBeenCalledWith({
+        where: { mediaId: 1 },
+      });
     });
 
     it('deletes non-protected variants while sparing the one matching protectStorageKey', async () => {

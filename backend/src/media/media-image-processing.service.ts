@@ -202,7 +202,10 @@ export class MediaImageProcessingService {
    * next time anything tries to read it). Only genuinely-derived variant
    * files (always a different storageKey) are safe to delete unconditionally.
    */
-  async deleteVariantsForMedia(mediaId: number, protectStorageKey?: string): Promise<void> {
+  async deleteVariantsForMedia(
+    mediaId: number,
+    protectStorageKey?: string,
+  ): Promise<void> {
     const variants = await this.prisma.mediaVariant.findMany({
       where: { mediaId },
     });

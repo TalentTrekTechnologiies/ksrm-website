@@ -26,7 +26,9 @@ import { DepartmentScoped } from '../auth/department-scope.decorator';
 @ApiTags('department-highlights')
 @Controller('department-highlights')
 export class DepartmentHighlightsController {
-  constructor(private readonly departmentHighlightsService: DepartmentHighlightsService) {}
+  constructor(
+    private readonly departmentHighlightsService: DepartmentHighlightsService,
+  ) {}
 
   @Get()
   findAllPublic(
@@ -54,14 +56,22 @@ export class DepartmentHighlightsController {
   @RequirePermission('department_highlights.create')
   @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreateDepartmentHighlightDto, @Request() req) {
-    return this.departmentHighlightsService.create(dto, req.user, req.requestId);
+    return this.departmentHighlightsService.create(
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch('reorder')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('department_highlights.update')
   reorder(@Body() dto: ReorderDepartmentHighlightsDto, @Request() req) {
-    return this.departmentHighlightsService.reorder(dto, req.user, req.requestId);
+    return this.departmentHighlightsService.reorder(
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch(':id')
@@ -73,7 +83,12 @@ export class DepartmentHighlightsController {
     @Body() dto: UpdateDepartmentHighlightDto,
     @Request() req,
   ) {
-    return this.departmentHighlightsService.update(id, dto, req.user, req.requestId);
+    return this.departmentHighlightsService.update(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete(':id')
@@ -81,7 +96,11 @@ export class DepartmentHighlightsController {
   @RequirePermission('department_highlights.delete')
   @DepartmentScoped({ source: 'lookup', model: 'departmentHighlight' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.departmentHighlightsService.softDelete(id, req.user, req.requestId);
+    return this.departmentHighlightsService.softDelete(
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post(':id/restore')
@@ -89,6 +108,10 @@ export class DepartmentHighlightsController {
   @RequirePermission('department_highlights.restore')
   @DepartmentScoped({ source: 'lookup', model: 'departmentHighlight' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.departmentHighlightsService.restore(id, req.user, req.requestId);
+    return this.departmentHighlightsService.restore(
+      id,
+      req.user,
+      req.requestId,
+    );
   }
 }

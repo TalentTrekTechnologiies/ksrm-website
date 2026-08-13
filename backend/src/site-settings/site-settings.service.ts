@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
@@ -40,7 +44,10 @@ export class SiteSettingsService {
       // silently drop the exclusion whenever a specific group was requested
       // (the later spread key wins in a JS object literal).
       where: {
-        AND: [{ group: { notIn: EXCLUDED_GROUPS } }, ...(group ? [{ group }] : [])],
+        AND: [
+          { group: { notIn: EXCLUDED_GROUPS } },
+          ...(group ? [{ group }] : []),
+        ],
       },
       orderBy: [{ group: 'asc' }, { key: 'asc' }],
     });
@@ -56,7 +63,10 @@ export class SiteSettingsService {
     const rows = await this.prisma.siteSetting.findMany({
       where: {
         isPublic: true,
-        AND: [{ group: { notIn: EXCLUDED_GROUPS } }, ...(group ? [{ group }] : [])],
+        AND: [
+          { group: { notIn: EXCLUDED_GROUPS } },
+          ...(group ? [{ group }] : []),
+        ],
       },
       select: { key: true, value: true, type: true, group: true },
       orderBy: [{ group: 'asc' }, { key: 'asc' }],
@@ -72,7 +82,11 @@ export class SiteSettingsService {
     return record;
   }
 
-  async create(dto: CreateSiteSettingDto, admin: RequestAdmin, requestId?: string) {
+  async create(
+    dto: CreateSiteSettingDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
 
     let created;
@@ -81,13 +95,23 @@ export class SiteSettingsService {
         data: { ...dto, value: resolvedUrl ?? dto.value, updatedBy: admin.id },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new BadRequestException(`Setting key '${dto.key}' already exists`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new BadRequestException(
+          `Setting key '${dto.key}' already exists`,
+        );
       }
       throw err;
     }
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -103,7 +127,12 @@ export class SiteSettingsService {
     return created;
   }
 
-  async update(id: number, dto: UpdateSiteSettingDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateSiteSettingDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findOrThrow(id);
 
     const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
@@ -119,8 +148,13 @@ export class SiteSettingsService {
         },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new BadRequestException(`Setting key '${dto.key}' already exists`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new BadRequestException(
+          `Setting key '${dto.key}' already exists`,
+        );
       }
       throw err;
     }
@@ -134,7 +168,11 @@ export class SiteSettingsService {
       action: 'UPDATE',
       module: 'site_settings',
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(dto) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(dto),
+      },
       requestId,
     });
 

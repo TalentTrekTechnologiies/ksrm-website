@@ -27,7 +27,11 @@ describe('DownloadsService', () => {
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
-  let mediaLink: { prepareLink: jest.Mock; syncUsage: jest.Mock; untrackAll: jest.Mock };
+  let mediaLink: {
+    prepareLink: jest.Mock;
+    syncUsage: jest.Mock;
+    untrackAll: jest.Mock;
+  };
 
   const admin = { id: 1, name: 'Admin', email: 'admin@ksrm.edu' };
 
@@ -45,11 +49,15 @@ describe('DownloadsService', () => {
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
     mediaLink = {
-      prepareLink: jest.fn().mockImplementation((mediaId: number | null | undefined) =>
-        mediaId === undefined || mediaId === null
-          ? Promise.resolve(undefined)
-          : Promise.resolve('http://localhost:4000/media/file/9/ORIGINAL/SOURCE'),
-      ),
+      prepareLink: jest
+        .fn()
+        .mockImplementation((mediaId: number | null | undefined) =>
+          mediaId === undefined || mediaId === null
+            ? Promise.resolve(undefined)
+            : Promise.resolve(
+                'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+              ),
+        ),
       syncUsage: jest.fn().mockResolvedValue(undefined),
       untrackAll: jest.fn().mockResolvedValue(undefined),
     };
@@ -87,7 +95,11 @@ describe('DownloadsService', () => {
   describe('softDelete / restore', () => {
     it('soft-deletes and untracks Media usage', async () => {
       prisma.download.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.download.update.mockResolvedValue({ id: 1, deletedAt: new Date(), deletedBy: 1 });
+      prisma.download.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+        deletedBy: 1,
+      });
 
       await service.softDelete(1, admin, undefined);
 
@@ -106,17 +118,36 @@ describe('DownloadsService', () => {
     });
 
     it('re-tracks Media usage on restore when the row still has a mediaId', async () => {
-      prisma.download.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.download.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: 9 });
+      prisma.download.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.download.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: 9,
+      });
 
       await service.restore(1, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('downloads', 1, 'fileUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'downloads',
+        1,
+        'fileUrl',
+        9,
+      );
     });
 
     it('does not re-track on restore when the row has no mediaId', async () => {
-      prisma.download.findFirst.mockResolvedValue({ id: 1, deletedAt: new Date() });
-      prisma.download.update.mockResolvedValue({ id: 1, deletedAt: null, mediaId: null });
+      prisma.download.findFirst.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
+      prisma.download.update.mockResolvedValue({
+        id: 1,
+        deletedAt: null,
+        mediaId: null,
+      });
 
       await service.restore(1, admin, undefined);
 
@@ -142,20 +173,38 @@ describe('DownloadsService', () => {
 
       expect(mediaLink.prepareLink).toHaveBeenCalledWith(9, 'DOCUMENT');
       expect(prisma.download.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ fileUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE' }),
+        data: expect.objectContaining({
+          fileUrl: 'http://localhost:4000/media/file/9/ORIGINAL/SOURCE',
+        }),
       });
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('downloads', 5, 'fileUrl', 9);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'downloads',
+        5,
+        'fileUrl',
+        9,
+      );
     });
 
     it('on update with mediaId: null, unlinks without touching fileUrl', async () => {
-      prisma.download.findFirst.mockResolvedValue({ id: 1, version: 1, fileUrl: '/existing.pdf' });
+      prisma.download.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        fileUrl: '/existing.pdf',
+      });
       prisma.download.update.mockResolvedValue({ id: 1, version: 2 });
 
-      await service.update(1, { mediaId: null, version: 1 } as any, admin, undefined);
+      await service.update(1, { mediaId: null, version: 1 }, admin, undefined);
 
-      expect(mediaLink.syncUsage).toHaveBeenCalledWith('downloads', 1, 'fileUrl', null);
+      expect(mediaLink.syncUsage).toHaveBeenCalledWith(
+        'downloads',
+        1,
+        'fileUrl',
+        null,
+      );
       expect(prisma.download.update).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.not.objectContaining({ fileUrl: expect.anything() }) }),
+        expect.objectContaining({
+          data: expect.not.objectContaining({ fileUrl: expect.anything() }),
+        }),
       );
     });
   });
@@ -164,7 +213,12 @@ describe('DownloadsService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),
@@ -176,7 +230,12 @@ describe('DownloadsService', () => {
     // cover it - both authorize a single target per request. Without the
     // service-level check these were the one write path a scoped admin could
     // use to touch another department's or another page's records.
-    const payload = { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 1 }] };
+    const payload = {
+      items: [
+        { id: 1, sortOrder: 0 },
+        { id: 2, sortOrder: 1 },
+      ],
+    };
     const deptAdmin = { ...admin, isSuperAdmin: false, departmentId: 5 };
     const examAdmin = {
       ...admin,
@@ -189,11 +248,13 @@ describe('DownloadsService', () => {
         { id: 1, departmentId: 5, pageSection: null },
         { id: 2, departmentId: 5, pageSection: null },
       ]);
-      await expect(service.reorder(payload, deptAdmin, undefined)).resolves.toBeDefined();
+      await expect(
+        service.reorder(payload, deptAdmin, undefined),
+      ).resolves.toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
     });
 
-    it('403s a department admin reordering another department\'s rows', async () => {
+    it("403s a department admin reordering another department's rows", async () => {
       prisma.download.findMany.mockResolvedValue([
         { id: 1, departmentId: 5, pageSection: null },
         { id: 2, departmentId: 6, pageSection: null },
@@ -220,7 +281,9 @@ describe('DownloadsService', () => {
         { id: 1, departmentId: null, pageSection: 'examinations' },
         { id: 2, departmentId: null, pageSection: 'examinations.timetables' },
       ]);
-      await expect(service.reorder(payload, examAdmin, undefined)).resolves.toBeDefined();
+      await expect(
+        service.reorder(payload, examAdmin, undefined),
+      ).resolves.toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
     });
 
@@ -241,7 +304,11 @@ describe('DownloadsService', () => {
         { id: 2, departmentId: null, pageSection: null },
       ]);
       await expect(
-        service.reorder(payload, { ...admin, isSuperAdmin: true, departmentId: 5 }, undefined),
+        service.reorder(
+          payload,
+          { ...admin, isSuperAdmin: true, departmentId: 5 },
+          undefined,
+        ),
       ).resolves.toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
     });

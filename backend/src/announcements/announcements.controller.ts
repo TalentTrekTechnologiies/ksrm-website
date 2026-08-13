@@ -73,14 +73,24 @@ export class AnnouncementsController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('announcements.update')
   publish(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.announcementsService.setPublished(id, true, req.user, req.requestId);
+    return this.announcementsService.setPublished(
+      id,
+      true,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Post('admin/:id/unpublish')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('announcements.update')
   unpublish(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.announcementsService.setPublished(id, false, req.user, req.requestId);
+    return this.announcementsService.setPublished(
+      id,
+      false,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete('admin/:id')

@@ -37,7 +37,9 @@ export class DepartmentsService {
     return this.prisma.department.findMany({
       where: {
         ...(!includeDeleted && { deletedAt: null }),
-        ...(admin && !admin.isSuperAdmin && admin.departmentId != null && { id: admin.departmentId }),
+        ...(admin &&
+          !admin.isSuperAdmin &&
+          admin.departmentId != null && { id: admin.departmentId }),
       },
       orderBy: { name: 'asc' },
     });
@@ -59,7 +61,12 @@ export class DepartmentsService {
   // Department Workspace UI needs to open an inactive or soft-deleted
   // department's profile tab, unlike findBySlug (public, active-only).
   async findByIdAdmin(id: number, admin?: RequestAdmin) {
-    if (admin && !admin.isSuperAdmin && admin.departmentId != null && id !== admin.departmentId) {
+    if (
+      admin &&
+      !admin.isSuperAdmin &&
+      admin.departmentId != null &&
+      id !== admin.departmentId
+    ) {
       throw new NotFoundException(`Department ${id} not found`);
     }
     const record = await this.prisma.department.findUnique({ where: { id } });
@@ -79,8 +86,15 @@ export class DepartmentsService {
     return record;
   }
 
-  async create(dto: CreateDepartmentDto, admin: RequestAdmin, requestId?: string) {
-    const resolvedUrl = await this.mediaLink.prepareLink(dto.heroMediaId, 'IMAGE');
+  async create(
+    dto: CreateDepartmentDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      dto.heroMediaId,
+      'IMAGE',
+    );
 
     let created;
     try {
@@ -88,13 +102,23 @@ export class DepartmentsService {
         data: { ...dto, heroImageUrl: resolvedUrl ?? dto.heroImageUrl },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new ConflictException(`Department slug '${dto.slug}' is already in use`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Department slug '${dto.slug}' is already in use`,
+        );
       }
       throw err;
     }
 
-    await this.mediaLink.syncUsage(AUDIT_MODULE, created.id, MEDIA_FIELD, dto.heroMediaId);
+    await this.mediaLink.syncUsage(
+      AUDIT_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.heroMediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -110,12 +134,20 @@ export class DepartmentsService {
     return created;
   }
 
-  async update(id: number, dto: UpdateDepartmentDto, admin: RequestAdmin, requestId?: string) {
+  async update(
+    id: number,
+    dto: UpdateDepartmentDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Department ${id}`);
 
-    const resolvedUrl = await this.mediaLink.prepareLink(rest.heroMediaId, 'IMAGE');
+    const resolvedUrl = await this.mediaLink.prepareLink(
+      rest.heroMediaId,
+      'IMAGE',
+    );
 
     let updated;
     try {
@@ -128,13 +160,23 @@ export class DepartmentsService {
         },
       });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        throw new ConflictException(`Department slug '${rest.slug}' is already in use`);
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Department slug '${rest.slug}' is already in use`,
+        );
       }
       throw err;
     }
 
-    await this.mediaLink.syncUsage(AUDIT_MODULE, id, MEDIA_FIELD, rest.heroMediaId);
+    await this.mediaLink.syncUsage(
+      AUDIT_MODULE,
+      id,
+      MEDIA_FIELD,
+      rest.heroMediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -143,7 +185,11 @@ export class DepartmentsService {
       action: 'UPDATE',
       module: AUDIT_MODULE,
       targetId: id,
-      details: { before: existing, after: updated, changedFields: Object.keys(rest) },
+      details: {
+        before: existing,
+        after: updated,
+        changedFields: Object.keys(rest),
+      },
       requestId,
     });
 
@@ -155,7 +201,11 @@ export class DepartmentsService {
 
     const deleted = await this.prisma.department.update({
       where: { id },
-      data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: admin.id,
+        version: { increment: 1 },
+      },
     });
 
     await this.mediaLink.untrackAll(AUDIT_MODULE, id);
@@ -188,7 +238,12 @@ export class DepartmentsService {
     });
 
     if (restored.heroMediaId) {
-      await this.mediaLink.syncUsage(AUDIT_MODULE, id, MEDIA_FIELD, restored.heroMediaId);
+      await this.mediaLink.syncUsage(
+        AUDIT_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.heroMediaId,
+      );
     }
 
     await this.auditLog.log({

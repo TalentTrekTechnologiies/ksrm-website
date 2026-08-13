@@ -44,7 +44,11 @@ export class GalleryService {
     private mediaLink: MediaLinkService,
   ) {}
 
-  async findAllPublic(category?: string, departmentId?: number, pageSection?: string) {
+  async findAllPublic(
+    category?: string,
+    departmentId?: number,
+    pageSection?: string,
+  ) {
     return this.prisma.galleryImage.findMany({
       where: {
         isActive: true,
@@ -121,7 +125,12 @@ export class GalleryService {
       },
     });
 
-    await this.mediaLink.syncUsage(MEDIA_MODULE, created.id, MEDIA_FIELD, dto.mediaId);
+    await this.mediaLink.syncUsage(
+      MEDIA_MODULE,
+      created.id,
+      MEDIA_FIELD,
+      dto.mediaId,
+    );
 
     await this.auditLog.log({
       adminId: admin.id,
@@ -235,7 +244,12 @@ export class GalleryService {
     // this row was soft-deleted, this re-track has nothing to point at and
     // the admin will need to re-pick media manually - not auto-resolved.
     if (restored.mediaId) {
-      await this.mediaLink.syncUsage(MEDIA_MODULE, id, MEDIA_FIELD, restored.mediaId);
+      await this.mediaLink.syncUsage(
+        MEDIA_MODULE,
+        id,
+        MEDIA_FIELD,
+        restored.mediaId,
+      );
     }
 
     await this.auditLog.log({
@@ -259,7 +273,9 @@ export class GalleryService {
   ) {
     const sortOrders = dto.items.map((i) => i.sortOrder);
     if (new Set(sortOrders).size !== sortOrders.length) {
-      throw new BadRequestException('Duplicate sortOrder values in reorder payload');
+      throw new BadRequestException(
+        'Duplicate sortOrder values in reorder payload',
+      );
     }
 
     const ids = dto.items.map((i) => i.id);

@@ -5,7 +5,12 @@ import { PrismaService } from '../prisma/prisma.service';
 describe('AuditLogService', () => {
   let service: AuditLogService;
   let prisma: {
-    auditLog: { findFirst: jest.Mock; findMany: jest.Mock; create: jest.Mock; count: jest.Mock };
+    auditLog: {
+      findFirst: jest.Mock;
+      findMany: jest.Mock;
+      create: jest.Mock;
+      count: jest.Mock;
+    };
   };
 
   beforeEach(async () => {
@@ -19,7 +24,10 @@ describe('AuditLogService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuditLogService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        AuditLogService,
+        { provide: PrismaService, useValue: prisma },
+      ],
     }).compile();
 
     service = module.get(AuditLogService);
@@ -196,12 +204,22 @@ describe('AuditLogService', () => {
     });
 
     it('falls back updatedBy to the CREATE entry itself when nothing has happened since', async () => {
-      const createEntry = { adminId: 1, adminName: 'Alice', createdAt: new Date('2026-01-01') };
-      prisma.auditLog.findFirst.mockResolvedValueOnce(createEntry).mockResolvedValueOnce(createEntry);
+      const createEntry = {
+        adminId: 1,
+        adminName: 'Alice',
+        createdAt: new Date('2026-01-01'),
+      };
+      prisma.auditLog.findFirst
+        .mockResolvedValueOnce(createEntry)
+        .mockResolvedValueOnce(createEntry);
 
       const result = await service.getCreatorAndUpdater('homepage_hero', 1);
 
-      expect(result.updatedBy).toEqual({ adminId: 1, adminName: 'Alice', createdAt: createEntry.createdAt });
+      expect(result.updatedBy).toEqual({
+        adminId: 1,
+        adminName: 'Alice',
+        createdAt: createEntry.createdAt,
+      });
     });
   });
 });

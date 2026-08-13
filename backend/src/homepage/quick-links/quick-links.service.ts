@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ContentCardService } from '../content-cards/content-card.service';
-import { CreateQuickLinkDto, QuickLinkSection } from './dto/create-quick-link.dto';
+import {
+  CreateQuickLinkDto,
+  QuickLinkSection,
+} from './dto/create-quick-link.dto';
 import { UpdateQuickLinkDto } from './dto/update-quick-link.dto';
 import { ReorderQuickLinksDto } from './dto/reorder-quick-links.dto';
 import { RequestAdmin } from '../types';
@@ -28,22 +31,58 @@ export class QuickLinksService {
   }
 
   create(dto: CreateQuickLinkDto, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.create(dto, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+    return this.contentCards.create(
+      dto,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
-  update(id: number, dto: UpdateQuickLinkDto, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.update(id, dto, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+  update(
+    id: number,
+    dto: UpdateQuickLinkDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
+    return this.contentCards.update(
+      id,
+      dto,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
   softDelete(id: number, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.softDelete(id, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+    return this.contentCards.softDelete(
+      id,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
   restore(id: number, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.restore(id, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+    return this.contentCards.restore(
+      id,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 
   reorder(dto: ReorderQuickLinksDto, admin: RequestAdmin, requestId?: string) {
-    return this.contentCards.reorder(dto, admin, AUDIT_MODULE, ENTITY_LABEL, requestId);
+    return this.contentCards.reorder(
+      dto,
+      admin,
+      AUDIT_MODULE,
+      ENTITY_LABEL,
+      requestId,
+    );
   }
 }

@@ -68,7 +68,11 @@ export class FacultyController {
   @RequirePermission('faculty.create')
   @DepartmentScoped({ source: 'body' })
   create(@Body() createFacultyDto: CreateFacultyDto, @Request() req) {
-    return this.facultyService.create(createFacultyDto, req.user, req.requestId);
+    return this.facultyService.create(
+      createFacultyDto,
+      req.user,
+      req.requestId,
+    );
   }
 
   // Declared before @Patch(':id') so Nest does not treat "reorder" as an id.
@@ -88,7 +92,12 @@ export class FacultyController {
     @Body() updateFacultyDto: UpdateFacultyDto,
     @Request() req,
   ) {
-    return this.facultyService.update(id, updateFacultyDto, req.user, req.requestId);
+    return this.facultyService.update(
+      id,
+      updateFacultyDto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete(':id')

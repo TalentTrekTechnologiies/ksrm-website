@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Put, Query, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Put,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ContentStylesService } from './content-styles.service';
 import { UpsertContentStylesDto } from './dto/content-style.dto';

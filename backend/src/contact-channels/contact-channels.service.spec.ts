@@ -1,8 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ContactChannelsService } from './contact-channels.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
@@ -79,7 +76,12 @@ describe('ContactChannelsService', () => {
       await service.findAllPublic(null, 'info');
 
       expect(prisma.contactChannel.findMany).toHaveBeenCalledWith({
-        where: { departmentId: null, isActive: true, deletedAt: null, group: 'info' },
+        where: {
+          departmentId: null,
+          isActive: true,
+          deletedAt: null,
+          group: 'info',
+        },
         orderBy: { sortOrder: 'asc' },
       });
     });
@@ -141,7 +143,7 @@ describe('ContactChannelsService', () => {
       prisma.contactChannel.count.mockResolvedValue(2);
       prisma.contactChannel.create.mockResolvedValue({ id: 5, sortOrder: 2 });
 
-      await service.create({ name: 'Principal Office' } as any, admin, undefined);
+      await service.create({ name: 'Principal Office' }, admin, undefined);
 
       expect(prisma.contactChannel.count).toHaveBeenCalledWith({
         where: { departmentId: null, group: 'directory', deletedAt: null },
@@ -156,7 +158,11 @@ describe('ContactChannelsService', () => {
       prisma.contactChannel.count.mockResolvedValue(0);
       prisma.contactChannel.create.mockResolvedValue({ id: 6, sortOrder: 0 });
 
-      await service.create({ name: 'Address', group: 'info' } as any, admin, undefined);
+      await service.create(
+        { name: 'Address', group: 'info' },
+        admin,
+        undefined,
+      );
 
       expect(prisma.contactChannel.count).toHaveBeenCalledWith({
         where: { departmentId: null, group: 'info', deletedAt: null },
@@ -185,12 +191,18 @@ describe('ContactChannelsService', () => {
   describe('softDelete / restore', () => {
     it('soft-deletes and logs DELETE', async () => {
       prisma.contactChannel.findFirst.mockResolvedValue({ id: 1, version: 1 });
-      prisma.contactChannel.update.mockResolvedValue({ id: 1, deletedAt: new Date() });
+      prisma.contactChannel.update.mockResolvedValue({
+        id: 1,
+        deletedAt: new Date(),
+      });
 
       await service.softDelete(1, admin, undefined);
 
       expect(auditLog.log).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'DELETE', module: 'contact_channels' }),
+        expect.objectContaining({
+          action: 'DELETE',
+          module: 'contact_channels',
+        }),
       );
     });
 
@@ -207,7 +219,12 @@ describe('ContactChannelsService', () => {
     it('rejects duplicate sortOrder values before touching the database', async () => {
       await expect(
         service.reorder(
-          { items: [{ id: 1, sortOrder: 0 }, { id: 2, sortOrder: 0 }] },
+          {
+            items: [
+              { id: 1, sortOrder: 0 },
+              { id: 2, sortOrder: 0 },
+            ],
+          },
           admin,
           undefined,
         ),

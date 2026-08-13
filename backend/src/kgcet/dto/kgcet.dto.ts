@@ -40,7 +40,9 @@ export class CreateKgcetParticipationDto {
   isActive?: boolean;
 }
 
-export class UpdateKgcetParticipationDto extends PartialType(CreateKgcetParticipationDto) {
+export class UpdateKgcetParticipationDto extends PartialType(
+  CreateKgcetParticipationDto,
+) {
   @IsInt()
   @Min(1)
   version: number;
@@ -72,7 +74,9 @@ export class CreateKgcetHighlightDto {
   isActive?: boolean;
 }
 
-export class UpdateKgcetHighlightDto extends PartialType(CreateKgcetHighlightDto) {
+export class UpdateKgcetHighlightDto extends PartialType(
+  CreateKgcetHighlightDto,
+) {
   @IsInt()
   @Min(1)
   version: number;

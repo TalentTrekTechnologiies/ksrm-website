@@ -1,4 +1,13 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 // Serves both the global office directory (departmentId omitted/null -
 // Principal/Admissions/Exam/Placement/Main) and a single department's

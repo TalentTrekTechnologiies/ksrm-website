@@ -66,7 +66,9 @@ export class MediaService {
     // either - a soft-deleted row with this checksum would otherwise cause
     // a raw unique-constraint violation on create() below instead of the
     // graceful outcomes handled here.
-    const existing = await this.prisma.media.findFirst({ where: { checksumSha256 } });
+    const existing = await this.prisma.media.findFirst({
+      where: { checksumSha256 },
+    });
     if (existing && !existing.deletedAt) {
       await fsp.rm(file.path, { force: true });
       return { deduplicated: true, media: this.toResponse(existing, []) };
@@ -87,10 +89,15 @@ export class MediaService {
         action: 'RESTORE',
         module: 'media',
         targetId: existing.id,
-        details: { after: restored, changedFields: ['re-uploaded matching content'] },
+        details: {
+          after: restored,
+          changedFields: ['re-uploaded matching content'],
+        },
         requestId,
       });
-      const variants = await this.prisma.mediaVariant.findMany({ where: { mediaId: existing.id } });
+      const variants = await this.prisma.mediaVariant.findMany({
+        where: { mediaId: existing.id },
+      });
       return { deduplicated: true, media: this.toResponse(restored, variants) };
     }
 
@@ -613,12 +620,20 @@ export class MediaService {
       if (u.module === 'gallery') {
         await this.prisma.galleryImage.updateMany({
           where: { id: u.recordId, deletedAt: null },
-          data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+          data: {
+            deletedAt: new Date(),
+            deletedBy: admin.id,
+            version: { increment: 1 },
+          },
         });
       } else {
         await this.prisma.download.updateMany({
           where: { id: u.recordId, deletedAt: null },
-          data: { deletedAt: new Date(), deletedBy: admin.id, version: { increment: 1 } },
+          data: {
+            deletedAt: new Date(),
+            deletedBy: admin.id,
+            version: { increment: 1 },
+          },
         });
       }
       await this.usageService.untrackAll(u.module, u.recordId);
@@ -643,7 +658,10 @@ export class MediaService {
       details: {
         before: existing,
         forced: blocking.length > 0 && force,
-        cascaded: cascading.map((u) => ({ module: u.module, recordId: u.recordId })),
+        cascaded: cascading.map((u) => ({
+          module: u.module,
+          recordId: u.recordId,
+        })),
       },
       requestId,
     });

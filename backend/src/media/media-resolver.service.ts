@@ -33,7 +33,9 @@ export class MediaResolverService {
       where: { id: mediaId, deletedAt: null, isActive: true },
     });
     if (!media) {
-      throw new BadRequestException(`Media ${mediaId} does not exist or is not active.`);
+      throw new BadRequestException(
+        `Media ${mediaId} does not exist or is not active.`,
+      );
     }
     if (media.type !== expectedType) {
       throw new BadRequestException(
@@ -60,12 +62,19 @@ export class MediaResolverService {
     if (!media) return null;
 
     const exact = await this.prisma.mediaVariant.findFirst({
-      where: { mediaId, variant: preferredVariant as never, format: preferredFormat },
+      where: {
+        mediaId,
+        variant: preferredVariant as never,
+        format: preferredFormat,
+      },
     });
     if (exact) return this.buildUrl(mediaId, exact.variant, exact.format);
 
-    const fallback = await this.prisma.mediaVariant.findFirst({ where: { mediaId } });
-    if (fallback) return this.buildUrl(mediaId, fallback.variant, fallback.format);
+    const fallback = await this.prisma.mediaVariant.findFirst({
+      where: { mediaId },
+    });
+    if (fallback)
+      return this.buildUrl(mediaId, fallback.variant, fallback.format);
 
     return null;
   }

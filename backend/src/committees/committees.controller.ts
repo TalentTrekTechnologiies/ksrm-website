@@ -49,8 +49,14 @@ export class CommitteesController {
   @Get('admin')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('committees.view')
-  findAllAdmin(@Query('includeDeleted') includeDeleted?: string, @Request() req?) {
-    return this.committeesService.findAllAdmin(includeDeleted === 'true', req?.user);
+  findAllAdmin(
+    @Query('includeDeleted') includeDeleted?: string,
+    @Request() req?,
+  ) {
+    return this.committeesService.findAllAdmin(
+      includeDeleted === 'true',
+      req?.user,
+    );
   }
 
   @Post()
@@ -78,14 +84,23 @@ export class CommitteesController {
     @Body() dto: ReorderCommitteesDto,
     @Request() req,
   ) {
-    return this.committeesService.reorderMembers(committeeId, dto.ids, req.user, req.requestId);
+    return this.committeesService.reorderMembers(
+      committeeId,
+      dto.ids,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
   @RequirePermission('committees.update')
   @DepartmentScoped({ source: 'lookup', model: 'committee' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCommitteeDto, @Request() req) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateCommitteeDto,
+    @Request() req,
+  ) {
     return this.committeesService.update(id, dto, req.user, req.requestId);
   }
 
@@ -115,7 +130,12 @@ export class CommitteesController {
     @Body() dto: CreateCommitteeMemberDto,
     @Request() req,
   ) {
-    return this.committeesService.createMember(committeeId, dto, req.user, req.requestId);
+    return this.committeesService.createMember(
+      committeeId,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Patch('members/:id')
@@ -126,7 +146,12 @@ export class CommitteesController {
     @Body() dto: UpdateCommitteeMemberDto,
     @Request() req,
   ) {
-    return this.committeesService.updateMember(id, dto, req.user, req.requestId);
+    return this.committeesService.updateMember(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete('members/:id')

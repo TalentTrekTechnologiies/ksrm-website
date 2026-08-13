@@ -30,7 +30,9 @@ export class EventsController {
   @Get()
   findAllPublic(@Query('departmentId') departmentId?: string) {
     const deptId = departmentId ? Number(departmentId) : undefined;
-    return this.eventsService.findAllPublic(Number.isFinite(deptId) ? deptId : undefined);
+    return this.eventsService.findAllPublic(
+      Number.isFinite(deptId) ? deptId : undefined,
+    );
   }
 
   @Get('admin')

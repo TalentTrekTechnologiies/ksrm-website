@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
-import { ContentStyleItemDto, UpsertContentStylesDto } from './dto/content-style.dto';
+import {
+  ContentStyleItemDto,
+  UpsertContentStylesDto,
+} from './dto/content-style.dto';
 import { RequestAdmin } from '../homepage/types';
 
 const AUDIT_MODULE = 'content_styles';
@@ -39,7 +42,11 @@ export class ContentStylesService {
    * "no styling" is the absence of a row, so clearing one leaves nothing
    * behind for the next reader to interpret.
    */
-  async upsert(dto: UpsertContentStylesDto, admin: RequestAdmin, requestId?: string) {
+  async upsert(
+    dto: UpsertContentStylesDto,
+    admin: RequestAdmin,
+    requestId?: string,
+  ) {
     const written: ContentStyleItemDto[] = [];
 
     for (const item of dto.items) {
@@ -55,7 +62,11 @@ export class ContentStylesService {
 
       if (!fontSize && !color) {
         await this.prisma.contentStyle.deleteMany({
-          where: { module: item.module, recordId: item.recordId, field: item.field },
+          where: {
+            module: item.module,
+            recordId: item.recordId,
+            field: item.field,
+          },
         });
         continue;
       }

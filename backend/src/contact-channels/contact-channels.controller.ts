@@ -25,7 +25,9 @@ import { DepartmentScoped } from '../auth/department-scope.decorator';
 @ApiTags('contact-channels')
 @Controller('contact-channels')
 export class ContactChannelsController {
-  constructor(private readonly contactChannelsService: ContactChannelsService) {}
+  constructor(
+    private readonly contactChannelsService: ContactChannelsService,
+  ) {}
 
   // No departmentId -> the global office directory (Principal/Admissions/
   // Exam/Placement/Main). departmentId set -> that department's Contact tab.
@@ -55,8 +57,17 @@ export class ContactChannelsController {
     @Query('includeDeleted') includeDeleted?: string,
     @Query('group') group?: string,
   ) {
-    const scope = global === 'true' ? null : departmentId ? parseInt(departmentId) : undefined;
-    return this.contactChannelsService.findAllAdmin(scope, includeDeleted === 'true', group);
+    const scope =
+      global === 'true'
+        ? null
+        : departmentId
+          ? parseInt(departmentId)
+          : undefined;
+    return this.contactChannelsService.findAllAdmin(
+      scope,
+      includeDeleted === 'true',
+      group,
+    );
   }
 
   @Post()

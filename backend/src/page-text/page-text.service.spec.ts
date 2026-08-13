@@ -87,7 +87,9 @@ describe('PageTextService', () => {
     });
 
     it('logs an edit to an existing override as UPDATE, with the old value', async () => {
-      prisma.pageText.findUnique.mockResolvedValue(row({ value: 'Old wording' }));
+      prisma.pageText.findUnique.mockResolvedValue(
+        row({ value: 'Old wording' }),
+      );
       prisma.pageText.upsert.mockResolvedValue(row());
 
       await service.upsert({ items }, admin);
@@ -95,7 +97,9 @@ describe('PageTextService', () => {
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({
           action: 'UPDATE',
-          details: expect.objectContaining({ before: { value: 'Old wording' } }),
+          details: expect.objectContaining({
+            before: { value: 'Old wording' },
+          }),
         }),
       );
     });
@@ -104,7 +108,9 @@ describe('PageTextService', () => {
     // unchanged slot would bump its version and add an audit entry on every
     // save, burying the edits that actually happened.
     it('skips writes and audit entries for a value that has not changed', async () => {
-      prisma.pageText.findUnique.mockResolvedValue(row({ value: 'New wording' }));
+      prisma.pageText.findUnique.mockResolvedValue(
+        row({ value: 'New wording' }),
+      );
 
       const result = await service.upsert({ items }, admin);
 
@@ -114,24 +120,34 @@ describe('PageTextService', () => {
     });
 
     it('blanks a slot when given an empty string, rather than treating it as a reset', async () => {
-      prisma.pageText.findUnique.mockResolvedValue(row({ value: 'Old wording' }));
+      prisma.pageText.findUnique.mockResolvedValue(
+        row({ value: 'Old wording' }),
+      );
       prisma.pageText.upsert.mockResolvedValue(row({ value: '' }));
 
       await service.upsert(
-        { items: [{ key: 'library.about.p1', pageSection: 'library', value: '' }] },
+        {
+          items: [
+            { key: 'library.about.p1', pageSection: 'library', value: '' },
+          ],
+        },
         admin,
       );
 
       expect(prisma.pageText.delete).not.toHaveBeenCalled();
       expect(prisma.pageText.upsert).toHaveBeenCalledWith(
-        expect.objectContaining({ update: expect.objectContaining({ value: '' }) }),
+        expect.objectContaining({
+          update: expect.objectContaining({ value: '' }),
+        }),
       );
     });
   });
 
   describe('reset', () => {
     it('deletes the override and records what it held', async () => {
-      prisma.pageText.findUnique.mockResolvedValue(row({ value: 'Edited wording' }));
+      prisma.pageText.findUnique.mockResolvedValue(
+        row({ value: 'Edited wording' }),
+      );
       prisma.pageText.delete.mockResolvedValue(row());
 
       const result = await service.reset('library.about.p1', admin);
@@ -142,7 +158,9 @@ describe('PageTextService', () => {
       expect(auditLog.log).toHaveBeenCalledWith(
         expect.objectContaining({
           action: 'DELETE',
-          details: expect.objectContaining({ before: { value: 'Edited wording' } }),
+          details: expect.objectContaining({
+            before: { value: 'Edited wording' },
+          }),
         }),
       );
       expect(result).toEqual({ key: 'library.about.p1', reset: true });

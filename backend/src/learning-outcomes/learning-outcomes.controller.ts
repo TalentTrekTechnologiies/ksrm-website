@@ -26,7 +26,9 @@ import { DepartmentScoped } from '../auth/department-scope.decorator';
 @ApiTags('learning-outcomes')
 @Controller('learning-outcomes')
 export class LearningOutcomesController {
-  constructor(private readonly learningOutcomesService: LearningOutcomesService) {}
+  constructor(
+    private readonly learningOutcomesService: LearningOutcomesService,
+  ) {}
 
   @Get()
   findAllPublic(
@@ -73,7 +75,12 @@ export class LearningOutcomesController {
     @Body() dto: UpdateLearningOutcomeDto,
     @Request() req,
   ) {
-    return this.learningOutcomesService.update(id, dto, req.user, req.requestId);
+    return this.learningOutcomesService.update(
+      id,
+      dto,
+      req.user,
+      req.requestId,
+    );
   }
 
   @Delete(':id')
