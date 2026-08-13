@@ -553,24 +553,62 @@ export default function Navbar() {
             if (hasChildren) {
               return (
                 <div key={item.label}>
+                  {/*
+                    The label is a LINK; only the chevron toggles the submenu.
+
+                    This whole row used to be one div whose sole action was
+                    expanding the children, so on a phone a parent page could
+                    not be opened at all - tapping "IQAC" revealed NAAC and
+                    there was no way to reach /iqac itself. That applied to
+                    every parent with children: About, Departments, Academics,
+                    Admissions, Examinations, Placements, Campus Life, Contact.
+
+                    Splitting them gives both actions a target of their own,
+                    which is the standard mobile pattern. The chevron keeps a
+                    44px-wide hit area so it stays comfortably tappable.
+                  */}
                   <div
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      alignItems: "stretch",
                       justifyContent: "space-between",
-                      padding: "13px 14px",
-                      fontSize: "15px",
-                      fontWeight: 600,
                       borderBottom: "1px solid rgba(255,255,255,0.08)",
-                      fontFamily: "'Rajdhani', sans-serif",
-                      color: active ? "#FFE619" : "#fff",
-                      cursor: "pointer",
                       background: isExpanded ? "rgba(255,230,25,0.1)" : "transparent",
                     }}
-                    onClick={() => setExpandedMobile(isExpanded ? null : item.label)}
                   >
-                    <span>{item.label}</span>
-                    <ChevronDown size={15} style={{ transition: "transform 0.2s", transform: isExpanded ? "rotate(180deg)" : "none" }} />
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      style={{
+                        flex: 1,
+                        padding: "13px 14px",
+                        fontSize: "15px",
+                        fontWeight: 600,
+                        fontFamily: "'Rajdhani', sans-serif",
+                        color: active ? "#FFE619" : "#fff",
+                        textDecoration: "none",
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                    <button
+                      type="button"
+                      aria-label={`${isExpanded ? "Hide" : "Show"} ${item.label} submenu`}
+                      aria-expanded={isExpanded}
+                      onClick={() => setExpandedMobile(isExpanded ? null : item.label)}
+                      style={{
+                        width: "44px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "transparent",
+                        border: "none",
+                        color: active ? "#FFE619" : "#fff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <ChevronDown size={15} style={{ transition: "transform 0.2s", transform: isExpanded ? "rotate(180deg)" : "none" }} />
+                    </button>
                   </div>
                   {isExpanded && (
                     <div style={{ background: "rgba(255,255,255,0.05)" }}>

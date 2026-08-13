@@ -12,7 +12,7 @@ import { hs } from "@/data/departments/hs";
 import { CourseListJsonLd } from "@/components/seo/JsonLd";
 import RouteBreadcrumbs from "@/components/seo/RouteBreadcrumbs";
 import { pageMetadata } from "@/lib/seo";
-import { getDepartmentsPublic } from "@/lib/departments-api";
+import { API_BASE } from "@/lib/api-base";
 
 // MCA launches as an empty CMS record (per the Department CMS phase decision);
 // DepartmentPage's own client-side fetch fills it in from the backend.
@@ -92,6 +92,69 @@ export function generateStaticParams() {
     .map((slug) => ({ slug }));
 }
 
+/** How long the build will wait for the CMS before giving up on overrides. */
+const CMS_LOOKUP_TIMEOUT_MS = 4000;
+
+/**
+ * The departments as the CMS knows them, fetched ONCE per build.
+ *
+ * Two things this has to get right, both learned the hard way when the first
+ * version of it broke a production build:
+ *
+ *  1. A TIMEOUT. The original went through apiGet, which calls fetch with no
+ *     signal, and a .catch() only fires on rejection - a request that HANGS
+ *     never rejects, so each department page sat waiting until Next's own
+ *     60-second export limit killed it, three attempts each, and the build
+ *     exited. An unreachable API must fail in seconds, not hang.
+ *  2. ONE call, not one per page. This runs inside generateMetadata for every
+ *     department, so without the shared promise below it was eight identical
+ *     requests per build.
+ *
+ * Returns null on any failure - timeout, network error, non-200, bad JSON - and
+ * the page then uses its own hardcoded metadata exactly as it did before. The
+ * CMS override is a nice-to-have; it must never be able to fail a build.
+ */
+let cmsDepartmentsPromise: Promise<Map<string, DepartmentRecord>> | null = null;
+
+interface DepartmentRecord {
+  slug: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  ogImageUrl?: string | null;
+}
+
+function loadCmsDepartments(): Promise<Map<string, DepartmentRecord>> {
+  // `force-cache`, NOT `no-store`. Under output: "export" the route is
+  // effectively `dynamic = "error"`, and a no-store fetch marks the render
+  // dynamic - Next then refuses to render it statically and the lookup fails
+  // every time with "couldn't be rendered statically". Caching is right here
+  // anyway: this runs once at build, and the result is baked into the HTML.
+  cmsDepartmentsPromise ??= fetch(`${API_BASE}/departments`, {
+    signal: AbortSignal.timeout(CMS_LOOKUP_TIMEOUT_MS),
+    cache: "force-cache",
+  })
+    .then((r) => (r.ok ? r.json() : []))
+    .then((list: DepartmentRecord[]) =>
+      new Map((Array.isArray(list) ? list : []).map((d) => [d.slug, d])),
+    )
+    .catch((err: unknown) => {
+      // Logged once, not per page, so a build against an offline API says so
+      // plainly instead of looking like the overrides silently did nothing.
+      // The reason is included: "timed out" and "connection refused" call for
+      // very different fixes, and without it the message is a dead end.
+      console.warn(
+        `[departments] CMS metadata lookup failed - using built-in metadata. ` +
+          `URL: ${API_BASE}/departments - ${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}`,
+      );
+      return new Map<string, DepartmentRecord>();
+    });
+  return cmsDepartmentsPromise;
+}
+
+async function cmsDepartment(slug: string): Promise<DepartmentRecord | null> {
+  return (await loadCmsDepartments()).get(slug) ?? null;
+}
+
 // Per-department SEO: without this every department page inherited the root
 // layout's generic homepage title/description. Now each gets a unique title +
 // description + canonical, which is what people actually search for ("K.S.R.M. CSE
@@ -101,17 +164,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const department = (departments as Record<string, typeof civil>)[slug];
   if (!department) return {};
 
-  // CMS overrides, read at BUILD time (this is a static export, so there is no
-  // request-time server to consult). Wrapped so the build never depends on the
-  // API being up: if it is unreachable, or has no row for this slug, the
-  // hardcoded values below are used exactly as before.
-  //
-  // Editing these in Admin -> Departments -> Profile therefore takes effect on
-  // the next site build, not instantly - the same constraint every other
-  // CMS-driven value on this statically exported site has.
-  const cms = await getDepartmentsPublic()
-    .then((list) => list.find((d) => d.slug === slug) ?? null)
-    .catch(() => null);
+  const cms = await cmsDepartment(slug);
 
   if (cms?.metaTitle?.trim() || cms?.metaDescription?.trim()) {
     return pageMetadata({
