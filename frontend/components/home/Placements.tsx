@@ -305,7 +305,7 @@ export default function Placements() {
             <div className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
               {posterStrip.map((poster, i) => (
                 <div key={i} className={`photo-item${i >= posters.length ? " strip-clone" : ""}`}>
-                  <img src={poster} alt={`Placement ${i}`} loading="lazy" />
+                  <img src={poster} alt={`Placement ${i}`} loading="lazy" decoding="async" />
                 </div>
               ))}
             </div>

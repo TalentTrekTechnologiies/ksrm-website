@@ -7,6 +7,7 @@ import { getHeroPublic, HomepageHero, HeroNewsTickerItem } from "@/lib/homepage-
 import { getAnnouncementsPublic } from "@/lib/announcements-api"
 import { getExamNotificationsPublic } from "@/lib/exam-notifications-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { getPublicSiteSettings } from "@/lib/site-settings-api"
 
 const NEW_WINDOW_MS = 3 * 24 * 60 * 60 * 1000
 
@@ -92,6 +93,14 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const videoRef = useRef<HTMLVideoElement>(null)
 
+  // Seconds each notice takes to travel the panel. Site Settings ->
+  // Announcements; falls back to a readable default when unset or invalid.
+  const siteSettings = useLiveData<Record<string, string>>(() => getPublicSiteSettings(), [])
+  const heroPanelSecondsPerItem = (() => {
+    const n = Number(siteSettings?.["site.heroPanelSecondsPerItem"])
+    return Number.isFinite(n) && n > 0 ? n : 4
+  })()
+
   const accreditationLabel = hero?.accreditationLabel || FALLBACK_ACCREDITATION
   const heading = hero?.heading || FALLBACK_HEADING
   const subtitle = hero?.subtitle || FALLBACK_SUBTITLE
@@ -99,6 +108,20 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
   const panelLabel = hero?.panelLabel || FALLBACK_PANEL_LABEL
   const captions = hero?.captions?.length ? hero.captions : FALLBACK_CAPTIONS
   const newsItems = liveNewsItems?.length ? liveNewsItems : FALLBACK_NEWS_ITEMS
+
+  /**
+   * How long one full loop of the Latest Updates panel takes.
+   *
+   * Derived from the number of items rather than fixed, so each notice stays on
+   * screen for the same readable moment whether there are three of them or
+   * thirty. `secondsPerItem` is editable in Admin -> Site Settings; the floor
+   * stops a one-item list from looping frantically.
+   *
+   * The track renders the list twice for a seamless loop, and the keyframes
+   * translate by -50% (exactly one copy), so this duration covers one pass
+   * through the real list - not both copies.
+   */
+  const panelScrollSeconds = Math.max((newsItems?.length ?? 0) * heroPanelSecondsPerItem, 8)
   const ctaPrimary =
     hero?.ctaPrimaryText && hero?.ctaPrimaryHref
       ? { text: hero.ctaPrimaryText, href: hero.ctaPrimaryHref }
@@ -150,8 +173,14 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
           animation: pulse-dot 1.5s infinite;
         }
 
+        /* Duration comes from --news-dur, computed per item count below.
+           It used to be a hard-coded 12s for the WHOLE loop, so the scroll
+           speed depended entirely on how much was published: readable with
+           four notices, and an unreadable blur once the list grew - each new
+           notice made every existing one move faster. Pacing per item keeps
+           reading speed constant however many there are. */
         .news-track {
-          animation: news-scroll 12s linear infinite;
+          animation: news-scroll var(--news-dur, 24s) linear infinite;
         }
         .hero-glass:hover .news-track {
           animation-play-state: paused;
@@ -247,7 +276,26 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
             {accreditationLabel}
           </motion.p>
 
-          {/* MAIN HEADING */}
+          {/*
+            The homepage had NO <h1> at all: the hero's tagline was an <h2>, so
+            the most important page on the domain opened at heading level 2 and
+            never named the institution in a heading.
+
+            The tagline is CMS-editable marketing copy ("Ignite Your Potential,
+            Engineer Your Future"), so it is the wrong text for an <h1> - the
+            page is about the college, not the slogan. The institution name
+            therefore becomes the h1 and the tagline stays exactly as it is,
+            demoted to nothing (it was already an h2).
+
+            The h1 is screen-reader-only because the institution is identified
+            visually by the masthead logo directly above it; this is the
+            standard pattern for logo-led hero designs, and the same name is
+            visible in plain text in the header, About section and footer, so
+            nothing is being shown to crawlers that users cannot see.
+          */}
+          <h1 className="sr-only">K.S.R.M. College of Engineering, Kadapa</h1>
+
+          {/* MAIN HEADING (visual tagline - unchanged) */}
           <motion.h2
             className="hero-heading"
             variants={fadeUp} initial="hidden" animate="visible" custom={0.2}
@@ -343,7 +391,10 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
 
           {/* NEWS SCROLL VIEWPORT */}
           <div style={{ height: "375px", overflow: "hidden" }}>
-            <div className="news-track">
+            <div
+              className="news-track"
+              style={{ ["--news-dur" as string]: `${panelScrollSeconds}s` } as React.CSSProperties}
+            >
               {/* Doubled for seamless loop */}
               {(Array.isArray(newsItems) ? [...newsItems, ...newsItems] : []).map((item, i) => (
                 <Link key={i} href={item.href || "/news"} className="news-item">

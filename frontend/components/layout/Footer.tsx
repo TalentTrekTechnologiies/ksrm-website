@@ -408,7 +408,7 @@ export default function Footer() {
               display: "flex", alignItems: "center", justifyContent: "center",
               flexShrink: 0,
             }}>
-              <img src="/logo.png" alt="K.S.R.M. Logo" loading="lazy" style={{ width: "48px", height: "48px", objectFit: "contain" }} />
+              <img src="/logo.png" alt="K.S.R.M. Logo" loading="lazy" decoding="async" style={{ width: "48px", height: "48px", objectFit: "contain" }} />
             </div>
             <div>
               <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "23px", fontWeight: 700, color: "#ffffff", lineHeight: 1 }}>

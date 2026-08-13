@@ -17,7 +17,20 @@ const FALLBACK_STATS = [
 ]
 
 function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suffix: string; duration?: number }) {
-  const [count, setCount] = useState(0)
+  // Seeded with the REAL figure, not 0.
+  //
+  // This component used to start at useState(0), so the static export shipped
+  // `<div class="stat-number">0</div>` (and "0.00" for the decimal stat) into
+  // the HTML - the count-up only ever ran in the browser. Every crawler, and
+  // any user with JS disabled or still hydrating, saw a wall of zeroes where
+  // the institution's headline numbers should be.
+  //
+  // Now the server-rendered HTML carries "46+", "1,200+", "200+" and so on.
+  // The animation is unchanged for real users: the effect below resets the
+  // display to 0 and counts up, but it runs only on the client and only once
+  // the card scrolls into view, so the pre-hydration paint already shows the
+  // true value.
+  const [count, setCount] = useState(target)
   const [hasStarted, setHasStarted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -44,6 +57,9 @@ function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suf
   useEffect(() => {
     if (!hasStarted) return
     let start = 0
+    // Client-only: drop back to 0 and count up. Never runs during the static
+    // render, so it cannot put a 0 into the exported HTML.
+    setCount(0)
     const increment = target / (duration * 60)
     const interval = setInterval(() => {
       start += increment

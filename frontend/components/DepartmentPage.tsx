@@ -1007,8 +1007,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                   display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
                 }}>
                   {department.hod.photo ? (
+                    // Media Library photos are stored as "/api/media/..." and
+                    // must be resolved against the API base - see FacultyGrid.
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={department.hod.photo} alt={department.hod.name} loading="lazy"
+                    <img src={resolveFileUrl(department.hod.photo)} alt={department.hod.name} loading="lazy" decoding="async"
                       style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
                   ) : null}
                 </div>
@@ -1140,8 +1142,22 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
               {department.labs.map((lab, i) => (
                 <div className="dept-lab-card" key={i}>
                   <div className="dept-lab-img">
+                    {/* Hide the frame rather than show a broken-image icon.
+                        Some lab photos referenced in data/departments/*.ts were
+                        never uploaded (CSE lists /Labs/CSE/1-10 but only 1-4
+                        exist), so those tiles rendered as broken images on a
+                        public page. The lab's name and description still show;
+                        only the missing picture is dropped. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={lab.imageUrl} alt={lab.name} loading="lazy" />
+                    <img
+                      src={resolveFileUrl(lab.imageUrl)}
+                      alt={lab.name}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none"
+                      }}
+                    />
                   </div>
                   <div className="dept-lab-body">
                     <h3>{lab.name}</h3>
@@ -1292,7 +1308,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 {department.gallery!.map((url, i) => (
                   <div className="dept-lab-img" key={i} style={{ borderRadius: 12 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt="" loading="lazy" />
+                    <img src={url} alt="" loading="lazy" decoding="async" />
                   </div>
                 ))}
               </div>

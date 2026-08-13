@@ -97,10 +97,37 @@ export default function AnnouncementTicker({
   // The site-wide header ticker also folds in Exam Notifications so they scroll
   // alongside announcements; department tickers stay announcements-only.
   const all = useLiveData<TickerItem[]>(async () => {
-    const announcements = (await getAnnouncementsPublic(location, departmentId).catch(() => []))
-      .map(announcementToTicker)
-    if (location !== "HEADER_TICKER") return announcements
-    const exams = (await getExamNotificationsPublic().catch(() => [])).map((n) => ({
+    // These used to be `.catch(() => [])`, which quietly turned a FAILED
+    // request into a SUCCESSFUL empty result. useLiveData deliberately keeps
+    // the last good value when a fetcher rejects - but it never saw a
+    // rejection, so it stored [], and `all.length === 0` below unmounts the
+    // whole bar. One dropped request and the ticker vanished until the next
+    // poll succeeded, which in production is up to 120s away. That is the
+    // "notices sometimes come, sometimes don't" report.
+    //
+    // Now a failure stays a failure. Settled results are inspected so a
+    // partial outage still shows what did load: if exam notifications fail,
+    // announcements alone are fine, and vice versa. Only when EVERY source
+    // fails do we throw, so the previously-loaded items stay on screen.
+    const annResult = await getAnnouncementsPublic(location, departmentId).then(
+      (v) => ({ ok: true as const, v }),
+      () => ({ ok: false as const, v: [] }),
+    )
+
+    if (location !== "HEADER_TICKER") {
+      if (!annResult.ok) throw new Error("announcements unavailable")
+      return annResult.v.map(announcementToTicker)
+    }
+
+    const examResult = await getExamNotificationsPublic().then(
+      (v) => ({ ok: true as const, v }),
+      () => ({ ok: false as const, v: [] }),
+    )
+
+    if (!annResult.ok && !examResult.ok) throw new Error("ticker sources unavailable")
+
+    const announcements = annResult.v.map(announcementToTicker)
+    const exams = examResult.v.map((n) => ({
       id: `exam-${n.id}`,
       badge: "Exam",
       text: n.title,
@@ -118,7 +145,22 @@ export default function AnnouncementTicker({
 
   const items = all.slice(0, cfg.maxVisible)
 
-  const topPriority = items.reduce<AnnouncementPriority>((top, item) => {
+  /**
+   * The bar's colour comes from the highest priority present - and it is
+   * computed from EVERY item, not just the `maxVisible` slice shown.
+   *
+   * It used to read the slice, which made the colour move on its own. The list
+   * is sorted newest-first and mixes announcements with exam notifications, so
+   * publishing a few exam notifications pushed older announcements past the
+   * cut-off - and a CRITICAL notice dropping out of the window silently turned
+   * the bar from red to amber or navy, even though that notice was still live.
+   * Exam notifications have no priority of their own (they are mapped to
+   * NORMAL above), so they were changing the colour purely by existing.
+   *
+   * Reading the whole list means the colour reflects what is actually
+   * published, and only changes when a priority does.
+   */
+  const topPriority = all.reduce<AnnouncementPriority>((top, item) => {
     const order: AnnouncementPriority[] = ["CRITICAL", "HIGH", "NORMAL", "LOW"]
     return order.indexOf(item.priority) < order.indexOf(top) ? item.priority : top
   }, "LOW")
@@ -129,7 +171,16 @@ export default function AnnouncementTicker({
       className="relative flex min-h-[24px] items-stretch overflow-hidden text-white"
     >
       <style>{`
-        .ann-track { animation: ann-scroll ${cfg.speedSeconds}s linear infinite; }
+        /* Paced per item, not per loop.
+           cfg.speedSeconds was applied to the entire loop, so the bar's actual
+           reading speed depended on how many notices were published: publish
+           three more and every existing one sped up. The Site Settings slider
+           now sets how long ONE notice takes to cross, and the loop length
+           follows from the count - so the setting means the same thing whatever
+           is published. Divided by 10 because the slider's 10-90 range was
+           written as whole-loop seconds against a default of ~10 visible items,
+           which keeps existing saved values behaving as they do today. */
+        .ann-track { animation: ann-scroll ${Math.max((cfg.speedSeconds / 10) * items.length, 8).toFixed(1)}s linear infinite; }
         ${cfg.pauseOnHover ? ".ann-track-wrap:hover .ann-track { animation-play-state: paused; }" : ""}
         @keyframes ann-scroll {
           from { transform: translateX(0); }

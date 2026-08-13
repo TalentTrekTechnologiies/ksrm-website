@@ -54,18 +54,38 @@ export default function ExamNotificationsList({
 } = {}) {
   const items = useLiveData<ExamNoticeItem[]>(
     async () => {
-      const [examNotifications, examAnnouncements] = await Promise.all([
-        getExamNotificationsPublic(type).catch(() => [] as ExamNotification[]),
+      // A dropped request must stay a failure, not become an empty list.
+      //
+      // These were `.catch(() => [])`, which resolves SUCCESSFULLY with nothing.
+      // useLiveData keeps the last good value when a fetcher rejects, but it
+      // never saw a rejection - so a single failed poll replaced the
+      // notifications with "No active notifications right now." until the next
+      // one succeeded (up to 120s in production). That is the notices
+      // appearing-and-disappearing report.
+      //
+      // Settled results are inspected instead, so a partial outage still shows
+      // whatever did load, and only a total failure throws.
+      const wanted = !type || type === "NOTIFICATION"
+      const [notifResult, annResult] = await Promise.all([
+        getExamNotificationsPublic(type).then(
+          (v) => ({ ok: true as const, v }),
+          () => ({ ok: false as const, v: [] as ExamNotification[] }),
+        ),
         // Announcements have no type of their own, so they belong with the
         // notifications block only - never duplicated into every section.
-        type && type !== "NOTIFICATION"
-          ? Promise.resolve([] as Announcement[])
-          : getAnnouncementsPublic("EXAM_NOTIFICATIONS_PAGE").catch(() => [] as Announcement[]),
+        wanted
+          ? getAnnouncementsPublic("EXAM_NOTIFICATIONS_PAGE").then(
+              (v) => ({ ok: true as const, v }),
+              () => ({ ok: false as const, v: [] as Announcement[] }),
+            )
+          : Promise.resolve({ ok: true as const, v: [] as Announcement[] }),
       ])
 
+      if (!notifResult.ok && !annResult.ok) throw new Error("exam notifications unavailable")
+
       return [
-        ...examNotifications.map(fromExamNotification),
-        ...examAnnouncements.map(fromAnnouncement),
+        ...notifResult.v.map(fromExamNotification),
+        ...annResult.v.map(fromAnnouncement),
       ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     },
     [type],
@@ -107,7 +127,19 @@ export default function ExamNotificationsList({
       id: `${n.kind}-${n.id}`,
       title: n.title,
       description: n.description,
-      meta: new Date(n.date).toLocaleDateString(),
+      // Same "Published <date>, <time>" wording the document rows on this page
+      // use, so the Examinations page does not show two different date formats
+      // side by side. Guarded so an unparseable date yields no meta line
+      // rather than "Invalid Date".
+      meta: (() => {
+        const d = new Date(n.date)
+        if (Number.isNaN(d.getTime())) return null
+        return `Published ${d.toLocaleDateString(undefined, {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}, ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`
+      })(),
       href: n.linkUrl,
       actionLabel: n.buttonText,
     }))

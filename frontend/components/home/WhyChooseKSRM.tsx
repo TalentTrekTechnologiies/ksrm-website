@@ -113,7 +113,7 @@ export default function WhyChooseKSRM() {
           {HIGHLIGHTS.map((h) => (
             <motion.div key={h.title} className="why-card" variants={cardVariants}>
               {/* eslint-disable-next-line @next/next/no-img-element -- static campus asset */}
-              <img className="why-card-img" src={h.image} alt={h.title} loading="lazy" />
+              <img className="why-card-img" src={h.image} alt={h.title} loading="lazy" decoding="async" />
               <div className="why-card-overlay" />
               <div className="why-card-body">
                 <div className="why-icon">

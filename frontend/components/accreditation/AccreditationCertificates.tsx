@@ -107,7 +107,7 @@ export default function AccreditationCertificates({
                 <span className="ac-logo">
                   {logo ? (
                     // eslint-disable-next-line @next/next/no-img-element -- static logo asset
-                    <img src={logo.src} alt={logo.alt} loading="lazy" />
+                    <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" />
                   ) : (
                     <span className="ac-initials">{initials(d.title)}</span>
                   )}

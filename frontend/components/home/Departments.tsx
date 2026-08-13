@@ -178,7 +178,7 @@ export default function Departments() {
               <Link href={dept.link} style={{ textDecoration: "none" }}>
                 <div className="dept-card">
                   <div className="dept-icon">
-                    <img src={dept?.svg} alt={dept?.name} loading="lazy" />
+                    <img src={dept?.svg} alt={dept?.name} loading="lazy" decoding="async" />
                   </div>
                   <div className="dept-content">
                     <div className="dept-name">{dept?.name}</div>

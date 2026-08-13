@@ -8,39 +8,71 @@ import Image from "next/image"
  *  behind it. Kept in this module because the splash owns the moment. */
 export const INTRO_DONE_EVENT = "ksrm:intro-done"
 
+/**
+ * The URL the visitor actually landed on, captured once when this module is
+ * first evaluated. `null` during prerender (there is no window on the server).
+ *
+ * This is what distinguishes "someone just arrived on the homepage" from
+ * "someone clicked Home while browsing" without waiting for an effect to run -
+ * and doing it without an effect is the whole point (see `show` below).
+ */
+const LANDING_PATH = typeof window === "undefined" ? null : window.location.pathname
+
+/** "/about/" -> "/about"; "/" stays "/". The site runs with trailingSlash: true. */
+function normalizePath(p: string): string {
+  return p !== "/" && p.endsWith("/") ? p.slice(0, -1) : p
+}
+
+/** Set once the intro has played, so it never replays within the same session. */
+let introConsumed = false
+
 export default function IntroSplash() {
   const pathname = usePathname()
 
-  // Starts hidden and is switched on after mount, so the server and client
-  // render identical markup (no hydration mismatch) and the page itself paints
-  // immediately rather than behind an overlay.
+  // Rendered from the FIRST paint, not switched on after mount.
   //
-  // Plays only when the site is FIRST opened on "/" - not on every visit to
-  // the homepage. This component lives in the persistent root chrome, so it
-  // survives client-side navigation; keying the effect on the pathname meant
-  // clicking "Home" from another page replayed the whole 4s animation. Running
-  // it once on mount, against the landing route, gives the intended behaviour:
-  // an intro when someone arrives, and never an interruption while they browse.
-  const [show, setShow] = useState(false)
+  // This used to start `false` and flip to `true` in an effect. That is why the
+  // site flashed before the logo: the static HTML contained no overlay, so the
+  // browser painted the whole homepage, and only once React had hydrated did
+  // the splash drop over the top of it. The intro was chasing the page instead
+  // of preceding it.
+  //
+  // Deciding it during render instead means the overlay is in the exported HTML
+  // and covers the page from the very first frame. Both sides agree on the
+  // value, so there is still no hydration mismatch:
+  //   - prerender: LANDING_PATH is null, so it falls back to the route being
+  //     built - true only for out/index.html.
+  //   - hydration: LANDING_PATH is the URL just loaded - true only if that was
+  //     the homepage.
+  // Requiring `pathname === "/"` as well means navigating away hides it, and
+  // `introConsumed` stops it replaying if the visitor comes back to "/".
+  const landedOnHome =
+    LANDING_PATH === null ? pathname === "/" : normalizePath(LANDING_PATH) === "/"
+
+  const [dismissed, setDismissed] = useState(false)
+  const show = landedOnHome && pathname === "/" && !introConsumed && !dismissed
+
+  const close = () => {
+    introConsumed = true
+    setDismissed(true)
+  }
+
   // The clip only starts playing once enough of it is buffered. Until then the
   // overlay would sit blank, which reads as a broken load - so the logo fades
   // in on `canplaythrough` and a quiet spinner covers the wait.
   const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
-    // Landing route only, read once on mount - deliberately NOT re-run when
-    // the pathname changes, so navigating back to "/" never replays it.
-    if (pathname !== "/") return
-    setShow(true)
+    if (!show) return
     // Safety net only - the splash normally closes on the video's `ended`
     // event, so the animation always plays to its natural end. A fixed timer
     // alone cut it off: the clip runs ~4.1s and the timer fired at 2.6s.
     // This just guarantees the overlay can never trap anyone if the video
     // stalls or never fires `ended`.
-    const timer = setTimeout(() => setShow(false), 9000)
+    const timer = setTimeout(close, 9000)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [show])
 
   // Announce the end of the intro so the homepage popup can queue behind it.
   // Only on the true->false transition (the splash actually finishing), plus
@@ -70,11 +102,12 @@ export default function IntroSplash() {
     // splash they've already seen enough of, and if the video ever fails to
     // paint, the visitor isn't stuck staring at a blank screen.
     <div
-      onClick={() => setShow(false)}
+      className="ksrm-intro"
+      onClick={close}
       role="button"
       tabIndex={0}
       aria-label="Skip intro"
-      onKeyDown={() => setShow(false)}
+      onKeyDown={close}
       style={{
         position: "fixed",
         inset: 0,
@@ -83,11 +116,36 @@ export default function IntroSplash() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        opacity: 1,
         pointerEvents: "auto",
         cursor: "pointer",
       }}
     >
+      <style>{`
+        /* The overlay now ships in the static HTML so it precedes the page
+           rather than dropping over it. That makes a CSS-only exit essential:
+           React normally unmounts this on the video's 'ended' event, but if the
+           bundle fails, is blocked, or is simply slow, nothing else would ever
+           remove a full-screen opaque layer. This guarantees it clears itself
+           even with JavaScript entirely disabled - which also means a crawler
+           rendering the page never sees the content covered. */
+        .ksrm-intro { animation: ksrm-intro-out 0s linear 5.2s forwards; }
+        @keyframes ksrm-intro-out {
+          to { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
+
+        /* Fade the logo in when the clip is ready. The delayed keyframe is a
+           floor, not the mechanism: it reveals the video by 1.4s even if
+           hydration is slow and the React 'canplaythrough' handler is not
+           attached yet, so the logo can never sit invisible behind the spinner. */
+        .ksrm-intro-video { opacity: 0; animation: ksrm-intro-in 0.35s ease 1.4s forwards; }
+        .ksrm-intro-video.is-ready { opacity: 1; animation: none; transition: opacity 0.35s ease; }
+        @keyframes ksrm-intro-in { to { opacity: 1; } }
+
+        /* Anyone who has asked for less motion gets the site, not a video. */
+        @media (prefers-reduced-motion: reduce) {
+          .ksrm-intro { display: none; }
+        }
+      `}</style>
       {/* The wrapper sized itself with height:auto while the video asked for
           height:100% of it - a circular constraint, so on a wide desktop the
           video overflowed the box and rendered clipped ("half the logo"). The
@@ -135,21 +193,20 @@ export default function IntroSplash() {
           // metadata-only fetch, which left playback starting late on a cold
           // load - the "video hasn't loaded yet" gap.
           preload="auto"
+          className={`ksrm-intro-video${videoReady ? " is-ready" : ""}`}
           onCanPlayThrough={() => setVideoReady(true)}
           // Close on the clip's own `ended` event so the animation always
           // finishes, whatever its length - a hard-coded timer had to guess,
           // and guessed short. If the file can't load at all, don't sit on a
           // blank overlay waiting for the safety timeout.
-          onEnded={() => setShow(false)}
-          onError={() => setShow(false)}
+          onEnded={close}
+          onError={close}
           style={{
             width: "100%",
             height: "auto",
             maxHeight: "82vh",
             objectFit: "contain",
             display: "block",
-            opacity: videoReady ? 1 : 0,
-            transition: "opacity 0.35s ease",
           }}
         >
           {/* WebM (VP8/VP9 with alpha) carries the background-removed logo, so

@@ -108,7 +108,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
                 <div className="ng-media">
                   {n.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                    <img src={resolveFileUrl(n.imageUrl)} alt={n.title} loading="lazy" onError={(e) => (e.currentTarget.style.display = "none")} />
+                    <img src={resolveFileUrl(n.imageUrl)} alt={n.title} loading="lazy" decoding="async" onError={(e) => (e.currentTarget.style.display = "none")} />
                   ) : n.videoUrl ? (
                     <video src={n.videoUrl} preload="metadata" muted />
                   ) : (
@@ -138,7 +138,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
                 <video src={open.videoUrl} controls autoPlay />
               ) : open.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-                <img src={resolveFileUrl(open.imageUrl)} alt={open.title} loading="lazy" />
+                <img src={resolveFileUrl(open.imageUrl)} alt={open.title} loading="lazy" decoding="async" />
               ) : null}
             </div>
             <div className="ng-modal-body">

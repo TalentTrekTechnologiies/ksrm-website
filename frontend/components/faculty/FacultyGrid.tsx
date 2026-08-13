@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Faculty } from "@/lib/faculty-api"
+import { resolveFileUrl } from "@/lib/api-base"
 import FacultyProfileModal from "@/components/faculty/FacultyProfileModal"
 
 /**
@@ -84,7 +85,20 @@ export default function FacultyGrid({
                 {f.photoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
                   <img
-                    src={f.photoUrl}
+                    // resolveFileUrl, not the raw value. Faculty photos come in
+                    // two shapes: 129 of the 182 records store a Media Library
+                    // path ("/api/media/file/64/ORIGINAL/SOURCE") and 38 store a
+                    // static public/ path ("/faculty/ece/....jpg"). Only the
+                    // second kind works as a bare src, which is why some faculty
+                    // photos appeared and others - including the Examination
+                    // Section - did not.
+                    //
+                    // It looked fine in production by luck: nginx proxies /api
+                    // on the same origin there. In development the site is on
+                    // :3000 and the API on :4000, so every Media Library photo
+                    // 404'd. resolveFileUrl rewrites against the API base and
+                    // leaves absolute and static URLs untouched.
+                    src={resolveFileUrl(f.photoUrl)}
                     alt={f.name}
                     loading="lazy"
                     onError={(e) => {

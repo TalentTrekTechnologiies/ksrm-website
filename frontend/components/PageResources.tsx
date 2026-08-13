@@ -91,31 +91,52 @@ async function fetchSection(
   docsCategory?: DownloadCategory,
   fallback?: { sections?: string[]; titlePattern?: RegExp },
 ): Promise<SectionData> {
+  // Every source below records whether it actually succeeded, rather than
+  // collapsing a failure into an empty array.
+  //
+  // These were all `.catch(() => [])`, which resolves SUCCESSFULLY with
+  // nothing - so useLiveData (which keeps the last good value only when a
+  // fetcher REJECTS) stored the empty result and the section vanished until
+  // the next successful poll. On the Examinations page that showed up as
+  // documents disappearing and coming back on their own.
+  //
+  // A partial failure is still fine: if the gallery call fails but documents
+  // load, the documents render. Only a total failure throws, which makes
+  // useLiveData hold whatever was already on screen.
+  const settled = <T,>(p: Promise<T[]>) =>
+    p.then((v) => ({ ok: true, v }), () => ({ ok: false, v: [] as T[] }))
+
   const [routed, byCategory, fallbackDocs, images, tables] = await Promise.all([
-    getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
+    settled(getDownloadsPublic(undefined, undefined, section)),
     // Category-driven inclusion (e.g. every SYLLABUS doc shows on the
     // Syllabus page regardless of explicit page routing) - matches the
     // natural admin mental model "I set the category, it shows there".
-    docsCategory ? getDownloadsPublic(docsCategory).catch(() => [] as Download[]) : Promise.resolve([] as Download[]),
+    docsCategory ? settled(getDownloadsPublic(docsCategory)) : Promise.resolve({ ok: true, v: [] as Download[] }),
     fallback?.sections?.length
-      ? Promise.all(fallback.sections.map((s) => getDownloadsPublic(undefined, undefined, s).catch(() => [] as Download[]))).then((groups) =>
-          groups.flat().filter((d) => !fallback.titlePattern || fallback.titlePattern.test(d.title)),
+      ? settled(
+          Promise.all(fallback.sections.map((s) => getDownloadsPublic(undefined, undefined, s).catch(() => [] as Download[]))).then((groups) =>
+            groups.flat().filter((d) => !fallback.titlePattern || fallback.titlePattern.test(d.title)),
+          ),
         )
-      : Promise.resolve([] as Download[]),
-    getGalleryPublic(undefined, undefined, section).catch(() => [] as GalleryImage[]),
-    getPageTablesPublic(section).catch(() => [] as PageTable[]),
+      : Promise.resolve({ ok: true, v: [] as Download[] }),
+    settled(getGalleryPublic(undefined, undefined, section)),
+    settled(getPageTablesPublic(section)),
   ])
+
+  if (!routed.ok && !byCategory.ok && !fallbackDocs.ok && !images.ok && !tables.ok) {
+    throw new Error(`page resources unavailable for "${section}"`)
+  }
   // Explicit page routing wins over category inclusion: a doc the admin routed
   // to a specific section (e.g. "examinations.results") must appear only there,
   // not also in a broader block that happens to match its category.
-  const byCategoryUnrouted = byCategory.filter((d) => !d.pageSection || d.pageSection === section)
+  const byCategoryUnrouted = byCategory.v.filter((d) => !d.pageSection || d.pageSection === section)
   // Dedupe by id (same row matched by both routing + category) AND by file URL,
   // so if the same document was accidentally added twice - e.g. once in the
   // global "Add Documents" and once in a department's Documents tab - it still
   // shows only once on the public page.
   const seenId = new Set<number>()
   const seenFile = new Set<string>()
-  const docs = [...routed, ...byCategoryUnrouted, ...fallbackDocs].filter((d) => {
+  const docs = [...routed.v, ...byCategoryUnrouted, ...fallbackDocs.v].filter((d) => {
     if (seenId.has(d.id)) return false
     const fileKey = (d.fileUrl || "").trim().toLowerCase()
     if (fileKey && seenFile.has(fileKey)) return false
@@ -124,9 +145,9 @@ async function fetchSection(
     return true
   })
   // Split video-tagged gallery records out so they render as <video> players.
-  const videos = images.filter((g) => g.category === VIDEO_CATEGORY)
-  const realImages = images.filter((g) => g.category !== VIDEO_CATEGORY)
-  return { docs, images: realImages, videos, tables }
+  const videos = images.v.filter((g) => g.category === VIDEO_CATEGORY)
+  const realImages = images.v.filter((g) => g.category !== VIDEO_CATEGORY)
+  return { docs, images: realImages, videos, tables: tables.v }
 }
 
 const PR_STYLES = `
@@ -145,6 +166,25 @@ const PR_STYLES = `
   .pr-video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #eef0f3; }
   .pr-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .pr-video-cap { font-size: 14px; font-weight: 600; color: #444; margin-top: 8px; text-align: center; }
+  /* Loading placeholder. Height matches a real document row so the layout does
+     not shift when the fetched rows replace it. */
+  .pr-skel-row {
+    height: 64px;
+    border-radius: 10px;
+    border: 1px solid #eef0f3;
+    background: linear-gradient(90deg, #f4f5f8 25%, #eceef3 37%, #f4f5f8 63%);
+    background-size: 400% 100%;
+    animation: pr-skel-shimmer 1.4s ease infinite;
+  }
+  @keyframes pr-skel-shimmer {
+    from { background-position: 100% 50%; }
+    to   { background-position: 0 50%; }
+  }
+  /* A shimmer is decoration, not information - hold it still for anyone who
+     has asked for reduced motion rather than animating a whole page of rows. */
+  @media (prefers-reduced-motion: reduce) {
+    .pr-skel-row { animation: none; }
+  }
   .pr-tile { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #eef0f3; }
   .pr-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
   .pr-tile:hover img { transform: scale(1.06); }
@@ -178,6 +218,87 @@ const PR_STYLES = `
  * collapse to the first `maxVisible` rows behind a "Show all" toggle, so a page
  * cannot grow without bound as more documents are added over the years.
  */
+/**
+ * "Published 13 Aug 2026, 10:45 am" for a document row.
+ *
+ * Date AND time, because several documents are often published in one sitting
+ * and the date alone cannot tell them apart. Rendered from the visitor's
+ * locale; an unparseable value yields no meta line rather than "Invalid Date".
+ */
+function formatPublished(iso: string | null | undefined): string | null {
+  if (!iso) return null
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return null
+  return `Published ${d.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })}, ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`
+}
+
+/**
+ * Placeholder shown while the first fetch is in flight.
+ *
+ * Deliberately mirrors the real document rows (same height, same spacing, same
+ * container) so nothing jumps when the content arrives - the whole point is to
+ * avoid the "empty, then suddenly files" effect, and a skeleton that is the
+ * wrong size just trades one layout shift for another.
+ *
+ * aria-busy + a visually-hidden "Loading" line means a screen reader announces
+ * the wait rather than reading an empty region.
+ */
+function PageResourcesSkeleton({
+  embedded,
+  heading,
+  background,
+  anchorId,
+}: {
+  embedded?: boolean
+  heading?: string
+  background?: string
+  anchorId?: string
+}) {
+  const rows = (
+    <div className={`pr-list${embedded ? " pr-embedded" : ""}`} aria-busy="true" aria-live="polite">
+      <span className="sr-only">Loading documents…</span>
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="pr-skel-row" style={{ animationDelay: `${i * 0.12}s` }} />
+      ))}
+    </div>
+  )
+
+  if (embedded) {
+    return (
+      <>
+        <style>{PR_STYLES}</style>
+        {rows}
+      </>
+    )
+  }
+
+  return (
+    <section id={anchorId} style={{ width: "100%", background, padding: "56px 0" }}>
+      <style>{PR_STYLES}</style>
+      <div className="pr-container">
+        {heading && (
+          <h2
+            style={{
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+              fontWeight: 700,
+              color: "#2B3490",
+              fontFamily: "'Rajdhani', sans-serif",
+              margin: "0 0 28px",
+            }}
+          >
+            {heading}
+          </h2>
+        )}
+        {rows}
+      </div>
+    </section>
+  )
+}
+
 function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: number }) {
   const [expanded, setExpanded] = useState(false)
   const overflowing = group.items.length > maxVisible
@@ -199,6 +320,13 @@ function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: num
           title: d.title,
           description: d.description,
           href: resolveFileUrl(d.fileUrl),
+          // When it was published, on every document row. Nothing on the public
+          // page previously said how old a file was, so a visitor could not
+          // tell this year's timetable from last year's - and the admin had no
+          // confirmation that a fresh upload had actually gone live.
+          // PublicDocumentList already rendered a `meta` line; it was simply
+          // never given one.
+          meta: formatPublished(d.publishedAt),
           actionLabel: "Download",
         }))}
       />
@@ -308,7 +436,19 @@ export default function PageResources({
     [section, docsCategory, fallbackSections, titlePattern],
   )
 
-  if (!data) return null
+  // `data` is null only while the FIRST fetch is in flight - useLiveData keeps
+  // the last good value afterwards. This used to `return null` there, which is
+  // indistinguishable from "this section has nothing in it": the page rendered
+  // its heading over a blank gap, and the documents dropped in a moment later.
+  // On the Examinations page - Latest Notifications, Academic Calendars, Exam
+  // Time Tables - that read as "the files are missing", then they appeared.
+  //
+  // The site is a static export, so this content genuinely cannot exist until
+  // the client fetch resolves. A skeleton is therefore the honest thing to
+  // show: it reserves the space, says "loading" rather than "empty", and keeps
+  // the layout from shifting when the real rows land.
+  if (!data) return <PageResourcesSkeleton embedded={embedded} heading={heading} background={background} anchorId={anchorId} />
+
   const { images, tables } = data
   const videos = hideVideos ? [] : data.videos
   const docs = hideDocs ? [] : data.docs
@@ -402,7 +542,7 @@ export default function PageResources({
               {images.slice(0, 8).map((img) => (
                 <div key={img.id} className="pr-tile">
                   {/* eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL */}
-                  <img src={resolveFileUrl(img.imageUrl)} alt={img.title} loading="lazy" onError={(e) => ((e.currentTarget.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} />
+                  <img src={resolveFileUrl(img.imageUrl)} alt={img.title} loading="lazy" decoding="async" onError={(e) => ((e.currentTarget.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} />
                   <div className="pr-cap"><span>{img.title}</span></div>
                 </div>
               ))}

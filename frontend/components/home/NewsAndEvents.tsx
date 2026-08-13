@@ -260,7 +260,7 @@ export default function NewsAndEvents() {
                       <Link key={`${n.id}-${i}`} href="/news" className={`ne-item${clone ? " ne-clone" : ""}`}>
                         {n.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
-                          <img src={resolveFileUrl(n.imageUrl)} alt="" loading="lazy" className="ne-thumb" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
+                          <img src={resolveFileUrl(n.imageUrl)} alt="" loading="lazy" decoding="async" className="ne-thumb" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
                         ) : (
                           <span className="ne-thumb" aria-hidden />
                         )}
@@ -301,7 +301,7 @@ export default function NewsAndEvents() {
                       <Link key={`${e.id}-${i}`} href="/events" className={`ne-item${clone ? " ne-clone" : ""}`}>
                         {e.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL
-                          <img src={resolveFileUrl(e.imageUrl)} alt="" loading="lazy" className="ne-thumb" onError={(ev) => (ev.currentTarget.style.visibility = "hidden")} />
+                          <img src={resolveFileUrl(e.imageUrl)} alt="" loading="lazy" decoding="async" className="ne-thumb" onError={(ev) => (ev.currentTarget.style.visibility = "hidden")} />
                         ) : (
                           <span className="ne-thumb ne-thumb-date" aria-hidden>
                             <span className="ne-chip-day">{c.day}</span>

@@ -9,6 +9,7 @@ import {
   getFacultyAchievementsPublic,
 } from "@/lib/faculty-achievements-api"
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api"
+import { resolveFileUrl } from "@/lib/api-base"
 
 /**
  * The full profile behind a faculty card's "View Profile".
@@ -202,8 +203,10 @@ export default function FacultyProfileModal({
         <div className="fp-head">
           <div className="fp-photo">
             {showPhoto && faculty.photoUrl ? (
+              // Media Library photos are stored as "/api/media/..." and need
+              // resolving against the API base - see the note in FacultyGrid.
               // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
-              <img src={faculty.photoUrl} alt={faculty.name} loading="lazy" onError={(e) => { e.currentTarget.style.display = "none" }} />
+              <img src={resolveFileUrl(faculty.photoUrl)} alt={faculty.name} loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none" }} />
             ) : (
               <span className="fp-initials">{initials(faculty.name)}</span>
             )}
