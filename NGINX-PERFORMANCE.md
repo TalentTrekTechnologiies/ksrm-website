@@ -83,6 +83,27 @@ requests. Combine them rather than having two — put the `expires` and
 
 ## Combined
 
+> **SUPERSEDED — use [`deploy/nginx-performance.conf`](deploy/nginx-performance.conf).**
+>
+> The block below is kept for context, but do not paste it: the 2026-08
+> performance pass found two defects in it, each of which silently costs more
+> than everything else on this page gains.
+>
+> 1. **JavaScript was never compressed.** `gzip_types` lists
+>    `application/javascript`, but nginx 1.21.1 changed the default MIME type
+>    for `.js` to `text/javascript` — and Ubuntu 22.04/24.04 ship 1.18/1.24.
+>    On the VPS, nothing matched, so every `.js` file went out uncompressed.
+>    Measured: the homepage pulls **~936 KB** of JS, which gzip takes to
+>    **~270 KB**. That is ~660 KB of wasted transfer on every first page view,
+>    and it dwarfs the image savings this document was written for.
+> 2. **JS and CSS were never cached.** The cache block matches only
+>    `(webp|png|jpe?g|svg|woff2|mp4)`. Next.js emits content-hashed bundles
+>    under `/_next/static/` — the textbook case for `immutable` for a year.
+>    Without it, a returning visitor re-downloaded every chunk on every page.
+>
+> The replacement file fixes both, adds an optional Brotli block, and stops
+> `.html` being cached immutably (which would hide new deployments).
+
 ```nginx
 map $http_accept $webp_suffix {
     default  "";
