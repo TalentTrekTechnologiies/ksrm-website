@@ -123,6 +123,34 @@ export interface DownloadInput {
   isActive?: boolean;
 }
 
+/**
+ * Page sections deliberately NOT managed on the Page Content screen.
+ *
+ * The whole Examinations page - its documents AND its wording - is managed in
+ * Admin -> Exam Notifications instead, so an examinations admin has one screen
+ * rather than two.
+ *
+ * Exported because the sidebar and Page Content must agree: the sidebar lists
+ * the pages, Page Content renders them, and when only one of them filtered the
+ * sidebar offered links that opened an empty picker.
+ *
+ * These stay in PAGE_SECTIONS above - Documents, Gallery and the bulk uploader
+ * still need them as routing targets. This governs one screen's page list.
+ */
+export const SECTIONS_MANAGED_ELSEWHERE = new Set([
+  "examinations",
+  "examinations.results",
+  "examinations.notifications",
+  "examinations.timetables",
+  "examinations.calendars",
+  "examinations.rules",
+]);
+
+/** The pages the Page Content screen offers. */
+export const PAGE_CONTENT_SECTIONS = PAGE_SECTIONS.filter(
+  (s) => !SECTIONS_MANAGED_ELSEWHERE.has(s.value),
+);
+
 export function getDownloadsPublic(
   category?: DownloadCategory,
   departmentId?: number,

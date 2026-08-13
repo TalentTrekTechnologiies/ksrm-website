@@ -15,7 +15,7 @@ import {
 } from "lucide-react"
 import { getDashboardOverview } from "@/lib/dashboard-api"
 import { getStoredAdmin, hasPermission, isDepartmentScopedAdmin, allowedPageRoots, pageSectionRoot } from "@/lib/auth"
-import { PAGE_SECTIONS } from "@/lib/downloads-api"
+import { PAGE_CONTENT_SECTIONS } from "@/lib/downloads-api"
 import { widgetIcon } from "@/lib/dashboard-icons"
 import { getDepartmentsAdmin, Department } from "@/lib/departments-api"
 import { Building2 } from "lucide-react"
@@ -54,6 +54,12 @@ interface NavItem {
 // /admin/gallery, /admin/downloads pages still exist (unlinked, reachable
 // via the tree's "All / unassigned records" escape hatch) so a record with
 // no departmentId set is never unmanageable.
+/**
+ * Site-wide content browsers. Every record on the site, not scoped to anything -
+ * so they are hidden from admins whose remit is a single page.
+ */
+const GENERIC_CONTENT_BROWSERS = new Set(["media", "downloads", "gallery"])
+
 const NAV_ITEMS: NavItem[] = [
   { widgetKey: "announcements", label: "Announcements", href: "/admin/announcements" },
   { widgetKey: "media", label: "Media Library", href: "/admin/media" },
@@ -160,14 +166,22 @@ export default function AdminSidebar({
   // own pages rather than all fifty and a string of 403s. Mirrors the backend's
   // PageSectionOwnershipGuard - null means unrestricted, which is what keeps
   // super admins and the college-wide roles seeing everything.
+  const allowedRoots = allowedPageRoots(admin)
+  /**
+   * Holds at least one `pages.*` permission, so their remit is a page (or two)
+   * rather than the whole site. Super admins are never page-scoped -
+   * allowedPageRoots exempts them - so this never hides anything from them.
+   */
+  const isPageScoped = allowedRoots !== null
+
   const sortedPageSections = useMemo(() => {
-    const allowed = allowedPageRoots(admin)
+    const allowed = allowedRoots
     const list =
       allowed === null
-        ? PAGE_SECTIONS
-        : PAGE_SECTIONS.filter((s) => allowed.has(pageSectionRoot(s.value)))
+        ? PAGE_CONTENT_SECTIONS
+        : PAGE_CONTENT_SECTIONS.filter((s) => allowed.has(pageSectionRoot(s.value)))
     return [...list].sort((a, b) => a.label.localeCompare(b.label))
-  }, [admin])
+  }, [allowedRoots])
 
   useEffect(() => {
     let cancelled = false
@@ -426,7 +440,12 @@ export default function AdminSidebar({
           NAAC, ...), mirroring the Departments dropdown above. Picking one
           opens that page's existing uploads plus its add document/image/video
           options. */}
-      {hasPermission(admin, "downloads.view") && !isDeptScoped && (
+      {/* Hidden when the admin owns no page that this screen lists. An
+          Examinations admin is the case that matters: they hold
+          pages.examinations, but the Examinations page moved wholesale into
+          Admin -> Exam Notifications, so this screen has nothing to show them
+          and the link would open an empty picker. */}
+      {hasPermission(admin, "downloads.view") && !isDeptScoped && sortedPageSections.length > 0 && (
         collapsed ? (
           <div onClick={onNavigate}>
             <NavLink
@@ -513,7 +532,16 @@ export default function AdminSidebar({
             departmentScoped - so a scoped admin only ever gets keys for the
             nine modules that are meaningful within a department.
           */}
-          {NAV_ITEMS.filter((item) => visibleKeys.has(item.widgetKey)).map((item) => (
+          {NAV_ITEMS.filter(
+            (item) =>
+              visibleKeys.has(item.widgetKey) &&
+              // A page-scoped admin needs downloads/media/gallery PERMISSIONS -
+              // their own screen uses those APIs to upload and reorder - but not
+              // the college-wide browsers built on them, which list every
+              // record on the site and are not theirs to manage. Their work
+              // happens on their module screen and their own pages.
+              !(isPageScoped && GENERIC_CONTENT_BROWSERS.has(item.widgetKey)),
+          ).map((item) => (
             <NavLink
               key={item.href}
               href={item.href}
