@@ -351,6 +351,21 @@ const ROLES: {
       ...permissionsFor('downloads', 'gallery'),
       'pages.examinations',
       ...MEDIA_UPLOAD,
+      // The Examination Section's own staff - the Controller and the exam
+      // office team - are Faculty rows under a Department of that name, and
+      // are edited on this role's own screen (Exam Notifications ->
+      // Examination Section Staff). Without these the tab called
+      // getDepartmentsAdmin(), got a 403, and reported the department as
+      // MISSING - which it never was.
+      //
+      // departments.view only reads the list; it grants no edit rights over
+      // any department. Assign this admin the "Examination Section"
+      // department as well, and DepartmentOwnershipGuard confines these
+      // faculty writes to that office.
+      'departments.view',
+      'faculty.view',
+      'faculty.create',
+      'faculty.update',
     ],
   },
   {
@@ -381,6 +396,13 @@ const ROLES: {
       ...permissionsFor('downloads', 'gallery'),
       'pages.library',
       ...MEDIA_UPLOAD,
+      // Central Library's staff, same reasoning as the Examination role above:
+      // the librarian and library team are Faculty rows under a Department of
+      // that name, and this role is the one that maintains them.
+      'departments.view',
+      'faculty.view',
+      'faculty.create',
+      'faculty.update',
     ],
   },
   {

@@ -444,11 +444,23 @@ function ExamNotificationsManagerInner() {
  */
 function ExamStaffTab() {
   const [dept, setDept] = useState<{ id: number; name: string } | null | undefined>(undefined)
+  /**
+   * Why the lookup failed, kept apart from the result.
+   *
+   * Every failure used to collapse into `null` and report the department as
+   * MISSING - so an admin without departments.view was told to have the
+   * database reseeded, when the record was there all along and the request had
+   * simply been refused. Two very different problems, two different messages.
+   */
+  const [denied, setDenied] = useState(false)
 
   useEffect(() => {
     getDepartmentsAdmin()
       .then((all) => setDept(all.find((d) => d.slug === "examination-section") ?? null))
-      .catch(() => setDept(null))
+      .catch((err: unknown) => {
+        if (err instanceof ApiError && (err.statusCode === 401 || err.statusCode === 403)) setDenied(true)
+        setDept(null)
+      })
   }, [])
 
   if (dept === undefined) {
@@ -461,8 +473,9 @@ function ExamStaffTab() {
   if (dept === null) {
     return (
       <p className="rounded-xl border border-dashed border-admin-border p-8 text-center text-sm text-slate-500">
-        The &ldquo;Examination Section&rdquo; department record is missing, so its staff cannot be loaded.
-        Ask your technical team to re-run the database seed.
+        {denied
+          ? "Your account cannot view staff records, so this list could not be loaded. Ask a super admin to update your role - it needs the Examination role's faculty permissions."
+          : "The “Examination Section” department record is missing, so its staff cannot be loaded. Ask your technical team to re-run the database seed."}
       </p>
     )
   }
