@@ -496,10 +496,13 @@ function ExamResultsTab() {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm font-semibold text-slate-800">Results &amp; Exam Documents</p>
+        <p className="text-sm font-semibold text-slate-800">Examination Documents</p>
         <p className="text-sm text-slate-500">
-          Upload results, time tables and calendars. Use the group heading for the semester or academic
-          year (e.g. &ldquo;AY 2025-26&rdquo;) - the public page groups documents under it.
+          Every document on the Examinations page is uploaded here - results, time tables, academic
+          calendars, notifications, and <strong>Rules &amp; Regulations</strong> (the student code of
+          conduct). Pick the list it belongs to under &ldquo;Which list on the Examinations
+          page&rdquo; below. Use the group heading for the semester or academic year (e.g.
+          &ldquo;AY 2025-26&rdquo;) - the public page groups documents under it.
         </p>
       </div>
 
@@ -514,6 +517,8 @@ function ExamResultsTab() {
         defaultCategory="QUESTION_PAPER"
         defaultPageSection="examinations.results"
         pageSectionOptions={EXAM_PAGE_SECTIONS}
+        pageSectionLabel="Which list on the Examinations page"
+        pageSectionHelper="Choose Rules & Regulations for the code of conduct; it appears at /examinations#rules."
         onCancel={() => setRefreshKey((k) => k + 1)}
         onDone={(count) => {
           setNotice(`Published ${count} document${count === 1 ? "" : "s"} to the Examinations page.`)

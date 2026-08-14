@@ -54,12 +54,19 @@ export default function BulkDocumentUpload({
   defaultCategory = "OTHER",
   defaultPageSection = "",
   pageSectionOptions,
+  pageSectionLabel = "Show on page",
+  pageSectionHelper,
   departmentId,
   onDone,
   onCancel,
 }: {
   defaultCategory?: DownloadCategory
   defaultPageSection?: string
+  /** Wording for the section picker. "Show on page" is right on the general
+   *  Documents screen; a module that only routes within ONE page (Exam
+   *  Notifications) needs to ask which list, not which page. */
+  pageSectionLabel?: string
+  pageSectionHelper?: string
   /** Restricts the page dropdown - the Examinations tab offers only its own sections. */
   pageSectionOptions?: { value: string; label: string }[]
   departmentId?: number
@@ -187,10 +194,11 @@ export default function BulkDocumentUpload({
           required
         />
         <SelectField
-          label="Show on page"
+          label={pageSectionLabel}
           value={pageSection}
           onChange={setPageSection}
           options={[{ value: "", label: "Not tied to a page" }, ...sections]}
+          helperText={pageSectionHelper}
         />
         <TextField
           label="Group heading (optional)"
