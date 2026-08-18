@@ -103,8 +103,25 @@ export default function Placements() {
    * the animation drives `transform` while a swipe drives `scrollLeft`, so
    * resuming would yank the strip away from wherever the reader had put it.
    */
-  const onStripInteract = (e: React.SyntheticEvent<HTMLDivElement>) => {
-    e.currentTarget.classList.add("manual")
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
+
+  const onStripTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const t = e.touches[0]
+    touchStart.current = t ? { x: t.clientX, y: t.clientY } : null
+  }
+
+  const onStripInteract = (e: React.TouchEvent<HTMLDivElement>) => {
+    const start = touchStart.current
+    const t = e.touches[0]
+    if (!start || !t) return
+    const dx = Math.abs(t.clientX - start.x)
+    const dy = Math.abs(t.clientY - start.y)
+    // Only a predominantly HORIZONTAL drag counts as browsing the strip.
+    // Binding to any touchmove was still too eager: scrolling the page with a
+    // finger over the logos is a vertical gesture, and it was killing the
+    // animation for the rest of the visit. A strip only scrolls sideways, so
+    // the axis tells deliberate browsing apart from passing through.
+    if (dx > 12 && dx > dy) e.currentTarget.classList.add("manual")
   }
 
   // Both strips move at a constant pixels-per-second rate whatever they hold.
@@ -170,6 +187,15 @@ export default function Placements() {
         .photo-track {
           display: flex;
           gap: 16px;
+          /* max-content is load-bearing, not tidiness. The keyframes below
+             translate by -50%, and a percentage translate resolves against the
+             ELEMENT'S OWN width - not its content's. Without this the track is
+             a flex box pinned to the viewport, so -50% meant half a screen
+             (~640px) while --dur was calculated for half the content (~3050px).
+             The strip crawled at a fifth of its intended speed on a laptop and
+             a thirteenth on a phone, which is the "logos scroll very slowly"
+             report. Sized to its content, -50% is exactly one copy again. */
+          width: max-content;
           animation: scroll var(--dur, 30s) linear infinite;
           will-change: transform;
         }
@@ -252,6 +278,15 @@ export default function Placements() {
         .recruiter-track {
           display: flex;
           gap: 20px;
+          /* max-content is load-bearing, not tidiness. The keyframes below
+             translate by -50%, and a percentage translate resolves against the
+             ELEMENT'S OWN width - not its content's. Without this the track is
+             a flex box pinned to the viewport, so -50% meant half a screen
+             (~640px) while --dur was calculated for half the content (~3050px).
+             The strip crawled at a fifth of its intended speed on a laptop and
+             a thirteenth on a phone, which is the "logos scroll very slowly"
+             report. Sized to its content, -50% is exactly one copy again. */
+          width: max-content;
           animation: scroll var(--dur, 30s) linear infinite;
           will-change: transform;
         }
@@ -350,7 +385,13 @@ export default function Placements() {
           .placements-stats { grid-template-columns: 1fr; }
           .stat-box { padding: 28px 20px; }
           .stat-number { font-size: 40px; }
-          .photo-item { width: 100%; height: 200px; }
+          /* A definite width, not 100%. The track is width:max-content, so a
+             percentage width on a flex item inside it resolves against a
+             container that is itself sized from its children - the poster
+             strip kept crawling on a phone (2.9px/s measured) while the logo
+             strip beside it ran correctly. 86vw still shows one poster at a
+             time with the next one peeking in, which is what 100% was for. */
+          .photo-item { width: 86vw; height: 200px; }
           /* Tighten the blue recruiter card so it isn't cramped, and center +
              shrink its text/badge to fit a phone width. */
           .recruiter-section { padding: 32px 0; }
@@ -392,7 +433,7 @@ export default function Placements() {
         {/* PHOTO CAROUSEL */}
         <div className="photo-carousel">
           <div className="carousel-title">2025 Placements</div>
-          <div className="strip-viewport" onTouchMove={onStripInteract}>
+          <div className="strip-viewport" onTouchStart={onStripTouchStart} onTouchMove={onStripInteract}>
             <div ref={photoTrack} className="photo-track" style={{ ["--dur" as string]: `${photoDuration}s` } as React.CSSProperties}>
               {posterStrip.map((poster, i) => (
                 <div key={i} className={`photo-item${i >= posters.length ? " strip-clone" : ""}`}>
@@ -414,7 +455,7 @@ export default function Placements() {
               </div>
             </div>
 
-            <div className="recruiter-carousel strip-viewport" onTouchMove={onStripInteract}>
+            <div className="recruiter-carousel strip-viewport" onTouchStart={onStripTouchStart} onTouchMove={onStripInteract}>
               <div ref={recruiterTrack} className="recruiter-track" style={{ ["--dur" as string]: `${recruiterDuration}s` } as React.CSSProperties}>
                 {[...recruiters, ...recruiters].map((recruiter, i) => {
                   const isClone = i >= recruiters.length;

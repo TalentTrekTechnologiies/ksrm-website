@@ -104,19 +104,20 @@ function useOverflows(itemCount: number) {
 }
 
 /**
- * SWIPING an auto-scrolling list on a phone hands it over permanently: the
- * animation drives `transform` while a swipe drives `scrollTop`, so resuming
- * would drag the list away from wherever the reader had put it.
+ * A vertical list cannot tell "swipe the list" apart from "scroll the page".
  *
- * Bound to touchmove, not touchstart. On touchstart a single tap - including
- * the one that starts an ordinary vertical page scroll while a finger happens
- * to be over the list - stopped the animation for good. That is why News could
- * sit still while Events beside it kept moving: one had been touched.
+ * This used to hand control over to the reader on touchmove, permanently
+ * stopping the animation. On a phone the two boxes are full width and stacked,
+ * so almost any downward swipe past this section passes over one of them - and
+ * from that moment the list never moved again. Measured on the live site: one
+ * ordinary page-scroll gesture set .manual on the News box. That is the whole
+ * of the "news and events are not scrolling on mobile" report.
+ *
+ * The strips in Placements keep their swipe-to-take-over, because a strip only
+ * scrolls sideways and the axis of the drag says which one the reader meant.
+ * Here there is no such signal, so the list simply auto-scrolls, the same as it
+ * does on a laptop, and tapping a headline still opens the article.
  */
-function takeManualControl(e: React.SyntheticEvent<HTMLDivElement>) {
-  e.currentTarget.classList.add("manual")
-}
-
 export default function NewsAndEvents() {
   const state = useLiveData(fetchNewsAndEvents, [])
   // Called before the early return below, so the hook order never changes
@@ -179,37 +180,15 @@ export default function NewsAndEvents() {
           .ne-viewport:hover .ne-track.anim { animation-play-state: paused; }
         }
 
-        /* On a touchscreen the list does not auto-scroll at all: it becomes an
-           ordinary one you swipe.
+        /* No touch override: the list keeps overflow hidden and keeps
+           animating, exactly as it does on a laptop.
 
-           Gating the hover-pause was not enough. The viewport is overflow
-           hidden, so the ONLY thing moving the list was the animation - and a
-           phone stops CSS animations whenever it feels like it: iOS Low Power
-           Mode, Android battery saver, a backgrounded tab. When that happened
-           the list froze with no way to scroll it by hand, which is the
-           "events are not scrolling" report. It was never about how many items
-           there were; it was that the reader had no control.
-
-           A marquee is the wrong thing on a phone regardless - you cannot read
-           a list that moves under your thumb.
-
-           Same rule for anyone who has asked for less motion. The duplicated
-           half is hidden in both cases, since it exists only to make the loop
-           seamless. */
-        /* Touch devices auto-scroll too now, per the college's request, but
-           keep the manual escape hatch that was the reason it was disabled.
-
-           The original failure was not the animation - it was that stopping it
-           left nothing behind: the viewport is overflow hidden, so when a phone
-           throttled the animation the list froze with no way to move it. Both
-           run together now, so a throttled animation degrades to an ordinary
-           scroller. Touching the list hands it over for good (.manual), rather
-           than the animation fighting the reader's thumb for scroll position. */
-        @media (hover: none) {
-          .ne-viewport { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-          .ne-viewport.manual .ne-track.anim { animation: none; }
-          .ne-viewport.manual .ne-clone { display: none; }
-        }
+           It used to switch to overflow-y:auto here so a throttled animation
+           still left something scrollable. That cost more than it bought - a
+           full-width scrollable box swallows the page-scroll gesture, so a
+           visitor could get stuck inside the news list trying to scroll past
+           it. Reduced-motion still gets a hand-scrollable list below, because
+           there the animation is off by request and something has to move. */
 
         /* Reduced motion still gets a plain, unanimated list. */
         @media (prefers-reduced-motion: reduce) {
@@ -276,7 +255,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">Latest News</h3>
                 <Link href="/news" className="ne-box-link">View All News <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls} onTouchMove={takeManualControl}>
+              <div className="ne-viewport" ref={news.viewportRef} data-cloned={newsScrolls}>
                 <div
                   className={`ne-track ${newsScrolls ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${newsDuration}s` } as React.CSSProperties}
@@ -318,7 +297,7 @@ export default function NewsAndEvents() {
                 <h3 className="ne-box-title">{state.eventsAllUpcoming ? "Upcoming Events" : "Events"}</h3>
                 <Link href="/events" className="ne-box-link">View All Events <ArrowRight size={14} /></Link>
               </div>
-              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll} onTouchMove={takeManualControl}>
+              <div className="ne-viewport" ref={events.viewportRef} data-cloned={eventsScroll}>
                 <div
                   className={`ne-track ${eventsScroll ? "anim" : ""}`}
                   style={{ ["--dur" as string]: `${eventsDuration}s` } as React.CSSProperties}
