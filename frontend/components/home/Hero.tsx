@@ -9,7 +9,14 @@ import { getExamNotificationsPublic } from "@/lib/exam-notifications-api"
 import { useLiveData } from "@/lib/use-live-data"
 import { getPublicSiteSettings } from "@/lib/site-settings-api"
 
-const NEW_WINDOW_MS = 3 * 24 * 60 * 60 * 1000
+/**
+ * How long a notice keeps its "NEW" badge, measured from when it was added.
+ *
+ * Raised from 3 days to 10 at the college's request: notices are published in
+ * bursts around results and admissions, and three days meant most had lost the
+ * badge before the students they were aimed at next visited the site.
+ */
+const NEW_WINDOW_MS = 10 * 24 * 60 * 60 * 1000
 
 // The "Latest Updates" panel used to be a separately hand-curated list
 // (HomepageHero.newsTicker) - per explicit direction, it now sources from

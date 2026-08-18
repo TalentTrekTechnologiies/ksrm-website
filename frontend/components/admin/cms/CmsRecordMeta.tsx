@@ -53,3 +53,36 @@ export default function CmsRecordMeta({
     </div>
   )
 }
+
+/**
+ * "Added 14 Aug 2026, 6:20 pm" / "Updated ..." for a row or card in a list.
+ *
+ * The full CmsRecordMeta block only appears once a record is OPEN for editing,
+ * so a list gave no indication of when anything was added - an admin scanning
+ * twenty notices could not tell last week's from this morning's without
+ * opening each one.
+ *
+ * Shows the update time once a record has been edited (updatedAt moves past
+ * createdAt by more than a minute), and the creation time otherwise, so the
+ * single line always answers "when did this last change?".
+ */
+export function CmsListTimestamp({
+  createdAt,
+  updatedAt,
+}: {
+  createdAt?: string | null
+  updatedAt?: string | null
+}) {
+  if (!createdAt && !updatedAt) return null
+  const created = createdAt ? new Date(createdAt) : null
+  const updated = updatedAt ? new Date(updatedAt) : null
+  const edited =
+    created && updated && updated.getTime() - created.getTime() > 60_000
+  const shown = edited ? updated : (created ?? updated)
+  if (!shown || Number.isNaN(shown.getTime())) return null
+  return (
+    <span className="text-[11px] text-slate-400">
+      {edited ? "Updated" : "Added"} {formatDate(shown.toISOString())}
+    </span>
+  )
+}

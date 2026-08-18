@@ -19,9 +19,13 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { GripVertical, Pencil, Trash2, RotateCcw } from "lucide-react"
+import { CmsListTimestamp } from "@/components/admin/cms/CmsRecordMeta"
 
 export interface CmsDragListItem {
   id: number
+  /** Optional: rendered as an "Added/Updated <date>" line beside the row. */
+  createdAt?: string | null
+  updatedAt?: string | null
   /** Optional: some modules (e.g. learning outcomes) have no active/inactive
    *  column, so the "Inactive" badge is simply not shown for them. */
   isActive?: boolean
@@ -78,7 +82,17 @@ function SortableRow<T extends CmsDragListItem>({
         <GripVertical className="h-4 w-4" />
       </span>
 
-      <div className="min-w-0 flex-1">{children}</div>
+      <div className="min-w-0 flex-1">
+        {children}
+        {/* When this row was added or last changed - the full record meta only
+            shows once a record is open for editing, which left a list with no
+            sense of what was recent. */}
+        {(item.createdAt || item.updatedAt) && (
+          <div className="mt-0.5">
+            <CmsListTimestamp createdAt={item.createdAt} updatedAt={item.updatedAt} />
+          </div>
+        )}
+      </div>
 
       {!isDeleted && item.isActive === false && (
         <span className="shrink-0 rounded px-1.5 py-0.5 text-[11px] font-semibold text-amber-700 bg-amber-50">

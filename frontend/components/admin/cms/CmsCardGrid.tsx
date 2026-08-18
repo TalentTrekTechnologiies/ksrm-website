@@ -2,11 +2,15 @@
 
 import { ReactNode } from "react"
 import { Pencil, Trash2, RotateCcw, Inbox } from "lucide-react"
+import { CmsListTimestamp } from "@/components/admin/cms/CmsRecordMeta"
 
 export interface CmsCardGridItem {
   id: number
   isActive: boolean
   deletedAt: string | null
+  /** Optional: rendered as an "Added/Updated <date>" line under each card. */
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 /**
@@ -98,6 +102,14 @@ export default function CmsCardGrid<T extends CmsCardGridItem>({
             )}
 
             <div className="flex-1">{renderCard(item)}</div>
+
+            {/* When this record was added or last changed - so a list can be
+                scanned for recency without opening each card. */}
+            {(item.createdAt || item.updatedAt) && (
+              <div className="px-3 pb-1">
+                <CmsListTimestamp createdAt={item.createdAt} updatedAt={item.updatedAt} />
+              </div>
+            )}
 
             <div className="flex items-center justify-end gap-1 border-t border-admin-border px-2 py-1.5">
               {isDeleted ? (

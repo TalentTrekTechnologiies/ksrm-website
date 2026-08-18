@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Loader2, Plus, AlertTriangle, CheckCircle2 } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
+import { CmsListTimestamp } from "@/components/admin/cms/CmsRecordMeta"
 import MediaField from "@/components/admin/cms/MediaField"
 import FacultyTab from "@/components/admin/departments/FacultyTab"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
@@ -402,7 +403,13 @@ function ExamNotificationsManagerInner() {
                 </div>
               )}
               <div className="mb-2 flex items-center justify-between">
-                <StatusBadge item={item} />
+                <span className="flex items-center gap-2">
+                  <StatusBadge item={item} />
+                  {/* When it was added or last edited - a list of notices is
+                      scanned for recency, and without this every card looked
+                      the same age. */}
+                  <CmsListTimestamp createdAt={item.createdAt} updatedAt={item.updatedAt} />
+                </span>
                 <button
                   type="button"
                   onClick={() => handleTogglePublish(item)}

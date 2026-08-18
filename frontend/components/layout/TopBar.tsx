@@ -44,6 +44,13 @@ export default function TopBar() {
         .topbar-right { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
         .topbar-social { color: #fff; display: flex; align-items: center; transition: color 0.2s; }
         .topbar-social:hover { color: #FFE619; }
+        .topbar-phone { color: #fff; text-decoration: none; transition: color 0.2s; }
+        .topbar-phone:hover { color: #FFE619; }
+        .topbar-label {
+          font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+          color: #FFE619; opacity: 0.9;
+        }
+        .topbar-dean { display: inline-flex; align-items: center; gap: 8px; }
 
         .topbar-codes-viewport { flex: 1; overflow: hidden; min-width: 0; }
         .topbar-codes-track { display: flex; width: max-content; white-space: nowrap; gap: 60px; animation: topbar-scroll 34s linear infinite; }
@@ -57,6 +64,7 @@ export default function TopBar() {
           .topbar-inner { padding: 4px 14px; gap: 8px; }
           .topbar-left { font-size: 11px; gap: 10px; flex-direction: row; align-items: center; }
           .topbar-codes-viewport { display: none; }
+          .topbar-dean { display: none; }
           .topbar-right { gap: 12px; }
         }
         @media (max-width: 380px) {
@@ -67,9 +75,25 @@ export default function TopBar() {
       `}</style>
 
       <div className="topbar-inner" style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(-15px)", transition: "all 0.7s ease" }}>
+        {/*
+          Real tel: links, not plain text. These were <span>s, so on a phone -
+          where most visitors are, and where a college's admissions number
+          matters most - the numbers could be read but not dialled.
+
+          Labelled, because two bare numbers side by side said nothing about
+          who answers them. The Dean's line is hidden on the narrowest screens
+          (see .topbar-dean) rather than wrapping the bar onto two rows.
+        */}
         <div className="topbar-left">
-          <span>📞 +91 8143731980</span>
-          <span>📞 8142838241</span>
+          <span className="topbar-label">Admissions</span>
+          <a href="tel:+918143731980" className="topbar-phone">📞 +91 8143731980</a>
+          <a href="tel:+919948101980" className="topbar-phone">+91 9948101980</a>
+          <span className="topbar-dean">
+            <span className="topbar-label">Contact</span>
+            <a href="tel:+919948201980" className="topbar-phone">
+              Dean S. L. Prathap Reddy +91 9948201980
+            </a>
+          </span>
         </div>
         <div className="topbar-codes-viewport">
           <div className="topbar-codes-track">
