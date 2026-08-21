@@ -5,6 +5,7 @@ import AdmissionsContact from "@/components/admissions/AdmissionsContact";
 import CmsText from "@/components/CmsText";
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { withApprovedBca } from "@/lib/bca-programme";
 
 // Fallback shown until/unless UG programmes are added in the CMS (Departments
 // -> Programmes -> level "UG"), matching the built-in list exactly so nothing
@@ -28,9 +29,11 @@ export default function UGAdmissionsPage() {
     () => getDepartmentProgrammesPublic(undefined, "UG").catch(() => [] as DepartmentProgramme[]),
     [],
   );
+  // Same rule as the Admissions card that links here, so the count on that
+  // card always matches the number of rows in this table.
   const programs =
     cmsUg && cmsUg.length > 0
-      ? cmsUg.map((p) => ({
+      ? withApprovedBca(cmsUg).map((p) => ({
           name: p.name,
           code: p.department?.shortName || p.department?.name || "—",
           intake: p.intake,

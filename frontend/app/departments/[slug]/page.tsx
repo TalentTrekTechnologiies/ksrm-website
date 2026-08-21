@@ -12,7 +12,7 @@ import { hs } from "@/data/departments/hs";
 import { CourseListJsonLd } from "@/components/seo/JsonLd";
 import RouteBreadcrumbs from "@/components/seo/RouteBreadcrumbs";
 import { pageMetadata } from "@/lib/seo";
-import { API_BASE } from "@/lib/api-base";
+import { cmsDepartment, cmsDepartmentSlugs } from "@/lib/departments-build";
 
 // MCA launches as an empty CMS record (per the Department CMS phase decision);
 // DepartmentPage's own client-side fetch fills it in from the backend.
@@ -86,94 +86,43 @@ const DUPLICATE_SLUGS = new Set(["mechanical", "humanities-sciences"]);
  * is where a redirect belongs. The maps below stay so the route still resolves
  * correctly in `next dev`, where redirect() does work.
  */
-export function generateStaticParams() {
-  return Object.keys(departments)
-    .filter((slug) => !DUPLICATE_SLUGS.has(slug))
-    .map((slug) => ({ slug }));
-}
+export async function generateStaticParams() {
+  const inCode = Object.keys(departments).filter((slug) => !DUPLICATE_SLUGS.has(slug));
 
-/** How long the build will wait for the CMS before giving up on overrides. */
-const CMS_LOOKUP_TIMEOUT_MS = 4000;
+  // Everything the CMS has as well, so a department created by an admin gets a
+  // real page on the next build. Without this the page set was whatever this
+  // file happened to list, and a department added in the CMS produced no page
+  // at all - the URL then answered 200 with the homepage, because nginx serves
+  // /index.html for unknown paths. Nothing anywhere said "that page does not
+  // exist"; it simply looked like the CMS had not saved.
+  //
+  // A CMS-only department renders the same empty shell MCA does and fills
+  // itself in from the API client-side, so it needs no content in this file.
+  const fromCms = await cmsDepartmentSlugs();
 
-/**
- * Absolute URL for the build-time CMS lookup.
- *
- * API_BASE is whatever NEXT_PUBLIC_API_URL says, and in production that is the
- * RELATIVE "/api" - correct for the browser, which resolves it against the page
- * it was served from. This code runs in Node during `next build`, where there
- * is no page and therefore no origin, so fetch("/api/departments") throws
- * "Failed to parse URL" and every override was silently skipped on the server.
- *
- * When API_BASE is relative we point at the API on the build machine itself.
- * The VPS runs the backend beside the build (nginx proxies /api to it), so
- * localhost:4000 is the same API the relative path would reach at runtime.
- * Override with BUILD_API_ORIGIN if it lives elsewhere.
- */
-function cmsEndpoint(): string {
-  if (/^https?:\/\//i.test(API_BASE)) return `${API_BASE}/departments`;
-  const origin = (process.env.BUILD_API_ORIGIN ?? "http://localhost:4000").replace(/\/$/, "");
-  return `${origin}${API_BASE}/departments`;
+  return [...new Set([...inCode, ...fromCms])].map((slug) => ({ slug }));
 }
 
 /**
- * The departments as the CMS knows them, fetched ONCE per build.
+ * The department behind a slug: the one written in this file if there is one,
+ * otherwise a shell built from the CMS record.
  *
- * Two things this has to get right, both learned the hard way when the first
- * version of it broke a production build:
- *
- *  1. A TIMEOUT. The original went through apiGet, which calls fetch with no
- *     signal, and a .catch() only fires on rejection - a request that HANGS
- *     never rejects, so each department page sat waiting until Next's own
- *     60-second export limit killed it, three attempts each, and the build
- *     exited. An unreachable API must fail in seconds, not hang.
- *  2. ONE call, not one per page. This runs inside generateMetadata for every
- *     department, so without the shared promise below it was eight identical
- *     requests per build.
- *
- * Returns null on any failure - timeout, network error, non-200, bad JSON - and
- * the page then uses its own hardcoded metadata exactly as it did before. The
- * CMS override is a nice-to-have; it must never be able to fail a build.
+ * A department created in the CMS has no entry above, and both entry points
+ * used to treat that as "no such department" - generateMetadata returned {}
+ * and the page called notFound(). The shell is what MCA already renders:
+ * DepartmentPage matches the slug against the API client-side and fills in the
+ * profile, HoD, faculty, programmes and labs from the CMS, so the only thing
+ * needed here is a correctly-named placeholder to hang that off.
  */
-let cmsDepartmentsPromise: Promise<Map<string, DepartmentRecord>> | null = null;
+async function resolveDepartment(slug: string): Promise<Department | null> {
+  const inCode = (departments as Record<string, Department>)[slug];
+  if (inCode) return inCode;
 
-interface DepartmentRecord {
-  slug: string;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  ogImageUrl?: string | null;
-}
+  const cms = await cmsDepartment(slug);
+  if (!cms || cms.isActive === false) return null;
 
-function loadCmsDepartments(): Promise<Map<string, DepartmentRecord>> {
-  // `force-cache`, NOT `no-store`. Under output: "export" the route is
-  // effectively `dynamic = "error"`, and a no-store fetch marks the render
-  // dynamic - Next then refuses to render it statically and the lookup fails
-  // every time with "couldn't be rendered statically". Caching is right here
-  // anyway: this runs once at build, and the result is baked into the HTML.
-  const endpoint = cmsEndpoint();
-  cmsDepartmentsPromise ??= fetch(endpoint, {
-    signal: AbortSignal.timeout(CMS_LOOKUP_TIMEOUT_MS),
-    cache: "force-cache",
-  })
-    .then((r) => (r.ok ? r.json() : []))
-    .then((list: DepartmentRecord[]) =>
-      new Map((Array.isArray(list) ? list : []).map((d) => [d.slug, d])),
-    )
-    .catch((err: unknown) => {
-      // Logged once, not per page, so a build against an offline API says so
-      // plainly instead of looking like the overrides silently did nothing.
-      // The reason is included: "timed out" and "connection refused" call for
-      // very different fixes, and without it the message is a dead end.
-      console.warn(
-        `[departments] CMS metadata lookup failed - using built-in metadata. ` +
-          `URL: ${endpoint} - ${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}`,
-      );
-      return new Map<string, DepartmentRecord>();
-    });
-  return cmsDepartmentsPromise;
-}
-
-async function cmsDepartment(slug: string): Promise<DepartmentRecord | null> {
-  return (await loadCmsDepartments()).get(slug) ?? null;
+  const name = cms.name?.trim() || slug;
+  return emptyDepartment(slug, name, cms.shortName?.trim() || name);
 }
 
 // Per-department SEO: without this every department page inherited the root
@@ -182,7 +131,7 @@ async function cmsDepartment(slug: string): Promise<DepartmentRecord | null> {
 // department", etc.).
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const department = (departments as Record<string, typeof civil>)[slug];
+  const department = await resolveDepartment(slug);
   if (!department) return {};
 
   const cms = await cmsDepartment(slug);
@@ -225,7 +174,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   // Only reachable in `next dev`; the static export does not build these paths
   // and the edge 301s handle them in production.
   if (CSE_ALIASES.has(slug)) redirect("/departments/cse");
-  const department = (departments as Record<string, typeof civil>)[slug];
+  const department = await resolveDepartment(slug);
   if (!department) return notFound();
 
   return (

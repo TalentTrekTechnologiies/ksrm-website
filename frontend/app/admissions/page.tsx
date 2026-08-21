@@ -4,6 +4,7 @@ import CmsText from "@/components/CmsText";
 import AdmissionsContact from "@/components/admissions/AdmissionsContact";
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { withApprovedBca } from "@/lib/bca-programme";
 ﻿import PageResources from "@/components/PageResources";
 
 const cards = [
@@ -11,7 +12,7 @@ const cards = [
     href: "/admissions/ug",
     level: "UG" as const,
     title: "UG Programs",
-    desc: "B.Tech Undergraduate Programs",
+    desc: "B.Tech and BCA Programs",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2B3490" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 7v14" />
@@ -54,8 +55,12 @@ export default function AdmissionsPage() {
     () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
     [],
   );
+  // withApprovedBca so the UG card counts the approved BCA intake even before
+  // an admin has created its record - the card read "8 programmes - 810 seats"
+  // for a college offering nine. The UG list this card links to applies the
+  // same rule, so the two cannot disagree.
   const tally = (level: "UG" | "PG" | "DIPLOMA") => {
-    const rows = (programmes ?? []).filter((p) => p.level === level);
+    const rows = withApprovedBca(programmes).filter((p) => p.level === level);
     return { programmes: rows.length, seats: rows.reduce((t, p) => t + (p.intake || 0), 0) };
   };
   const counts = { UG: tally("UG"), PG: tally("PG"), DIPLOMA: tally("DIPLOMA") };

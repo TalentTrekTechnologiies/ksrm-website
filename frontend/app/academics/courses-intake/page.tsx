@@ -4,6 +4,7 @@ import PageResources from "@/components/PageResources";
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
+import { isBcaProgramme, BCA_FROM_YEAR } from "@/lib/bca-programme";
 
 const btechRows = [
   { name: "Civil Engineering", code: "CE", intake: 60, nba: true },
@@ -24,6 +25,22 @@ const mtechRows = [
 
 const mbaRows = [
   { name: "Master of Business Administration", code: "MBA", intake: 60, nba: false },
+];
+
+/**
+ * Approved by the college for an intake of 60 from AY 2026-27.
+ *
+ * Unlike the other fallbacks in this file, this one renders even when the CMS
+ * has programmes, because BCA is approved and has to appear on the site now.
+ * The moment an admin adds a BCA programme under Admin -> Academics, the CMS
+ * row takes over and this is not used - so revising the intake stays an admin
+ * edit, exactly like every other programme here.
+ *
+ * No duration or regulation is stated: the college gave the intake and the
+ * academic year, and neither of the others, so neither is shown.
+ */
+const bcaRows = [
+  { name: "Bachelor of Computer Applications", code: "BCA", intake: 60, nba: false },
 ];
 
 const approvals = [
@@ -47,22 +64,42 @@ function AwardIcon() {
  *  revising an intake is an admin edit rather than a code change. */
 
 function CourseTable({
+  id,
   title,
   regulation,
+  note,
   totalIntake,
   rows,
 }: {
+  /** Anchor target, so a menu entry can link straight to one table. */
+  id?: string;
   title: string;
-  regulation: string;
+  /** Omitted for a programme whose regulation code the college has not issued
+   *  yet - the segment is dropped rather than showing a made-up code. */
+  regulation?: string;
+  /** Free line under the title, e.g. when a programme starts. */
+  note?: string;
   totalIntake: number;
   rows: { name: string; code: string; intake: number; nba: boolean }[];
 }) {
   return (
-    <div>
+    // scroll-margin-top keeps the heading clear of the sticky header when the
+    // page is opened at #bca rather than scrolled to.
+    <div id={id} style={id ? { scrollMarginTop: 120 } : undefined}>
       <h3 className="ci-table-title">{title}</h3>
       <p style={{ fontSize: 13, color: "#666", margin: "0 0 16px" }}>
-        Regulation: <strong>{regulation}</strong> | Total Intake:{" "}
-        <strong className="ci-intake-number">{totalIntake} seats</strong>
+        {regulation && (
+          <>
+            Regulation: <strong>{regulation}</strong> |{" "}
+          </>
+        )}
+        Total Intake: <strong className="ci-intake-number">{totalIntake} seats</strong>
+        {note && (
+          <>
+            {" "}
+            | <strong>{note}</strong>
+          </>
+        )}
       </p>
       <div className="ci-table-wrapper">
         <table className="ci-table">
@@ -99,12 +136,24 @@ export default function CoursesIntakePage() {
     [],
   );
 
-  // Group into the three tables the page has always shown. MBA is a PG
-  // programme in the CMS, so it is split out by name rather than by level.
-  const ug = (cmsProgrammes ?? []).filter((p) => p.level === "UG");
+  // Group into the tables the page shows. MBA is a PG programme in the CMS
+  // and BCA a UG one, so both are split out of their level by name.
+  //
+  // The word boundaries here are a real backslash followed by b. They were
+  // literal 0x08 backspace characters - which is what that escape means to a
+  // string, but not to a regex - so the MBA test matched nothing: the MBA
+  // table never rendered at all and MBA was listed under "M.Tech (2 Years)"
+  // on the live site. Written by an editing script that unescaped them.
+  const isBca = isBcaProgramme;
+  const isMba = (p: DepartmentProgramme) => /\bMBA\b/i.test(p.name);
+
+  const ugAll = (cmsProgrammes ?? []).filter((p) => p.level === "UG");
+  // Kept out of the B.Tech table, and out of its intake total.
+  const ug = ugAll.filter((p) => !isBca(p));
+  const bca = ugAll.filter(isBca);
   const pgAll = (cmsProgrammes ?? []).filter((p) => p.level === "PG");
-  const mba = pgAll.filter((p) => /MBA/i.test(p.name));
-  const mtech = pgAll.filter((p) => !/MBA/i.test(p.name));
+  const mba = pgAll.filter(isMba);
+  const mtech = pgAll.filter((p) => !isMba(p));
 
   const toRows = (list: DepartmentProgramme[]) =>
     list.map((p) => ({
@@ -377,6 +426,15 @@ export default function CoursesIntakePage() {
                 {ug.length > 0 && <CourseTable title="B.Tech (4 Years)" regulation="R23UG" totalIntake={sum(ug)} rows={toRows(ug)} />}
                 {mtech.length > 0 && <CourseTable title="M.Tech (2 Years)" regulation="R22PG" totalIntake={sum(mtech)} rows={toRows(mtech)} />}
                 {mba.length > 0 && <CourseTable title="MBA (2 Years)" regulation="R25" totalIntake={sum(mba)} rows={toRows(mba)} />}
+                {/* Falls back to the approved intake until an admin adds the
+                    programme in the CMS - see bcaRows. */}
+                <CourseTable
+                  id="bca"
+                  title="BCA"
+                  note={BCA_FROM_YEAR}
+                  totalIntake={bca.length > 0 ? sum(bca) : 60}
+                  rows={bca.length > 0 ? toRows(bca) : bcaRows}
+                />
               </>
             ) : (
               /* Only while the CMS has no programmes at all, or the API is
@@ -385,6 +443,7 @@ export default function CoursesIntakePage() {
                 <CourseTable title="B.Tech (4 Years)" regulation="R23UG" totalIntake={600} rows={btechRows} />
                 <CourseTable title="M.Tech (2 Years)" regulation="R22PG" totalIntake={54} rows={mtechRows} />
                 <CourseTable title="MBA (2 Years)" regulation="R25" totalIntake={60} rows={mbaRows} />
+                <CourseTable id="bca" title="BCA" note={BCA_FROM_YEAR} totalIntake={60} rows={bcaRows} />
               </>
             )}
           </div>

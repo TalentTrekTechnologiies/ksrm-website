@@ -1,10 +1,12 @@
 "use client"
 
 import { mediaFile } from "@/lib/api-base";
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, useMemo } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronDown, Send } from "lucide-react"
+import { getDepartmentsPublic, isAcademicDepartment } from "@/lib/departments-api"
+import { useLiveData } from "@/lib/use-live-data"
 
 const socialLinks = [
   { Icon: "f", href: "https://facebook.com/ksrmceofficial", label: "Facebook" },
@@ -88,6 +90,10 @@ const navItems: NavItem[] = [
     href: "/academics",
     children: [
       { label: "Courses & Intake", href: "/academics/courses-intake" },
+      // Approved for an intake of 60 from AY 2026-27. It points at the BCA
+      // table on Courses & Intake rather than a page of its own, which is
+      // where the programme's seats and details actually live.
+      { label: "BCA", href: "/academics/courses-intake#bca" },
       { label: "Academic Calendar", href: "/academics/academic-calendar" },
       { label: "Syllabus", href: "/academics/syllabus" },
       { label: "Regulations", href: "/academics/regulations" },
@@ -225,6 +231,31 @@ const navItems: NavItem[] = [
 ]
 
 export default function Navbar() {
+  // The Departments sub-menu is built from the CMS, not from the list above.
+  //
+  // It used to be a hardcoded array of seven links, so a department created in
+  // the CMS never appeared in the menu however correctly it had been set up -
+  // there was no error to find, because nothing was wrong: the menu simply did
+  // not read from the place the department had been created. This picks new
+  // departments up at page load, with no rebuild.
+  //
+  // useLiveData keeps the last good value on a failed refresh, and the
+  // hardcoded children stay as the fallback, so a CMS outage leaves the menu
+  // exactly as it is today rather than empty.
+  const liveDepartments = useLiveData(
+    () => getDepartmentsPublic().then((all) => all.filter((d) => d.isActive && isAcademicDepartment(d))),
+    [],
+  )
+
+  const items = useMemo(() => {
+    if (!liveDepartments?.length) return navItems
+    const children = liveDepartments.map((d) => ({
+      label: d.name,
+      href: `/departments/${d.slug}`,
+    }))
+    return navItems.map((item) => (item.label === "Departments" ? { ...item, children } : item))
+  }, [liveDepartments])
+
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hoveredDropdown, setHoveredDropdown] = useState<string | null>(null)
   const [dropdownPos, setDropdownPos] = useState<{ left: number; top: number } | null>(null)
@@ -351,7 +382,7 @@ export default function Navbar() {
             scrollBehavior: "smooth",
           }}
         >
-          {navItems.map((item) => {
+          {items.map((item) => {
             const active = isActive(item.href)
             const hasChildren = !!(item.children && item.children.length > 0)
             const isOpen = hoveredDropdown === item.label
@@ -545,7 +576,7 @@ export default function Navbar() {
           maxHeight: "75vh",
           overflowY: "auto",
         }}>
-          {navItems.map((item) => {
+          {items.map((item) => {
             const hasChildren = !!(item.children && item.children.length > 0)
             const isExpanded = expandedMobile === item.label
             const active = isActive(item.href)

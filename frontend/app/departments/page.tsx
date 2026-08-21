@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
+import ExtraDepartmentCards from "@/components/departments/ExtraDepartmentCards";
 import { pageMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = pageMetadata({
@@ -25,6 +26,18 @@ const DEPARTMENTS = [
   { slug: "mech", name: "Mechanical Engineering", short: "ME", blurb: "Design, thermal, manufacturing and CAD/CAM." },
   { slug: "mba", name: "Management Studies", short: "MBA", blurb: "Business administration, finance, marketing and HR." },
   { slug: "hs", name: "Humanities & Sciences", short: "H&S", blurb: "Mathematics, physics, chemistry and communication skills." },
+];
+
+/**
+ * Slugs the curated list above already covers, alias forms included - the CMS
+ * calls Mechanical "mechanical" while this page links to "mech", and without
+ * both spellings it would be listed twice.
+ */
+const KNOWN_SLUGS = [
+  ...DEPARTMENTS.map((d) => d.slug),
+  "mechanical",
+  "humanities-sciences",
+  "mca",
 ];
 
 export default function DepartmentsIndexPage() {
@@ -61,6 +74,8 @@ export default function DepartmentsIndexPage() {
                 <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>View department →</span>
               </Link>
             ))}
+            {/* Departments added in the CMS since this list was written. */}
+            <ExtraDepartmentCards knownSlugs={KNOWN_SLUGS} />
           </div>
         </div>
       </section>

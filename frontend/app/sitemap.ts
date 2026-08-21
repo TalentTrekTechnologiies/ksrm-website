@@ -3,6 +3,7 @@ import { readdirSync, statSync } from "node:fs"
 import { join } from "node:path"
 import { LEADERSHIP } from "@/data/leadership"
 import { absoluteUrl } from "@/lib/seo"
+import { cmsDepartmentSlugs } from "@/lib/departments-build"
 
 /**
  * Generated into out/sitemap.xml at build.
@@ -124,16 +125,20 @@ function changeFrequencyFor(path: string): "daily" | "weekly" | "monthly" | "yea
   return "monthly"
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
   const staticRoutes = discoverStaticRoutes().filter(
     (r) => !EXCLUDED_PREFIXES.some((ex) => r === ex || r.startsWith(`${ex}/`))
   )
 
-  const departmentRoutes = CANONICAL_DEPARTMENT_SLUGS.filter((s) => !DEPARTMENT_ALIASES.has(s)).map(
-    (s) => `/departments/${s}`
-  )
+  // The same two sources the department route builds from, so a department
+  // cannot get a page but be left out of the sitemap. Departments created in
+  // the CMS used to be missing from both.
+  const departmentSlugs = new Set([...CANONICAL_DEPARTMENT_SLUGS, ...(await cmsDepartmentSlugs())])
+  const departmentRoutes = [...departmentSlugs]
+    .filter((s) => !DEPARTMENT_ALIASES.has(s))
+    .map((s) => `/departments/${s}`)
 
   // Driven by the same data the pages are, so a new leader is never left out -
   // which is exactly how /about/finance-officer went missing before.
