@@ -495,7 +495,13 @@ export default function Navbar() {
 
       {/* Dropdown menu — fixed-position so it escapes the scroll row's clip */}
       {(() => {
-        const item = navItems.find((i) => i.label === hoveredDropdown && i.children && i.children.length)
+        // `items`, NOT navItems. The desktop panel is rendered here, apart
+        // from the row that triggers it, and it was looking the entry up in
+        // the hardcoded array - so the CMS-driven Departments list reached the
+        // mobile drawer (which maps `items`) but never this panel. On a laptop
+        // the menu simply did not change, which is how a department created in
+        // the CMS still appeared to be missing after a correct deploy.
+        const item = items.find((i) => i.label === hoveredDropdown && i.children && i.children.length)
         if (!item || !dropdownPos) return null
         return (
           <div
