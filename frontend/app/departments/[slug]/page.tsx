@@ -27,7 +27,11 @@ function emptyDepartment(slug: string, name: string, shortName: string): Departm
     name,
     shortName,
     tagline: "",
-    about: "Department content is being populated by the administration.",
+    // Names the department rather than being the same sentence everywhere.
+    // Two empty shells shared one description word for word, which the SEO
+    // audit reports as duplicate meta descriptions - and it is, since the
+    // description falls back to this text when no CMS override is set.
+    about: `${name} at K.S.R.M. College of Engineering, Kadapa. Department content is being populated by the administration.`,
     vision: "",
     mission: [],
     peos: [],

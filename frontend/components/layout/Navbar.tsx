@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"
 import { ChevronDown, Send } from "lucide-react"
 import { getDepartmentsPublic, isAcademicDepartment } from "@/lib/departments-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { canonicalDepartmentSlug } from "@/lib/department-slugs"
 
 const socialLinks = [
   { Icon: "f", href: "https://facebook.com/ksrmceofficial", label: "Facebook" },
@@ -253,7 +254,9 @@ export default function Navbar() {
     if (!liveDepartments?.length) return navItems
     const children = liveDepartments.map((d) => ({
       label: d.name,
-      href: `/departments/${d.slug}`,
+      // The CMS slug is not always the published URL - "mechanical" is only
+      // ever built as "mech". Linking the raw slug opened the homepage.
+      href: `/departments/${canonicalDepartmentSlug(d.slug)}`,
     }))
     return navItems.map((item) => (item.label === "Departments" ? { ...item, children } : item))
   }, [liveDepartments])

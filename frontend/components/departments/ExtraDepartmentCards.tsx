@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { getDepartmentsPublic, isAcademicDepartment } from "@/lib/departments-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { canonicalDepartmentSlug } from "@/lib/department-slugs"
 
 /**
  * Cards for departments the index page's own list does not name.
@@ -26,8 +27,13 @@ export default function ExtraDepartmentCards({ knownSlugs }: { knownSlugs: strin
   const extras = useLiveData(
     () =>
       getDepartmentsPublic().then((all) =>
+        // Compared on the published slug, so the CMS's "mechanical" is
+        // recognised as the curated "mech" card and not added a second time.
         all.filter(
-          (d) => d.isActive && isAcademicDepartment(d) && !known.has(d.slug.trim().toLowerCase()),
+          (d) =>
+            d.isActive &&
+            isAcademicDepartment(d) &&
+            !known.has(canonicalDepartmentSlug(d.slug).toLowerCase()),
         ),
       ),
     // knownSlugs is a literal defined at module scope in the parent, so the
@@ -40,7 +46,7 @@ export default function ExtraDepartmentCards({ knownSlugs }: { knownSlugs: strin
   return (
     <>
       {extras.map((d) => (
-        <Link key={d.slug} href={`/departments/${d.slug}`} className="dh-card">
+        <Link key={d.slug} href={`/departments/${canonicalDepartmentSlug(d.slug)}`} className="dh-card">
           {d.shortName && (
             <span
               style={{
