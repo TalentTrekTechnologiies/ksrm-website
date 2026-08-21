@@ -89,11 +89,13 @@ const navItems: NavItem[] = [
     label: "Academics",
     href: "/academics",
     children: [
+      // No entry for an individual programme here. BCA briefly had one, which
+      // was inconsistent: every other programme the college offers - B.Tech,
+      // M.Tech, MBA, Diploma - is reached through Courses & Intake, and the
+      // department itself belongs in the Departments menu, where it is listed
+      // under its full name from the CMS. This menu is page-level sections of
+      // academic administration, not a programme list.
       { label: "Courses & Intake", href: "/academics/courses-intake" },
-      // Approved for an intake of 60 from AY 2026-27. It points at the BCA
-      // table on Courses & Intake rather than a page of its own, which is
-      // where the programme's seats and details actually live.
-      { label: "BCA", href: "/academics/courses-intake#bca" },
       { label: "Academic Calendar", href: "/academics/academic-calendar" },
       { label: "Syllabus", href: "/academics/syllabus" },
       { label: "Regulations", href: "/academics/regulations" },
