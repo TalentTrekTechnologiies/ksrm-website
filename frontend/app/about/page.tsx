@@ -7,9 +7,36 @@ import Link from "next/link"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { LEADERSHIP } from "@/data/leadership"
+
 import CmsText from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
 import GoverningBody from "@/components/about/GoverningBody";
+
+/**
+ * Finance Officer is hidden from the public listing at the college's request.
+ * The profile page itself is untouched - it is simply not linked from here.
+ */
+const visibleLeaders = LEADERSHIP.filter((leader) => leader.slug !== "finance-officer")
+
+/**
+ * How many columns to lay `count` cards out in, given the most the width can
+ * take.
+ *
+ * Prefers a column count that divides the cards evenly, so the last row is
+ * never a single stranded card with empty cells beside it. Four leaders in
+ * three columns is 3 + 1; in two columns it is a tidy 2 + 2.
+ *
+ * Falls back to the widest fit when nothing divides evenly - five cards in
+ * three columns is 3 + 2, which is balanced enough - so this can only improve
+ * on a fixed number, never make the row narrower for no reason.
+ */
+function leadershipColumns(count: number, max: number): number {
+  const widest = Math.min(count, max)
+  for (let cols = widest; cols >= 2; cols--) {
+    if (count % cols === 0) return cols
+  }
+  return Math.max(1, widest)
+}
 
 /** Group headings the About page's document sections are stored under, so an
  *  admin can add/remove documents in Page Content -> About and have them land
@@ -136,7 +163,7 @@ export default function About() {
 
         .k-leadership { background: #F4F3EF; }
         /* Five cards. Four columns stranded the fifth alone on a second row. */
-        .k-leadership-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; align-items: stretch; }
+        .k-leadership-grid { display: grid; grid-template-columns: repeat(var(--leader-cols, 5), 1fr); gap: 24px; align-items: stretch; }
         /* The cards used to be whatever height their bio made them, so the
            "View Profile" buttons sat at four different heights. The link is a
            flex item filling its grid cell, the card fills the link, and the
@@ -192,10 +219,16 @@ export default function About() {
         .k-social-btn { display: inline-block; padding: 8px 14px; background: #2B3490; color: white; border-radius: 4px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
         .k-social-btn:hover { background: #D4A500; color: #2B3490; }
 
-        /* Five across needs the room; below it the cards get too narrow to
-           read, so drop to three before the 1024 rule takes over at two. */
-        @media (max-width: 1440px) {
-          .k-leadership-grid { grid-template-columns: repeat(3, 1fr); }
+        /* Below the widest layout the cards get too narrow to read, so the
+           count drops - again rounded to something that divides the cards
+           evenly rather than stranding one on its own.
+
+           1100px, not 1440px: four cards still have ~330px each at 1440, which
+           reads perfectly well, and dropping to two that early left two very
+           wide cards per row with a lot of air in them. The old 1440 breakpoint
+           was sized for five across, which does need the room. */
+        @media (max-width: 1100px) {
+          .k-leadership-grid { grid-template-columns: repeat(var(--leader-cols-md, 3), 1fr); }
         }
         @media (max-width: 1024px) {
           .k-stats-grid { grid-template-columns: repeat(3, 1fr); }
@@ -340,11 +373,22 @@ export default function About() {
       <section className="k-section k-leadership" id="leadership">
         <div className="k-container">
           <h2><CmsText section="about" slot="leadership" /></h2>
-          <div className="k-leadership-grid">
-            {/* Finance Officer hidden from public listing at the college's
-                request - the profile page itself is untouched (not deleted),
-                just not linked from here. */}
-            {LEADERSHIP.filter((leader) => leader.slug !== "finance-officer").map((leader, i) => (
+          {/* Column counts come from how many leaders are actually shown - see
+              leadershipColumns. The grid was fixed at five across, from when
+              five were listed; with the Finance Officer hidden there are four,
+              so a fifth column sat permanently empty on a wide screen, and at
+              1440px and below the three-column rule left the Principal alone
+              on a row with two empty cells beside him. */}
+          <div
+            className="k-leadership-grid"
+            style={
+              {
+                "--leader-cols": leadershipColumns(visibleLeaders.length, 5),
+                "--leader-cols-md": leadershipColumns(visibleLeaders.length, 3),
+              } as React.CSSProperties
+            }
+          >
+            {visibleLeaders.map((leader, i) => (
               <Link key={i} href={`/about/${leader.slug}`} className="k-leader-link">
                 <div className="k-leadership-card" style={{ cursor: "pointer" }}>
                   <img src={leader.photo} alt={leader.name} className="k-leader-photo" loading="lazy" decoding="async" />
