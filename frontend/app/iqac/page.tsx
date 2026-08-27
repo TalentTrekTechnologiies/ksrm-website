@@ -81,7 +81,29 @@ const compositionGroups: Record<number, string> = {
   27: "IQAC Core Team",
 };
 
-const minutesYears = ["2022-23", "2021-22", "2020-21", "2019-20", "2018-19", "2017-18", "2016-17", "2015-16", "2014-15", "2013-14"];
+/**
+ * Where the minutes actually are, as opposed to where they belong.
+ *
+ * Nothing has ever been filed under "iqac.minutes" - the migration brought the
+ * PDFs across but not the page section they belong to, so the IQAC MOM papers
+ * sit under "naac" and the committee minutes under "iqac.aqar" and "iqac".
+ * The section therefore rendered empty under ten year buttons that did not
+ * open, which is what "the minutes are not opening" was.
+ *
+ * Same mechanism the Examinations page uses for the same reason: scan the
+ * broad sections documents were bulk-uploaded to, and keep the ones whose
+ * title says what they are. Re-filing them in the CMS makes this redundant,
+ * and nothing here breaks when that happens - a document filed correctly is
+ * found by the section, not the fallback.
+ */
+const MINUTES_FALLBACK_SECTIONS = ["iqac", "iqac.aqar", "naac"];
+
+/**
+ * Deliberately "minutes" and not "minute": a NAAC document titled "1 One
+ * minute talk" is not a set of minutes. mom likewise avoids matching
+ * "moment" or a word ending in "mom".
+ */
+const MINUTES_TITLE = "minutes|\\bmom\\b|agenda";
 
 const aqarReports = [
   { label: "2021-2022", href: mediaFile(229) },
@@ -178,11 +200,6 @@ export default function IQACPage() {
         }
         @media (max-width: 640px) { .iqac-table th, .iqac-table td { padding: 10px 12px; font-size: 13px; } }
 
-        .iqac-minutes-btn {
-          background: #f4f3ef; padding: 16px 20px; width: 100%; text-align: left; font-weight: 700;
-          color: #2B3490; font-size: 17px; cursor: pointer; border: none; border-bottom: 1px solid #e5e7eb;
-          display: flex; justify-content: space-between; align-items: center;
-        }
         .iqac-doc-link {
           background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; display: flex;
           align-items: center; gap: 16px; text-decoration: none; transition: all 0.2s;
@@ -328,16 +345,21 @@ export default function IQACPage() {
       <section id="minutes" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="minutes-of-meeting" /></h2>
-          <div style={{ maxWidth: 800, margin: "0 auto" }}>
-            {minutesYears.map((y) => (
-              <div key={y} style={{ marginBottom: 8 }}>
-                <button className="iqac-minutes-btn">{y}<span style={{ fontSize: 12 }}>v</span></button>
-              </div>
-            ))}
-          </div>
+          {/* The ten year buttons that used to be here rendered a chevron and
+              did nothing at all - no handler, no panel, no documents behind
+              them. They were a mock-up of an accordion, so every visitor who
+              clicked a year got no response and concluded the minutes were
+              broken. Real documents replace them; PageResources already groups
+              by the document's group label, so a year heading comes from the
+              upload rather than from a list hardcoded here that stopped at
+              2022-23 regardless of what had been published since. */}
+          <PageResources
+            section="iqac.minutes"
+            fallbackSections={MINUTES_FALLBACK_SECTIONS}
+            fallbackTitlePattern={MINUTES_TITLE}
+            emptyText="Minutes of IQAC meetings will be published here."
+          />
         </div>
-          {/* Anything uploaded to "IQAC -> Minutes" in Documents. */}
-          <PageResources section="iqac.minutes" embedded />
       </section>
 
       {/* AQAR */}
