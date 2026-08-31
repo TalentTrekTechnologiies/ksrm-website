@@ -47,6 +47,9 @@ const RULES = [
   ["link to their media server", /\/api\/media\/file\//i],
   ["Indian mobile number", /(?<!\d)(?:\+?91[- ]?)?[6-9]\d{4}[- ]?\d{5}(?!\d)/],
   ["their email", /ksrmcengg@|@ksrmce/i],
+  // The campus coordinates. Identify the institution as surely as its name
+  // does, and sit inside a maps embed where no name-based rule looks.
+  ["campus coordinates", /14[.]477[0-9]*|78[.]764[0-9]*/],
   ["named person from the college", /rajeswari|madan\s*mohan|chandra\s*obul|nageswara|prathap\s+reddy/i],
 ];
 

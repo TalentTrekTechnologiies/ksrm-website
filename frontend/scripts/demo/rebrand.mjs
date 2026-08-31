@@ -51,6 +51,14 @@ const REPLACEMENTS = [
   [/\+?91[-\s]?9000073434/g, "+91 90000 00000"],
   [/kandula/gi, "Demo"],
   [/jntua/gi, "State Technical University"],
+  // The campus map. The embed carries the college's real coordinates
+  // (!2d<lon>!3d<lat>), so anyone who opened it - or read the page source -
+  // found the actual institution, whatever the page called itself. Moved to
+  // a neutral point; the embed URL keeps its shape, so the map still loads.
+  [new RegExp("!2d[0-9.]+!3d[0-9.]+", "g"), "!2d77.5946!3d12.9716"],
+  // Any other coordinate pair that survives in a maps link.
+  [new RegExp("(maps[^\"]{0,40}?)14[.]47[0-9]*[,!]-?78[.]7[0-9]*", "g"), "$1" + "12.9716,77.5946"],
+
   // Anchor fragments show up in the address bar when a menu item is
   // clicked, so "#about-ksrmce" is user-visible in a way a CMS slot id is
   // not. Replaced on both sides - the link and the section id - so the
