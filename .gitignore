@@ -92,3 +92,7 @@ uploaded-calendars/
 
 # Unscrubbed recording behind the client specimen - never committed.
 scratchpad/demo-raw.json
+
+# The built specimen - regenerate with `npm run demo`, never committed.
+frontend/demo-out/
+ksrmce-specimen.zip

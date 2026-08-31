@@ -17,6 +17,8 @@
  * has to run both on a developer's laptop and on a Linux build machine.
  */
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 const env = {
   ...process.env,
