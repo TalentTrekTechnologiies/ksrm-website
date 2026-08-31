@@ -51,6 +51,11 @@ const REPLACEMENTS = [
   [/\+?91[-\s]?9000073434/g, "+91 90000 00000"],
   [/kandula/gi, "Demo"],
   [/jntua/gi, "State Technical University"],
+  // Anchor fragments show up in the address bar when a menu item is
+  // clicked, so "#about-ksrmce" is user-visible in a way a CMS slot id is
+  // not. Replaced on both sides - the link and the section id - so the
+  // jump still lands.
+  [/about-ksrmce/gi, "about-talent-trek"],
 
   // Social links. There are two sets in the codebase - the navbar's
   // "ksrmceofficial" handles and a footer set on plain "ksrmce" - and both
@@ -87,6 +92,31 @@ function main() {
     console.error("No out/ directory - run a build first.");
     process.exit(1);
   }
+
+  // The five leaders are written into data/leadership.ts, not fetched, so the
+  // API scrub never saw them: their names sat in page titles, breadcrumbs and
+  // structured data on their own profile pages, and their PHOTOGRAPHS shipped
+  // as files. Names are read from the source of truth rather than listed here,
+  // so a sixth leader added later cannot be missed.
+  const leadershipSrc = fs.readFileSync(path.join(process.cwd(), "data", "leadership.ts"), "utf-8");
+  const realNames = [...leadershipSrc.matchAll(/name:\s*"([^"]+)"/g)].map((m) => m[1]);
+  // Regex-escaping built from a runtime backslash: a literal one here has been
+  // silently eaten by an editing shell more than once in this file.
+  const BS = String.fromCharCode(92);
+  const escapeRe = (t) => [...t].map((c) => (/[A-Za-z0-9 ]/.test(c) ? c : BS + c)).join("");
+  const FAKE = ["Dr. Anand Rao", "Sri B. Demo Kumar", "Dr. Chetan Iyer", "Dr. Divya Menon",
+                "Sri E. Sample Reddy", "Dr. Farah Nair", "Dr. Girish Patel"];
+  realNames.forEach((real, i) => {
+    // Longest first, so "Dr. T. Nageswara Prasad" is replaced before a rule
+    // that would only catch "Nageswara Prasad" leaves the honorific behind.
+    REPLACEMENTS.push([new RegExp(escapeRe(real), "g"), FAKE[i % FAKE.length]]);
+    const bare = real.replace(new RegExp("^(Sri|Smt|Dr|Prof)[.]?[ ]+", "i"), "");
+    if (bare !== real) REPLACEMENTS.push([new RegExp(escapeRe(bare), "g"), FAKE[i % FAKE.length]]);
+  });
+
+  // Links to the college's media server written straight into components -
+  // 55 mediaFile(n) calls across the pages - which no API scrub can reach.
+  REPLACEMENTS.push([new RegExp("/api/media/file/[" + BS + "w/-]*", "g"), "/demo/sample.pdf"]);
 
   let filesChanged = 0;
   let replacements = 0;
@@ -125,6 +155,54 @@ function main() {
   // the agency logo in demo mode instead, so the file is simply removed.
   const clip = path.join(OUT, "ksrm-logo.webm");
   if (fs.existsSync(clip)) { fs.unlinkSync(clip); console.log("  removed /ksrm-logo.webm"); }
+
+  // Real documents. Every download link in the specimen already points at
+  // /demo/sample.pdf, so the college's own PDFs sit in the bundle referenced by
+  // nothing - 47 MB of their prospectuses and brochures, one of them with their
+  // name in the filename. Text scans never looked at these: a binary's contents
+  // are not searched, and neither was any filename.
+  let removedDocs = 0, freedBytes = 0;
+  walk(OUT, (file) => {
+    if (!/\.(pdf|docx?|xlsx?|pptx?)$/i.test(file)) return;
+    if (file.includes(`${path.sep}demo${path.sep}`)) return;   // our own sample.pdf
+    freedBytes += fs.statSync(file).size;
+    fs.unlinkSync(file);
+    removedDocs++;
+  });
+
+  // Anything still NAMED after the college, contents aside.
+  let renamed = 0;
+  const identifying = /ksrm|kadapa|kandula/i;
+  walk(OUT, (file) => {
+    const base = path.basename(file);
+    if (!identifying.test(base)) return;
+    const clean = base.replace(/ksrmce?/gi, "demo").replace(/kadapa/gi, "springfield").replace(/kandula/gi, "demo");
+    const dest = path.join(path.dirname(file), clean);
+    fs.renameSync(file, dest);
+    renamed++;
+    // Repoint anything that linked to it under the old name.
+    const from = path.posix.join("/", path.relative(OUT, file).split(path.sep).join("/"));
+    const to = path.posix.join("/", path.relative(OUT, dest).split(path.sep).join("/"));
+    walk(OUT, (f) => {
+      if (!TEXT.has(path.extname(f))) return;
+      const t = fs.readFileSync(f, "utf-8");
+      if (!t.includes(from)) return;
+      fs.writeFileSync(f, t.split(from).join(to));
+    });
+  });
+
+  // The portraits themselves. Replaced rather than deleted so the layout still
+  // shows a face-shaped image where a leader's photograph belongs.
+  const silhouette = fs.readFileSync(path.join(process.cwd(), "public", "demo", "person.svg"));
+  let portraits = 0;
+  const leadershipDir = path.join(OUT, "images", "leadership");
+  if (fs.existsSync(leadershipDir)) {
+    for (const f of fs.readdirSync(leadershipDir)) {
+      fs.writeFileSync(path.join(leadershipDir, f), silhouette);
+      portraits++;
+    }
+  }
+  if (portraits) console.log(`  replaced ${portraits} leadership portrait(s)`);
 
   // Keep it out of search results. This is the single most important line
   // here: an indexed copy of a client's site competes with the client.

@@ -13,7 +13,11 @@
     "seo:audit": "node scripts/seo-audit.mjs",
     "seo:og-image": "node scripts/make-og-image.mjs",
     "images:compress": "node scripts/compress-public-images.mjs",
-    "build:prod": "node -e \"process.env.NEXT_PUBLIC_API_URL='/api';require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\""
+    "build:prod": "node -e \"process.env.NEXT_PUBLIC_API_URL='/api';require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\"",
+    "demo:record": "node scripts/demo/record-api.mjs",
+    "demo:scrub": "node scripts/demo/scrub-snapshot.mjs",
+    "demo": "node scripts/demo/build.mjs",
+    "demo:verify": "node scripts/demo/verify-demo.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
