@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import IntroSplash from "@/components/layout/IntroSplash"
+import DemoRibbon from "@/components/layout/DemoRibbon"
 import PopupNotice from "@/components/layout/PopupNotice"
 import TopBar from "@/components/layout/TopBar"
 import Header from "@/components/layout/Header"
@@ -41,6 +42,8 @@ export default function ChromeGate({ children }: { children: React.ReactNode }) 
         href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300..600;1,9..40,300..600&display=swap"
       />
       <IntroSplash />
+      {/* Renders nothing outside the specimen build. */}
+      <DemoRibbon />
       <PopupNotice />
       <TopBar />
       <Header />

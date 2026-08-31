@@ -1,5 +1,6 @@
 import { clearSession, getToken } from "./auth";
 import { API_BASE } from "./api-base";
+import { IS_DEMO, demoFetch } from "./demo-mode";
 
 /** Fired (browser only) whenever any API call comes back 401 - the stored
  * session is already cleared by then; the admin layout redirects on it. */
@@ -50,6 +51,19 @@ export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
+  // The specimen build has no backend behind it - reads come from a recorded,
+  // scrubbed snapshot instead. Intercepting at this one function rather than in
+  // each of the ~25 public fetchers means every page, present and future, is
+  // covered without knowing anything about demo mode.
+  if (IS_DEMO) {
+    const method = (options.method ?? "GET").toUpperCase();
+    if (method === "GET") return demoFetch<T>(path);
+    // Writes are refused rather than faked. A demo that appears to save and
+    // then loses the change on reload is worse than one that says plainly it
+    // is read-only.
+    throw new ApiError("This is a read-only demo - changes are not saved.", 403);
+  }
+
   const token = getToken();
   const headers = new Headers(options.headers);
   headers.set("Content-Type", "application/json");

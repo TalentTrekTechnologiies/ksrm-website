@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { IS_DEMO, DEMO_BRAND } from "@/lib/demo-mode"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
 
@@ -69,7 +70,9 @@ export default function IntroSplash() {
     // alone cut it off: the clip runs ~4.1s and the timer fired at 2.6s.
     // This just guarantees the overlay can never trap anyone if the video
     // stalls or never fires `ended`.
-    const timer = setTimeout(close, 9000)
+    // The demo shows a still logo rather than a clip, so it does not need
+    // the full nine seconds a video might run to.
+    const timer = setTimeout(close, IS_DEMO ? 2600 : 9000)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show])
@@ -182,9 +185,22 @@ export default function IntroSplash() {
                 display: "block",
               }}
             />
-            <style>{`@keyframes ksrm-intro-spin { to { transform: rotate(360deg); } }`}</style>
+            <style>{`@keyframes ksrm-intro-spin { to { transform: rotate(360deg); } } @keyframes ksrm-intro-demo-in { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } } .ksrm-intro-demo { animation: ksrm-intro-demo-in 900ms ease-out both; }`}</style>
           </div>
         )}
+        {/* The specimen has no college logo animation to play - that clip is
+            the client's. It shows the agency's own logo with the same timing
+            instead, so the intro is still demonstrated rather than skipped.
+            Without this the missing file would fire onError and close the
+            splash instantly, and the feature would never be seen. */}
+        {IS_DEMO ? (
+          <img
+            src={DEMO_BRAND.logo}
+            alt={DEMO_BRAND.company}
+            className="ksrm-intro-video is-ready ksrm-intro-demo"
+            style={{ width: "100%", height: "auto", maxHeight: "60vh", objectFit: "contain", display: "block" }}
+          />
+        ) : (
         <video
           autoPlay
           muted
@@ -215,6 +231,7 @@ export default function IntroSplash() {
               that deleted file, which left the splash blank. */}
           <source src="/ksrm-logo.webm" type="video/webm" />
         </video>
+        )}
       </div>
     </div>
   )
