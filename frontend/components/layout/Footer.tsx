@@ -83,10 +83,24 @@ function useProgrammeColumns() {
     const forLevel = (rows ?? []).filter((r) => r.level === level)
     if (forLevel.length === 0) return fallback
     const labels = labelsFor(forLevel.map((r) => r.name))
-    return forLevel.map((r, i) => ({
-      label: labels[i],
-      href: r.department?.slug ? `/departments/${r.department.slug}` : "/academics/courses-intake",
-    }))
+
+    // Deduplicated on the label the reader actually sees, not on the record.
+    // Two programme records can shorten to the same footer entry - the college
+    // lists CSE and its specialisations separately, and the abbreviation that
+    // makes them fit a 200px column is what collapses them - so the footer
+    // showed the same line twice with no way to tell which was which.
+    const seen = new Set<string>()
+    return forLevel
+      .map((r, i) => ({
+        label: labels[i],
+        href: r.department?.slug ? `/departments/${r.department.slug}` : "/academics/courses-intake",
+      }))
+      .filter((entry) => {
+        const key = entry.label.toLowerCase().replace(/[^a-z0-9]/g, "")
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
   }
 
   return {
@@ -232,7 +246,7 @@ const colVariants = {
 
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: "18px", lineHeight: 1.2 }}>
+    <div style={{ marginBottom: "12px", lineHeight: 1.2 }}>
       <div style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "19px", fontWeight: 700, color: "#ffffff", marginBottom: "8px", letterSpacing: "0.6px", textTransform: "uppercase" }}>
         {children}
       </div>
@@ -250,8 +264,11 @@ function NavLink({ href, label }: { href: string; label: string }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         display: "flex", alignItems: "center", gap: "5px",
-        padding: "7px 0",
-        lineHeight: 1.4,
+        // 4px, not 7. At nine entries the UG column ran ~90px taller than the
+        // others, and since the grid rows are as tall as their tallest cell,
+        // every neighbouring column gained that much dead space beneath it.
+        padding: "4px 0",
+        lineHeight: 1.35,
         color: hovered ? "#FFE619" : "rgba(255,255,255,0.72)",
         fontSize: "15.5px",
         textDecoration: "none",
@@ -332,7 +349,9 @@ export default function Footer() {
         .footer-links {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 24px;
+          /* Column gap only. A row gap did nothing here - there is a single
+             row - while adding to the block's height. */
+          gap: 0 24px;
           align-items: start;
         }
         .footer-bottom-inner {

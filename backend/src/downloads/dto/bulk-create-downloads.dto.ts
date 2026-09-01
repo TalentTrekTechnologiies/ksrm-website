@@ -65,6 +65,14 @@ export class BulkCreateDownloadsDto {
   @IsString()
   @MaxLength(80)
   groupLabel?: string;
+  // Academic year this document belongs to, as "AY 2026-27". Previous years
+  // fold away on the public pages; null means "not year-specific" and always
+  // shows.
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  academicYear?: string;
+
 
   @IsOptional()
   @IsInt()

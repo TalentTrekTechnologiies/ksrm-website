@@ -93,6 +93,8 @@ export interface Download {
   category: DownloadCategory;
   pageSection: string | null;
   groupLabel: string | null;
+  /** Academic year, e.g. "AY 2026-27". Null = not year-specific. */
+  academicYear: string | null;
   fileUrl: string;
   /** Media Library reference, or null when using a manually-typed fileUrl
    * (legacy path, still supported). */
@@ -114,6 +116,7 @@ export interface DownloadInput {
   category: DownloadCategory;
   pageSection?: string | null;
   groupLabel?: string | null;
+  academicYear?: string | null;
   fileUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing fileUrl. */
@@ -191,6 +194,7 @@ export interface BulkDownloadsInput {
   category: DownloadCategory;
   pageSection?: string;
   groupLabel?: string;
+  academicYear?: string;
   departmentId?: number;
   isActive?: boolean;
 }

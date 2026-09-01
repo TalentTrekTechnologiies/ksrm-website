@@ -37,6 +37,7 @@ interface FormState {
   category: DownloadCategory
   pageSection: string
   groupLabel: string
+  academicYear: string
   fileUrl: string
   mediaId: number | null
   isActive: boolean
@@ -58,7 +59,26 @@ const PAGE_SECTION_OPTIONS = [{ value: "", label: "— None (general only) —" 
 // admin can see which page a document is on and narrow to just that page's docs.
 const SECTION_LABEL = new Map(PAGE_SECTIONS.map((s) => [s.value, s.label]))
 
-const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", fileUrl: "", mediaId: null, isActive: true }
+/**
+ * The current academic year and the five before it, newest first.
+ *
+ * Generated rather than listed, so it rolls over on its own in June and an
+ * admin never has to add next year's option. The year turns over in June, so
+ * January to May still belongs to the year that began the previous June.
+ */
+const ACADEMIC_YEAR_OPTIONS = (() => {
+  const now = new Date()
+  const start = now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1
+  const opts = [{ value: "", label: "Not year-specific (always shown)" }]
+  for (let i = 0; i < 6; i++) {
+    const y = start - i
+    const label = `AY ${y}-${String((y + 1) % 100).padStart(2, "0")}`
+    opts.push({ value: label, label: i === 0 ? `${label} (current)` : label })
+  }
+  return opts
+})()
+
+const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", academicYear: "", fileUrl: "", mediaId: null, isActive: true }
 
 function DownloadsManagerInner() {
   const [loading, setLoading] = useState(true)
@@ -111,7 +131,7 @@ function DownloadsManagerInner() {
   function startEdit(item: Download) {
     setEditing(item)
     setCreating(false)
-    setForm({ title: item.title, description: item.description ?? "", category: item.category, pageSection: item.pageSection ?? "", groupLabel: item.groupLabel ?? "", fileUrl: item.fileUrl, mediaId: item.mediaId, isActive: item.isActive })
+    setForm({ title: item.title, description: item.description ?? "", category: item.category, pageSection: item.pageSection ?? "", groupLabel: item.groupLabel ?? "", academicYear: item.academicYear ?? "", fileUrl: item.fileUrl, mediaId: item.mediaId, isActive: item.isActive })
   }
 
   function cancelForm() {
@@ -124,7 +144,7 @@ function DownloadsManagerInner() {
     setSaving(true)
     setError(null)
     try {
-      const dto = { title: form.title, description: form.description || null, category: form.category, pageSection: form.pageSection || null, groupLabel: form.groupLabel || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
+      const dto = { title: form.title, description: form.description || null, category: form.category, pageSection: form.pageSection || null, groupLabel: form.groupLabel || null, academicYear: form.academicYear || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
       if (editing) {
         await updateDownload(editing.id, { ...dto, version: editing.version })
       } else {
@@ -284,6 +304,21 @@ function DownloadsManagerInner() {
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
           <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} required />
           <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={PAGE_SECTION_OPTIONS} />
+
+          {/* Which academic year this belongs to. Previous years fold shut on
+              the public page, so a section does not grow without limit as each
+              intake adds another set of circulars.
+
+              "Not year-specific" is the default, and it always shows: a policy
+              or a regulation has no academic year, and neither does anything
+              uploaded before this field existed. Nothing is archived unless an
+              admin says which year it belongs to. */}
+          <SelectField
+            label="Academic year (optional)"
+            value={form.academicYear}
+            onChange={(v) => setForm({ ...form, academicYear: v })}
+            options={ACADEMIC_YEAR_OPTIONS}
+          />
           {/* Free text still - a page can grow a heading without a code change -
               but the headings a page binds to a designed block are offered as
               buttons, because typing one differently drops the document into

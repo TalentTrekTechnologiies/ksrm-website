@@ -195,6 +195,24 @@ const PR_STYLES = `
      document rows on the same page (e.g. Examinations' Academic Calendars). */
   .pr-list { display: flex; flex-direction: column; gap: 8px; margin-top: 28px; }
   .pr-list.pr-embedded { margin-top: 8px; }
+
+  /* A folded-away academic year. Reads as a closed drawer rather than a
+     heading, so it is obvious there is more behind it. */
+  .pr-year { border: 1px solid #e6e8f0; border-radius: 10px; margin-top: 12px; background: #fbfcfe; }
+  .pr-year-head {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 12px 16px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 16px; color: #2B3490; list-style: none; user-select: none;
+  }
+  .pr-year-head::-webkit-details-marker { display: none; }
+  .pr-year-head::before { content: '▸'; font-size: 12px; transition: transform .15s; }
+  .pr-year[open] > .pr-year-head::before { transform: rotate(90deg); }
+  .pr-year-head:hover { color: #1e2570; }
+  .pr-year-count {
+    margin-left: auto; background: #eef1f8; color: #5b6a91;
+    border-radius: 999px; padding: 1px 9px; font-size: 12px; font-weight: 700;
+  }
+  .pr-year-body { padding: 0 16px 12px; }
   .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
   .pr-list > div:first-child .pr-group-head { margin-top: 0; }
   ${PUBLIC_DOCUMENT_LIST_STYLES}
@@ -296,6 +314,93 @@ function PageResourcesSkeleton({
         {rows}
       </div>
     </section>
+  )
+}
+
+/**
+ * The academic year running today, as the documents label it ("AY 2026-27").
+ *
+ * The year turns over in June, so January to May still belongs to the year
+ * that began the previous June - the same rule the exam notifications use, so
+ * a document and a notification uploaded on the same day agree about which
+ * year they are in.
+ */
+function currentAcademicYear(): string {
+  const now = new Date()
+  const start = now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1
+  return `AY ${start}-${String((start + 1) % 100).padStart(2, "0")}`
+}
+
+/**
+ * Groups documents by academic year, newest first, with anything unlabelled
+ * kept at the top.
+ *
+ * This is what stops a page growing without limit. Every intake adds another
+ * set of circulars, timetables and notifications, and none of the old ones can
+ * be deleted - so after three or four years the reader scrolls through
+ * hundreds of rows to reach this year's. Previous years are folded shut
+ * instead: still there, still one click away, out of the way until asked for.
+ *
+ * Documents with no year are NOT treated as old. A regulation or a policy has
+ * no academic year, and neither does anything uploaded before the field
+ * existed; both keep showing exactly as they did.
+ */
+function groupByYear(docs: Download[]): { year: string | null; items: Download[] }[] {
+  const byYear = new Map<string, Download[]>()
+  const undated: Download[] = []
+  for (const d of docs) {
+    const year = d.academicYear?.trim()
+    if (!year) {
+      undated.push(d)
+      continue
+    }
+    const list = byYear.get(year)
+    if (list) list.push(d)
+    else byYear.set(year, [d])
+  }
+  // Descending, so the most recent year is first whatever order the API
+  // returned. String sort is correct here: the labels share a fixed shape.
+  const years = [...byYear.keys()].sort().reverse()
+  return [
+    ...(undated.length ? [{ year: null, items: undated }] : []),
+    ...years.map((year) => ({ year, items: byYear.get(year)! })),
+  ]
+}
+
+/**
+ * One academic year's documents. The current year renders open; earlier years
+ * render as a closed header the reader can click.
+ *
+ * A <details> element rather than state: it is open/closed markup the browser
+ * already knows, it works before hydration, and Ctrl+F finds text inside a
+ * closed one in most browsers - which matters when the thing being folded away
+ * is an archive somebody is searching.
+ */
+function YearBlock({
+  year,
+  items,
+  maxVisible,
+}: {
+  year: string | null
+  items: Download[]
+  maxVisible: number
+}) {
+  const current = year === null || year === currentAcademicYear()
+  const groups = groupDocs(items)
+  const body = groups.map((g) => (
+    <DocGroupBlock key={g.label ?? "__ungrouped__"} group={g} maxVisible={maxVisible} />
+  ))
+
+  if (current) return <>{body}</>
+
+  return (
+    <details className="pr-year">
+      <summary className="pr-year-head">
+        {year}
+        <span className="pr-year-count">{items.length}</span>
+      </summary>
+      <div className="pr-year-body">{body}</div>
+    </details>
   )
 }
 
@@ -458,8 +563,8 @@ export default function PageResources({
   const docsList =
     docs.length > 0 ? (
       <div className={`pr-list${embedded ? " pr-embedded" : ""}`}>
-        {groupDocs(docs).map((grp) => (
-          <DocGroupBlock key={grp.label ?? "__ungrouped__"} group={grp} maxVisible={maxVisible} />
+        {groupByYear(docs).map((y) => (
+          <YearBlock key={y.year ?? "__undated__"} year={y.year} items={y.items} maxVisible={maxVisible} />
         ))}
       </div>
     ) : null

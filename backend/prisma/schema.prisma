@@ -1264,6 +1264,19 @@ model Download {
   /// (e.g. "AY 2025-26" on Examinations, "B.Tech" / "M.Tech" / "MBA" on
   /// Syllabus). Null = ungrouped. PageResources groups by this verbatim.
   groupLabel   String?
+  /// Academic year this document belongs to, as "AY 2026-27". Set on upload
+  /// and used to fold previous years away on the public pages: the current
+  /// year renders open, earlier ones collapse behind a header, so a page does
+  /// not grow without limit as each intake adds another set of circulars.
+  ///
+  /// Null means "not year-specific" (a policy, a regulation) and always shows,
+  /// which is also what every document imported before this column existed
+  /// gets - none of them are guessed at.
+  ///
+  /// A column rather than an archive table on purpose: the documents keep one
+  /// list, one search and one set of permissions, and "everything from
+  /// 2023-24" stays a single query instead of a hunt through folders.
+  academicYear String?
   fileUrl      String
   sortOrder    Int              @default(0)
   isActive     Boolean          @default(true)
