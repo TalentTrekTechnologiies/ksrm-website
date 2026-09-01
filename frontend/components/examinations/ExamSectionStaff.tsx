@@ -6,7 +6,7 @@ import { useLiveData } from "@/lib/use-live-data"
 import FacultyGrid from "@/components/faculty/FacultyGrid"
 import { resolveFileUrl } from "@/lib/api-base"
 
-/** "Dr. M.V. Ravi Kishore Reddy" -> "MR". Shown when no photo is set. */
+/** "Dr. N. Amaranatha Reddy" -> "NA". Shown when no photo is set. */
 function initials(name: string): string {
   return name
     .replace(/^(Dr\.|Sri\.|Smt\.|Mr\.|Ms\.|Prof\.)\s*/i, "")

@@ -17,8 +17,11 @@ import { useLiveData } from "@/lib/use-live-data"
 const OFFICE = /examination/i
 
 const FALLBACK = {
-  phones: ["+91 91549 25978", "+91 90321 58604"],
-  emails: ["exams@ksrmce.ac.in"],
+  // Kept in step with the Contact record by hand. Updated when the office
+  // changed hands in Sep 2026: the first number followed the post, the second
+  // is the new Controller's.
+  phones: ["+91 91549 25978", "+91 86861 51727"],
+  emails: ["ce@ksrmce.ac.in"],
 }
 
 /** "9032158604" -> "+91 90321 58604"; anything already formatted is left alone. */

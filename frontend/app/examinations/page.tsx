@@ -226,7 +226,8 @@ export default function ExaminationsPage() {
           <div style={{ maxWidth: 600, margin: "0 auto", border: "2px solid #D4A500", borderRadius: 12, padding: 40 }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 8 }}>Controller of Examinations</div>
             <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>K.S.R.M. College of Engineering (Autonomous)</div>
-            <div style={{ fontSize: 16, color: "#444", fontWeight: 600, marginBottom: 24 }}>Dr. M. V. Ravi Kishore Reddy</div>
+            <div style={{ fontSize: 16, color: "#444", fontWeight: 600, marginBottom: 24 }}>Dr. N. Amaranatha Reddy</div>
+            <div style={{ fontSize: 14, color: "#666", marginTop: -18, marginBottom: 24 }}>Professor, Dept. of Civil Engineering</div>
             <CoeContact />
           </div>
         </div>

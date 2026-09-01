@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The specimen build. Same generated output as out/, just under a name
+    // that keeps it away from the folder the college's deploy publishes -
+    // without this, linting the repo reports thousands of problems in built
+    // bundles and buries the real ones.
+    "demo-out/**",
   ]),
 ]);
 

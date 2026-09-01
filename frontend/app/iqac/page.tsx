@@ -45,7 +45,7 @@ const composition = [
   { name: "Dr. M. Venugopal", designation: "Dean, Industry Relations", role: "Member" },
   { name: "Dr. V. Giridhar", designation: "Dean, Industry Institution Interaction cell", role: "Member" },
   { name: "Dr. T. Elia", designation: "Dean, Innovation and Entrepreneurship", role: "Member" },
-  { name: "Dr. M. V. Ravi Kishore Reddy", designation: "Controller of Examinations", role: "Member" },
+  { name: "Dr. N. Amaranatha Reddy", designation: "Controller of Examinations", role: "Member" },
   { name: "Dr. G. Chennakesava Reddy", designation: "HoD, CE", role: "Member" },
   { name: "Dr. A. Sudhakar", designation: "HoD, EEE", role: "Member" },
   { name: "Dr. D. Ravikanth", designation: "HoD, ME", role: "Member" },
