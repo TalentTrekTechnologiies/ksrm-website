@@ -309,6 +309,13 @@ export default function FeeStructurePage() {
           </div>
         </section>
 
+        {/* Fee notifications and circulars, directly under the tables they
+            belong with. This sat at the very bottom of the page, after the
+            Accounts Office contact card - so an uploaded fee circular appeared
+            below the phone number, past the point most readers stop. Documents
+            about fees belong with the fees. */}
+        <PageResources section="academics.fee-structure" />
+
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="academics.fee-structure" slot="scholarships-financial-assistance" /></h2>
@@ -361,8 +368,6 @@ export default function FeeStructurePage() {
             </div>
           </div>
         </section>
-      
-      <PageResources section="academics.fee-structure" />
       </main>
     </>
   );
