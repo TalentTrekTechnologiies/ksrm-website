@@ -37,8 +37,25 @@ function run(label, command, args) {
   }
 }
 
-run("1/3  build (demo mode)", "npx", ["next", "build"]);
-run("2/3  rebrand", "node", ["scripts/demo/rebrand.mjs"]);
-run("3/3  verify", "node", ["scripts/demo/verify-demo.mjs"]);
+run("1/4  build (demo mode)", "npx", ["next", "build"]);
+run("2/4  rebrand", "node", ["scripts/demo/rebrand.mjs"]);
+run("3/4  verify", "node", ["scripts/demo/verify-demo.mjs"]);
 
-console.log("\nSpecimen built and verified. Publish the out/ folder.\n");
+// Moved out of out/ deliberately, and only after it has passed.
+//
+// next build always writes to out/, and out/ is exactly the folder the
+// college's deploy rsyncs to production. A finished specimen sitting there
+// means the next person to deploy - without rebuilding first, because it was
+// just built - publishes the demo onto the live site under the college's own
+// domain. Renaming makes the two physically separate: out/ only ever holds a
+// real build, demo-out/ only ever holds a specimen.
+console.log("\n=== 4/4  set aside ===");
+const OUT = path.join(process.cwd(), "out");
+const DEMO_OUT = path.join(process.cwd(), "demo-out");
+fs.rmSync(DEMO_OUT, { recursive: true, force: true });
+fs.renameSync(OUT, DEMO_OUT);
+console.log("  moved out/ -> demo-out/");
+
+console.log("\nSpecimen built and verified.");
+console.log("Upload:  frontend/demo-out");
+console.log("out/ is now absent, so a normal deploy cannot pick this up by mistake.\n");

@@ -101,26 +101,55 @@ function main() {
     process.exit(1);
   }
 
-  // The five leaders are written into data/leadership.ts, not fetched, so the
-  // API scrub never saw them: their names sat in page titles, breadcrumbs and
-  // structured data on their own profile pages, and their PHOTOGRAPHS shipped
-  // as files. Names are read from the source of truth rather than listed here,
-  // so a sixth leader added later cannot be missed.
-  const leadershipSrc = fs.readFileSync(path.join(process.cwd(), "data", "leadership.ts"), "utf-8");
-  const realNames = [...leadershipSrc.matchAll(/name:\s*"([^"]+)"/g)].map((m) => m[1]);
-  // Regex-escaping built from a runtime backslash: a literal one here has been
-  // silently eaten by an editing shell more than once in this file.
+  // Every person named in the source, not just the five in leadership.ts.
+  //
+  // The first version of this read that one file, and the specimen still named
+  // the Controller of Examinations, the IQAC committee members, the librarian,
+  // the admissions contacts and every hardcoded faculty member - 122 real
+  // people across 18 files, none of them fetched from the API and so none of
+  // them touched by its scrub. Reading the whole source tree means a name
+  // added to any of those lists is covered without this file being edited.
   const BS = String.fromCharCode(92);
   const escapeRe = (t) => [...t].map((c) => (/[A-Za-z0-9 ]/.test(c) ? c : BS + c)).join("");
+
+    // An honorific is required, deliberately.
+  //
+  // The looser heuristic - two to five capitalised words, no digits - read
+  // "NTT Data", "Birla Soft" and "GND Solutions" as people and relabelled the
+  // recruiter logos with invented doctors. Company names and personal names
+  // are the same shape, so shape cannot separate them; the title in front can.
+  // A staff member listed without one survives, which is a smaller and much
+  // more visible failure than silently corrupting the page.
+  const looksLikePerson = (v) => /^(dr|prof|sri|smt|mr|mrs|ms)[.]?[ ]/i.test(v.trim());
+
+  const realPeople = new Set();
+  for (const dir of ["app", "components", "data"]) {
+    const root = path.join(process.cwd(), dir);
+    if (!fs.existsSync(root)) continue;
+    walk(root, (file) => {
+      if (![".ts", ".tsx"].includes(path.extname(file))) return;
+      const text = fs.readFileSync(file, "utf-8");
+      for (const m of text.matchAll(/name:\s*"([^"]{4,60})"/g)) {
+        if (looksLikePerson(m[1])) realPeople.add(m[1]);
+      }
+    });
+  }
+
   const FAKE = ["Dr. Anand Rao", "Sri B. Demo Kumar", "Dr. Chetan Iyer", "Dr. Divya Menon",
-                "Sri E. Sample Reddy", "Dr. Farah Nair", "Dr. Girish Patel"];
-  realNames.forEach((real, i) => {
-    // Longest first, so "Dr. T. Nageswara Prasad" is replaced before a rule
-    // that would only catch "Nageswara Prasad" leaves the honorific behind.
+                "Sri E. Sample Reddy", "Dr. Farah Nair", "Dr. Girish Patel", "Dr. Hema Bose",
+                "Smt. I. Placeholder Devi", "Dr. Jyoti Verma", "Prof. K. Example Rao"];
+
+  // Longest first, so "Dr. T. Nageswara Prasad" is replaced whole rather than
+  // a shorter rule catching "Nageswara Prasad" and leaving the honorific.
+  const sortedPeople = [...realPeople].sort((a, b) => b.length - a.length);
+  sortedPeople.forEach((real, i) => {
     REPLACEMENTS.push([new RegExp(escapeRe(real), "g"), FAKE[i % FAKE.length]]);
-    const bare = real.replace(new RegExp("^(Sri|Smt|Dr|Prof)[.]?[ ]+", "i"), "");
-    if (bare !== real) REPLACEMENTS.push([new RegExp(escapeRe(bare), "g"), FAKE[i % FAKE.length]]);
+    const bare = real.replace(new RegExp("^(Sri|Smt|Dr|Prof|Mr|Mrs|Ms)[.]?[ ]+", "i"), "");
+    if (bare !== real && bare.length > 6) {
+      REPLACEMENTS.push([new RegExp(escapeRe(bare), "g"), FAKE[i % FAKE.length]]);
+    }
   });
+  console.log(`  ${sortedPeople.length} real people found in source, replaced`);
 
   // Links to the college's media server written straight into components -
   // 55 mediaFile(n) calls across the pages - which no API scrub can reach.

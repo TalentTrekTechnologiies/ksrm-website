@@ -66,6 +66,48 @@ if (!fs.existsSync(OUT)) {
   process.exit(1);
 }
 
+/**
+ * Every person named in the source tree, gathered the same way the rebrand
+ * gathers them. Hardcoded as a list this would go stale the first time the
+ * college added a committee member; derived, it cannot.
+ *
+ * This exists because the specimen shipped with the Controller of
+ * Examinations, the IQAC committee, the librarian and 122 hardcoded faculty
+ * still named in it - the rebrand read one file and the check only knew about
+ * five people.
+ */
+// An honorific is required, deliberately - the same rule the rebrand uses, so
+// the two cannot disagree about who is a person.
+//
+// The looser heuristic (two to five capitalised words, no digits) read "NTT
+// Data", "Birla Soft" and "GND Solutions" as people. Company names and
+// personal names are the same shape, so shape cannot separate them; the title
+// in front can. A staff member listed without one survives this check, which
+// is a smaller failure than relabelling every recruiter with an invented name.
+function looksLikePerson(v) {
+  return /^(dr|prof|sri|smt|mr|mrs|ms)[.]?[ ]/i.test(v.trim());
+}
+
+const realPeople = new Set();
+for (const dir of ["app", "components", "data"]) {
+  const root = path.join(process.cwd(), dir);
+  if (!fs.existsSync(root)) continue;
+  walk(root, (file) => {
+    if (![".ts", ".tsx"].includes(path.extname(file))) return;
+    const text = fs.readFileSync(file, "utf-8");
+    for (const m of text.matchAll(/name:\s*"([^"]{4,60})"/g)) {
+      if (looksLikePerson(m[1])) realPeople.add(m[1]);
+    }
+  });
+}
+// Escaping built from a runtime backslash - a literal one in this position has
+// been eaten by an editing shell repeatedly in these files.
+const BS = String.fromCharCode(92);
+const escapeRe = (t) => [...t].map((c) => (/[A-Za-z0-9 ]/.test(c) ? c : BS + c)).join("");
+for (const person of realPeople) {
+  RULES.push([`real person: ${person}`, new RegExp(escapeRe(person), "i")]);
+}
+
 const failures = [];
 
 // 1. Contents of everything shipped as text.
