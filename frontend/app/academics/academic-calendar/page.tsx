@@ -140,12 +140,33 @@ export default function AcademicCalendarPage() {
         description: n.description,
       }));
 
-    const seen = new Set<string>();
-    const merged = [...(filed ?? []), ...(fromExams ?? []), ...asDocuments].filter((d) => {
-      if (!d.fileUrl || seen.has(d.fileUrl)) return false;
-      seen.add(d.fileUrl);
+    // Documents are deduplicated by RECORD, not by file.
+    //
+    // Deduplicating on fileUrl silently hid documents: two calendars that
+    // point at the same PDF - which happens whenever an admin picks an
+    // existing file from the Media Library instead of uploading a new copy -
+    // collapsed into one, and whichever came second vanished from the page
+    // while sitting perfectly happily in the database. That is the "every time
+    // I upload, one goes missing" report: nothing was ever deleted.
+    //
+    // A record is a deliberate act - somebody created it, titled it and filed
+    // it - so every record is shown. The same file appearing twice under two
+    // titles is the admin's business, and visible enough for them to fix.
+    const byId = new Set<number>();
+    const documents = [...(filed ?? []), ...(fromExams ?? [])].filter((d) => {
+      if (!d.fileUrl || byId.has(d.id)) return false;
+      byId.add(d.id);
       return true;
     });
+
+    // Notifications ARE deduplicated against the documents by file, because a
+    // calendar both uploaded and posted is one calendar published twice by
+    // two different routes - not two records an admin meant to keep.
+    const documentFiles = new Set(documents.map((d) => d.fileUrl));
+    const merged = [
+      ...documents,
+      ...asDocuments.filter((n) => n.fileUrl && !documentFiles.has(n.fileUrl)),
+    ];
 
     const groups = new Map<string, { title: string; reg: string; file: string }[]>();
     for (const d of merged) {
