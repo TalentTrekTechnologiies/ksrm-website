@@ -162,7 +162,26 @@ function DownloadsManagerInner() {
     setSaving(true)
     setError(null)
     try {
-      const dto = { title: form.title, description: form.description || null, category: form.category, pageSection: form.pageSection || null, groupLabel: form.groupLabel || null, academicYear: form.academicYear || null, fileUrl: form.fileUrl, mediaId: form.mediaId, isActive: form.isActive }
+      // academicYear is sent ONLY when the admin picked one.
+      //
+      // The API rejects fields it does not recognise (forbidNonWhitelisted),
+      // so a frontend that always sends this breaks every save against a
+      // backend that has not been updated yet - reads keep working, and every
+      // edit fails with "An unexpected error occurred", which points nowhere
+      // near the real cause. Omitting it when unset means this screen works
+      // against either version, and a deploy of the two halves in either order
+      // is survivable.
+      const dto = {
+        title: form.title,
+        description: form.description || null,
+        category: form.category,
+        pageSection: form.pageSection || null,
+        groupLabel: form.groupLabel || null,
+        ...(form.academicYear ? { academicYear: form.academicYear } : {}),
+        fileUrl: form.fileUrl,
+        mediaId: form.mediaId,
+        isActive: form.isActive,
+      }
       if (editing) {
         await updateDownload(editing.id, { ...dto, version: editing.version })
       } else {
