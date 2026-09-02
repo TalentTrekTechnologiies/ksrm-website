@@ -339,11 +339,16 @@ export default function AcademicCalendarPage() {
               </div>
               <div className="ac-contact-item">
                 <h4><CmsText section="academics.calendar" slot="phone" /></h4>
-                <p><a href="tel:+918143731980">+91 8143731980 / 08562 295972</a></p>
+                {/* The Examination Section's own number, not the admissions
+                    line. This band answers calendar and timetable queries, and
+                    it carried the admissions number and the Principal's
+                    address - so anyone ringing about an exam reached the wrong
+                    desk. */}
+                <p><a href="tel:+919154925978">+91 91549 25978</a></p>
               </div>
               <div className="ac-contact-item">
                 <h4><CmsText section="academics.calendar" slot="email" /></h4>
-                <p><a href="mailto:principal@ksrmce.ac.in">principal@ksrmce.ac.in</a></p>
+                <p><a href="mailto:ce@ksrmce.ac.in">ce@ksrmce.ac.in</a></p>
               </div>
             </div>
           </div>

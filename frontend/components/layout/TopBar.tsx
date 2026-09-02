@@ -30,7 +30,7 @@ const socials = [
 // Same scrolling-strip approach already used for the homepage's placements/
 // recruiters strips: a doubled track looping via translateX, so it reads as
 // an unbroken loop rather than snapping back to the start.
-const codesText = "EAPCET / ECET / ICET / POLYCET Code: KSRM  •  PGECET Code: KSRM1  •  Diploma: CE, EEE, ME, ECE, CSE, AIML  •  B.Tech: CE, EEE, ME, ECE, CSE, CSD, CSM, AIML  •  M.Tech: GTE, SE, PS, ES&VLSI, AIDS  •  MBA"
+const codesText = "EAPCET / ECET / ICET / POLYCET Code: KSRM  •  PGECET Code: KSRM1  •  Diploma: CE, EEE, ME, ECE, CSE, AIML  •  BCA (Honours): 14694  •  B.Tech: CE, EEE, ME, ECE, CSE, CSD, CSM, AIML  •  M.Tech: GTE, SE, PS, ES&VLSI, AIDS  •  MBA"
 
 export default function TopBar() {
   const [loaded, setLoaded] = useState(false)
