@@ -42,7 +42,7 @@ function academicYearOf(title: string): string {
   const four = (y: string) => (y.length === 2 ? `20${y}` : y);
 
   // "AY" followed by two years, separated by a space, dash or slash.
-  const marked = title.match(/AY\s*(\d{4}|\d{2})\s*[-–—/ ]\s*(\d{4}|\d{2})/i);
+  const marked = title.match(/\bAY\s*(\d{4}|\d{2})\s*[-–—/ ]\s*(\d{4}|\d{2})\b/i);
   if (marked) {
     const from = four(marked[1]);
     return `AY ${from}-${four(marked[2]).slice(2)}`;

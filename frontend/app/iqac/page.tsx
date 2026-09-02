@@ -100,7 +100,7 @@ const MINUTES_FALLBACK_SECTIONS = ["iqac", "iqac.aqar", "naac"];
 
 /**
  * Deliberately "minutes" and not "minute": a NAAC document titled "1 One
- * minute talk" is not a set of minutes. mom likewise avoids matching
+ * minute talk" is not a set of minutes. \bmom\b likewise avoids matching
  * "moment" or a word ending in "mom".
  */
 const MINUTES_TITLE = "minutes|\\bmom\\b|agenda";
