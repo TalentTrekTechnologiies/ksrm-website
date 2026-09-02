@@ -6,6 +6,7 @@ import CmsText from "@/components/CmsText";
 import { useMemo } from "react";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { getExamNotificationsPublic, ExamNotification } from "@/lib/exam-notifications-api";
 import AcademicYear from "@/components/AcademicYear";
 
 /**
@@ -112,10 +113,36 @@ export default function AcademicCalendarPage() {
     [],
   );
 
+  // Calendars posted as exam NOTIFICATIONS rather than uploaded as documents.
+  //
+  // The Examinations page shows both, so a calendar added under Exam
+  // Notifications -> Academic Calendars appeared there and nowhere else, and
+  // the college had no way of knowing which of the two places they had used.
+  // Reading both here means it does not matter which one an admin picks.
+  const fromNotifications = useLiveData<ExamNotification[]>(
+    () => getExamNotificationsPublic("CALENDAR").catch(() => [] as ExamNotification[]),
+    [],
+  );
+
   const years = useMemo(() => {
+    // A notification carries its file on buttonUrl and its year as a field,
+    // so it is reshaped to look like a document before merging - one list, one
+    // grouping, one sort, rather than two half-lists rendered side by side.
+    //
+    // Its academicYear is authoritative when set: an admin picked it from a
+    // dropdown, which beats reading a year out of a filename.
+    const asDocuments: Download[] = (fromNotifications ?? [])
+      .filter((n) => n.isPublished && n.isActive && n.buttonUrl)
+      .map((n) => ({
+        ...(n as unknown as Download),
+        title: n.academicYear ? `${n.title} ${n.academicYear}` : n.title,
+        fileUrl: n.buttonUrl as string,
+        description: n.description,
+      }));
+
     const seen = new Set<string>();
-    const merged = [...(filed ?? []), ...(fromExams ?? [])].filter((d) => {
-      if (seen.has(d.fileUrl)) return false;
+    const merged = [...(filed ?? []), ...(fromExams ?? []), ...asDocuments].filter((d) => {
+      if (!d.fileUrl || seen.has(d.fileUrl)) return false;
       seen.add(d.fileUrl);
       return true;
     });
@@ -131,7 +158,7 @@ export default function AcademicCalendarPage() {
     return [...groups.entries()].sort((a, b) =>
       a[0] === "Other" ? 1 : b[0] === "Other" ? -1 : b[0].localeCompare(a[0]),
     );
-  }, [filed, fromExams]);
+  }, [filed, fromExams, fromNotifications]);
 
   return (
     <>
