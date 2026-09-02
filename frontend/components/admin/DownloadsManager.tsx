@@ -78,6 +78,24 @@ const ACADEMIC_YEAR_OPTIONS = (() => {
   return opts
 })()
 
+/**
+ * A usable document title from a picked file's name.
+ *
+ * Returns "" for the media-URL artefacts - "SOURCE", "ORIGINAL", a bare id -
+ * rather than letting one become the title, because a title that says nothing
+ * cannot be found again and carries no year for the pages that group by one.
+ */
+function cleanTitle(name?: string | null): string {
+  const raw = (name ?? "").trim()
+  if (!raw) return ""
+  if (/^(source|original|file|download|untitled|\d+)$/i.test(raw)) return ""
+  return raw
+    .replace(/\.[^.]+$/, "")
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
+
 const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", academicYear: "", fileUrl: "", mediaId: null, isActive: true }
 
 function DownloadsManagerInner() {
@@ -356,7 +374,19 @@ function DownloadsManagerInner() {
             label="File"
             url={form.fileUrl}
             mediaId={form.mediaId}
-            onChange={(url, mediaId) => setForm({ ...form, fileUrl: url, mediaId })}
+            onChange={(url, mediaId, mediaTitle) =>
+              setForm((prev) => ({
+                ...prev,
+                fileUrl: url,
+                mediaId,
+                // Only when the admin has not typed one. A document uploaded
+                // with no title took the last segment of its media URL, so a
+                // calendar arrived titled "SOURCE" - which carries no year, so
+                // the page filed it under "Other" at the very bottom and it
+                // looked as though the upload had failed.
+                title: prev.title.trim() ? prev.title : cleanTitle(mediaTitle),
+              }))
+            }
             accept={["DOCUMENT"]}
             required
             urlPlaceholder="/downloads/syllabus.pdf"

@@ -40,7 +40,10 @@ export default function MediaField({
   label: string
   url: string
   mediaId: number | null
-  onChange: (url: string, mediaId: number | null) => void
+  /** The picked file's own name is passed as a third argument so a form can
+   *  fill an empty title from it. Optional, so existing callers that only
+   *  take (url, mediaId) keep working unchanged. */
+  onChange: (url: string, mediaId: number | null, mediaTitle?: string | null) => void
   accept?: MediaType[]
   required?: boolean
   urlPlaceholder?: string
@@ -50,7 +53,7 @@ export default function MediaField({
   const isImage = url && (!accept || accept.includes("IMAGE"))
 
   function handleSelect(media: Media, pickedUrl: string) {
-    onChange(pickedUrl, media.id)
+    onChange(pickedUrl, media.id, media.title)
     setPickerOpen(false)
   }
 
