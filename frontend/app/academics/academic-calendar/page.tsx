@@ -6,6 +6,7 @@ import CmsText from "@/components/CmsText";
 import { useMemo } from "react";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { academicYearOf } from "@/lib/academic-year";
 import { getExamNotificationsPublic, ExamNotification } from "@/lib/exam-notifications-api";
 import AcademicYear from "@/components/AcademicYear";
 
@@ -22,44 +23,18 @@ import AcademicYear from "@/components/AcademicYear";
 
 /** "Academic Calendar - B.Tech III & IV Semester AY 2025-26" -> "2025-2026". */
 /**
- * The academic year a calendar belongs to, read from its title.
+ * The heading a calendar sits under.
  *
- * An explicit "AY ..." marker wins over everything else, because these titles
- * carry several years and only one of them is the academic year:
- *
- *   "A. Calendar II B.Tech 2025 (R) 2025 (LE) AY 26 27"   -> AY 2026-27
- *   "A. Calendar IV B.Tech 2023 (R) 2024 (LE) AY26 27"    -> AY 2026-27
- *
- * The others are admission batches. Taking the first four-digit number - which
- * is what this did - filed this year's calendars under 2025 and 2023, so the
- * Examinations page showed AY 2026-27 while Academics showed nothing newer
- * than 2025-26 from the very same documents.
- *
- * Accepts the marker written loosely, because that is how it is typed:
- * "AY 26 27", "AY26 27", "AY 2026-27", "AY 2026-2027".
+ * Delegates to the shared rule so this page and the Examinations page cannot
+ * disagree - they did, and renaming a document fixed one and not the other.
+ * A lone year is kept as its own heading here (this page has always shown
+ * "2023" groups) rather than being folded into "Other".
  */
-function academicYearOf(title: string): string {
-  const four = (y: string) => (y.length === 2 ? `20${y}` : y);
-
-  // "AY" followed by two years, separated by a space, dash or slash.
-  const marked = title.match(/\bAY\s*(\d{4}|\d{2})\s*[-–—/ ]\s*(\d{4}|\d{2})\b/i);
-  if (marked) {
-    const from = four(marked[1]);
-    return `AY ${from}-${four(marked[2]).slice(2)}`;
-  }
-
-  // A plain span anywhere in the title: "2025-26", "2025 - 2026".
-  const span = title.match(/(20\d{2})\s*[-–—]\s*(\d{2,4})/);
-  if (span) {
-    const from = span[1];
-    const to = span[2].length === 2 ? span[2] : span[2].slice(2);
-    return `AY ${from}-${to}`;
-  }
-
-  // A lone year is ambiguous - it is as likely to be the batch as the academic
-  // year - so it is reported as the year it says and nothing is inferred.
-  const single = title.match(/(20\d{2})/);
-  return single ? single[1] : "Other";
+function calendarYearOf(doc: { academicYear?: string | null; title?: string | null }): string {
+  const year = academicYearOf(doc);
+  if (year) return year;
+  const lone = (doc.title ?? "").match(/(20\d{2})/);
+  return lone ? lone[1] : "Other";
 }
 
 function DownloadIcon() {
@@ -170,7 +145,7 @@ export default function AcademicCalendarPage() {
 
     const groups = new Map<string, { title: string; reg: string; file: string }[]>();
     for (const d of merged) {
-      const year = academicYearOf(d.title);
+      const year = calendarYearOf(d);
       const rows = groups.get(year) ?? [];
       rows.push({ title: d.title, reg: d.description ?? "", file: resolveFileUrl(d.fileUrl) });
       groups.set(year, rows);

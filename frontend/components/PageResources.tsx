@@ -1,7 +1,8 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { resolveFileUrl } from "@/lib/api-base";
+import { resolveFileUrl } from "@/lib/api-base"
+import { academicYearOf, currentAcademicYearLabel } from "@/lib/academic-year";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
@@ -69,7 +70,22 @@ function groupDocs(docs: Download[]): DocGroup[] {
   const byLabel = new Map<string, DocGroup>()
   const ungrouped: DocGroup = { label: null, items: [] }
   for (const d of docs) {
-    const label = d.groupLabel?.trim() || null
+    // Which heading this document sits under, most deliberate first:
+    //
+    //   1. the academicYear field  - an admin picked it from a dropdown
+    //   2. groupLabel              - an admin typed it ("B.Tech", "AY 2025-26")
+    //   3. the year in its title   - for the thousands uploaded before either
+    //                                field existed
+    //
+    // Step 3 is what was missing. The Academic Calendar page read the year out
+    // of the title while this one knew only groupLabel, so a document with no
+    // label landed in an unlabelled heap here and under AY 2026-27 there -
+    // from the same record, renamed the same way.
+    const label =
+      d.academicYear?.trim() ||
+      d.groupLabel?.trim() ||
+      academicYearOf({ title: d.title }) ||
+      null
     if (!label) {
       ungrouped.items.push(d)
       continue
@@ -130,20 +146,38 @@ async function fetchSection(
   // to a specific section (e.g. "examinations.results") must appear only there,
   // not also in a broader block that happens to match its category.
   const byCategoryUnrouted = byCategory.v.filter((d) => !d.pageSection || d.pageSection === section)
-  // Dedupe by id (same row matched by both routing + category) AND by file URL,
-  // so if the same document was accidentally added twice - e.g. once in the
-  // global "Add Documents" and once in a department's Documents tab - it still
-  // shows only once on the public page.
+  // Deduplicated by id, and by file ONLY when the title matches too.
+  //
+  // The file check used to stand alone, so two documents pointing at the same
+  // PDF collapsed into one - which happens whenever an admin picks an existing
+  // item from the Media Library rather than uploading a fresh copy. The result
+  // was a document silently missing from the page while sitting in the
+  // database: "every time I upload, one goes missing".
+  //
+  // Same file AND same title is still a genuine duplicate - the same document
+  // added twice, once globally and once in a department's Documents tab, which
+  // is what this check was written for. Same file under two different titles is
+  // two records an admin made on purpose, and both are shown.
   const seenId = new Set<number>()
-  const seenFile = new Set<string>()
-  const docs = [...routed.v, ...byCategoryUnrouted, ...fallbackDocs.v].filter((d) => {
-    if (seenId.has(d.id)) return false
-    const fileKey = (d.fileUrl || "").trim().toLowerCase()
-    if (fileKey && seenFile.has(fileKey)) return false
-    seenId.add(d.id)
-    if (fileKey) seenFile.add(fileKey)
-    return true
-  })
+  const seenFileTitle = new Set<string>()
+  const docs = [...routed.v, ...byCategoryUnrouted, ...fallbackDocs.v]
+    .filter((d) => {
+      if (seenId.has(d.id)) return false
+      const key = `${(d.fileUrl || "").trim().toLowerCase()}::${(d.title || "").trim().toLowerCase()}`
+      if (d.fileUrl && seenFileTitle.has(key)) return false
+      seenId.add(d.id)
+      if (d.fileUrl) seenFileTitle.add(key)
+      return true
+    })
+    // Admin order first, then newest. Without this the list came out in
+    // whatever order the sections happened to concatenate in, so a document
+    // uploaded minutes ago could sit below one from four years back - and
+    // behind a "Show all" toggle, which reads as the upload having failed.
+    .sort((a, b) => {
+      const order = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+      if (order !== 0) return order
+      return String(b.publishedAt ?? "").localeCompare(String(a.publishedAt ?? ""))
+    })
   // Split video-tagged gallery records out so they render as <video> players.
   const videos = images.v.filter((g) => g.category === VIDEO_CATEGORY)
   const realImages = images.v.filter((g) => g.category !== VIDEO_CATEGORY)
@@ -318,20 +352,6 @@ function PageResourcesSkeleton({
 }
 
 /**
- * The academic year running today, as the documents label it ("AY 2026-27").
- *
- * The year turns over in June, so January to May still belongs to the year
- * that began the previous June - the same rule the exam notifications use, so
- * a document and a notification uploaded on the same day agree about which
- * year they are in.
- */
-function currentAcademicYear(): string {
-  const now = new Date()
-  const start = now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1
-  return `AY ${start}-${String((start + 1) % 100).padStart(2, "0")}`
-}
-
-/**
  * Groups documents by academic year, newest first, with anything unlabelled
  * kept at the top.
  *
@@ -385,7 +405,7 @@ function YearBlock({
   items: Download[]
   maxVisible: number
 }) {
-  const current = year === null || year === currentAcademicYear()
+  const current = year === null || year === currentAcademicYearLabel()
   const groups = groupDocs(items)
   const body = groups.map((g) => (
     <DocGroupBlock key={g.label ?? "__ungrouped__"} group={g} maxVisible={maxVisible} />
