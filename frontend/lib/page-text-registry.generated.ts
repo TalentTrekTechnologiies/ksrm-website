@@ -11,6 +11,175 @@
 import type { PageTextPage } from "./page-text-registry"
 
 export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
+  "students.policies": {
+    label: "Student Policies & Procedures",
+    path: "/students/policies-procedures",
+    groups: [
+      {
+        label: "Student Policies & Procedures",
+        slots: [
+          { id: "student-policies-procedures", label: "Page title", kind: "line", default: "Student Policies & Procedures" },
+          { id: "tagline", label: "Tagline", kind: "line", default: "The policies and procedures that apply to students" },
+          { id: "intro", label: "Introduction", kind: "paragraph", default: "The policies and procedures governing student life at K.S.R.M. College of Engineering - admission, attendance, conduct, examinations, grievances and welfare. Each document opens in full." },
+        ],
+      },
+    ],
+  },
+  "students.rules": {
+    label: "Student Rules",
+    path: "/students/rules",
+    groups: [
+      {
+        label: "Student Rules",
+        slots: [
+          { id: "student-rules", label: "Page title", kind: "line", default: "Student Rules" },
+          { id: "tagline", label: "Tagline", kind: "line", default: "The rules students are expected to follow" },
+          { id: "intro", label: "Introduction", kind: "paragraph", default: "The rules of the college as they apply to students, including the code of conduct, hostel and transport rules, anti-ragging regulations and the use of college facilities." },
+        ],
+      },
+    ],
+  },
+  "students.data": {
+    label: "Student Data",
+    path: "/students/data",
+    groups: [
+      {
+        label: "Student Data",
+        slots: [
+          { id: "student-data", label: "Page title", kind: "line", default: "Student Data" },
+          { id: "tagline", label: "Tagline", kind: "line", default: "Enrolment, results and other student statistics" },
+          { id: "intro", label: "Introduction", kind: "paragraph", default: "Student data published by the college - enrolment and intake figures, results analysis, progression and placement statistics, and the returns filed with regulatory bodies." },
+        ],
+      },
+    ],
+  },
+  "faculty.policies": {
+    label: "Faculty Policies and Procedures",
+    path: "/faculty/policies-procedures",
+    groups: [
+      {
+        label: "Faculty Policies and Procedures",
+        slots: [
+          { id: "faculty-policies-and-procedures", label: "Page title", kind: "line", default: "Faculty Policies and Procedures" },
+          { id: "tagline", label: "Tagline", kind: "line", default: "The policies and procedures that apply to faculty" },
+          { id: "intro", label: "Introduction", kind: "paragraph", default: "The policies and procedures governing faculty at K.S.R.M. College of Engineering - recruitment, appraisal, promotion, research, leave and professional development. Each document opens in full." },
+        ],
+      },
+    ],
+  },
+  "faculty.rules": {
+    label: "Faculty Rules",
+    path: "/faculty/rules",
+    groups: [
+      {
+        label: "Faculty Rules",
+        slots: [
+          { id: "faculty-rules", label: "Page title", kind: "line", default: "Faculty Rules" },
+          { id: "tagline", label: "Tagline", kind: "line", default: "The rules and conduct expected of faculty" },
+          { id: "intro", label: "Introduction", kind: "paragraph", default: "The rules of the college as they apply to its teaching and non-teaching staff, including the code of professional conduct, service conditions and the use of college facilities." },
+        ],
+      },
+    ],
+  },
+  "faculty.data": {
+    label: "Faculty Data",
+    path: "/faculty/data",
+    groups: [
+      {
+        label: "Faculty Data",
+        slots: [
+          { id: "faculty-data", label: "Page title", kind: "line", default: "Faculty Data" },
+          { id: "tagline", label: "Tagline", kind: "line", default: "Faculty strength, qualifications and contributions" },
+          { id: "intro", label: "Introduction", kind: "paragraph", default: "Faculty data published by the college - sanctioned and working strength, qualifications and experience, research output, and the returns filed with regulatory bodies." },
+        ],
+      },
+    ],
+  },
+  // Added with the Committees, Policies and Service Rules pages. Hand-written
+  // rather than generated: the migration that produced this file was a
+  // one-time pass over the pages that existed then, and these came later. The
+  // shape and the "slot ids are permanent" rule are the same.
+  "committees": {
+    label: "Committees",
+    path: "/committees",
+    groups: [
+      {
+        label: "Committees",
+        slots: [
+          { id: "committees", label: "Page title", kind: "line", default: "Committees" },
+          {
+            id: "the-committees-that-govern-and",
+            label: "Tagline",
+            kind: "line",
+            default: "The committees that govern and support the work of the college",
+          },
+          {
+            id: "k-s-r-m-college",
+            label: "Introduction",
+            kind: "paragraph",
+            default:
+              "K.S.R.M. College of Engineering is governed and supported by a number of statutory and institutional committees. Each committee's constitution, members and responsibilities are published below, along with its minutes and related papers.",
+          },
+          {
+            id: "committee-documents",
+            label: "Documents heading",
+            kind: "line",
+            default: "Committee Documents",
+          },
+        ],
+      },
+    ],
+  },
+  "policies": {
+    label: "Policies",
+    path: "/policies",
+    groups: [
+      {
+        label: "Policies",
+        slots: [
+          { id: "policies", label: "Page title", kind: "line", default: "Policies" },
+          {
+            id: "the-policies-that-govern-college",
+            label: "Tagline",
+            kind: "line",
+            default: "The policies that govern college life, academics and administration",
+          },
+          {
+            id: "k-s-r-m-college",
+            label: "Introduction",
+            kind: "paragraph",
+            default:
+              "K.S.R.M. College of Engineering publishes the policies under which it operates, so that students, staff and the public can read the rules that apply to them. Policies are grouped by category below; each document opens in full.",
+          },
+        ],
+      },
+    ],
+  },
+  "academics.service-rules": {
+    label: "Academics - Service Rules",
+    path: "/academics/service-rules",
+    groups: [
+      {
+        label: "Service Rules",
+        slots: [
+          { id: "service-rules", label: "Page title", kind: "line", default: "Service Rules" },
+          {
+            id: "conditions-of-service-for-staff",
+            label: "Tagline",
+            kind: "line",
+            default: "Conditions of service for the teaching and non-teaching staff",
+          },
+          {
+            id: "k-s-r-m-college",
+            label: "Introduction",
+            kind: "paragraph",
+            default:
+              "K.S.R.M. College of Engineering, an autonomous institution affiliated to JNTUA and run by the Kandula Obul Reddy Charities, sets out the terms on which its teaching and non-teaching staff are appointed and serve. The service rules covering recruitment, promotion, leave, conduct and related matters are published below.",
+          },
+        ],
+      },
+    ],
+  },
   "about": {
     label: "About Us",
     path: "/about",

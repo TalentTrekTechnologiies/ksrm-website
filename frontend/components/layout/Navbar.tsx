@@ -100,6 +100,7 @@ const navItems: NavItem[] = [
       { label: "Academic Calendar", href: "/academics/academic-calendar" },
       { label: "Syllabus", href: "/academics/syllabus" },
       { label: "Regulations", href: "/academics/regulations" },
+      { label: "Service Rules", href: "/academics/service-rules" },
     ],
   },
   {
@@ -225,6 +226,20 @@ const navItems: NavItem[] = [
       { label: "News & Events", href: "/news" },
       // Moved off the top row. Its own sub-links are kept rather than dropped,
       // so nothing that was reachable before became unreachable.
+      { label: "Committees", href: "/committees" },
+      { label: "Policies", href: "/policies" },
+      // Grouped with the "  ↳ " prefix the About menu already uses, so
+      // twelve entries do not read as one undifferentiated list. Students and
+      // Faculty each have the same three, and the indent is what makes that
+      // legible at a glance.
+      { label: "Students", href: "/students/policies-procedures" },
+      { label: "  ↳ Student Policies & Procedures", href: "/students/policies-procedures" },
+      { label: "  ↳ Student Rules", href: "/students/rules" },
+      { label: "  ↳ Student Data", href: "/students/data" },
+      { label: "Faculty", href: "/faculty/policies-procedures" },
+      { label: "  ↳ Faculty Policies and Procedures", href: "/faculty/policies-procedures" },
+      { label: "  ↳ Faculty Rules", href: "/faculty/rules" },
+      { label: "  ↳ Faculty Data", href: "/faculty/data" },
       { label: "Mandatory Disclosure", href: "/mandatory-disclosure" },
       { label: "Accreditation", href: "/accreditation" },
       { label: "UGC Autonomous", href: "/mandatory-disclosure#doc-ugc-autonomous" },

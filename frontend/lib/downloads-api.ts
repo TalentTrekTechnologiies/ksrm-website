@@ -8,6 +8,15 @@ export type DownloadCategory = "SYLLABUS" | "QUESTION_PAPER" | "BROCHURE" | "AFF
 export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "kgcet", label: "KGCET — results, notifications" },
   { value: "research.policies", label: "Research → RDC Policies" },
+  { value: "committees", label: "Committees" },
+  { value: "policies", label: "Policies" },
+  { value: "academics.service-rules", label: "Academics → Service Rules" },
+  { value: "students.policies", label: "Student Policies & Procedures" },
+  { value: "students.rules", label: "Student Rules" },
+  { value: "students.data", label: "Student Data" },
+  { value: "faculty.policies", label: "Faculty Policies and Procedures" },
+  { value: "faculty.rules", label: "Faculty Rules" },
+  { value: "faculty.data", label: "Faculty Data" },
   { value: "research.documents", label: "Research → Additional Documents" },
   { value: "edc", label: "EDC — Entrepreneurship Development Cell" },
   { value: "iic", label: "IIC — Institution's Innovation Council" },
@@ -242,6 +251,32 @@ export const GROUP_SUGGESTIONS: Record<string, string[]> = {
     "Policy Documents",
   ],
   alumni: ["Alumni Meets", "Activity Reports"],
+  // The policy categories the college asked for. Offered as buttons rather
+  // than a fixed dropdown so a new category is an admin decision, not a code
+  // change - the same reasoning as every other group heading here.
+  policies: [
+    "Academic Policies",
+    "Administrative Policies",
+    "Student Welfare Policies",
+    "Research Policies",
+    "IT & Data Policies",
+    "Environment & Sustainability Policies",
+    "Grievance & Anti-Ragging Policies",
+    "Financial Policies",
+  ],
+  committees: [
+    "Statutory Committees",
+    "Academic Committees",
+    "Administrative Committees",
+    "Student Committees",
+  ],
+  "academics.service-rules": ["Service Rules", "Recruitment", "Promotion", "Leave & Attendance"],
+  "students.policies": ["Admission & Enrolment", "Attendance", "Conduct & Discipline", "Examinations", "Grievance & Redressal", "Scholarships & Welfare"],
+  "students.rules": ["Code of Conduct", "Hostel Rules", "Transport Rules", "Anti-Ragging", "Library & Lab Rules"],
+  "students.data": ["Enrolment & Intake", "Results Analysis", "Progression", "Awards & Achievements"],
+  "faculty.policies": ["Recruitment & Selection", "Appraisal & Promotion", "Research & Consultancy", "Leave & Attendance", "Professional Development"],
+  "faculty.rules": ["Code of Professional Conduct", "Service Conditions", "Duties & Responsibilities", "Disciplinary Procedure"],
+  "faculty.data": ["Faculty Strength", "Qualifications & Experience", "Research & Publications", "Awards & Recognition"],
   "about.financecommittee": ["2025-26", "2024-25", "2023-24", "2022-23", "2021-22"],
   "mandatory-disclosure": [
     "Accreditation Status",
