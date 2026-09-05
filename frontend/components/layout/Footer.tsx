@@ -8,6 +8,7 @@ import { getPublicSiteSettings } from "@/lib/site-settings-api"
 import { useLiveData } from "@/lib/use-live-data"
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api"
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api"
+import { canonicalDepartmentSlug } from "@/lib/department-slugs"
 
 /**
  * Site Settings override the built-in defaults below, but only when actually
@@ -93,7 +94,7 @@ function useProgrammeColumns() {
     return forLevel
       .map((r, i) => ({
         label: labels[i],
-        href: r.department?.slug ? `/departments/${r.department.slug}` : "/academics/courses-intake",
+        href: r.department?.slug ? `/departments/${canonicalDepartmentSlug(r.department.slug)}` : "/academics/courses-intake",
       }))
       .filter((entry) => {
         const key = entry.label.toLowerCase().replace(/[^a-z0-9]/g, "")
@@ -142,7 +143,7 @@ function useFooterContact() {
   }
 }
 
-type SvgIconProps = { size?: number; color?: string }
+type SvgIconProps = { size?: number; color?: string; strokeWidth?: number }
 
 const IconFacebook = ({ size = 18, color = "currentColor" }: SvgIconProps) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg">
@@ -309,7 +310,7 @@ function SocialBtn({ Icon, href }: { Icon: (props: SvgIconProps) => React.ReactE
         flexShrink: 0,
       }}
     >
-      <Icon size={18} color={hovered ? "#1e2570" : "#ffffff"} {...({ strokeWidth: 1.8 } as any)} />
+      <Icon size={18} color={hovered ? "#1e2570" : "#ffffff"} strokeWidth={1.8} />
     </a>
   )
 }

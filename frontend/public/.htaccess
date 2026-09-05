@@ -77,7 +77,7 @@ Options -MultiViews
 
   # Campus life
   RewriteRule ^campusnew\.php$ /campus-life/campus-facilities [R=301,L]
-  RewriteRule ^edc\.php$ /campus-life/edc [R=301,L]
+  RewriteRule ^edc\.php$ /edc [R=301,L]
   RewriteRule ^nss\.php$ /campus-life/nss [R=301,L]
   RewriteRule ^startup\.php$ /campus-life/startup-cell [R=301,L]
   RewriteRule ^libruf2\.php$ /campus-life/library [R=301,L]
@@ -91,22 +91,22 @@ Options -MultiViews
   # Old-site pages still linked to from the new site's own content (IQAC's
   # feedback forms, governing body, etc). Without these they 404 the moment the
   # new site replaces the old one, because the linked .php files stop existing.
-  RewriteRule ^AlumniFeedback\.php$ /iqac [R=301,L]
-  RewriteRule ^StudentFeedback\.php$ /iqac [R=301,L]
-  RewriteRule ^ParentFeedback\.php$ /iqac [R=301,L]
-  RewriteRule ^TeacherFeedback\.php$ /iqac [R=301,L]
-  RewriteRule ^EmployerFeedback\.php$ /iqac [R=301,L]
-  RewriteRule ^gbody\.php$ /about [R=301,L]
-  RewriteRule ^academiccouncil\.php$ /about [R=301,L]
-  RewriteRule ^financial\.php$ /about [R=301,L]
+  RewriteRule ^AlumniFeedback\.php$ /iqac/\#survey [NE,R=301,L]
+  RewriteRule ^StudentFeedback\.php$ /iqac/\#survey [NE,R=301,L]
+  RewriteRule ^ParentFeedback\.php$ /iqac/\#survey [NE,R=301,L]
+  RewriteRule ^TeacherFeedback\.php$ /iqac/\#survey [NE,R=301,L]
+  RewriteRule ^EmployerFeedback\.php$ /iqac/\#survey [NE,R=301,L]
+  RewriteRule ^gbody\.php$ /committees/\#governing-body [NE,R=301,L]
+  RewriteRule ^academiccouncil\.php$ /committees/\#academic-council [NE,R=301,L]
+  RewriteRule ^financial\.php$ /committees/\#finance-committee [NE,R=301,L]
   RewriteRule ^alumniregistration\.php$ /alumni [R=301,L]
 
   # Other
   RewriteRule ^alumniruf\.php$ /alumni [R=301,L]
   RewriteRule ^enquiry\.php$ /contact [R=301,L]
-  RewriteRule ^kgcet\.php$ /admissions [R=301,L]
-  RewriteRule ^reports\.php$ /iqac [R=301,L]
-  RewriteRule ^feedback\.php$ /iqac [R=301,L]
+  RewriteRule ^kgcet\.php$ /kgcet [R=301,L]
+  RewriteRule ^reports\.php$ /iqac/\#annual-reports [NE,R=301,L]
+  RewriteRule ^feedback\.php$ /iqac/\#survey [NE,R=301,L]
 
   # 1. A real file (an asset, a PDF, the .html itself) is served as-is.
   RewriteCond %{REQUEST_FILENAME} -f
@@ -122,6 +122,11 @@ Options -MultiViews
   #    served as-is.
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
+
+  # Department URL aliases. Nginx has matching rules in deploy/nginx-redirects.conf.
+  RewriteRule ^departments/(aids|ai-ds|aiml|ai-ml|data-science|cse-ds|cse-aiml)/?$ /departments/cse [R=301,L]
+  RewriteRule ^departments/mechanical/?$ /departments/mech [R=301,L]
+  RewriteRule ^departments/humanities-sciences/?$ /departments/hs [R=301,L]
 </IfModule>
 
 # Unknown URLs get the export's own 404 page.

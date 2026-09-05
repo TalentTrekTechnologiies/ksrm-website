@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Loader2, Plus, AlertTriangle, Users, X } from "lucide-react"
+import { FileText, Loader2, Plus, AlertTriangle, Trash2, Users, X } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
+import MediaField from "@/components/admin/cms/MediaField"
 import {
   TextField,
   TextAreaField,
@@ -15,8 +16,16 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import {
+  createDownload,
+  deleteDownload,
+  Download,
+  getDownloadsAdmin,
+  updateDownload,
+} from "@/lib/downloads-api"
 import { getDepartmentsPublic, Department } from "@/lib/departments-api"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
+import { committeeAnchor } from "@/components/committees/NamedCommittees"
 import {
   getCommitteesAdmin,
   createCommittee,
@@ -97,6 +106,37 @@ interface MemberFormState {
 
 const emptyMemberForm: MemberFormState = { name: "", designation: "", role: "" }
 
+interface MinutesFormState {
+  title: string
+  academicYear: string
+  fileUrl: string
+  mediaId: number | null
+}
+
+const emptyMinutesForm: MinutesFormState = { title: "", academicYear: "", fileUrl: "", mediaId: null }
+
+const ACADEMIC_YEAR_OPTIONS = (() => {
+  const now = new Date()
+  const start = now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1
+  const opts = [{ value: "", label: "Not year-specific" }]
+  for (let i = 0; i < 6; i++) {
+    const y = start - i
+    const label = `AY ${y}-${String((y + 1) % 100).padStart(2, "0")}`
+    opts.push({ value: label, label: i === 0 ? `${label} (current)` : label })
+  }
+  return opts
+})()
+
+function cleanTitle(name?: string | null): string {
+  const raw = (name ?? "").trim()
+  if (!raw || /^(source|original|file|download|untitled|\d+)$/i.test(raw)) return ""
+  return raw.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim()
+}
+
+function committeeMinutesSection(name: string): string {
+  return `committees.${committeeAnchor(name)}`
+}
+
 function CommitteesManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -113,6 +153,11 @@ function CommitteesManagerInner() {
   const [managingMembersId, setManagingMembersId] = useState<number | null>(null)
   const [memberForm, setMemberForm] = useState<MemberFormState>(emptyMemberForm)
   const [savingMember, setSavingMember] = useState(false)
+  const [minutes, setMinutes] = useState<Download[]>([])
+  const [loadingMinutes, setLoadingMinutes] = useState(false)
+  const [minutesForm, setMinutesForm] = useState<MinutesFormState>(emptyMinutesForm)
+  const [editingMinutesId, setEditingMinutesId] = useState<number | null>(null)
+  const [savingMinutes, setSavingMinutes] = useState(false)
   // Which member the form below the list is editing; null means it adds a new
   // one. An id rather than a copy, for the same reason as managingMembersId.
   const [editingMemberId, setEditingMemberId] = useState<number | null>(null)
@@ -169,6 +214,98 @@ function CommitteesManagerInner() {
   function cancelMemberEdit() {
     setEditingMemberId(null)
     setMemberForm(emptyMemberForm)
+  }
+
+  async function refreshMinutes(committeeName = managingMembersOf?.name) {
+    if (!committeeName) {
+      setMinutes([])
+      return
+    }
+    setLoadingMinutes(true)
+    try {
+      const section = committeeMinutesSection(committeeName)
+      const all = await getDownloadsAdmin(true)
+      setMinutes(
+        all
+          .filter((d) => d.pageSection === section)
+          .sort((a, b) => {
+            const year = String(b.academicYear ?? "").localeCompare(String(a.academicYear ?? ""))
+            if (year !== 0) return year
+            return String(b.publishedAt ?? "").localeCompare(String(a.publishedAt ?? ""))
+          }),
+      )
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to load minutes")
+    } finally {
+      setLoadingMinutes(false)
+    }
+  }
+
+  function openCommitteeManager(item: Committee) {
+    cancelMemberEdit()
+    setEditingMinutesId(null)
+    setMinutesForm(emptyMinutesForm)
+    setManagingMembersId(item.id)
+    refreshMinutes(item.name)
+  }
+
+  function startEditMinutes(item: Download) {
+    setEditingMinutesId(item.id)
+    setMinutesForm({
+      title: item.title,
+      academicYear: item.academicYear ?? "",
+      fileUrl: item.fileUrl,
+      mediaId: item.mediaId,
+    })
+  }
+
+  function cancelMinutesEdit() {
+    setEditingMinutesId(null)
+    setMinutesForm(emptyMinutesForm)
+  }
+
+  async function handleSaveMinutes() {
+    if (!managingMembersOf) return
+    setSavingMinutes(true)
+    setError(null)
+    try {
+      const dto = {
+        title: minutesForm.title,
+        category: "OTHER" as const,
+        pageSection: committeeMinutesSection(managingMembersOf.name),
+        groupLabel: minutesForm.academicYear || null,
+        ...(minutesForm.academicYear ? { academicYear: minutesForm.academicYear } : {}),
+        fileUrl: minutesForm.fileUrl,
+        mediaId: minutesForm.mediaId,
+        isActive: true,
+      }
+      if (editingMinutesId !== null) {
+        const current = minutes.find((d) => d.id === editingMinutesId)
+        if (!current) throw new ApiError("That minutes document no longer exists. Reload and try again.", 404)
+        await updateDownload(editingMinutesId, { ...dto, version: current.version })
+      } else {
+        await createDownload(dto)
+      }
+      cancelMinutesEdit()
+      await refreshMinutes(managingMembersOf.name)
+      notifySaved("Minutes have been saved.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to save minutes")
+    } finally {
+      setSavingMinutes(false)
+    }
+  }
+
+  async function handleDeleteMinutes(item: Download) {
+    if (!(await confirm({ title: "Delete minutes?", message: `Delete "${item.title}"?`, confirmLabel: "Delete", destructive: true }))) return
+    try {
+      await deleteDownload(item.id)
+      if (editingMinutesId === item.id) cancelMinutesEdit()
+      await refreshMinutes(managingMembersOf?.name)
+      notifySaved("The minutes document has been deleted.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to delete minutes")
+    }
   }
 
   function startCreate() {
@@ -476,6 +613,88 @@ function CommitteesManagerInner() {
               {savingMember ? "Saving..." : editingMemberId !== null ? "Save member" : "Add member"}
             </PrimaryButton>
           </FormActions>
+
+          <div className="border-t border-admin-border pt-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-slate-700">
+                  <FileText className="h-4 w-4 text-admin-primary" /> Minutes of Meetings
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  These publish under this committee on the public Committees page, grouped by academic year.
+                </p>
+              </div>
+              {loadingMinutes && <Loader2 className="h-4 w-4 animate-spin text-admin-primary" />}
+            </div>
+
+            <div className="space-y-2">
+              {minutes.filter((d) => !d.deletedAt).length === 0 && !loadingMinutes && (
+                <p className="rounded-lg border border-dashed border-admin-border px-3 py-2 text-xs text-slate-500">
+                  No minutes uploaded for this committee yet.
+                </p>
+              )}
+              {minutes.filter((d) => !d.deletedAt).map((d) => (
+                <div key={d.id} className="flex items-center justify-between gap-3 rounded-lg border border-admin-border bg-admin-bg/40 px-3 py-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-slate-800">{d.title}</p>
+                    <p className="text-xs text-slate-500">{d.academicYear || d.groupLabel || "Not year-specific"}</p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <a href={d.fileUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-admin-primary hover:underline">
+                      Open
+                    </a>
+                    <button type="button" onClick={() => startEditMinutes(d)} className="text-xs font-semibold text-admin-primary hover:underline">
+                      Edit
+                    </button>
+                    <button type="button" onClick={() => handleDeleteMinutes(d)} className="text-red-600 hover:text-red-700" aria-label={`Delete ${d.title}`}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-4 text-sm font-semibold text-slate-700">
+              {editingMinutesId !== null ? "Edit minutes" : "Add minutes"}
+            </p>
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <TextField
+                label="Title"
+                value={minutesForm.title}
+                onChange={(v) => setMinutesForm({ ...minutesForm, title: v })}
+                placeholder={`${managingMembersOf.name} MoM`}
+              />
+              <SelectField
+                label="Academic year"
+                value={minutesForm.academicYear}
+                onChange={(v) => setMinutesForm({ ...minutesForm, academicYear: v })}
+                options={ACADEMIC_YEAR_OPTIONS}
+              />
+            </div>
+            <div className="mt-3">
+              <MediaField
+                label="Minutes file"
+                url={minutesForm.fileUrl}
+                mediaId={minutesForm.mediaId}
+                onChange={(url, mediaId, mediaTitle) =>
+                  setMinutesForm((prev) => ({
+                    ...prev,
+                    fileUrl: url,
+                    mediaId,
+                    title: prev.title.trim() ? prev.title : cleanTitle(mediaTitle),
+                  }))
+                }
+                accept={["DOCUMENT"]}
+                required
+              />
+            </div>
+            <FormActions>
+              {editingMinutesId !== null && <SecondaryButton onClick={cancelMinutesEdit}>Cancel</SecondaryButton>}
+              <PrimaryButton onClick={handleSaveMinutes} disabled={savingMinutes || !minutesForm.title || !minutesForm.fileUrl}>
+                {savingMinutes ? "Saving..." : editingMinutesId !== null ? "Save minutes" : "Add minutes"}
+              </PrimaryButton>
+            </FormActions>
+          </div>
         </div>
       )}
 
@@ -529,7 +748,7 @@ function CommitteesManagerInner() {
             {!c.deletedAt && (
               <button
                 type="button"
-                onClick={() => { setManagingMembersId(c.id); cancelMemberEdit() }}
+                onClick={() => openCommitteeManager(c)}
                 className="flex shrink-0 items-center gap-1 text-xs font-semibold text-admin-primary hover:underline"
               >
                 <Users className="h-3.5 w-3.5" /> Edit members

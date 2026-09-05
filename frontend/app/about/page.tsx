@@ -246,7 +246,7 @@ export default function About() {
       `}</style>
 
       {/* HERO BANNER */}
-      <section className="k-hero" style={{ backgroundImage: "url('/banners/about.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <section id="about-ksrmce" className="k-hero" style={{ backgroundImage: "url('/banners/about.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="k-container">
           <div className="k-hero-content">
             <div className="k-hero-eyebrow">🏛️ ABOUT US</div>

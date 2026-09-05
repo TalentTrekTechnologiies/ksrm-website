@@ -6,8 +6,10 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronDown, Send } from "lucide-react"
 import { getDepartmentsPublic, isAcademicDepartment } from "@/lib/departments-api"
+import { getCommitteesPublic } from "@/lib/committees-api"
 import { useLiveData } from "@/lib/use-live-data"
 import { canonicalDepartmentSlug } from "@/lib/department-slugs"
+import { committeeAnchor } from "@/components/committees/NamedCommittees"
 
 const socialLinks = [
   { Icon: "f", href: "https://facebook.com/ksrmceofficial", label: "Facebook" },
@@ -42,7 +44,7 @@ const navItems: NavItem[] = [
     href: "/about",
     children: [
       { label: "About KSRMCE", href: "/about#about-ksrmce" },
-      { label: "Vision & Mission", href: "/about#vision" },
+      { label: "Vision & Mission", href: "/about#vision-mission" },
       // Renamed at the college's request. The section it jumps to keeps the
       // trust's full name as its heading; only the menu entry is shorter.
       { label: "Sponsoring Body", href: "/about#charities" },
@@ -264,17 +266,36 @@ export default function Navbar() {
     () => getDepartmentsPublic().then((all) => all.filter((d) => d.isActive && isAcademicDepartment(d))),
     [],
   )
+  const liveCommittees = useLiveData(
+    () => getCommitteesPublic().then((all) => all.filter((c) => c.isActive !== false)),
+    [],
+  )
 
   const items = useMemo(() => {
-    if (!liveDepartments?.length) return navItems
-    const children = liveDepartments.map((d) => ({
+    const departmentChildren = liveDepartments?.length ? liveDepartments.map((d) => ({
       label: d.name,
       // The CMS slug is not always the published URL - "mechanical" is only
       // ever built as "mech". Linking the raw slug opened the homepage.
       href: `/departments/${canonicalDepartmentSlug(d.slug)}`,
-    }))
-    return navItems.map((item) => (item.label === "Departments" ? { ...item, children } : item))
-  }, [liveDepartments])
+    })) : null
+    const committeeChildren = liveCommittees?.length
+      ? liveCommittees.map((c) => ({
+          label: `  ↳ ${c.name}`,
+          href: `/committees#${committeeAnchor(c.name)}`,
+        }))
+      : []
+
+    return navItems.map((item) => {
+      if (item.label === "Departments" && departmentChildren) return { ...item, children: departmentChildren }
+      if (item.label === "More" && item.children) {
+        const nextChildren = item.children.flatMap((child) =>
+          child.href === "/committees" ? [child, ...committeeChildren] : [child],
+        )
+        return { ...item, children: nextChildren }
+      }
+      return item
+    })
+  }, [liveDepartments, liveCommittees])
 
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hoveredDropdown, setHoveredDropdown] = useState<string | null>(null)

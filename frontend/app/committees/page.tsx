@@ -3,6 +3,7 @@
 import SimplePageShell from "@/components/SimplePageShell";
 import PageResources from "@/components/PageResources";
 import CommitteeRosterTable from "@/components/committees/CommitteeRosterTable";
+import { committeeAnchor } from "@/components/committees/NamedCommittees";
 import CmsText from "@/components/CmsText";
 import { getCommitteesPublic, Committee } from "@/lib/committees-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -25,6 +26,7 @@ export default function CommitteesPage() {
   );
 
   const live = (committees ?? []).filter((c) => c.isActive !== false);
+  const momSection = (name: string) => `committees.${committeeAnchor(name)}`;
 
   return (
     <SimplePageShell
@@ -35,23 +37,41 @@ export default function CommitteesPage() {
     >
       {live.map((committee) => {
         const members = (committee.members ?? []).filter((m) => m.isActive !== false);
-        if (members.length === 0) return null;
+        const anchor = committeeAnchor(committee.name);
         return (
-          <div key={committee.id} style={{ marginBottom: 48 }}>
+          <section key={committee.id} id={anchor} style={{ marginBottom: 56, scrollMarginTop: 104 }}>
             <h2 className="sp-heading">{committee.name}</h2>
             {committee.description && (
               <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7, margin: "-16px 0 20px", maxWidth: 820 }}>
                 {committee.description}
               </p>
             )}
-            <CommitteeRosterTable
-              rows={members.map((m) => ({
-                name: m.name,
-                designation: m.designation,
-                role: m.role,
-              }))}
-            />
-          </div>
+            {members.length === 0 ? (
+              <p style={{ color: "#666", fontSize: 15, fontStyle: "italic" }}>
+                Members will be published here shortly.
+              </p>
+            ) : (
+              <CommitteeRosterTable
+                rows={members.map((m) => ({
+                  name: m.name,
+                  designation: m.designation,
+                  role: m.role,
+                }))}
+              />
+            )}
+            <h3
+              style={{
+                color: "#2B3490",
+                fontFamily: "var(--font-rajdhani), sans-serif",
+                fontSize: 22,
+                fontWeight: 700,
+                margin: "28px 0 12px",
+              }}
+            >
+              Minutes of Meetings
+            </h3>
+            <PageResources section={momSection(committee.name)} embedded maxVisible={8} />
+          </section>
         );
       })}
 
