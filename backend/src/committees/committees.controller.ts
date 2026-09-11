@@ -23,6 +23,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
 import { RequirePermission } from '../auth/permission.decorator';
 import { DepartmentOwnershipGuard } from '../auth/department-ownership.guard';
+import { CommitteePlacementOwnershipGuard } from '../auth/committee-placement-ownership.guard';
 import { DepartmentScoped } from '../auth/department-scope.decorator';
 
 @ApiTags('committees')
@@ -60,7 +61,7 @@ export class CommitteesController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.create')
   @DepartmentScoped({ source: 'body' })
   create(@Body() dto: CreateCommitteeDto, @Request() req) {
@@ -77,7 +78,11 @@ export class CommitteesController {
   }
 
   @Post(':committeeId/members/reorder')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  // Placement-scoped as well: a page-owning admin (Library,
+  // Examination) must not edit the roster of a committee on somebody
+  // else's page. The department guard cannot do it - it waves through any
+  // admin with no departmentId, which those roles deliberately have.
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.update')
   reorderMembers(
     @Param('committeeId', ParseIntPipe) committeeId: number,
@@ -93,7 +98,7 @@ export class CommitteesController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.update')
   @DepartmentScoped({ source: 'lookup', model: 'committee' })
   update(
@@ -105,7 +110,7 @@ export class CommitteesController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.delete')
   @DepartmentScoped({ source: 'lookup', model: 'committee' })
   softDelete(@Param('id', ParseIntPipe) id: number, @Request() req) {
@@ -113,7 +118,7 @@ export class CommitteesController {
   }
 
   @Post(':id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard, DepartmentOwnershipGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.restore')
   @DepartmentScoped({ source: 'lookup', model: 'committee' })
   restore(@Param('id', ParseIntPipe) id: number, @Request() req) {
@@ -123,7 +128,11 @@ export class CommitteesController {
   // --- Members ---
 
   @Post(':committeeId/members')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  // Placement-scoped as well: a page-owning admin (Library,
+  // Examination) must not edit the roster of a committee on somebody
+  // else's page. The department guard cannot do it - it waves through any
+  // admin with no departmentId, which those roles deliberately have.
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.create')
   createMember(
     @Param('committeeId', ParseIntPipe) committeeId: number,
@@ -139,7 +148,11 @@ export class CommitteesController {
   }
 
   @Patch('members/:id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  // Placement-scoped as well: a page-owning admin (Library,
+  // Examination) must not edit the roster of a committee on somebody
+  // else's page. The department guard cannot do it - it waves through any
+  // admin with no departmentId, which those roles deliberately have.
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.update')
   updateMember(
     @Param('id', ParseIntPipe) id: number,
@@ -155,14 +168,22 @@ export class CommitteesController {
   }
 
   @Delete('members/:id')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  // Placement-scoped as well: a page-owning admin (Library,
+  // Examination) must not edit the roster of a committee on somebody
+  // else's page. The department guard cannot do it - it waves through any
+  // admin with no departmentId, which those roles deliberately have.
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.delete')
   softDeleteMember(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.committeesService.softDeleteMember(id, req.user, req.requestId);
   }
 
   @Post('members/:id/restore')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  // Placement-scoped as well: a page-owning admin (Library,
+  // Examination) must not edit the roster of a committee on somebody
+  // else's page. The department guard cannot do it - it waves through any
+  // admin with no departmentId, which those roles deliberately have.
+  @UseGuards(JwtAuthGuard, PermissionsGuard, CommitteePlacementOwnershipGuard)
   @RequirePermission('committees.restore')
   restoreMember(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.committeesService.restoreMember(id, req.user, req.requestId);

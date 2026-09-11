@@ -403,6 +403,15 @@ const ROLES: {
       'faculty.view',
       'faculty.create',
       'faculty.update',
+      // The Library Committee on their own page. Safe to grant because
+      // CommitteePlacementOwnershipGuard confines a page-owning admin to
+      // committees whose placement maps to a page they hold - so this is the
+      // LIBRARY-placed committee and nothing else. Without the guard these
+      // keys would also have handed them the Governing Body and IQAC.
+      'committees.view',
+      'committees.create',
+      'committees.update',
+      'committees.delete',
     ],
   },
   {
