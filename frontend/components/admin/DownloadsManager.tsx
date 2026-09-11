@@ -8,6 +8,9 @@ import CmsTable from "@/components/admin/cms/CmsTable"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
+import { getCommitteesPublic, Committee } from "@/lib/committees-api"
+import { committeeAnchor } from "@/components/committees/NamedCommittees"
+import { useLiveData } from "@/lib/use-live-data"
 import {
   TextField,
   TextAreaField,
@@ -55,6 +58,32 @@ const CATEGORY_OPTIONS: { value: DownloadCategory; label: string }[] = [
 // "" = not tied to any page (general Downloads only). Prepended to the shared
 // PAGE_SECTIONS list so the admin can clear the routing.
 const PAGE_SECTION_OPTIONS = [{ value: "", label: "— None (general only) —" }, ...PAGE_SECTIONS]
+
+/**
+ * "Committees → <name>", one per committee, appended to the fixed list.
+ *
+ * Each committee's page reads its minutes from its own section,
+ * "committees.<slug>". Those sections cannot be written into PAGE_SECTIONS,
+ * because the committees live in the database and a new one must not need a
+ * code change - so without this an admin had no way to upload minutes at all,
+ * and every committee's "Minutes of Meetings" heading sat permanently empty.
+ */
+function useCommitteeSections() {
+  const committees = useLiveData<Committee[]>(
+    () => getCommitteesPublic().catch(() => [] as Committee[]),
+    [],
+  )
+  return useMemo(
+    () =>
+      (committees ?? [])
+        .filter((c) => c.isActive !== false)
+        .map((c) => ({
+          value: `committees.${committeeAnchor(c.name)}`,
+          label: `Committees → ${c.name}`,
+        })),
+    [committees],
+  )
+}
 // value -> readable label, for the "Page" column and the page filter, so an
 // admin can see which page a document is on and narrow to just that page's docs.
 const SECTION_LABEL = new Map(PAGE_SECTIONS.map((s) => [s.value, s.label]))
@@ -102,6 +131,7 @@ function DownloadsManagerInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { confirm, notifySaved } = useCmsConfirm()
+  const committeeSections = useCommitteeSections()
   const [items, setItems] = useState<Download[]>([])
   const [editing, setEditing] = useState<Download | null>(null)
   const [creating, setCreating] = useState(false)
@@ -340,7 +370,7 @@ function DownloadsManagerInner() {
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit download" : "New download"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
           <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} required />
-          <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={PAGE_SECTION_OPTIONS} />
+          <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={[...PAGE_SECTION_OPTIONS, ...committeeSections]} />
 
           {/* Which academic year this belongs to. Previous years fold shut on
               the public page, so a section does not grow without limit as each

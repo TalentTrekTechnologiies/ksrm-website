@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import SimplePageShell from "@/components/SimplePageShell";
 import PageResources from "@/components/PageResources";
 import CommitteeRosterTable from "@/components/committees/CommitteeRosterTable";
@@ -40,7 +41,14 @@ export default function CommitteesPage() {
         const anchor = committeeAnchor(committee.name);
         return (
           <section key={committee.id} id={anchor} style={{ marginBottom: 56, scrollMarginTop: 104 }}>
-            <h2 className="sp-heading">{committee.name}</h2>
+            <h2 className="sp-heading">
+              {/* Links to the committee's own page, which is what the college
+                  cites in NAAC and NBA submissions - this index is for finding
+                  one, not for reading it. */}
+              <Link href={`/committees/${committeeAnchor(committee.name)}`} style={{ color: "inherit", textDecoration: "none" }}>
+                {committee.name}
+              </Link>
+            </h2>
             {committee.description && (
               <p style={{ color: "#555", fontSize: 15, lineHeight: 1.7, margin: "-16px 0 20px", maxWidth: 820 }}>
                 {committee.description}

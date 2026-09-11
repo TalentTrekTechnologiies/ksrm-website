@@ -281,7 +281,11 @@ export default function Navbar() {
     const committeeChildren = liveCommittees?.length
       ? liveCommittees.map((c) => ({
           label: `  ↳ ${c.name}`,
-          href: `/committees#${committeeAnchor(c.name)}`,
+          // A real page, not an anchor. The college cites these in NAAC and
+          // NBA submissions, where a reviewer needs a link that can be
+          // bookmarked and that keeps working when the shared page is
+          // reordered - "/committees/finance-committee", not "#finance".
+          href: `/committees/${committeeAnchor(c.name)}`,
         }))
       : []
 

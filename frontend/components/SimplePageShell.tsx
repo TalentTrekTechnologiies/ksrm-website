@@ -18,6 +18,8 @@ export default function SimplePageShell({
   section,
   titleSlot,
   taglineSlot,
+  overrideTitle,
+  overrideTagline,
   introSlot,
   banner = "/banners/courses-intake.webp",
   children,
@@ -26,6 +28,11 @@ export default function SimplePageShell({
   section: string
   titleSlot: string
   taglineSlot: string
+  /** A literal heading, used instead of the CmsText slot. The per-committee
+   *  pages share this shell but each carries its own name, which comes from
+   *  the CMS record rather than from a page-text slot. */
+  overrideTitle?: string
+  overrideTagline?: string
   /** Body paragraph under the hero. Omit for a page that opens straight in. */
   introSlot?: string
   banner?: string
@@ -60,8 +67,8 @@ export default function SimplePageShell({
 
       <section className="sp-hero">
         <div className="sp-container">
-          <h1 className="sp-title"><CmsText section={section} slot={titleSlot} /></h1>
-          <p className="sp-tagline"><CmsText section={section} slot={taglineSlot} /></p>
+          <h1 className="sp-title">{overrideTitle || <CmsText section={section} slot={titleSlot} />}</h1>
+          <p className="sp-tagline">{overrideTagline || (overrideTitle ? null : <CmsText section={section} slot={taglineSlot} />)}</p>
         </div>
       </section>
 
