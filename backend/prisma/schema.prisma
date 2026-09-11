@@ -889,6 +889,14 @@ model CommitteeMember {
   name        String
   designation String
   role        String
+  /// Department or body the member belongs to, as the college publishes it -
+  /// "H&S", "CIVIL", "Library", "NGO", "Advocate". Null for a committee whose
+  /// roster does not break members down that way.
+  department  String?
+  /// Contact number, published for the cells that exist to be reached - an
+  /// Anti-Sexual Harassment Cell is only useful if a complainant can call
+  /// somebody on it. Null everywhere it is not deliberately published.
+  contact     String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())

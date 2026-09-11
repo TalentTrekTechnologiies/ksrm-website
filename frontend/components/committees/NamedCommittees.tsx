@@ -81,6 +81,8 @@ export default function NamedCommittees({
                     rows={members.map((m) => ({
                       name: m.name,
                       designation: m.designation,
+                      department: m.department,
+                      contact: m.contact,
                       role: m.role,
                     }))}
                   />

@@ -28,6 +28,10 @@ export interface CommitteeMember {
   name: string;
   designation: string;
   role: string;
+  /** Department or body - "H&S", "Library", "NGO". Null when not published. */
+  department: string | null;
+  /** Published contact number. Null when not published. */
+  contact: string | null;
   sortOrder: number;
   isActive: boolean;
   deletedAt: string | null;

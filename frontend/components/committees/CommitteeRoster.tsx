@@ -38,7 +38,7 @@ export default function CommitteeRoster({
           committees
             .flatMap((c) => c.members)
             .filter((m) => m.isActive)
-            .map((m) => ({ name: m.name, designation: m.designation, role: m.role })),
+            .map((m) => ({ name: m.name, designation: m.designation, department: m.department, role: m.role, contact: m.contact })),
         )
         .catch(() => fallback ?? []),
     [type],

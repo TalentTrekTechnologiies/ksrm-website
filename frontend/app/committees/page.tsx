@@ -63,6 +63,8 @@ export default function CommitteesPage() {
                 rows={members.map((m) => ({
                   name: m.name,
                   designation: m.designation,
+                  department: m.department,
+                  contact: m.contact,
                   role: m.role,
                 }))}
               />

@@ -61,7 +61,13 @@ export default function CommitteePage({
         <div style={{ marginBottom: 44 }}>
           <h2 className="sp-heading">Members</h2>
           <CommitteeRosterTable
-            rows={members.map((m) => ({ name: m.name, designation: m.designation, role: m.role }))}
+            rows={members.map((m) => ({
+              name: m.name,
+              designation: m.designation,
+              department: m.department,
+              role: m.role,
+              contact: m.contact,
+            }))}
           />
         </div>
       )}

@@ -11,6 +11,10 @@
  */
 
 export interface RosterRow {
+  /** Shown as its own column, but only when at least one row has one - a
+   *  roster that does not publish departments keeps three columns. */
+  department?: string | null;
+  contact?: string | null;
   name: string;
   designation: string;
   role: string;
@@ -23,12 +27,25 @@ const cell: React.CSSProperties = {
 };
 
 export default function CommitteeRosterTable({ rows }: { rows: RosterRow[] }) {
+  // Columns are shown only when something fills them, so a roster that
+  // publishes neither keeps the three it always had rather than gaining two
+  // empty ones.
+  const hasDepartment = rows.some((r) => r.department?.trim());
+  const hasContact = rows.some((r) => r.contact?.trim());
+  const headings = [
+    "Name",
+    "Designation",
+    ...(hasDepartment ? ["Dept."] : []),
+    "Role",
+    ...(hasContact ? ["Contact"] : []),
+  ];
+
   return (
     <div style={{ overflowX: "auto" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
         <thead>
           <tr>
-            {["Name", "Designation", "Role"].map((h) => (
+            {headings.map((h) => (
               <th
                 key={h}
                 style={{
@@ -52,7 +69,19 @@ export default function CommitteeRosterTable({ rows }: { rows: RosterRow[] }) {
             <tr key={`${r.name}-${i}`} style={{ background: i % 2 === 0 ? "#f4f3ef" : "transparent" }}>
               <td style={{ ...cell, fontWeight: 600 }}>{r.name}</td>
               <td style={cell}>{r.designation}</td>
+              {hasDepartment && <td style={cell}>{r.department ?? ""}</td>}
               <td style={{ ...cell, color: "#2B3490", fontWeight: 700 }}>{r.role}</td>
+              {hasContact && (
+                <td style={cell}>
+                  {/* Dialable on a phone, which is the point of publishing it
+                      on a cell people are meant to contact. */}
+                  {r.contact ? (
+                    <a href={`tel:${r.contact.replace(/[^\d+]/g, "")}`} style={{ color: "#2B3490", textDecoration: "none" }}>
+                      {r.contact}
+                    </a>
+                  ) : ""}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

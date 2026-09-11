@@ -101,10 +101,14 @@ const TYPE_OPTIONS: { value: CommitteeType; label: string }[] = [
 interface MemberFormState {
   name: string
   designation: string
+  /** Department or body - "H&S", "Library", "NGO". Blank when not published. */
+  department: string
   role: string
+  /** Published contact number. Blank when not published. */
+  contact: string
 }
 
-const emptyMemberForm: MemberFormState = { name: "", designation: "", role: "" }
+const emptyMemberForm: MemberFormState = { name: "", designation: "", department: "", role: "", contact: "" }
 
 interface MinutesFormState {
   title: string
@@ -208,7 +212,7 @@ function CommitteesManagerInner() {
 
   function startEditMember(m: CommitteeMember) {
     setEditingMemberId(m.id)
-    setMemberForm({ name: m.name, designation: m.designation, role: m.role })
+    setMemberForm({ name: m.name, designation: m.designation, department: m.department ?? "", role: m.role, contact: m.contact ?? "" })
   }
 
   function cancelMemberEdit() {
@@ -605,7 +609,12 @@ function CommitteesManagerInner() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <TextField label="Name" value={memberForm.name} onChange={(v) => setMemberForm({ ...memberForm, name: v })} />
             <TextField label="Designation" value={memberForm.designation} onChange={(v) => setMemberForm({ ...memberForm, designation: v })} />
+            <TextField label="Department (optional)" value={memberForm.department} onChange={(v) => setMemberForm({ ...memberForm, department: v })} placeholder="H&S · CIVIL · Library · NGO" />
             <TextField label="Role" value={memberForm.role} onChange={(v) => setMemberForm({ ...memberForm, role: v })} placeholder="Chairperson" />
+            {/* Published on the public roster and dialable there. Left blank
+                for a committee whose members' numbers are not published - most
+                of them; the cells that exist to be contacted are the exception. */}
+            <TextField label="Contact number (optional)" value={memberForm.contact} onChange={(v) => setMemberForm({ ...memberForm, contact: v })} placeholder="9154925962" />
           </div>
           <FormActions>
             {editingMemberId !== null && <SecondaryButton onClick={cancelMemberEdit}>Cancel</SecondaryButton>}
