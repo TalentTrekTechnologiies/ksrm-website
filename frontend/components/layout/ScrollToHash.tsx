@@ -29,24 +29,8 @@ export default function ScrollToHash() {
   const pathname = usePathname()
 
   useEffect(() => {
-    // Re-runs on a hash change as well as a route change.
-    //
-    // Clicking "Governing Body" while already on /about changes only the
-    // fragment: the router does not remount, pathname does not change, and an
-    // effect keyed on pathname alone never fires. So the menu entry appeared
-    // to do nothing from the very page it points into - which is where a
-    // reader is most likely to click it.
-    const run = () => start()
-    window.addEventListener("hashchange", run)
-
-    let cleanup: (() => void) | null = null
-
-    function start() {
-      cleanup?.()
-      cleanup = null
-
-      const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""))
-      if (!hash) return
+    const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""))
+    if (!hash) return
 
     // Already there: the browser resolved it because the section was static.
     //
@@ -54,11 +38,11 @@ export default function ScrollToHash() {
     // sit 582px down and still be visible, which is not the same as being
     // scrolled to. /examinations#notifications was left mid-page for exactly
     // that reason. Near the TOP is the test.
-      const existing = document.getElementById(hash)
-      if (existing && Math.abs(existing.getBoundingClientRect().top) < 150) return
+    const existing = document.getElementById(hash)
+    if (existing && Math.abs(existing.getBoundingClientRect().top) < 150) return
 
-      let done = false
-      const finish = () => {
+    let done = false
+    const finish = () => {
       if (done) return
       done = true
       observer.disconnect()
@@ -69,7 +53,7 @@ export default function ScrollToHash() {
       window.removeEventListener("keydown", cancel)
     }
 
-      const cancel = () => finish()
+    const cancel = () => finish()
 
     // Re-aligned, not scrolled once.
     //
@@ -79,8 +63,8 @@ export default function ScrollToHash() {
     // 790px below the viewport is what that looked like. So it keeps
     // correcting while the page is still settling, and stops the moment the
     // reader takes over or the timeout expires.
-      let aligned = 0
-      const tryScroll = () => {
+    let aligned = 0
+    const tryScroll = () => {
       const el = document.getElementById(hash)
       if (!el) return
       const top = el.getBoundingClientRect().top
@@ -93,32 +77,25 @@ export default function ScrollToHash() {
       aligned++
     }
 
-      const observer = new MutationObserver(() => {
+    const observer = new MutationObserver(() => {
       // Debounced: a section mounting fires many mutations, and re-scrolling
       // on each one fights the smooth scroll already in flight.
       clearTimeout(settle)
       settle = setTimeout(tryScroll, 120)
     })
-      let settle: ReturnType<typeof setTimeout>
+    let settle: ReturnType<typeof setTimeout>
     observer.observe(document.body, { childList: true, subtree: true })
 
     // A section whose content never arrives should not leave an observer
     // running for the life of the page.
-      const giveUp = setTimeout(finish, 8000)
+    const giveUp = setTimeout(finish, 8000)
 
-      window.addEventListener("wheel", cancel, { passive: true })
-      window.addEventListener("touchmove", cancel, { passive: true })
-      window.addEventListener("keydown", cancel)
+    window.addEventListener("wheel", cancel, { passive: true })
+    window.addEventListener("touchmove", cancel, { passive: true })
+    window.addEventListener("keydown", cancel)
 
-      tryScroll()
-      cleanup = finish
-    }
-
-    start()
-    return () => {
-      window.removeEventListener("hashchange", run)
-      cleanup?.()
-    }
+    tryScroll()
+    return finish
   }, [pathname])
 
   return null

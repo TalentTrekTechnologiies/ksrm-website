@@ -52,14 +52,7 @@ const navItems: NavItem[] = [
       // the two councils under them. The Academic Council and Finance
       // Committee were on the IQAC page behind an "Apex Bodies" tab until the
       // college asked for them here.
-      // Points at the committee page, not the About section. Both existed and
-      // both were labelled "Governing Body" - one in this menu, one under More
-      // once the committee list was added - so the same body had two
-      // destinations that behaved differently. The committee page is the one
-      // with the full roster and the minutes, and it is the URL the college
-      // cites to NAAC, so it is the one the menu should lead to. The section
-      // on the About page stays for anyone reading that page through.
-      { label: "Governing Body", href: "/committees/governing-body" },
+      { label: "Governing Body", href: "/about#governing-body" },
       { label: "Leadership", href: "/about#leadership" },
       { label: "  ↳ Correspondent and Secretary", href: "/about/correspondent" },
       { label: "  ↳ Chairman", href: "/about/chairman" },
