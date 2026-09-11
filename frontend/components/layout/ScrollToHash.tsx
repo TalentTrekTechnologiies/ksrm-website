@@ -4,98 +4,108 @@ import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 
 /**
- * Scrolls to the #fragment in the URL once the section it names actually
- * exists.
+ * Scrolls to the #fragment in the URL once the section it names exists.
  *
  * The browser resolves a fragment the moment the document loads. Most sections
- * on this site are CMS-driven and render nothing until their fetch lands -
- * GoverningBody returns null until it has members, a department's Student
- * Chapter until it has content, PageResources until documents arrive - so the
- * element is simply not there yet. The browser finds nothing, gives up, and
- * the page sits at the top. Opening /about#governing-body therefore looked
- * exactly like a link to /about, which is what was reported.
+ * here are CMS-driven and render nothing until their fetch lands -
+ * GoverningBody returns null until it has members, PageResources until
+ * documents arrive - so the element is not there yet. The browser finds
+ * nothing, gives up, and the page sits at the top. /about#governing-body
+ * therefore behaved exactly like a link to /about.
  *
- * Nothing in the page markup changes; this waits for the element and then
- * scrolls. A MutationObserver rather than a timer, so it fires the instant the
- * section mounts rather than at a guessed delay - and it gives up after a few
- * seconds so it cannot sit watching the DOM forever on a page whose section
- * genuinely has no content.
+ * Two things this has to get right, both learned by getting them wrong:
  *
- * Stops immediately if the reader scrolls themselves: arriving at a link and
- * then being yanked somewhere else a second later is worse than not scrolling
- * at all.
+ *  1. Read the hash EVERY time, never capture it. An earlier version read it
+ *     once and then re-aligned to that value for eight seconds - so clicking
+ *     "Leadership" jumped there and was immediately dragged back to Governing
+ *     Body by the previous link's observer still running.
+ *  2. React to hashchange, not just to a route change. Clicking an anchor
+ *     while already on the page changes only the fragment; the router does not
+ *     remount and an effect keyed on pathname alone never fires.
  */
 export default function ScrollToHash() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""))
-    if (!hash) return
+    let observer: MutationObserver | null = null
+    let settle: ReturnType<typeof setTimeout> | undefined
+    let giveUp: ReturnType<typeof setTimeout> | undefined
 
-    // Already there: the browser resolved it because the section was static.
-    //
-    // "Within the viewport" is not the test - the first section on a page can
-    // sit 582px down and still be visible, which is not the same as being
-    // scrolled to. /examinations#notifications was left mid-page for exactly
-    // that reason. Near the TOP is the test.
-    const existing = document.getElementById(hash)
-    if (existing && Math.abs(existing.getBoundingClientRect().top) < 150) return
+    /** Whichever fragment the URL names right now - never a remembered one. */
+    const currentHash = () => decodeURIComponent(window.location.hash.replace(/^#/, ""))
 
-    let done = false
-    const finish = () => {
-      if (done) return
-      done = true
-      observer.disconnect()
+    /** The fragment this run is chasing; cleared once it lands or is replaced. */
+    let target = ""
+    let landed = false
+
+    function stop() {
+      observer?.disconnect()
+      observer = null
+      clearTimeout(settle)
       clearTimeout(giveUp)
-      clearTimeout(settle)
-      window.removeEventListener("wheel", cancel)
-      window.removeEventListener("touchmove", cancel)
-      window.removeEventListener("keydown", cancel)
     }
 
-    const cancel = () => finish()
+    function align() {
+      // If the URL moved on while we were waiting, this run is stale.
+      if (currentHash() !== target) return stop()
 
-    // Re-aligned, not scrolled once.
-    //
-    // Scrolling the first time the section appears is not enough: other
-    // CMS-driven blocks ABOVE it are still arriving, and each one pushes the
-    // target further down. Landing on #leadership and then watching it drift
-    // 790px below the viewport is what that looked like. So it keeps
-    // correcting while the page is still settling, and stops the moment the
-    // reader takes over or the timeout expires.
-    let aligned = 0
-    const tryScroll = () => {
-      const el = document.getElementById(hash)
+      const el = document.getElementById(target)
       if (!el) return
+
       const top = el.getBoundingClientRect().top
-      // Already where it should be - within a header's height of the top.
-      if (aligned > 0 && Math.abs(top) < 120) return
-      // scrollIntoView rather than a computed offset: the sections already
-      // carry scroll-margin-top for the sticky header, and honouring that is
-      // what keeps the heading clear of it.
-      el.scrollIntoView({ behavior: aligned === 0 ? "smooth" : "auto", block: "start" })
-      aligned++
+      // Close enough once it has landed. Sections keep arriving above it for a
+      // moment and each one shifts it, so it is re-checked rather than
+      // scrolled once - but not nudged forever over a few pixels.
+      if (landed && Math.abs(top) < 120) return
+
+      el.scrollIntoView({ behavior: landed ? "auto" : "smooth", block: "start" })
+      landed = true
     }
 
-    const observer = new MutationObserver(() => {
-      // Debounced: a section mounting fires many mutations, and re-scrolling
-      // on each one fights the smooth scroll already in flight.
-      clearTimeout(settle)
-      settle = setTimeout(tryScroll, 120)
-    })
-    let settle: ReturnType<typeof setTimeout>
-    observer.observe(document.body, { childList: true, subtree: true })
+    function begin() {
+      stop()
+      target = currentHash()
+      landed = false
+      if (!target) return
 
-    // A section whose content never arrives should not leave an observer
-    // running for the life of the page.
-    const giveUp = setTimeout(finish, 8000)
+      // Already resolved by the browser because the section was static. Near
+      // the TOP is the test, not merely visible: the first section on a page
+      // can sit 582px down and be in view without being scrolled to.
+      const existing = document.getElementById(target)
+      if (existing && Math.abs(existing.getBoundingClientRect().top) < 150) return
 
-    window.addEventListener("wheel", cancel, { passive: true })
-    window.addEventListener("touchmove", cancel, { passive: true })
-    window.addEventListener("keydown", cancel)
+      observer = new MutationObserver(() => {
+        // Debounced: a section mounting fires many mutations, and re-scrolling
+        // on each fights the smooth scroll already in flight.
+        clearTimeout(settle)
+        settle = setTimeout(align, 120)
+      })
+      observer.observe(document.body, { childList: true, subtree: true })
 
-    tryScroll()
-    return finish
+      // A section whose content never arrives must not leave an observer
+      // running for the life of the page.
+      giveUp = setTimeout(stop, 8000)
+
+      align()
+    }
+
+    // Arriving at a link and then being yanked elsewhere a second later is
+    // worse than not scrolling, so the reader taking over ends it.
+    const surrender = () => stop()
+    window.addEventListener("wheel", surrender, { passive: true })
+    window.addEventListener("touchmove", surrender, { passive: true })
+    window.addEventListener("keydown", surrender)
+    window.addEventListener("hashchange", begin)
+
+    begin()
+
+    return () => {
+      stop()
+      window.removeEventListener("wheel", surrender)
+      window.removeEventListener("touchmove", surrender)
+      window.removeEventListener("keydown", surrender)
+      window.removeEventListener("hashchange", begin)
+    }
   }, [pathname])
 
   return null
