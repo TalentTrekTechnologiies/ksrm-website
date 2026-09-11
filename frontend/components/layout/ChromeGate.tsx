@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import IntroSplash from "@/components/layout/IntroSplash"
 import DemoRibbon from "@/components/layout/DemoRibbon"
+import ScrollToHash from "@/components/layout/ScrollToHash"
 import PopupNotice from "@/components/layout/PopupNotice"
 import TopBar from "@/components/layout/TopBar"
 import Header from "@/components/layout/Header"
@@ -44,6 +45,8 @@ export default function ChromeGate({ children }: { children: React.ReactNode }) 
       <IntroSplash />
       {/* Renders nothing outside the specimen build. */}
       <DemoRibbon />
+      {/* Waits for CMS-driven sections before honouring a #fragment. */}
+      <ScrollToHash />
       <PopupNotice />
       <TopBar />
       <Header />
