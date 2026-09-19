@@ -1378,7 +1378,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                           src={resolveFileUrl(d.fileUrl)}
                           alt={d.title}
                           loading="lazy"
-                          style={{ width: "100%", aspectRatio: "16 / 10", objectFit: "cover", borderRadius: 6, marginBottom: 4 }}
+                          style={{ width: "100%", aspectRatio: "16 / 10", objectFit: "contain", background: "#eef1f6", borderRadius: 6, marginBottom: 4 }}
                         />
                       )}
                       <h3 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 16, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>

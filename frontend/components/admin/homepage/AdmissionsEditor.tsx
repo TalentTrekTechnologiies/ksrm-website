@@ -10,6 +10,7 @@ import CmsPreviewPanel from "@/components/admin/cms/CmsPreviewPanel"
 import CmsDynamicList from "@/components/admin/cms/CmsDynamicList"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
 import CmsChipList from "@/components/admin/cms/CmsChipList"
+import CmsImageField from "@/components/admin/cms/CmsImageField"
 import MediaField from "@/components/admin/cms/MediaField"
 import {
   TextField,
@@ -39,6 +40,28 @@ const emptyForm: AdmissionsContent = {
   subtitle: "",
   helplinePhones: [],
   helplineEmail: "",
+  poster: { url: "", alt: "", href: "" },
+}
+
+/**
+ * The payload sent on save.
+ *
+ * An empty poster is dropped rather than sent as blank strings: the backend
+ * validates a poster that is present, so "no poster chosen yet" has to be an
+ * absent field, not an empty one. It also means a site whose backend has not
+ * been updated yet keeps saving normally, since nothing unknown is sent.
+ */
+function toPayload(form: AdmissionsContent): AdmissionsContent {
+  const url = form.poster?.url?.trim()
+  if (!url) {
+    const { poster: _drop, ...rest } = form
+    return rest
+  }
+  const href = form.poster?.href?.trim()
+  return {
+    ...form,
+    poster: { url, alt: form.poster?.alt?.trim() || "", ...(href ? { href } : {}) },
+  }
 }
 
 interface ProgramFormState {
@@ -299,7 +322,11 @@ function AdmissionsEditorInner() {
 
   useEffect(() => {
     function syncForm() {
-      if (editor.section) setForm(editor.section.content)
+      if (!editor.section) return
+      const content = editor.section.content
+      // Content saved before the poster field existed has none, and the image
+      // field needs an object to edit rather than undefined.
+      setForm({ ...content, poster: content.poster ?? { url: "", alt: "", href: "" } })
     }
     syncForm()
   }, [editor.section])
@@ -364,6 +391,25 @@ function AdmissionsEditorInner() {
 
           <TextField label="Helpline email" value={form.helplineEmail} onChange={(helplineEmail) => setForm({ ...form, helplineEmail })} required />
 
+          <div className="border-t border-admin-border pt-4">
+            <CmsImageField
+              label="Admissions poster (first card)"
+              value={{ url: form.poster?.url ?? "", alt: form.poster?.alt ?? "" }}
+              onChange={(image) => setForm({ ...form, poster: { ...form.poster, url: image.url, alt: image.alt } })}
+            />
+            <p className="mt-2 text-xs text-slate-500">
+              Leave the image empty to keep the poster that ships with the site.
+            </p>
+            <div className="mt-3">
+              <TextField
+                label="Poster link (optional)"
+                value={form.poster?.href ?? ""}
+                onChange={(href) => setForm({ ...form, poster: { url: form.poster?.url ?? "", alt: form.poster?.alt ?? "", href } })}
+                placeholder="/admissions - defaults to opening the poster itself"
+              />
+            </div>
+          </div>
+
           {editor.section && (
             <CmsRecordMeta
               updatedAt={editor.section.updatedAt}
@@ -375,10 +421,10 @@ function AdmissionsEditorInner() {
           )}
 
           <FormActions>
-            <SecondaryButton onClick={() => editor.save(form, "DRAFT")} disabled={editor.saving || !isValid}>
+            <SecondaryButton onClick={() => editor.save(toPayload(form), "DRAFT")} disabled={editor.saving || !isValid}>
               {editor.saving ? "Saving..." : "Save Draft"}
             </SecondaryButton>
-            <PublishButton onClick={() => editor.save(form, "PUBLISHED")} disabled={editor.saving || !isValid}>
+            <PublishButton onClick={() => editor.save(toPayload(form), "PUBLISHED")} disabled={editor.saving || !isValid}>
               {editor.saving ? "Publishing..." : "Publish"}
             </PublishButton>
           </FormActions>

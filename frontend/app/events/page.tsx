@@ -31,8 +31,8 @@ export default function EventsPage() {
         .evt-hero > * { position: relative; z-index: 2; }
         .evt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin: 32px 0; }
         .evt-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; }
-        .evt-card-image { width: 100%; height: 180px; background: #e5e7eb; }
-        .evt-card-image img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        .evt-card-image { width: 100%; background: #eef1f6; }
+        .evt-card-image img { width: 100%; height: auto; max-height: 420px; object-fit: contain; display: block; }
         .evt-content { padding: 20px; }
         .evt-date { font-size: 13px; color: #2B3490; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
         .evt-title { font-family: 'Rajdhani', sans-serif; font-size: 19px; font-weight: 700; color: #1a1a2e; margin: 0 0 8px; line-height: 1.4; }

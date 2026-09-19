@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { resolveFileUrl } from "@/lib/api-base"
 import { academicYearOf, currentAcademicYearLabel } from "@/lib/academic-year";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
+import { UPLOADED_MEDIA_STYLES } from "@/lib/uploaded-media-styles"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
 import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api"
@@ -192,13 +193,15 @@ const PR_STYLES = `
      used by every hand-built section, so admin-driven blocks read as part of
      the page rather than a bolted-on widget. */
   .pr-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem, 3vw, 2.6rem); font-weight: 800; color: #2B3490; margin: 0 0 40px; }
-  .pr-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px; gap: 14px; margin-top: 28px; }
+  /* No fixed row height: a tile is as tall as the picture in it, so a portrait
+     notice is shown whole rather than cropped to a landscape slot. */
+  .pr-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 28px; align-items: start; }
   @media (max-width: 1024px) { .pr-gallery { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 560px) { .pr-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; } }
+  @media (max-width: 560px) { .pr-gallery { grid-template-columns: repeat(2, 1fr); } }
   .pr-videos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 28px; }
   @media (max-width: 760px) { .pr-videos { grid-template-columns: 1fr; } }
   .pr-video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #eef0f3; }
-  .pr-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pr-video video { width: 100%; height: 100%; object-fit: contain; display: block; }
   .pr-video-cap { font-size: 14px; font-weight: 600; color: #444; margin-top: 8px; text-align: center; }
   /* Loading placeholder. Height matches a real document row so the layout does
      not shift when the fetched rows replace it. */
@@ -220,7 +223,7 @@ const PR_STYLES = `
     .pr-skel-row { animation: none; }
   }
   .pr-tile { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #eef0f3; }
-  .pr-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+  .pr-tile img { transition: transform 0.5s ease; }
   .pr-tile:hover img { transform: scale(1.06); }
   .pr-cap { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity 0.3s ease; background: linear-gradient(180deg, rgba(14,21,51,0) 55%, rgba(14,21,51,0.78) 100%); }
   .pr-tile:hover .pr-cap { opacity: 1; }
@@ -250,6 +253,7 @@ const PR_STYLES = `
   .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
   .pr-list > div:first-child .pr-group-head { margin-top: 0; }
   ${PUBLIC_DOCUMENT_LIST_STYLES}
+  ${UPLOADED_MEDIA_STYLES}
   .pr-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: none; border: 1.5px solid #2B3490; color: #2B3490; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s; }
   .pr-more:hover { background: #2B3490; color: #fff; }
 
@@ -665,7 +669,7 @@ export default function PageResources({
             </div>
             <div className="pr-gallery">
               {images.slice(0, 8).map((img) => (
-                <div key={img.id} className="pr-tile">
+                <div key={img.id} className="pr-tile um-frame">
                   {/* eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL */}
                   <img src={resolveFileUrl(img.imageUrl)} alt={img.title} loading="lazy" decoding="async" onError={(e) => ((e.currentTarget.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} />
                   <div className="pr-cap"><span>{img.title}</span></div>

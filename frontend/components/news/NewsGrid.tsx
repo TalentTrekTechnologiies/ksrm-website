@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import { resolveFileUrl } from "@/lib/api-base";
 import { NewsArticle } from "@/lib/news-api"
+import { UPLOADED_MEDIA_STYLES } from "@/lib/uploaded-media-styles"
 
 /**
  * News presentation for the /news page.
@@ -65,12 +66,12 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
         .ng-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
         .ng-chip { background: #f7f8fa; border: 1px solid #eef0f3; color: #2B3490; padding: 9px 20px; border-radius: 22px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; }
         .ng-chip.on { background: #2B3490; color: #FFE619; border-color: #2B3490; }
-        .ng-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+        .ng-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; align-items: start; }
         .ng-card { background: #fff; border: 1px solid #eef0f3; border-radius: 14px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; text-align: left; padding: 0; transition: box-shadow .2s, transform .2s; }
         .ng-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,.09); transform: translateY(-3px); }
-        .ng-media { position: relative; height: 178px; background: #eef1f6; }
-        .ng-media img, .ng-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ng-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; font-size: 40px; }
+        .ng-media { position: relative; background: #eef1f6; }
+        .ng-placeholder { display: flex; align-items: center; justify-content: center; height: 178px; font-size: 40px; }
+        ${UPLOADED_MEDIA_STYLES}
         .ng-kind { position: absolute; top: 10px; left: 10px; background: rgba(20,26,74,.86); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
         .ng-new { position: absolute; top: 10px; right: 10px; background: #E8112D; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 20px; letter-spacing: .5px; }
         .ng-body { padding: 16px 18px 20px; flex: 1; display: flex; flex-direction: column; }
@@ -105,7 +106,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
             const kind = kindOf(n)
             return (
               <button key={n.id} className="ng-card" onClick={() => setOpen(n)}>
-                <div className="ng-media">
+                <div className={`ng-media um-frame${!n.imageUrl && n.videoUrl ? " um-video" : ""}`}>
                   {n.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
                     <img src={resolveFileUrl(n.imageUrl)} alt={n.title} loading="lazy" decoding="async" onError={(e) => (e.currentTarget.style.display = "none")} />

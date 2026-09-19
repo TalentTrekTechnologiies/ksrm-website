@@ -230,12 +230,23 @@ export interface HelplinePhone {
   href: string;
 }
 
+/** The poster that leads the Admissions section. */
+export interface AdmissionsPoster {
+  url: string;
+  alt: string;
+  /** Where it links. Defaults to the image itself. */
+  href?: string;
+}
+
 export interface AdmissionsContent {
   badge: string;
   heading: string;
   subtitle: string;
   helplinePhones: HelplinePhone[];
   helplineEmail: string;
+  /** Optional: content saved before the field existed has no poster, and the
+   *  public page falls back to the one shipped with the build. */
+  poster?: AdmissionsPoster | null;
 }
 
 export interface HomepageSectionContentMap {

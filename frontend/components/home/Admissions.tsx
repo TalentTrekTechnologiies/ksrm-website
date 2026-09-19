@@ -7,6 +7,7 @@ import {
   getSectionPublic,
   getAdmissionProgramsPublic,
   AdmissionsContent,
+  AdmissionsPoster,
   AdmissionProgram,
 } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
@@ -19,6 +20,12 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 }
 
+/** The poster shipped with the build, used until the CMS carries one. */
+const FALLBACK_POSTER: AdmissionsPoster = {
+  url: "/admissions-2026-poster.webp",
+  alt: "K.S.R.M. College of Engineering - Admissions Open 2026-27",
+}
+
 const FALLBACK_ADMISSIONS: AdmissionsContent = {
   badge: `ADMISSIONS ${formatAcademicYearShort()}`,
   heading: "Begin Your Engineering Journey",
@@ -28,6 +35,7 @@ const FALLBACK_ADMISSIONS: AdmissionsContent = {
     { display: "+91-8143731980", href: "tel:+918143731980" },
   ],
   helplineEmail: "ksrmcengg@yahoo.co.in",
+  poster: FALLBACK_POSTER,
 }
 
 const FALLBACK_PROGRAMS: AdmissionProgram[] = [
@@ -112,6 +120,24 @@ function normalizeProgram(program: AdmissionProgram): AdmissionProgram {
   }
 }
 
+/**
+ * The poster to show: the one in the CMS, else the one in the build.
+ *
+ * A saved record from before the field existed has no poster at all, so the
+ * section would otherwise open on a blank card the first time anyone edits
+ * anything else on it.
+ */
+function normalizePoster(poster: AdmissionsPoster | null | undefined): AdmissionsPoster {
+  const url = resolveFileUrl(poster?.url?.trim() || "")
+  if (!url) return FALLBACK_POSTER
+
+  return {
+    url,
+    alt: poster?.alt?.trim() || FALLBACK_POSTER.alt,
+    href: resolveFileUrl(poster?.href?.trim() || "") || url,
+  }
+}
+
 function normalizeAdmissions(content: AdmissionsContent | null | undefined): AdmissionsContent {
   if (!content) return FALLBACK_ADMISSIONS
 
@@ -121,6 +147,7 @@ function normalizeAdmissions(content: AdmissionsContent | null | undefined): Adm
     subtitle: content.subtitle?.trim() || FALLBACK_ADMISSIONS.subtitle,
     helplinePhones: content.helplinePhones?.length ? content.helplinePhones : FALLBACK_ADMISSIONS.helplinePhones,
     helplineEmail: content.helplineEmail?.trim() || FALLBACK_ADMISSIONS.helplineEmail,
+    poster: normalizePoster(content.poster),
   }
 }
 
@@ -147,6 +174,7 @@ export default function Admissions({
   const live = useLiveData(fetchAdmissions, [], { skip: !!previewData })
   const admissions = previewData?.admissions ?? live?.admissions ?? FALLBACK_ADMISSIONS
   const programs = previewData?.programs ?? live?.programs ?? FALLBACK_PROGRAMS
+  const poster = normalizePoster(admissions.poster)
 
   return (
     <section
@@ -191,19 +219,47 @@ export default function Admissions({
           margin: 0;
         }
 
+        /* One row, always.
+           This used to be a three-column grid, so the fourth programme the
+           college added started a second row, the fifth a third, and the
+           homepage grew by 400px every time someone uploaded a card. Laying
+           the cards out along a single scrolling row means the section is the
+           same height with three programmes or thirty - the row scrolls
+           sideways instead of the page growing downwards.
+           minmax(300px, 1fr): while the cards fit they share the width evenly
+           and nothing scrolls, which is what it looks like today. */
         .admissions-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-auto-flow: column;
+          grid-auto-columns: minmax(300px, 1fr);
           gap: 28px;
           max-width: 1760px;
           margin: 0 auto;
           align-items: stretch;
-          padding: 0 16px;
+          /* Vertical padding, because overflow clips at the padding box and
+             the cards lift and cast a shadow on hover. */
+          padding: 14px 16px 18px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scroll-snap-type: x proximity;
+          scrollbar-width: thin;
+          /* Keeps a sideways swipe in the row instead of turning into the
+             browser's back gesture. */
+          overscroll-behavior-x: contain;
         }
+
+        .admissions-grid > * { scroll-snap-align: start; }
 
         .admissions-poster-card {
           display: block;
-          height: 480px;
+          position: relative;
+          /* The row is as tall as its tallest programme card - never taller,
+             and never shorter than this floor. A fixed height clipped the
+             eight-branch B.Tech card's button; letting the poster size itself
+             made the whole section as tall as the poster is. */
+          height: auto;
+          min-height: 380px;
+          background: #eef1f6;
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
@@ -216,11 +272,19 @@ export default function Admissions({
           box-shadow: 0 14px 36px rgba(43, 52, 144, 0.18);
         }
 
+        /* The poster is a notice, not a decoration: cropping it to fill the
+           card cut the heading off "SPOT ADMISSIONS 2026-27" and sliced the
+           body text mid-sentence. Contain shows whatever was uploaded whole,
+           whichever shape it is. */
+        /* Absolute so the poster fills the card without setting its height:
+           a portrait poster would otherwise make the whole section as tall as
+           itself. It is shown whole inside whatever space the row has. */
         .admissions-poster-card img {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
-          object-position: center top;
+          object-fit: contain;
           display: block;
         }
 
@@ -232,16 +296,16 @@ export default function Admissions({
           display: flex;
           flex-direction: column;
           width: 100%;
-          height: 480px;
+          height: auto;
+          min-height: 380px;
         }
 
         .admissions-card-image {
           width: 100%;
-          height: 220px;
-          object-fit: cover;
-          object-position: center top;
+          height: 160px;
+          object-fit: contain;
           display: block;
-          background: #f0f0f0;
+          background: #eef1f6;
           flex-shrink: 0;
         }
 
@@ -383,26 +447,20 @@ export default function Admissions({
         }
 
         @media (max-width: 1024px) {
+          /* Still one row - a card at a time, swiped, with the next one
+             peeking so it is obvious there is more. */
           .admissions-grid {
-            grid-template-columns: 1fr;
-            gap: 22px;
-            justify-items: center;
+            grid-auto-columns: minmax(260px, 78vw);
+            gap: 18px;
+            scroll-snap-type: x mandatory;
           }
-          .admissions-poster-card {
-            height: auto;
-            width: 100%;
-            max-width: 460px;
-          }
-          .admissions-poster-card img { height: auto; }
-          .admissions-card {
-            height: auto;
-            max-width: 460px;
-          }
+          .admissions-poster-card { min-height: 420px; }
+          .admissions-card { min-height: 420px; }
         }
 
         @media (max-width: 768px) {
           .admissions-heading { font-size: clamp(19px, 5.1vw, 32px); }
-          .admissions-card-image { height: 200px; }
+          .admissions-card-image { height: 150px; }
           .admissions-card-panel { padding: 18px 20px; }
         }
       `}</style>
@@ -424,18 +482,14 @@ export default function Admissions({
         {/* CARDS GRID — poster + programme cards, all three side by side */}
         <div className="admissions-grid">
           <a
-            href="/admissions-2026-poster.webp"
+            href={poster.href || poster.url}
             target="_blank"
             rel="noopener noreferrer"
-            title="View full Admissions 2026-27 details"
+            title={poster.alt}
             className="admissions-poster-card"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- static admissions poster */}
-            <img
-              src="/admissions-2026-poster.webp"
-              alt="K.S.R.M. College of Engineering — Admissions Open 2026-27"
-              loading="lazy"
-            />
+            {/* eslint-disable-next-line @next/next/no-img-element -- CMS-supplied poster */}
+            <img src={poster.url} alt={poster.alt} loading="lazy" />
           </a>
           {programs.map((program) => (
             <div key={program.id}>

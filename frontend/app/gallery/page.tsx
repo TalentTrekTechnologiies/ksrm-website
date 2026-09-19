@@ -5,6 +5,7 @@ import { resolveFileUrl } from "@/lib/api-base";
 import { getGalleryPublic } from "@/lib/gallery-api";
 import { getCampusVideosPublic } from "@/lib/homepage-api";
 import { useLiveData } from "@/lib/use-live-data";
+import { UPLOADED_MEDIA_STYLES } from "@/lib/uploaded-media-styles";
 import CmsText from "@/components/CmsText";
 
 interface GalleryImageDisplay {
@@ -227,16 +228,16 @@ export default function GalleryPage() {
         .gal-filters { display: flex; gap: 12px; margin: 32px 0; flex-wrap: wrap; }
         .gal-filter-btn { background: #f7f8fa; border: 1px solid #eef0f3; color: #2B3490; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
         .gal-filter-btn.active { background: #2B3490; color: #D4A500; border-color: #2B3490; }
-        .gal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; }
+        /* start, not stretch: a card is as tall as its own picture, so a short
+           photo beside a tall notice is not padded out with empty grey. */
+        .gal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; align-items: start; }
         .gal-card { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; }
-        .gal-card-image { width: 100%; height: 200px; }
-        .gal-card-image img,
-        .gal-card-image video { width: 100%; height: 200px; object-fit: cover; display: block; background: #000; }
         .gal-card-content { padding: 16px; }
         .gal-card-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #2B3490; margin: 0 0 8px; }
         .gal-video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
         .gal-video-wrap { border-radius: 8px; overflow: hidden; }
-        .gal-video-wrap video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+        .gal-video-wrap video { width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #000; display: block; }
+        ${UPLOADED_MEDIA_STYLES}
 
         @media (max-width: 1760px) { .gal-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .gal-grid { grid-template-columns: 1fr; } }
@@ -264,7 +265,7 @@ export default function GalleryPage() {
           <div className="gal-grid">
             {filteredImages.map((img, index) => (
               <div className="gal-card" key={`${img.src}-${index}`}>
-                <div className="gal-card-image">
+                <div className={`gal-card-image um-frame${img.isVideo ? " um-video" : ""}`}>
                   {img.isVideo ? (
                     <video src={img.src} controls preload="metadata" onError={(e) => { e.currentTarget.style.display = "none" }} />
                   ) : (
