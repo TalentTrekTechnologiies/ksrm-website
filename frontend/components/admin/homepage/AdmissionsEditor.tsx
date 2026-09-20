@@ -402,11 +402,18 @@ function AdmissionsEditorInner() {
             </p>
             <div className="mt-3">
               <TextField
-                label="Poster link (optional)"
+                label="Poster link - optional, leave blank"
                 value={form.poster?.href ?? ""}
                 onChange={(href) => setForm({ ...form, poster: { url: form.poster?.url ?? "", alt: form.poster?.alt ?? "", href } })}
-                placeholder="/admissions - defaults to opening the poster itself"
+                placeholder="Leave blank"
               />
+              <p className="mt-1 text-xs text-slate-500">
+                Blank is the right answer for a poster: clicking it opens the
+                poster image itself. Only fill this in to send people somewhere
+                else instead, and then it must be a page that exists - a path
+                starting with &quot;/&quot; or a full https:// address -
+                otherwise the link lands on a 404.
+              </p>
             </div>
           </div>
 

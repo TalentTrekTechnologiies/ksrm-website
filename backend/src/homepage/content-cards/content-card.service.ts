@@ -85,6 +85,28 @@ export class ContentCardService {
     return record;
   }
 
+  /**
+   * The lowest sortOrder in this section, minus one - so a new card lands at
+   * the FRONT of the row.
+   *
+   * This used to be the row COUNT, which put every card the college added
+   * after all the ones already there: the list sorts by sortOrder ascending,
+   * so the newest admission programme appeared last and, before the row
+   * scrolled sideways, on a second line down the page. Counting also collides
+   * after a delete, since the next count repeats a number already in use.
+   *
+   * Going below the minimum rather than renumbering everything leaves any
+   * order an admin has set by dragging exactly as it is. Same helper, same
+   * reason, as in downloads.service.ts and gallery.service.ts.
+   */
+  private async sortOrderForNewest(section: string): Promise<number> {
+    const lowest = await this.prisma.contentCard.aggregate({
+      _min: { sortOrder: true },
+      where: { section, deletedAt: null },
+    });
+    return (lowest._min.sortOrder ?? 0) - 1;
+  }
+
   async create(
     dto: ContentCardInput,
     admin: RequestAdmin,
@@ -92,11 +114,7 @@ export class ContentCardService {
     entityLabel: string,
     requestId?: string,
   ) {
-    const sortOrder =
-      dto.sortOrder ??
-      (await this.prisma.contentCard.count({
-        where: { section: dto.section, deletedAt: null },
-      }));
+    const sortOrder = dto.sortOrder ?? (await this.sortOrderForNewest(dto.section));
 
     const resolvedUrl = await this.mediaLink.prepareLink(dto.mediaId, 'IMAGE');
 

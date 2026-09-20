@@ -16,6 +16,7 @@ describe('GalleryService', () => {
       findMany: jest.Mock;
       findFirst: jest.Mock;
       count: jest.Mock;
+      aggregate: jest.Mock;
       create: jest.Mock;
       update: jest.Mock;
     };
@@ -36,6 +37,7 @@ describe('GalleryService', () => {
         findMany: jest.fn(),
         findFirst: jest.fn(),
         count: jest.fn(),
+        aggregate: jest.fn().mockResolvedValue({ _min: { sortOrder: 0 } }),
         create: jest.fn(),
         update: jest.fn(),
       },
@@ -82,9 +84,9 @@ describe('GalleryService', () => {
   });
 
   describe('create', () => {
-    it('auto-assigns sortOrder to the current count when not provided', async () => {
-      prisma.galleryImage.count.mockResolvedValue(4);
-      prisma.galleryImage.create.mockResolvedValue({ id: 5, sortOrder: 4 });
+    it('puts a new image at the top, below the lowest sortOrder in use', async () => {
+      prisma.galleryImage.aggregate.mockResolvedValue({ _min: { sortOrder: -3 } });
+      prisma.galleryImage.create.mockResolvedValue({ id: 5, sortOrder: -4 });
 
       await service.create(
         { title: 'Campus', imageUrl: '/gallery/campus.jpg' },
@@ -93,7 +95,22 @@ describe('GalleryService', () => {
       );
 
       expect(prisma.galleryImage.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ sortOrder: 4, category: '' }),
+        data: expect.objectContaining({ sortOrder: -4, category: '' }),
+      });
+    });
+
+    it('starts at -1 when the gallery is empty', async () => {
+      prisma.galleryImage.aggregate.mockResolvedValue({ _min: { sortOrder: null } });
+      prisma.galleryImage.create.mockResolvedValue({ id: 1, sortOrder: -1 });
+
+      await service.create(
+        { title: 'First', imageUrl: '/gallery/first.jpg' },
+        admin,
+        undefined,
+      );
+
+      expect(prisma.galleryImage.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ sortOrder: -1 }),
       });
     });
   });

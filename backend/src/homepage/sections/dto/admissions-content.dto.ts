@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsOptional,
   IsString,
+  ValidateIf,
   Matches,
   MaxLength,
   ValidateNested,
@@ -37,11 +38,21 @@ export class AdmissionsPosterDto {
   @IsPathOrUrl()
   url: string;
 
+  /** Describes the poster for a screen reader. Blank is allowed. */
   @IsString()
   @MaxLength(150)
   alt: string;
 
-  /** Where the poster links to. Defaults to opening the image itself. */
+  /**
+   * Where the poster links to. Optional in every sense: left out, left blank,
+   * it opens the poster image itself.
+   *
+   * ValidateIf, not IsOptional alone: an admin who opens the field, thinks
+   * better of it and clears it sends an empty string, which is present as far
+   * as IsOptional is concerned and would fail the path-or-URL check - so
+   * saving the section would be refused over a field nobody wanted to fill in.
+   */
+  @ValidateIf((o: AdmissionsPosterDto) => o.href !== undefined && o.href !== '')
   @IsOptional()
   @IsPathOrUrl()
   href?: string;

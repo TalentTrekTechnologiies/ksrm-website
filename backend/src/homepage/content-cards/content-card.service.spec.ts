@@ -16,6 +16,7 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
       findMany: jest.Mock;
       findFirst: jest.Mock;
       count: jest.Mock;
+      aggregate: jest.Mock;
       create: jest.Mock;
       update: jest.Mock;
     };
@@ -38,6 +39,7 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
         findMany: jest.fn(),
         findFirst: jest.fn(),
         count: jest.fn(),
+        aggregate: jest.fn().mockResolvedValue({ _min: { sortOrder: 0 } }),
         create: jest.fn(),
         update: jest.fn(),
       },
@@ -186,6 +188,34 @@ describe('ContentCardService (generic, exercised via a Quick Links-shaped config
     expect(auditLog.log).toHaveBeenCalledWith(
       expect.objectContaining({ action: 'REORDER', requestId: 'req-4' }),
     );
+  });
+
+  it('puts a new card at the front of its own section', async () => {
+    prisma.contentCard.aggregate.mockResolvedValue({ _min: { sortOrder: -2 } });
+    prisma.contentCard.create.mockResolvedValue({ id: 10, sortOrder: -3 });
+
+    await service.create(
+      {
+        section: 'homepage_admission_programs',
+        imageUrl: '/x.png',
+        title: 'BCA',
+        linkUrl: '/x',
+        tags: ['BCA'],
+      },
+      admin,
+      'homepage_admission_programs',
+      'Admission program',
+      undefined,
+    );
+
+    expect(prisma.contentCard.aggregate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { section: 'homepage_admission_programs', deletedAt: null },
+      }),
+    );
+    expect(prisma.contentCard.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ sortOrder: -3 }),
+    });
   });
 
   it('reuses the exact same logic for a different section/module config (e.g. admission programs)', async () => {

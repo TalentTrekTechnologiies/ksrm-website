@@ -93,15 +93,35 @@ export class GalleryService {
     return record;
   }
 
+  /**
+   * The lowest sortOrder in use, minus one - so a new image lands at the TOP
+   * of the gallery.
+   *
+   * This used to be the row COUNT, which put every upload below everything
+   * already there: the list sorts by sortOrder ascending, so each new row got
+   * a bigger number than the last and the newest photo appeared last on the
+   * page. Counting is doubly wrong - deleting a row makes the next count
+   * collide with a value already in use.
+   *
+   * Going below the minimum rather than renumbering everything leaves any
+   * manual order set through the reorder endpoint exactly as it is. The same
+   * helper, for the same reason, is in downloads.service.ts.
+   */
+  private async sortOrderForNewest(): Promise<number> {
+    const lowest = await this.prisma.galleryImage.aggregate({
+      _min: { sortOrder: true },
+      where: { deletedAt: null },
+    });
+    return (lowest._min.sortOrder ?? 0) - 1;
+  }
+
   async create(
     dto: CreateGalleryImageDto,
     admin: RequestAdmin,
     requestId?: string,
   ) {
     const { date, sortOrder, ...rest } = dto;
-    const resolvedSortOrder =
-      sortOrder ??
-      (await this.prisma.galleryImage.count({ where: { deletedAt: null } }));
+    const resolvedSortOrder = sortOrder ?? (await this.sortOrderForNewest());
 
     // imageUrl stays the DTO's own value unless a mediaId is also given, in
     // which case the Media Library's current URL for that asset wins - see
