@@ -253,12 +253,10 @@ export default function Admissions({
         .admissions-poster-card {
           display: block;
           position: relative;
-          /* The row is as tall as its tallest programme card - never taller,
-             and never shorter than this floor. A fixed height clipped the
-             eight-branch B.Tech card's button; letting the poster size itself
-             made the whole section as tall as the poster is. */
-          height: auto;
-          min-height: 380px;
+          /* One height for every card in the row, poster included, so the
+             section is a predictable band rather than as tall as whatever was
+             uploaded. */
+          height: 340px;
           background: #eef1f6;
           border-radius: 16px;
           overflow: hidden;
@@ -288,34 +286,74 @@ export default function Admissions({
           display: block;
         }
 
+        /* A programme card is its poster. The blue panel used to sit below the
+           image, which made every card twice as tall as it needed to be and
+           left the image squeezed into a strip at the top. It is now an
+           overlay: the card shows the poster, and the details appear over it
+           on hover. */
         .admissions-card {
-          background: #ffffff;
+          position: relative;
+          background: #eef1f6;
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
-          display: flex;
-          flex-direction: column;
           width: 100%;
-          height: auto;
-          min-height: 380px;
+          height: 340px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .admissions-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 14px 36px rgba(43, 52, 144, 0.18);
         }
 
         .admissions-card-image {
+          position: absolute;
+          inset: 0;
           width: 100%;
-          height: 160px;
+          height: 100%;
           object-fit: contain;
           display: block;
-          background: #eef1f6;
-          flex-shrink: 0;
         }
 
         .admissions-card-panel {
-          background: linear-gradient(135deg, #2B3490 0%, #1e2570 100%);
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(43, 52, 144, 0.95) 0%, rgba(30, 37, 112, 0.97) 100%);
           padding: 20px 24px;
-          flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+
+        /* Only where there is a cursor to hover with. focus-within matters as
+           much as hover: the button inside is a real link, and hiding it
+           behind a pointer would put it out of reach of the keyboard. */
+        @media (hover: hover) and (pointer: fine) {
+          .admissions-card:hover .admissions-card-panel,
+          .admissions-card:focus-within .admissions-card-panel { opacity: 1; }
+        }
+
+        /* A touch screen has no hover, so the details cannot be hidden behind
+           one. They sit in a strip along the bottom instead, over a gradient,
+           leaving most of the poster visible. */
+        @media (hover: none) {
+          .admissions-card-panel {
+            opacity: 1;
+            inset: auto 0 0 0;
+            padding-top: 48px;
+            background: linear-gradient(180deg, rgba(20, 26, 74, 0) 0%, rgba(20, 26, 74, 0.93) 42%);
+          }
+          /* Scoped through the card, because the unqualified
+             .admissions-branches rule is defined further down this stylesheet
+             and would otherwise win on source order and put the chips back. */
+          .admissions-card .admissions-branches { display: none; }
+          /* The label repeats the title, and on a strip every line costs
+             poster. Title, one info line and the button are enough. */
+          .admissions-card .admissions-card-label { display: none; }
+          .admissions-card .admissions-card-panel { padding: 36px 18px 16px; }
         }
 
         .admissions-card-label {
@@ -454,8 +492,8 @@ export default function Admissions({
             gap: 18px;
             scroll-snap-type: x mandatory;
           }
-          .admissions-poster-card { min-height: 420px; }
-          .admissions-card { min-height: 420px; }
+          .admissions-poster-card { height: 320px; }
+          .admissions-card { height: 320px; }
         }
 
         @media (max-width: 768px) {
