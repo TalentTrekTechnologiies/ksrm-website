@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import {
@@ -25,6 +26,10 @@ import {
   SyllabusProgramme,
   SyllabusRegulation,
 } from "@/lib/syllabus-api"
+import {
+  getDepartmentProgrammesPublic,
+  DepartmentProgramme,
+} from "@/lib/department-programmes-api"
 import type { ProgrammeLevel } from "@/lib/department-programmes-api"
 
 /**
@@ -261,9 +266,39 @@ function RegulationRows({
   )
 }
 
+/**
+ * The branches a heading will actually show, worked out here rather than left
+ * for the admin to picture.
+ *
+ * Mirrors branchesFor() on the public page. The college opened this screen,
+ * saw "UG branches" and reasonably asked where CSE and Civil were - they are
+ * not entered here at all, they come from the Programmes tab. Printing the
+ * resolved names makes that obvious without reading any documentation.
+ */
+function branchesFor(
+  programme: SyllabusProgramme,
+  all: DepartmentProgramme[],
+): string[] | null {
+  if (!programme.level) return null
+  const needle = programme.nameContains?.trim().toLowerCase()
+  return [
+    ...new Set(
+      all
+        .filter(
+          (p) =>
+            p.level === programme.level &&
+            p.isActive !== false &&
+            (!needle || p.name.toLowerCase().includes(needle)),
+        )
+        .map((p) => p.name),
+    ),
+  ].sort()
+}
+
 function SyllabusManagerInner() {
   const { confirm, notifySaved } = useCmsConfirm()
   const [programmes, setProgrammes] = useState<SyllabusProgramme[]>([])
+  const [branches, setBranches] = useState<DepartmentProgramme[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState<SyllabusProgramme | null>(null)
@@ -279,8 +314,16 @@ function SyllabusManagerInner() {
     let cancelled = false
     ;(async () => {
       try {
-        const rows = await getSyllabusProgrammesAdmin(true)
-        if (!cancelled) setProgrammes(rows)
+        const [rows, allProgrammes] = await Promise.all([
+          getSyllabusProgrammesAdmin(true),
+          // Read-only: the branch list lives in the Programmes tab, and is
+          // shown here only so it is clear where the cards come from.
+          getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
+        ])
+        if (!cancelled) {
+          setProgrammes(rows)
+          setBranches(allProgrammes)
+        }
       } catch (err) {
         if (!cancelled)
           setError(err instanceof ApiError ? err.message : "Failed to load syllabus programmes")
@@ -383,6 +426,30 @@ function SyllabusManagerInner() {
         </p>
       )}
 
+      {/* Two things this screen does NOT do, said plainly on the screen itself
+          rather than in a document. Both were the first questions asked of it. */}
+      <div className="rounded-xl border border-admin-border bg-admin-bg px-4 py-3 text-sm text-slate-600">
+        <p className="mb-1">
+          <span className="font-semibold text-slate-800">Branches (CSE, Civil, ECE…)</span>{" "}
+          are not added here. They come from the{" "}
+          <Link href="/admin/academics" className="font-semibold text-admin-primary hover:underline">
+            Programmes tab
+          </Link>{" "}
+          next door, so they match Courses &amp; Intake. Each heading below lists the
+          ones it will show.
+        </p>
+        <p>
+          <span className="font-semibold text-slate-800">Syllabus PDFs</span> are uploaded
+          in{" "}
+          <Link href="/admin/downloads" className="font-semibold text-admin-primary hover:underline">
+            Downloads
+          </Link>{" "}
+          with <span className="font-semibold">Category = Syllabus</span>. A file is filed
+          under a branch and a regulation by its own name - &quot;Civil Engineering(R23)
+          Syllabus&quot; lands under Civil Engineering, R23.
+        </p>
+      </div>
+
       {live.length === 0 && !isFormOpen && (
         <p className="rounded-lg border border-dashed border-admin-border bg-admin-bg px-4 py-6 text-center text-sm text-slate-500">
           Nothing here yet, so the Syllabus page is showing the three headings it has
@@ -467,11 +534,34 @@ function SyllabusManagerInner() {
                   </span>
                 )}
               </p>
-              <p className="text-xs text-slate-500">
-                {programme.level
-                  ? `${programme.level} branches${programme.nameContains ? ` containing "${programme.nameContains}"` : ""}`
-                  : "No branches - one card for the whole course"}
-              </p>
+              {(() => {
+                const shown = branchesFor(programme, branches)
+                if (shown === null) {
+                  return (
+                    <p className="text-xs text-slate-500">
+                      No branches - one card for the whole course, taking the
+                      documents named after &quot;{programme.nameContains?.trim() || programme.name}&quot;.
+                    </p>
+                  )
+                }
+                if (shown.length === 0) {
+                  return (
+                    <p className="text-xs text-amber-700">
+                      No {programme.level} branches found
+                      {programme.nameContains ? ` containing "${programme.nameContains}"` : ""} -
+                      this heading will be empty. Branches come from the Programmes tab.
+                    </p>
+                  )
+                }
+                return (
+                  <p className="text-xs text-slate-500">
+                    <span className="font-semibold">
+                      {shown.length} {shown.length === 1 ? "branch" : "branches"}
+                    </span>{" "}
+                    from the Programmes tab: {shown.join(", ")}
+                  </p>
+                )
+              })()}
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <button
