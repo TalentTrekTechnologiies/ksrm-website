@@ -7,34 +7,41 @@ import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import {
   getDepartmentProgrammesPublic,
   DepartmentProgramme,
-  ProgrammeLevel,
 } from "@/lib/department-programmes-api";
+import {
+  getSyllabusProgrammesPublic,
+  SyllabusProgramme,
+  FALLBACK_SYLLABUS_PROGRAMMES,
+} from "@/lib/syllabus-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
 
-// Each regulation carries the code that appears in its syllabus filenames, so
-// a card can find the PDFs uploaded for it. Without this the cards were purely
-// decorative: every "Download PDF" button was href="#" and downloaded nothing.
-const btechRegs = [
-  // R26 applies to the batch admitted in AY 2026-27, so it leads the list.
-  // R23 stays here rather than being retired: the three senior years are still
-  // studying under it.
-  { code: "R26", name: "R26 (AY 2026-27 intake)" },
-  { code: "R23", name: "R23" },
-  { code: "R20", name: "R20" },
-  { code: "R18", name: "R18" },
-  { code: "R15", name: "R15 (Archive)" },
-];
+// A regulation code goes into a RegExp to find the documents uploaded for it,
+// and the code is typed by an admin now rather than written here - so "R23+"
+// or "R23 (new)" would otherwise be read as a pattern and either throw or
+// match the wrong files.
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
-const mtechRegs = [
-  { code: "R22", name: "R22 (Current)" },
-  { code: "R18PG", name: "R18PG" },
-];
-
-const mbaRegs = [
-  { code: "R25", name: "R25 (Current)" },
-  { code: "R19", name: "R19 (Archive)" },
-];
+/**
+ * Does this document belong to this regulation? Matched on the filename.
+ *
+ * The word boundaries are written `\\b`, not `\b`. A template literal
+ * processes escapes, so `\b` here would compile to a backspace character and
+ * the regex would silently match nothing - which is how the MBA table, the
+ * IQAC minutes and the academic-year parser each broke in turn.
+ */
+function docMatchesReg(title: string, code: string): boolean {
+  // A boundary only where the code's own edge is a word character. "R23+"
+  // ends in punctuation, and \b after it demands a word character next - so a
+  // fixed \b...\b silently matched nothing for any code an admin ends in a
+  // symbol. R18 still refuses to match an R18PG document, which is the whole
+  // point of having the boundaries at all.
+  const left = /^\w/.test(code) ? "\\b" : "";
+  const right = /\w$/.test(code) ? "\\b" : "";
+  return new RegExp(`${left}${escapeRegExp(code)}${right}`, "i").test(title);
+}
 
 function DownloadIcon() {
   return (
@@ -99,10 +106,24 @@ function branchAliases(name: string): string[] {
   return [...aliases, ...(known[n] ?? [])];
 }
 
+/**
+ * Is this phrase in this title, as a word rather than as letters inside one?
+ *
+ * The aliases include two-letter codes, and a plain substring test made "CE"
+ * match "Computer **S-c-i-e**nce": every CSE syllabus was being listed under
+ * Civil Engineering. The boundary is applied only at an end that is itself a
+ * word character, so a code written "AI&ML" still matches.
+ */
+function containsWord(title: string, phrase: string): boolean {
+  if (phrase.length < 2) return false;
+  const left = /^\w/.test(phrase) ? "\\b" : "";
+  const right = /\w$/.test(phrase) ? "\\b" : "";
+  return new RegExp(`${left}${escapeRegExp(phrase)}${right}`, "i").test(title);
+}
+
 /** Does this document belong to this branch? Matched on the filename wording. */
 function docMatchesBranch(title: string, name: string): boolean {
-  const t = title.toLowerCase();
-  return branchAliases(name).some((a) => a.length > 1 && t.includes(a.toLowerCase()));
+  return branchAliases(name).some((a) => containsWord(title, a));
 }
 
 /**
@@ -118,16 +139,32 @@ const BRANCH_CARD_MAX_VISIBLE = 4;
 
 function BranchPanel({
   branch,
+  matchWord,
+  heading,
   regs,
   docs,
 }: {
-  branch: string;
+  /** The branch this card is for, or null for a course with no branches -
+   *  BCA has one syllabus, not one per specialisation. */
+  branch: string | null;
+  /** For a branch-less course, the word its documents are named after, e.g.
+   *  "BCA". Without it the card took every syllabus on the site, so BCA
+   *  listed the CSE and ECE PDFs too. */
+  matchWord?: string;
+  /** What the card is titled. Defaults to the branch name. */
+  heading?: string;
   regs: { code: string; name: string }[];
   docs: Download[];
 }) {
   const [expanded, setExpanded] = useState(false);
-  const mine = docs.filter((d) => docMatchesBranch(d.title, branch));
-  const label = branch.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+  const mine =
+    branch === null
+      ? docs.filter((d) => (matchWord ? containsWord(d.title, matchWord) : false))
+      : docs.filter((d) => docMatchesBranch(d.title, branch));
+  // Falls back to the branch name: stripping the prefix off "MBA" leaves an
+  // empty string, and the card was rendering with no title at all.
+  const stripped = (branch ?? "").replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
+  const label = heading ?? (stripped || branch || "");
 
   // Every card the same height regardless of how many files a branch has -
   // flatten regulation-then-other into one ordered list, cap it, and let
@@ -136,10 +173,10 @@ function BranchPanel({
   // tower over branches with 2).
   const groups: { label: string; items: Download[] }[] = [];
   for (const r of regs) {
-    const forReg = mine.filter((d) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title));
+    const forReg = mine.filter((d) => docMatchesReg(d.title, r.code));
     if (forReg.length > 0) groups.push({ label: r.name, items: forReg });
   }
-  const unmatched = mine.filter((d) => !regs.some((r) => new RegExp(`\\b${r.code}\\b`, "i").test(d.title)));
+  const unmatched = mine.filter((d) => !regs.some((r) => docMatchesReg(d.title, r.code)));
   if (unmatched.length > 0) groups.push({ label: "Other", items: unmatched });
 
   const total = groups.reduce((n, g) => n + g.items.length, 0);
@@ -202,18 +239,36 @@ function BranchPanel({
 
 function ProgrammeAccordion({
   title,
+  matchWord,
+  description,
   branches,
   regs,
   docs,
   defaultOpen,
 }: {
   title: string;
-  branches: string[];
+  /** For a branch-less course, the word its documents are named after. */
+  matchWord?: string;
+  description?: string | null;
+  /** Null when the programme lists no branches - one card carries the whole
+   *  course, which is what BCA and Diploma need. An empty array is the other
+   *  case: branches were asked for and none are set up yet. */
+  branches: string[] | null;
   regs: { code: string; name: string }[];
   docs: Download[];
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(!!defaultOpen);
+  const grid = (
+    <div className="syl-branch-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
+      {branches === null ? (
+        <BranchPanel branch={null} matchWord={matchWord} heading={title} regs={regs} docs={docs} />
+      ) : (
+        branches.map((b) => <BranchPanel key={b} branch={b} regs={regs} docs={docs} />)
+      )}
+    </div>
+  );
+
   return (
     <div className={`syl-accordion-item ${open ? "expanded" : ""}`}>
       <button className="syl-accordion-header" onClick={() => setOpen(!open)}>
@@ -221,16 +276,15 @@ function ProgrammeAccordion({
         <div className="syl-chevron"><ChevronDown /></div>
       </button>
       <div className="syl-accordion-content">
-        {branches.length === 0 ? (
+        {description && (
+          <p style={{ fontSize: 13.5, color: "#666", margin: "16px 0 0", lineHeight: 1.6 }}>{description}</p>
+        )}
+        {branches !== null && branches.length === 0 ? (
           <p style={{ fontSize: 13, color: "#888", fontStyle: "italic", marginTop: 16 }}>
             Branches will appear here once they are added in Admin &rarr; Academics.
           </p>
         ) : (
-          <div className="syl-branch-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
-            {branches.map((b) => (
-              <BranchPanel key={b} branch={b} regs={regs} docs={docs} />
-            ))}
-          </div>
+          grid
         )}
       </div>
     </div>
@@ -251,20 +305,47 @@ export default function SyllabusPage() {
     () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
     [],
   );
-  const named = (level: ProgrammeLevel, match: RegExp) =>
-    [
+  // The headings themselves, and the regulations under each, are now content:
+  // the college renames "B.Tech (UG)", retires R15 and adds BCA without a
+  // deploy. Until the CMS has rows the page falls back to the three headings
+  // it has always shown, so nothing changes until someone fills it in.
+  const cmsProgrammes = useLiveData<SyllabusProgramme[]>(
+    () => getSyllabusProgrammesPublic().catch(() => [] as SyllabusProgramme[]),
+    [],
+  );
+  const groups =
+    cmsProgrammes && cmsProgrammes.length > 0
+      ? cmsProgrammes
+      : FALLBACK_SYLLABUS_PROGRAMMES;
+
+  /**
+   * The branches listed under a heading.
+   *
+   * Null when the programme names no level: that is a course with no
+   * specialisations - BCA and Diploma have one syllabus, not one per branch -
+   * and its card takes the documents directly.
+   */
+  const branchesFor = (group: SyllabusProgramme): string[] | null => {
+    if (!group.level) return null;
+    const needle = group.nameContains?.trim().toLowerCase();
+    return [
       ...new Set(
         (programmes ?? [])
-          .filter((p) => p.level === level && p.isActive !== false && match.test(p.name))
+          .filter(
+            (p) =>
+              p.level === group.level &&
+              p.isActive !== false &&
+              (!needle || p.name.toLowerCase().includes(needle)),
+          )
           .map((p) => p.name),
       ),
     ].sort();
+  };
 
-  const btechBranches = named("UG", /./);
-  // MBA is a PG programme but has its own regulations and no specialisations,
-  // so it is listed separately rather than as an M.Tech branch.
-  const mtechBranches = named("PG", /tech/i);
-  const mbaBranches = named("PG", /mba/i);
+  const regsFor = (group: SyllabusProgramme) =>
+    group.regulations
+      .filter((r) => r.isActive !== false && !r.deletedAt)
+      .map((r) => ({ code: r.code, name: r.label?.trim() || r.code }));
 
   return (
     <>
@@ -397,9 +478,18 @@ export default function SyllabusPage() {
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 40px" }}><CmsText section="syllabus" slot="download-syllabus-by-programme" /></h2>
             <div className="syl-accordion">
-              <ProgrammeAccordion title="B.Tech (UG)" branches={btechBranches} regs={btechRegs} docs={syllabi} defaultOpen />
-              <ProgrammeAccordion title="M.Tech (PG)" branches={mtechBranches} regs={mtechRegs} docs={syllabi} />
-              <ProgrammeAccordion title="MBA" branches={mbaBranches} regs={mbaRegs} docs={syllabi} />
+              {groups.map((group, i) => (
+                <ProgrammeAccordion
+                  key={group.id}
+                  title={group.name}
+                  matchWord={group.nameContains?.trim() || group.name}
+                  description={group.description}
+                  branches={branchesFor(group)}
+                  regs={regsFor(group)}
+                  docs={syllabi}
+                  defaultOpen={i === 0}
+                />
+              ))}
             </div>
           </div>
         </section>

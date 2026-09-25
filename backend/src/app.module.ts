@@ -16,6 +16,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { HomepageModule } from './homepage/homepage.module';
 import { DownloadsModule } from './downloads/downloads.module';
 import { CareersModule } from './careers/careers.module';
+import { SyllabusModule } from './syllabus/syllabus.module';
 import { EventsModule } from './events/events.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { CommitteesModule } from './committees/committees.module';
@@ -67,6 +68,7 @@ import { SiteStatsModule } from './site-stats/site-stats.module';
     HomepageModule,
     DownloadsModule,
     CareersModule,
+    SyllabusModule,
     EventsModule,
     DepartmentsModule,
     CommitteesModule,

@@ -173,7 +173,7 @@ model News {
   /// and legacy manual-URL saves; when set, the server resolves this to the
   /// Media Library's current URL for that asset on every read/write so
   /// Replace propagates without a News re-save.
-  mediaId Int?
+  mediaId         Int?
   /// Optional video and document attachments, alongside the image.
   videoUrl        String?
   videoMediaId    Int?
@@ -221,12 +221,12 @@ model Faculty {
   /// every read/write so Replace propagates without a Faculty re-save.
   mediaId Int?
 
-  departmentRef        Department?       @relation("Faculty_Department", fields: [departmentId], references: [id], onDelete: SetNull)
-  hodOfDepartment      Department?       @relation("Department_Hod")
-  deletedByAdmin       Admin?            @relation("Faculty_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
-  labsInCharge         Lab[]             @relation("Lab_InCharge")
-  committeeMemberships CommitteeMember[] @relation("CommitteeMember_Faculty")
-  researchRecords      Research[]        @relation("Research_Faculty")
+  departmentRef        Department?          @relation("Faculty_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  hodOfDepartment      Department?          @relation("Department_Hod")
+  deletedByAdmin       Admin?               @relation("Faculty_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  labsInCharge         Lab[]                @relation("Lab_InCharge")
+  committeeMemberships CommitteeMember[]    @relation("CommitteeMember_Faculty")
+  researchRecords      Research[]           @relation("Research_Faculty")
   achievements         FacultyAchievement[] @relation("FacultyAchievement_Faculty")
 
   @@index([departmentId])
@@ -264,25 +264,25 @@ enum FacultyAchievementType {
 /// annual haul. They are rows against the existing Faculty record rather than
 /// fields on it, so adding this year's work never means duplicating a person.
 model FacultyAchievement {
-  id        Int                    @id @default(autoincrement())
-  facultyId Int
-  type      FacultyAchievementType
-  title     String
+  id          Int                    @id @default(autoincrement())
+  facultyId   Int
+  type        FacultyAchievementType
+  title       String
   /// Journal, conference, publisher, or the authority that granted it.
-  detail    String?
+  detail      String?
   /// DOI, ISSN/ISBN, patent or application number - whatever identifies it.
   referenceNo String?
   /// Date of publication, or date of issue for a patent. Nullable because
   /// older records are often remembered only by year, and a filed-but-not-yet
   /// granted patent has no issue date at all.
-  date      DateTime?
+  date        DateTime?
   /// Free text so "Granted", "Filed", "Published" all fit without a migration.
-  status    String?
-  url       String?
-  sortOrder Int                    @default(0)
-  isActive  Boolean                @default(true)
-  createdAt DateTime               @default(now())
-  updatedAt DateTime               @updatedAt
+  status      String?
+  url         String?
+  sortOrder   Int                    @default(0)
+  isActive    Boolean                @default(true)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
 
   deletedAt DateTime?
   deletedBy Int?
@@ -319,7 +319,7 @@ model Placement {
   /// decoupled-by-design reasoning as the other modules' mediaId columns).
   /// imageUrl/companyLogoUrl stay authoritative for existing rows and
   /// legacy manual-URL saves.
-  mediaId          Int?
+  mediaId            Int?
   companyLogoMediaId Int?
 
   departmentRef  Department? @relation("Placement_Department", fields: [departmentId], references: [id], onDelete: SetNull)
@@ -350,7 +350,7 @@ model GalleryImage {
   /// this image to a specific public page's gallery block, parallel to
   /// Download.pageSection. Null = not tied to a page (still appears in the
   /// general Gallery). Free string, driven by the admin UI's PAGE_SECTIONS.
-  pageSection  String?
+  pageSection String?
 
   /// Media Library reference (plain Int, no Prisma relation - same
   /// decoupled-by-design reasoning as HomepageHero.mediaId). imageUrl stays
@@ -418,6 +418,8 @@ model Admin {
   deletedDepartments          Department[]          @relation("Department_DeletedBy")
   deletedLearningOutcomes     LearningOutcome[]     @relation("LearningOutcome_DeletedBy")
   deletedDepartmentProgrammes DepartmentProgramme[] @relation("DepartmentProgramme_DeletedBy")
+  deletedSyllabusProgrammes   SyllabusProgramme[]   @relation("SyllabusProgramme_DeletedBy")
+  deletedSyllabusRegulations  SyllabusRegulation[]  @relation("SyllabusRegulation_DeletedBy")
   deletedDepartmentHighlights DepartmentHighlight[] @relation("DepartmentHighlight_DeletedBy")
   deletedDownloads            Download[]            @relation("Download_DeletedBy")
   deletedCommittees           Committee[]           @relation("Committee_DeletedBy")
@@ -449,20 +451,20 @@ model Admin {
   deletedEvents  Event[]  @relation("Event_DeletedBy")
 
   // Media Library.
-  uploadedMedia           Media[]        @relation("Media_UploadedBy")
-  deletedTransportRoutes TransportRoute[] @relation("TransportRoute_DeletedBy")
+  uploadedMedia             Media[]              @relation("Media_UploadedBy")
+  deletedTransportRoutes    TransportRoute[]     @relation("TransportRoute_DeletedBy")
   deletedKgcetParticipation KgcetParticipation[] @relation("KgcetParticipation_DeletedBy")
   deletedKgcetHighlights    KgcetHighlight[]     @relation("KgcetHighlight_DeletedBy")
   updatedContentStyles      ContentStyle[]       @relation("ContentStyle_UpdatedBy")
-  deletedMedia            Media[]        @relation("Media_DeletedBy")
-  mediaVersionsReplacedBy MediaVersion[] @relation("MediaVersion_ReplacedBy")
+  deletedMedia              Media[]              @relation("Media_DeletedBy")
+  mediaVersionsReplacedBy   MediaVersion[]       @relation("MediaVersion_ReplacedBy")
 
   // Department CMS phase.
   departmentDisplaySettingsUpdated DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_UpdatedBy")
 
   // Careers Application Pipeline.
-  assignedCareerApplications    CareerApplication[]                @relation("CareerApplication_AssignedHr")
-  careerApplicationStatusChanges CareerApplicationStatusHistory[]  @relation("CareerApplicationStatusHistory_ChangedBy")
+  assignedCareerApplications     CareerApplication[]              @relation("CareerApplication_AssignedHr")
+  careerApplicationStatusChanges CareerApplicationStatusHistory[] @relation("CareerApplicationStatusHistory_ChangedBy")
 
   // Announcement Engine.
   deletedAnnouncements Announcement[] @relation("Announcement_DeletedBy")
@@ -513,19 +515,19 @@ model Research {
 }
 
 model ExamNotification {
-  id       Int      @id @default(autoincrement())
-  title    String
+  id        Int       @id @default(autoincrement())
+  title     String
   // --- Legacy Phase 1 fields, no longer written by the current
   // (deliberately simple - "publish an important link, not a notification
   // engine") admin form. Kept rather than dropped, matching this schema's
   // additive-only convention - see startDate/endDate/isPublished below for
   // the fields that replaced date/category's role. Table had zero rows at
   // migration time, so nothing needed backfilling.
-  fileUrl  String?
-  category String?
-  date     DateTime?
-  isActive Boolean  @default(true)
-  createdAt DateTime @default(now())
+  fileUrl   String?
+  category  String?
+  date      DateTime?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
 
   // --- Admin Management rework ---
   description String?
@@ -537,7 +539,7 @@ model ExamNotification {
   // toggles deliberately; isActive stays available as a quick
   // enable/disable that doesn't lose the "published" state. Public display
   // requires both, plus falling inside [startDate, endDate].
-  isPublished Boolean  @default(false)
+  isPublished Boolean   @default(false)
 
   // --- Phase 1 additive fields ---
   // NOTE: also intentionally not given soft-delete columns - same reasoning
@@ -665,25 +667,25 @@ model Department {
   hod            Faculty? @relation("Department_Hod", fields: [hodId], references: [id], onDelete: SetNull)
   deletedByAdmin Admin?   @relation("Department_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
-  faculties           Faculty[]             @relation("Faculty_Department")
-  labs                Lab[]                 @relation("Lab_Department")
-  researches          Research[]            @relation("Research_Department")
-  placements          Placement[]           @relation("Placement_Department")
-  learningOutcomes    LearningOutcome[]     @relation("LearningOutcome_Department")
-  programmes          DepartmentProgramme[] @relation("DepartmentProgramme_Department")
-  highlights          DepartmentHighlight[] @relation("DepartmentHighlight_Department")
-  galleryImages       GalleryImage[]        @relation("GalleryImage_Department")
-  examNotifications   ExamNotification[]    @relation("ExamNotification_Department")
-  downloads           Download[]            @relation("Download_Department")
-  admins              Admin[]               @relation("Admin_Department")
+  faculties         Faculty[]             @relation("Faculty_Department")
+  labs              Lab[]                 @relation("Lab_Department")
+  researches        Research[]            @relation("Research_Department")
+  placements        Placement[]           @relation("Placement_Department")
+  learningOutcomes  LearningOutcome[]     @relation("LearningOutcome_Department")
+  programmes        DepartmentProgramme[] @relation("DepartmentProgramme_Department")
+  highlights        DepartmentHighlight[] @relation("DepartmentHighlight_Department")
+  galleryImages     GalleryImage[]        @relation("GalleryImage_Department")
+  examNotifications ExamNotification[]    @relation("ExamNotification_Department")
+  downloads         Download[]            @relation("Download_Department")
+  admins            Admin[]               @relation("Admin_Department")
 
   // Department CMS phase.
-  campusVideos    CampusVideo[]           @relation("CampusVideo_Department")
-  siteStatistics  SiteStatistic[]         @relation("SiteStatistic_Department")
-  contactChannels ContactChannel[]        @relation("ContactChannel_Department")
-  displaySettings DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_Department")
-  committees      Committee[]                @relation("Committee_Department")
-  events          Event[]                    @relation("Event_Department")
+  campusVideos        CampusVideo[]              @relation("CampusVideo_Department")
+  siteStatistics      SiteStatistic[]            @relation("SiteStatistic_Department")
+  contactChannels     ContactChannel[]           @relation("ContactChannel_Department")
+  displaySettings     DepartmentDisplaySetting[] @relation("DepartmentDisplaySetting_Department")
+  committees          Committee[]                @relation("Committee_Department")
+  events              Event[]                    @relation("Event_Department")
   /// The department's Student Chapter "About Us" text. Separate from `about`
   /// (the department itself) on purpose - the chapter is a distinct, mostly
   /// student-run body with its own description.
@@ -748,11 +750,11 @@ model LearningOutcome {
 }
 
 model DepartmentProgramme {
-  id           Int            @id @default(autoincrement())
-  departmentId Int
-  name         String
-  level        ProgrammeLevel
-  intake       Int
+  id            Int            @id @default(autoincrement())
+  departmentId  Int
+  name          String
+  level         ProgrammeLevel
+  intake        Int
   /// Course/branch code as printed on the Courses & Intake table (e.g. "CSE",
   /// "05"). Optional: not every programme has one, and the table shows the
   /// department's short name when it is absent.
@@ -761,10 +763,10 @@ model DepartmentProgramme {
   /// Optional and deliberately free text - it is a claim about this branch
   /// only, so it is never inferred or defaulted.
   accreditation String?
-  sortOrder    Int            @default(0)
-  isActive     Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  sortOrder     Int            @default(0)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   deletedAt DateTime?
   deletedBy Int?
@@ -777,16 +779,91 @@ model DepartmentProgramme {
   @@index([deletedAt])
 }
 
+/// A heading on Academics -> Syllabus: "B.Tech (UG)", "Diploma", "BCA".
+///
+/// These used to be three groups written into the page, with their regulations
+/// in a const array beside them, so renaming "B.Tech (UG)" or offering a new
+/// course meant a code change and a deploy. The college adds courses - BCA was
+/// approved for AY 2026-27 while this page still knew about three - so the list
+/// of them is content, not code.
+model SyllabusProgramme {
+  id   Int    @id @default(autoincrement())
+  /// What the heading says. Free text: the college renames these.
+  name String
+
+  /// Which branches are listed under the heading: the active programmes of
+  /// this level, from the same rows that drive Courses & Intake, so a branch
+  /// added there appears here without a deploy.
+  ///
+  /// Null lists no branches, which is right for a course with no
+  /// specialisations - its regulations then carry the documents directly.
+  level ProgrammeLevel?
+
+  /// Narrows those branches by name, matched case-insensitively. MBA and
+  /// M.Tech are both PG, and each wants its own heading and its own
+  /// regulations, so level alone cannot separate them.
+  nameContains String?
+
+  /// Optional line under the heading.
+  description String?
+
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  regulations    SyllabusRegulation[] @relation("SyllabusRegulation_Programme")
+  deletedByAdmin Admin?               @relation("SyllabusProgramme_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([deletedAt])
+}
+
+/// One regulation of a programme - R19, R23, R26.
+///
+/// Its own row rather than a position in an array on the programme, so
+/// deleting R19 cannot silently renumber R23 into its place.
+model SyllabusRegulation {
+  id          Int @id @default(autoincrement())
+  programmeId Int
+
+  /// The code as it appears in the uploaded filenames, e.g. "R23" - this is
+  /// what a syllabus document is matched on, so it has to be exactly the text
+  /// the college types when naming the file.
+  code String
+
+  /// What the page calls it, e.g. "R23 (Current)". Blank shows the code.
+  label String?
+
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+  deletedBy Int?
+  version   Int       @default(1)
+
+  programme      SyllabusProgramme @relation("SyllabusRegulation_Programme", fields: [programmeId], references: [id], onDelete: Cascade)
+  deletedByAdmin Admin?            @relation("SyllabusRegulation_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([programmeId])
+  @@index([deletedAt])
+}
+
 model DepartmentHighlight {
-  id           Int                      @id @default(autoincrement())
+  id           Int                     @id @default(autoincrement())
   departmentId Int
-  kind         DepartmentHighlightKind  @default(HIGHLIGHT)
+  kind         DepartmentHighlightKind @default(HIGHLIGHT)
   title        String
   description  String
-  sortOrder    Int                      @default(0)
-  isActive     Boolean                  @default(true)
-  createdAt    DateTime                 @default(now())
-  updatedAt    DateTime                 @updatedAt
+  sortOrder    Int                     @default(0)
+  isActive     Boolean                 @default(true)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
 
   deletedAt DateTime?
   deletedBy Int?
@@ -841,23 +918,23 @@ model Lab {
 }
 
 model Committee {
-  id          Int           @id @default(autoincrement())
-  name        String
-  type        CommitteeType
-  description String?
+  id           Int                 @id @default(autoincrement())
+  name         String
+  type         CommitteeType
+  description  String?
   /// Admin-controlled display order. Committees used to come out alphabetically,
   /// which is not the order a college lists its committees in.
-  sortOrder   Int           @default(0)
+  sortOrder    Int                 @default(0)
   /// Which public page lists this committee. See CommitteePlacement.
-  placement   CommitteePlacement?
+  placement    CommitteePlacement?
   /// The department this committee belongs to, for committees that are a
   /// department's own rather than the institution's - a Board of Studies is
   /// one per department. Null for institution-wide committees, which is every
   /// committee that existed before this column.
   departmentId Int?
-  isActive    Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  isActive     Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
   deletedAt DateTime?
   deletedBy Int?
@@ -962,7 +1039,7 @@ enum ApplicationStatus {
 /// transition (tracked in CareerApplicationStatusHistory), never deleted
 /// through the admin UI.
 model CareerApplication {
-  id       Int     @id @default(autoincrement())
+  id       Int  @id @default(autoincrement())
   careerId Int?
 
   fullName          String
@@ -1004,7 +1081,7 @@ model CareerApplication {
   updatedAt DateTime @updatedAt
 
   career        Career?                          @relation(fields: [careerId], references: [id], onDelete: SetNull)
-  assignedHr    Admin?                            @relation("CareerApplication_AssignedHr", fields: [assignedHrId], references: [id], onDelete: SetNull)
+  assignedHr    Admin?                           @relation("CareerApplication_AssignedHr", fields: [assignedHrId], references: [id], onDelete: SetNull)
   statusHistory CareerApplicationStatusHistory[]
 
   @@index([careerId])
@@ -1112,7 +1189,7 @@ model Announcement {
   deletedBy Int?
   version   Int       @default(1)
 
-  deletedByAdmin Admin?                   @relation("Announcement_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  deletedByAdmin Admin?                  @relation("Announcement_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
   placements     AnnouncementPlacement[]
 
   @@index([isActive])
@@ -1181,29 +1258,29 @@ model AdminNotification {
 /// Sprint "tonight" build - a campus events calendar, distinct from
 /// `ExamNotification`/scrolling ticker notices (Notification model).
 model Event {
-  id          Int       @id @default(autoincrement())
-  title       String
+  id            Int       @id @default(autoincrement())
+  title         String
   /// Short byline under the title, e.g. "Part of SIVANANDA SMARANAM 2K26".
   /// Optional - most events don't need one.
-  subtitle    String?
-  description String?
-  eventDate   DateTime
-  endDate     DateTime?
-  location    String?
-  imageUrl    String?
-  category    String?
+  subtitle      String?
+  description   String?
+  eventDate     DateTime
+  endDate       DateTime?
+  location      String?
+  imageUrl      String?
+  category      String?
   /// Pill tags shown under the byline, e.g. ["Technical Competitions",
   /// "Cultural Performances"] for a multi-strand fest. Optional, empty for
   /// a plain event.
-  tags        String[]  @default([])
+  tags          String[]  @default([])
   /// A prize pool figure, if the event has one (fests, hackathons).
-  prizePool   String?
+  prizePool     String?
   /// The event's convener/organizer, shown as a fact alongside dates/venue.
   organizerName String?
-  sortOrder   Int       @default(0)
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  sortOrder     Int       @default(0)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   deletedAt DateTime?
   deletedBy Int?
@@ -1215,7 +1292,7 @@ model Event {
   /// existing rows and legacy manual-URL saves; when set, the server
   /// resolves this to the Media Library's current URL for that asset on
   /// every read/write so Replace propagates without an Events re-save.
-  mediaId Int?
+  mediaId         Int?
   /// Optional video and document attachments, alongside the image.
   videoUrl        String?
   videoMediaId    Int?
@@ -2147,20 +2224,20 @@ model PageText {
 /// year. Same shape as ContactChannel: a repeating public record with its own
 /// admin screen, soft-delete and optimistic locking.
 model TransportRoute {
-  id       Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   /// Route number as displayed, e.g. "R1". Free text, not an integer - some
   /// colleges use "A1" or "N-2".
-  routeNo  String
+  routeNo     String
   /// Where the route starts from.
-  fromPlace String
+  fromPlace   String
   /// The stops in between, as one line: "Clock Tower -> Tirupati Road -> Gate".
-  via      String?
+  via         String?
   /// Departure and return times, kept as free text so "6:45 AM" and
   /// "6:45 AM (Sat 7:15)" are both expressible without a schema change.
-  departTime String?
-  returnTime String?
+  departTime  String?
+  returnTime  String?
   /// Monthly fee as displayed, e.g. "Rs 3,000/month".
-  fee      String?
+  fee         String?
   /// The bus and its crew. All optional - a route can be published before the
   /// driver is assigned for the year.
   busNo       String?

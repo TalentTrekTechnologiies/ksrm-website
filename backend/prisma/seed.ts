@@ -40,6 +40,10 @@ const MODULE_ACTIONS: Record<string, readonly string[]> = {
   downloads: [...CRUD_ACTIONS, 'restore'],
   committees: [...CRUD_ACTIONS, 'restore'],
   careers: [...CRUD_ACTIONS, 'restore'],
+  // Academics -> Syllabus: the headings and their regulations. Its own module
+  // rather than folded into department_programmes, because the Academics role
+  // should be able to own one without the other.
+  syllabus_programmes: [...CRUD_ACTIONS, 'restore'],
   events: [...CRUD_ACTIONS, 'restore'],
   // Media Library. Force-deleting a still-referenced asset is deliberately
   // NOT its own permission key - it's gated purely by Admin.isSuperAdmin in
@@ -115,6 +119,7 @@ const MODULE_LABELS: Record<string, string> = {
   research: 'research publication records',
   downloads: 'downloadable documents',
   committees: 'committees and committee membership rosters',
+  syllabus_programmes: 'Academics -> Syllabus programmes and regulations',
   careers: 'job openings on the public Careers page',
   events: 'campus events calendar entries',
   media: 'the centralized Media Library (images, videos, documents)',
@@ -374,7 +379,7 @@ const ROLES: {
       'Owns the Academics pages: the college-wide programme/course list, plus the documents, images, tables and text on Academics → Academic Calendar / Courses & Intake / Fee Structure / Regulations, and the Syllabus page. Restricted to those pages by the pages.academics and pages.syllabus keys.',
     isSystemRole: true,
     permissionKeys: [
-      ...permissionsFor('department_programmes'),
+      ...permissionsFor('department_programmes', 'syllabus_programmes'),
       ...permissionsFor('downloads', 'gallery'),
       'pages.academics',
       'pages.syllabus',

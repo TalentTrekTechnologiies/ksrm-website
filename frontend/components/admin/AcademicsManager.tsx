@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
+import SyllabusManager from "@/components/admin/SyllabusManager"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import {
   TextField,
@@ -412,10 +413,50 @@ function AcademicsManagerInner() {
   )
 }
 
+/**
+ * Two screens under one sidebar entry: the programmes the college offers, and
+ * the Syllabus page built out of them.
+ *
+ * They are tabs rather than two sidebar items because they are the same job -
+ * a syllabus heading lists branches that come from the programme list beside
+ * it, and the college explicitly wanted this inside Academics rather than in
+ * Page Content.
+ */
+const TABS = [
+  { key: "programmes", label: "Programmes" },
+  { key: "syllabus", label: "Syllabus" },
+] as const
+
 export default function AcademicsManager() {
+  const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("programmes")
+
   return (
-    <PermissionGate permission="department_programmes.view">
-      <AcademicsManagerInner />
-    </PermissionGate>
+    <div className="space-y-4">
+      <div className="flex gap-1 border-b border-admin-border">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setTab(t.key)}
+            aria-current={tab === t.key ? "page" : undefined}
+            className={
+              tab === t.key
+                ? "-mb-px border-b-2 border-admin-primary px-4 py-2 text-sm font-semibold text-admin-primary"
+                : "-mb-px border-b-2 border-transparent px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800"
+            }
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "programmes" ? (
+        <PermissionGate permission="department_programmes.view">
+          <AcademicsManagerInner />
+        </PermissionGate>
+      ) : (
+        <SyllabusManager />
+      )}
+    </div>
   )
 }
