@@ -7,6 +7,7 @@ import PermissionGate from "@/components/admin/cms/PermissionGate"
 import CmsTable from "@/components/admin/cms/CmsTable"
 import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
+import SyllabusTitleHint from "@/components/admin/SyllabusTitleHint"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import { getCommitteesPublic, Committee } from "@/lib/committees-api"
 import { committeeAnchor } from "@/components/committees/NamedCommittees"
@@ -370,6 +371,12 @@ function DownloadsManagerInner() {
           <p className="text-sm font-semibold text-slate-700">{editing ? "Edit download" : "New download"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
           <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} required />
+
+          {/* A syllabus has no branch field - the Title decides which branch
+              and which regulation it is filed under, and a title matching
+              neither lands under "Other" without saying so. Shown only for the
+              one category where that rule applies. */}
+          {form.category === "SYLLABUS" && <SyllabusTitleHint title={form.title} />}
           <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={[...PAGE_SECTION_OPTIONS, ...committeeSections]} />
 
           {/* Which academic year this belongs to. Previous years fold shut on

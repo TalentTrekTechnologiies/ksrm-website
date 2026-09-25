@@ -15,33 +15,11 @@ import {
 } from "@/lib/syllabus-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
-
-// A regulation code goes into a RegExp to find the documents uploaded for it,
-// and the code is typed by an admin now rather than written here - so "R23+"
-// or "R23 (new)" would otherwise be read as a pattern and either throw or
-// match the wrong files.
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-/**
- * Does this document belong to this regulation? Matched on the filename.
- *
- * The word boundaries are written `\\b`, not `\b`. A template literal
- * processes escapes, so `\b` here would compile to a backspace character and
- * the regex would silently match nothing - which is how the MBA table, the
- * IQAC minutes and the academic-year parser each broke in turn.
- */
-function docMatchesReg(title: string, code: string): boolean {
-  // A boundary only where the code's own edge is a word character. "R23+"
-  // ends in punctuation, and \b after it demands a word character next - so a
-  // fixed \b...\b silently matched nothing for any code an admin ends in a
-  // symbol. R18 still refuses to match an R18PG document, which is the whole
-  // point of having the boundaries at all.
-  const left = /^\w/.test(code) ? "\\b" : "";
-  const right = /\w$/.test(code) ? "\\b" : "";
-  return new RegExp(`${left}${escapeRegExp(code)}${right}`, "i").test(title);
-}
+import {
+  containsWord,
+  docMatchesBranch,
+  docMatchesReg,
+} from "@/lib/syllabus-matching";
 
 function DownloadIcon() {
   return (
@@ -67,63 +45,6 @@ function ChevronRight() {
       <path d="m9 6 6 6-6 6" />
     </svg>
   );
-}
-
-/**
- * The branches a programme is offered in, from Admin -> Academics.
- *
- * Not a hardcoded list: the college adds and retires specialisations, and a
- * syllabus page that has to be redeployed to show a new branch is a syllabus
- * page that will be wrong. The names come from the same programme rows that
- * drive Courses & Intake, so the two pages can never disagree.
- *
- * The short form is what appears in a filename - the college names these
- * "Computer Science and Engineering(R23)" - so it is what a document is
- * matched on.
- */
-function branchAliases(name: string): string[] {
-  // MBA has no specialisation text after the prefix - stripping it left
-  // nothing to match a document against, so no MBA syllabus could ever be
-  // found regardless of what was uploaded. Fall back to the full name.
-  const stripped = name.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
-  const n = stripped || name.trim();
-  const aliases = [n];
-  const known: Record<string, string[]> = {
-    "Computer Science & Engineering": ["Computer Science and Engineering", "CSE"],
-    "Electronics & Communication Engineering": ["Electronics and Communication Engineering", "ECE"],
-    "Electrical & Electronics Engineering": ["Electrical and Electronics Engineering", "EEE"],
-    "Mechanical Engineering": ["Mechanical", "ME"],
-    "Civil Engineering": ["Civil", "CE"],
-    "CSE (AIML)": ["AIML", "AI & ML", "Artificial Intelligence and Machine Learning"],
-    "CSE (Data Science)": ["Data Science", "AIDS"],
-    "AIML": ["Artificial Intelligence and Machine Learning", "AI & ML"],
-    "AIDS": ["Artificial Intelligence and Data Science", "Data Science"],
-    "Power Systems": ["PS", "Power System"],
-    "VLSI & Embedded Systems": ["VLSI", "Embedded Systems"],
-    "Structural Engineering": ["Structural"],
-    "Geotechnical Engineering": ["Geotechnical", "GE"],
-  };
-  return [...aliases, ...(known[n] ?? [])];
-}
-
-/**
- * Is this phrase in this title, as a word rather than as letters inside one?
- *
- * The aliases include two-letter codes, and a plain substring test made "CE"
- * match "Computer **S-c-i-e**nce": every CSE syllabus was being listed under
- * Civil Engineering. The boundary is applied only at an end that is itself a
- * word character, so a code written "AI&ML" still matches.
- */
-function containsWord(title: string, phrase: string): boolean {
-  if (phrase.length < 2) return false;
-  const left = /^\w/.test(phrase) ? "\\b" : "";
-  const right = /\w$/.test(phrase) ? "\\b" : "";
-  return new RegExp(`${left}${escapeRegExp(phrase)}${right}`, "i").test(title);
-}
-
-/** Does this document belong to this branch? Matched on the filename wording. */
-function docMatchesBranch(title: string, name: string): boolean {
-  return branchAliases(name).some((a) => containsWord(title, a));
 }
 
 /**
