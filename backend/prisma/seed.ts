@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ProgrammeLevel } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { SYSTEM_ADMIN_EMAIL } from '../src/common/system-admin.constant';
 import {
@@ -610,6 +610,92 @@ async function seedSiteSettings() {
   }
 }
 
+/**
+ * The Syllabus page's headings and regulations, as the page already shows them.
+ *
+ * These three lived in the page's own code until the Syllabus CMS module was
+ * added, so the college could see them on the site but not edit them. Seeding
+ * them means the CMS opens with exactly what is already published, ready to be
+ * renamed, reordered or added to - rather than an empty screen next to a page
+ * that visibly has content on it.
+ *
+ * Regulations are newest first, which is the order the page has always used
+ * and the order the module now assigns to anything new.
+ */
+const SYLLABUS_SEED: {
+  name: string;
+  level: ProgrammeLevel | null;
+  nameContains: string | null;
+  regulations: { code: string; label: string | null }[];
+}[] = [
+  {
+    name: 'B.Tech (UG)',
+    level: 'UG',
+    nameContains: null,
+    regulations: [
+      { code: 'R26', label: 'R26 (AY 2026-27 intake)' },
+      { code: 'R23', label: 'R23' },
+      { code: 'R20', label: 'R20' },
+      { code: 'R18', label: 'R18' },
+      { code: 'R15', label: 'R15 (Archive)' },
+    ],
+  },
+  {
+    // M.Tech and MBA are both PG, so each takes only its own branches by name.
+    name: 'M.Tech (PG)',
+    level: 'PG',
+    nameContains: 'tech',
+    regulations: [
+      { code: 'R22', label: 'R22 (Current)' },
+      { code: 'R18PG', label: 'R18PG' },
+    ],
+  },
+  {
+    name: 'MBA',
+    level: 'PG',
+    nameContains: 'mba',
+    regulations: [
+      { code: 'R25', label: 'R25 (Current)' },
+      { code: 'R19', label: 'R19 (Archive)' },
+    ],
+  },
+];
+
+/**
+ * Seeds the Syllabus page once, and never touches it again.
+ *
+ * Guarded on the table being completely empty rather than upserting by name:
+ * the whole point of the module is that these are renameable, so an upsert
+ * keyed on "B.Tech (UG)" would recreate a heading the college had deliberately
+ * renamed - and the seed runs on every deploy.
+ */
+async function seedSyllabusProgrammes() {
+  const existing = await prisma.syllabusProgramme.count();
+  if (existing > 0) {
+    console.log(`  Syllabus programmes: ${existing} already present, left alone`);
+    return 0;
+  }
+
+  for (const [index, programme] of SYLLABUS_SEED.entries()) {
+    await prisma.syllabusProgramme.create({
+      data: {
+        name: programme.name,
+        level: programme.level,
+        nameContains: programme.nameContains,
+        sortOrder: index,
+        regulations: {
+          create: programme.regulations.map((regulation, order) => ({
+            code: regulation.code,
+            label: regulation.label,
+            sortOrder: order,
+          })),
+        },
+      },
+    });
+  }
+  return SYLLABUS_SEED.length;
+}
+
 async function seedPermissions() {
   const permissionsByKey = new Map<string, { id: number }>();
   // PERMISSIONS_WITH_SECTIONS, not PERMISSIONS: the pages.* keys have to
@@ -789,6 +875,14 @@ async function main() {
   console.log(
     `✅ Seeded ${PERMISSIONS_WITH_SECTIONS.length} permissions and ${ROLES.length} system roles`,
   );
+
+  console.log('\n🌱 Seeding Academics -> Syllabus (headings + regulations)...');
+  const syllabusCreated = await seedSyllabusProgrammes();
+  if (syllabusCreated > 0) {
+    console.log(
+      `✅ Seeded ${syllabusCreated} syllabus programmes with their regulations`,
+    );
+  }
 
   console.log('\n🌱 Seeding Site Settings (global configuration)...');
   await seedSiteSettings();
