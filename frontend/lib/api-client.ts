@@ -105,8 +105,60 @@ export async function apiFetch<T>(
   return (await response.json()) as T;
 }
 
+/**
+ * How long an identical public GET is reused instead of re-requested.
+ *
+ * Measured on the live homepage: 112 API requests for 45 distinct endpoints.
+ * Every one was fetched three times, `site-settings/public` eight times. The
+ * blocks are not polling - they mount, unmount and mount again as the splash
+ * screen gives way to the page, and each mount fetches everything over again.
+ * The result is ~70 requests racing on one connection pool while the browser
+ * is also pulling images, which is what "the site is sticking" looks like.
+ *
+ * Five seconds is long enough to cover a remount and far too short to show
+ * anyone stale content - and a CMS edit clears this cache outright, so the
+ * two-second content-version signal is as immediate as it ever was.
+ */
+const GET_CACHE_MS = Number(process.env.NEXT_PUBLIC_GET_CACHE_MS ?? 5000);
+
+/**
+ * Never cached, however briefly.
+ *
+ * `/content-version` IS the freshness signal - serving it from a cache would
+ * delay every edit by up to the cache window. The site-stats endpoints are
+ * counters whose whole purpose is to be current.
+ */
+const NEVER_CACHE = ["/content-version", "/site-stats"];
+
+const getCache = new Map<string, { at: number; promise: Promise<unknown> }>();
+
+/** Drops everything remembered. Called when the CMS says content changed. */
+export function clearApiGetCache() {
+  getCache.clear();
+}
+
 export function apiGet<T>(path: string): Promise<T> {
-  return apiFetch<T>(path, { method: "GET" });
+  const cacheable =
+    typeof window !== "undefined" &&
+    GET_CACHE_MS > 0 &&
+    // Signed in means the admin panel, where a list must reflect the save that
+    // just happened rather than what it looked like five seconds ago.
+    !getToken() &&
+    !NEVER_CACHE.some((prefix) => path.startsWith(prefix));
+
+  if (!cacheable) return apiFetch<T>(path, { method: "GET" });
+
+  const hit = getCache.get(path);
+  if (hit && Date.now() - hit.at < GET_CACHE_MS) return hit.promise as Promise<T>;
+
+  const promise = apiFetch<T>(path, { method: "GET" });
+  getCache.set(path, { at: Date.now(), promise });
+  // A failure is not worth remembering: caching it would turn one network
+  // blip into five seconds of the same failure for every caller.
+  promise.catch(() => {
+    if (getCache.get(path)?.promise === promise) getCache.delete(path);
+  });
+  return promise;
 }
 
 export function apiPost<T>(path: string, body?: unknown): Promise<T> {

@@ -9,6 +9,7 @@ import { useLiveData } from "@/lib/use-live-data"
 import { getContactChannelsPublic, ContactChannel } from "@/lib/contact-channels-api"
 import { getDepartmentProgrammesPublic, DepartmentProgramme } from "@/lib/department-programmes-api"
 import { canonicalDepartmentSlug } from "@/lib/department-slugs"
+import LazyMapEmbed from "@/components/layout/LazyMapEmbed"
 
 /**
  * Site Settings override the built-in defaults below, but only when actually
@@ -500,17 +501,12 @@ export default function Footer() {
             </a>
           </div>
 
-          <iframe
+          <LazyMapEmbed
             src={s(
               "site.googleMapsEmbedUrl",
               "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.125530584371!2d78.76410318567737!3d14.477480402447771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb373e15c65e6b7%3A0x2b13242197e9d9fa!2zS1NSTSDgsJXgsL7gsLLgsYfgsJzgsY0!5e0!3m2!1ste!2sin!4v1479195998208",
             )}
-            width="100%"
-            height="150"
-            style={{ border: "none", borderRadius: "8px", display: "block", opacity: 0.9 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
+            height={150}
           />
         </motion.div>
       </motion.div>

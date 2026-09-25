@@ -74,6 +74,8 @@ const FALLBACK_HEADING = "Ignite Your Potential, Engineer Your Future"
 const FALLBACK_SUBTITLE =
   "K.S.R.M. College of Engineering, Kadapa — 45 years of engineering excellence."
 const FALLBACK_VIDEO_URL = "/videos/main-block.mp4"
+/** A frame of the clip above, so the hero is not black while 2.5 MB loads. */
+const FALLBACK_VIDEO_POSTER = "/videos/main-block-poster.webp"
 const FALLBACK_PANEL_LABEL = "Latest Updates"
 const FALLBACK_CTA_PRIMARY = { text: "Apply Now", href: "/admissions" }
 const FALLBACK_CTA_SECONDARY = { text: "Explore Campus", href: "/about" }
@@ -225,12 +227,21 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
 
       {/* BACKGROUND LAYER — VIDEO */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        {/* The clip is 2.5 MB and measured 4.7 seconds on the live site - the
+            single slowest thing on the homepage. The poster is a frame of it
+            at 72 KB, so the hero is filled almost immediately and the video
+            fades in over the top when it is ready, instead of the visitor
+            watching a black rectangle while it downloads.
+            Only the shipped clip has a poster: a video swapped in through the
+            CMS has no frame to show, and a stale poster from a different video
+            would be worse than none. */}
         <video
           ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
+          poster={videoUrl === FALLBACK_VIDEO_URL ? FALLBACK_VIDEO_POSTER : undefined}
           style={{
             width: "100%",
             height: "100%",

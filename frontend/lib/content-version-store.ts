@@ -1,6 +1,6 @@
 "use client"
 
-import { apiGet } from "./api-client"
+import { apiGet, clearApiGetCache } from "./api-client"
 
 /**
  * Watches one number so the whole site can react the moment anything is edited.
@@ -53,6 +53,9 @@ async function check() {
     }
     if (res.version !== lastVersion) {
       lastVersion = res.version
+      // Before the listeners refetch, not after: they would otherwise be
+      // served the very responses this signal exists to invalidate.
+      clearApiGetCache()
       listeners.forEach((fn) => fn())
     }
   } catch {
