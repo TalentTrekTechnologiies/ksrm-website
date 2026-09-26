@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import {
   getSyllabusProgrammesPublic,
   SyllabusProgramme,
@@ -74,47 +75,32 @@ export default function SyllabusTitleHint({ title }: { title: string }) {
   const ok = matchedBranches.length > 0 && matchedCodes.length > 0
 
   return (
-    <div
-      className={`rounded-lg border px-3 py-2.5 text-xs ${
-        typed && ok
-          ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-          : "border-amber-200 bg-amber-50 text-amber-800"
-      }`}
-    >
+    <div className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs text-sky-900">
       <p className="mb-1 font-semibold">
-        There is no branch to pick - the title decides it.
+        There is an easier way to add a syllabus.
       </p>
-      {typed === "" ? (
-        <p>
-          Put the branch and the regulation in the Title, e.g.{" "}
-          <span className="font-semibold">I &amp; II SEM R23 ECE</span>.
-        </p>
-      ) : ok ? (
-        <p>
-          This will appear under{" "}
-          <span className="font-semibold">{matchedBranches.join(", ")}</span>, in{" "}
-          <span className="font-semibold">{matchedCodes.join(" and ")}</span>.
-        </p>
-      ) : (
-        <p>
-          {matchedBranches.length === 0 && (
+      <p>
+        On{" "}
+        <Link href="/admin/academics" className="font-semibold underline">
+          Academics &rarr; Syllabus
+        </Link>{" "}
+        you pick the branch and the regulation and upload the file there, and
+        nothing depends on how it is named.
+      </p>
+      {typed !== "" && (
+        <p className="mt-1.5">
+          Uploaded from this form instead, it is filed by the words in the title.
+          This one{" "}
+          {ok ? (
             <>
-              No branch recognised in this title, so it will show under every branch
-              it is not filed to as &quot;Other&quot;. Add one of:{" "}
-              <span className="font-semibold">
-                {[...listedBranches].sort().slice(0, 8).join(", ") || "none configured yet"}
-              </span>
-              {listedBranches.size > 8 ? ", …" : ""}.{" "}
+              would appear under{" "}
+              <span className="font-semibold">{matchedBranches.join(", ")}</span>, in{" "}
+              <span className="font-semibold">{matchedCodes.join(" and ")}</span>.
             </>
-          )}
-          {matchedCodes.length === 0 && (
+          ) : (
             <>
-              No regulation code recognised, so it will be grouped as
-              &quot;Other&quot;. Known codes:{" "}
-              <span className="font-semibold">
-                {codes.join(", ") || "none added yet"}
-              </span>
-              .
+              matches {matchedBranches.length === 0 ? "no branch" : "no regulation"},
+              so it would be grouped as &quot;Other&quot;.
             </>
           )}
         </p>

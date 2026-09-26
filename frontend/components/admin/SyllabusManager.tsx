@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
+import SyllabusUploads from "@/components/admin/SyllabusUploads"
 import {
   TextField,
   SelectField,
@@ -13,6 +14,12 @@ import {
   SecondaryButton,
 } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
+import {
+  getDownloadsAdmin,
+  createDownload,
+  deleteDownload,
+  Download,
+} from "@/lib/downloads-api"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import {
   getSyllabusProgrammesAdmin,
@@ -79,10 +86,15 @@ const emptyRegulation: RegulationForm = { code: "", label: "", isActive: true }
 
 function RegulationRows({
   programme,
+  branches,
+  documents,
   onChanged,
   onError,
 }: {
   programme: SyllabusProgramme
+  /** The branches this programme lists, for the upload form's dropdown. */
+  branches: string[]
+  documents: Download[]
   onChanged: () => Promise<void>
   onError: (message: string) => void
 }) {
@@ -212,10 +224,8 @@ function RegulationRows({
       ) : (
         <ul className="space-y-1.5">
           {live.map((reg) => (
-            <li
-              key={reg.id}
-              className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm"
-            >
+            <li key={reg.id} className="rounded-lg bg-white px-3 py-2 text-sm">
+              <div className="flex items-center justify-between">
               <span className="min-w-0 truncate">
                 <span className="font-semibold text-slate-800">{reg.code}</span>
                 {reg.label && <span className="ml-2 text-slate-500">{reg.label}</span>}
@@ -251,6 +261,14 @@ function RegulationRows({
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </span>
+              </div>
+              <SyllabusUploads
+                regulation={reg}
+                branches={branches}
+                documents={documents}
+                onChanged={onChanged}
+                onError={onError}
+              />
             </li>
           ))}
         </ul>
@@ -299,6 +317,7 @@ function SyllabusManagerInner() {
   const { confirm, notifySaved } = useCmsConfirm()
   const [programmes, setProgrammes] = useState<SyllabusProgramme[]>([])
   const [branches, setBranches] = useState<DepartmentProgramme[]>([])
+  const [documents, setDocuments] = useState<Download[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState<SyllabusProgramme | null>(null)
@@ -307,22 +326,33 @@ function SyllabusManagerInner() {
   const [saving, setSaving] = useState(false)
 
   async function refresh() {
-    setProgrammes(await getSyllabusProgrammesAdmin(true))
+    const [rows, docs] = await Promise.all([
+      getSyllabusProgrammesAdmin(true),
+      // Every syllabus document, filtered per regulation in the row itself -
+      // there are under a hundred of them, so one fetch beats one per row.
+      getDownloadsAdmin().then((all) => all.filter((d) => d.category === "SYLLABUS")),
+    ])
+    setProgrammes(rows)
+    setDocuments(docs)
   }
 
   useEffect(() => {
     let cancelled = false
     ;(async () => {
       try {
-        const [rows, allProgrammes] = await Promise.all([
+        const [rows, allProgrammes, docs] = await Promise.all([
           getSyllabusProgrammesAdmin(true),
           // Read-only: the branch list lives in the Programmes tab, and is
           // shown here only so it is clear where the cards come from.
           getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
+          getDownloadsAdmin()
+            .then((all) => all.filter((d) => d.category === "SYLLABUS"))
+            .catch(() => [] as Download[]),
         ])
         if (!cancelled) {
           setProgrammes(rows)
           setBranches(allProgrammes)
+          setDocuments(docs)
         }
       } catch (err) {
         if (!cancelled)
@@ -426,10 +456,13 @@ function SyllabusManagerInner() {
         </p>
       )}
 
-      {/* Two things this screen does NOT do, said plainly on the screen itself
-          rather than in a document. Both were the first questions asked of it. */}
       <div className="rounded-xl border border-admin-border bg-admin-bg px-4 py-3 text-sm text-slate-600">
         <p className="mb-1">
+          <span className="font-semibold text-slate-800">Syllabus files</span> are
+          uploaded here, under the regulation they belong to - choose the branch,
+          give it a title, pick the file. Nothing depends on how the file is named.
+        </p>
+        <p>
           <span className="font-semibold text-slate-800">Branches (CSE, Civil, ECE…)</span>{" "}
           are not added here. They come from the{" "}
           <Link href="/admin/academics" className="font-semibold text-admin-primary hover:underline">
@@ -437,16 +470,6 @@ function SyllabusManagerInner() {
           </Link>{" "}
           next door, so they match Courses &amp; Intake. Each heading below lists the
           ones it will show.
-        </p>
-        <p>
-          <span className="font-semibold text-slate-800">Syllabus PDFs</span> are uploaded
-          in{" "}
-          <Link href="/admin/downloads" className="font-semibold text-admin-primary hover:underline">
-            Downloads
-          </Link>{" "}
-          with <span className="font-semibold">Category = Syllabus</span>. A file is filed
-          under a branch and a regulation by its own name - &quot;Civil Engineering(R23)
-          Syllabus&quot; lands under Civil Engineering, R23.
         </p>
       </div>
 
@@ -595,6 +618,8 @@ function SyllabusManagerInner() {
 
           <RegulationRows
             programme={programme}
+            branches={branchesFor(programme, branches) ?? []}
+            documents={documents}
             onChanged={refresh}
             onError={setError}
           />

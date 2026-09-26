@@ -58,59 +58,45 @@ function ChevronRight() {
  */
 const BRANCH_CARD_MAX_VISIBLE = 4;
 
-function BranchPanel({
-  branch,
-  matchWord,
-  heading,
-  regs,
-  docs,
-}: {
-  /** The branch this card is for, or null for a course with no branches -
-   *  BCA has one syllabus, not one per specialisation. */
-  branch: string | null;
-  /** For a branch-less course, the word its documents are named after, e.g.
-   *  "BCA". Without it the card took every syllabus on the site, so BCA
-   *  listed the CSE and ECE PDFs too. */
-  matchWord?: string;
-  /** What the card is titled. Defaults to the branch name. */
-  heading?: string;
-  regs: { code: string; name: string }[];
-  docs: Download[];
-}) {
+type Reg = { id: number; code: string; name: string };
+
+/**
+ * The documents for one branch under one regulation.
+ *
+ * Two ways a document gets here. The Syllabus screen now records the branch
+ * and the regulation on the document itself, which is exact. Everything
+ * uploaded before that screen existed - around seventy files - carries
+ * neither, and is still matched on the words in its title, which is how the
+ * page has always worked. The explicit fields win wherever they are set, so a
+ * file the college files by hand cannot be overruled by its own name.
+ */
+function docsForBranch(
+  docs: Download[],
+  reg: Reg,
+  branch: string | null,
+  /** For a branch-less course, the word its old documents are named after,
+   *  e.g. "BCA". Without it every legacy file under the same regulation code
+   *  matched, so BCA listed the CSE and ECE PDFs too. */
+  matchWord?: string,
+): Download[] {
+  return docs.filter((d) => {
+    if (d.syllabusRegulationId != null) {
+      if (d.syllabusRegulationId !== reg.id) return false;
+      // A branch-less course files its documents with no branch at all.
+      if (branch === null) return !d.syllabusBranch;
+      return d.syllabusBranch === branch;
+    }
+    if (!docMatchesReg(d.title, reg.code)) return false;
+    if (branch !== null) return docMatchesBranch(d.title, branch);
+    return matchWord ? containsWord(d.title, matchWord) : false;
+  });
+}
+
+/** One branch, showing the syllabus published for the selected regulation. */
+function BranchCard({ label, items }: { label: string; items: Download[] }) {
   const [expanded, setExpanded] = useState(false);
-  const mine =
-    branch === null
-      ? docs.filter((d) => (matchWord ? containsWord(d.title, matchWord) : false))
-      : docs.filter((d) => docMatchesBranch(d.title, branch));
-  // Falls back to the branch name: stripping the prefix off "MBA" leaves an
-  // empty string, and the card was rendering with no title at all.
-  const stripped = (branch ?? "").replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim();
-  const label = heading ?? (stripped || branch || "");
-
-  // Every card the same height regardless of how many files a branch has -
-  // flatten regulation-then-other into one ordered list, cap it, and let
-  // "View more" reveal the rest rather than the card growing to fit
-  // whatever's uploaded (a branch with 20 files made its row's neighbours
-  // tower over branches with 2).
-  const groups: { label: string; items: Download[] }[] = [];
-  for (const r of regs) {
-    const forReg = mine.filter((d) => docMatchesReg(d.title, r.code));
-    if (forReg.length > 0) groups.push({ label: r.name, items: forReg });
-  }
-  const unmatched = mine.filter((d) => !regs.some((r) => docMatchesReg(d.title, r.code)));
-  if (unmatched.length > 0) groups.push({ label: "Other", items: unmatched });
-
-  const total = groups.reduce((n, g) => n + g.items.length, 0);
-  let remaining = expanded ? Infinity : BRANCH_CARD_MAX_VISIBLE;
-  const visibleGroups = groups
-    .map((g) => {
-      if (remaining <= 0) return null;
-      const items = g.items.slice(0, remaining);
-      remaining -= items.length;
-      return { ...g, items };
-    })
-    .filter((g): g is { label: string; items: Download[] } => g !== null);
-  const hiddenCount = total - visibleGroups.reduce((n, g) => n + g.items.length, 0);
+  const visible = expanded ? items : items.slice(0, BRANCH_CARD_MAX_VISIBLE);
+  const hidden = items.length - visible.length;
 
   return (
     <div className="syl-branch-card">
@@ -118,36 +104,26 @@ function BranchPanel({
         {label}
       </h4>
 
-      {mine.length === 0 ? (
+      {items.length === 0 ? (
         <div className="syl-empty-state">
           <DownloadIcon />
           Syllabus not published yet.
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {visibleGroups.map((g) => (
-            <div key={g.label}>
-              <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: ".5px", textTransform: "uppercase", color: "#999", margin: "0 0 6px" }}>
-                {g.label}
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {g.items.map((d) => (
-                  <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
-                    <span className="syl-doc-icon"><DownloadIcon /></span>
-                    <span className="syl-doc-title">{d.title}</span>
-                    <span className="syl-doc-arrow"><ChevronRight /></span>
-                  </a>
-                ))}
-              </div>
-            </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {visible.map((d) => (
+            <a key={d.id} href={resolveFileUrl(d.fileUrl)} className="syl-download-btn" target="_blank" rel="noopener noreferrer">
+              <span className="syl-doc-icon"><DownloadIcon /></span>
+              <span className="syl-doc-title">{d.title}</span>
+              <span className="syl-doc-arrow"><ChevronRight /></span>
+            </a>
           ))}
-
-          {hiddenCount > 0 && (
+          {hidden > 0 && (
             <button type="button" className="syl-view-more" onClick={() => setExpanded(true)}>
-              View {hiddenCount} more ↓
+              View {hidden} more ↓
             </button>
           )}
-          {expanded && total > BRANCH_CARD_MAX_VISIBLE && (
+          {expanded && items.length > BRANCH_CARD_MAX_VISIBLE && (
             <button type="button" className="syl-view-more" onClick={() => setExpanded(false)}>
               Show less
             </button>
@@ -158,6 +134,17 @@ function BranchPanel({
   );
 }
 
+/**
+ * A programme: its regulations along the top, the branches of the chosen one
+ * below.
+ *
+ * It used to be the other way round - every branch listed at once, each card
+ * carrying all of its regulations stacked inside. A student knows which
+ * regulation they are under before they know anything else, and with five
+ * regulations across nine branches that layout showed forty-five groups at
+ * once. Regulation first, then branch, is the order the question is actually
+ * asked in.
+ */
 function ProgrammeAccordion({
   title,
   matchWord,
@@ -168,27 +155,33 @@ function ProgrammeAccordion({
   defaultOpen,
 }: {
   title: string;
-  /** For a branch-less course, the word its documents are named after. */
+  /** For a branch-less course, the word its legacy documents are named after. */
   matchWord?: string;
   description?: string | null;
   /** Null when the programme lists no branches - one card carries the whole
-   *  course, which is what BCA and Diploma need. An empty array is the other
-   *  case: branches were asked for and none are set up yet. */
+   *  course, which is what BCA needs. An empty array is the other case:
+   *  branches were asked for and none are set up yet. */
   branches: string[] | null;
-  regs: { code: string; name: string }[];
+  regs: Reg[];
   docs: Download[];
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(!!defaultOpen);
-  const grid = (
-    <div className="syl-branch-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
-      {branches === null ? (
-        <BranchPanel branch={null} matchWord={matchWord} heading={title} regs={regs} docs={docs} />
-      ) : (
-        branches.map((b) => <BranchPanel key={b} branch={b} regs={regs} docs={docs} />)
-      )}
-    </div>
-  );
+  const [activeCode, setActiveCode] = useState<string | null>(regs[0]?.code ?? null);
+  const active = regs.find((r) => r.code === activeCode) ?? regs[0] ?? null;
+
+  const cards =
+    branches === null
+      ? [{ label: title, items: active ? docsForBranch(docs, active, null, matchWord) : [] }]
+      : branches.map((b) => ({
+          label: b.replace(/^(B\.?Tech|M\.?Tech|MBA)\s*-?\s*/i, "").trim() || b,
+          items: active ? docsForBranch(docs, active, b) : [],
+        }));
+
+  const countFor = (reg: Reg) =>
+    branches === null
+      ? docsForBranch(docs, reg, null, matchWord).length
+      : branches.reduce((n, b) => n + docsForBranch(docs, reg, b).length, 0);
 
   return (
     <div className={`syl-accordion-item ${open ? "expanded" : ""}`}>
@@ -200,12 +193,41 @@ function ProgrammeAccordion({
         {description && (
           <p style={{ fontSize: 13.5, color: "#666", margin: "16px 0 0", lineHeight: 1.6 }}>{description}</p>
         )}
-        {branches !== null && branches.length === 0 ? (
+
+        {regs.length === 0 ? (
           <p style={{ fontSize: 13, color: "#888", fontStyle: "italic", marginTop: 16 }}>
-            Branches will appear here once they are added in Admin &rarr; Academics.
+            No regulations added yet.
           </p>
         ) : (
-          grid
+          <>
+            <div className="syl-regs" role="tablist" aria-label={`${title} regulations`}>
+              {regs.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active?.code === r.code}
+                  className={`syl-reg-btn${active?.code === r.code ? " active" : ""}`}
+                  onClick={() => setActiveCode(r.code)}
+                >
+                  {r.name}
+                  <span className="syl-reg-count">{countFor(r)}</span>
+                </button>
+              ))}
+            </div>
+
+            {branches !== null && branches.length === 0 ? (
+              <p style={{ fontSize: 13, color: "#888", fontStyle: "italic", marginTop: 16 }}>
+                Branches will appear here once they are added in Admin &rarr; Academics.
+              </p>
+            ) : (
+              <div className="syl-branch-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, marginTop: 16 }}>
+                {cards.map((c) => (
+                  <BranchCard key={c.label} label={c.label} items={c.items} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -263,10 +285,12 @@ export default function SyllabusPage() {
     ].sort();
   };
 
-  const regsFor = (group: SyllabusProgramme) =>
+  // The id travels with the code: a document filed from the Syllabus screen
+  // points at the regulation row, and only the code is in an old title.
+  const regsFor = (group: SyllabusProgramme): Reg[] =>
     group.regulations
       .filter((r) => r.isActive !== false && !r.deletedAt)
-      .map((r) => ({ code: r.code, name: r.label?.trim() || r.code }));
+      .map((r) => ({ id: r.id, code: r.code, name: r.label?.trim() || r.code }));
 
   return (
     <>
@@ -348,6 +372,24 @@ export default function SyllabusPage() {
         .syl-doc-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .syl-doc-arrow { color: #D4A500; flex-shrink: 0; opacity: 0; transform: translateX(-3px); transition: all 0.15s; }
         .syl-download-btn:hover .syl-doc-arrow { opacity: 1; transform: translateX(0); }
+
+        /* Regulations first: the row of them a student picks from before any
+           branch is shown. */
+        .syl-regs { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+        .syl-reg-btn {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: #fff; border: 1.5px solid #e2e5f0; color: #2B3490;
+          font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14.5px;
+          padding: 9px 16px; border-radius: 24px; cursor: pointer;
+          transition: background .15s, border-color .15s, color .15s;
+        }
+        .syl-reg-btn:hover { border-color: #2B3490; }
+        .syl-reg-btn.active { background: #2B3490; border-color: #2B3490; color: #FFE619; }
+        .syl-reg-count {
+          background: #eef1f8; color: #5b6a91; border-radius: 999px;
+          padding: 1px 8px; font-size: 12px; font-weight: 700;
+        }
+        .syl-reg-btn.active .syl-reg-count { background: rgba(255,255,255,0.18); color: #fff; }
 
         .syl-branch-card {
           background: #fff; border: 1px solid #eef0f3; border-radius: 12px; padding: 18px;

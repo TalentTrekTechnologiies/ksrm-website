@@ -42,6 +42,18 @@ export class CreateDownloadDto {
   @MaxLength(20)
   academicYear?: string;
 
+  // Which regulation on Academics -> Syllabus this belongs to, and the branch
+  // it is for. Set by the Syllabus screen, which asks for both; left unset by
+  // the general Downloads form, where the title matching still applies.
+  @IsOptional()
+  @IsInt()
+  syllabusRegulationId?: number | null;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  syllabusBranch?: string | null;
+
 
   @IsString()
   fileUrl: string;

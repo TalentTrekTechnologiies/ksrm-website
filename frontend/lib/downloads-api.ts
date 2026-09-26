@@ -104,6 +104,11 @@ export interface Download {
   groupLabel: string | null;
   /** Academic year, e.g. "AY 2026-27". Null = not year-specific. */
   academicYear: string | null;
+  /** Set by the Syllabus screen: which regulation this belongs to, and the
+   *  branch it is for. Null on everything uploaded before that screen existed,
+   *  which the public page still files by matching words in the title. */
+  syllabusRegulationId?: number | null;
+  syllabusBranch?: string | null;
   fileUrl: string;
   /** Media Library reference, or null when using a manually-typed fileUrl
    * (legacy path, still supported). */
@@ -126,6 +131,8 @@ export interface DownloadInput {
   pageSection?: string | null;
   groupLabel?: string | null;
   academicYear?: string | null;
+  syllabusRegulationId?: number | null;
+  syllabusBranch?: string | null;
   fileUrl: string;
   /** Pass the picked Media's id to link it; pass `null` explicitly to
    * unlink and fall back to manually editing fileUrl. */

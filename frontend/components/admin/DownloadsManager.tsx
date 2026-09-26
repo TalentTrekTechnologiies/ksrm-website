@@ -368,14 +368,15 @@ function DownloadsManagerInner() {
 
       {isFormOpen && (
         <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="space-y-4 rounded-2xl border border-admin-border bg-white p-5">
-          <p className="text-sm font-semibold text-slate-700">{editing ? "Edit download" : "New download"}</p>
+          <p className="text-sm font-semibold text-slate-700">{editing ? "Edit upload" : "New upload"}</p>
           <TextField label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required maxLength={300} />
           <SelectField label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v as DownloadCategory })} options={CATEGORY_OPTIONS} required />
 
-          {/* A syllabus has no branch field - the Title decides which branch
-              and which regulation it is filed under, and a title matching
-              neither lands under "Other" without saying so. Shown only for the
-              one category where that rule applies. */}
+          {/* Syllabus files belong on the Syllabus screen now, where the branch
+              and the regulation are chosen rather than spelled into a title.
+              This form still accepts them - it is how the seventy-odd already
+              published were added - so it says where the better route is
+              rather than refusing. */}
           {form.category === "SYLLABUS" && <SyllabusTitleHint title={form.title} />}
           <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={[...PAGE_SECTION_OPTIONS, ...committeeSections]} />
 
@@ -495,7 +496,7 @@ function DownloadsManagerInner() {
               onClick={startCreate}
               className="flex items-center gap-1.5 rounded-lg bg-admin-primary px-3 py-2 text-sm font-semibold text-white hover:bg-admin-primary-dark"
             >
-              <Plus className="h-4 w-4" /> Add download
+              <Plus className="h-4 w-4" /> Upload
             </button>
           </div>
         }

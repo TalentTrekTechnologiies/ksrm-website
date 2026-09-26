@@ -847,6 +847,8 @@ model SyllabusRegulation {
   deletedBy Int?
   version   Int       @default(1)
 
+  /// The syllabus documents filed under this regulation.
+  documents      Download[]        @relation("Download_SyllabusRegulation")
   programme      SyllabusProgramme @relation("SyllabusRegulation_Programme", fields: [programmeId], references: [id], onDelete: Cascade)
   deletedByAdmin Admin?            @relation("SyllabusRegulation_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
@@ -1381,13 +1383,31 @@ model Download {
   /// without a Downloads re-save.
   mediaId Int?
 
-  department     Department? @relation("Download_Department", fields: [departmentId], references: [id], onDelete: SetNull)
-  categoryRef    Category?   @relation("Download_Category", fields: [categoryId], references: [id], onDelete: SetNull)
-  deletedByAdmin Admin?      @relation("Download_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
+  /// Which regulation on Academics -> Syllabus this document belongs to.
+  ///
+  /// The page used to work this out from the words in the title: "I & II SEM
+  /// R18 ECE" was filed under ECE, R18. That put the filing rule somewhere no
+  /// uploader could see it - the upload form has a Title box and no branch
+  /// field - and a title matching nothing landed under "Other" in silence.
+  ///
+  /// Null on every document uploaded before this column, and on anything
+  /// uploaded outside the Syllabus screen, so the title matching stays as the
+  /// fallback for the seventy-odd already published.
+  syllabusRegulationId Int?
+  /// The branch this syllabus is for, as the programme list names it, e.g.
+  /// "Electronics & Communication Engineering". Null on a course with no
+  /// branches - a BCA syllabus belongs to BCA, not to a specialisation.
+  syllabusBranch       String?
+
+  department         Department?         @relation("Download_Department", fields: [departmentId], references: [id], onDelete: SetNull)
+  syllabusRegulation SyllabusRegulation? @relation("Download_SyllabusRegulation", fields: [syllabusRegulationId], references: [id], onDelete: SetNull)
+  categoryRef        Category?           @relation("Download_Category", fields: [categoryId], references: [id], onDelete: SetNull)
+  deletedByAdmin     Admin?              @relation("Download_DeletedBy", fields: [deletedBy], references: [id], onDelete: SetNull)
 
   @@index([departmentId])
   @@index([category])
   @@index([deletedAt])
+  @@index([syllabusRegulationId])
 }
 
 model Permission {
