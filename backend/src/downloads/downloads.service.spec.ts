@@ -24,6 +24,8 @@ describe('DownloadsService', () => {
       // first rather than buried at the bottom.
       aggregate: jest.Mock;
     };
+    syllabusRegulation: { findFirst: jest.Mock };
+    departmentProgramme: { findMany: jest.Mock };
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
@@ -45,6 +47,8 @@ describe('DownloadsService', () => {
         create: jest.fn(),
         update: jest.fn(),
       },
+      syllabusRegulation: { findFirst: jest.fn().mockResolvedValue(null) },
+      departmentProgramme: { findMany: jest.fn().mockResolvedValue([]) },
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
@@ -311,6 +315,108 @@ describe('DownloadsService', () => {
         ),
       ).resolves.toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * A syllabus filed against a regulation or branch that does not exist never
+   * appears on the page, and nothing anywhere says why. These make it an error
+   * at the point the wrong value is sent, rather than a syllabus that is
+   * quietly missing until somebody goes looking for it.
+   */
+  describe('syllabus filing', () => {
+    const withBranches = {
+      id: 7,
+      code: 'R23',
+      deletedAt: null,
+      programme: { id: 1, name: 'B.Tech (UG)', level: 'UG', nameContains: null },
+    };
+
+    function baseDto(extra: Record<string, unknown> = {}) {
+      return {
+        title: 'I & II Semester',
+        category: 'SYLLABUS',
+        fileUrl: '/f.pdf',
+        ...extra,
+      } as never;
+    }
+
+    it('rejects a regulation that does not exist', async () => {
+      prisma.syllabusRegulation.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.create(baseDto({ syllabusRegulationId: 999 }), admin as never),
+      ).rejects.toThrow(/Regulation 999 does not exist/);
+      expect(prisma.download.create).not.toHaveBeenCalled();
+    });
+
+    it('rejects a branch the programme does not have', async () => {
+      prisma.syllabusRegulation.findFirst.mockResolvedValue(withBranches);
+      prisma.departmentProgramme.findMany.mockResolvedValue([
+        { name: 'Computer Science & Engineering' },
+        { name: 'Civil Engineering' },
+      ]);
+
+      await expect(
+        service.create(
+          baseDto({ syllabusRegulationId: 7, syllabusBranch: 'Aeronautical' }),
+          admin as never,
+        ),
+      ).rejects.toThrow(/not a branch of B.Tech \(UG\)/);
+      expect(prisma.download.create).not.toHaveBeenCalled();
+    });
+
+    it('rejects a branch with no regulation to belong to', async () => {
+      await expect(
+        service.create(baseDto({ syllabusBranch: 'Civil Engineering' }), admin as never),
+      ).rejects.toThrow(/needs the regulation/);
+    });
+
+    it('rejects a missing branch when the programme has them', async () => {
+      prisma.syllabusRegulation.findFirst.mockResolvedValue(withBranches);
+      prisma.departmentProgramme.findMany.mockResolvedValue([
+        { name: 'Civil Engineering' },
+      ]);
+
+      await expect(
+        service.create(baseDto({ syllabusRegulationId: 7 }), admin as never),
+      ).rejects.toThrow(/needs a branch/);
+    });
+
+    it('rejects a branch on a course that has none', async () => {
+      prisma.syllabusRegulation.findFirst.mockResolvedValue({
+        ...withBranches,
+        programme: { id: 3, name: 'BCA', level: null, nameContains: null },
+      });
+
+      await expect(
+        service.create(
+          baseDto({ syllabusRegulationId: 7, syllabusBranch: 'Civil Engineering' }),
+          admin as never,
+        ),
+      ).rejects.toThrow(/has no branches/);
+    });
+
+    it('accepts a real regulation and a real branch', async () => {
+      prisma.syllabusRegulation.findFirst.mockResolvedValue(withBranches);
+      prisma.departmentProgramme.findMany.mockResolvedValue([
+        { name: 'Civil Engineering' },
+      ]);
+      prisma.download.create.mockResolvedValue({ id: 5 });
+
+      await expect(
+        service.create(
+          baseDto({ syllabusRegulationId: 7, syllabusBranch: 'Civil Engineering' }),
+          admin as never,
+        ),
+      ).resolves.toBeDefined();
+    });
+
+    it('still accepts a syllabus with neither, which is every legacy one', async () => {
+      prisma.download.create.mockResolvedValue({ id: 6 });
+
+      await expect(service.create(baseDto(), admin as never)).resolves.toBeDefined();
+      expect(prisma.syllabusRegulation.findFirst).not.toHaveBeenCalled();
     });
   });
 });

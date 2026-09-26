@@ -124,11 +124,85 @@ export class DownloadsService {
     return (lowest._min.sortOrder ?? 0) - 1;
   }
 
+  /**
+   * Refuses a syllabus filed against a regulation or a branch that does not
+   * exist.
+   *
+   * The Syllabus screen only offers real ones, so this cannot be reached
+   * through the UI - it is here because the UI is not the only way in, and a
+   * document pointing at a regulation nobody added is a document that silently
+   * never appears on the page. That failure has no error, no log and no
+   * symptom until somebody goes looking for a syllabus that is not there.
+   *
+   * Only checks what is actually supplied. A syllabus uploaded without these
+   * fields is still allowed - that is every one of the seventy-odd already
+   * published, and they are matched by their titles instead.
+   */
+  private async assertSyllabusFiling(dto: {
+    syllabusRegulationId?: number | null;
+    syllabusBranch?: string | null;
+  }) {
+    const branch = dto.syllabusBranch?.trim();
+
+    if (branch && dto.syllabusRegulationId == null) {
+      throw new BadRequestException(
+        'A syllabus branch needs the regulation it belongs to. Upload it from Academics -> Syllabus, which asks for both.',
+      );
+    }
+    if (dto.syllabusRegulationId == null) return;
+
+    const regulation = await this.prisma.syllabusRegulation.findFirst({
+      where: { id: dto.syllabusRegulationId, deletedAt: null },
+      include: { programme: true },
+    });
+    if (!regulation) {
+      throw new BadRequestException(
+        `Regulation ${dto.syllabusRegulationId} does not exist. Add it on Academics -> Syllabus first, then upload against it.`,
+      );
+    }
+
+    const programme = regulation.programme;
+
+    // A course with no branches must not claim one, and a course with
+    // branches must name one the programme list actually has.
+    if (!programme.level) {
+      if (branch) {
+        throw new BadRequestException(
+          `"${programme.name}" has no branches, so a syllabus under ${regulation.code} cannot be filed against "${branch}".`,
+        );
+      }
+      return;
+    }
+
+    const needle = programme.nameContains?.trim().toLowerCase();
+    const available = (
+      await this.prisma.departmentProgramme.findMany({
+        where: { level: programme.level, isActive: true, deletedAt: null },
+        select: { name: true },
+      })
+    )
+      .map((p) => p.name)
+      .filter((name) => !needle || name.toLowerCase().includes(needle));
+
+    if (!branch) {
+      throw new BadRequestException(
+        `A syllabus under ${regulation.code} needs a branch. One of: ${available.join(', ') || 'none configured'}.`,
+      );
+    }
+    if (!available.includes(branch)) {
+      throw new BadRequestException(
+        `"${branch}" is not a branch of ${programme.name}. One of: ${available.join(', ') || 'none configured'}.`,
+      );
+    }
+  }
+
   async create(
     dto: CreateDownloadDto,
     admin: RequestAdmin,
     requestId?: string,
   ) {
+    await this.assertSyllabusFiling(dto);
+
     const sortOrder = dto.sortOrder ?? (await this.sortOrderForNewest());
 
     const resolvedUrl = await this.mediaLink.prepareLink(
@@ -246,6 +320,20 @@ export class DownloadsService {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Download ${id}`);
+
+    // Against the values the row will actually end up with, not just the ones
+    // in this request: changing only the branch still has to be checked
+    // against the regulation already on the document.
+    await this.assertSyllabusFiling({
+      syllabusRegulationId:
+        rest.syllabusRegulationId !== undefined
+          ? rest.syllabusRegulationId
+          : existing.syllabusRegulationId,
+      syllabusBranch:
+        rest.syllabusBranch !== undefined
+          ? rest.syllabusBranch
+          : existing.syllabusBranch,
+    });
 
     const resolvedUrl = await this.mediaLink.prepareLink(
       rest.mediaId,
