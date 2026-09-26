@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Loader2, Plus, AlertTriangle, Pencil, Trash2, RotateCcw } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
 import SyllabusUploads from "@/components/admin/SyllabusUploads"
+import SyllabusUnfiled from "@/components/admin/SyllabusUnfiled"
+import PageTextEditor from "@/components/admin/PageTextEditor"
 import {
   TextField,
   SelectField,
@@ -625,6 +627,26 @@ function SyllabusManagerInner() {
           />
         </div>
       ))}
+
+      {/* The page's own wording. It lived on Page Content, which also listed
+          these same documents - so the Syllabus page had two screens showing
+          overlapping things. Page Content no longer offers Syllabus at all,
+          and this is the wording it used to hold. */}
+      <div style={{ boxShadow: "var(--shadow-admin-card)" }} className="rounded-2xl border border-admin-border bg-white p-5">
+        <p className="mb-1 font-semibold text-slate-900">Page wording</p>
+        <p className="mb-3 text-sm text-slate-500">
+          The heading and the paragraphs on the public Syllabus page.
+        </p>
+        <PageTextEditor section="syllabus" />
+      </div>
+
+      <SyllabusUnfiled
+        documents={documents}
+        programmes={live}
+        branchesFor={(programme) => branchesFor(programme, branches)}
+        onChanged={refresh}
+        onError={setError}
+      />
 
       {removed.length > 0 && (
         <div className="rounded-2xl border border-admin-border bg-white p-5">

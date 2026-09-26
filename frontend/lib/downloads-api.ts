@@ -157,6 +157,12 @@ export interface DownloadInput {
  * still need them as routing targets. This governs one screen's page list.
  */
 export const SECTIONS_MANAGED_ELSEWHERE = new Set([
+  // Syllabus, for the same reason: every one of its seventy files carries
+  // pageSection "syllabus", so Page Content and Academics -> Syllabus were
+  // two windows onto one library, each showing it differently. The Syllabus
+  // screen owns the headings, the regulations, the files and the page's
+  // wording, which is all this page has.
+  "syllabus",
   "examinations",
   "examinations.results",
   "examinations.notifications",

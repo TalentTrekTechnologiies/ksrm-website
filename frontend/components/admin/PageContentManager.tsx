@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import { Loader2, Plus, Trash2, FileText, Image as ImageIcon, Video as VideoIcon, Type } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
@@ -362,7 +363,31 @@ function PageContentInner() {
               targets: tables are keyed by pageSection, not by department. */}
           {target.kind === "page" && <PageTableEditor pageSection={target.section} />}
 
-          {/* DOCUMENTS */}
+          {/* DOCUMENTS
+              A page whose documents have a screen of their own is sent there
+              instead of listing them twice. Syllabus is the case that forced
+              it: all seventy of its files carry pageSection "syllabus", so
+              this screen and Academics -> Syllabus showed the same library
+              through two different lenses, and an edit made in one was a
+              surprise in the other. */}
+          {target.kind === "page" && DEDICATED_DOCUMENT_SCREENS[target.section] ? (
+            <section>
+              <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+                <FileText className="h-4 w-4" /> Documents ({docs.length})
+              </h3>
+              <div className="rounded-xl border border-admin-border bg-admin-bg px-4 py-3 text-sm text-slate-600">
+                These {docs.length} documents are managed on{" "}
+                <Link
+                  href={DEDICATED_DOCUMENT_SCREENS[target.section].href}
+                  className="font-semibold text-admin-primary hover:underline"
+                >
+                  {DEDICATED_DOCUMENT_SCREENS[target.section].label}
+                </Link>
+                , where {DEDICATED_DOCUMENT_SCREENS[target.section].why}. This screen
+                still owns the page's wording, tables and images above.
+              </div>
+            </section>
+          ) : (
           <section>
             <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
               <FileText className="h-4 w-4" /> Documents ({docs.length})
@@ -387,6 +412,7 @@ function PageContentInner() {
               </ul>
             )}
           </section>
+          )}
 
           {/* IMAGES */}
           <section>
@@ -440,6 +466,28 @@ function PageContentInner() {
       )}
     </div>
   )
+}
+
+/**
+ * Pages whose documents belong to a screen of their own.
+ *
+ * Every syllabus file carries pageSection "syllabus", so this screen listed
+ * the same seventy documents that Academics -> Syllabus manages - two windows
+ * onto one library, each showing it differently, which is exactly the
+ * confusion a single Page Content screen was meant to avoid.
+ *
+ * Adding a page here moves only its Documents block. Its wording, tables and
+ * images stay here, because nowhere else edits those.
+ */
+const DEDICATED_DOCUMENT_SCREENS: Record<
+  string,
+  { href: string; label: string; why: string }
+> = {
+  syllabus: {
+    href: "/admin/academics",
+    label: "Academics -> Syllabus",
+    why: "each one is filed under a regulation and a branch you choose",
+  },
 }
 
 export default function PageContentManager() {
