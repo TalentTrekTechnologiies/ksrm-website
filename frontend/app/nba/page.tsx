@@ -1,7 +1,9 @@
 "use client";
 
-import PageResources from "@/components/PageResources";
+import { useState } from "react";
 import CmsText from "@/components/CmsText";
+import ProtectedDocViewer from "@/components/ProtectedDocViewer";
+import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import {
   getDepartmentProgrammesPublic,
   DepartmentProgramme,
@@ -27,6 +29,14 @@ export default function NbaPage() {
     () => getDepartmentProgrammesPublic().catch(() => [] as DepartmentProgramme[]),
     [],
   );
+
+  // Not PageResources: that block links straight to the file, which is the one
+  // thing these documents must not do. They open in the viewer instead.
+  const docs = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "nba").catch(() => [] as Download[]),
+    [],
+  );
+  const [reading, setReading] = useState<Download | null>(null);
 
   const accredited = (programmes ?? [])
     .filter((p) => p.isActive !== false && /nba/i.test(p.accreditation ?? ""))
@@ -68,6 +78,11 @@ export default function NbaPage() {
           display: inline-block; margin-top: 10px; background: #eef1f8; color: #2B3490;
           border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700;
         }
+        .nba-doc {
+          text-align: left; cursor: pointer; font: inherit; width: 100%;
+          transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .nba-doc:hover { box-shadow: 0 6px 20px rgba(43,52,144,0.10); border-left-color: #D4A500; }
         .nba-empty {
           border: 1px dashed #e2e0d8; background: #f9f9f7; border-radius: 10px;
           padding: 22px; color: #999; font-size: 14px; text-align: center; margin-top: 28px;
@@ -126,7 +141,45 @@ export default function NbaPage() {
           </div>
         </section>
 
-        <PageResources section="nba" />
+        <section style={{ padding: "0 0 72px", background: "#ffffff" }}>
+          <div className="responsive-container">
+            <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", textAlign: "center" }}>
+              <CmsText section="nba" slot="documents" />
+            </h2>
+            <p style={{ color: "#777", fontSize: 14, textAlign: "center", margin: "0 0 24px" }}>
+              Open to read. These documents are displayed page by page and cannot be
+              downloaded.
+            </p>
+
+            {(docs ?? []).length === 0 ? (
+              <p className="nba-empty">
+                Documents appear here once they are uploaded to the NBA page.
+              </p>
+            ) : (
+              <div className="nba-grid">
+                {(docs ?? []).map((d) => (
+                  <button
+                    type="button"
+                    key={d.id}
+                    className="nba-card nba-doc"
+                    onClick={() => setReading(d)}
+                  >
+                    <h3>{d.title}</h3>
+                    <span className="nba-tag">Read →</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {reading && (
+          <ProtectedDocViewer
+            documentId={reading.id}
+            title={reading.title}
+            onClose={() => setReading(null)}
+          />
+        )}
       </main>
     </>
   );

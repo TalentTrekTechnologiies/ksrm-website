@@ -51,6 +51,9 @@ import { STORAGE_ADAPTER } from './storage/storage.constants';
     MediaResolverService,
     MediaLinkService,
     LocalDiskStorageAdapter,
+    // Exported so another module can read stored bytes without knowing where
+    // they live - the swap boundary storage-adapter.interface.ts describes.
+    STORAGE_ADAPTER,
   ],
 })
 export class MediaModule {}
