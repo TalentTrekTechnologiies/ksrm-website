@@ -190,6 +190,7 @@ const PAGE_SECTION_ROOTS: Record<string, string> = {
   admissions: 'Admissions',
   iqac: 'IQAC',
   naac: 'NAAC',
+  nba: 'NBA',
   research: 'Research',
   library: 'Library',
   placements: 'Placements',

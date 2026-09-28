@@ -201,6 +201,11 @@ const navItems: NavItem[] = [
       { label: "NAAC", href: "/naac" },
     ],
   },
+  // Beside IQAC rather than inside it: NBA accredits programmes and NAAC
+  // accredits the institution, so a reviewer arriving for one has no reason to
+  // look under the other. Both are cited by URL in submissions, which is also
+  // why this is a real page and not an anchor.
+  { label: "NBA", href: "/nba" },
   // Gallery and Careers are on the row itself rather than buried in More:
   // both are destinations a visitor arrives looking for, unlike the statutory
   // documents they traded places with, which are consulted deliberately by

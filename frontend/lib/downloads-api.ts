@@ -36,6 +36,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "iqac.annualreports", label: "IQAC → Annual Reports" },
   { value: "iqac", label: "IQAC → Other Documents" },
   { value: "naac", label: "NAAC" },
+  { value: "nba", label: "NBA" },
   { value: "alumni", label: "Alumni" },
   { value: "syllabus", label: "Syllabus" },
   // Examinations is split into its page's sub-sections so an upload lands in
