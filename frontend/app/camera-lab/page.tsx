@@ -1,9 +1,8 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import CameraResistantViewer, {
-  PatternType,
-} from "@/components/CameraResistantViewer"
+import CameraResistantViewer from "@/components/CameraResistantViewer"
+import { recogniseImage, scoreTranscript, OcrScore } from "@/lib/ocr-benchmark"
 
 /**
  * The bench for the camera-resistance experiment.
@@ -110,6 +109,11 @@ interface Row {
   photoReadability: string
   distortion: string
   result: string
+  /** Filled by OCR rather than by eye - "looks noisy" and "cannot be copied"
+   *  turned out to be different things, and only the second one matters. */
+  ocrChar?: number
+  ocrWords?: number
+  ocrTranscript?: string
 }
 
 const EMPTY: Row = {
@@ -158,19 +162,71 @@ export default function CameraLabPage() {
   const set = (key: string, field: keyof Row, value: string) =>
     setRows((r) => ({ ...r, [key]: { ...(r[key] ?? EMPTY), [field]: value } }))
 
+  const [busy, setBusy] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
+
+  /**
+   * Scores a photograph of one panel by reading the text back out of it.
+   *
+   * This is the measurement that matters. An earlier pass scored these by how
+   * much fine detail the image carried, and by that measure the strongest
+   * configuration looked 89% better - while OCR still recovered 98% of the
+   * words from it. A photograph can be covered in stripes and transcribe
+   * perfectly.
+   */
+  async function scorePhoto(key: string, file: File) {
+    setBusy(key)
+    setProgress(0)
+    try {
+      const text = await recogniseImage(file, setProgress)
+      const s: OcrScore = scoreTranscript(SAMPLE, text)
+      setRows((r) => ({
+        ...r,
+        [key]: {
+          ...(r[key] ?? EMPTY),
+          ocrChar: s.characterAccuracy,
+          ocrWords: s.wordRecall,
+          ocrTranscript: s.transcript,
+          photoReadability:
+            s.wordRecall > 0.9 ? "copies fully" : s.wordRecall > 0.4 ? "partial" : "not usable",
+        },
+      }))
+    } catch {
+      setRows((r) => ({ ...r, [key]: { ...(r[key] ?? EMPTY), photoReadability: "OCR failed" } }))
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const pct = (v?: number) => (v === undefined ? "—" : `${Math.round(v * 100)}%`)
+
   const csv = () => {
     const header = [
       "Config",
       "Phone",
       "Camera mode",
       "Human readability",
+      "OCR character accuracy",
+      "OCR word recall",
       "Photo readability",
       "Photo distortion",
       "Result",
+      "OCR transcript",
     ]
     const lines = list.map((c) => {
       const r = rows[c.key] ?? EMPTY
-      return [c.label, r.phone, r.camera, r.humanReadability, r.photoReadability, r.distortion, r.result]
+      return [
+        c.label,
+        r.phone,
+        r.camera,
+        r.humanReadability,
+        pct(r.ocrChar),
+        pct(r.ocrWords),
+        r.photoReadability,
+        r.distortion,
+        r.result,
+        r.ocrTranscript ?? "",
+      ]
         .map((v) => `"${(v ?? "").replace(/"/g, '""')}"`)
         .join(",")
     })
@@ -201,6 +257,7 @@ export default function CameraLabPage() {
         th { background: #eef1f8; font-weight: 700; }
         td input { width: 100%; border: none; font: inherit; background: transparent; }
         td input:focus { outline: 2px solid #2B3490; border-radius: 4px; }
+        .ocr { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 700; color: #2B3490; cursor: pointer; text-decoration: underline; }
         .btn { background: #2B3490; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-weight: 600; cursor: pointer; }
       `}</style>
 
@@ -255,6 +312,14 @@ export default function CameraLabPage() {
         <h2 style={{ fontSize: 18, margin: "30px 0 0" }}>Results</h2>
         <p className="sub" style={{ margin: "4px 0 0" }}>
           One row per configuration, per phone. Saved in this browser as you type.
+          Photograph a panel, then use <strong>Score a photo</strong> in its row: the
+          image is read with OCR and compared against the original text, entirely in
+          this browser.
+        </p>
+        <p className="sub" style={{ margin: "4px 0 0" }}>
+          <strong>OCR words</strong> is the number that matters — the share of the
+          document&apos;s words recovered exactly. Someone copying a document needs the
+          words, not the pixels. A panel can look ruined and still score 98%.
         </p>
 
         <table>
@@ -264,6 +329,8 @@ export default function CameraLabPage() {
               <th>Phone</th>
               <th>Camera mode</th>
               <th>Human readability</th>
+              <th>OCR chars</th>
+              <th>OCR words</th>
               <th>Photo readability</th>
               <th>Photo distortion</th>
               <th>Result</th>
@@ -278,7 +345,25 @@ export default function CameraLabPage() {
                   <td><input value={r.phone} onChange={(e) => set(c.key, "phone", e.target.value)} placeholder="iPhone 14" /></td>
                   <td><input value={r.camera} onChange={(e) => set(c.key, "camera", e.target.value)} placeholder="auto / HDR off / night" /></td>
                   <td><input value={r.humanReadability} onChange={(e) => set(c.key, "humanReadability", e.target.value)} placeholder="easy / strained / no" /></td>
-                  <td><input value={r.photoReadability} onChange={(e) => set(c.key, "photoReadability", e.target.value)} placeholder="full / partial / none" /></td>
+                  <td style={{ fontVariantNumeric: "tabular-nums" }}>{pct(r.ocrChar)}</td>
+                  <td style={{ fontVariantNumeric: "tabular-nums", fontWeight: 700 }}>{pct(r.ocrWords)}</td>
+                  <td>
+                    <input value={r.photoReadability} onChange={(e) => set(c.key, "photoReadability", e.target.value)} placeholder="run OCR below" />
+                    <label className="ocr">
+                      {busy === c.key ? `Reading… ${Math.round(progress * 100)}%` : "Score a photo"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        disabled={busy !== null}
+                        onChange={(e) => {
+                          const f = e.target.files?.[0]
+                          if (f) void scorePhoto(c.key, f)
+                          e.target.value = ""
+                        }}
+                      />
+                    </label>
+                  </td>
                   <td><input value={r.distortion} onChange={(e) => set(c.key, "distortion", e.target.value)} placeholder="none / bands / moire" /></td>
                   <td><input value={r.result} onChange={(e) => set(c.key, "result", e.target.value)} placeholder="worth keeping?" /></td>
                 </tr>

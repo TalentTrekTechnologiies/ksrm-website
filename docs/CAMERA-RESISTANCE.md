@@ -39,6 +39,58 @@ fine detail sits in the image, relative to the unprotected control.
 G puts 89% more fine detail into a single-frame capture than the control, while
 the averaged view gains only 20%. That gap is the effect.
 
+## Then measured again, properly
+
+Laplacian detail says how noisy a picture looks. It does not say whether the
+document can be copied, and those turned out to be different questions. Each
+panel was put through OCR and scored against the known text - character
+accuracy, and the share of words recovered exactly.
+
+| Configuration | Camera words | Reader words |
+|---|---|---|
+| A — none | 100% | 100% |
+| B — static watermark | 100% | 100% |
+| C — dynamic watermark | 98% | 98% |
+| D — temporal modulation | 100% | 98% |
+| E — spatial only | 100% | 100% |
+| F — temporal + spatial | 98% | 100% |
+| G — everything | **98%** | 98% |
+
+**At readable strength, none of it works.** The configuration that carried 89%
+more fine detail still gave up 98% of its words. A page can be covered in
+stripes and transcribe perfectly, and the detail measure could not see the
+difference.
+
+## Sweeping for a setting that does work
+
+Three patterns x four scales x four strengths, each scored by OCR on one frame
+against eight averaged:
+
+| Overlay strength | Camera words | Reader words |
+|---|---|---|
+| 0.12 (comfortable) | 97% | 97% |
+| 0.25 | 71-95% | 95-97% |
+| **0.40** | **0-14%** | 86-100% |
+| **0.60** | **0-3%** | 93-100% |
+
+So the mechanism is real - below about 0.25 there is no separation at all, and
+at 0.4 and above a single frame stops being transcribable while the average
+survives.
+
+The catch is what 0.4-0.6 means. That is an overlay at half strength
+alternating every frame. The averaged column says a reader recovers the text;
+it says nothing about what watching it feels like, and at that amplitude a
+person will see pronounced flicker. The simulation cannot measure eye strain,
+and it cannot measure a seizure risk. **Do not deploy these settings on the
+strength of this table** - they are the settings to test on a person, briefly,
+having read the health note below.
+
+The sweep was also unstable in places: the same pattern scored 0% and then
+100% for the reader one step apart. That is the harness, not the effect -
+screenshots are not guaranteed to land on alternating frames, so an uneven
+number of each polarity leaves a residue. It means these numbers show where to
+look, not what to ship.
+
 ## Two bugs the measurement caught
 
 Both were invisible by eye and would have shipped as a feature that did
@@ -83,6 +135,26 @@ Alternating luminance in this range can affect people with photosensitive
 epilepsy. Amplitude is kept low, the lab page carries a warning, and
 modulation is disabled automatically under `prefers-reduced-motion`. Any move
 from prototype to production should keep all three.
+
+## Scoring a real photograph
+
+The lab scores phone photos directly. Photograph a panel, then use **Score a
+photo** in that panel's row: the image is read with OCR in the browser and
+compared against the original text. The transcript is kept, and the CSV export
+carries both scores and the text that was read.
+
+**OCR words** is the number to read. Someone copying a document needs the
+words, not the pixels - a panel can look ruined and still score 98%.
+
+Verified against a capture of the unprotected panel: 78% characters, 100%
+words, "copies fully". A control that scored low would mean the scorer was
+broken and every other number meaningless.
+
+Note the automated numbers above come from clean screen captures, not
+photographs. A real phone adds lens blur, perspective, glare and lower
+effective resolution, all of which lower OCR on their own - so the absolute
+figures will be lower on a phone. What carries over is the comparison between
+configurations.
 
 ## Testing it properly
 
