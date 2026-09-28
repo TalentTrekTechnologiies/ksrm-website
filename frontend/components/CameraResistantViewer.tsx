@@ -64,6 +64,21 @@ export interface CameraResistantViewerProps {
   opacity?: number
   /** Reports the measured frame rate, so a test can record what the display was doing. */
   onFps?: (fps: number) => void
+  /**
+   * Fresh noise every frame, alternating polarity. A different mechanism from
+   * the fixed pattern: independent noise averages DOWN over n frames by about
+   * sqrt(n), so the eye sees roughly a third of it while a single exposure
+   * sees all of it.
+   */
+  ditherIntensity?: number
+  /**
+   * A second grating at another period, in counter-phase to the first. One
+   * spatial frequency can be aliased away by stepping back or zooming; two at
+   * different periods leave no single distance that clears both.
+   */
+  secondaryFrequency?: number
+  /** Pixels of pattern drift per frame. 0 holds the pattern still. */
+  phaseShiftSpeed?: number
 }
 
 const PRESETS: Record<
@@ -171,6 +186,9 @@ export default function CameraResistantViewer({
   modulationSpeed,
   opacity,
   onFps,
+  ditherIntensity = 0,
+  secondaryFrequency = 0,
+  phaseShiftSpeed = 1 / 120,
 }: CameraResistantViewerProps) {
   const hostRef = useRef<HTMLDivElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -208,6 +226,8 @@ export default function CameraResistantViewer({
     // about the page looked wrong.
     let maskLight: HTMLCanvasElement | null = null
     let maskDark: HTMLCanvasElement | null = null
+    let secondLight: HTMLCanvasElement | null = null
+    let secondDark: HTMLCanvasElement | null = null
     let width = 0
     let height = 0
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -223,6 +243,10 @@ export default function CameraResistantViewer({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       maskLight = buildMask(cfg.patternType, cfg.patternFrequency, width, height, "#ffffff")
       maskDark = buildMask(cfg.patternType, cfg.patternFrequency, width, height, "#000000")
+      secondLight =
+        secondaryFrequency > 0 ? buildMask("vertical", secondaryFrequency, width, height, "#ffffff") : null
+      secondDark =
+        secondaryFrequency > 0 ? buildMask("vertical", secondaryFrequency, width, height, "#000000") : null
     }
 
     resize()
@@ -263,9 +287,33 @@ export default function CameraResistantViewer({
         ctx.globalAlpha = cfg.opacity
         // A stationary grating is easy for the eye to lock onto and ignore,
         // and easy for a burst to average away, so it creeps.
-        const drift = cfg.patternType === "moire" ? 0 : (frame % 120) / 120
-        ctx.translate(0, drift * cfg.patternFrequency * 2)
+        const period = cfg.patternFrequency * 2
+        const drift = cfg.patternType === "moire" || period <= 0 ? 0 : ((frame * phaseShiftSpeed) % 1) * period
+        ctx.translate(0, drift)
         ctx.drawImage(mask, 0, 0, width, height)
+        ctx.restore()
+      }
+
+      // The second grating runs in counter-phase: light when the first is
+      // dark. Each still cancels against itself over two frames.
+      const second = phase === 0 ? secondDark : secondLight
+      if (second && cfg.opacity > 0 && !reduced) {
+        ctx.save()
+        ctx.globalAlpha = cfg.opacity * 0.7
+        ctx.drawImage(second, 0, 0, width, height)
+        ctx.restore()
+      }
+
+      if (ditherIntensity > 0 && !reduced) {
+        ctx.save()
+        ctx.globalAlpha = ditherIntensity
+        ctx.fillStyle = frame % 2 === 0 ? "#000" : "#fff"
+        // Density scaled to area, so a small panel and a full page are
+        // dithered equally.
+        const dots = Math.round((width * height) / 900)
+        for (let i = 0; i < dots; i++) {
+          ctx.fillRect((Math.random() * width) | 0, (Math.random() * height) | 0, 2, 2)
+        }
         ctx.restore()
       }
 
@@ -289,6 +337,9 @@ export default function CameraResistantViewer({
     watermarkMotion,
     reduced,
     onFps,
+    ditherIntensity,
+    secondaryFrequency,
+    phaseShiftSpeed,
   ])
 
   return (

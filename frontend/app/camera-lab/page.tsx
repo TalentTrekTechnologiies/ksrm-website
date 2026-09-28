@@ -27,80 +27,122 @@ including sanction letters, utilisation certificates and the audited statement
 of accounts for each financial year under review. Figures in Table 3.4.2(a)
 are reconciled against the annual accounts.`
 
+/**
+ * The seven configurations, as specified: NONE, WATERMARK, TEMPORAL, SPATIAL,
+ * TEMPORAL + SPATIAL, TEMPORAL + DITHERING, EVERYTHING.
+ *
+ * Parameters come from the optimiser, not from judgement. It searched pattern,
+ * period, strength, dithering and a second frequency, scored every point by
+ * OCR on a single frame against the average of sixteen, and required the
+ * reader to keep 90% of what the unprotected page yields - words and figures
+ * separately. The temporal settings here sit at 0.3, the strongest amplitude
+ * that kept the reader at 100/100; 0.4 separates harder but is in the range
+ * where flicker becomes pronounced, and a simulation cannot measure that.
+ */
 function configs(watermarkText: string): Config[] {
   return [
     {
       key: "A",
-      label: "A — No protection",
+      label: "A — None",
       note: "Control. Whatever a phone does to this is the baseline everything else is judged against.",
       props: { protectionLevel: "off" },
     },
     {
       key: "B",
-      label: "B — Static watermark",
-      note: "No movement, no modulation. Survives any camera, any mode. Attribution only.",
-      props: {
-        protectionLevel: "off",
-        watermark: true,
-        watermarkMotion: false,
-        watermarkText,
-        opacity: 0,
-        modulationSpeed: 0,
-      },
+      label: "B — Watermark",
+      note: "Moving watermark only. Survives every capture mode, including HDR and video. Attribution, not prevention.",
+      props: { protectionLevel: "off", watermark: true, watermarkText, opacity: 0, modulationSpeed: 0 },
     },
     {
       key: "C",
-      label: "C — Dynamic watermark",
-      note: "Drifts and re-phases, so two photographs are not stamped identically.",
-      props: { protectionLevel: "low", watermarkText },
-    },
-    {
-      key: "D",
-      label: "D — Temporal modulation",
-      note: "Pattern at +delta then -delta on alternate frames. The eye averages it away; a short exposure should not.",
+      label: "C — Temporal",
+      note: "+delta / -delta on alternate frames at 0.3. Optimiser: a single frame loses 40% of words and 92% of figures; the average keeps all of both.",
       props: {
         protectionLevel: "off",
         patternType: "horizontal",
-        patternFrequency: 4,
+        patternFrequency: 3,
         modulationSpeed: 1,
-        opacity: 0.1,
+        opacity: 0.3,
         watermark: false,
       },
     },
     {
-      key: "E",
-      label: "E — Spatial interference",
-      note: "Static fine grating. Aliases in the sensor, but defeated by changing distance or zoom.",
+      key: "D",
+      label: "D — Spatial",
+      note: "Static grating, no modulation. Aliases in the sensor, but is the same to the camera and the eye - and changing distance or zoom clears it.",
       props: {
         protectionLevel: "off",
         patternType: "moire",
         patternFrequency: 3,
         modulationSpeed: 0,
-        opacity: 0.1,
+        opacity: 0.12,
         watermark: false,
       },
     },
     {
-      key: "F",
-      label: "F — Temporal + spatial",
-      note: "Both at once, no watermark, to see whether they add or simply cost readability twice.",
+      key: "E",
+      label: "E — Temporal + spatial",
+      note: "Modulated checker plus a second grating in counter-phase, so no single distance clears both frequencies.",
       props: {
         protectionLevel: "off",
         patternType: "checker",
         patternFrequency: 3,
         modulationSpeed: 1,
-        opacity: 0.12,
+        opacity: 0.3,
+        secondaryFrequency: 5,
+        watermark: false,
+      },
+    },
+    {
+      key: "F",
+      label: "F — Temporal + dithering",
+      note: "Modulation plus fresh noise each frame. Independent noise averages down by about the square root of the frame count, so the eye sees roughly a third of it.",
+      props: {
+        protectionLevel: "off",
+        patternType: "horizontal",
+        patternFrequency: 3,
+        modulationSpeed: 1,
+        opacity: 0.3,
+        ditherIntensity: 0.1,
         watermark: false,
       },
     },
     {
       key: "G",
       label: "G — Everything",
-      note: "The full stack. Judge readability here hardest: this is the configuration most likely to fail the human test.",
-      props: { protectionLevel: "max", watermarkText },
+      note: "Temporal, spatial, dithering and the watermark together. Judge readability here hardest.",
+      props: {
+        protectionLevel: "off",
+        patternType: "checker",
+        patternFrequency: 3,
+        modulationSpeed: 1,
+        opacity: 0.3,
+        secondaryFrequency: 5,
+        ditherIntensity: 0.1,
+        watermark: true,
+        watermarkText,
+      },
     },
   ]
 }
+
+/**
+ * The capture modes to try per phone. A fixed list rather than free text, so
+ * rows from different testers line up. HDR on, night mode and video are the
+ * ones expected to defeat the temporal layers - they average frames, which is
+ * exactly what the eye does - so they are the ones that matter most to record.
+ */
+const MODES = [
+  "Auto photo",
+  "HDR on",
+  "HDR off",
+  "Night mode",
+  "Video",
+  "Frame extracted from video",
+  "Closer / further",
+  "Zoomed",
+  "Angled",
+]
 
 interface Row {
   phone: string
@@ -109,6 +151,8 @@ interface Row {
   photoReadability: string
   distortion: string
   result: string
+  patternVisible?: string
+  watermarkVisible?: string
   /** Filled by OCR rather than by eye - "looks noisy" and "cannot be copied"
    *  turned out to be different things, and only the second one matters. */
   ocrChar?: number
@@ -153,7 +197,7 @@ export default function CameraLabPage() {
   }, [rows])
 
   const watermarkText = useMemo(
-    () => `KSRM COLLEGE · VIEW ONLY · ${user} · ${session} · ${now}`,
+    () => `KSRM COLLEGE · CONFIDENTIAL — VIEW ONLY · Viewer ${user} · Session ${session} · ${now}`,
     [user, session, now],
   )
 
@@ -209,7 +253,8 @@ export default function CameraLabPage() {
       "OCR character accuracy",
       "OCR word recall",
       "Photo readability",
-      "Photo distortion",
+      "Pattern visible",
+      "Watermark visible",
       "Result",
       "OCR transcript",
     ]
@@ -223,7 +268,8 @@ export default function CameraLabPage() {
         pct(r.ocrChar),
         pct(r.ocrWords),
         r.photoReadability,
-        r.distortion,
+        r.patternVisible ?? "",
+        r.watermarkVisible ?? "",
         r.result,
         r.ocrTranscript ?? "",
       ]
@@ -309,6 +355,28 @@ export default function CameraLabPage() {
           ))}
         </div>
 
+        <h2 style={{ fontSize: 18, margin: "30px 0 4px" }}>Human readability test</h2>
+        <p className="sub" style={{ margin: "0 0 8px" }}>
+          The same document - heading, paragraph, small print, figures and a table - at
+          each strength the optimiser tested. Open each and read it at normal distance
+          for a minute. The acceptance bar is that you can read all five parts{" "}
+          <strong>comfortably</strong>; if one of these tires your eyes or visibly
+          flickers, that strength is too high regardless of what OCR says.
+        </p>
+        <div className="bar">
+          {[
+            ["None", "pattern=none&freq=0&speed=0&opacity=0"],
+            ["0.1", "pattern=horizontal&freq=3&speed=1&opacity=0.1"],
+            ["0.2", "pattern=checker&freq=4&speed=1&opacity=0.2"],
+            ["0.3 (lab default)", "pattern=horizontal&freq=3&speed=1&opacity=0.3"],
+            ["0.4 (flicker range)", "pattern=checker&freq=3&speed=1&opacity=0.4"],
+          ].map(([label, qs]) => (
+            <a key={label} className="btn" style={{ textDecoration: "none" }} href={`/camera-lab/sweep/?${qs}`} target="_blank" rel="noreferrer">
+              {label}
+            </a>
+          ))}
+        </div>
+
         <h2 style={{ fontSize: 18, margin: "30px 0 0" }}>Results</h2>
         <p className="sub" style={{ margin: "4px 0 0" }}>
           One row per configuration, per phone. Saved in this browser as you type.
@@ -332,7 +400,8 @@ export default function CameraLabPage() {
               <th>OCR chars</th>
               <th>OCR words</th>
               <th>Photo readability</th>
-              <th>Photo distortion</th>
+              <th>Pattern visible?</th>
+              <th>Watermark visible?</th>
               <th>Result</th>
             </tr>
           </thead>
@@ -343,7 +412,12 @@ export default function CameraLabPage() {
                 <tr key={c.key}>
                   <td>{c.label}</td>
                   <td><input value={r.phone} onChange={(e) => set(c.key, "phone", e.target.value)} placeholder="iPhone 14" /></td>
-                  <td><input value={r.camera} onChange={(e) => set(c.key, "camera", e.target.value)} placeholder="auto / HDR off / night" /></td>
+                  <td>
+                    <select value={r.camera} onChange={(e) => set(c.key, "camera", e.target.value)} style={{ width: "100%", border: "none", font: "inherit", background: "transparent" }}>
+                      <option value="">— mode —</option>
+                      {MODES.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </td>
                   <td><input value={r.humanReadability} onChange={(e) => set(c.key, "humanReadability", e.target.value)} placeholder="easy / strained / no" /></td>
                   <td style={{ fontVariantNumeric: "tabular-nums" }}>{pct(r.ocrChar)}</td>
                   <td style={{ fontVariantNumeric: "tabular-nums", fontWeight: 700 }}>{pct(r.ocrWords)}</td>
@@ -364,7 +438,8 @@ export default function CameraLabPage() {
                       />
                     </label>
                   </td>
-                  <td><input value={r.distortion} onChange={(e) => set(c.key, "distortion", e.target.value)} placeholder="none / bands / moire" /></td>
+                  <td><input value={r.patternVisible ?? ""} onChange={(e) => set(c.key, "patternVisible", e.target.value)} placeholder="stripes / moire / none" /></td>
+                  <td><input value={r.watermarkVisible ?? ""} onChange={(e) => set(c.key, "watermarkVisible", e.target.value)} placeholder="yes / partial / no" /></td>
                   <td><input value={r.result} onChange={(e) => set(c.key, "result", e.target.value)} placeholder="worth keeping?" /></td>
                 </tr>
               )
