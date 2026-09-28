@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import { createRequire } from 'node:module';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -24,6 +25,16 @@ const PROTECTED_SECTION_ROOTS = new Set(['nba']);
  * to turn pages without waiting.
  */
 const RENDER_SCALE = 2;
+
+/**
+ * How long a page link stays valid.
+ *
+ * Short enough that a URL copied out of the network tab and pasted to someone
+ * else has usually stopped working by the time they open it; long enough to
+ * read a long document without the pages dying underneath you, because the
+ * token is reissued whenever the viewer asks for the document again.
+ */
+const TOKEN_TTL_MS = 15 * 60 * 1000;
 
 /**
  * Serves accreditation documents as page images that carry the viewer's own
@@ -54,6 +65,53 @@ export class ProtectedDocsService {
       this.config.get<string>('MEDIA_STORAGE_ROOT') ?? './storage/media',
       '.protected-pages',
     );
+  }
+
+  /**
+   * A signed, expiring permit for one document.
+   *
+   * The page route is public - NBA reviewers are given a URL and will not be
+   * issued accounts - so "public" has to mean "public for a quarter of an
+   * hour, to whoever asked". Without this the page URLs are permanent and
+   * guessable by walking the id, which is a worse position than the PDF link
+   * this replaced.
+   *
+   * Signed with the server's own key, so nothing about it can be forged
+   * client-side, and it commits to the document id: a token for one document
+   * cannot be replayed against another.
+   */
+  private secret(): string {
+    const key = this.config.get<string>('JWT_SECRET');
+    if (!key) {
+      // Same stance as AuthModule: refuse rather than fall back to a default
+      // that would make every signature meaningless.
+      throw new Error('JWT_SECRET is not set; refusing to issue document tokens.');
+    }
+    return key;
+  }
+
+  issueToken(documentId: number): string {
+    const expires = Date.now() + TOKEN_TTL_MS;
+    const payload = `${documentId}.${expires}`;
+    const mac = createHmac('sha256', this.secret()).update(payload).digest('base64url');
+    return `${expires}.${mac}`;
+  }
+
+  verifyToken(documentId: number, token: string | undefined): boolean {
+    if (!token) return false;
+    const [expiresRaw, mac] = token.split('.');
+    const expires = Number(expiresRaw);
+    if (!Number.isFinite(expires) || !mac) return false;
+    if (Date.now() > expires) return false;
+
+    const expected = createHmac('sha256', this.secret())
+      .update(`${documentId}.${expires}`)
+      .digest('base64url');
+    const a = Buffer.from(mac);
+    const b = Buffer.from(expected);
+    // Constant time, so a caller cannot learn the signature a byte at a time
+    // from how long the comparison took.
+    return a.length === b.length && timingSafeEqual(a, b);
   }
 
   /**
@@ -160,7 +218,13 @@ export class ProtectedDocsService {
   async meta(id: number) {
     const doc = await this.documentOrThrow(id);
     const pages = await this.ensureRendered(doc.id, doc.mediaId);
-    return { id: doc.id, title: doc.title, pages };
+    return {
+      id: doc.id,
+      title: doc.title,
+      pages,
+      token: this.issueToken(doc.id),
+      expiresInMs: TOKEN_TTL_MS,
+    };
   }
 
   /**

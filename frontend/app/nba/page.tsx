@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import CmsText from "@/components/CmsText";
-import ProtectedDocViewer from "@/components/ProtectedDocViewer";
+import ProtectedDocumentViewer from "@/components/ProtectedDocumentViewer";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import {
   getDepartmentProgrammesPublic,
@@ -174,10 +174,11 @@ export default function NbaPage() {
         </section>
 
         {reading && (
-          <ProtectedDocViewer
+          <ProtectedDocumentViewer
             documentId={reading.id}
             title={reading.title}
             onClose={() => setReading(null)}
+            protectionLevel="strong"
           />
         )}
       </main>

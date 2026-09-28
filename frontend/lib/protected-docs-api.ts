@@ -12,6 +12,9 @@ export interface ProtectedDocMeta {
   id: number;
   title: string;
   pages: number;
+  /** Signed permit for this document's pages. Expires; reopen to renew. */
+  token: string;
+  expiresInMs: number;
 }
 
 export const getProtectedDocMeta = (id: number) =>
@@ -24,5 +27,5 @@ export const getProtectedDocMeta = (id: number) =>
  * <img src>, so the browser streams it and shows it progressively instead of
  * the page waiting on a buffer it then has to hold in memory.
  */
-export const protectedPageUrl = (id: number, page: number) =>
-  `${API_BASE}/protected-docs/${id}/page/${page}`;
+export const protectedPageUrl = (id: number, page: number, token: string) =>
+  `${API_BASE}/protected-docs/${id}/page/${page}?t=${encodeURIComponent(token)}`;

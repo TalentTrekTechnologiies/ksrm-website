@@ -1,9 +1,11 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
   Header,
   Param,
   ParseIntPipe,
+  Query,
   Res,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -39,8 +41,16 @@ export class ProtectedDocsController {
   async page(
     @Param('id', ParseIntPipe) id: number,
     @Param('page', ParseIntPipe) page: number,
+    @Query('t') token: string | undefined,
     @Res() res: Response,
   ) {
+    // The permit comes from /meta and lasts fifteen minutes. Without it these
+    // URLs would be permanent and walkable by id - a worse position than the
+    // PDF link this replaced.
+    if (!this.docs.verifyToken(id, token)) {
+      throw new ForbiddenException('This document link has expired. Reopen the document.');
+    }
+
     const stamp = new Date().toLocaleString('en-IN', {
       timeZone: 'Asia/Kolkata',
       dateStyle: 'medium',
