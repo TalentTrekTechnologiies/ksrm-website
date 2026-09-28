@@ -69,6 +69,43 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
   ...GENERATED_PAGE_TEXT,
 
 
+  // NBA is a new page with no generated entry, the same as KGCET. It shipped
+  // without one: every <CmsText section="nba"> resolved to an empty default,
+  // so the page rendered with no title, no subtitle, no intro and no section
+  // headings, and nothing anywhere raised an error about it.
+  nba: {
+    label: "NBA",
+    path: "/nba",
+    groups: [
+      {
+        label: "Header",
+        slots: [
+          { id: "nba", label: "Page heading", kind: "line", default: "NBA" },
+          {
+            id: "national-board-of-accreditation",
+            label: "Sub-heading",
+            kind: "line",
+            default: "National Board of Accreditation",
+          },
+          {
+            id: "k-s-r-m-college",
+            label: "Intro paragraph",
+            kind: "paragraph",
+            default:
+              "B.Tech programmes in Civil, Electrical and Electronics, Electronics and Communication, Computer Science and Mechanical Engineering at K.S.R.M. College of Engineering are accredited by the National Board of Accreditation. NBA accreditation assesses each programme on its outcomes, curriculum, faculty and infrastructure, and is a mark of the quality of technical education it provides.",
+          },
+        ],
+      },
+      {
+        label: "Sections",
+        slots: [
+          { id: "accredited-programmes", label: "Programmes heading", kind: "line", default: "Accredited Programmes" },
+          { id: "documents", label: "Documents heading", kind: "line", default: "NBA Documents" },
+        ],
+      },
+    ],
+  },
+
   // KGCET has no generated entry - it is a new page, so its slots are all
   // hand-written here rather than spread over a generated base.
   kgcet: {

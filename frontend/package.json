@@ -18,7 +18,8 @@
     "demo:scrub": "node scripts/demo/scrub-snapshot.mjs",
     "demo": "node scripts/demo/build.mjs",
     "demo:verify": "node scripts/demo/verify-demo.mjs",
-    "check:chars": "node scripts/check-control-chars.mjs"
+    "check:chars": "node scripts/check-control-chars.mjs",
+    "check:text": "node scripts/check-page-text.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
