@@ -3,7 +3,7 @@
 Every number here is measured. Where something has not been measured — real
 phones, real OS screenshots — it says so, rather than standing in a simulation.
 
-Evidence images and the raw optimiser log are in
+Evidence images and the raw optimiser output (`optimiser-run.txt`) are in
 [`protection-evidence/`](protection-evidence/). To reproduce:
 `BASE=http://localhost:3000 node frontend/scripts/protection/optimise.mjs`.
 

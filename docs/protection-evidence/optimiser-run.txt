@@ -1,0 +1,99 @@
+Baseline, no protection:
+  none       f0  a0     d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+  (reader bar: 90% words, 90% figures - 90% of the unprotected page)
+
+Stage 1 - pattern x period x strength:
+  horizontal f2  a0.1   d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+  horizontal f2  a0.2   d0    f2=0  | camera w 100% n  90% | reader w 100% n  98% | gap    0% 
+  horizontal f2  a0.3   d0    f2=0  | camera w  65% n  50% | reader w 100% n 100% | gap   35% 
+  horizontal f2  a0.4   d0    f2=0  | camera w  22% n   0% | reader w 100% n 100% | gap   78% 
+  horizontal f3  a0.1   d0    f2=0  | camera w 100% n  60% | reader w 100% n 100% | gap    0% 
+  horizontal f3  a0.2   d0    f2=0  | camera w 100% n  70% | reader w 100% n 100% | gap    0% 
+Detected 1 diacritics
+  horizontal f3  a0.3   d0    f2=0  | camera w  60% n   8% | reader w 100% n 100% | gap   40% 
+Detected 16 diacritics
+  horizontal f3  a0.4   d0    f2=0  | camera w   0% n   0% | reader w  56% n   4% | gap   56% (reader below bar)
+Detected 12 diacritics
+  horizontal f4  a0.1   d0    f2=0  | camera w 100% n  60% | reader w 100% n 100% | gap    0% 
+Detected 15 diacritics
+  horizontal f4  a0.2   d0    f2=0  | camera w 100% n  57% | reader w 100% n 100% | gap    0% 
+  horizontal f4  a0.3   d0    f2=0  | camera w  37% n   0% | reader w 100% n  50% | gap   63% (reader below bar)
+Detected 9 diacritics
+  horizontal f4  a0.4   d0    f2=0  | camera w   0% n   0% | reader w  98% n  50% | gap   98% (reader below bar)
+  checker    f2  a0.1   d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+  checker    f2  a0.2   d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+  checker    f2  a0.3   d0    f2=0  | camera w  66% n  50% | reader w 100% n  98% | gap   34% 
+  checker    f2  a0.4   d0    f2=0  | camera w  33% n   0% | reader w 100% n 100% | gap   67% 
+  checker    f3  a0.1   d0    f2=0  | camera w 100% n  70% | reader w 100% n 100% | gap    0% 
+Detected 7 diacritics
+  checker    f3  a0.2   d0    f2=0  | camera w  99% n  57% | reader w 100% n 100% | gap    1% 
+  checker    f3  a0.3   d0    f2=0  | camera w  63% n   0% | reader w 100% n  73% | gap   37% (reader below bar)
+  checker    f3  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n  98% | gap  100% 
+  checker    f4  a0.1   d0    f2=0  | camera w 100% n  75% | reader w 100% n 100% | gap    0% 
+  checker    f4  a0.2   d0    f2=0  | camera w  99% n  50% | reader w 100% n  98% | gap    1% 
+  checker    f4  a0.3   d0    f2=0  | camera w  28% n   0% | reader w 100% n  53% | gap   72% (reader below bar)
+  checker    f4  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  random     f2  a0.1   d0    f2=0  | camera w 100% n 100% | reader w 100% n  98% | gap    0% 
+  random     f2  a0.2   d0    f2=0  | camera w 100% n  98% | reader w 100% n 100% | gap    0% 
+  random     f2  a0.3   d0    f2=0  | camera w  67% n  50% | reader w 100% n 100% | gap   33% 
+  random     f2  a0.4   d0    f2=0  | camera w  33% n   0% | reader w 100% n  95% | gap   67% 
+  random     f3  a0.1   d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+  random     f3  a0.2   d0    f2=0  | camera w 100% n  93% | reader w 100% n 100% | gap    0% 
+Detected 58 diacritics
+Error in boxClipToRectangle: box outside rectangle
+Error in pixScanForForeground: invalid box
+  random     f3  a0.3   d0    f2=0  | camera w  66% n  42% | reader w 100% n 100% | gap   34% 
+  random     f3  a0.4   d0    f2=0  | camera w  33% n   0% | reader w 100% n  83% | gap   67% (reader below bar)
+Detected 9 diacritics
+  random     f4  a0.1   d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+  random     f4  a0.2   d0    f2=0  | camera w 100% n  85% | reader w 100% n 100% | gap    0% 
+  random     f4  a0.3   d0    f2=0  | camera w  63% n  50% | reader w 100% n 100% | gap   37% 
+Error in boxClipToRectangle: box outside rectangle
+Error in pixScanForForeground: invalid box
+  random     f4  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+
+Stage 2 - refining the 3 best feasible settings with dither and a second frequency:
+  checker    f3  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n  98% | gap  100% 
+  checker    f3  a0.4   d0    f2=5  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f3  a0.4   d0.1  f2=0  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f3  a0.4   d0.1  f2=5  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f3  a0.4   d0.2  f2=0  | camera w   0% n   0% | reader w  99% n  60% | gap   99% (reader below bar)
+Detected 11 diacritics
+  checker    f3  a0.4   d0.2  f2=5  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f4  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f4  a0.4   d0    f2=5  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f4  a0.4   d0.1  f2=0  | camera w   0% n   0% | reader w 100% n  88% | gap  100% (reader below bar)
+  checker    f4  a0.4   d0.1  f2=5  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f4  a0.4   d0.2  f2=0  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  checker    f4  a0.4   d0.2  f2=5  | camera w   0% n   0% | reader w 100% n  50% | gap  100% (reader below bar)
+  random     f4  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+  random     f4  a0.4   d0    f2=5  | camera w   0% n   0% | reader w 100% n 100% | gap  100% 
+Error in boxClipToRectangle: box outside rectangle
+Error in pixScanForForeground: invalid box
+Error in boxClipToRectangle: box outside rectangle
+Error in pixScanForForeground: invalid box
+Error in boxClipToRectangle: box outside rectangle
+Error in pixScanForForeground: invalid box
+  random     f4  a0.4   d0.1  f2=0  | camera w  33% n   0% | reader w 100% n 100% | gap   67% 
+  random     f4  a0.4   d0.1  f2=5  | camera w   0% n   0% | reader w 100% n  57% | gap  100% (reader below bar)
+Detected 2 diacritics
+  random     f4  a0.4   d0.2  f2=0  | camera w  33% n   0% | reader w 100% n  83% | gap   67% (reader below bar)
+Detected 12 diacritics
+  random     f4  a0.4   d0.2  f2=5  | camera w   0% n   0% | reader w 100% n  53% | gap  100% (reader below bar)
+
+==================== RESULT ====================
+Baseline:  none       f0  a0     d0    f2=0  | camera w 100% n 100% | reader w 100% n 100% | gap    0% 
+Best:      checker    f3  a0.4   d0    f2=0  | camera w   0% n   0% | reader w 100% n  98% | gap  100% 
+
+A single-frame capture loses 100 points of word recall against no protection,
+while the reader keeps 100% of words and 98% of figures.
+
+Per part (camera -> reader), with the unprotected page for reference:
+  heading       0% ->  100%   (unprotected  100%)
+  paragraph     0% ->  100%   (unprotected  100%)
+  small         0% ->  100%   (unprotected  100%)
+  numbers       0% ->  100%   (unprotected  100%)
+  table         0% ->   95%   (unprotected  100%)
+
+Camera with HDR on is the reader column: HDR averages frames, which is the
+same operation the eye performs. No setting can separate those two.
