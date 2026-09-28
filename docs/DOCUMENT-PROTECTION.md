@@ -44,6 +44,55 @@ for another, an edited signature is refused, a pushed-out expiry is refused
 | **Temporal modulation** | Real but weak at readable amplitudes. Measured: OCR recovered 98% of words from the strongest comfortable setting. See [CAMERA-RESISTANCE.md](CAMERA-RESISTANCE.md). |
 | **Phone photographs** | Not preventable by anything. A camera records what a person can see. |
 
+## Capture response (experimental)
+
+The viewer reacts to the browser events that sometimes accompany a capture:
+PrintScreen `keydown` and `keyup`, `window.blur`, and `visibilitychange`.
+
+`protectionResponse` decides what reacting looks like:
+
+| Mode | Effect |
+|---|---|
+| `hide` | Opaque "Protected content" cover. Nothing of the document remains. |
+| `obscure` | CSS blur and darkening on the page image, watermark still legible over it. |
+| `watermark` | Document stays; overlay amplitude and watermark opacity are turned up hard. |
+
+`captureProtection`, `captureHoldMs`, `captureAmplitude` and
+`captureWatermarkOpacity` are all configurable. Every event is reported with
+the time it took to repaint, and `/screenshot-lab` lists them live.
+
+These are CSS filters on the element. **Nothing here touches physical display
+brightness**, and nothing in a browser can.
+
+### The number that decides it
+
+Measured on the running viewer: **22.0 ms** from a PrintScreen `keydown` to
+the response being painted, **22.6 ms** from `keyup`, **25.3 ms** from `blur`.
+That is one and a half frames at 60Hz, and it is as fast as a web page gets -
+the response is read from a ref inside the animation loop rather than through
+a re-render, so it reaches the very next frame.
+
+Whether one and a half frames is fast enough is a property of each capture
+method, not of the page:
+
+| Method | Event reaches the page? | Expected outcome |
+|---|---|---|
+| PrintScreen | `keyup`, usually not `keydown` | **Not disrupted.** Windows grabs the framebuffer on the keypress and tells the page afterwards. The response protects the *next* capture. |
+| Win + Shift + S | `blur`, after the fact | **Not disrupted.** The snip overlay freezes an image of the screen the moment it is invoked; the blur arrives after that freeze. |
+| Snipping Tool (app) | `blur`, on the app taking focus | **Plausibly disrupted.** Seconds pass between the app opening and the user dragging a rectangle, so 22 ms is ample. |
+| Browser / devtools capture | none | **Not disrupted.** Rendered from the page by the browser itself. |
+| Screenshot extension | none | **Not disrupted.** `captureVisibleTab` never touches the page. |
+
+**This table is a prediction, not a result.** It follows from how each method
+is documented to work and from the measured latency; it has not been confirmed
+with real OS captures, because that needs a person at the deployment machine
+pressing the keys. `/screenshot-lab` exists to record it: take a real capture,
+check whether a row appeared in the event log, then score the captured file by
+OCR.
+
+Expect roughly one method in five to be disruptable. That is worth having and
+is not worth describing to anyone as screenshot prevention.
+
 ## What a browser cannot control
 
 - **OS-level screen capture.** No API exists. `FLAG_SECURE` is Android-native only.

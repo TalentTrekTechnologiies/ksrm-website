@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import ProtectedDocumentViewer, {
   ProtectionLevel,
 } from "@/components/ProtectedDocumentViewer"
+import { CaptureEvent, ProtectionResponse } from "@/lib/capture-protection"
 import { recogniseImage, scoreTranscript } from "@/lib/ocr-benchmark"
 
 /**
@@ -63,6 +64,10 @@ export default function ScreenshotLabPage() {
   const [rows, setRows] = useState<Record<string, Result>>({})
   const [busy, setBusy] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
+  const [response, setResponse] = useState<ProtectionResponse>("hide")
+  const [captureOn, setCaptureOn] = useState(true)
+  /** Every capture-ish event the page saw, newest first, with repaint time. */
+  const [events, setEvents] = useState<CaptureEvent[]>([])
 
   useEffect(() => {
     try {
@@ -190,7 +195,19 @@ export default function ScreenshotLabPage() {
             <input type="checkbox" checked={protectionOn} onChange={(e) => setProtectionOn(e.target.checked)} />{" "}
             screenshotProtection
           </label>
-          <button type="button" className="btn" disabled={!docId} onClick={() => setOpen(true)}>
+          <label>
+            Response{" "}
+            <select value={response} onChange={(e) => setResponse(e.target.value as ProtectionResponse)}>
+              <option value="hide">hide</option>
+              <option value="obscure">obscure</option>
+              <option value="watermark">watermark</option>
+            </select>
+          </label>
+          <label>
+            <input type="checkbox" checked={captureOn} onChange={(e) => setCaptureOn(e.target.checked)} />{" "}
+            captureProtection
+          </label>
+          <button type="button" className="btn" disabled={!docId} onClick={() => { setEvents([]); setOpen(true) }}>
             Open the viewer
           </button>
           <button type="button" className="btn" onClick={csv}>
@@ -260,6 +277,65 @@ export default function ScreenshotLabPage() {
           still score 98%.
         </p>
 
+        <h2 style={{ fontSize: 18, margin: "26px 0 4px" }}>Capture events seen by the page</h2>
+        <p className="sub" style={{ margin: "0 0 8px" }}>
+          Recorded while the viewer is open. <strong>Repaint</strong> is the time from
+          the event handler running to the response being on screen. It is the number
+          that decides whether reacting is worth anything: if the operating system
+          grabs the framebuffer before it elapses, the response changed nothing about
+          that capture.
+        </p>
+        {events.length === 0 ? (
+          <p className="sub" style={{ margin: 0 }}>
+            Nothing yet. Open the viewer and try a capture — a method that produces no
+            row here cannot be reacted to at all.
+          </p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: "30%" }}>Event</th>
+                <th style={{ width: "25%" }}>Repaint</th>
+                <th>At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((e, i) => (
+                <tr key={`${e.at}-${i}`}>
+                  <td>{e.kind}</td>
+                  <td style={{ fontVariantNumeric: "tabular-nums" }}>
+                    {e.paintLatencyMs === undefined ? "—" : `${e.paintLatencyMs.toFixed(1)} ms`}
+                  </td>
+                  <td style={{ color: "#778" }}>{Math.round(e.at)} ms into the session</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        <h2 style={{ fontSize: 18, margin: "26px 0 4px" }}>How to run this honestly</h2>
+        <ol className="sub" style={{ margin: 0, paddingLeft: 20 }}>
+          <li>Open the viewer on the machine you actually deploy to.</li>
+          <li>
+            Take a real capture with one method. Do not use a browser or automation
+            capture as a stand-in — they take the pixels by a different route and will
+            tell you nothing about the OS ones.
+          </li>
+          <li>
+            Check the event table above. No row means the page never knew, and no
+            response was possible.
+          </li>
+          <li>Open the captured file and fill in its row below, then score it by OCR.</li>
+        </ol>
+        <p className="sub" style={{ marginTop: 8 }}>
+          Expect PrintScreen and Win+Shift+S to be unaffected. Windows delivers
+          PrintScreen as a keyup after the framebuffer is taken, and the Win+Shift+S
+          overlay freezes an image of the screen the moment it is invoked — so in both
+          cases the page is told once it is already too late. Snipping Tool opened as
+          an app is the plausible case, because seconds pass between it taking focus
+          and the user dragging a rectangle. Measure it rather than trusting that.
+        </p>
+
         {open && docId && (
           <ProtectedDocumentViewer
             documentId={Number(docId)}
@@ -268,6 +344,9 @@ export default function ScreenshotLabPage() {
             screenshotProtection={protectionOn}
             protectionLevel={level}
             viewerLabel="LAB"
+            captureProtection={captureOn}
+            protectionResponse={response}
+            onCaptureEvent={(e) => setEvents((prev) => [e, ...prev].slice(0, 40))}
           />
         )}
       </div>

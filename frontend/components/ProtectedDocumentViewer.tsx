@@ -6,6 +6,11 @@ import {
   protectedPageUrl,
   ProtectedDocMeta,
 } from "@/lib/protected-docs-api"
+import {
+  CaptureEvent,
+  ProtectionResponse,
+  measurePaintLatency,
+} from "@/lib/capture-protection"
 
 /**
  * Reads a protected document without handing it over, and makes a capture of
@@ -54,6 +59,27 @@ export interface ProtectedDocumentViewerProps {
   noiseIntensity?: number
   watermarkOpacity?: number
   watermarkMotion?: boolean
+
+  /* -------- capture response, layer 7 -------- */
+
+  /** React to the browser events that sometimes accompany a capture. */
+  captureProtection?: boolean
+  /**
+   * What reacting looks like.
+   *
+   *   hide      - opaque cover, document gone
+   *   obscure   - blurred and darkened, watermark still legible over it
+   *   watermark - document stays, pattern and watermark turned up hard
+   */
+  protectionResponse?: ProtectionResponse
+  /** How long the response is held before the document returns. */
+  captureHoldMs?: number
+  /** Overlay strength while responding. Separate from the resting amplitude. */
+  captureAmplitude?: number
+  /** Watermark opacity while responding. */
+  captureWatermarkOpacity?: number
+  /** Every event, with the measured time to repaint. The lab records these. */
+  onCaptureEvent?: (event: CaptureEvent) => void
 }
 
 interface Tuning {
@@ -130,11 +156,28 @@ export default function ProtectedDocumentViewer({
   noiseIntensity,
   watermarkOpacity,
   watermarkMotion,
+  captureProtection = true,
+  protectionResponse = "hide",
+  captureHoldMs = 1500,
+  captureAmplitude = 0.55,
+  captureWatermarkOpacity = 0.45,
+  onCaptureEvent,
 }: ProtectedDocumentViewerProps) {
   const [meta, setMeta] = useState<ProtectedDocMeta | null>(null)
   const [page, setPage] = useState(1)
   const [error, setError] = useState<string | null>(null)
+  /**
+   * Responding to a possible capture.
+   *
+   * Separate from `hidden` because the two have different causes and different
+   * cures: `hidden` is the window not being in front, which ends when focus
+   * returns; this ends on a timer, because the event that triggered it - a
+   * PrintScreen keyup, say - carries no "finished" to wait for.
+   */
   const [hidden, setHidden] = useState(false)
+  const [responding, setResponding] = useState(false)
+  const respondingRef = useRef(false)
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [turning, setTurning] = useState<"next" | "prev" | null>(null)
   const [reduced, setReduced] = useState(false)
   const stageRef = useRef<HTMLDivElement | null>(null)
@@ -214,6 +257,38 @@ export default function ProtectedDocumentViewer({
     return () => clearTimeout(t)
   }, [turning, page])
 
+  /**
+   * Raises the response and measures how long it took to be painted.
+   *
+   * The latency is the whole point of recording it: reacting to an event is
+   * only worth anything if the new pixels are on screen before the operating
+   * system grabs the old ones, and for most capture methods they are not.
+   */
+  const raiseResponse = useCallback(
+    (kind: CaptureEvent["kind"]) => {
+      if (!captureProtection) return
+      const at = performance.now()
+      respondingRef.current = true
+      setResponding(true)
+      measurePaintLatency(at, (paintLatencyMs) =>
+        onCaptureEvent?.({ kind, at, paintLatencyMs }),
+      )
+      if (holdTimer.current) clearTimeout(holdTimer.current)
+      holdTimer.current = setTimeout(() => {
+        respondingRef.current = false
+        setResponding(false)
+      }, captureHoldMs)
+    },
+    [captureProtection, captureHoldMs, onCaptureEvent],
+  )
+
+  useEffect(
+    () => () => {
+      if (holdTimer.current) clearTimeout(holdTimer.current)
+    },
+    [],
+  )
+
   /* -------- Layer 3 + 6: browser actions, and the focus cover ------------- */
 
   useEffect(() => {
@@ -222,10 +297,10 @@ export default function ProtectedDocumentViewer({
       if (e.key === "ArrowRight") return go(1)
       if (e.key === "ArrowLeft") return go(-1)
       if (!screenshotProtection) return
-      if (e.key === "PrintScreen") {
-        setHidden(true)
-        setTimeout(() => setHidden(false), 1500)
-      }
+      // Both, because Windows delivers keyup for this key and frequently not
+      // keydown - and keyup arrives after the framebuffer has been taken, so
+      // this protects the next capture rather than the one just made.
+      if (e.key === "PrintScreen") raiseResponse("printscreen-down")
       const mod = e.ctrlKey || e.metaKey
       if (mod && ["p", "s", "c", "u"].includes(e.key.toLowerCase())) e.preventDefault()
     }
@@ -233,11 +308,22 @@ export default function ProtectedDocumentViewer({
 
     if (!screenshotProtection) return () => document.removeEventListener("keydown", onKeyDown)
 
-    const hide = () => setHidden(true)
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "PrintScreen") raiseResponse("printscreen-up")
+    }
+    const hide = () => {
+      setHidden(true)
+      raiseResponse("blur")
+    }
     const show = () => setHidden(false)
-    const onVisibility = () => setHidden(document.visibilityState !== "visible")
+    const onVisibility = () => {
+      const gone = document.visibilityState !== "visible"
+      setHidden(gone)
+      if (gone) raiseResponse("visibility")
+    }
     const block = (e: Event) => e.preventDefault()
 
+    document.addEventListener("keyup", onKeyUp)
     window.addEventListener("blur", hide)
     window.addEventListener("focus", show)
     document.addEventListener("visibilitychange", onVisibility)
@@ -247,6 +333,7 @@ export default function ProtectedDocumentViewer({
 
     return () => {
       document.removeEventListener("keydown", onKeyDown)
+      document.removeEventListener("keyup", onKeyUp)
       window.removeEventListener("blur", hide)
       window.removeEventListener("focus", show)
       document.removeEventListener("visibilitychange", onVisibility)
@@ -254,7 +341,7 @@ export default function ProtectedDocumentViewer({
       document.removeEventListener("copy", block)
       document.removeEventListener("dragstart", block)
     }
-  }, [go, onClose, screenshotProtection])
+  }, [go, onClose, screenshotProtection, raiseResponse])
 
   /* -------- Layer 4 + 5: modulation, noise, and the moving watermark ------ */
 
@@ -296,13 +383,17 @@ export default function ProtectedDocumentViewer({
       frame += 1
       ctx.clearRect(0, 0, w, h)
 
-      const modulating = tune.modulationFrequency > 0 && tune.modulationAmplitude > 0 && !reduced
+      // Read through the ref, not through state: raising the response has to
+      // reach the very next frame, and waiting for a re-render would add one.
+      const escalated = respondingRef.current
+      const amplitude = escalated ? captureAmplitude : tune.modulationAmplitude
+      const modulating = tune.modulationFrequency > 0 && amplitude > 0 && !reduced
       if (modulating) {
         const phase = Math.floor(frame / tune.modulationFrequency) % 2
         const mask = phase === 0 ? light : dark
         if (mask) {
           ctx.save()
-          ctx.globalAlpha = tune.modulationAmplitude
+          ctx.globalAlpha = amplitude
           ctx.translate(0, ((frame % 120) / 120) * tune.patternFrequency * 2)
           ctx.drawImage(mask, 0, 0, w, h)
           ctx.restore()
@@ -323,7 +414,15 @@ export default function ProtectedDocumentViewer({
         ctx.restore()
       }
 
-      drawWatermark(ctx, w, h, frame, watermarkText, tune, reduced)
+      drawWatermark(
+        ctx,
+        w,
+        h,
+        frame,
+        watermarkText,
+        escalated ? { ...tune, watermarkOpacity: captureWatermarkOpacity } : tune,
+        reduced,
+      )
     }
     raf = requestAnimationFrame(draw)
     return () => {
@@ -340,6 +439,8 @@ export default function ProtectedDocumentViewer({
     tune.watermarkMotion,
     watermarkText,
     reduced,
+    captureAmplitude,
+    captureWatermarkOpacity,
   ])
 
   const pages = meta?.pages ?? 0
@@ -364,7 +465,7 @@ export default function ProtectedDocumentViewer({
         @keyframes pdv-turn-next { from { transform: rotateY(-38deg); opacity: .55 } to { transform: rotateY(0); opacity: 1 } }
         @keyframes pdv-turn-prev { from { transform: rotateY(38deg); opacity: .55 } to { transform: rotateY(0); opacity: 1 } }
         @media (prefers-reduced-motion: reduce) { .pdv-page.turn-next, .pdv-page.turn-prev { animation: none } }
-        .pdv-hidden { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; background: #0c1026; color: rgba(255,255,255,0.75); font-size: 15px; z-index: 3; }
+        .pdv-hidden { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; background: #0c1026; color: rgba(255,255,255,0.75); font-size: 15px; z-index: 4; }
         .pdv-note { font-size: 12.5px; opacity: 0.6; padding: 0 18px 12px; color: #fff; }
         @media print { .pdv-overlay { display: none !important } body > *:not(.pdv-overlay) { display: none !important } }
       `}</style>
@@ -401,6 +502,13 @@ export default function ProtectedDocumentViewer({
             alt={`${title} — page ${page} of ${pages}`}
             className={`pdv-page${turning ? ` turn-${turning}` : ""}`}
             draggable={false}
+            // CSS filters on the element, not the physical display. Nothing
+            // here touches monitor brightness, and nothing can.
+            style={
+              responding && protectionResponse === "obscure"
+                ? { filter: "blur(14px) brightness(0.45)" }
+                : undefined
+            }
             onError={() => setError("This page could not be loaded.")}
           />
         )}
@@ -411,11 +519,20 @@ export default function ProtectedDocumentViewer({
           style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2 }}
         />
 
-        {hidden && (
+        {/* The opaque cover, for the focus case and for the "hide" response.
+            z-index above the overlay canvas so nothing shows through, and
+            painted as one flat colour so there is nothing to recover from a
+            capture of it. */}
+        {(hidden || (responding && protectionResponse === "hide")) && (
           <div className="pdv-hidden">
-            Hidden while this window is not in focus.
-            <br />
-            Return to this tab to keep reading.
+            <div>
+              <strong style={{ display: "block", fontSize: 17, marginBottom: 6 }}>
+                Protected content
+              </strong>
+              {hidden
+                ? "Hidden while this window is not in focus. Return to this tab to keep reading."
+                : "Hidden briefly after a possible screen capture."}
+            </div>
           </div>
         )}
       </div>
