@@ -1032,14 +1032,13 @@ export default function ProtectedDocumentViewer({
       </div>
 
       <p className="pdv-note">
-        Displayed page by page and cannot be downloaded. Every page carries the address,
-        session and time it was served.
+        Displayed page by page and cannot be downloaded.
         {captureExcluded && (
           <>
             {" "}
             <strong>Screen capture is disabled for this document</strong> — screenshots
             and screen recordings will not contain it. A photograph of the screen still
-            will, and carries the watermark.
+            will.
           </>
         )}
         {redactFigures && (figures[page]?.length ?? 0) > 0 && (
@@ -1069,7 +1068,7 @@ export default function ProtectedDocumentViewer({
           <>
             {" "}
             <strong>Flicker reduced</strong> — a screen capture of this page would
-            now be readable, and still carries the watermark.
+            now be readable.
           </>
         )}
       </p>
@@ -1086,6 +1085,7 @@ function drawWatermark(
   tune: Tuning,
   reduced: boolean,
 ) {
+  if (tune.watermarkOpacity <= 0) return
   const t = reduced || !tune.watermarkMotion ? 0 : frame
   const size = Math.max(12, Math.round(width / 40))
   ctx.save()

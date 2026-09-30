@@ -11,7 +11,6 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { ProtectedDocsService } from './protected-docs.service';
-import { getRequestIpAddress } from '../common/request-context';
 
 /**
  * Read-only routes for documents that are shown but never handed over.
@@ -58,8 +57,8 @@ export class ProtectedDocsController {
   @Get(':id/page/:page')
   @Header('Content-Type', 'image/jpeg')
   // Never cached anywhere but the asking browser, and only for a moment: the
-  // image carries that viewer's own watermark, so a shared cache would hand
-  // one reader's stamp to the next.
+  // link behind it expires, and a shared cache would keep serving the page
+  // after it had.
   @Header('Cache-Control', 'private, max-age=60, no-transform')
   @Header('Content-Disposition', 'inline')
   @Header('X-Robots-Tag', 'noindex, noimageindex, noarchive')
@@ -78,14 +77,7 @@ export class ProtectedDocsController {
       );
     }
 
-    const stamp = new Date().toLocaleString('en-IN', {
-      timeZone: 'Asia/Kolkata',
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    });
-    const viewer = `K.S.R.M. · ${getRequestIpAddress() ?? 'unknown'} · ${stamp} IST`;
-
-    const image = await this.docs.page(id, page, viewer);
+    const image = await this.docs.page(id, page);
     res.end(image);
   }
 }

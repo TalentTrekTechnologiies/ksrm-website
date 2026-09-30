@@ -273,6 +273,10 @@ export default function NbaPage() {
              * back the other way.
              */
             redactFigures={false}
+            // No watermark, at the college's request - neither the moving one
+            // nor the heavier one shown while a capture is in progress.
+            watermarkOpacity={0}
+            captureWatermarkOpacity={0}
           />
         )}
       </main>

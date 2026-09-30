@@ -4,6 +4,14 @@ For `ProtectedDocumentViewer`, used by NBA documents. Written so nobody has to
 guess later which parts are controls and which are friction, and so the college
 is never told something is prevented when it is only discouraged.
 
+> **Watermarks removed (2026-09-30), at the college's request.** Neither the
+> burned-in server watermark nor the moving on-screen one is applied to NBA
+> documents any more. Everything below that describes a watermark, or tracing
+> a leaked capture back to a viewer, no longer applies: a screenshot or photo
+> of a page now carries nothing that identifies who took it. What remains is
+> page images only (no PDF sent), no download or text copy, and page links
+> that expire after 15 minutes.
+
 ## Architecture
 
 ```

@@ -56,8 +56,8 @@ const RENDER_SCALE = 3;
 const TOKEN_TTL_MS = 15 * 60 * 1000;
 
 /**
- * Serves accreditation documents as page images that carry the viewer's own
- * watermark, so the PDF itself never reaches anybody's device.
+ * Serves accreditation documents as page images, so the PDF itself never
+ * reaches anybody's device.
  *
  * What this genuinely prevents: downloading the file. The browser is sent one
  * flattened JPEG per page, so there is no document to save, no text to copy,
@@ -65,10 +65,10 @@ const TOKEN_TTL_MS = 15 * 60 * 1000;
  *
  * What nothing can prevent: a screenshot, or a photograph of the screen. Those
  * happen in the operating system and in the room, where no website reaches.
- * The watermark is the answer to both - it is burned into the pixels rather
- * than laid over them in the DOM, so it cannot be removed with devtools and it
- * appears in a phone photo exactly as it appears on screen. A leaked page
- * names the address and the minute it was served.
+ * Pages used to carry a burned-in watermark naming the address and time they
+ * were served, so a leaked copy could be traced; it was removed at the
+ * college's request, and a leaked page now carries nothing that identifies
+ * who took it.
  */
 @Injectable()
 export class ProtectedDocsService implements OnModuleInit, OnModuleDestroy {
@@ -227,9 +227,8 @@ export class ProtectedDocsService implements OnModuleInit, OnModuleDestroy {
    * Renders every page once and keeps them.
    *
    * Rasterising is the expensive part and the document does not change, so it
-   * is done on the first request and read from disk afterwards. The watermark
-   * is NOT baked in here - it is per viewer, and a cached copy carrying
-   * somebody else's address would defeat the point of having one.
+   * is done on upload (see `prewarm`) or the first request, and read from
+   * disk afterwards.
    */
   private async ensureRendered(
     docId: number,
@@ -510,7 +509,7 @@ export class ProtectedDocsService implements OnModuleInit, OnModuleDestroy {
    * tucked into a corner, because a corner is the first thing cropped out of
    * a screenshot.
    */
-  async page(id: number, pageNumber: number, viewer: string): Promise<Buffer> {
+  async page(id: number, pageNumber: number): Promise<Buffer> {
     const doc = await this.documentOrThrow(id);
     const pages = await this.ensureRendered(doc.id, doc.mediaId);
     if (!Number.isInteger(pageNumber) || pageNumber < 1 || pageNumber > pages) {
@@ -530,41 +529,11 @@ export class ProtectedDocsService implements OnModuleInit, OnModuleDestroy {
       if (!fs.existsSync(file)) throw new NotFoundException();
     }
 
-    const image = sharp(file);
-    const { width = 1000, height = 1400 } = await image.metadata();
-    const mark = this.watermarkSvg(width, height, viewer);
-
-    return image
-      .composite([{ input: mark, top: 0, left: 0 }])
+    // No watermark: removed at the college's request. The page is served as
+    // rendered - behind the expiring token, never as the PDF.
+    return sharp(file)
       .jpeg({ quality: 88, progressive: true, chromaSubsampling: '4:4:4' })
       .toBuffer();
-  }
-
-  /**
-   * Repeated diagonally so no crop of the page can be free of it.
-   *
-   * Faint grey and sparse, not red and dense. It is there to identify a copy,
-   * which it does at any opacity a person can still make out; at the old 17%
-   * red over seven rows it sat on top of the text and the page was harder to
-   * read than the watermark was worth.
-   */
-  private watermarkSvg(width: number, height: number, viewer: string): Buffer {
-    const label = escapeXml(viewer);
-    const fontSize = Math.max(14, Math.round(width / 34));
-    const rows: string[] = [];
-    const lines = 4;
-    for (let i = 0; i < lines; i++) {
-      const y = Math.round((height * (i + 0.5)) / lines);
-      rows.push(
-        `<text class="m" x="${Math.round(-width * 0.2)}" y="${y}">${label} &#160;&#160;&#160;&#160; ${label}</text>`,
-      );
-    }
-    return Buffer.from(
-      `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">` +
-        `<style>.m{fill:#5a6275;fill-opacity:0.08;font-family:sans-serif;font-size:${fontSize}px;font-weight:700}</style>` +
-        `<g transform="rotate(-28 ${width / 2} ${height / 2})">${rows.join('')}</g>` +
-        `</svg>`,
-    );
   }
 }
 
@@ -577,12 +546,4 @@ export class ProtectedDocsService implements OnModuleInit, OnModuleDestroy {
  */
 function cacheKey(docId: number, mediaId: number | null): string {
   return `${docId}-${mediaId ?? 'none'}`;
-}
-
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
