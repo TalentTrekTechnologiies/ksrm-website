@@ -33,7 +33,22 @@ export type ProtectionResponse = "hide" | "obscure" | "watermark"
 
 export interface CaptureEvent {
   /** Which browser event fired. */
-  kind: "printscreen-down" | "printscreen-up" | "blur" | "visibility" | "manual"
+  kind:
+    | "printscreen-down"
+    | "printscreen-up"
+    /**
+     * The Windows key going down.
+     *
+     * Win+Shift+S is a chord, and this is the first key of it. The snip
+     * overlay freezes the screen only once all three are down, so the page
+     * learns the capture is coming while the user still has two keys to
+     * press - hundreds of milliseconds against the 22ms it needs to repaint.
+     * It is the one common capture route a browser gets advance warning of.
+     */
+    | "meta-down"
+    | "blur"
+    | "visibility"
+    | "manual"
   /** performance.now() when the handler ran. */
   at: number
   /** Milliseconds from the handler running to the response being painted. */

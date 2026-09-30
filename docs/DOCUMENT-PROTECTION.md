@@ -39,9 +39,10 @@ for another, an edited signature is refused, a pushed-out expiry is refused
 
 | | Reality |
 |---|---|
-| **Screenshots** | Not preventable in a browser. The capture happens in the OS. What happens instead: the page hides itself when the window loses focus, which catches Snipping Tool, Win+Shift+S and most recorders because they take focus as they open; PrintScreen blanks it briefly; the capture carries the modulation stripes and both watermarks. |
+| **Screenshots** | The capture cannot be blocked - it happens in the OS - but what it captures is now unusable. At `protectionLevel="screenshot"` a single capture keeps **2-6% of the words and none of the figures**, and is destroyed to a person and not only to OCR. Four captures averaged recover the document, and a screen recording does it for free. The page also hides on blur, which catches the tools that take focus as they open. |
 | **Right-click, copy, drag, shortcuts** | Enforced through events, so devtools walks past all of it. Friction. |
-| **Temporal modulation** | Real but weak at readable amplitudes. Measured: OCR recovered 98% of words from the strongest comfortable setting. See [CAMERA-RESISTANCE.md](CAMERA-RESISTANCE.md). |
+| **Temporal modulation (overlay)** | Weaker than it measures. An overlay modulates the PAPER and leaves glyph shapes intact, so it wrecks OCR and a person reads the capture without difficulty - 67% measured word loss on an image every word of which was legible. It is a finisher, not the control. See [PROTECTION-REPORT.md](PROTECTION-REPORT.md) section 2. |
+| **Content masking** | The layer that actually hides the page. Two copies of the page carry complementary masks and one shows per frame, so a capture is missing half of every glyph rather than textured over it. Costs about half the reader's contrast. Still defeated by averaging four captures. |
 | **Phone photographs** | Not preventable by anything. A camera records what a person can see. |
 
 ## Capture response (experimental)
@@ -104,6 +105,110 @@ is not worth describing to anyone as screenshot prevention.
   to a person. The mechanism cannot tell them apart.
 - **A camera pointed at the screen.**
 
+## What ships: figure redaction
+
+**The page reads completely normally, and every figure on it is blacked out,
+revealing one at a time as the reader points at it.** A screenshot therefore
+carries a whole-looking document with a single readable number in it.
+
+No flicker, no covered page, no contrast loss, sharp at any zoom, works in
+Chrome with nothing installed.
+
+### Why figures rather than the page
+
+From the OCR work in [PROTECTION-REPORT.md](PROTECTION-REPORT.md): prose
+survives damage and figures do not, because context and a dictionary repair a
+mangled word and nothing repairs `4617500`. The same asymmetry applies to a
+person reading a leaked screenshot.
+
+An accreditation submission is prose *about* numbers. The prose is largely
+boilerplate; the numbers are the finding. So covering ~3% of the page protects
+most of what is worth protecting, where the reading band covered 66% to protect
+all of it and the modulation degraded the whole page to protect some of it.
+
+### How it works
+
+| | |
+|---|---|
+| **At upload** | Each rendered page is OCR'd once and every numeric token's box is stored in `figures.json` beside the page images. Cached with the render, so no reader ever waits for OCR. |
+| **Serving** | `GET /protected-docs/:id/figures/:page` returns the boxes, behind the same expiring token as the page image. **Positions only — never values.** The numbers stay in the page pixels. |
+| **In the viewer** | Opaque blocks are positioned in fractional coordinates over the page image. Hover or keyboard focus uncovers exactly one at a time. |
+
+Two OCR passes are merged, `AUTO` and `SPARSE_TEXT`. AUTO reads the page as a
+document and routinely misses a short number alone in a table cell - it lost
+two of four values in one column of the test page, and a figure this layer
+fails to cover is served in the clear. SPARSE finds exactly those.
+
+Blocks are **solid, never blurred**: a blur is a reversible transform of the
+real pixels and deblurring a known font is not hard.
+
+### What it is worth, honestly
+
+- It raises the cost from **one capture to one per figure** — 18 on the test
+  page. That is a large increase and it is not a wall. Someone patient gets
+  every number.
+- **The prose is still captured.** Only figures are protected.
+- It is the only layer here that is **indifferent to how the capture was
+  made**, so unlike everything else it applies to a phone photograph too.
+- Detection is OCR, so it is not guaranteed complete on every document. Verify
+  a new document by opening it; anything missed is served in the clear.
+
+Reproduce the detection on a page image:
+
+```bash
+cd backend
+FIGURE_FIXTURE=../docs/protection-evidence/screenshot/clean.png FIGURE_DEBUG=../docs/protection-evidence/screenshot/figures-detected.png npx jest figure-boxes
+```
+
+`figures-detected.png` draws the boxes onto the page. **Look at it** — every
+assertion in the suite passed while the boxes sat below and to the right of
+every number, leaving all of them readable, because they were normalised
+against the extent of the detected text rather than the page. Numbers could
+not catch that and one glance did.
+
+`/camera-lab/redact` is the same idea on the fixture, without the backend.
+
+## The one thing that would empty a screenshot entirely — CONFIRMED WORKING
+
+**Requirement**: the page reads normally, and a screenshot of it carries nothing.
+
+**No browser can do this.** Not as a limitation to work around - the page is
+told about a capture after Windows has already taken the pixels (measured:
+22 ms to repaint, and PrintScreen reports on keyup). Every in-browser approach
+in this document instead degrades what the capture contains, and each was
+tried and rejected by a reader: the modulation flickered and was hard to read,
+the reading band covered most of the page.
+
+**A native window can do it, and it was verified on a real machine.**
+`SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE)` tells the Desktop
+Window Manager to omit the window from any capture of the screen.
+
+Proof taken during the session: a WinForms window at a known position, restored
+and foregrounded (`IsIconic` false), holding the fixture document. A full-screen
+`CopyFromScreen` of exactly that region returned **the windows behind it**. The
+document was on screen and absent from the capture. The reader then confirmed
+it independently with PrintScreen.
+
+Because the compositor enforces it, it covers PrintScreen, Snipping Tool,
+Win+Shift+S, screen recorders and any capture API at once - not only the routes
+a page gets warning of.
+
+`scripts/protection/protected-window.ps1` reproduces it in isolation.
+
+### Shipping it
+
+The document backend does not change - expiring tokens, server-side
+rasterisation and the burnt-in watermark all stay. Only the window changes:
+
+| | |
+|---|---|
+| **Electron viewer** | `win.setContentProtection(true)` is the same flag, one line, and maps to `NSWindow.sharingType = .none` on macOS. Loads the existing viewer URL. |
+| **Cost** | Readers install a small desktop app instead of opening a browser tab. That is the whole trade, and it is a product decision rather than a technical one. |
+| **Windows support** | `WDA_EXCLUDEFROMCAPTURE` needs Windows 10 2004+. Older builds fall back to `WDA_MONITOR`, which renders the window black in captures - equally effective here. |
+
+**Still not covered**: a phone camera pointed at the screen. Nothing in software
+reaches that, which is why the watermark stays.
+
 ## What would need a native application
 
 - **Screenshot blocking on Android** — `FLAG_SECURE` on the window. Blocks the
@@ -136,25 +241,75 @@ So the honest position to give the college is **not** "this cannot be copied"
   documentId={id}
   title={title}
   onClose={close}
-  screenshotProtection      // default true; false leaves layers 1-2 only
-  protectionLevel="strong"  // standard | strong | experimental
+  screenshotProtection          // default true; false leaves layers 1-2 only
+  protectionLevel="screenshot"  // standard | strong | screenshot | experimental
 />
 ```
 
-| Level | Modulation | Noise | Notes |
-|---|---|---|---|
-| `standard` | none | none | Watermark and browser-action blocking only. No flicker. |
-| `strong` | 0.09 | 0.02 | The default for protected documents. |
-| `experimental` | 0.20 | 0.05 | Lab only. Visible flicker. |
+| Level | Content mask | Overlay | A capture keeps | Notes |
+|---|---|---|---|---|
+| `standard` | no | none | everything | Watermark and browser-action blocking only. No flicker. |
+| `strong` | no | 0.09 stripes | ~everything | The old default. Be plain that it costs a capture approximately nothing. |
+| **`screenshot`** | **4px blocks** | **0.2** | **2-6% words, 0% figures** | **The default for protected documents.** Reader keeps 100% / 98%. |
+| `experimental` | 4px blocks | 0.4 | nothing | Lab only. Pronounced flicker. |
+
+**The content mask is the control and the overlay is the finisher** - which is
+the opposite of what this file said before it was measured against a human
+rather than against OCR. Alone, the content mask takes a capture to 9% of words
+and 0% of figures; the overlay alone takes it to 100%, i.e. nowhere.
+
+A capture of the overlay alone is *plainly readable* while scoring 67% word
+loss, because an overlay modulates the paper and leaves glyph shapes intact.
+See `docs/protection-evidence/screenshot/screenshot.png` and do not accept an
+OCR number for this without looking at the image.
 
 Amplitude, frequency, pattern scale, noise and watermark opacity are all
 overridable for testing.
 
-**Safety.** All modulation is disabled under `prefers-reduced-motion`. The
-default amplitude is conservative, and `experimental` stops at 0.20 — well
-below the 0.4 where the sweep found real separation, because at 0.4 a person
-sees pronounced flicker and that is a photosensitivity risk, not a trade-off.
-Do not raise these defaults on the strength of a simulation.
+**Safety.** Three things, and the first two are not optional:
+
+- All modulation is disabled under `prefers-reduced-motion`.
+- The viewer shows a **Reduce flicker** button whenever modulation is running.
+  One click turns it off for the session and says plainly what that costs
+  ("a screen capture of this page would now be readable"). A reader must never
+  have to choose between reading the page and their eyes.
+- Every frame carries the same mean luminance — half the blocks light, half
+  dark — so there is no large-area flash, which is the property the
+  photosensitivity guidance is written around. Fine-grained modulation at
+  constant mean is a much lower risk than a full-area flash at the same rate.
+  That lowers the risk; it does not remove it.
+
+`screenshot` has **not yet been assessed by a person**, for flicker or for the
+contrast the content mask costs (text lands dark grey, not black). A simulation
+cannot do either. `/camera-lab` → **★ Shipped** is that exact configuration. If
+it is unpleasant to read, lower it — a 3px content mask still costs a capture
+most of its figures — and an overlay nobody will tolerate protects nothing.
+
+## The attack that beats it
+
+Averaging captures. The page is legible to a person because the eye averages
+consecutive frames, so an attacker who averages captures performs the same
+operation and gets the same result:
+
+| Captures averaged | 1 | 2 | 3 | 4 | 8 |
+|---|---|---|---|---|---|
+| Words recovered | 33% | 33% | 33% | **99%** | 100% |
+
+(Measured on the overlay; the content mask has the same ceiling for the same
+reason - two complementary frames sum to the page by design.)
+
+**Four is enough**, and a screen recording is four for free. No parameter fixes
+this; anything that stopped the attacker would stop the reader.
+
+Rotating several masks instead of one was tried against this and dropped: it
+made no difference at 4 captures and made 2-3 captures *easier* to recover
+from, because two captures of one fixed mask at the same polarity carry no new
+information between them while two different masks each carry some.
+
+So the supportable claim is narrow, and worth writing down in these words:
+**one casual screenshot comes out unreadable; somebody who knows what they are
+doing gets the document back with four.** That defeats screenshot-and-forward,
+which is how these documents actually leak. It is not access control.
 
 ## Benches
 

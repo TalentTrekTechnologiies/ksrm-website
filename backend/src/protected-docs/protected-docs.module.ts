@@ -7,5 +7,7 @@ import { ProtectedDocsService } from './protected-docs.service';
   imports: [MediaModule],
   controllers: [ProtectedDocsController],
   providers: [ProtectedDocsService],
+  // For Downloads, which starts the render when a document is uploaded.
+  exports: [ProtectedDocsService],
 })
 export class ProtectedDocsModule {}

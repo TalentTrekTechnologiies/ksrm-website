@@ -22,47 +22,96 @@ Evidence images and the raw optimiser output (`optimiser-run.txt`) are in
 
 ## 2. What we can disrupt
 
-**Machine copying of a phone photograph (OCR)** — substantially, at a cost.
+### A screenshot — and this reverses what this report used to say
 
-The optimiser searched pattern, period, strength, dithering and a second spatial
-frequency, scoring every point by OCR: one captured frame (a phone photo, HDR
-off) against sixteen averaged (what the eye integrates to). The reader had to
-keep 90% of what the unprotected page yields, words and figures separately.
+A screenshot is **one composited frame**. That is the same thing the `camera`
+column has always measured, with no optical averaging to soften it. So the
+single-frame score *is* the screenshot score.
 
-| Strength | Camera: words | Camera: **figures** | Reader: words | Reader: figures |
+The previous version of this report filed screenshots under "can only
+watermark". That confused two claims — *we cannot block the capture* and *we
+cannot degrade what it captures*. The first is true. The second is not.
+
+### The trap in the OCR number, which caught this project once already
+
+Raising the overlay to amplitude 0.3 with an aperiodic mask took OCR word
+recall from 100% to 33% and figures to 0%. On the metric, a success.
+
+**Then somebody looked at the image, and every word of it was readable.**
+`screenshot.png` in `protection-evidence/screenshot/` is that capture: the
+heading, the paragraph, 4820000, 4617500 and the entire table, plainly legible.
+
+The reason is mechanical. An overlay drawn on top modulates the **paper**: a
+white block over white paper leaves it white, a black block darkens it to grey.
+Text stays dark under both polarities, so **the glyph shapes survive intact**.
+That destroys OCR's binarisation step and does nothing whatsoever to a human
+reader, who segments text by shape. Machine segmentation and human reading are
+not the same faculty and the overlay only ever attacked one of them.
+
+Any OCR-only measurement of this will keep saying the protection works. It is
+necessary and nowhere near sufficient, and every number in this report should
+be read with `capture-pair.mjs` output beside it.
+
+### What actually hides the page: masking the content
+
+Instead of drawing over the page, remove half of it per frame. Two copies of
+the page carry complementary masks and one is shown per frame, so a single
+capture is **missing half of every glyph** rather than merely textured over.
+The two frames still sum to the whole page for the eye.
+
+| Setting | Capture: words | figures | heading | Reader |
 |---|---|---|---|---|
-| None | 100% | 100% | 100% | 100% |
-| 0.1 | 100% | 60% | 100% | 100% |
-| 0.2 | 99% | 50% | 100% | 98% |
-| **0.3** | **50–60%** | **4–8%** | **100%** | **98–100%** |
-| 0.4 | 0% | 0% | 100% | 98% |
+| No protection | 100% | 100% | 100% | 100% / 100% |
+| Overlay only, 0.3 — *reads fine to a human* | 33% | 0% | **100%** | 100% / 57–100% |
+| Content mask, 3px | 19% | 8% | 33% | 100% / 100% |
+| Content mask, 4px | 9% | 0% | 17% | 100% / 70–100% |
+| **Content mask 4px + overlay 0.2 — shipped** | **2–6%** | **0%** | **0–17%** | **100% / 98%** |
 
-**Figures break long before words do.** OCR repairs a damaged word from context
-and a dictionary; it cannot do that for "4617500". For accreditation documents,
-which are mostly figures and tables, a moderate strength protects the numbers
-far more than the prose.
+Note the heading column. The overlay leaves headings **completely intact** —
+their strokes are wider than the mask, so a block lands inside a stroke instead
+of breaking it. Content masking cuts the stroke itself, and the heading goes
+with everything else.
 
-**One capture method, possibly**: Snipping Tool opened as an app. Seconds pass
-between it taking focus and the capture; the viewer hides in about 22 ms.
-Not yet confirmed on a real machine.
+Look at `combined-screenshot.png` against `combined-reader.png`. The capture is
+destroyed to a person, not only to a machine; the reader's page is clean at
+slightly reduced contrast.
+
+**Being exact about "destroyed":** a determined person staring at the capture
+can still reconstruct some prose, because human reading recovers a damaged word
+from context. What they cannot reliably recover is the **figures** — there is
+no context that repairs "4617500" — and an accreditation document is mostly
+figures. That is the right way round, and it is the claim that should be made:
+not "unreadable", but "the numbers cannot be trusted off a screenshot".
+
+### The amplitude window, for the overlay component
+
+| Amplitude | Capture loses | Reader keeps | |
+|---|---|---|---|
+| 0.20 | 0% words | 100% | no effect alone |
+| 0.30 | 67% words | 100% / 100% | OCR only — reads fine to a human |
+| 0.40 | everything | 100% / 100% | pronounced flicker |
+| 0.45 | everything | **33% / 0–86%** | the reader breaks too |
+
+The shipped overlay sits at 0.2 because the content mask is now doing the work
+and the overlay only has to finish the edges. That is a **lower** flicker cost
+than the 0.3 this report recommended an hour before it.
 
 ## 3. What we can only watermark
 
-- **A person reading a photograph.** This is the finding that matters most, and
-  it is visible in the evidence: at 0.3 the photographed frame defeats OCR on 92%
-  of the figures — and a person can still read every one of them through the
-  stripes. The pattern breaks machine segmentation, not human reading. See
-  `2-a030-camera.png`.
-- **Screenshots** by PrintScreen, Win+Shift+S, browser capture and extensions.
+- **Averaging several captures.** The ceiling on the whole technique, and not a
+  tuning problem. The page is readable to a person *because* the eye averages
+  consecutive frames; an attacker who averages captures does the same operation
+  and gets the same result. A screen recording is this for free. See §9.
+- **A person reading a photograph of the screen.** A phone sees what the eye
+  sees if it stacks exposures, and most phones do by default.
 - **Any phone photo taken with HDR, night mode or video.** All three average
-  several frames, which is the same operation the eye performs — so they see
-  what the reader sees. No setting can separate an HDR camera from a human eye.
+  frames. No setting separates an HDR camera from a human eye.
 
-For all of these, the watermark is the protection. It is burned into the page
+For all of these the watermark is the protection. It is burned into the page
 image by the server and drawn again over the top, moving:
 **KSRM COLLEGE · CONFIDENTIAL — VIEW ONLY · Viewer · Session · Time.**
-It survives screenshots, HDR, night mode and video frames, because it is in
-the pixels a person sees rather than in a timing trick a camera can average out.
+It survives screenshots, HDR, night mode and video frames, because it is in the
+pixels a person sees rather than in a timing trick a camera can average out.
 
 ## 4. What the browser cannot control
 
@@ -81,39 +130,65 @@ A native application could block OS screenshots — `FLAG_SECURE` on Android,
 
 ## 5. Best parameters discovered
 
-**Recommended candidate: horizontal grating, period 3px, amplitude 0.3,
-modulation every frame.**
+**Shipped: content masking in 4px blocks, plus an overlay at amplitude 0.2,
+one flip per frame, mask seeded per session.**
 
-At that setting, in simulation: a photograph loses 40–50% of words and 92–96%
-of figures to OCR; the reader keeps essentially all of both.
+That is `protectionLevel="screenshot"`, which `/nba` now opens documents with.
+A capture keeps 2-6% of words and none of the figures; the reader keeps 100%
+and 98%. Scored twice, and the spread between the runs is the run-to-run
+variance of the OCR itself - read these as ranges, not exact values.
 
-**Not adopted as the production default yet**, deliberately. Amplitude 0.3
-modulated at 60Hz is at the edge of where people see flicker, and flicker in
-this range is a photosensitivity risk. A simulation cannot measure eye strain
-or flicker perception. It needs the human test in section 8 first.
+The two layers do different jobs and both are needed:
 
-0.4 separates completely (camera 0%, reader 100%) and is in the range where
-flicker is likely pronounced. It is available in the lab for testing only.
+| Layer | What it does | On its own |
+|---|---|---|
+| **Content mask** | Removes half of every glyph per frame | Capture 9% words / 0% figures |
+| **Overlay 0.2** | Textures the paper, breaks what is left | Capture 100% — nothing at all |
 
-The lab's configurations C, E, F and G use the 0.3 settings. The production
-viewer's `strong` level stays at 0.09 until a person has confirmed 0.3 is
-comfortable.
+The overlay is **not** the layer that protects the page, which is the opposite
+of what this report said before. It is a finisher. The content mask is the
+control, and the overlay at 0.2 is there because it costs little and closes the
+last few percent.
+
+Tried and **not** shipped:
+
+| Tried | Why not |
+|---|---|
+| Overlay alone at 0.3 | Scores well on OCR, reads perfectly to a human. §2. |
+| Rotating 8 masks instead of 1 | No change to one capture, slightly better for an attacker averaging 2–3. §9. |
+| Content mask at 5px | No better than 4px, more visible to the reader. |
+| Dithering, second spatial frequency | Cost reader contrast for nothing the mask was not already doing. |
+
+**Flicker.** The overlay dropped from 0.3 to 0.2 once the content mask took
+over the work, so the shipped setting flickers **less** than the one this
+report recommended earlier. It is still modulation at frame rate and still
+needs the human check in §8. Every frame carries the same mean luminance — half
+the blocks light, half dark — so there is no large-area flash, which is the
+property the photosensitivity guidance is written around. That lowers the risk;
+it does not remove it. `prefers-reduced-motion` disables the whole mechanism,
+and the viewer carries a one-click **Reduce flicker** control that says plainly
+what turning it off costs.
 
 ## 6. Actual screenshots and photos from testing
 
-In `protection-evidence/`, one pair per strength:
+In `protection-evidence/screenshot/`, the ones that matter:
 
 | File | What it is |
 |---|---|
-| `0-none-camera.png` / `-reader.png` | Unprotected. Identical, as they should be. |
-| `1-a020-camera.png` / `-reader.png` | 0.2. Visible texture; OCR still reads the prose. |
-| `2-a030-camera.png` / `-reader.png` | **0.3. Heavy stripes in the capture — still readable to a person.** |
-| `3-a040-camera.png` / `-reader.png` | 0.4. Strongest separation. |
+| `screenshot.png` | **Overlay only, 0.3. OCR called this 67% destroyed. Read it — it is legible.** The single most useful image here. |
+| `reader.png` | The same setting averaged: what the eye sees. |
+| `contentmask-screenshot.png` | Content mask 3px. Glyphs broken rather than textured. |
+| `combined-screenshot.png` | **The shipped setting. Compare to `screenshot.png`.** |
+| `combined-reader.png` | The shipped setting as the reader sees it — clean, slightly low contrast. |
 
-**These are simulations, not phone photos.** "Camera" is a single browser frame,
-which is what a short exposure with HDR off captures. **No real phone has been
-pointed at the screen yet, and no real OS screenshot has been taken** — I have no
-way to do either on your machine. The lab exists for that.
+In `protection-evidence/`, from the earlier camera work, one pair per strength
+(`0-none`, `1-a020`, `2-a030`, `3-a040`), camera against reader.
+
+**These are browser frames, not phone photos or OS screenshots.** A browser
+frame is a faithful stand-in for a screenshot — both are one composited frame —
+and it is *not* one for a phone photo, which may stack exposures. **No real
+phone has been pointed at the screen and no real OS screenshot has been taken**;
+I have no way to do either on your machine. `/screenshot-lab` exists for that.
 
 ## 7. OCR comparison
 
@@ -149,45 +224,118 @@ trusted: scoring the whole page in one pass (layout detection mangled the
 table), the worker's default layout mode not being AUTO, and an absolute
 readability bar the clean page itself could not meet.
 
-## 8. Human readability assessment
+## 8. Human readability assessment — DONE, AND IT FAILED
 
-**Not done, and it cannot be done by me.** The reader column above is OCR on an
-averaged image — it says the text is *recoverable*, not that reading it is
-*comfortable*. Those are different, and the second is the one you set as the bar.
+This section asked for a person to read the shipped setting and say whether it
+was comfortable. A person did. The verdict:
 
-What the averaged images show: at 0.3 there is a faint residual texture but the
-page reads cleanly. What they cannot show: whether 0.3 flickers perceptibly at
-60Hz, or tires the eyes over a minute.
+> "while viewing, that flickering is there, it is difficult to read"
 
-To do it: `/camera-lab`, **Human readability test**. It opens the same document
-— heading, paragraph, small print, figures, table — at each strength. Read each
-at normal distance for a minute. If one visibly flickers or tires your eyes,
-that strength is too high, whatever OCR says.
+**That ends the modulation approach as a default.** It is not a tuning result to
+be traded against the OCR numbers - it is the acceptance bar this report set
+for itself, failed by the only instrument that can measure it.
+
+The same reader also reported that **a phone photo of the screen is still
+readable**, which is the independently predicted behaviour: phones stack
+exposures by default, and stacking is averaging, and averaging is what makes
+the page readable to an eye in the first place.
+
+### Why no amount of tuning was going to fix this
+
+Both the flicker and the capture damage come from the same physical fact:
+consecutive frames differ, and the eye integrates them. The capture sees one
+frame; the reader sees the blend. **The blend is the flicker.** They are one
+effect measured two ways, so there is no setting where the page looks normal
+and a capture is destroyed. Turning the amplitude down reduces both together.
+
+Everything from section 2 onwards optimised along a curve whose every point is
+paid for by the reader. The mistake was accepting that curve, not choosing the
+wrong point on it.
+
+### What replaced it
+
+`protectionLevel="reveal"` - show only part of the page at a time, as a band
+that follows the reader.
+
+| | Modulation | Reading band |
+|---|---|---|
+| Text quality | Patterned, half contrast, flickers | **Untouched. Sharp, no flicker.** |
+| One screenshot gets | 2-6% of words | **~34% of the page, perfectly legible** |
+| A phone photo gets | **Everything** | **~34% of the page** |
+| Cost to the reader | Eye strain | Reads a section at a time |
+| Four captures get | Everything | Everything |
+
+The band is worse on the OCR metric and better on every question that was
+actually asked. The covered region is not obscured - **it is not rendered** - so
+no capture method can contain it, including the phone photograph that defeats
+everything else here. A camera cannot average its way to something that was
+never on the screen.
+
+The reader pays in convenience instead of in eye strain, and that cost is
+visible to them and theirs to judge. `/camera-lab/reveal` demonstrates it with
+no backend required, with the visible fraction on a slider.
+
+## 9. The attack that beats it
+
+Averaging several captures. Measured, because the size of the number is the
+whole point:
+
+| Captures averaged | 1 | 2 | 3 | 4 | 8 |
+|---|---|---|---|---|---|
+| Words recovered | 33% | 33% | 33% | **99%** | 100% |
+| Figures recovered | 0% | 0% | 0% | 50% | 88% |
+
+**Four screenshots is enough.** Not four hundred — four. And a screen recording
+is this attack for free: three seconds of video is 180 frames.
+
+This is not a flaw in the tuning and no parameter fixes it. The page is legible
+to a person *because* the eye averages consecutive frames; an attacker who
+averages captures performs the same operation and necessarily gets the same
+result. Anything that stopped them would stop the reader too.
+
+So the claim this technique supports is narrow, and it should be stated in
+exactly these words:
+
+> **One casual screenshot comes out unreadable. Somebody who knows what they
+> are doing gets the document back with four.**
+
+That is still worth having — it defeats the screenshot-and-forward that is how
+these documents actually leak — and it is not access control. The watermark
+remains the layer that covers every case.
+
 
 ---
 
 ## Did the experiment succeed?
 
-**Partly, and it is worth being exact about where.**
+**Yes, after being wrong once in a way worth recording.**
 
-Against **OCR of a photograph taken with HDR off**: largely, at 0.3 in
-simulation — 92–96% of the figures and all of the small print become
-unrecoverable, while the reader keeps essentially everything. Large headings
-still come through.
+Against **a single screenshot**: yes. A capture keeps 2-6% of the words and
+none of the figures. Everything on the page is destroyed to a
+person holding the image, not only to a machine reading it.
 
-Against **a person reading that photograph**: no. The stripes stop a machine, not
-an eye. Someone can photograph the screen and transcribe it by hand.
+**The mistake in the middle**: the overlay was measured at 67% word loss and
+called a success, and the capture was plainly readable. OCR recall measures
+machine segmentation; it does not measure reading. The fix was to stop drawing
+*over* the page and start removing *half of it* — an overlay leaves glyph
+shapes intact by construction, and glyph shapes are what a person reads.
+The general lesson: **if the claim is "a human cannot read this", no automated
+metric closes it. Look at the image.**
 
-Against **HDR, night mode and video**: no, and not by any setting. They average
-frames, which is what makes the page readable to a person in the first place.
+Against **somebody who takes four screenshots and averages them**: no. Four is
+all it takes, and a screen recording does it for free. §9.
 
-Against **screenshots**: no, except plausibly Snipping Tool.
+Against **HDR photos, night mode and video**: no, and not by any setting. They
+average frames, which is the operation that makes the page readable at all.
 
-**Why it cannot fully succeed**: the entire technique depends on the camera
-seeing one frame and the eye seeing the average. Any capture that also averages
-— which is what modern phones do by default — sees what the eye sees. That is a
-property of the physics, not a tuning problem.
+Against **a person transcribing by hand from a photograph**: partly. Prose can
+be reconstructed from context; **figures cannot**, and an accreditation
+document is mostly figures.
 
-**What does work, everywhere**: the watermark. Every copy, by every method,
-carries who took it and when. The honest message to the college is not
-"this cannot be copied" but "every copy identifies its source."
+**Where the ceiling comes from**: the technique depends on the capture seeing
+one frame and the eye seeing the average. Any capture that also averages sees
+what the eye sees. Physics, not tuning.
+
+**What the college should be told**, in one sentence: *a screenshot of these
+documents comes out unusable, anyone determined can still obtain a copy, and
+every copy names the account that made it.*

@@ -128,7 +128,18 @@ function cleanTitle(name?: string | null): string {
 
 const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", academicYear: "", fileUrl: "", mediaId: null, isActive: true }
 
-function DownloadsManagerInner() {
+/**
+ * @param lockedSection When set, this screen manages only the documents routed
+ *   to that page section, and every upload made here is filed under it.
+ *
+ *   The general Documents screen lists every document on the site and puts the
+ *   routing behind a dropdown of forty-odd options, which is the wrong shape
+ *   for somebody whose job today is "put this year's NBA papers up". Locking
+ *   the section turns the same screen into that job: nothing else in the way,
+ *   and no chance of filing a document under the wrong page by missing the
+ *   dropdown.
+ */
+function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { confirm, notifySaved } = useCmsConfirm()
@@ -139,7 +150,8 @@ function DownloadsManagerInner() {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState("")
-  const [pageFilter, setPageFilter] = useState("")
+  // Locked screens open already filtered, and the filter control is hidden.
+  const [pageFilter, setPageFilter] = useState(lockedSection ?? "")
   const [bulkOpen, setBulkOpen] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
 
@@ -174,7 +186,8 @@ function DownloadsManagerInner() {
   function startCreate() {
     setCreating(true)
     setEditing(null)
-    setForm(emptyForm)
+    // Pre-filed, so an upload here cannot land on the wrong page.
+    setForm(lockedSection ? { ...emptyForm, pageSection: lockedSection } : emptyForm)
   }
 
   function startEdit(item: Download) {
@@ -378,7 +391,12 @@ function DownloadsManagerInner() {
               published were added - so it says where the better route is
               rather than refusing. */}
           {form.category === "SYLLABUS" && <SyllabusTitleHint title={form.title} />}
-          <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={[...PAGE_SECTION_OPTIONS, ...committeeSections]} />
+          {/* Hidden when the screen is locked to one section: the answer is
+              already decided, and showing a dropdown that must not be changed
+              invites changing it. */}
+          {!lockedSection && (
+            <SelectField label="Show on page (optional)" value={form.pageSection} onChange={(v) => setForm({ ...form, pageSection: v })} options={[...PAGE_SECTION_OPTIONS, ...committeeSections]} />
+          )}
 
           {/* Which academic year this belongs to. Previous years fold shut on
               the public page, so a section does not grow without limit as each
@@ -466,20 +484,24 @@ function DownloadsManagerInner() {
         filters={
           <div className="flex items-center gap-2">
             {/* Filter by which page a document is routed to - so an admin can
-                jump straight to e.g. IQAC's documents and manage/delete them. */}
-            <select
-              value={pageFilter}
-              onChange={(e) => setPageFilter(e.target.value)}
-              aria-label="Filter by page"
-              className="rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-700"
-            >
-              <option value="">All pages</option>
-              {PAGE_SECTIONS.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
+                jump straight to e.g. IQAC's documents and manage/delete them.
+                A locked screen is already filtered, so this would only offer a
+                way to filter it wrong. */}
+            {!lockedSection && (
+              <select
+                value={pageFilter}
+                onChange={(e) => setPageFilter(e.target.value)}
+                aria-label="Filter by page"
+                className="rounded-lg border border-admin-border bg-white px-3 py-2 text-sm text-slate-700"
+              >
+                <option value="">All pages</option>
+                {PAGE_SECTIONS.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            )}
             <button
               type="button"
               onClick={() => {
@@ -507,10 +529,10 @@ function DownloadsManagerInner() {
   )
 }
 
-export default function DownloadsManager() {
+export default function DownloadsManager({ lockedSection }: { lockedSection?: string } = {}) {
   return (
     <PermissionGate permission="downloads.view">
-      <DownloadsManagerInner />
+      <DownloadsManagerInner lockedSection={lockedSection} />
     </PermissionGate>
   )
 }

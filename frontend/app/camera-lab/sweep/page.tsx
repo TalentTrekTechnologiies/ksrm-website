@@ -20,6 +20,8 @@ import { FIXTURE } from "@/lib/readability-fixture"
  * score them one at a time.
  *
  *   /camera-lab/sweep?pattern=checker&freq=3&speed=1&opacity=0.2&dither=0.1&freq2=5
+ *   &cycle=8    cycles eight different masks instead of reusing one
+ *   &content=1  masks the CONTENT instead of overlaying it
  */
 
 function num(q: URLSearchParams, key: string, fallback: number): number {
@@ -44,6 +46,12 @@ function SweepPanel() {
           ditherIntensity={num(q, "dither", 0)}
           secondaryFrequency={num(q, "freq2", 0)}
           phaseShiftSpeed={num(q, "phase", 1 / 120)}
+          maskCycle={num(q, "cycle", 0)}
+          contentMask={q.get("content") === "1"}
+          // The lab holds the block size fixed so the OCR numbers stay
+          // comparable between runs. The production viewer scales it with the
+          // rendered width instead - see ProtectedDocumentViewer.
+          
           watermark={q.get("watermark") === "1"}
           watermarkText="KSRM COLLEGE · CONFIDENTIAL — VIEW ONLY"
         >

@@ -2,6 +2,14 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import {
+  buildContentMaskPair,
+  buildMask,
+  buildMaskCycle,
+  maskIndex,
+  MaskPattern,
+} from "@/lib/protection-mask"
+
 /**
  * An experiment: can a page be left readable to a person while a photograph of
  * the screen comes out measurably worse?
@@ -36,14 +44,8 @@ import { useEffect, useRef, useState } from "react"
  */
 
 export type ProtectionLevel = "off" | "low" | "medium" | "high" | "max"
-export type PatternType =
-  | "none"
-  | "horizontal"
-  | "vertical"
-  | "diagonal"
-  | "checker"
-  | "random"
-  | "moire"
+/** Kept as the lab's name for the shared mask vocabulary. */
+export type PatternType = MaskPattern
 
 export interface CameraResistantViewerProps {
   /** The document. Any markup - the overlay sits on top of it. */
@@ -79,6 +81,29 @@ export interface CameraResistantViewerProps {
   secondaryFrequency?: number
   /** Pixels of pattern drift per frame. 0 holds the pattern still. */
   phaseShiftSpeed?: number
+  /**
+   * Cycle through this many different masks instead of reusing one.
+   *
+   * A fixed mask is one puzzle: an attacker holding two captures of the same
+   * page can difference them and subtract it. Cycling means consecutive
+   * captures carry unrelated masks, so there is nothing constant to subtract,
+   * and the residue that survives the eye's averaging falls as sqrt(n) rather
+   * than staying put.
+   *
+   * The pair is kept intact - each mask is shown at + then - polarity before
+   * the next is used - because breaking that is what leaves a visible veil.
+   * 0 or 1 keeps the single fixed mask.
+   */
+  maskCycle?: number
+  /**
+   * Mask the CONTENT rather than drawing an overlay over it.
+   *
+   * The overlay modulates the paper and leaves glyph shapes intact, which
+   * defeats OCR and not a person. This removes half of every glyph per frame
+   * instead, so a single capture is missing the content rather than merely
+   * textured. Costs half the contrast, for the reason in protection-mask.ts.
+   */
+  contentMask?: boolean
 }
 
 const PRESETS: Record<
@@ -90,89 +115,6 @@ const PRESETS: Record<
   medium: { patternType: "horizontal", patternFrequency: 6, modulationSpeed: 0, opacity: 0.08, watermark: true },
   high: { patternType: "horizontal", patternFrequency: 4, modulationSpeed: 1, opacity: 0.1, watermark: true },
   max: { patternType: "checker", patternFrequency: 3, modulationSpeed: 1, opacity: 0.14, watermark: true },
-}
-
-/**
- * Builds the mask once, as an offscreen canvas.
- *
- * Pre-rendered rather than drawn per frame: at 60fps a full-page pattern drawn
- * line by line is enough work to miss frames, and a dropped frame breaks the
- * +delta/-delta pairing that the whole effect depends on - the average stops
- * being neutral and the human sees it flicker.
- */
-function buildMask(
-  type: PatternType,
-  period: number,
-  width: number,
-  height: number,
-  ink: string,
-): HTMLCanvasElement | null {
-  if (type === "none" || period <= 0) return null
-  const c = document.createElement("canvas")
-  c.width = Math.max(1, Math.ceil(width))
-  c.height = Math.max(1, Math.ceil(height))
-  const ctx = c.getContext("2d")
-  if (!ctx) return null
-
-  // Every pixel is painted, not only the pattern's own cells: the pattern in
-  // `ink` and the gaps in the opposite tone. Painting only the cells left the
-  // gaps untouched, so averaging the two phases did not cancel - it left the
-  // pattern behind as a permanent veil, which the measurement showed as a
-  // still-visible checker in the averaged image.
-  ctx.fillStyle = ink === "#ffffff" ? "#000000" : "#ffffff"
-  ctx.fillRect(0, 0, c.width, c.height)
-
-  ctx.fillStyle = ink
-  const p = Math.max(1, Math.round(period))
-
-  if (type === "horizontal") {
-    for (let y = 0; y < c.height; y += p * 2) ctx.fillRect(0, y, c.width, p)
-  } else if (type === "vertical") {
-    for (let x = 0; x < c.width; x += p * 2) ctx.fillRect(x, 0, p, c.height)
-  } else if (type === "diagonal") {
-    ctx.save()
-    ctx.translate(c.width / 2, c.height / 2)
-    ctx.rotate(Math.PI / 4)
-    const span = Math.hypot(c.width, c.height)
-    for (let y = -span; y < span; y += p * 2) ctx.fillRect(-span, y, span * 2, p)
-    ctx.restore()
-  } else if (type === "checker") {
-    for (let y = 0; y < c.height; y += p) {
-      for (let x = 0; x < c.width; x += p) {
-        if (((x / p) | 0) % 2 === ((y / p) | 0) % 2) ctx.fillRect(x, y, p, p)
-      }
-    }
-  } else if (type === "random") {
-    // A fixed pseudo-random mask, not new noise each frame: the pairing needs
-    // the two frames to use the SAME mask at opposite polarity.
-    const img = ctx.createImageData(c.width, c.height)
-    let seed = 0x2545f491
-    for (let i = 0; i < img.data.length; i += 4) {
-      seed ^= seed << 13
-      seed ^= seed >>> 17
-      seed ^= seed << 5
-      // Full coverage here too: the cell takes `ink`, the gap its opposite.
-      const on = (seed & 0xff) > 127
-      const level = on === (ink === "#ffffff") ? 255 : 0
-      img.data[i] = img.data[i + 1] = img.data[i + 2] = level
-      img.data[i + 3] = 255
-    }
-    ctx.putImageData(img, 0, 0)
-  } else if (type === "moire") {
-    // Two gratings at a slight angle to each other. Their beat frequency is
-    // what a sensor aliases into coarse fringes; to the eye it is a fine
-    // texture.
-    for (const angle of [0, 0.06]) {
-      ctx.save()
-      ctx.translate(c.width / 2, c.height / 2)
-      ctx.rotate(angle)
-      const span = Math.hypot(c.width, c.height)
-      for (let y = -span; y < span; y += p * 2) ctx.fillRect(-span, y, span * 2, p)
-      ctx.restore()
-    }
-  }
-
-  return c
 }
 
 export default function CameraResistantViewer({
@@ -189,9 +131,13 @@ export default function CameraResistantViewer({
   ditherIntensity = 0,
   secondaryFrequency = 0,
   phaseShiftSpeed = 1 / 120,
+  maskCycle = 0,
+  contentMask = false,
 }: CameraResistantViewerProps) {
   const hostRef = useRef<HTMLDivElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const layerA = useRef<HTMLDivElement | null>(null)
+  const layerB = useRef<HTMLDivElement | null>(null)
   const [reduced, setReduced] = useState(false)
 
   const preset = PRESETS[protectionLevel]
@@ -224,8 +170,9 @@ export default function CameraResistantViewer({
     // the identical thing twice. Measured frame-to-frame difference was 0.114
     // out of 255 - the modulation was doing nothing whatsoever, and nothing
     // about the page looked wrong.
-    let maskLight: HTMLCanvasElement | null = null
-    let maskDark: HTMLCanvasElement | null = null
+    // One entry per mask in the cycle; each entry holds the SAME mask at both
+    // polarities, which is what makes the pair average to nothing.
+    let masks: Array<{ light: HTMLCanvasElement | null; dark: HTMLCanvasElement | null }> = []
     let secondLight: HTMLCanvasElement | null = null
     let secondDark: HTMLCanvasElement | null = null
     let width = 0
@@ -241,8 +188,7 @@ export default function CameraResistantViewer({
       canvas.style.width = `${width}px`
       canvas.style.height = `${height}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      maskLight = buildMask(cfg.patternType, cfg.patternFrequency, width, height, "#ffffff")
-      maskDark = buildMask(cfg.patternType, cfg.patternFrequency, width, height, "#000000")
+      masks = buildMaskCycle(cfg.patternType, cfg.patternFrequency, width, height, maskCycle)
       secondLight =
         secondaryFrequency > 0 ? buildMask("vertical", secondaryFrequency, width, height, "#ffffff") : null
       secondDark =
@@ -281,7 +227,8 @@ export default function CameraResistantViewer({
 
       // White through the mask on one phase, black through the same mask on
       // the next. Averaged they cancel; caught singly they are stripes.
-      const mask = phase === 0 ? maskLight : maskDark
+      const slot = masks[maskIndex(frame, cfg.modulationSpeed, masks.length)] ?? masks[0]
+      const mask = phase === 0 ? slot?.light ?? null : slot?.dark ?? null
       if (mask && cfg.opacity > 0) {
         ctx.save()
         ctx.globalAlpha = cfg.opacity
@@ -340,11 +287,90 @@ export default function CameraResistantViewer({
     ditherIntensity,
     secondaryFrequency,
     phaseShiftSpeed,
+    maskCycle,
   ])
 
+  /**
+   * Two copies of the content, each carrying one half of the mask, with only
+   * one visible per frame.
+   *
+   * Two static layers toggled rather than one layer whose mask-image is
+   * swapped: changing a mask forces the browser to re-rasterise that layer,
+   * and doing it 60 times a second drops frames - which breaks the pairing the
+   * whole effect depends on. Toggling visibility on two already-rasterised
+   * layers is a compositor operation.
+   */
+  useEffect(() => {
+    const host = hostRef.current
+    const a = layerA.current
+    const b = layerB.current
+    if (!contentMask || !host || !a || !b) return
+    if (reduced) {
+      a.style.visibility = "visible"
+      a.style.webkitMaskImage = ""
+      a.style.maskImage = ""
+      b.style.visibility = "hidden"
+      return
+    }
+
+    let raf = 0
+    let frame = 0
+
+    const apply = () => {
+      const r = host.getBoundingClientRect()
+      const pair = buildContentMaskPair(cfg.patternFrequency || 3, r.width, r.height)
+      if (!pair) return
+      for (const [el, url] of [
+        [a, pair.a],
+        [b, pair.b],
+      ] as const) {
+        el.style.webkitMaskImage = `url(${url})`
+        el.style.maskImage = `url(${url})`
+        el.style.webkitMaskRepeat = "no-repeat"
+        el.style.maskRepeat = "no-repeat"
+      }
+    }
+    apply()
+    const ro = new ResizeObserver(apply)
+    ro.observe(host)
+
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      frame += 1
+      const showA = Math.floor(frame / Math.max(1, cfg.modulationSpeed || 1)) % 2 === 0
+      a.style.visibility = showA ? "visible" : "hidden"
+      b.style.visibility = showA ? "hidden" : "visible"
+    }
+    raf = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(raf)
+      ro.disconnect()
+    }
+  }, [contentMask, cfg.patternFrequency, cfg.modulationSpeed, reduced])
+
   return (
-    <div ref={hostRef} style={{ position: "relative", isolation: "isolate" }}>
-      {children}
+    <div
+      ref={hostRef}
+      style={{
+        position: "relative",
+        isolation: "isolate",
+        // The holes punched in the content show this through, so it has to be
+        // the colour of the paper.
+        background: contentMask ? "#ffffff" : undefined,
+      }}
+    >
+      {contentMask ? (
+        <>
+          <div ref={layerA}>{children}</div>
+          {/* The second copy is decoration - the first one carries the page
+              for a screen reader, and this must not be read out twice. */}
+          <div ref={layerB} aria-hidden="true" style={{ position: "absolute", inset: 0 }}>
+            {children}
+          </div>
+        </>
+      ) : (
+        children
+      )}
       <canvas
         ref={canvasRef}
         aria-hidden="true"

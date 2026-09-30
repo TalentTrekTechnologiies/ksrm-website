@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DownloadsService } from './downloads.service';
+import { ProtectedDocsService } from '../protected-docs/protected-docs.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { MediaLinkService } from '../media/media-link.service';
@@ -72,6 +73,7 @@ describe('DownloadsService', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AuditLogService, useValue: auditLog },
         { provide: MediaLinkService, useValue: mediaLink },
+        { provide: ProtectedDocsService, useValue: { prewarm: jest.fn() } },
       ],
     }).compile();
 
@@ -187,6 +189,24 @@ describe('DownloadsService', () => {
         'fileUrl',
         9,
       );
+    });
+
+    it('on create, starts the protected-page render so the first reader does not wait', async () => {
+      prisma.download.count.mockResolvedValue(0);
+      prisma.download.create.mockResolvedValue({ id: 5 });
+      const { prewarm } = (
+        service as unknown as { protectedDocs: { prewarm: jest.Mock } }
+      ).protectedDocs;
+
+      await service.create(
+        { title: 'SAR', category: 'OTHER', fileUrl: '/x.pdf', mediaId: 9 } as any,
+        admin,
+        undefined,
+      );
+
+      // Every upload, not only NBA ones: the service decides what it serves
+      // and ignores the rest, so the section rule lives in one place.
+      expect(prewarm).toHaveBeenCalledWith(5);
     });
 
     it('on update with mediaId: null, unlinks without touching fileUrl', async () => {

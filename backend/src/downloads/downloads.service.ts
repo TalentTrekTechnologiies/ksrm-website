@@ -15,6 +15,7 @@ import { RequestAdmin } from '../homepage/types';
 import { assertMayReorderAll } from '../auth/reorder-ownership.util';
 import { adminScopeWhere } from '../auth/admin-scope.util';
 import { MediaLinkService } from '../media/media-link.service';
+import { ProtectedDocsService } from '../protected-docs/protected-docs.service';
 
 const MEDIA_MODULE = 'downloads';
 const MEDIA_FIELD = 'fileUrl';
@@ -25,6 +26,7 @@ export class DownloadsService {
     private prisma: PrismaService,
     private auditLog: AuditLogService,
     private mediaLink: MediaLinkService,
+    private protectedDocs: ProtectedDocsService,
   ) {}
 
   async findAllPublic(
@@ -232,6 +234,9 @@ export class DownloadsService {
       requestId,
     });
 
+    // So the first reader of an NBA document does not wait for it to render.
+    this.protectedDocs.prewarm(created.id);
+
     return created;
   }
 
@@ -308,6 +313,8 @@ export class DownloadsService {
       created.push(row);
     }
 
+    for (const row of created) this.protectedDocs.prewarm(row.id);
+
     return created;
   }
 
@@ -365,6 +372,9 @@ export class DownloadsService {
       },
       requestId,
     });
+
+    // A replaced file renders under a new cache key; start it now.
+    this.protectedDocs.prewarm(updated.id);
 
     return updated;
   }

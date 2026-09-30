@@ -3,9 +3,10 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
 import { DownloadsController } from './downloads.controller';
 import { DownloadsService } from './downloads.service';
 import { MediaModule } from '../media/media.module';
+import { ProtectedDocsModule } from '../protected-docs/protected-docs.module';
 
 @Module({
-  imports: [AuditLogModule, MediaModule],
+  imports: [AuditLogModule, MediaModule, ProtectedDocsModule],
   controllers: [DownloadsController],
   providers: [DownloadsService],
 })

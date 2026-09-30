@@ -29,3 +29,24 @@ export const getProtectedDocMeta = (id: number) =>
  */
 export const protectedPageUrl = (id: number, page: number, token: string) =>
   `${API_BASE}/protected-docs/${id}/page/${page}?t=${encodeURIComponent(token)}`;
+
+/**
+ * Where the figures are on a page, as fractions of its width and height.
+ *
+ * Fractions, not pixels: the viewer scales the page image to the window, and a
+ * box in source pixels would sit off its number at every size but one.
+ *
+ * Positions only - the values stay in the page image. A block is moved aside
+ * to read a figure, so nothing ever sends the numbers as text.
+ */
+export interface FigureBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export const getProtectedDocFigures = (id: number, page: number, token: string) =>
+  apiGet<FigureBox[]>(
+    `/protected-docs/${id}/figures/${page}?t=${encodeURIComponent(token)}`,
+  );

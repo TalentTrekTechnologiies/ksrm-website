@@ -76,6 +76,15 @@ const NAV_ITEMS: NavItem[] = [
   // Labelled "Documents" for admins - the model/route stay `downloads`, this is
   // wording only (a visitor still clicks a "Download" button on the public site).
   { widgetKey: "downloads", label: "Documents", href: "/admin/downloads" },
+  // Everything the public /nba page shows - accredited branches and the
+  // protected documents - on one screen.
+  //
+  // Its own entry because the page's contents came from two unrelated corners
+  // of the admin, and because whether a document is protected at all depends
+  // on being filed under a section the backend allows. On the general
+  // Documents screen that is one option among forty in a dropdown; here it
+  // cannot be got wrong.
+  { widgetKey: "downloads", label: "NBA", href: "/admin/nba" },
   { widgetKey: "news", label: "News", href: "/admin/news" },
   { widgetKey: "research", label: "Research", href: "/admin/research" },
   { widgetKey: "placements", label: "Placements", href: "/admin/placements" },

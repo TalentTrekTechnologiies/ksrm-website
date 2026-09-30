@@ -579,7 +579,7 @@ export default function Navbar() {
           >
             {item.children?.map((child) => (
               <Link
-                key={child.href}
+                key={`${child.label}|${child.href}`}
                 href={child.href}
                 className="nav-drop-item"
                 onClick={() => setHoveredDropdown(null)}
@@ -701,7 +701,7 @@ export default function Navbar() {
                     <div style={{ background: "rgba(255,255,255,0.05)" }}>
                       {item.children?.map((child) => (
                         <Link
-                          key={child.href}
+                          key={`${child.label}|${child.href}`}
                           href={child.href}
                           target={child.href.startsWith("http") ? "_blank" : undefined}
                           rel={child.href.startsWith("http") ? "noopener noreferrer" : undefined}

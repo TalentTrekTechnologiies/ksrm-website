@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Loader2, Plus, Trash2, Table as TableIcon } from "lucide-react"
+import { Eye, EyeOff, Loader2, Plus, Trash2, Table as TableIcon } from "lucide-react"
 import { TextField, PrimaryButton, SecondaryButton, FormActions } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
@@ -25,6 +25,9 @@ import {
  * so the editor doesn't clutter the ~40 pages that will never need one.
  */
 const TABLE_CAPABLE_PAGES = new Set([
+  // Space under the NBA documents for whatever the committee asks for next:
+  // members, a committee, a contact address.
+  "nba",
   "academics.fee-structure",
   "academics.courses-intake",
   "academics.regulations",
@@ -101,13 +104,30 @@ export default function PageTableEditor({ pageSection }: { pageSection: string }
         title: d.title,
         columns: d.columns,
         rows: d.rows,
-        footnote: d.footnote || undefined,
+        // Sent even when empty, so clearing the note actually removes it -
+        // `undefined` would leave the old one in place.
+        footnote: d.footnote,
         version: t.version,
       })
       await load()
       notifySaved("Table saved.")
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save the table")
+    } finally {
+      setSavingId(null)
+    }
+  }
+
+  /** Off the public page without deleting it, and back again. */
+  async function toggleVisible(t: PageTable) {
+    setSavingId(t.id)
+    setError(null)
+    try {
+      await updatePageTable(t.id, { isActive: !t.isActive, version: t.version })
+      await load()
+      notifySaved(t.isActive ? "Table hidden from the public page." : "Table shown on the public page.")
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to change visibility")
     } finally {
       setSavingId(null)
     }
@@ -216,6 +236,19 @@ export default function PageTableEditor({ pageSection }: { pageSection: string }
                     className="flex-1 rounded-lg border border-admin-border px-3 py-2 text-sm font-semibold text-slate-800"
                     aria-label="Table title"
                   />
+                  {!t.isActive && (
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">Hidden</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => toggleVisible(t)}
+                    disabled={savingId === t.id}
+                    aria-label={t.isActive ? "Hide from the public page" : "Show on the public page"}
+                    title={t.isActive ? "Hide from the public page" : "Show on the public page"}
+                    className="rounded-lg p-2 text-slate-400 hover:bg-admin-bg hover:text-slate-700 disabled:opacity-50"
+                  >
+                    {t.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                  </button>
                   <button type="button" onClick={() => removeTable(t)} aria-label="Delete table" className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600">
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -256,6 +289,15 @@ export default function PageTableEditor({ pageSection }: { pageSection: string }
                     </tbody>
                   </table>
                 </div>
+
+                <textarea
+                  value={d.footnote}
+                  onChange={(e) => setDrafts((p) => ({ ...p, [t.id]: { ...d, footnote: e.target.value } }))}
+                  rows={2}
+                  placeholder="Note shown under the table (optional) - e.g. an address, a date, a remark"
+                  aria-label="Note under the table"
+                  className="mt-3 w-full rounded-lg border border-admin-border px-3 py-2 text-sm text-slate-700"
+                />
 
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <button type="button" onClick={() => addRow(t.id)} className="flex items-center gap-1 text-xs font-semibold text-admin-primary hover:underline">

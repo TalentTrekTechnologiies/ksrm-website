@@ -96,3 +96,6 @@ scratchpad/demo-raw.json
 # The built specimen - regenerate with `npm run demo`, never committed.
 frontend/demo-out/
 ksrmce-specimen.zip
+
+# Tesseract language data, downloaded on demand by the figure-detection OCR pass
+*.traineddata

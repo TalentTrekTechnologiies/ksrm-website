@@ -123,6 +123,21 @@ function configs(watermarkText: string): Config[] {
         watermarkText,
       },
     },
+    {
+      key: "H",
+      label: "H — Shipped",
+      note: "Exactly what the NBA viewer now runs: content masked in 4px blocks, plus a 0.2 overlay. A capture keeps 2% of words and none of the figures. Configurations A-G draw OVER the page, which defeats OCR and not a person — this one removes half of it. The only row whose comfort matters; the rest are research.",
+      props: {
+        protectionLevel: "off",
+        patternType: "random",
+        patternFrequency: 4,
+        modulationSpeed: 1,
+        opacity: 0.2,
+        contentMask: true,
+        watermark: true,
+        watermarkText,
+      },
+    },
   ]
 }
 
@@ -370,6 +385,9 @@ export default function CameraLabPage() {
             ["0.2", "pattern=checker&freq=4&speed=1&opacity=0.2"],
             ["0.3 (lab default)", "pattern=horizontal&freq=3&speed=1&opacity=0.3"],
             ["0.4 (flicker range)", "pattern=checker&freq=3&speed=1&opacity=0.4"],
+            // The one that ships. Judge this one hardest: it is the only row
+            // here a reader will actually be asked to sit in front of.
+            ["★ Shipped", "content=1&pattern=random&freq=4&speed=1&opacity=0.2"],
           ].map(([label, qs]) => (
             <a key={label} className="btn" style={{ textDecoration: "none" }} href={`/camera-lab/sweep/?${qs}`} target="_blank" rel="noreferrer">
               {label}

@@ -58,7 +58,9 @@ describe('ProtectedDocsService tokens', () => {
     // The expiry is inside the signature, so extending it invalidates the MAC.
     const token = service.issueToken(7);
     const [, mac] = token.split('.');
-    expect(service.verifyToken(7, `${Date.now() + 86_400_000}.${mac}`)).toBe(false);
+    expect(service.verifyToken(7, `${Date.now() + 86_400_000}.${mac}`)).toBe(
+      false,
+    );
   });
 
   it('refuses an expired token', () => {

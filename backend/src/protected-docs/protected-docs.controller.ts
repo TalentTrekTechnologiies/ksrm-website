@@ -30,6 +30,31 @@ export class ProtectedDocsController {
     return this.docs.meta(id);
   }
 
+  /**
+   * Where the figures are on a page, so the viewer can block them out.
+   *
+   * Behind the same expiring token as the page image: the boxes say where the
+   * numbers are, and handing that to anyone who asks would help an attacker
+   * aim rather than hinder them.
+   *
+   * Positions only, never values. The figures stay in the page pixels.
+   */
+  @Get(':id/figures/:page')
+  @Header('Cache-Control', 'private, max-age=60')
+  @Header('X-Robots-Tag', 'noindex, noarchive')
+  figures(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('page', ParseIntPipe) page: number,
+    @Query('t') token: string | undefined,
+  ) {
+    if (!this.docs.verifyToken(id, token)) {
+      throw new ForbiddenException(
+        'This document link has expired. Reopen the document.',
+      );
+    }
+    return this.docs.figures(id, page);
+  }
+
   @Get(':id/page/:page')
   @Header('Content-Type', 'image/jpeg')
   // Never cached anywhere but the asking browser, and only for a moment: the
@@ -48,7 +73,9 @@ export class ProtectedDocsController {
     // URLs would be permanent and walkable by id - a worse position than the
     // PDF link this replaced.
     if (!this.docs.verifyToken(id, token)) {
-      throw new ForbiddenException('This document link has expired. Reopen the document.');
+      throw new ForbiddenException(
+        'This document link has expired. Reopen the document.',
+      );
     }
 
     const stamp = new Date().toLocaleString('en-IN', {
