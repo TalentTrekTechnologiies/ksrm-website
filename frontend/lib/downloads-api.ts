@@ -39,7 +39,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "nba", label: "NBA" },
   // A dash, not a dot: everything under "nba." is served only through the
   // protected viewer. Certificates are published openly, so they sit outside it.
-  { value: "nba-certificates", label: "NBA → Certifications" },
+  { value: "nba-certificates", label: "NBA → Accredited Certificates" },
   { value: "alumni", label: "Alumni" },
   { value: "syllabus", label: "Syllabus" },
   // Examinations is split into its page's sub-sections so an upload lands in

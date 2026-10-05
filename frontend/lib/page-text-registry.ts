@@ -99,7 +99,7 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
       {
         label: "Sections",
         slots: [
-          { id: "certificates", label: "Certifications heading", kind: "line", default: "NBA Certifications" },
+          { id: "certificates", label: "Accredited Certificates heading", kind: "line", default: "Accredited Certificates" },
           { id: "accredited-programmes", label: "Programmes heading", kind: "line", default: "Accredited Programmes" },
           { id: "documents", label: "Documents heading", kind: "line", default: "NBA Documents" },
         ],

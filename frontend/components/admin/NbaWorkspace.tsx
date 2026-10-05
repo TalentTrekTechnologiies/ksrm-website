@@ -24,7 +24,7 @@ import PageTableEditor from "@/components/admin/PageTableEditor"
 
 const TABS: { key: string; label: string; permission: string }[] = [
   { key: "branches", label: "Accredited Branches", permission: "department_programmes.view" },
-  { key: "certificates", label: "NBA Certifications", permission: "downloads.view" },
+  { key: "certificates", label: "Accredited Certificates", permission: "downloads.view" },
   { key: "documents", label: "Documents", permission: "downloads.view" },
   { key: "sections", label: "More Sections", permission: "downloads.view" },
 ]
@@ -37,7 +37,7 @@ export default function NbaWorkspace() {
       <div>
         <h1 className="text-xl font-bold text-slate-800">NBA</h1>
         <p className="text-sm text-slate-500">
-          Accredited branches, certifications and documents for the public{" "}
+          Accredited branches, certificates and documents for the public{" "}
           <span className="font-mono text-xs">/nba</span> page.
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function NbaWorkspace() {
         {tab === "certificates" && (
           <div className="space-y-3">
             <p className="rounded-lg border border-admin-border bg-admin-bg px-4 py-3 text-sm text-slate-600">
-              PDFs uploaded here appear on the public NBA page under <strong>NBA Certifications</strong>,
+              PDFs uploaded here appear on the public NBA page under <strong>Accredited Certificates</strong>,
               above the accredited programmes. Anyone can open and download them -{" "}
               <strong>no protection</strong>. For documents that must stay view-only, use the
               Documents tab.

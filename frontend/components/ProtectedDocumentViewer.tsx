@@ -1024,9 +1024,6 @@ export default function ProtectedDocumentViewer({
         {(hidden || (responding && protectionResponse === "hide")) && (
           <div className="pdv-hidden">
             <div>
-              <strong style={{ display: "block", fontSize: 17, marginBottom: 6 }}>
-                Protected content
-              </strong>
               {hidden
                 ? "Hidden while this window is not in focus. Return to this tab to keep reading."
                 : "Hidden briefly after a possible screen capture."}

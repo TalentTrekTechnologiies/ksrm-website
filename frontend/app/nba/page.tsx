@@ -40,9 +40,9 @@ export default function NbaPage() {
   );
   const [reading, setReading] = useState<Download | null>(null);
 
-  // NBA Certifications: open PDFs, so they link straight to the file. Filed
+  // Accredited Certificates: open PDFs, so they link straight to the file. Filed
   // under "nba-certificates" - a dash, so they sit outside the protected "nba"
-  // section. Uploaded in Admin -> NBA -> NBA Certifications.
+  // section. Uploaded in Admin -> NBA -> Accredited Certificates.
   const certs = useLiveData<Download[]>(
     () => getDownloadsPublic(undefined, undefined, "nba-certificates").catch(() => [] as Download[]),
     [],
@@ -151,7 +151,7 @@ export default function NbaPage() {
           </div>
         </section>
 
-        {/* NBA Certifications - the same cards as the documents below, but a
+        {/* Accredited Certificates - the same cards as the documents below, but a
             plain link to the PDF. Hidden until one is uploaded. */}
         {(certs ?? []).length > 0 && (
           <section style={{ padding: "64px 0 0", background: "#ffffff" }}>
@@ -207,10 +207,6 @@ export default function NbaPage() {
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", textAlign: "center" }}>
               <CmsText section="nba" slot="documents" />
             </h2>
-            <p style={{ color: "#777", fontSize: 14, textAlign: "center", margin: "0 0 24px" }}>
-              Open to read. These documents are displayed page by page and cannot be
-              downloaded.
-            </p>
 
             {(docs ?? []).length === 0 ? (
               <p className="nba-empty">
