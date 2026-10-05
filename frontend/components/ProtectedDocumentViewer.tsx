@@ -100,6 +100,9 @@ export interface ProtectedDocumentViewerProps {
   captureWatermarkOpacity?: number
   /** Every event, with the measured time to repaint. The lab records these. */
   onCaptureEvent?: (event: CaptureEvent) => void
+  /** The line under the page explaining the protection. The labs keep it;
+   *  the NBA page drops it at the college's request. */
+  showNote?: boolean
 }
 
 interface Tuning {
@@ -286,6 +289,7 @@ export default function ProtectedDocumentViewer({
   captureAmplitude = 0.55,
   captureWatermarkOpacity = 0.45,
   onCaptureEvent,
+  showNote = true,
 }: ProtectedDocumentViewerProps) {
   const [meta, setMeta] = useState<ProtectedDocMeta | null>(null)
   const [page, setPage] = useState(1)
@@ -1031,7 +1035,7 @@ export default function ProtectedDocumentViewer({
         )}
       </div>
 
-      <p className="pdv-note">
+      {showNote && <p className="pdv-note">
         Displayed page by page and cannot be downloaded.
         {captureExcluded && (
           <>
@@ -1071,7 +1075,7 @@ export default function ProtectedDocumentViewer({
             now be readable.
           </>
         )}
-      </p>
+      </p>}
     </div>
   )
 }

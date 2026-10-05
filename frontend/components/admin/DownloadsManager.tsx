@@ -364,6 +364,12 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
 
       {bulkOpen && (
         <BulkDocumentUpload
+          // A locked screen files bulk uploads where its single uploads go.
+          // Without this they arrived with no section at all - on the NBA
+          // Documents tab that meant outside the protected section, published
+          // with an open download link instead of in the viewer.
+          defaultPageSection={lockedSection ?? ""}
+          pageSectionOptions={lockedSection ? PAGE_SECTIONS.filter((s) => s.value === lockedSection) : undefined}
           onCancel={() => setBulkOpen(false)}
           onDone={(count) => {
             setBulkOpen(false)

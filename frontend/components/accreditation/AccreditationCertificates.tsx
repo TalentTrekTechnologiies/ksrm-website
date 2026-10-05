@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api"
 import { resolveFileUrl } from "@/lib/api-base";
 import { useLiveData } from "@/lib/use-live-data"
@@ -16,6 +17,18 @@ import { useLiveData } from "@/lib/use-live-data"
  * this file, so next year's EOA letter appears here by being uploaded, with no
  * code change. The logo is matched on the document's title; anything without a
  * recognised logo still appears, with its initials, rather than being dropped.
+ *
+ * Usage:
+ *   <AccreditationCertificates />                       Accreditation page: the
+ *                                                       Mandatory Disclosure
+ *                                                       certificate groups
+ *   <AccreditationCertificates section="nba-certificates" groups={null}
+ *     centered heading={...} />                         NBA page: every PDF in
+ *                                                       the section
+ *
+ * Renders nothing until a matching document exists, so a page can carry it
+ * before anything has been uploaded. Opens the file directly - never use it
+ * for a protected section (see backend protected-sections.ts).
  */
 
 // Matched against the document title, first hit wins.
@@ -51,20 +64,27 @@ export default function AccreditationCertificates({
    * Only these groups are certificates. They are the college's own tab names
    * from its Mandatory Disclosure page - the MoUs and general policies filed
    * alongside them are documents, not certificates, and stay off this block.
+   * `null` shows every document in the section, for a section that holds
+   * nothing but certificates.
    */
   groups = ["Accreditation Status", "AICTE Approval Letters", "UGC Autonomous"],
   heading = "Certificates & Letters",
+  lead = "Click any certificate to open the document.",
+  /** Centre the heading, to match pages whose other headings are centred. */
+  centered = false,
 }: {
   section?: string
-  groups?: string[]
-  heading?: string
+  groups?: string[] | null
+  heading?: ReactNode
+  lead?: ReactNode
+  centered?: boolean
 }) {
   const docs = useLiveData<Download[]>(
     () => getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
     [section],
   )
 
-  const items = (docs ?? []).filter((d) => groups.includes(d.groupLabel ?? ""))
+  const items = (docs ?? []).filter((d) => groups === null || groups.includes(d.groupLabel ?? ""))
   if (items.length === 0) return null
 
   return (
@@ -74,6 +94,7 @@ export default function AccreditationCertificates({
         @media (max-width: 768px) { .ac-container { padding: 0 20px; } }
         .ac-h2 { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 700; color: #1a1a2e; margin: 0 0 6px; }
         .ac-lead { color: #666; font-size: 15.5px; margin: 0 0 28px; }
+        .ac-centered .ac-h2, .ac-centered .ac-lead { text-align: center; }
         /* Flex-centred rather than an auto-fill grid: on a 1760px container
            auto-fill lays out roughly eight 210px tracks, so three certificates
            filled the first three and left the rest of the row visibly empty on
@@ -89,9 +110,9 @@ export default function AccreditationCertificates({
         .ac-open { margin-top: 10px; color: #2B3490; font-size: 12.5px; font-weight: 700; }
       `}</style>
 
-      <div className="ac-container">
+      <div className={`ac-container${centered ? " ac-centered" : ""}`}>
         <h2 className="ac-h2">{heading}</h2>
-        <p className="ac-lead">Click any certificate to open the document.</p>
+        {lead && <p className="ac-lead">{lead}</p>}
         <div className="ac-grid">
           {items.map((d) => {
             const logo = logoFor(d.title)

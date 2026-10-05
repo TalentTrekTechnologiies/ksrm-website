@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CmsText from "@/components/CmsText";
+import AccreditationCertificates from "@/components/accreditation/AccreditationCertificates";
 import ProtectedDocumentViewer from "@/components/ProtectedDocumentViewer";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import {
@@ -139,6 +140,18 @@ export default function NbaPage() {
           </div>
         </section>
 
+        {/* NBA Certifications. Open, unlike the documents below: these PDFs are
+            published to be seen and downloaded. Filed under "nba-certificates" -
+            a dash, so they sit outside the protected "nba" section. Renders
+            nothing until one is uploaded in Admin -> NBA -> NBA Certifications. */}
+        <AccreditationCertificates
+          section="nba-certificates"
+          groups={null}
+          centered
+          heading={<CmsText section="nba" slot="certificates" />}
+          lead="Click a certification to open the PDF."
+        />
+
         <section style={{ padding: "64px 0", background: "#ffffff" }}>
           <div className="responsive-container">
             <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: 0, textAlign: "center" }}>
@@ -273,6 +286,7 @@ export default function NbaPage() {
              * back the other way.
              */
             redactFigures={false}
+            showNote={false}
             // No watermark, at the college's request - neither the moving one
             // nor the heavier one shown while a capture is in progress.
             watermarkOpacity={0}

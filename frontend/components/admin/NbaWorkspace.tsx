@@ -24,6 +24,7 @@ import PageTableEditor from "@/components/admin/PageTableEditor"
 
 const TABS: { key: string; label: string; permission: string }[] = [
   { key: "branches", label: "Accredited Branches", permission: "department_programmes.view" },
+  { key: "certificates", label: "NBA Certifications", permission: "downloads.view" },
   { key: "documents", label: "Documents", permission: "downloads.view" },
   { key: "sections", label: "More Sections", permission: "downloads.view" },
 ]
@@ -36,7 +37,7 @@ export default function NbaWorkspace() {
       <div>
         <h1 className="text-xl font-bold text-slate-800">NBA</h1>
         <p className="text-sm text-slate-500">
-          Accredited branches and documents for the public{" "}
+          Accredited branches, certifications and documents for the public{" "}
           <span className="font-mono text-xs">/nba</span> page.
         </p>
       </div>
@@ -62,6 +63,20 @@ export default function NbaWorkspace() {
         permission={TABS.find((t) => t.key === tab)?.permission ?? "downloads.view"}
       >
         {tab === "branches" && <NbaBranchesTab />}
+        {/* Certificates are the opposite of the documents tab: published
+            openly, to be seen and downloaded. Their own section, outside the
+            protected `nba` one, so the viewer never touches them. */}
+        {tab === "certificates" && (
+          <div className="space-y-3">
+            <p className="rounded-lg border border-admin-border bg-admin-bg px-4 py-3 text-sm text-slate-600">
+              PDFs uploaded here appear on the public NBA page under <strong>NBA Certifications</strong>,
+              above the accredited programmes. Anyone can open and download them -{" "}
+              <strong>no protection</strong>. For documents that must stay view-only, use the
+              Documents tab.
+            </p>
+            <DownloadsManager lockedSection="nba-certificates" />
+          </div>
+        )}
         {/* Locked to the `nba` section: uploads here are pre-filed, and the
             page-section dropdown is hidden. Whether a document is protected
             depends on that section, so it is not left to be chosen. */}

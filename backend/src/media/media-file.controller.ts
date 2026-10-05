@@ -13,6 +13,7 @@ import { SkipThrottle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
 import { LocalDiskStorageAdapter } from './storage/local-disk-storage.adapter';
+import { protectedSectionWhere } from '../protected-docs/protected-sections';
 
 /**
  * The ONE public route this module exposes - deliberately isolated from
@@ -54,6 +55,18 @@ export class MediaFileController {
       where: { id: mediaId, deletedAt: null, isActive: true, isPrivate: false },
     });
     if (!media) throw new NotFoundException();
+
+    // A file behind the protected viewer is never served whole. The viewer
+    // sends one page image at a time and the PDF stays on the server - but
+    // only if this route agrees, because media ids are sequential and the
+    // original was reachable here by anyone who guessed one. Any row counts,
+    // inactive or deleted included: unpublishing a document must not
+    // publish its file.
+    const protectedUse = await this.prisma.download.findFirst({
+      where: { mediaId, ...protectedSectionWhere() },
+      select: { id: true },
+    });
+    if (protectedUse) throw new NotFoundException();
 
     const variantRow = await this.prisma.mediaVariant.findFirst({
       where: {

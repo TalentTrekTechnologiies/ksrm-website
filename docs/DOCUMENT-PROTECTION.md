@@ -34,6 +34,13 @@ Next.js page
 | **Walking the id space** | Only pages whose section is on a short allow-list are served at all. Everything else 404s, including ids that exist. |
 | **Copying the text** | There is no text. It is pixels. |
 | **Printing** | Print styles blank the viewer. |
+| **The original file, by its media URL** | `/media/file/:id/...` 404s for any media used by a download in a protected section, deleted or inactive rows included. Added 2026-10-05 — before it, the original PDF was publicly downloadable at a sequential id. |
+| **The original file, from the document list** | Public `GET /downloads` lists a protected document only when its own section is asked for, and always with `fileUrl: ""` and `mediaId: null`. Added 2026-10-05 — before it, the list beside the viewer carried a direct link to every PDF. |
+
+**Which sections are protected** is decided in one place,
+`backend/src/protected-docs/protected-sections.ts`: a section whose part before
+the first dot is `nba`. `nba-certificates` (the NBA Certifications block) uses a
+dash on purpose — those PDFs are published openly.
 
 Verified in a browser: 14 of 14 checks — image not PDF, token present, content-type
 `image/jpeg`, right-click / copy / drag / selection blocked, Ctrl+P, Ctrl+S,

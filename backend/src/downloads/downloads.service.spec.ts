@@ -27,6 +27,7 @@ describe('DownloadsService', () => {
     };
     syllabusRegulation: { findFirst: jest.Mock };
     departmentProgramme: { findMany: jest.Mock };
+    media: { findMany: jest.Mock };
     $transaction: jest.Mock;
   };
   let auditLog: { log: jest.Mock };
@@ -50,6 +51,7 @@ describe('DownloadsService', () => {
       },
       syllabusRegulation: { findFirst: jest.fn().mockResolvedValue(null) },
       departmentProgramme: { findMany: jest.fn().mockResolvedValue([]) },
+      media: { findMany: jest.fn().mockResolvedValue([]) },
       $transaction: jest.fn(),
     };
     auditLog = { log: jest.fn().mockResolvedValue(undefined) };
@@ -78,6 +80,39 @@ describe('DownloadsService', () => {
     }).compile();
 
     service = module.get(DownloadsService);
+  });
+
+  describe('findAllPublic - protected documents', () => {
+    const rows = [
+      { id: 1, pageSection: 'nba', fileUrl: '/api/media/file/7/ORIGINAL/SOURCE', mediaId: 7 },
+      { id: 2, pageSection: 'nba.minutes', fileUrl: '/api/media/file/8/ORIGINAL/SOURCE', mediaId: 8 },
+      { id: 3, pageSection: 'nba-certificates', fileUrl: '/api/media/file/9/ORIGINAL/SOURCE', mediaId: 9 },
+      { id: 4, pageSection: null, fileUrl: '/api/media/file/10/ORIGINAL/SOURCE', mediaId: 10 },
+    ];
+
+    it('lists a protected document on its own page without its file link', async () => {
+      prisma.download.findMany.mockResolvedValue([rows[0]]);
+
+      const result = await service.findAllPublic(undefined, undefined, 'nba');
+
+      expect(result).toEqual([{ ...rows[0], fileUrl: '', mediaId: null }]);
+    });
+
+    it('leaves protected documents out of every other public list', async () => {
+      prisma.download.findMany.mockResolvedValue(rows);
+
+      const result = await service.findAllPublic();
+
+      expect(result.map((r) => r.id)).toEqual([3, 4]);
+    });
+
+    it('publishes NBA certificates openly, file link included', async () => {
+      prisma.download.findMany.mockResolvedValue([rows[2]]);
+
+      const result = await service.findAllPublic(undefined, undefined, 'nba-certificates');
+
+      expect(result).toEqual([rows[2]]);
+    });
   });
 
   describe('update', () => {

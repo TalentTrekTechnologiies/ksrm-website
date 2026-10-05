@@ -16,6 +16,7 @@ import { assertMayReorderAll } from '../auth/reorder-ownership.util';
 import { adminScopeWhere } from '../auth/admin-scope.util';
 import { MediaLinkService } from '../media/media-link.service';
 import { ProtectedDocsService } from '../protected-docs/protected-docs.service';
+import { isProtectedSection } from '../protected-docs/protected-sections';
 
 const MEDIA_MODULE = 'downloads';
 const MEDIA_FIELD = 'fileUrl';
@@ -51,7 +52,7 @@ export class DownloadsService {
       select: { id: true },
     });
 
-    return this.prisma.download.findMany({
+    const rows = await this.prisma.download.findMany({
       where: {
         isActive: true,
         deletedAt: null,
@@ -67,6 +68,23 @@ export class DownloadsService {
       // uploads lead and older ones sink rather than the reverse.
       orderBy: [{ sortOrder: 'asc' }, { publishedAt: 'desc' }, { id: 'desc' }],
     });
+
+    // Documents behind the protected viewer are listed only on their own page,
+    // and never with a link to the file. This list is public and unauthenticated,
+    // so a fileUrl here was a download button for exactly the PDFs the viewer
+    // exists to withhold. Filtered here rather than in the query: a NOT over a
+    // nullable column also drops every row whose pageSection is NULL.
+    return rows
+      .filter(
+        (row) =>
+          !isProtectedSection(row.pageSection) ||
+          row.pageSection === pageSection,
+      )
+      .map((row) =>
+        isProtectedSection(row.pageSection)
+          ? { ...row, fileUrl: '', mediaId: null }
+          : row,
+      );
   }
 
   // includeDeleted surfaces soft-deleted rows too (deletedAt set) so the

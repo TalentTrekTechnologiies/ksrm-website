@@ -36,11 +36,6 @@ const FALLBACK_MISSION: MissionContent = {
 const INTRO =
   'Rooted in the ideals of our founders, K.S.R.M. College of Engineering pursues one clear purpose — to shape capable, ethical and innovative engineers who serve society and the nation. The vision and mission below guide every programme we design, every class we teach and every graduate we send into the world.'
 
-// Supporting (aspirational) copy that elaborates the official statements — kept
-// visually distinct so it never reads as part of the formal vision/mission.
-const VISION_SUPPORT =
-  'Guided by this vision, KSRMCE blends a rigorous, industry-aligned curriculum with hands-on research, innovation and value-based learning across a green, well-equipped campus — nurturing engineers who lead with competence, integrity and a genuine commitment to society.'
-
 const MISSION_LEAD =
   'We translate that vision into everyday practice through three enduring commitments:'
 
@@ -196,7 +191,6 @@ export default function VisionMissionTabs({
               <h3 className="vm-card-title">Vision</h3>
               <span className="vm-quote">&ldquo;</span>
               <p className="vm-text">{vision.text}</p>
-              <p className="vm-support">{VISION_SUPPORT}</p>
               <div className="vm-rule" />
             </motion.div>
 

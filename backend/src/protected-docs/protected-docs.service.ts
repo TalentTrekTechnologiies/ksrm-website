@@ -19,16 +19,7 @@ import type { StorageAdapter } from '../media/storage/storage-adapter.interface'
 import { findFigureBoxes, type FigureBox } from './figure-boxes';
 import { resolvePolicy } from './figure-policy';
 import type { RenderJob, RenderMessage } from './render-worker';
-
-/**
- * Pages whose documents are shown, never handed over.
- *
- * Deliberately a short allow-list rather than a flag on every document: this
- * route rasterises whatever it is pointed at, so if it could be pointed at any
- * id it would become a way to read documents the rest of the CMS keeps behind
- * permissions. A page has to be named here to be reachable at all.
- */
-const PROTECTED_SECTION_ROOTS = new Set(['nba']);
+import { isProtectedSection } from './protected-sections';
 
 /**
  * How large a page is rendered.
@@ -190,8 +181,7 @@ export class ProtectedDocsService implements OnModuleInit, OnModuleDestroy {
     const doc = await this.prisma.download.findFirst({
       where: { id, deletedAt: null, isActive: true },
     });
-    const root = doc?.pageSection?.split('.')[0];
-    if (!doc || !root || !PROTECTED_SECTION_ROOTS.has(root)) {
+    if (!doc || !isProtectedSection(doc.pageSection)) {
       throw new NotFoundException();
     }
     return doc;
