@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import CmsText from "@/components/CmsText";
-import AccreditationCertificates from "@/components/accreditation/AccreditationCertificates";
 import ProtectedDocumentViewer from "@/components/ProtectedDocumentViewer";
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/lib/department-programmes-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api";
+import { resolveFileUrl } from "@/lib/api-base";
 
 /**
  * NBA - programme accreditation.
@@ -39,6 +39,14 @@ export default function NbaPage() {
     [],
   );
   const [reading, setReading] = useState<Download | null>(null);
+
+  // NBA Certifications: open PDFs, so they link straight to the file. Filed
+  // under "nba-certificates" - a dash, so they sit outside the protected "nba"
+  // section. Uploaded in Admin -> NBA -> NBA Certifications.
+  const certs = useLiveData<Download[]>(
+    () => getDownloadsPublic(undefined, undefined, "nba-certificates").catch(() => [] as Download[]),
+    [],
+  );
 
   // Admin -> NBA -> More Sections: members, committees, an address - whatever
   // is asked for next. Nothing is rendered until one exists.
@@ -73,7 +81,9 @@ export default function NbaPage() {
         .nba-badge-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; justify-content: center; }
         .nba-logo { width: 96px; height: 96px; object-fit: contain; }
 
-        .nba-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 28px; }
+        /* auto-fill, not auto-fit: a lone card stays the width of its
+           neighbours in the other sections instead of spanning the page. */
+        .nba-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 28px; }
         .nba-card {
           background: #fff; border: 1px solid #eef0f3; border-left: 4px solid #2B3490;
           border-radius: 10px; padding: 18px 20px;
@@ -90,6 +100,7 @@ export default function NbaPage() {
         .nba-doc {
           text-align: left; cursor: pointer; font: inherit; width: 100%;
           transition: box-shadow 0.2s, border-color 0.2s;
+          display: block; text-decoration: none;
         }
         .nba-doc:hover { box-shadow: 0 6px 20px rgba(43,52,144,0.10); border-left-color: #D4A500; }
         .nba-extra { max-width: 1100px; margin: 0 auto 36px; }
@@ -140,17 +151,31 @@ export default function NbaPage() {
           </div>
         </section>
 
-        {/* NBA Certifications. Open, unlike the documents below: these PDFs are
-            published to be seen and downloaded. Filed under "nba-certificates" -
-            a dash, so they sit outside the protected "nba" section. Renders
-            nothing until one is uploaded in Admin -> NBA -> NBA Certifications. */}
-        <AccreditationCertificates
-          section="nba-certificates"
-          groups={null}
-          centered
-          heading={<CmsText section="nba" slot="certificates" />}
-          lead="Click a certification to open the PDF."
-        />
+        {/* NBA Certifications - the same cards as the documents below, but a
+            plain link to the PDF. Hidden until one is uploaded. */}
+        {(certs ?? []).length > 0 && (
+          <section style={{ padding: "64px 0 0", background: "#ffffff" }}>
+            <div className="responsive-container">
+              <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: 0, textAlign: "center" }}>
+                <CmsText section="nba" slot="certificates" />
+              </h2>
+              <div className="nba-grid">
+                {(certs ?? []).map((c) => (
+                  <a
+                    key={c.id}
+                    className="nba-card nba-doc"
+                    href={resolveFileUrl(c.fileUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <h3>{c.title}</h3>
+                    <span className="nba-tag">Open →</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         <section style={{ padding: "64px 0", background: "#ffffff" }}>
           <div className="responsive-container">
