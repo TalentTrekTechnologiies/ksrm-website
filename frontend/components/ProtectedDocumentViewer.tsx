@@ -1020,15 +1020,9 @@ export default function ProtectedDocumentViewer({
         {/* The opaque cover, for the focus case and for the "hide" response.
             z-index above the overlay canvas so nothing shows through, and
             painted as one flat colour so there is nothing to recover from a
-            capture of it. */}
+            capture of it. No text on it, at the college's request. */}
         {(hidden || (responding && protectionResponse === "hide")) && (
-          <div className="pdv-hidden">
-            <div>
-              {hidden
-                ? "Hidden while this window is not in focus. Return to this tab to keep reading."
-                : "Hidden briefly after a possible screen capture."}
-            </div>
-          </div>
+          <div className="pdv-hidden" />
         )}
       </div>
 
