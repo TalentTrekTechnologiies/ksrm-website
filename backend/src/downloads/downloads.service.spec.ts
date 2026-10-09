@@ -115,6 +115,87 @@ describe('DownloadsService', () => {
     });
   });
 
+  describe('one-document sections (the NAAC certificate)', () => {
+    const cert = {
+      title: 'NAAC Certificate of Accreditation',
+      category: 'OTHER',
+      pageSection: 'naac.certificate',
+      fileUrl: '/x.pdf',
+    } as any;
+
+    it('accepts the first certificate', async () => {
+      prisma.download.findFirst.mockResolvedValue(null);
+      prisma.download.create.mockResolvedValue({ id: 5 });
+
+      await expect(service.create(cert, admin)).resolves.toEqual({ id: 5 });
+    });
+
+    it('refuses a second certificate', async () => {
+      prisma.download.findFirst.mockResolvedValue({ id: 4 });
+
+      await expect(service.create(cert, admin)).rejects.toBeInstanceOf(ConflictException);
+      expect(prisma.download.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses a bulk upload of several files into the slot', async () => {
+      prisma.download.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.bulkCreate(
+          {
+            category: 'OTHER',
+            pageSection: 'naac.certificate',
+            items: [
+              { title: 'a', fileUrl: '/a.pdf' },
+              { title: 'b', fileUrl: '/b.pdf' },
+            ],
+          } as any,
+          admin,
+        ),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(prisma.download.create).not.toHaveBeenCalled();
+    });
+
+    it('lets the existing certificate have its file replaced', async () => {
+      prisma.download.findFirst.mockResolvedValue({ id: 4, version: 1, pageSection: 'naac.certificate' });
+      prisma.download.update.mockResolvedValue({ id: 4 });
+
+      await service.update(4, { version: 1, mediaId: 12 } as any, admin);
+
+      // One lookup for the row itself; no slot check, since it is not moving.
+      expect(prisma.download.findFirst).toHaveBeenCalledTimes(1);
+      expect(prisma.download.update).toHaveBeenCalled();
+    });
+
+    it('refuses moving another document into an occupied slot', async () => {
+      prisma.download.findFirst
+        .mockResolvedValueOnce({ id: 7, version: 1, pageSection: 'naac' })
+        .mockResolvedValueOnce({ id: 4 });
+
+      await expect(
+        service.update(7, { version: 1, pageSection: 'naac.certificate' } as any, admin),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(prisma.download.update).not.toHaveBeenCalled();
+    });
+
+    it('refuses restoring a deleted certificate while another is in the slot', async () => {
+      prisma.download.findFirst
+        .mockResolvedValueOnce({ id: 3, pageSection: 'naac.certificate', deletedAt: new Date() })
+        .mockResolvedValueOnce({ id: 4 });
+
+      await expect(service.restore(3, admin)).rejects.toBeInstanceOf(ConflictException);
+      expect(prisma.download.update).not.toHaveBeenCalled();
+    });
+
+    it('leaves every other section unlimited', async () => {
+      prisma.download.create.mockResolvedValue({ id: 6 });
+
+      await service.create({ ...cert, pageSection: 'naac' }, admin);
+
+      expect(prisma.download.findFirst).not.toHaveBeenCalled();
+    });
+  });
+
   describe('update', () => {
     it('409s on stale version', async () => {
       prisma.download.findFirst.mockResolvedValue({ id: 1, version: 2 });

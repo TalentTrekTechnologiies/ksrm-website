@@ -8,6 +8,7 @@ import PermissionGate from "@/components/admin/cms/PermissionGate"
 import MediaField from "@/components/admin/cms/MediaField"
 import PageTableEditor from "@/components/admin/PageTableEditor"
 import PageTextEditor from "@/components/admin/PageTextEditor"
+import NaacCertificateSlot from "@/components/admin/naac/NaacCertificateSlot"
 import { PAGE_TEXT, pagesWithText } from "@/lib/page-text-registry"
 import {
   TextField,
@@ -345,6 +346,10 @@ function PageContentInner() {
               </FormActions>
             </div>
           )}
+
+          {/* The single certificate behind the NAAC page's A+ badge. Replace
+              only - see NaacCertificateSlot. */}
+          {target.kind === "page" && target.section === "naac" && <NaacCertificateSlot />}
 
           {/* PAGE TEXT - the page's own wording. First, because it is the part
               of a page an editor most often comes here to change. Only shown

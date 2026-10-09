@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,6 +21,15 @@ import { isProtectedSection } from '../protected-docs/protected-sections';
 
 const MEDIA_MODULE = 'downloads';
 const MEDIA_FIELD = 'fileUrl';
+
+/**
+ * Sections that hold exactly one document, replaced in place. Under "naac." so
+ * an admin who owns the NAAC page owns this too, and kept out of the NAAC
+ * page's own document list by being its own section.
+ */
+export const SINGLE_DOCUMENT_SECTIONS: ReadonlySet<string> = new Set([
+  'naac.certificate',
+]);
 
 @Injectable()
 export class DownloadsService {
@@ -216,12 +226,42 @@ export class DownloadsService {
     }
   }
 
+  /**
+   * Refuses a second document in a one-document section.
+   *
+   * The NAAC certificate is one file the A+ badge opens, replaced in place
+   * from Page Content -> NAAC. The screen only offers "Replace", but the API is
+   * reachable on its own, and a second row would leave the badge choosing
+   * between two certificates. Deleted rows do not count; inactive ones do,
+   * since unpublishing is not removing.
+   */
+  private async assertSlotFree(
+    pageSection: string | null | undefined,
+    exceptId?: number,
+  ) {
+    if (!pageSection || !SINGLE_DOCUMENT_SECTIONS.has(pageSection)) return;
+    const taken = await this.prisma.download.findFirst({
+      where: {
+        pageSection,
+        deletedAt: null,
+        ...(exceptId !== undefined && { NOT: { id: exceptId } }),
+      },
+      select: { id: true },
+    });
+    if (taken) {
+      throw new ConflictException(
+        'This section holds one document. Replace the existing one instead of adding another.',
+      );
+    }
+  }
+
   async create(
     dto: CreateDownloadDto,
     admin: RequestAdmin,
     requestId?: string,
   ) {
     await this.assertSyllabusFiling(dto);
+    await this.assertSlotFree(dto.pageSection);
 
     const sortOrder = dto.sortOrder ?? (await this.sortOrderForNewest());
 
@@ -278,6 +318,15 @@ export class DownloadsService {
     requestId?: string,
   ) {
     const { items, ...shared } = dto;
+
+    if (shared.pageSection && SINGLE_DOCUMENT_SECTIONS.has(shared.pageSection)) {
+      if (items.length > 1) {
+        throw new ConflictException(
+          'This section holds one document. Upload a single file.',
+        );
+      }
+      await this.assertSlotFree(shared.pageSection);
+    }
 
     // One starting point for the whole batch so the files keep the order they
     // were listed in, rather than each re-deriving one and colliding. The batch
@@ -360,6 +409,12 @@ export class DownloadsService {
           : existing.syllabusBranch,
     });
 
+    // Only a move INTO the slot is checked; replacing the file of the row
+    // already there is the whole point of the slot.
+    if (rest.pageSection !== undefined && rest.pageSection !== existing.pageSection) {
+      await this.assertSlotFree(rest.pageSection, id);
+    }
+
     const resolvedUrl = await this.mediaLink.prepareLink(
       rest.mediaId,
       'DOCUMENT',
@@ -432,6 +487,7 @@ export class DownloadsService {
     if (!existing) {
       throw new NotFoundException(`Deleted download ${id} not found`);
     }
+    await this.assertSlotFree(existing.pageSection, id);
 
     const restored = await this.prisma.download.update({
       where: { id },

@@ -3,9 +3,9 @@
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
-import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
+import { getNaacCertificate, NaacCertificate } from "@/lib/naac-certificate";
 
 const criteria = [
   { n: 1, title: "Curricular Aspects", text: "Curriculum design, academic flexibility and enrichment programmes" },
@@ -44,27 +44,12 @@ function DownloadIcon() {
  * Clicking it opens the certificate. That document comes from the CMS rather
  * than a hardcoded path - the two links this page used to carry pointed at the
  * old site and returned the homepage - so it becomes a link only once a
- * certificate is actually uploaded.
- *
- * Matched strictly. The NAAC section holds ~2,000 criteria documents from the
- * old site, and the old loose match (/certificat|accreditation/, else the first
- * document) opened "One week Certification course on CATIA V5" from the A+
- * badge. The real certificate is filed under Mandatory Disclosure as "NAAC
- * certificate", so both sections are searched, NAAC first. No match, no link.
+ * certificate is actually uploaded. Which document that is, is decided in
+ * lib/naac-certificate.ts, shared with the admin box that replaces it.
  */
-const NAAC_CERTIFICATE = /\bnaac\b.*\bcertificate\b|\bcertificate of accreditation\b/i;
-
 function NaacBadge() {
-  const docs = useLiveData<Download[]>(
-    () =>
-      Promise.all(
-        ["naac", "mandatory-disclosure"].map((section) =>
-          getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
-        ),
-      ).then((groups) => groups.flat()),
-    [],
-  );
-  const certificate = (docs ?? []).find((d) => NAAC_CERTIFICATE.test(d.title));
+  const found = useLiveData<NaacCertificate | null>(() => getNaacCertificate().catch(() => null), []);
+  const certificate = found?.doc;
 
   const inner = (
     <>
