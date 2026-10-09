@@ -492,6 +492,8 @@ export default function PageResources({
   emptyText,
   fallbackSections,
   fallbackTitlePattern,
+  onlyShow,
+  leaveOut,
 }: {
   section: string
   /** Also include every download of this category (not just page-routed ones). */
@@ -552,12 +554,41 @@ export default function PageResources({
    * Components"). The pattern is compiled below instead.
    */
   fallbackTitlePattern?: string
+  /**
+   * Keep only documents of this category OR whose title matches the pattern
+   * (a regex source string, compiled case-insensitively like the one above).
+   *
+   * For two blocks that read the same broad section and must split it rather
+   * than both list it. On Examinations, the Question Papers block and the
+   * "More Exam Documents" block both read every "examinations" document, so
+   * all 1,885 appeared twice; Question Papers now keeps only question papers.
+   */
+  onlyShow?: { category?: DownloadCategory; titlePattern?: string }
+  /** The opposite of onlyShow: drop documents that match. */
+  leaveOut?: { category?: DownloadCategory; titlePattern?: string }
 }) {
   // Recompiled only when the source string changes, so the identity stays
   // stable for the fetch dependency below.
   const titlePattern = useMemo(
     () => (fallbackTitlePattern ? new RegExp(fallbackTitlePattern, "i") : undefined),
     [fallbackTitlePattern],
+  )
+
+  const keep = useMemo(
+    () =>
+      onlyShow && {
+        category: onlyShow.category,
+        re: onlyShow.titlePattern ? new RegExp(onlyShow.titlePattern, "i") : undefined,
+      },
+    [onlyShow],
+  )
+  const leave = useMemo(
+    () =>
+      leaveOut && {
+        category: leaveOut.category,
+        re: leaveOut.titlePattern ? new RegExp(leaveOut.titlePattern, "i") : undefined,
+      },
+    [leaveOut],
   )
 
   const data = useLiveData<SectionData>(
@@ -580,7 +611,13 @@ export default function PageResources({
 
   const { images, tables } = data
   const videos = hideVideos ? [] : data.videos
-  const docs = hideDocs ? [] : data.docs
+  const docs = hideDocs ? [] : data.docs.filter((d) => {
+    const matches = (rule: { category?: DownloadCategory; re?: RegExp }) =>
+      (rule.category !== undefined && d.category === rule.category) || (rule.re?.test(d.title) ?? false)
+    if (keep && !matches(keep)) return false
+    if (leave && matches(leave)) return false
+    return true
+  })
   const isEmpty = docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0
   if (isEmpty && !(emptyText && !embedded)) return null
 

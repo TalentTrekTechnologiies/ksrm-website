@@ -169,6 +169,10 @@ export default function ExaminationsPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}>Question Papers</h2>
           <ExamNotificationsList type="QUESTION_PAPER" hideEmpty />
+          {/* Only question papers. This block and "More Exam Documents" below
+              read the same "examinations" section, and both used to list all
+              of it - every document appeared twice. Now they split it: papers
+              here, everything else below. */}
           <PageResources
             section="examinations"
             docsCategory="QUESTION_PAPER"
@@ -176,11 +180,23 @@ export default function ExaminationsPage() {
             maxVisible={8}
             fallbackSections={EXAM_FALLBACK_SECTIONS}
             fallbackTitlePattern={QUESTION_PAPER_TITLE}
+            onlyShow={{ category: "QUESTION_PAPER", titlePattern: QUESTION_PAPER_TITLE }}
           />
         </div>
       </section>
 
-      <PageResources section="examinations" docsCategory="QUESTION_PAPER" docsTitle="More Exam Documents" background="#ffffff" />
+      {/* What no block above claims. Leaves out question papers, and the
+          calendar / timetable / result titles that those blocks pull in from
+          this same section, so nothing is listed twice. */}
+      <PageResources
+        section="examinations"
+        docsTitle="More Exam Documents"
+        background="#ffffff"
+        leaveOut={{
+          category: "QUESTION_PAPER",
+          titlePattern: [QUESTION_PAPER_TITLE, CALENDAR_TITLE, TIMETABLE_TITLE, RESULT_TITLE].join("|"),
+        }}
+      />
 
       {/* Results & fee payment (SBI) sits low - it is a utility link-out, not
           what most visitors scan the page for. */}
