@@ -29,6 +29,14 @@
  */
 
 import { GENERATED_PAGE_TEXT } from "./page-text-registry.generated"
+import { NAAC_FEEDBACK_FORMS, NAAC_TABS } from "./naac-tabs"
+
+/** IQAC slots whose sections now live on the NAAC page. */
+const IQAC_MOVED_TO_NAAC =
+  /^(minutes-of-meeting|aqar-reports|annual-reports-heading|student-satisfaction-survey|feedback-forms|feedbackForms\.\d+\.label|tabs\.(2|3|4|7)\.label)$/
+
+/** NAAC slots for blocks the tabbed layout replaced. */
+const NAAC_RETIRED = /^(key-documents|explore-naac-documentation)$/
 
 export type SlotKind = "line" | "paragraph"
 
@@ -191,44 +199,36 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
   // instead of a form. The labels stay; the URL is now something the college
   // sets - a Google Form, or a new page - and a form with no URL simply does
   // not render, rather than presenting a button that goes nowhere.
+  //
+  // Minutes, AQARs, the survey, feedback forms and annual reports moved to the
+  // NAAC page (2026-10, the college's IQAC outline), so their wording is edited
+  // there now. Their old slots are hidden here rather than left listed against
+  // a page that no longer shows them. Nothing had been saved under any of them.
   iqac: {
     ...GENERATED_PAGE_TEXT.iqac,
+    groups: GENERATED_PAGE_TEXT.iqac.groups
+      .map((g) => ({ ...g, slots: g.slots.filter((s) => !IQAC_MOVED_TO_NAAC.test(s.id)) }))
+      .filter((g) => g.slots.length > 0),
+  },
+
+  // The college's outline: thirteen sections, each a tab. Section headings and
+  // tab labels are the same text, edited once as tabs.<id>.
+  naac: {
+    ...GENERATED_PAGE_TEXT.naac,
     groups: [
-      ...GENERATED_PAGE_TEXT.iqac.groups,
+      ...GENERATED_PAGE_TEXT.naac.groups
+        .map((g) => ({ ...g, slots: g.slots.filter((s) => !NAAC_RETIRED.test(s.id)) }))
+        .filter((g) => g.slots.length > 0),
       {
-        label: "Feedback form links",
-        slots: [
-          {
-            id: "feedbackForms.0.href",
-            label: "Alumni Feedback - form link",
-            kind: "line",
-            default: "",
-          },
-          {
-            id: "feedbackForms.1.href",
-            label: "Student Feedback - form link",
-            kind: "line",
-            default: "",
-          },
-          {
-            id: "feedbackForms.2.href",
-            label: "Parent Feedback - form link",
-            kind: "line",
-            default: "",
-          },
-          {
-            id: "feedbackForms.3.href",
-            label: "Teacher Feedback - form link",
-            kind: "line",
-            default: "",
-          },
-          {
-            id: "feedbackForms.4.href",
-            label: "Employer Feedback - form link",
-            kind: "line",
-            default: "",
-          },
-        ],
+        label: "Sections (tab and heading)",
+        slots: NAAC_TABS.map((t) => ({ id: `tabs.${t.id}`, label: t.label, kind: "line" as const, default: t.label })),
+      },
+      {
+        label: "Stakeholders feedback forms",
+        slots: NAAC_FEEDBACK_FORMS.flatMap((label, i) => [
+          { id: `feedbackForms.${i}.label`, label: `${label} - button text`, kind: "line" as const, default: label },
+          { id: `feedbackForms.${i}.href`, label: `${label} - form link`, kind: "line" as const, default: "" },
+        ]),
       },
     ],
   },

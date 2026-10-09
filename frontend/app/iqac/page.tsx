@@ -1,10 +1,10 @@
 "use client";
 
 import { Fragment } from "react";
-import { mediaFile } from "@/lib/api-base";
+import Link from "next/link";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
-import CmsText, { usePageTextValue } from "@/components/CmsText";
+import CmsText from "@/components/CmsText";
 
 const missionFunctions = [
   "Development of quality benchmarks",
@@ -82,89 +82,18 @@ const compositionGroups: Record<number, string> = {
 };
 
 /**
- * Where the minutes actually are, as opposed to where they belong.
- *
- * Nothing has ever been filed under "iqac.minutes" - the migration brought the
- * PDFs across but not the page section they belong to, so the IQAC MOM papers
- * sit under "naac" and the committee minutes under "iqac.aqar" and "iqac".
- * The section therefore rendered empty under ten year buttons that did not
- * open, which is what "the minutes are not opening" was.
- *
- * Same mechanism the Examinations page uses for the same reason: scan the
- * broad sections documents were bulk-uploaded to, and keep the ones whose
- * title says what they are. Re-filing them in the CMS makes this redundant,
- * and nothing here breaks when that happens - a document filed correctly is
- * found by the section, not the fallback.
- */
-const MINUTES_FALLBACK_SECTIONS = ["iqac", "iqac.aqar", "naac"];
-
-/**
- * Deliberately "minutes" and not "minute": a NAAC document titled "1 One
- * minute talk" is not a set of minutes. \bmom\b likewise avoids matching
- * "moment" or a word ending in "mom".
- */
-const MINUTES_TITLE = "minutes|\\bmom\\b|agenda";
-
-const aqarReports = [
-  { label: "2021-2022", href: mediaFile(229) },
-  { label: "2020-2021", href: mediaFile(226) },
-  { label: "2019-2020", href: mediaFile(230) },
-  { label: "2018-2019", href: mediaFile(221) },
-  { label: "2017-2018", href: mediaFile(222) },
-  { label: "2016-2017", href: mediaFile(224) },
-  { label: "2015-2016", href: mediaFile(225) },
-  { label: "2014-2015", href: mediaFile(227) },
-  { label: "2013-2014", href: mediaFile(228) },
-];
-
-const surveys = [
-  { label: "2023-2024", href: mediaFile(220) },
-  { label: "2021-2022", href: mediaFile(223) },
-  { label: "2020-2021", href: mediaFile(232) },
-  { label: "2019-2020", href: mediaFile(219) },
-  { label: "2018-2019", href: mediaFile(231) },
-];
-
-// Labels only. Each form's URL comes from Page Content -> IQAC -> "Feedback
-// form links", and a form with no URL is not rendered at all - see
-// FeedbackFormLink below. These used to point at AlumniFeedback.php and its
-// four siblings on the old site; that domain serves this site now, so all
-// five handed the visitor the homepage back instead of a form.
-const feedbackForms = [
-  { label: "Alumni Feedback" },
-  { label: "Student Feedback" },
-  { label: "Parent Feedback" },
-  { label: "Teacher Feedback" },
-  { label: "Employer Feedback" },
-];
-
-function FeedbackFormLink({ index }: { index: number }) {
-  const href = usePageTextValue("iqac", `feedbackForms.${index}.href`).trim();
-  if (!href) return null;
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="iqac-feedback-btn">
-      <CmsText section="iqac" slot={`feedbackForms.${index}.label`} />
-    </a>
-  );
-}
-
-
-/**
  * `slot` is the tab's permanent id in Page Content, not its position here.
  *
  * These labels are edited as tabs.N.label, and N used to be the array index.
  * Removing the Apex Bodies tab therefore slid Contact up into Apex Bodies'
  * wording - the tab row still read "Apex Bodies" with the section gone. Pinned
  * ids mean a tab can be removed or reordered without disturbing the rest; 5,
- * which was Apex Bodies, stays retired.
+ * which was Apex Bodies, stays retired, and so do 2, 3, 4 and 7 (Minutes, AQAR,
+ * Survey, Annual Reports), which moved to the NAAC page in 2026-10.
  */
 const tabs = [
   { slot: 0, label: "About IQAC", id: "about" },
   { slot: 1, label: "Composition", id: "composition" },
-  { slot: 2, label: "Minutes & Agenda", id: "minutes" },
-  { slot: 3, label: "AQAR Reports", id: "aqar" },
-  { slot: 4, label: "Student Survey", id: "survey" },
-  { slot: 7, label: "Annual Reports", id: "annual-reports" },
   { slot: 6, label: "Contact", id: "contact" },
 ];
 
@@ -181,6 +110,11 @@ export default function IQACPage() {
         @media (max-width: 768px) { .responsive-container { padding-left: 20px; padding-right: 20px; } }
         @media (max-width: 480px) { .responsive-container { padding-left: 14px; padding-right: 14px; } }
 
+        /* Below the site's sticky menu bar (48px, 56px under 900px wide),
+           which covered this bar entirely once the page scrolled. */
+        .iqac-tabs { top: 48px; }
+        @media (max-width: 900px) { .iqac-tabs { top: 56px; } }
+        section[id] { scroll-margin-top: 130px; }
         .iqac-tab-btn {
           background: #2B3490; color: #D4A500; padding: 8px 16px; border-radius: 6px; font-weight: 600;
           font-size: 14px; border: none; cursor: pointer; text-decoration: none; white-space: nowrap;
@@ -230,12 +164,16 @@ export default function IQACPage() {
       </section>
 
       {/* STICKY TABS */}
-      <div style={{ position: "sticky", top: 0, zIndex: 100, background: "white", boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: "16px 0", overflowX: "auto" }}>
+      <div className="iqac-tabs" style={{ position: "sticky", zIndex: 100, background: "white", boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: "16px 0", overflowX: "auto" }}>
         <div className="responsive-container">
           <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
             {tabs.map((t) => (
               <button key={t.id} className="iqac-tab-btn" onClick={() => scrollTo(t.id)}><CmsText section="iqac" slot={`tabs.${t.slot}.label`} /></button>
             ))}
+            {/* Minutes, AQARs, the survey and annual reports moved to the NAAC
+                page with the college's IQAC outline; this keeps them one click
+                away for anyone who looks for them here. */}
+            <Link href="/naac" className="iqac-tab-btn" style={{ background: "#D4A500", color: "#2B3490" }}>NAAC: AQARs, Minutes, Surveys →</Link>
           </div>
         </div>
       </div>
@@ -341,88 +279,6 @@ export default function IQACPage() {
           <PageResources section="iqac.composition" embedded />
       </section>
 
-      {/* MINUTES */}
-      <section id="minutes" style={{ padding: "80px 0", background: "white" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="minutes-of-meeting" /></h2>
-          {/* The ten year buttons that used to be here rendered a chevron and
-              did nothing at all - no handler, no panel, no documents behind
-              them. They were a mock-up of an accordion, so every visitor who
-              clicked a year got no response and concluded the minutes were
-              broken. Real documents replace them; PageResources already groups
-              by the document's group label, so a year heading comes from the
-              upload rather than from a list hardcoded here that stopped at
-              2022-23 regardless of what had been published since. */}
-          <PageResources
-            section="iqac.minutes"
-            fallbackSections={MINUTES_FALLBACK_SECTIONS}
-            fallbackTitlePattern={MINUTES_TITLE}
-            emptyText="Minutes of IQAC meetings will be published here."
-          />
-        </div>
-      </section>
-
-      {/* AQAR */}
-      <section id="aqar" style={{ padding: "80px 0", background: "#f4f3ef" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="aqar-reports" /></h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-            {aqarReports.map((r) => (
-              <a href={r.href} target="_blank" rel="noopener noreferrer" className="iqac-doc-link" key={r.label}>
-                <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#2B3490", flexShrink: 0 }}>PDF</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, color: "#2B3490", fontSize: 14, marginBottom: 4 }}>AQAR Report {r.label}</div>
-                  <div style={{ fontSize: 12, color: "#999" }}>Annual Quality Assurance Report</div>
-                </div>
-                <div style={{ fontSize: 18, color: "#D4A500" }}>Download</div>
-              </a>
-            ))}
-          </div>
-        </div>
-          {/* Anything uploaded to "IQAC -> Aqar" in Documents. */}
-          <PageResources section="iqac.aqar" embedded />
-      </section>
-
-      {/* SURVEY */}
-      <section id="survey" style={{ padding: "80px 0", background: "white" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="student-satisfaction-survey" /></h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16, marginBottom: 48 }}>
-            {surveys.map((s) => (
-              <a href={s.href} target="_blank" rel="noopener noreferrer" className="iqac-doc-link" key={s.label}>
-                <div style={{ background: "#eef1ff", width: 44, height: 44, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#2B3490", flexShrink: 0 }}>PDF</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, color: "#2B3490", fontSize: 14, marginBottom: 4 }}>Survey {s.label}</div>
-                  <div style={{ fontSize: 12, color: "#999" }}>Student Satisfaction Report</div>
-                </div>
-                <div style={{ fontSize: 18, color: "#D4A500" }}>Download</div>
-              </a>
-            ))}
-          </div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "#2B3490", marginBottom: 20, textAlign: "center" }}><CmsText section="iqac" slot="feedback-forms" /></h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
-            {feedbackForms.map((f, _i) => (
-              <FeedbackFormLink key={f.label} index={_i} />
-            ))}
-          </div>
-        </div>
-          {/* Anything uploaded to "IQAC -> Survey" in Documents. */}
-          <PageResources section="iqac.survey" embedded />
-      </section>
-
-      {/* ANNUAL REPORTS - separate from AQAR Reports above (Annual Quality
-          Assurance Report is a distinct, NAAC-specific document from the
-          institution's general Annual Report). Three documents that had been
-          filed under AQAR by title-guessing during migration were moved here
-          to this pageSection ("iqac.annualreports") since that is what they
-          actually are. */}
-      <section id="annual-reports" style={{ padding: "80px 0", background: "white" }}>
-        <div className="responsive-container">
-          <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="annual-reports-heading" /></h2>
-          <PageResources section="iqac.annualreports" embedded maxVisible={10} />
-        </div>
-      </section>
-
       {/* The Governing Body, Academic Council and Finance Committee used to sit
           here behind an "Apex Bodies" tab. They are the college's governance,
           not its quality assurance, and now live on About - which is where the
@@ -449,7 +305,8 @@ export default function IQACPage() {
           Renders nothing until one is pointed here. */}
       <PlacedCommittees placement="IQAC" heading="Committees" />
 
-      <PageResources section="iqac" />
+      {/* Minutes filed here show on the NAAC page's Minutes section instead. */}
+      <PageResources section="iqac" leaveOut={{ titlePattern: "minutes|\\bmom\\b|agenda" }} />
     </main>
   );
 }

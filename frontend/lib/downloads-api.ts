@@ -30,11 +30,23 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   // page rather than that page's general document list.
   { value: "about.ombudsman", label: "About → Ombudsman" },
   { value: "iqac.composition", label: "IQAC → Composition" },
-  { value: "iqac.minutes", label: "IQAC → Minutes & Agenda" },
-  { value: "iqac.aqar", label: "IQAC → AQAR Reports" },
-  { value: "iqac.survey", label: "IQAC → Student Survey" },
-  { value: "iqac.annualreports", label: "IQAC → Annual Reports" },
+  // Minutes, AQARs, survey and annual reports are shown on the NAAC page now
+  // (the college's IQAC outline). Their values are unchanged, so every file
+  // already filed under them stays put; only the label says where it shows.
+  { value: "iqac.minutes", label: "NAAC → Minutes of Meeting" },
+  { value: "iqac.aqar", label: "NAAC → AQARs" },
+  { value: "iqac.survey", label: "NAAC → Student Satisfaction Survey" },
+  { value: "iqac.annualreports", label: "NAAC → Annual Reports" },
   { value: "iqac", label: "IQAC → Other Documents" },
+  // One per NAAC tab that had no section of its own.
+  { value: "naac.dvv", label: "NAAC → DVV" },
+  { value: "naac.ssr", label: "NAAC → SSR" },
+  { value: "naac.aaa", label: "NAAC → Academic & Administrative Audit (AAA)" },
+  { value: "naac.code-of-conduct", label: "NAAC → Code of Conduct" },
+  { value: "naac.policies", label: "NAAC → Policies and Handbooks" },
+  { value: "naac.feedback", label: "NAAC → Stakeholders Feedback" },
+  { value: "naac.best-practices", label: "NAAC → Best Practices" },
+  { value: "naac.distinctiveness", label: "NAAC → Institutional Distinctiveness" },
   { value: "naac", label: "NAAC" },
   { value: "nba", label: "NBA" },
   // A dash, not a dot: everything under "nba." is served only through the

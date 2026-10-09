@@ -106,7 +106,7 @@ function groupDocs(docs: Download[]): DocGroup[] {
 async function fetchSection(
   section: string,
   docsCategory?: DownloadCategory,
-  fallback?: { sections?: string[]; titlePattern?: RegExp },
+  fallback?: { sections?: string[]; titlePattern?: RegExp; groupPattern?: RegExp },
 ): Promise<SectionData> {
   // Every source below records whether it actually succeeded, rather than
   // collapsing a failure into an empty array.
@@ -132,7 +132,12 @@ async function fetchSection(
     fallback?.sections?.length
       ? settled(
           Promise.all(fallback.sections.map((s) => getDownloadsPublic(undefined, undefined, s).catch(() => [] as Download[]))).then((groups) =>
-            groups.flat().filter((d) => !fallback.titlePattern || fallback.titlePattern.test(d.title)),
+            // Title OR group: a pattern on either is enough, both absent keeps all.
+            groups.flat().filter((d) =>
+              (!fallback.titlePattern && !fallback.groupPattern) ||
+              (fallback.titlePattern?.test(d.title) ?? false) ||
+              (fallback.groupPattern?.test(d.groupLabel ?? "") ?? false),
+            ),
           ),
         )
       : Promise.resolve({ ok: true, v: [] as Download[] }),
@@ -492,6 +497,7 @@ export default function PageResources({
   emptyText,
   fallbackSections,
   fallbackTitlePattern,
+  fallbackGroupPattern,
   onlyShow,
   leaveOut,
 }: {
@@ -554,6 +560,8 @@ export default function PageResources({
    * Components"). The pattern is compiled below instead.
    */
   fallbackTitlePattern?: string
+  /** Like fallbackTitlePattern, matched against the document's group heading. */
+  fallbackGroupPattern?: string
   /**
    * Keep only documents of this category OR whose title matches the pattern
    * (a regex source string, compiled case-insensitively like the one above).
@@ -563,9 +571,9 @@ export default function PageResources({
    * "More Exam Documents" block both read every "examinations" document, so
    * all 1,885 appeared twice; Question Papers now keeps only question papers.
    */
-  onlyShow?: { category?: DownloadCategory; titlePattern?: string }
+  onlyShow?: { category?: DownloadCategory; titlePattern?: string; groupPattern?: string }
   /** The opposite of onlyShow: drop documents that match. */
-  leaveOut?: { category?: DownloadCategory; titlePattern?: string }
+  leaveOut?: { category?: DownloadCategory; titlePattern?: string; groupPattern?: string }
 }) {
   // Recompiled only when the source string changes, so the identity stays
   // stable for the fetch dependency below.
@@ -574,11 +582,17 @@ export default function PageResources({
     [fallbackTitlePattern],
   )
 
+  const groupPattern = useMemo(
+    () => (fallbackGroupPattern ? new RegExp(fallbackGroupPattern, "i") : undefined),
+    [fallbackGroupPattern],
+  )
+
   const keep = useMemo(
     () =>
       onlyShow && {
         category: onlyShow.category,
         re: onlyShow.titlePattern ? new RegExp(onlyShow.titlePattern, "i") : undefined,
+        group: onlyShow.groupPattern ? new RegExp(onlyShow.groupPattern, "i") : undefined,
       },
     [onlyShow],
   )
@@ -587,13 +601,14 @@ export default function PageResources({
       leaveOut && {
         category: leaveOut.category,
         re: leaveOut.titlePattern ? new RegExp(leaveOut.titlePattern, "i") : undefined,
+        group: leaveOut.groupPattern ? new RegExp(leaveOut.groupPattern, "i") : undefined,
       },
     [leaveOut],
   )
 
   const data = useLiveData<SectionData>(
-    () => fetchSection(section, docsCategory, { sections: fallbackSections, titlePattern }),
-    [section, docsCategory, fallbackSections, titlePattern],
+    () => fetchSection(section, docsCategory, { sections: fallbackSections, titlePattern, groupPattern }),
+    [section, docsCategory, fallbackSections, titlePattern, groupPattern],
   )
 
   // `data` is null only while the FIRST fetch is in flight - useLiveData keeps
@@ -612,14 +627,16 @@ export default function PageResources({
   const { images, tables } = data
   const videos = hideVideos ? [] : data.videos
   const docs = hideDocs ? [] : data.docs.filter((d) => {
-    const matches = (rule: { category?: DownloadCategory; re?: RegExp }) =>
-      (rule.category !== undefined && d.category === rule.category) || (rule.re?.test(d.title) ?? false)
+    const matches = (rule: { category?: DownloadCategory; re?: RegExp; group?: RegExp }) =>
+      (rule.category !== undefined && d.category === rule.category) ||
+      (rule.re?.test(d.title) ?? false) ||
+      (rule.group?.test(d.groupLabel ?? "") ?? false)
     if (keep && !matches(keep)) return false
     if (leave && matches(leave)) return false
     return true
   })
   const isEmpty = docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0
-  if (isEmpty && !(emptyText && !embedded)) return null
+  if (isEmpty && !emptyText) return null
 
   const docsList =
     docs.length > 0 ? (
@@ -634,7 +651,13 @@ export default function PageResources({
     tables.length > 0 ? tables.map((t) => <CmsPageTable key={t.id} table={t} />) : null
 
   if (embedded) {
-    if (!docsList && !tablesList) return null
+    // An embedded block has no heading of its own, so its empty state is a
+    // single line under the caller's heading - for a page whose sections are
+    // fixed by an outline (NAAC) and must stay in place before anything is
+    // uploaded to them.
+    if (!docsList && !tablesList) {
+      return emptyText ? <p style={{ color: "#888", fontSize: 15, fontStyle: "italic", margin: "8px 0 0", textAlign: "center" }}>{emptyText}</p> : null
+    }
     return (
       <>
         <style>{PR_STYLES}</style>
