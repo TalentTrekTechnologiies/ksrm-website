@@ -45,13 +45,26 @@ function DownloadIcon() {
  * than a hardcoded path - the two links this page used to carry pointed at the
  * old site and returned the homepage - so it becomes a link only once a
  * certificate is actually uploaded.
+ *
+ * Matched strictly. The NAAC section holds ~2,000 criteria documents from the
+ * old site, and the old loose match (/certificat|accreditation/, else the first
+ * document) opened "One week Certification course on CATIA V5" from the A+
+ * badge. The real certificate is filed under Mandatory Disclosure as "NAAC
+ * certificate", so both sections are searched, NAAC first. No match, no link.
  */
+const NAAC_CERTIFICATE = /\bnaac\b.*\bcertificate\b|\bcertificate of accreditation\b/i;
+
 function NaacBadge() {
   const docs = useLiveData<Download[]>(
-    () => getDownloadsPublic(undefined, undefined, "naac").catch(() => [] as Download[]),
+    () =>
+      Promise.all(
+        ["naac", "mandatory-disclosure"].map((section) =>
+          getDownloadsPublic(undefined, undefined, section).catch(() => [] as Download[]),
+        ),
+      ).then((groups) => groups.flat()),
     [],
   );
-  const certificate = (docs ?? []).find((d) => /certificat|accreditation/i.test(d.title)) ?? (docs ?? [])[0];
+  const certificate = (docs ?? []).find((d) => NAAC_CERTIFICATE.test(d.title));
 
   const inner = (
     <>
@@ -166,9 +179,10 @@ export default function NAACPage() {
               never confirmed - better absent than wrong on the page that
               exists to state the accreditation.
 
-              The logo links to the certificate when one is uploaded (Documents
-              -> NAAC, with "certificate" in the title). Until then it is a
-              plain badge rather than a link that goes nowhere. */}
+              The logo links to the certificate: a document titled like "NAAC
+              certificate" under NAAC or Mandatory Disclosure (see NaacBadge).
+              Until one exists it is a plain badge rather than a link that goes
+              nowhere. */}
           <NaacBadge />
         </div>
       </section>
