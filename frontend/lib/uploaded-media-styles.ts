@@ -39,6 +39,14 @@ export const UPLOADED_MEDIA_STYLES = `
     display: block;
   }
   .um-frame.um-video { background: #000; }
+  /* In a grid: a fixed 4:3 box, the whole image fitted inside it. A frame
+     sized by its image had no height until the image arrived, so every tile
+     grew as it loaded and pushed the rest of the page down - the Gallery's
+     one remaining jump. Nothing is cropped; a tall poster sits in the box
+     with margins either side. */
+  .um-frame.um-fixed { aspect-ratio: 4 / 3; }
+  .um-frame.um-fixed > img,
+  .um-frame.um-fixed > video { height: 100%; max-height: none; }
   @media (max-width: 640px) {
     .um-frame > img,
     .um-frame > video { max-height: 360px; }

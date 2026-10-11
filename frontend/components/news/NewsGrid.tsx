@@ -106,7 +106,7 @@ export default function NewsGrid({ items }: { items: NewsItem[] }) {
             const kind = kindOf(n)
             return (
               <button key={n.id} className="ng-card" onClick={() => setOpen(n)}>
-                <div className={`ng-media um-frame${!n.imageUrl && n.videoUrl ? " um-video" : ""}`}>
+                <div className={`ng-media um-frame um-fixed${!n.imageUrl && n.videoUrl ? " um-video" : ""}`}>
                   {n.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- CMS image URL
                     <img src={resolveFileUrl(n.imageUrl)} alt={n.title} loading="lazy" decoding="async" onError={(e) => (e.currentTarget.style.display = "none")} />

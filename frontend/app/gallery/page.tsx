@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
+import LiteYouTube from "@/components/ui/LiteYouTube";
 import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import { getGalleryPublic } from "@/lib/gallery-api";
 import { getCampusVideosPublic } from "@/lib/homepage-api";
@@ -146,7 +147,7 @@ export default function GalleryPage() {
           <div className="gal-grid">
             {filteredImages.map((img, index) => (
               <div className="gal-card" key={`${img.src}-${index}`}>
-                <div className={`gal-card-image um-frame${img.isVideo ? " um-video" : ""}`}>
+                <div className={`gal-card-image um-frame um-fixed${img.isVideo ? " um-video" : ""}`}>
                   {img.isVideo ? (
                     <video src={img.src} controls preload="metadata" onError={(e) => { e.currentTarget.style.display = "none" }} />
                   ) : (
@@ -172,13 +173,7 @@ export default function GalleryPage() {
               return (
                 <div className="gal-video-wrap" key={v.url}>
                   {embed ? (
-                    <iframe
-                      src={embed}
-                      title={v.title || "Campus video"}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      style={{ width: "100%", aspectRatio: "16 / 9", border: 0, display: "block" }}
-                    />
+                    <LiteYouTube url={embed} title={v.title || "Campus video"} />
                   ) : (
                     /* Not autoplaying a CMS video: the built-in clips are
                        short silent loops, but a video the college uploads can

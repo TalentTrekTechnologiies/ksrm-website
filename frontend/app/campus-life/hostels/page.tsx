@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import LazyVideo from "@/components/ui/LazyVideo";
 import Link from "next/link"
 import { pageMetadata } from "@/lib/seo"
 
@@ -106,9 +107,7 @@ export default function HostelsPage() {
           <div className="hostels-grid">
             {tourVideos.map((v) => (
               <div style={{ borderRadius: 8, overflow: "hidden" }} key={v}>
-                <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                  <source src={v} type="video/mp4" />
-                </video>
+                <LazyVideo src={v} />
               </div>
             ))}
           </div>

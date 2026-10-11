@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { isDateOnly } from "@/lib/format-date"
 import Link from "next/link"
 import { resolveFileUrl } from "@/lib/api-base";
 import { ArrowRight, MapPin, Clock } from "lucide-react"
@@ -52,6 +53,8 @@ function dayMon(iso: string) {
   }
 }
 function eventTime(iso: string) {
+  // No time for a date-only value - it would read "5:30 am" (midnight UTC).
+  if (isDateOnly(iso)) return ""
   return new Date(iso).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })
 }
 function fmtNewsDate(iso: string) {
@@ -325,7 +328,7 @@ export default function NewsAndEvents() {
                           <p className="ne-item-title">{e.title}</p>
                           {desc && <p className="ne-item-desc">{desc}</p>}
                           <div className="ne-meta">
-                            <span><Clock size={12} /> {eventTime(e.eventDate)}</span>
+                            {eventTime(e.eventDate) && <span><Clock size={12} /> {eventTime(e.eventDate)}</span>}
                             {e.location && <span><MapPin size={12} /> {e.location}</span>}
                           </div>
                         </span>

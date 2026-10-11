@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import LazyVideo from "@/components/ui/LazyVideo";
 import { pageMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = pageMetadata({
@@ -129,19 +130,13 @@ export default function SportsPage() {
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#2B3490", margin: "0 0 40px" }}><CmsText section="sports" slot="sports-arena-tours" /></h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
             <div style={{ borderRadius: 8, overflow: "hidden" }}>
-              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                <source src="/videos/sports-arena.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/videos/sports-arena.mp4" />
             </div>
             <div style={{ borderRadius: 8, overflow: "hidden" }}>
-              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                <source src="/videos/sports-event.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/videos/sports-event.mp4" />
             </div>
             <div style={{ borderRadius: 8, overflow: "hidden" }}>
-              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                <source src="/videos/sports-winners.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/videos/sports-winners.mp4" />
             </div>
           </div>
         </div>

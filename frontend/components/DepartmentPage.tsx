@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import LiteYouTube, { youtubeId } from "@/components/ui/LiteYouTube";
 import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import type { Department, FacultyMember } from "@/types/department";
 import { getDepartmentsPublic } from "@/lib/departments-api";
@@ -1334,14 +1335,14 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
               <div className="dept-labs-grid">
                 {videos.map((v) => (
                   <div key={v.id} className="dept-lab-card">
-                    <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
-                      <iframe
-                        src={v.youtubeUrl}
-                        title={v.title}
-                        style={{ width: "100%", height: "100%", border: 0 }}
-                        allowFullScreen
-                      />
-                    </div>
+                    {/* YouTube as a click-to-play thumbnail; anything else (an
+                        uploaded file) in a plain player - an mp4 inside an
+                        iframe was never a video player. */}
+                    {youtubeId(v.youtubeUrl) ? (
+                      <LiteYouTube url={v.youtubeUrl} title={v.title} />
+                    ) : (
+                      <video src={resolveFileUrl(v.youtubeUrl)} controls playsInline preload="metadata" style={{ width: "100%", aspectRatio: "16 / 9", display: "block", background: "#000" }} />
+                    )}
                     <div className="dept-lab-body">
                       <h3>{v.title}</h3>
                     </div>

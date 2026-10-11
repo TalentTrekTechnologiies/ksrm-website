@@ -1,6 +1,7 @@
 "use client"
 
 import PublicDocumentList from "@/components/PublicDocumentList"
+import { formatPublished } from "@/lib/format-date"
 import { getAnnouncementsPublic, Announcement } from "@/lib/announcements-api"
 import { getExamNotificationsPublic, ExamNotification, ExamNotificationType } from "@/lib/exam-notifications-api"
 import { useLiveData } from "@/lib/use-live-data"
@@ -135,15 +136,9 @@ export default function ExamNotificationsList({
       // use, so the Examinations page does not show two different date formats
       // side by side. Guarded so an unparseable date yields no meta line
       // rather than "Invalid Date".
-      meta: (() => {
-        const d = new Date(n.date)
-        if (Number.isNaN(d.getTime())) return null
-        return `Published ${d.toLocaleDateString(undefined, {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        })}, ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`
-      })(),
+      // A notification has a date but no time; formatPublished shows the
+      // date alone for those instead of "5:30 am" (midnight UTC in IST).
+      meta: formatPublished(n.date),
       href: n.linkUrl,
       actionLabel: n.buttonText,
     }))

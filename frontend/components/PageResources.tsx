@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { formatPublished } from "@/lib/format-date"
 import { resolveFileUrl, thumbProps } from "@/lib/api-base"
 import { academicYearOf, currentAcademicYearLabel } from "@/lib/academic-year";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
@@ -286,16 +287,8 @@ const PR_STYLES = `
  * and the date alone cannot tell them apart. Rendered from the visitor's
  * locale; an unparseable value yields no meta line rather than "Invalid Date".
  */
-function formatPublished(iso: string | null | undefined): string | null {
-  if (!iso) return null
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return null
-  return `Published ${d.toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  })}, ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`
-}
+// Shared with the exam notification lists - see lib/format-date.ts, which also
+// drops the time from date-only values (they read "5:30 am" otherwise).
 
 /**
  * Placeholder shown while the first fetch is in flight.
@@ -730,7 +723,7 @@ export default function PageResources({
             </div>
             <div className="pr-gallery">
               {images.slice(0, 8).map((img) => (
-                <div key={img.id} className="pr-tile um-frame">
+                <div key={img.id} className="pr-tile um-frame um-fixed">
                   {/* eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL */}
                   <img {...thumbProps(img.imageUrl, "MEDIUM", (el) => (el.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} alt={img.title} loading="lazy" decoding="async" />
                   <div className="pr-cap"><span>{img.title}</span></div>

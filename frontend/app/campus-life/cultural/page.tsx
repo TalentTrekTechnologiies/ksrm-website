@@ -1,4 +1,5 @@
 ﻿import PageResources from "@/components/PageResources";
+import LazyVideo from "@/components/ui/LazyVideo";
 import Link from "next/link";
 import CmsText from "@/components/CmsText";
 import { pageMetadata } from "@/lib/seo"
@@ -235,14 +236,10 @@ export default function CulturalClubPage() {
             }}
           >
             <div style={{ borderRadius: 8, overflow: "hidden" }}>
-              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                <source src="/videos/flash-mob.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/videos/flash-mob.mp4" />
             </div>
             <div style={{ borderRadius: 8, overflow: "hidden" }}>
-              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                <source src="/videos/sivananda-smaranam-night-event.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/videos/sivananda-smaranam-night-event.mp4" />
             </div>
           </div>
         </div>

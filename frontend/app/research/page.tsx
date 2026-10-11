@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
+import LazyVideo from "@/components/ui/LazyVideo";
 import PageResources from "@/components/PageResources";
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api";
@@ -390,9 +391,7 @@ export default function ResearchPage() {
           ) : (
             <div style={{ borderRadius: 8, overflow: "hidden", maxWidth: 720, margin: "0 auto" }}>
               {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-              <video autoPlay loop muted playsInline style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", display: "block" }}>
-                <source src="/videos/3d-robo.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/videos/3d-robo.mp4" />
             </div>
           )}
         </div>
