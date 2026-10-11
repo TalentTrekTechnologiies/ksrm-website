@@ -90,7 +90,12 @@ export default function GrievanceRedressalPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: "url('/banners/grievance banner.jpg')",
+          // "grievance banner.jpg" was never added to /public/banners, so this
+          // hero rendered white text on a white page. The Anti-Ragging banner
+          // under a dark tint stands in until a grievance banner is supplied,
+          // and the colour behind it keeps the text readable regardless.
+          backgroundImage: "linear-gradient(rgba(20,26,74,0.72), rgba(20,26,74,0.72)), url('/banners/anti-ragging.webp')",
+          backgroundColor: "#2B3490",
           backgroundSize: "cover",
           backgroundPosition: "center",
           padding: "60px 40px",

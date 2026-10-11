@@ -40,6 +40,10 @@ const EXCLUDED_PREFIXES = [
   "/dashboard", // "Coming Soon" placeholder, noindexed
   "/test", // scaffolding page (removed, listed defensively)
   "/careers/apply", // application form, noindexed
+  // Internal test benches for the NBA document protection, not pages for
+  // visitors. They were listed here and so offered to search engines.
+  "/camera-lab",
+  "/screenshot-lab",
   // Thin CMS shells that duplicate a richer page and are noindexed.
   // See the comment blocks in each page.tsx.
   "/academics/admissions",

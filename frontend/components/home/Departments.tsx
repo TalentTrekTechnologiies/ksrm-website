@@ -1,8 +1,7 @@
 "use client"
 
-import Link from "next/link"
+import SmartLink from "@/components/ui/SmartLink"
 import Container from "@/components/ui/Container"
-import { homeData } from "@/data/home"
 import { getDepartmentsPublic } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
 
@@ -13,9 +12,6 @@ interface DisplayDept {
   svg: string
 }
 
-const FALLBACK_DEPARTMENTS: DisplayDept[] = (Array.isArray(homeData?.departments) ? homeData.departments : []).map(
-  (d) => ({ key: d.code, name: d.name, link: d.link, svg: d.svg }),
-)
 
 interface DepartmentsState {
   hidden: boolean
@@ -24,8 +20,7 @@ interface DepartmentsState {
 
 async function fetchDepartments(): Promise<DepartmentsState> {
   const { visible, items } = await getDepartmentsPublic()
-  if (!visible) return { hidden: true, departments: FALLBACK_DEPARTMENTS }
-  if (items.length === 0) return { hidden: false, departments: FALLBACK_DEPARTMENTS }
+  if (!visible) return { hidden: true, departments: [] }
   return {
     hidden: false,
     departments: items.map((d) => ({ key: String(d.id), name: d.title, link: d.linkUrl, svg: d.imageUrl })),
@@ -35,9 +30,12 @@ async function fetchDepartments(): Promise<DepartmentsState> {
 export default function Departments() {
   const live = useLiveData(fetchDepartments, [])
   const hidden = live?.hidden ?? false
-  const departments = live?.departments ?? FALLBACK_DEPARTMENTS
+  // Only what the CMS publishes. While loading, and whenever the CMS list
+  // was empty, this used to show the built-in departments instead - so a deleted
+  // one kept coming back. Nothing to show, no section.
+  const departments = live?.departments ?? []
 
-  if (hidden) return null
+  if (hidden || departments.length === 0) return null
 
   return (
     <section style={{ width: "100%", background: "#ffffff", padding: "40px 0", borderTop: "1px solid #f1f5f9" }}>
@@ -175,7 +173,7 @@ export default function Departments() {
         <div className="depts-grid">
           {departments.map((dept) => (
             <div key={dept.key}>
-              <Link href={dept.link} style={{ textDecoration: "none" }}>
+              <SmartLink href={dept.link} style={{ textDecoration: "none" }}>
                 <div className="dept-card">
                   <div className="dept-icon">
                     <img src={dept?.svg} alt={dept?.name} loading="lazy" decoding="async" />
@@ -185,7 +183,7 @@ export default function Departments() {
                     <div className="dept-link">Explore →</div>
                   </div>
                 </div>
-              </Link>
+              </SmartLink>
             </div>
           ))}
         </div>

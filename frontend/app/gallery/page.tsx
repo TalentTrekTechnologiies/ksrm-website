@@ -16,101 +16,6 @@ interface GalleryImageDisplay {
   cat: string;
 }
 
-const FALLBACK_IMAGES: GalleryImageDisplay[] = [
-  { src: "/site-images/topview.webp", alt: "K.S.R.M. College aerial campus view", cat: "Campus" },
-  { src: "/site-images/blocktop.webp", alt: "Main block aerial view", cat: "Campus" },
-  { src: "/site-images/block.webp", alt: "Main administrative block", cat: "Campus" },
-  { src: "/site-images/19.webp", alt: "Solar powered campus", cat: "Campus" },
-  { src: "/site-images/22.webp", alt: "Solar parking facility", cat: "Campus" },
-  { src: "/site-images/lab.webp", alt: "Robotics laboratory with ABB robotic arm", cat: "Labs" },
-  { src: "/site-images/roboticslab.webp", alt: "Robotic 3D printing lab", cat: "Labs" },
-  { src: "/site-images/ab.webp", alt: "Computer laboratory", cat: "Labs" },
-  { src: "/site-images/labw.webp", alt: "Computer lab examination", cat: "Labs" },
-  { src: "/site-images/lab2.webp", alt: "Chemistry laboratory", cat: "Labs" },
-  { src: "/site-images/lab3.webp", alt: "Electrical engineering lab", cat: "Labs" },
-  { src: "/site-images/volleyball.webp", alt: "Volleyball match", cat: "Sports" },
-  { src: "/site-images/sportsg3.webp", alt: "Indoor badminton court", cat: "Sports" },
-  { src: "/site-images/sportsground.webp", alt: "Basketball court", cat: "Sports" },
-  { src: "/site-images/sportsground2.webp", alt: "Sports ground aerial view", cat: "Sports" },
-  { src: "/site-images/library.webp", alt: "Central Library building", cat: "Library" },
-  { src: "/site-images/studentsinlib.webp", alt: "Students reading in library", cat: "Library" },
-  { src: "/site-images/studentsinlib2.webp", alt: "Students studying in library", cat: "Library" },
-  { src: "/site-images/fest.webp", alt: "Award ceremony", cat: "Events" },
-  { src: "/site-images/fest2.webp", alt: "Cultural fest performance", cat: "Events" },
-  { src: "/site-images/event.webp", alt: "KGCET poster launch", cat: "Events" },
-  { src: "/site-images/event2.webp", alt: "CONNECT 2K26 technical fest", cat: "Events" },
-  { src: "/site-images/seminar.webp", alt: "Seminar in auditorium", cat: "Events" },
-  { src: "/site-images/inaugaration.webp", alt: "Statue inauguration ceremony", cat: "Events" },
-  { src: "/site-images/inaugaration2.webp", alt: "Event inauguration ribbon cutting", cat: "Events" },
-  { src: "/site-images/achievements.webp", alt: "Achievement award", cat: "Events" },
-  { src: "/site-images/activity.webp", alt: "College activity", cat: "Events" },
-  { src: "/site-images/activity2.webp", alt: "Campus tour activity", cat: "Events" },
-  { src: "/site-images/activity3.webp", alt: "Bharat Environment Program", cat: "Events" },
-  { src: "/site-images/activity4.webp", alt: "INSPIRON 2K26 event", cat: "Events" },
-  { src: "/site-images/KSR00001.webp", alt: "Campus event - day view", cat: "Events" },
-  { src: "/site-images/KSR00007.webp", alt: "Campus gathering and activities", cat: "Events" },
-  { src: "/site-images/KSR00014.webp", alt: "Students engaged in event", cat: "Events" },
-  { src: "/site-images/KSR00016.webp", alt: "Campus life moment", cat: "Events" },
-  { src: "/site-images/KSR00017.webp", alt: "College event participation", cat: "Events" },
-  { src: "/site-images/KSR00019.webp", alt: "Campus event scene", cat: "Events" },
-  { src: "/site-images/KSR00027.webp", alt: "Student activities on campus", cat: "Events" },
-  { src: "/site-images/KSR00028.webp", alt: "Event with student participation", cat: "Events" },
-  { src: "/site-images/KSR00048.webp", alt: "Campus gathering and networking", cat: "Events" },
-  { src: "/site-images/KSR00053.webp", alt: "Event moment on campus", cat: "Events" },
-  { src: "/site-images/KSR00058.webp", alt: "Students at campus event", cat: "Events" },
-  { src: "/site-images/KSR00104.webp", alt: "Campus celebration event", cat: "Events" },
-  { src: "/site-images/KSR00116.webp", alt: "Crowd at campus event", cat: "Events" },
-  { src: "/site-images/KSR00140.webp", alt: "Event scene with students", cat: "Events" },
-  { src: "/site-images/KSR00163.webp", alt: "Large campus event gathering", cat: "Events" },
-  { src: "/site-images/KSR09989.webp", alt: "Campus activity highlight", cat: "Events" },
-  { src: "/site-images/buses.webp", alt: "K.S.R.M. college bus fleet", cat: "Transport" },
-  { src: "/site-images/KSR00001.webp", alt: "Inauguration ceremony with golden statue dedication", cat: "Events" },
-  { src: "/site-images/KSR00007.webp", alt: "Campus event with faculty and staff", cat: "Events" },
-  { src: "/site-images/KSR00014.webp", alt: "College event and gathering", cat: "Events" },
-  { src: "/site-images/KSR00016.webp", alt: "Performance rewards recognition ceremony", cat: "Events" },
-  { src: "/site-images/KSR00017.webp", alt: "Campus activity and team gathering", cat: "Campus" },
-  { src: "/site-images/KSR00019.webp", alt: "College event moment", cat: "Events" },
-  { src: "/site-images/KSR00027.webp", alt: "Campus gathering", cat: "Campus" },
-  { src: "/Filtered/KSR00027 (1).webp", alt: "Campus moment", cat: "Campus" },
-  { src: "/site-images/KSR00028.webp", alt: "Event photograph", cat: "Events" },
-  { src: "/Filtered/KSR00028 (1).webp", alt: "Campus event", cat: "Events" },
-  { src: "/site-images/KSR00048.webp", alt: "Campus activity", cat: "Campus" },
-  { src: "/site-images/KSR00053.webp", alt: "College event", cat: "Events" },
-  { src: "/site-images/KSR00058.webp", alt: "Campus gathering", cat: "Campus" },
-  { src: "/site-images/KSR00104.webp", alt: "Event moment", cat: "Events" },
-  { src: "/site-images/KSR00116.webp", alt: "Campus photo", cat: "Campus" },
-  { src: "/site-images/KSR00140.webp", alt: "College event", cat: "Events" },
-  { src: "/site-images/KSR00163.webp", alt: "Campus moment", cat: "Campus" },
-  { src: "/site-images/KSR09989.webp", alt: "Campus activity", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM.jpeg", alt: "Campus event with faculty lineup", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM (1).jpeg", alt: "Construction/foundation laying ceremony", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.31 PM (2).jpeg", alt: "Campus event gathering", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM.jpeg", alt: "Campus moment", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM (1).jpeg", alt: "Event photograph", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.32 PM (2).jpeg", alt: "Campus gathering", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM.jpeg", alt: "College event", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM (1).jpeg", alt: "Campus photo", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.33 PM (2).jpeg", alt: "Event moment", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.34 PM.jpeg", alt: "Campus activity", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.34 PM (1).jpeg", alt: "College gathering", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM.jpeg", alt: "Campus event", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM (1).jpeg", alt: "Event photo", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.35 PM (2).jpeg", alt: "Campus moment", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.36 PM.jpeg", alt: "College event", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.36 PM (1).jpeg", alt: "Campus gathering", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM.jpeg", alt: "Event photograph", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM (1).jpeg", alt: "Campus photo", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.37 PM (2).jpeg", alt: "College activity", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.38 PM.jpeg", alt: "Campus event", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.38 PM (1).jpeg", alt: "Event moment", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM.jpeg", alt: "Campus gathering", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM (1).jpeg", alt: "College photo", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.39 PM (2).jpeg", alt: "Campus moment", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.40 PM.jpeg", alt: "Event photo", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.40 PM (1).jpeg", alt: "Campus activity", cat: "Campus" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM.jpeg", alt: "College event", cat: "Events" },
-  { src: "/Filtered/WhatsApp Image 2026-07-02 at 2.59.41 PM (1).jpeg", alt: "Campus gathering", cat: "Campus" },
-];
 
 /**
  * The filter buttons used to be this fixed list, which meant a category the
@@ -126,21 +31,6 @@ const FILTER_ORDER = ["Campus", "Campus Life", "Labs", "Sports", "Library", "Eve
 // Gallery rows tagged with this category hold a video, not a photo.
 const VIDEO_CATEGORY = "__video__";
 
-/**
- * The four clips this page shipped with, shown only until the CMS has videos.
- *
- * They are files committed to the repo, so nobody could add a fifth or remove
- * one without a deployment - and meanwhile the videos the college DID add,
- * through Campus Videos, appeared on the homepage and on department pages but
- * never in the Gallery, which is the one page a visitor goes to looking for
- * them.
- */
-const FALLBACK_VIDEOS = [
-  { title: "", url: "/videos/flash-mob.mp4" },
-  { title: "", url: "/videos/3d-robo.mp4" },
-  { title: "", url: "/videos/sports-winners.mp4" },
-  { title: "", url: "/videos/sivananda-smaranam-night-event.mp4" },
-];
 
 /** A YouTube watch/share link becomes its embeddable form; anything else is
  *  a file URL and is played directly. */
@@ -154,41 +44,33 @@ export default function GalleryPage() {
 
   // Every video the college has added through Admin -> Campus Videos, so the
   // Gallery is where all of them are - not just the ones uploaded as gallery
-  // rows. The built-in clips show only while there are none.
+  // rows. Only those: the built-in clips used to fill in whenever there were
+  // none, so removing the last video in the admin brought four old ones back.
   const cmsVideos = useLiveData<{ title: string; url: string }[]>(
     () =>
       getCampusVideosPublic()
-        .then((r) => (r.visible ? r.items.map((v) => ({ title: v.title, url: v.youtubeUrl })) : []))
-        .catch(() => [] as { title: string; url: string }[]),
+        .then((r) => (r.visible ? r.items.map((v) => ({ title: v.title, url: v.youtubeUrl })) : [])),
     [],
   );
-  const videos = (cmsVideos ?? []).length ? (cmsVideos ?? []) : FALLBACK_VIDEOS;
+  const videos = cmsVideos ?? [];
 
   // Polled, so an image published in the admin appears here without a refresh.
-  // On an empty list or a failed fetch the fallback images stay - useLiveData
-  // keeps the last good value rather than blanking the page.
+  // Only what the admin publishes: the page used to start from the built-in
+  // photos and return to them whenever the gallery was empty or still loading,
+  // which is how a deleted photo appeared to come back.
   const images =
     useLiveData<GalleryImageDisplay[]>(
       () =>
         getGalleryPublic().then((items) => {
-          // The CMS is authoritative once it has any content.
-          //
-          // This used to MERGE the built-in set into the CMS results, so that
-          // the legacy photos stayed up "until an admin actually replaces that
-          // content through the CMS". That transition has now happened: the
-          // gallery is curated in the admin, and appending the hardcoded set
-          // put uncurated legacy photos alongside the real ones with no way to
-          // remove them from the admin - deleting a hardcoded image is not
-          // something the CMS can express, because it does not own it.
-          //
-          // The fallback below now does what a fallback should: it covers an
-          // empty CMS or an unreachable API, and nothing else.
+          // The CMS is the only source. A built-in set of legacy photos was
+          // first merged in, then kept as a fallback for an empty gallery;
+          // either way the admin could not delete those photos, because it
+          // does not own them, so they kept reappearing. They are gone.
           //
           // Videos are stored as Gallery rows tagged "__video__" (a Media URL
           // has no extension to sniff). They render as <video> tiles under a
           // "Videos" filter rather than being dropped - the raw sentinel is
           // never shown as a category label.
-          if (items.length === 0) return FALLBACK_IMAGES
           return items.map((i) =>
             i.category === VIDEO_CATEGORY
               ? { src: resolveFileUrl(i.imageUrl), alt: i.title, cat: "Videos", isVideo: true }
@@ -196,8 +78,7 @@ export default function GalleryPage() {
           )
         }),
       [],
-      { initialValue: FALLBACK_IMAGES },
-    ) ?? FALLBACK_IMAGES;
+    ) ?? [];
 
   // Built from what is actually in the gallery, so no photo can end up in a
   // category with no tab to reach it by.

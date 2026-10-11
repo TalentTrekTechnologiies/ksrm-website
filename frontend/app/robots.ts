@@ -27,6 +27,8 @@ export default function robots(): MetadataRoute.Robots {
         "/dashboard", // placeholder route
         "/api/", // backend proxy paths, if ever served from this origin
         "/careers/apply", // application form - no search value, collects PII
+        "/camera-lab", // internal test benches for the NBA document protection
+        "/screenshot-lab",
       ],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,

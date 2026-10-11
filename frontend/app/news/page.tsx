@@ -1,98 +1,19 @@
 ﻿"use client";
 
-import { mediaFile } from "@/lib/api-base";
-import StyledText from "@/components/StyledText";
-import { useState } from "react";
 import { getNewsPublic } from "@/lib/news-api";
 import NewsGrid, { toNewsItem, NewsItem } from "@/components/news/NewsGrid";
 import { useLiveData } from "@/lib/use-live-data";
 import CmsText from "@/components/CmsText";
 
-const filters = ["All", "Examinations", "Events", "Accreditation", "Rankings", "Placements"];
-
-interface NewsDisplay {
-  /** The CMS record's id, absent on the built-in fallback articles below -
-   *  which is why every use of it is guarded. Carried so a card's size and
-   *  colour can be set per item in Admin -> News. */
-  id?: number;
-  badge: string;
-  badgeBg: string;
-  badgeColor: string;
-  isNew: boolean;
-  date: string;
-  title: string;
-  desc: string;
-  href: string;
-}
-
-// Fixed palette matching the existing 5 named categories - unknown/future
-// categories fall back to a neutral gray rather than breaking the layout.
-const CATEGORY_STYLES: Record<string, { bg: string; color: string }> = {
-  Examinations: { bg: "#eef1ff", color: "#2B3490" },
-  Events: { bg: "#fff3e0", color: "#f57c00" },
-  Accreditation: { bg: "#e8f5e9", color: "#388e3c" },
-  Rankings: { bg: "#fce4ec", color: "#c2185b" },
-  Placements: { bg: "#e0f7fa", color: "#00838f" },
-};
-const DEFAULT_CATEGORY_STYLE = { bg: "#f0f0f0", color: "#666" };
-
-const FALLBACK_NEWS: NewsDisplay[] = [
-  { badge: "Examinations", badgeBg: "#eef1ff", badgeColor: "#2B3490", isNew: true, date: "2026-05-15", title: "KGCET 2K26 Results Announced", desc: "KGCET 2026 results have been announced. Students can check their results at the official portal.", href: mediaFile(173) },
-  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: true, date: "2026-04-01", title: "Graduation Day 2026 Applications Open", desc: "Applications for Graduation Day 2026 are now open. Students who have completed their degree can apply.", href: "#" },
-  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2025-08-15", title: "Freshers Orientation 2025-26", desc: "Welcome to the new batch of 2025-26. Orientation program details have been announced.", href: "#" },
-  { badge: "Accreditation", badgeBg: "#e8f5e9", badgeColor: "#388e3c", isNew: false, date: "2025-06-01", title: "NBA Accreditation Renewed", desc: "K.S.R.M. College of Engineering has successfully renewed NBA accreditation for multiple programmes.", href: "#" },
-  { badge: "Rankings", badgeBg: "#fce4ec", badgeColor: "#c2185b", isNew: false, date: "2025-03-01", title: "NIRF Ranking 2025 Submitted", desc: "KSRM College has submitted its NIRF ranking data for 2025.", href: "/accreditation" },
-  { badge: "Events", badgeBg: "#fff3e0", badgeColor: "#f57c00", isNew: false, date: "2024-12-10", title: "Industry-Academia Meet 2024", desc: "Annual Industry-Academia meet held with participation from 20+ companies.", href: "#" },
-];
-
 export default function NewsPage() {
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  // Polled, so an article published in the admin appears here without a
-  // refresh. On an empty list or a failed fetch the fallback news stay -
-  // useLiveData keeps the last good value rather than blanking the page.
-  //
-  // This full listing page always renders published articles regardless
-  // of the homepage teaser's visibility flag - that flag only controls
-  // whether the homepage's "Latest News" section shows, not this page.
-  const newsItems =
-    useLiveData<NewsDisplay[]>(
-      () =>
-        getNewsPublic().then(({ items }) =>
-          items.length === 0
-            ? FALLBACK_NEWS
-            : items.map((n) => {
-                const style = CATEGORY_STYLES[n.category] ?? DEFAULT_CATEGORY_STYLE
-                return {
-                  // Carried through so each card can be styled individually;
-                  // it was dropped here and the card had no id at all.
-                  id: n.id,
-                  badge: n.category,
-                  badgeBg: style.bg,
-                  badgeColor: style.color,
-                  isNew: n.isFeatured,
-                  date: n.date.slice(0, 10),
-                  title: n.title,
-                  desc: n.content.length > 160 ? `${n.content.slice(0, 160)}…` : n.content,
-                  href: "#",
-                }
-              }),
-        ),
-      [],
-      { initialValue: FALLBACK_NEWS },
-    ) ?? FALLBACK_NEWS;
-
-  // The redesigned grid needs the whole article (image, video, document), not
-  // the flattened teaser shape above, so it reads from the API separately. The
-  // old `newsItems` list still backs the fallback when the CMS is empty.
+  // Only what the CMS publishes. This page used to start from six built-in
+  // sample articles and fall back to them whenever the list was empty or still
+  // loading - so a deleted article seemed to come back, and an empty news page
+  // showed stories that never happened.
   const richNews = useLiveData<NewsItem[]>(
-    () => getNewsPublic().then(({ items }) => items.map(toNewsItem)).catch(() => [] as NewsItem[]),
+    () => getNewsPublic().then(({ items }) => items.map(toNewsItem)),
     [],
   );
-
-  const filteredNews = activeFilter === "All"
-    ? newsItems
-    : newsItems.filter(n => n.badge === activeFilter);
 
   return (
     <main style={{ background: "#ffffff" }}>
@@ -137,45 +58,14 @@ export default function NewsPage() {
           The homepage's news strip is deliberately left as it was. */}
       <section style={{ padding: "56px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
-          {richNews && richNews.length > 0 ? (
+          {/* While loading, hold a screen of space so the footer is not shown
+              and then shoved down when the articles arrive. */}
+          {richNews === null ? <div aria-busy="true" style={{ minHeight: "80vh" }} /> : richNews.length > 0 ? (
             <NewsGrid items={richNews} />
           ) : (
-            <>
-              <div className="news-filters">
-                {filters.map((f) => (
-                  <button key={f} onClick={() => setActiveFilter(f)} className={`news-filter-btn${activeFilter === f ? " active" : ""}`}>{f}</button>
-                ))}
-              </div>
-              <div className="news-grid">
-                {filteredNews.map((n) => (
-                  <div className="news-card" key={n.id ?? n.title}>
-                    <div className="news-badge" style={{ background: n.badgeBg, color: n.badgeColor }}>{n.badge}</div>
-                    {n.isNew && <div className="news-new-badge">🆕 NEW</div>}
-                    <div className="news-content">
-                      <span className="news-date">{n.date}</span>
-                      {/* Size and colour for this one item, set in
-                          Admin -> News. The built-in fallback articles have no
-                          id, so they simply render unstyled. */}
-                      <h3 className="news-title">
-                        {n.id ? (
-                          <StyledText module="news" recordId={n.id} field="title">{n.title}</StyledText>
-                        ) : (
-                          n.title
-                        )}
-                      </h3>
-                      <p className="news-description">
-                        {n.id ? (
-                          <StyledText module="news" recordId={n.id} field="content">{n.desc}</StyledText>
-                        ) : (
-                          n.desc
-                        )}
-                      </p>
-                      <a href={n.href} className="news-read-more">Read More →</a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
+            <p style={{ color: "#666", fontSize: 15, fontStyle: "italic", textAlign: "center", margin: "24px 0" }}>
+              No news has been published yet.
+            </p>
           )}
         </div>
       </section>

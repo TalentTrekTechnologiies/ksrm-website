@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
-import { campusVideosData } from "@/data/home"
 import { getCampusVideosPublic } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
 
@@ -24,7 +23,6 @@ interface DisplayVideo {
   badge: string
 }
 
-const FALLBACK_BADGES = ["Campus Tour", "Official", "College Tour"]
 
 // Extract video ID from a YouTube embed URL.
 function getVideoId(url: string) {
@@ -33,11 +31,6 @@ function getVideoId(url: string) {
   return match ? match[1] : ''
 }
 
-const FALLBACK_VIDEOS: DisplayVideo[] = (Array.isArray(campusVideosData) ? campusVideosData : []).map((v, i) => ({
-  title: v.title,
-  url: v.url,
-  badge: FALLBACK_BADGES[i] || 'Video',
-}))
 
 interface CampusVideosState {
   hidden: boolean
@@ -46,8 +39,7 @@ interface CampusVideosState {
 
 async function fetchCampusVideos(): Promise<CampusVideosState> {
   const { visible, items } = await getCampusVideosPublic()
-  if (!visible) return { hidden: true, videos: FALLBACK_VIDEOS }
-  if (items.length === 0) return { hidden: false, videos: FALLBACK_VIDEOS }
+  if (!visible) return { hidden: true, videos: [] }
   return {
     hidden: false,
     videos: items.map((v) => ({
@@ -61,9 +53,12 @@ async function fetchCampusVideos(): Promise<CampusVideosState> {
 export default function CampusVideos() {
   const live = useLiveData(fetchCampusVideos, [])
   const hidden = live?.hidden ?? false
-  const videos = live?.videos ?? FALLBACK_VIDEOS
+  // Only what the CMS publishes. While loading, and whenever the CMS list
+  // was empty, this used to show the built-in videos instead - so a deleted
+  // one kept coming back. Nothing to show, no section.
+  const videos = live?.videos ?? []
 
-  if (hidden) return null
+  if (hidden || videos.length === 0) return null
 
   return (
     <section style={{

@@ -220,6 +220,10 @@ export default function IntroSplash() {
           style={{
             width: "100%",
             height: "auto",
+            // The clip is square (720x720). Without this the element had no
+            // height until the file's metadata arrived, then sprang to full
+            // size - a visible jump inside the splash on every first visit.
+            aspectRatio: "1 / 1",
             maxHeight: "82vh",
             objectFit: "contain",
             display: "block",

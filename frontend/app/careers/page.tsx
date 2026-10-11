@@ -29,23 +29,18 @@ interface OpeningDisplay {
   location: string;
 }
 
-const FALLBACK_OPENINGS: OpeningDisplay[] = [
-  { careerId: null, title: "Assistant Professor - CSE", dept: "Computer Science & Engineering", type: "M.Tech/Ph.D. in Computer Science", location: "0-2 years" },
-  { careerId: null, title: "Lab Technician - ECE", dept: "Electronics & Communication", type: "Diploma/B.Tech in Electronics", location: "2-3 years" },
-  { careerId: null, title: "Administrative Officer", dept: "Administration", type: "Bachelor's Degree", location: "3-5 years" },
-];
 
 export default function CareersPage() {
   // Polled, so an opening published in the admin appears here without a
-  // refresh. On an empty list or a failed fetch the fallback openings stay -
-  // useLiveData keeps the last good value rather than blanking the page.
+  // refresh. Only real openings: this used to start from three built-in sample
+  // jobs and fall back to them whenever none were published, each with a live
+  // "Apply Now" - so a closed or deleted opening seemed to come back, and an
+  // applicant could apply for a job that did not exist.
   const openings =
     useLiveData<OpeningDisplay[]>(
       () =>
         getCareersPublic().then((items: Career[]) =>
-          items.length === 0
-            ? FALLBACK_OPENINGS
-            : items.map((o) => ({
+          items.map((o) => ({
                 careerId: o.id,
                 title: o.title,
                 dept: o.department ?? "—",
@@ -54,8 +49,7 @@ export default function CareersPage() {
               })),
         ),
       [],
-      { initialValue: FALLBACK_OPENINGS },
-    ) ?? FALLBACK_OPENINGS;
+    );
 
   return (
     <main style={{ background: "#ffffff" }}>
@@ -106,7 +100,12 @@ export default function CareersPage() {
       <section style={{ padding: "72px 0", background: "#f7f8fa" }}>
         <div className="responsive-container">
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700, color: "#1a1a2e", margin: "0 0 24px" }}><CmsText section="careers" slot="current-openings" /></h2>
-          {openings.map((o) => (
+          {openings !== null && openings.length === 0 && (
+            <p style={{ color: "#666", fontSize: 15, fontStyle: "italic", margin: 0 }}>
+              There are no openings at the moment. Please check back later.
+            </p>
+          )}
+          {(openings ?? []).map((o) => (
             <div className="car-opening-card" key={o.title}>
               <p className="car-opening-title">{o.title}</p>
               <p style={{ color: "#666", fontSize: 14, margin: "0 0 8px" }}><span style={{ fontWeight: 600, color: "#2B3490" }}>Department:</span> {o.dept}</p>

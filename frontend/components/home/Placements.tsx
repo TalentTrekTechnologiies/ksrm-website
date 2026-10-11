@@ -6,28 +6,19 @@ import { getStatisticsPublic, getRecruitersPublic, SiteStatistic } from "@/lib/h
 import { useLiveData } from "@/lib/use-live-data"
 import { useEffect, useRef, useState } from "react"
 
-const FALLBACK_STATS = [
-  { id: -1, number: 1200, suffix: "+", label: "Students Placed" },
-  { id: -2, number: 200, suffix: "+", label: "Recruiting Companies" },
-  { id: -3, number: 12, suffix: " LPA", label: "Highest Package" },
-  { id: -4, number: 15000, suffix: "+", label: "Alumni Network" },
-]
+/** Same shape as real stats; rendered invisible, only to reserve the row's height. */
+const STAT_PLACEHOLDERS = [-1, -2, -3, -4].map((id) => ({ id, number: 0, suffix: "", label: " " }))
 
 interface DisplayRecruiter {
   logo: string
   name: string
 }
 
-const INITIAL_STATS =
-  Array.isArray(homeData?.placements?.stats) && homeData.placements.stats.length > 0
-    ? homeData.placements.stats.map((s, i) => ({ id: -(i + 1), number: s.number, suffix: s.suffix, label: s.label }))
-    : FALLBACK_STATS
 
-const INITIAL_RECRUITERS: DisplayRecruiter[] = Array.isArray(homeData?.recruiters) ? homeData.recruiters : []
 
 async function fetchPlacementStats() {
   const data = await getStatisticsPublic("homepage_placements")
-  if (data.length === 0) return INITIAL_STATS
+  if (data.length === 0) return []
   return data.map((s: SiteStatistic) => ({ id: s.id, number: s.value, suffix: s.suffix ?? "", label: s.label }))
 }
 
@@ -41,8 +32,7 @@ interface RecruitersState {
 // doing that, per the plan's explicit callout.
 async function fetchRecruiters(): Promise<RecruitersState> {
   const { visible, items } = await getRecruitersPublic()
-  if (!visible) return { hidden: true, recruiters: INITIAL_RECRUITERS }
-  if (items.length === 0) return { hidden: false, recruiters: INITIAL_RECRUITERS }
+  if (!visible) return { hidden: true, recruiters: [] }
   return { hidden: false, recruiters: items.map((r) => ({ logo: r.logoUrl, name: r.name })) }
 }
 
@@ -82,10 +72,15 @@ function useTrackDuration(ref: React.RefObject<HTMLDivElement | null>, itemCount
 }
 
 export default function Placements() {
-  const stats = useLiveData(fetchPlacementStats, [], { initialValue: INITIAL_STATS }) ?? INITIAL_STATS
+  // Only what the CMS publishes. Both used to start from built-in figures and
+  // logos and return to them whenever the CMS list was empty, so a deleted
+  // stat or recruiter kept coming back. While the stats load, four invisible
+  // boxes hold their space so nothing below them jumps when they arrive.
+  const liveStats = useLiveData(fetchPlacementStats, [])
+  const stats = liveStats ?? STAT_PLACEHOLDERS
   const liveRecruiters = useLiveData(fetchRecruiters, [])
-  const recruitersHidden = liveRecruiters?.hidden ?? false
-  const recruiters = liveRecruiters?.recruiters ?? INITIAL_RECRUITERS
+  const recruiters = liveRecruiters?.recruiters ?? []
+  const recruitersHidden = (liveRecruiters?.hidden ?? false) || recruiters.length === 0
 
   const posters: string[] = Array.isArray(homeData?.placements?.posters) ? homeData.placements.posters : []
   const posterStrip = [...posters, ...posters]
@@ -421,7 +416,7 @@ export default function Placements() {
         {/* STATS */}
         <div className="placements-stats">
           {stats.map((stat) => (
-            <div key={stat.id} className="stat-box">
+            <div key={stat.id} className="stat-box" style={liveStats === null ? { visibility: "hidden" } : undefined} aria-hidden={liveStats === null}>
               <div className="stat-number">
                 {stat.number}{stat.suffix}
               </div>

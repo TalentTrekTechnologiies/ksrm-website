@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion"
 import Container from "@/components/ui/Container"
-import { testimonialsData } from "@/data/home"
 import { Star } from "lucide-react"
 import { getTestimonialsPublic } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
@@ -27,7 +26,6 @@ const containerVariants = {
   visible: { transition: { staggerChildren: 0.1 } },
 }
 
-const FALLBACK_TESTIMONIALS: DisplayTestimonial[] = Array.isArray(testimonialsData) ? testimonialsData : []
 
 interface TestimonialsState {
   hidden: boolean
@@ -36,8 +34,7 @@ interface TestimonialsState {
 
 async function fetchTestimonials(): Promise<TestimonialsState> {
   const { visible, items } = await getTestimonialsPublic()
-  if (!visible) return { hidden: true, testimonials: FALLBACK_TESTIMONIALS }
-  if (items.length === 0) return { hidden: false, testimonials: FALLBACK_TESTIMONIALS }
+  if (!visible) return { hidden: true, testimonials: [] }
   return {
     hidden: false,
     testimonials: items.map((t) => ({
@@ -53,9 +50,12 @@ async function fetchTestimonials(): Promise<TestimonialsState> {
 export default function Testimonials() {
   const live = useLiveData(fetchTestimonials, [])
   const hidden = live?.hidden ?? false
-  const testimonials = live?.testimonials ?? FALLBACK_TESTIMONIALS
+  // Only what the CMS publishes. While loading, and whenever the CMS list
+  // was empty, this used to show the built-in testimonials instead - so a deleted
+  // one kept coming back. Nothing to show, no section.
+  const testimonials = live?.testimonials ?? []
 
-  if (hidden) return null
+  if (hidden || testimonials.length === 0) return null
 
   return (
     <section style={{ width: "100%", background: "#f7f8fa", padding: "40px 0" }}>

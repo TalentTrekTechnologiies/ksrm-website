@@ -73,7 +73,13 @@ function Gallery() {
     [],
   );
   const shots = (uploaded ?? []).length
-    ? (uploaded ?? []).map((g) => ({ src: resolveFileUrl(g.imageUrl), caption: g.title ?? "" }))
+    ? (uploaded ?? []).map((g) => ({
+        src: resolveFileUrl(g.imageUrl),
+        caption: g.title ?? "",
+        // Gallery rows tagged "__video__" hold a video (see /gallery). Drawn as
+        // an <img> it showed as a broken picture.
+        isVideo: g.category === "__video__",
+      }))
     : GALLERY;
 
   if (shots.length === 0) return null;
@@ -85,8 +91,12 @@ function Gallery() {
         <div className="kg-gallery">
           {shots.map((g) => (
             <figure className="kg-shot" key={g.src}>
-              {/* eslint-disable-next-line @next/next/no-img-element -- static asset / admin upload */}
-              <img src={g.src} alt={g.caption} loading="lazy" decoding="async" />
+              {"isVideo" in g && g.isVideo ? (
+                <video src={g.src} controls muted playsInline preload="metadata" aria-label={g.caption} />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element -- static asset / admin upload
+                <img src={g.src} alt={g.caption} loading="lazy" decoding="async" />
+              )}
               {g.caption && <figcaption>{g.caption}</figcaption>}
             </figure>
           ))}
@@ -195,7 +205,7 @@ export default function KgcetPage() {
 
         .kg-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         .kg-shot { margin: 0; background: #fff; border: 1px solid #eef0f3; border-radius: 12px; overflow: hidden; }
-        .kg-shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+        .kg-shot img, .kg-shot video { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; background: #000; }
         /* Below the photo rather than over it: these captions name a year and a
            college, so they have to be readable, not decorative. */
         .kg-shot figcaption { padding: 14px 16px; font-size: 13.5px; line-height: 1.5; color: #555; }

@@ -51,6 +51,15 @@ export function mediaFile(id: number): string {
 export function resolveFileUrl(url: string | null | undefined): string {
   if (!url) return "";
   const trimmed = url.trim();
+  // A Media Library file is only ever served by this site's own API, so an
+  // absolute one is re-pointed at it whatever host it was saved against.
+  // Rows saved while the API answered on a bare IP still carried
+  // "http://200.141.7.253/api/media/file/...": on the HTTPS site the browser
+  // refused it as mixed content, and the H&S department video never played.
+  const media = trimmed.match(/^https?:\/\/[^/]+\/api(\/media\/file\/.*)$/i);
+  if (media) return `${API_BASE}${media[1]}`;
+  // Stored without the /api prefix, which the static host answers with a 404.
+  if (trimmed.startsWith("/media/file/")) return `${API_BASE}${trimmed}`;
   if (/^(https?:|data:|mailto:|tel:)/i.test(trimmed)) return trimmed;
   // API_BASE already carries the /api prefix, so the stored one is dropped
   // rather than doubled.

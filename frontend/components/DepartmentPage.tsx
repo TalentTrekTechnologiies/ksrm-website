@@ -867,6 +867,14 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           </div>
         </div>
 
+        {/* Until the department has loaded, a screen of empty space under the
+            tab bar. Without it the first paint was the banner, the tabs, an
+            empty outcomes box and the footer; the content then arrived above
+            them and shoved them off-screen - the largest layout shift on the
+            site (CLS 0.7-1.0 on department pages). Content now fills in below
+            the fold, where nothing visible moves. */}
+        {!visibilityReady && <div aria-busy="true" style={{ minHeight: "100vh" }} />}
+
         {/* ABOUT */}
         {isVisible("about.showSection") && (
         <section id="about" style={{ padding: "72px 0", background: "#ffffff" }}>
@@ -890,7 +898,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                   muted
                   loop
                 >
-                  <source src={department.aboutVideo} type="video/mp4" />
+                  <source src={resolveFileUrl(department.aboutVideo)} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               )}
@@ -1179,12 +1187,17 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
             with this department picked. Renders nothing until one exists, so
             every department has the section available without any of them
             being forced to show an empty one. */}
-        <BoardOfStudies departmentId={resolvedDepartmentId} />
+        {/* Both wait for visibilityReady like every section around them. They
+            load on their own and used to arrive first, rendering near the top
+            of an otherwise empty page - then the rest of the department was
+            inserted above them and they jumped ~600px down. On the live site
+            that made department pages the jumpiest on the site. */}
+        {visibilityReady && <BoardOfStudies departmentId={resolvedDepartmentId} />}
 
         {/* Student Chapter - Admin -> Committees (type "Student Chapter",
             this department) for the roster, the department workspace for its
             events and documents. */}
-        <StudentChapter departmentId={resolvedDepartmentId} />
+        {visibilityReady && <StudentChapter departmentId={resolvedDepartmentId} />}
 
         {/* OUTCOMES: PEOs / PSOs / POs */}
         <section id="outcomes" style={{ padding: "72px 0", background: "#f7f8fa" }}>

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import SmartLink from "@/components/ui/SmartLink"
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useRef } from "react"
 import { getHeroPublic, HomepageHero, HeroNewsTickerItem } from "@/lib/homepage-api"
@@ -415,7 +416,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
             >
               {/* Doubled for seamless loop */}
               {(Array.isArray(newsItems) ? [...newsItems, ...newsItems] : []).map((item, i) => (
-                <Link key={i} href={item.href || "/news"} className="news-item">
+                <SmartLink key={i} href={item.href || "/news"} className="news-item">
                   {/* META ROW */}
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
                     {item.isNew && (
@@ -435,7 +436,7 @@ export default function Hero({ previewData }: { previewData?: HomepageHero }) {
                   <div style={{ fontSize: "17px", color: "#ffffff", lineHeight: 1.4 }}>
                     {item.text}
                   </div>
-                </Link>
+                </SmartLink>
               ))}
             </div>
           </div>

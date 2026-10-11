@@ -48,10 +48,10 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "naac.best-practices", label: "NAAC → Best Practices" },
   { value: "naac.distinctiveness", label: "NAAC → Institutional Distinctiveness" },
   { value: "naac", label: "NAAC" },
-  { value: "nba", label: "NBA" },
+  { value: "nba", label: "NBA → DCS Reports" },
   // A dash, not a dot: everything under "nba." is served only through the
   // protected viewer. Certificates are published openly, so they sit outside it.
-  { value: "nba-certificates", label: "NBA → Accredited Certificates" },
+  { value: "nba-certificates", label: "NBA → Certificate" },
   { value: "alumni", label: "Alumni" },
   { value: "syllabus", label: "Syllabus" },
   // Examinations is split into its page's sub-sections so an upload lands in

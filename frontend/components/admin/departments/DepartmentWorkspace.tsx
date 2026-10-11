@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { AlertTriangle, ArrowLeft } from "lucide-react"
 import PermissionGate from "@/components/admin/cms/PermissionGate"
@@ -60,6 +60,14 @@ function DepartmentWorkspaceInner() {
   const [error, setError] = useState<string | null>(null)
   const [department, setDepartment] = useState<Department | null>(null)
 
+  // Read through a ref so a tab change does not re-run `load`. It used to be a
+  // dependency, so every tab click refetched the department and flashed
+  // "Loading department..." over a page that already had it.
+  const tabRef = useRef(tab)
+  useEffect(() => {
+    tabRef.current = tab
+  }, [tab])
+
   const load = useCallback(async () => {
     if (Number.isNaN(id)) {
       setError("No department id given.")
@@ -67,7 +75,7 @@ function DepartmentWorkspaceInner() {
       return
     }
     if (isDeptScoped && admin?.departmentId && id !== admin.departmentId) {
-      router.replace(`/admin/departments/workspace?id=${admin.departmentId}&tab=${tab}`)
+      router.replace(`/admin/departments/workspace?id=${admin.departmentId}&tab=${tabRef.current}`)
       return
     }
     setLoading(true)
@@ -79,14 +87,18 @@ function DepartmentWorkspaceInner() {
     } finally {
       setLoading(false)
     }
-  }, [admin?.departmentId, id, isDeptScoped, router, tab])
+  }, [admin?.departmentId, id, isDeptScoped, router])
 
   useEffect(() => {
     load()
   }, [load])
 
+  // replace, not push. Each tab used to add a history entry, so after looking
+  // through a few tabs the browser's Back button stepped through them one by
+  // one and the admin seemed stuck in that department ("BCA" in the report).
+  // Back now leaves the department in one step.
   function setTab(key: string) {
-    router.push(`/admin/departments/workspace?id=${id}&tab=${key}`)
+    router.replace(`/admin/departments/workspace?id=${id}&tab=${key}`)
   }
 
   if (loading) {

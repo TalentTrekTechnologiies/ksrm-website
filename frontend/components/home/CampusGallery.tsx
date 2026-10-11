@@ -11,22 +11,10 @@ import { useLiveData } from "@/lib/use-live-data"
 const EASE = [0.22, 1, 0.36, 1] as const
 const CATEGORY = "Campus Life"
 
-// Shown immediately on first paint and kept if the API is unreachable, so
-// the section never renders empty. Mirrors the real seeded gallery records.
-const FALLBACK: { id: number; title: string; imageUrl: string }[] = [
-  { id: -1, title: "Aerial Campus View", imageUrl: "/campus/aerial-campus.webp" },
-  { id: -2, title: "Main Academic Building", imageUrl: "/campus/main-building.webp" },
-  { id: -3, title: "Central Library", imageUrl: "/campus/central-library.webp" },
-  { id: -4, title: "Robotics & 3D Printing Lab", imageUrl: "/campus/robotics-lab.webp" },
-  { id: -5, title: "Seminar Hall", imageUrl: "/campus/seminar-hall.webp" },
-  { id: -6, title: "Sports Ground", imageUrl: "/campus/sports-ground.webp" },
-  { id: -7, title: "Cultural Fest", imageUrl: "/campus/cultural-fest.webp" },
-  { id: -8, title: "Founder's Day", imageUrl: "/campus/founders-day.webp" },
-]
 
 async function fetchGallery() {
   const data = await getGalleryPublic(CATEGORY)
-  if (!data.length) return FALLBACK
+  if (!data.length) return []
   return data.map((g: GalleryImage) => ({ id: g.id, title: g.title, imageUrl: resolveFileUrl(g.imageUrl) }))
 }
 
@@ -40,9 +28,13 @@ const tileVariants = {
 }
 
 export default function CampusGallery() {
-  const images = useLiveData(fetchGallery, [], { initialValue: FALLBACK }) ?? FALLBACK
+  // Only what the CMS publishes - not the built-in list, which this block
+  // used to show while loading and whenever the CMS list was empty, so a
+  // deleted item kept coming back. Nothing to show, no section.
+  const images = useLiveData(fetchGallery, []) ?? []
   // Uniform grid of 8 (2 rows of 4); the rest live on /gallery.
   const tiles = images.slice(0, 8)
+  if (tiles.length === 0) return null
 
   return (
     <section style={{ width: "100%", background: "#ffffff", padding: "44px 0", borderTop: "1px solid #f1f5f9" }}>

@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import SmartLink from "@/components/ui/SmartLink"
 import { resolveFileUrl } from "@/lib/api-base";
 import Container from "@/components/ui/Container"
 import { getQuickLinksPublic, QuickLink } from "@/lib/homepage-api"
@@ -35,12 +35,17 @@ function normalizeService(service: QuickLink) {
 
 async function fetchServices() {
   const data = await getQuickLinksPublic("homepage_quick_links")
-  if (data.length === 0) return FALLBACK_SERVICES
+  if (data.length === 0) return []
   return data.map(normalizeService)
 }
 
 export default function CampusServices() {
-  const services = useLiveData(fetchServices, [], { initialValue: FALLBACK_SERVICES }) ?? FALLBACK_SERVICES
+  // Only what the CMS publishes - not the built-in list, which this block
+  // used to show while loading and whenever the CMS list was empty, so a
+  // deleted item kept coming back. Nothing to show, no section.
+  // FALLBACK_SERVICES still supplies each service's icon, matched by title.
+  const services = useLiveData(fetchServices, []) ?? []
+  if (services.length === 0) return null
 
   return (
     <section
@@ -91,7 +96,7 @@ export default function CampusServices() {
       <div className="services-grid">
         {services.map((service) => (
           <div key={service.id}>
-            <Link href={service.link} style={{ textDecoration: "none", display: "block", height: "100%" }}>
+            <SmartLink href={service.link} style={{ textDecoration: "none", display: "block", height: "100%" }}>
               <div style={{
                 background: "#ffffff",
                 border: "1px solid #eef0f3",
@@ -152,7 +157,7 @@ export default function CampusServices() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </SmartLink>
           </div>
         ))}
       </div>

@@ -5,16 +5,9 @@ import Container from "@/components/ui/Container"
 import { getStatisticsPublic, SiteStatistic } from "@/lib/homepage-api"
 import { useLiveData } from "@/lib/use-live-data"
 
-const FALLBACK_STATS = [
-  { id: -1, number: 46, suffix: "+", label: "Years of Excellence" },
-  { id: -2, number: 35.23, suffix: "", label: "Acres Campus Area" },
-  { id: -3, number: 1200, suffix: "+", label: "Students Intake" },
-  { id: -4, number: 150, suffix: "+", label: "Faculty Members" },
-  { id: -5, number: 7, suffix: "", label: "Departments" },
-  { id: -6, number: 12, suffix: " LPA", label: "Highest Package" },
-  { id: -7, number: 15000, suffix: "+", label: "Alumni Network" },
-  { id: -8, number: 200, suffix: "+", label: "Companies Recruiting" },
-]
+/** Same shape as real stats; rendered invisible, only to reserve the band's height. */
+const STAT_PLACEHOLDERS = [-1, -2, -3, -4].map((id) => ({ id, number: 0, suffix: "", label: " " }))
+
 
 function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suffix: string; duration?: number }) {
   // Seeded with the REAL figure, not 0.
@@ -86,12 +79,19 @@ function AnimatedCounter({ target, suffix, duration = 2 }: { target: number; suf
 
 async function fetchStats() {
   const data = await getStatisticsPublic("homepage")
-  if (data.length === 0) return FALLBACK_STATS
+  if (data.length === 0) return []
   return data.map((s: SiteStatistic) => ({ id: s.id, number: s.value, suffix: s.suffix ?? "", label: s.label }))
 }
 
 export default function CampusStats() {
-  const stats = useLiveData(fetchStats, [], { initialValue: FALLBACK_STATS }) ?? FALLBACK_STATS
+  // Only what the CMS publishes - not the built-in list, which this block
+  // used to show while loading and whenever the CMS list was empty, so a
+  // deleted item kept coming back. Nothing to show, no section.
+  // While loading, four invisible cards hold the band's height so the page
+  // below does not jump when the real figures arrive.
+  const liveStats = useLiveData(fetchStats, [])
+  if (liveStats !== null && liveStats.length === 0) return null
+  const stats = liveStats ?? STAT_PLACEHOLDERS
 
   return (
     <section style={{
@@ -142,7 +142,7 @@ export default function CampusStats() {
       <Container>
         <div className="stats-grid">
           {stats.map((stat) => (
-            <div key={stat.id} className="stat-card">
+            <div key={stat.id} className="stat-card" style={liveStats === null ? { visibility: "hidden" } : undefined} aria-hidden={liveStats === null}>
               <AnimatedCounter target={stat.number} suffix={stat.suffix} />
               <div className="stat-label">{stat.label}</div>
             </div>

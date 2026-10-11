@@ -141,7 +141,12 @@ export default function AnnouncementTicker({
   const cfg = useTickerSettings(location)
 
   if (!cfg.enabled) return null
-  if (all === null || all.length === 0) return null
+  // While the notices load, an empty bar of the same height. It used to render
+  // nothing, then appear and push every page down 28px once they arrived.
+  if (all === null) {
+    return <div aria-hidden="true" style={{ height: 28, background: PRIORITY_COLORS.NORMAL }} />
+  }
+  if (all.length === 0) return null
 
   const items = all.slice(0, cfg.maxVisible)
 

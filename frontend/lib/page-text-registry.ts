@@ -107,9 +107,9 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
       {
         label: "Sections",
         slots: [
-          { id: "certificates", label: "Accredited Certificates heading", kind: "line", default: "Accredited Certificates" },
+          { id: "certificates", label: "Certificate heading", kind: "line", default: "Certificate" },
           { id: "accredited-programmes", label: "Programmes heading", kind: "line", default: "Accredited Programmes" },
-          { id: "documents", label: "Documents heading", kind: "line", default: "NBA Documents" },
+          { id: "documents", label: "DCS Reports heading", kind: "line", default: "DCS Reports" },
         ],
       },
     ],

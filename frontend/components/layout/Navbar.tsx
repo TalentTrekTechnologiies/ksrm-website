@@ -197,15 +197,16 @@ const navItems: NavItem[] = [
   {
     label: "IQAC",
     href: "/iqac",
+    // The college's IQAC outline (2026-10): About IQAC, NAAC and NBA, all
+    // under IQAC. NBA used to sit beside it on the menu row; it moved under it
+    // at the college's request. Each is still a page of its own (/nba is cited
+    // by URL in submissions), only the menu changed.
     children: [
+      { label: "About IQAC", href: "/iqac" },
       { label: "NAAC", href: "/naac" },
+      { label: "NBA", href: "/nba" },
     ],
   },
-  // Beside IQAC rather than inside it: NBA accredits programmes and NAAC
-  // accredits the institution, so a reviewer arriving for one has no reason to
-  // look under the other. Both are cited by URL in submissions, which is also
-  // why this is a real page and not an anchor.
-  { label: "NBA", href: "/nba" },
   // Gallery and Careers are on the row itself rather than buried in More:
   // both are destinations a visitor arrives looking for, unlike the statutory
   // documents they traded places with, which are consulted deliberately by

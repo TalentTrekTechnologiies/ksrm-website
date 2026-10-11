@@ -38,46 +38,6 @@ const FALLBACK_ADMISSIONS: AdmissionsContent = {
   poster: FALLBACK_POSTER,
 }
 
-const FALLBACK_PROGRAMS: AdmissionProgram[] = [
-  {
-    id: -1,
-    section: "homepage_admission_programs",
-    icon: "B.Tech Programmes",
-    imageUrl: "/b-tech-banner.webp",
-    mediaId: null,
-    title: "B.Tech Engineering",
-    description: "750+ Seats | 8 Branches | 4 Years",
-    tags: ["CSE", "ECE", "EEE", "CIVIL", "MECH", "AI&ML", "DS", "AIML"],
-    linkUrl: "/admissions/ug",
-    linkText: "View UG Courses",
-    sortOrder: 0,
-    isActive: true,
-    createdAt: "",
-    updatedAt: "",
-    deletedAt: null,
-    deletedBy: null,
-    version: 1,
-  },
-  {
-    id: -2,
-    section: "homepage_admission_programs",
-    icon: "Diploma / Polytechnic",
-    imageUrl: "/diploma-banner.webp",
-    mediaId: null,
-    title: "Diploma Programmes",
-    description: "Lateral Entry Available | 3 Years | EAPCET Eligible",
-    tags: ["Civil", "Mechanical", "ECE", "EEE", "CSE"],
-    linkUrl: "/admissions/diploma",
-    linkText: "View Diploma Courses",
-    sortOrder: 1,
-    isActive: true,
-    createdAt: "",
-    updatedAt: "",
-    deletedAt: null,
-    deletedBy: null,
-    version: 1,
-  },
-]
 
 interface AdmissionsState {
   admissions: AdmissionsContent
@@ -162,7 +122,10 @@ async function fetchAdmissions(): Promise<AdmissionsState> {
   ])
   return {
     admissions: normalizeAdmissions(section?.content),
-    programs: programsList.length > 0 ? programsList.map(normalizeProgram) : FALLBACK_PROGRAMS,
+    // Only the programmes the CMS publishes; the built-in list used to fill
+    // in whenever it was empty or still loading, so a removed programme
+    // kept reappearing.
+    programs: programsList.map(normalizeProgram),
   }
 }
 
@@ -173,7 +136,7 @@ export default function Admissions({
 }) {
   const live = useLiveData(fetchAdmissions, [], { skip: !!previewData })
   const admissions = previewData?.admissions ?? live?.admissions ?? FALLBACK_ADMISSIONS
-  const programs = previewData?.programs ?? live?.programs ?? FALLBACK_PROGRAMS
+  const programs = previewData?.programs ?? live?.programs ?? []
   const poster = normalizePoster(admissions.poster)
 
   return (
