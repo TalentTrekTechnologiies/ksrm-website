@@ -55,7 +55,11 @@ export function useLiveData<T>(
     load()
     // Reload as soon as anything is edited, rather than waiting for the timer.
     const unsubscribe = onContentChange(load)
-    const interval = setInterval(load, options?.intervalMs ?? DEFAULT_POLL_INTERVAL_MS)
+    // The backup timer skips tabs nobody is looking at; a content change still
+    // reaches them when they are shown again (see content-version-store).
+    const interval = setInterval(() => {
+      if (document.visibilityState !== "hidden") load()
+    }, options?.intervalMs ?? DEFAULT_POLL_INTERVAL_MS)
     return () => {
       cancelled = true
       unsubscribe()

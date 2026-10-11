@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { resolveFileUrl } from "@/lib/api-base"
+import { resolveFileUrl, thumbProps } from "@/lib/api-base"
 import { academicYearOf, currentAcademicYearLabel } from "@/lib/academic-year";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { UPLOADED_MEDIA_STYLES } from "@/lib/uploaded-media-styles"
@@ -322,9 +322,10 @@ function PageResourcesSkeleton({
   const rows = (
     <div className={`pr-list${embedded ? " pr-embedded" : ""}`} aria-busy="true" aria-live="polite">
       <span className="sr-only">Loading documents…</span>
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="pr-skel-row" style={{ animationDelay: `${i * 0.12}s` }} />
-      ))}
+      {/* One row, not three. Many blocks turn out to be empty, and a tall
+          placeholder collapsing to nothing jerked everything below it up
+          (Committees, Examinations); one row is still a visible "loading". */}
+      <div className="pr-skel-row" />
     </div>
   )
 
@@ -731,7 +732,7 @@ export default function PageResources({
               {images.slice(0, 8).map((img) => (
                 <div key={img.id} className="pr-tile um-frame">
                   {/* eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL */}
-                  <img src={resolveFileUrl(img.imageUrl)} alt={img.title} loading="lazy" decoding="async" onError={(e) => ((e.currentTarget.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} />
+                  <img {...thumbProps(img.imageUrl, "MEDIUM", (el) => (el.closest(".pr-tile") as HTMLElement | null)?.style.setProperty("display", "none"))} alt={img.title} loading="lazy" decoding="async" />
                   <div className="pr-cap"><span>{img.title}</span></div>
                 </div>
               ))}

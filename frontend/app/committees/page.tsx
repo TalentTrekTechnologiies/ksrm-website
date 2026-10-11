@@ -36,6 +36,10 @@ export default function CommitteesPage() {
       taglineSlot="the-committees-that-govern-and"
       introSlot="k-s-r-m-college"
     >
+      {/* While the committees load, a screen of space - otherwise the
+          "Committee Documents" heading below was drawn near the top, then
+          shoved off-screen when ~6,000px of committees arrived above it. */}
+      {committees === null && <div aria-busy="true" style={{ minHeight: "100vh" }} />}
       {live.map((committee) => {
         const members = (committee.members ?? []).filter((m) => m.isActive !== false);
         const anchor = committeeAnchor(committee.name);
@@ -80,7 +84,7 @@ export default function CommitteesPage() {
             >
               Minutes of Meetings
             </h3>
-            <PageResources section={momSection(committee.name)} embedded maxVisible={8} />
+            <PageResources section={momSection(committee.name)} embedded maxVisible={8} emptyText="No minutes published yet." />
           </section>
         );
       })}
@@ -88,10 +92,14 @@ export default function CommitteesPage() {
       {/* Minutes, constitution orders and any other committee papers, uploaded
           in Admin -> Documents against "Committees". Renders nothing until
           something is uploaded, so the page never shows an empty heading. */}
-      <h2 className="sp-heading" style={{ marginTop: 8 }}>
-        <CmsText section="committees" slot="committee-documents" />
-      </h2>
-      <PageResources section="committees" embedded />
+      {committees !== null && (
+        <>
+          <h2 className="sp-heading" style={{ marginTop: 8 }}>
+            <CmsText section="committees" slot="committee-documents" />
+          </h2>
+          <PageResources section="committees" embedded emptyText="None published yet." />
+        </>
+      )}
     </SimplePageShell>
   );
 }

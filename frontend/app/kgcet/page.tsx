@@ -7,7 +7,7 @@ import {
   KgcetParticipation,
   KgcetHighlight,
 } from "@/lib/kgcet-api";
-import { resolveFileUrl } from "@/lib/api-base";
+import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
@@ -95,7 +95,7 @@ function Gallery() {
                 <video src={g.src} controls muted playsInline preload="metadata" aria-label={g.caption} />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element -- static asset / admin upload
-                <img src={g.src} alt={g.caption} loading="lazy" decoding="async" />
+                <img {...thumbProps(g.src)} alt={g.caption} loading="lazy" decoding="async" />
               )}
               {g.caption && <figcaption>{g.caption}</figcaption>}
             </figure>

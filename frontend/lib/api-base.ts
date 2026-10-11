@@ -48,6 +48,41 @@ export function mediaFile(id: number): string {
  * Anything already absolute, or pointing somewhere else entirely (an external
  * site, a static file under /public), is returned untouched.
  */
+/**
+ * Props for an <img> in a grid: a smaller copy of a Media Library image, with
+ * the original as the fallback.
+ *
+ * Grids used to load every photo's original - 0.5-1.8 MB each, ~70 MB for the
+ * Gallery page - though the Media Library keeps an 800px WebP of each upload
+ * (MEDIUM, ~70 KB). Images imported from the old site may not have one until
+ * backend/scripts/backfill-image-variants.ts has run, so a missing copy falls
+ * back to the original instead of showing as broken. A URL that is not a
+ * Media Library original (a static file, a video) is used as it is.
+ *
+ * Usage: <img {...thumbProps(item.imageUrl)} alt="..." loading="lazy" />
+ */
+export function thumbProps(
+  url: string | null | undefined,
+  size: "SMALL" | "MEDIUM" | "LARGE" = "MEDIUM",
+  /** Runs when even the original fails - e.g. to hide the tile. */
+  onFinalError?: (img: HTMLImageElement) => void,
+) {
+  const original = resolveFileUrl(url);
+  const thumb = original.replace(/\/media\/file\/(\d+)\/ORIGINAL\/SOURCE$/, `/media/file/$1/${size}/WEBP`);
+  return {
+    src: thumb,
+    onError: (e: { currentTarget: HTMLImageElement }) => {
+      const img = e.currentTarget;
+      if (thumb !== original && img.dataset.fellBack !== "1") {
+        img.dataset.fellBack = "1";
+        img.src = original;
+        return;
+      }
+      onFinalError?.(img);
+    },
+  };
+}
+
 export function resolveFileUrl(url: string | null | undefined): string {
   if (!url) return "";
   const trimmed = url.trim();

@@ -18,8 +18,16 @@ const CATEGORY_LABELS: Record<DownloadCategory, string> = {
 
 const FILTERS: ("All" | DownloadCategory)[] = ["All", "SYLLABUS", "QUESTION_PAPER", "BROCHURE", "AFFIDAVIT", "FORM", "OTHER"];
 
+/**
+ * Rows drawn at a time. The list used to draw every document - about 6,700
+ * under "All" - which made this page slow to open and heavy to scroll.
+ */
+const PAGE_SIZE = 40;
+
 export default function DownloadsPage() {
   const [activeFilter, setActiveFilter] = useState<"All" | DownloadCategory>("All");
+  const [query, setQuery] = useState("");
+  const [shown, setShown] = useState(PAGE_SIZE);
 
   // Polled, so a file published in the admin appears here without a refresh.
   // The fetcher never rejects, so a failed request resolves to [] and still
@@ -31,10 +39,13 @@ export default function DownloadsPage() {
   const downloads = data ?? [];
   const loaded = data !== null;
 
-  const filtered = useMemo(
-    () => (activeFilter === "All" ? downloads : downloads.filter((d) => d.category === activeFilter)),
-    [downloads, activeFilter],
-  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return downloads.filter(
+      (d) => (activeFilter === "All" || d.category === activeFilter) && (!q || d.title.toLowerCase().includes(q)),
+    );
+  }, [downloads, activeFilter, query]);
+  const visible = filtered.slice(0, shown);
 
   return (
     <main style={{ background: "#ffffff" }}>
@@ -51,6 +62,8 @@ export default function DownloadsPage() {
         .dl-filter-btn { background: #f7f8fa; border: 1px solid #eef0f3; color: #2B3490; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
         .dl-filter-btn.active { background: #2B3490; color: #D4A500; border-color: #2B3490; }
         .dl-empty { text-align: center; padding: 64px 20px; color: #999; }
+        .dl-search { width: 100%; max-width: 480px; padding: 12px 16px; border: 1px solid #dfe3ea; border-radius: 10px; font-size: 15px; margin: 0 0 24px; }
+        .dl-search:focus { outline: 2px solid #2B3490; outline-offset: 1px; }
       `}</style>
 
       <section className="dl-hero">
@@ -66,19 +79,29 @@ export default function DownloadsPage() {
         <div className="responsive-container">
           <div className="dl-filters">
             {FILTERS.map((f) => (
-              <button key={f} onClick={() => setActiveFilter(f)} className={`dl-filter-btn${activeFilter === f ? " active" : ""}`}>
+              <button key={f} onClick={() => { setActiveFilter(f); setShown(PAGE_SIZE); }} className={`dl-filter-btn${activeFilter === f ? " active" : ""}`}>
                 {f === "All" ? "All" : CATEGORY_LABELS[f]}
               </button>
             ))}
           </div>
 
+          <input
+            type="search"
+            id="downloads-search"
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setShown(PAGE_SIZE); }}
+            placeholder="Search documents by name"
+            aria-label="Search documents by name"
+            className="dl-search"
+          />
+
           {filtered.length === 0 ? (
             <div className="dl-empty">
-              {loaded ? "No documents available in this category yet." : "Loading downloads..."}
+              {!loaded ? "Loading downloads..." : query.trim() ? "No documents match that search." : "No documents available in this category yet."}
             </div>
           ) : (
             <PublicDocumentList
-              items={filtered.map((d) => ({
+              items={visible.map((d) => ({
                 id: d.id,
                 title: d.title,
                 description: d.description,
@@ -87,6 +110,13 @@ export default function DownloadsPage() {
                 actionLabel: "Download",
               }))}
             />
+          )}
+          {filtered.length > shown && (
+            <div style={{ textAlign: "center", marginTop: 24 }}>
+              <button type="button" className="dl-filter-btn" onClick={() => setShown((n) => n + PAGE_SIZE * 2)}>
+                Show more ({filtered.length - shown} more)
+              </button>
+            </div>
           )}
         </div>
       </section>

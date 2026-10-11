@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Faculty } from "@/lib/faculty-api"
-import { resolveFileUrl } from "@/lib/api-base"
+import { thumbProps } from "@/lib/api-base"
 import FacultyProfileModal from "@/components/faculty/FacultyProfileModal"
 
 /**
@@ -98,12 +98,12 @@ export default function FacultyGrid({
                     // :3000 and the API on :4000, so every Media Library photo
                     // 404'd. resolveFileUrl rewrites against the API base and
                     // leaves absolute and static URLs untouched.
-                    src={resolveFileUrl(f.photoUrl)}
+                    //
+                    // The 400px copy, not the original: a card-sized photo
+                    // was downloading the full upload for every person listed.
+                    {...thumbProps(f.photoUrl, "SMALL", (el) => { el.style.display = "none" })}
                     alt={f.name}
                     loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none"
-                    }}
                   />
                 ) : (
                   <span className="fg-initials">{initials(f.name)}</span>

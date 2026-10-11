@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
-import { resolveFileUrl } from "@/lib/api-base";
+import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import { getGalleryPublic } from "@/lib/gallery-api";
 import { getCampusVideosPublic } from "@/lib/homepage-api";
 import { useLiveData } from "@/lib/use-live-data";
@@ -150,7 +150,7 @@ export default function GalleryPage() {
                   {img.isVideo ? (
                     <video src={img.src} controls preload="metadata" onError={(e) => { e.currentTarget.style.display = "none" }} />
                   ) : (
-                    <img src={img.src} alt={img.alt} loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none" }} />
+                    <img {...thumbProps(img.src, "MEDIUM", (el) => { el.style.display = "none" })} alt={img.alt} loading="lazy" decoding="async" />
                   )}
                 </div>
                 <div className="gal-card-content">

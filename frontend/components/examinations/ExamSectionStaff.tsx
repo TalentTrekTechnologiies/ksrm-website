@@ -43,7 +43,12 @@ export default function ExamSectionStaff() {
   const settingsLoaded = settings !== null
   const showPhotos = settings?.["faculty_show_photos"] === "true"
 
-  if (!staff || staff.length === 0 || !settingsLoaded) return null
+  // While loading, a screen of space. This block sits right under the banner
+  // and is about 1,200px tall; drawn from nothing once its data arrived, it
+  // shoved the whole Examinations page down - the page's one big jump. The
+  // college has eight staff here, so the space is filled, not collapsed.
+  if (staff === null || !settingsLoaded) return <div aria-busy="true" style={{ minHeight: "100vh" }} />
+  if (staff.length === 0) return null
 
   // The Controller is the isHod record, shown on their own above the team.
   // Falls back to the designation so a record that was never flagged isHod

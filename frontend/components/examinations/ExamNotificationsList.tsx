@@ -92,6 +92,10 @@ export default function ExamNotificationsList({
   )
 
   if (items === null) {
+    // A list that hides when empty shows nothing while it loads, too: three of
+    // the four on the Examinations page are empty, and each one's "Loading"
+    // line appeared and then vanished, jerking the page up three times.
+    if (hideEmpty) return null
     return <p style={{ color: "#999", fontSize: 14, textAlign: "center", padding: "24px 0" }}>Loading notifications...</p>
   }
 

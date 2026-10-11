@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { resolveFileUrl } from "@/lib/api-base";
+import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import type { Department, FacultyMember } from "@/types/department";
 import { getDepartmentsPublic } from "@/lib/departments-api";
 import { getFacultyPublic, Faculty } from "@/lib/faculty-api";
@@ -1018,7 +1018,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                     // Media Library photos are stored as "/api/media/..." and
                     // must be resolved against the API base - see FacultyGrid.
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={resolveFileUrl(department.hod.photo)} alt={department.hod.name} loading="lazy" decoding="async"
+                    <img {...thumbProps(department.hod.photo)} alt={department.hod.name} loading="lazy" decoding="async"
                       style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
                   ) : null}
                 </div>
@@ -1158,13 +1158,10 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                         only the missing picture is dropped. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={resolveFileUrl(lab.imageUrl)}
+                      {...thumbProps(lab.imageUrl, "MEDIUM", (el) => { el.style.display = "none" })}
                       alt={lab.name}
                       loading="lazy"
                       decoding="async"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none"
-                      }}
                     />
                   </div>
                   <div className="dept-lab-body">
@@ -1321,7 +1318,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                 {department.gallery!.map((url, i) => (
                   <div className="dept-lab-img" key={i} style={{ borderRadius: 12 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt="" loading="lazy" decoding="async" />
+                    <img {...thumbProps(url)} alt="" loading="lazy" decoding="async" />
                   </div>
                 ))}
               </div>
@@ -1388,7 +1385,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
                       {isImage && (
                         // eslint-disable-next-line @next/next/no-img-element -- CMS-supplied URL
                         <img
-                          src={resolveFileUrl(d.fileUrl)}
+                          {...thumbProps(d.fileUrl)}
                           alt={d.title}
                           loading="lazy"
                           style={{ width: "100%", aspectRatio: "16 / 10", objectFit: "contain", background: "#eef1f6", borderRadius: 6, marginBottom: 4 }}

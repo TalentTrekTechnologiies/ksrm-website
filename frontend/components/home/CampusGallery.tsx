@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { resolveFileUrl } from "@/lib/api-base";
+import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import Container from "@/components/ui/Container"
@@ -102,12 +102,9 @@ export default function CampusGallery() {
             <motion.div key={img.id} className="cg-tile" variants={tileVariants}>
               {/* eslint-disable-next-line @next/next/no-img-element -- CMS/arbitrary image URL */}
               <img
-                src={img.imageUrl}
+                {...thumbProps(img.imageUrl, "MEDIUM", (el) => (el.closest(".cg-tile") as HTMLElement | null)?.style.setProperty("display", "none"))}
                 alt={img.title}
                 loading="lazy"
-                onError={(e) => {
-                  ;(e.currentTarget.closest(".cg-tile") as HTMLElement | null)?.style.setProperty("display", "none")
-                }}
               />
               <div className="cg-overlay">
                 <span className="cg-caption">{img.title}</span>
