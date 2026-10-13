@@ -65,6 +65,96 @@ interface DocGroup {
   items: Download[]
 }
 
+interface DocumentFolder {
+  name: string
+  children: Map<string, DocumentFolder>
+  items: Download[]
+}
+
+function buildDocumentFolders(docs: Download[]): DocumentFolder[] {
+  const roots = new Map<string, DocumentFolder>()
+  for (const doc of docs) {
+    const parts = (doc.folderPath ?? "").split("/").map((part) => part.trim()).filter(Boolean)
+    let children = roots
+    for (const [index, part] of parts.entries()) {
+      let folder = children.get(part)
+      if (!folder) {
+        folder = { name: part, children: new Map(), items: [] }
+        children.set(part, folder)
+      }
+      if (index === parts.length - 1) folder.items.push(doc)
+      children = folder.children
+    }
+  }
+  return [...roots.values()]
+}
+
+function folderDocumentCount(folder: DocumentFolder): number {
+  return folder.items.length + [...folder.children.values()].reduce((sum, child) => sum + folderDocumentCount(child), 0)
+}
+
+function DocumentFolderNode({
+  folder,
+  depth = 0,
+  maxVisible,
+  showPublishedAt,
+}: {
+  folder: DocumentFolder
+  depth?: number
+  maxVisible: number
+  showPublishedAt: boolean
+}) {
+  return (
+    <details className={`pr-folder${depth === 0 ? " pr-folder-root" : ""}`}>
+      <summary className="pr-folder-head">
+        {folder.name}
+        <span className="pr-year-count">{folderDocumentCount(folder)}</span>
+      </summary>
+      <div className="pr-folder-body">
+        {folder.items.length > 0 && (
+          <DocGroupBlock
+            group={{ label: null, items: folder.items }}
+            maxVisible={maxVisible}
+            showPublishedAt={showPublishedAt}
+          />
+        )}
+        {[...folder.children.values()].map((child) => (
+          <DocumentFolderNode
+            key={child.name}
+            folder={child}
+            depth={depth + 1}
+            maxVisible={maxVisible}
+            showPublishedAt={showPublishedAt}
+          />
+        ))}
+      </div>
+    </details>
+  )
+}
+
+function DocumentFolderTree({
+  docs,
+  maxVisible,
+  showPublishedAt,
+}: {
+  docs: Download[]
+  maxVisible: number
+  showPublishedAt: boolean
+}) {
+  return (
+    <div className="pr-folder-tree" aria-label="Document folders">
+      {buildDocumentFolders(docs).map((folder) => (
+        <DocumentFolderNode
+          key={folder.name}
+          folder={folder}
+          maxVisible={maxVisible}
+          showPublishedAt={showPublishedAt}
+        />
+      ))}
+    </div>
+  )
+}
+
 // Groups documents by groupLabel, preserving first-seen order; every
 // unlabeled doc collects into a single trailing null group.
 function groupDocs(docs: Download[]): DocGroup[] {
@@ -256,6 +346,20 @@ const PR_STYLES = `
     border-radius: 999px; padding: 1px 9px; font-size: 12px; font-weight: 700;
   }
   .pr-year-body { padding: 0 16px 12px; }
+  .pr-folder-tree { display: grid; gap: 8px; margin-top: 12px; }
+  .pr-folder { border: 1px solid #e6e8f0; border-radius: 10px; background: #fbfcfe; }
+  .pr-folder-head {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 12px 16px; color: #2B3490; font-family: 'Rajdhani', sans-serif;
+    font-size: 16px; font-weight: 700; list-style: none; user-select: none;
+  }
+  .pr-folder-head::-webkit-details-marker { display: none; }
+  .pr-folder-head::before { content: '▸'; font-size: 12px; transition: transform .15s; }
+  .pr-folder[open] > .pr-folder-head::before { transform: rotate(90deg); }
+  .pr-folder-head:hover { color: #1e2570; }
+  .pr-folder-body { display: grid; gap: 8px; padding: 0 16px 12px; }
+  .pr-folder-body .pr-list { margin-top: 0; }
+  .pr-folder-body .pr-folder-tree { margin-top: 0; }
   .pr-group-head { font-size: 18px; font-weight: 700; color: #2B3490; border-left: 4px solid #D4A500; padding-left: 16px; margin: 32px 0 16px; }
   .pr-list > div:first-child .pr-group-head { margin-top: 0; }
   ${PUBLIC_DOCUMENT_LIST_STYLES}
@@ -403,15 +507,22 @@ function YearBlock({
   year,
   items,
   maxVisible,
+  showPublishedAt,
 }: {
   year: string | null
   items: Download[]
   maxVisible: number
+  showPublishedAt: boolean
 }) {
   const current = year === null || year === currentAcademicYearLabel()
   const groups = groupDocs(items)
   const body = groups.map((g) => (
-    <DocGroupBlock key={g.label ?? "__ungrouped__"} group={g} maxVisible={maxVisible} />
+    <DocGroupBlock
+      key={g.label ?? "__ungrouped__"}
+      group={g}
+      maxVisible={maxVisible}
+      showPublishedAt={showPublishedAt}
+    />
   ))
 
   if (current) return <>{body}</>
@@ -427,7 +538,15 @@ function YearBlock({
   )
 }
 
-function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: number }) {
+function DocGroupBlock({
+  group,
+  maxVisible,
+  showPublishedAt,
+}: {
+  group: DocGroup
+  maxVisible: number
+  showPublishedAt: boolean
+}) {
   const [expanded, setExpanded] = useState(false)
   const overflowing = group.items.length > maxVisible
   const items = expanded || !overflowing ? group.items : group.items.slice(0, maxVisible)
@@ -448,13 +567,9 @@ function DocGroupBlock({ group, maxVisible }: { group: DocGroup; maxVisible: num
           title: d.title,
           description: d.description,
           href: resolveFileUrl(d.fileUrl),
-          // When it was published, on every document row. Nothing on the public
-          // page previously said how old a file was, so a visitor could not
-          // tell this year's timetable from last year's - and the admin had no
-          // confirmation that a fresh upload had actually gone live.
-          // PublicDocumentList already rendered a `meta` line; it was simply
-          // never given one.
-          meta: formatPublished(d.publishedAt),
+          // Publication timestamps are useful on Examinations, where visitors
+          // need to distinguish fresh notices; other pages do not display them.
+          meta: showPublishedAt ? formatPublished(d.publishedAt) : undefined,
           actionLabel: "Download",
         }))}
       />
@@ -632,11 +747,27 @@ export default function PageResources({
   const isEmpty = docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0
   if (isEmpty && !emptyText) return null
 
+  const folderedDocs = docs.filter((doc) => Boolean(doc.folderPath?.trim()))
+  const unfiledDocs = docs.filter((doc) => !doc.folderPath?.trim())
+  const showPublishedAt = section === "examinations" || section.startsWith("examinations.")
   const docsList =
     docs.length > 0 ? (
       <div className={`pr-list${embedded ? " pr-embedded" : ""}`}>
-        {groupByYear(docs).map((y) => (
-          <YearBlock key={y.year ?? "__undated__"} year={y.year} items={y.items} maxVisible={maxVisible} />
+        {folderedDocs.length > 0 && (
+          <DocumentFolderTree
+            docs={folderedDocs}
+            maxVisible={maxVisible}
+            showPublishedAt={showPublishedAt}
+          />
+        )}
+        {groupByYear(unfiledDocs).map((y) => (
+          <YearBlock
+            key={y.year ?? "__undated__"}
+            year={y.year}
+            items={y.items}
+            maxVisible={maxVisible}
+            showPublishedAt={showPublishedAt}
+          />
         ))}
       </div>
     ) : null

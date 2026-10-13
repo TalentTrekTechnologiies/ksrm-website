@@ -41,6 +41,7 @@ interface FormState {
   category: DownloadCategory
   pageSection: string
   groupLabel: string
+  folderPath: string
   academicYear: string
   fileUrl: string
   mediaId: number | null
@@ -126,7 +127,11 @@ function cleanTitle(name?: string | null): string {
     .trim()
 }
 
-const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", academicYear: "", fileUrl: "", mediaId: null, isActive: true }
+const emptyForm: FormState = { title: "", description: "", category: "OTHER", pageSection: "", groupLabel: "", folderPath: "", academicYear: "", fileUrl: "", mediaId: null, isActive: true }
+
+function isIqacSection(section: string) {
+  return section === "iqac" || section.startsWith("iqac.")
+}
 
 /**
  * @param lockedSection When set, this screen manages only the documents routed
@@ -193,7 +198,7 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
   function startEdit(item: Download) {
     setEditing(item)
     setCreating(false)
-    setForm({ title: item.title, description: item.description ?? "", category: item.category, pageSection: item.pageSection ?? "", groupLabel: item.groupLabel ?? "", academicYear: item.academicYear ?? "", fileUrl: item.fileUrl, mediaId: item.mediaId, isActive: item.isActive })
+    setForm({ title: item.title, description: item.description ?? "", category: item.category, pageSection: item.pageSection ?? "", groupLabel: item.groupLabel ?? "", folderPath: item.folderPath ?? "", academicYear: item.academicYear ?? "", fileUrl: item.fileUrl, mediaId: item.mediaId, isActive: item.isActive })
   }
 
   function cancelForm() {
@@ -221,6 +226,7 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
         category: form.category,
         pageSection: form.pageSection || null,
         groupLabel: form.groupLabel || null,
+        folderPath: isIqacSection(form.pageSection) ? form.folderPath.trim() || null : null,
         ...(form.academicYear ? { academicYear: form.academicYear } : {}),
         fileUrl: form.fileUrl,
         mediaId: form.mediaId,
@@ -266,7 +272,9 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
     return items.filter((i) => {
       if (pageFilter && (i.pageSection ?? "") !== pageFilter) return false
       if (!q) return true
-      return i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)
+      return i.title.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q) ||
+        (i.folderPath ?? "").toLowerCase().includes(q)
     })
   }, [items, search, pageFilter])
 
@@ -293,6 +301,18 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
         ) : (
           <span className="text-[11px] text-slate-400">—</span>
         ),
+    },
+    {
+        id: "folder",
+        header: "Folder",
+        cell: ({ row }) =>
+          row.original.folderPath ? (
+            <span className="block max-w-[220px] truncate text-xs text-slate-500" title={row.original.folderPath}>
+              {row.original.folderPath}
+            </span>
+          ) : (
+            <span className="text-[11px] text-slate-400">—</span>
+          ),
     },
     {
       id: "file",
@@ -418,6 +438,15 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
             onChange={(v) => setForm({ ...form, academicYear: v })}
             options={ACADEMIC_YEAR_OPTIONS}
           />
+          {isIqacSection(form.pageSection) && (
+            <TextField
+              label="Folder path (optional)"
+              value={form.folderPath}
+              onChange={(v) => setForm({ ...form, folderPath: v })}
+              placeholder="AnnualReports/2025-26 or AQAR/2023-24/Criterion1/CSP"
+              helperText="Use / between folder names. Leave blank for the section root."
+            />
+          )}
           {/* Free text still - a page can grow a heading without a code change -
               but the headings a page binds to a designed block are offered as
               buttons, because typing one differently drops the document into

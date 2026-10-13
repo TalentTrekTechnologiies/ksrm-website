@@ -1351,6 +1351,10 @@ model Download {
   /// (e.g. "AY 2025-26" on Examinations, "B.Tech" / "M.Tech" / "MBA" on
   /// Syllabus). Null = ungrouped. PageResources groups by this verbatim.
   groupLabel   String?
+  /// Optional slash-separated logical folder path for nested document browsing
+  /// (e.g. "AQAR/2023-24/Criterion1/CSP"). This is display organization, not a
+  /// storage path; null keeps the existing flat/grouped rendering unchanged.
+  folderPath   String?
   /// Academic year this document belongs to, as "AY 2026-27". Set on upload
   /// and used to fold previous years away on the public pages: the current
   /// year renders open, earlier ones collapse behind a header, so a page does

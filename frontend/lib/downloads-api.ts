@@ -118,6 +118,8 @@ export interface Download {
   category: DownloadCategory;
   pageSection: string | null;
   groupLabel: string | null;
+  /** Slash-separated logical folder path; null keeps the document flat. */
+  folderPath?: string | null;
   /** Academic year, e.g. "AY 2026-27". Null = not year-specific. */
   academicYear: string | null;
   /** Set by the Syllabus screen: which regulation this belongs to, and the
@@ -146,6 +148,7 @@ export interface DownloadInput {
   category: DownloadCategory;
   pageSection?: string | null;
   groupLabel?: string | null;
+  folderPath?: string | null;
   academicYear?: string | null;
   syllabusRegulationId?: number | null;
   syllabusBranch?: string | null;
@@ -232,6 +235,7 @@ export interface BulkDownloadsInput {
   category: DownloadCategory;
   pageSection?: string;
   groupLabel?: string;
+  folderPath?: string;
   academicYear?: string;
   departmentId?: number;
   isActive?: boolean;

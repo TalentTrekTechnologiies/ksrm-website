@@ -77,6 +77,7 @@ export default function BulkDocumentUpload({
   const [category, setCategory] = useState<DownloadCategory>(defaultCategory)
   const [pageSection, setPageSection] = useState(defaultPageSection)
   const [groupLabel, setGroupLabel] = useState("")
+  const [folderPath, setFolderPath] = useState("")
   const [busy, setBusy] = useState(false)
   const [progress, setProgress] = useState(0)
   const [stage, setStage] = useState<"idle" | "uploading" | "publishing">("idle")
@@ -140,6 +141,9 @@ export default function BulkDocumentUpload({
         category,
         pageSection: pageSection || undefined,
         groupLabel: groupLabel.trim() || undefined,
+        ...(pageSection === "iqac" || pageSection.startsWith("iqac.")
+          ? { folderPath: folderPath.trim() || undefined }
+          : {}),
         departmentId,
         isActive: true,
       })
@@ -206,6 +210,17 @@ export default function BulkDocumentUpload({
           onChange={setGroupLabel}
           placeholder="AY 2025-26"
         />
+        {(pageSection === "iqac" || pageSection.startsWith("iqac.")) && (
+          <div className="sm:col-span-3">
+            <TextField
+              label="Folder path (optional)"
+              value={folderPath}
+              onChange={setFolderPath}
+              placeholder="AnnualReports/2025-26 or AQAR/2023-24/Criterion1/CSP"
+              helperText="Use / between folder names. Applies the same path to every uploaded document."
+            />
+          </div>
+        )}
       </div>
 
       {/* Drop zone */}

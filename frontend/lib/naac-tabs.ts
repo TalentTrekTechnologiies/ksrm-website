@@ -9,8 +9,8 @@
 export const NAAC_TABS = [
   { id: "accreditation-letter", label: "Accreditation Letter" },
   { id: "aqars", label: "AQARs" },
-  { id: "dvv", label: "DVV" },
   { id: "ssr", label: "SSR" },
+  { id: "dvv", label: "DVV" },
   { id: "minutes", label: "Minutes of Meeting" },
   { id: "survey", label: "Student Satisfaction Survey" },
   { id: "aaa", label: "Academic & Administrative Audit (AAA)" },

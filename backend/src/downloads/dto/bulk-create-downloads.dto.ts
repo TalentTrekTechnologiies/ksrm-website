@@ -8,6 +8,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   ValidateNested,
 } from 'class-validator';
@@ -65,6 +66,13 @@ export class BulkCreateDownloadsDto {
   @IsString()
   @MaxLength(80)
   groupLabel?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(240)
+  @Matches(/^(?!.*(?:^|\/)\.{1,2}(?:\/|$))[^/\\]+(?:\/[^/\\]+)*$/)
+  folderPath?: string;
+
   // Academic year this document belongs to, as "AY 2026-27". Previous years
   // fold away on the public pages; null means "not year-specific" and always
   // shows.

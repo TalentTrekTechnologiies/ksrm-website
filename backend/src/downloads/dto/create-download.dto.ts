@@ -4,6 +4,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   Min,
 } from 'class-validator';
@@ -34,6 +35,15 @@ export class CreateDownloadDto {
   @IsString()
   @MaxLength(80)
   groupLabel?: string;
+
+  // Relative logical path, not a filesystem path; used for nested IQAC
+  // document folders such as "AQAR/2023-24/Criterion1/CSP".
+  @IsOptional()
+  @IsString()
+  @MaxLength(240)
+  @Matches(/^(?!.*(?:^|\/)\.{1,2}(?:\/|$))[^/\\]+(?:\/[^/\\]+)*$/)
+  folderPath?: string | null;
+
   // Academic year this document belongs to, as "AY 2026-27". Previous years
   // fold away on the public pages; null means "not year-specific" and always
   // shows.
