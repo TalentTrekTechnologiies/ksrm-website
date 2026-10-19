@@ -4,6 +4,7 @@ import { mediaFile, resolveFileUrl } from "@/lib/api-base";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import NamedCommittees from "@/components/committees/NamedCommittees";
 import Link from "next/link"
+import { scrollToSection } from "@/lib/scroll-to-section"
 import { getDownloadsPublic, Download } from "@/lib/downloads-api";
 import { useLiveData } from "@/lib/use-live-data";
 import { LEADERSHIP } from "@/data/leadership"
@@ -258,23 +259,27 @@ export default function About() {
 
       {/* NAVIGATION MENU */}
       <style>{`
-        .nav-menu { background: white; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #E5E7EB; }
-        .nav-menu .k-container { display: flex; gap: 12px; padding: 16px 0; overflow-x: auto; align-items: center; }
+        /* Pinned below the site menu (48px, 56px under 900px), not under it;
+           wraps instead of scrolling sideways; on a phone it scrolls away. */
+        .nav-menu { background: white; position: sticky; top: 48px; z-index: 100; border-bottom: 1px solid #E5E7EB; }
+        @media (max-width: 900px) { .nav-menu { top: 56px; } }
+        @media (max-width: 768px) { .nav-menu { position: static; } }
+        .nav-menu .k-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px; padding: 16px 0; align-items: center; }
         .nav-link { color: #666; text-decoration: none; font-weight: 600; font-size: 15px; padding: 10px 20px; border-radius: 20px; white-space: nowrap; transition: all 0.2s; }
         .nav-link:hover { color: #333; }
         .nav-link.active { background: #2B3490; color: white; }
       `}</style>
 
-      <nav className="nav-menu">
+      <nav className="nav-menu" data-section-tabs>
         <div className="k-container">
-          <a href="#stats" className="nav-link active" style={{ background: "#2B3490", color: "white" }}>About</a>
-          <a href="#vision-mission" className="nav-link">Vision & Mission</a>
-          <a href="#leadership" className="nav-link">Leadership</a>
-          <a href="#organogram" className="nav-link">Organogram</a>
-          <a href="#newsletters" className="nav-link">Newsletters</a>
-          <a href="#strategic" className="nav-link">Strategic Plan</a>
-          <a href="#policies" className="nav-link">Policies</a>
-          <a href="#contact" className="nav-link">Contact</a>
+          <a href="#stats" onClick={(e) => { e.preventDefault(); scrollToSection("stats") }} className="nav-link active" style={{ background: "#2B3490", color: "white" }}>About</a>
+          <a href="#vision-mission" onClick={(e) => { e.preventDefault(); scrollToSection("vision-mission") }} className="nav-link">Vision & Mission</a>
+          <a href="#leadership" onClick={(e) => { e.preventDefault(); scrollToSection("leadership") }} className="nav-link">Leadership</a>
+          <a href="#organogram" onClick={(e) => { e.preventDefault(); scrollToSection("organogram") }} className="nav-link">Organogram</a>
+          <a href="#newsletters" onClick={(e) => { e.preventDefault(); scrollToSection("newsletters") }} className="nav-link">Newsletters</a>
+          <a href="#strategic" onClick={(e) => { e.preventDefault(); scrollToSection("strategic") }} className="nav-link">Strategic Plan</a>
+          <a href="#policies" onClick={(e) => { e.preventDefault(); scrollToSection("policies") }} className="nav-link">Policies</a>
+          <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection("contact") }} className="nav-link">Contact</a>
         </div>
       </nav>
 

@@ -2,6 +2,7 @@
 
 import { Fragment } from "react";
 import Link from "next/link";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
@@ -100,7 +101,7 @@ const tabs = [
 export default function IQACPage() {
   const rows = composition;
 
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollTo = scrollToSection;
 
   return (
     <main style={{ background: "#ffffff" }}>
@@ -112,8 +113,12 @@ export default function IQACPage() {
 
         /* Below the site's sticky menu bar (48px, 56px under 900px wide),
            which covered this bar entirely once the page scrolled. */
-        .iqac-tabs { top: 48px; }
+        .iqac-tabs { position: sticky; top: 48px; z-index: 100; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 16px 0; }
         @media (max-width: 900px) { .iqac-tabs { top: 56px; } }
+        /* Wraps instead of scrolling sideways; on a phone it scrolls away
+           with the page rather than staying pinned over the content. */
+        .iqac-tabs-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        @media (max-width: 768px) { .iqac-tabs { position: static; } }
         section[id] { scroll-margin-top: 130px; }
         .iqac-tab-btn {
           background: #2B3490; color: #D4A500; padding: 8px 16px; border-radius: 6px; font-weight: 600;
@@ -164,9 +169,9 @@ export default function IQACPage() {
       </section>
 
       {/* STICKY TABS */}
-      <div className="iqac-tabs" style={{ position: "sticky", zIndex: 100, background: "white", boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: "16px 0", overflowX: "auto" }}>
+      <div className="iqac-tabs" data-section-tabs>
         <div className="responsive-container">
-          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
+          <div className="iqac-tabs-row">
             {tabs.map((t) => (
               <button key={t.id} className="iqac-tab-btn" onClick={() => scrollTo(t.id)}><CmsText section="iqac" slot={`tabs.${t.slot}.label`} /></button>
             ))}

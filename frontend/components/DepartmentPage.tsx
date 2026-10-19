@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import LiteYouTube, { youtubeId } from "@/components/ui/LiteYouTube";
 import { resolveFileUrl, thumbProps } from "@/lib/api-base";
 import type { Department, FacultyMember } from "@/types/department";
@@ -330,8 +331,8 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
 
   const scrollTo = (id: string) => {
     setActiveTab(id);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Measures the menu and the (now wrapping) section bar at click time.
+    scrollToSection(id);
   };
 
   return (
@@ -402,21 +403,28 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
           text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
 
+        /* Section buttons wrap onto a second line instead of scrolling
+           sideways behind a hidden scrollbar, so every section is in view. */
         .dept-sticky-nav {
           position: sticky;
           top: 48px;
           background: #fff;
           border-bottom: 1px solid #eef0f3;
           z-index: 100;
-          overflow-x: auto;
-          scrollbar-width: none;
         }
-        .dept-sticky-nav::-webkit-scrollbar { display: none; }
         .dept-nav-container {
           display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
           gap: 8px;
           padding: 12px 5%;
-          min-width: max-content;
+        }
+        /* Several lines deep on a phone - scrolls away rather than staying
+           pinned over the content. */
+        @media (max-width: 900px) { .dept-sticky-nav { top: 56px; } }
+        @media (max-width: 768px) {
+          .dept-sticky-nav { position: static; }
+          .dept-nav-pill { padding: 7px 12px; font-size: 14px; }
         }
         .dept-nav-pill {
           padding: 10px 18px;
@@ -854,7 +862,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         </section>
 
         {/* STICKY NAV */}
-        <div className="dept-sticky-nav">
+        <div className="dept-sticky-nav" data-section-tabs>
           <div className="dept-nav-container">
             {NAV_ITEMS.map((item) => (
               <button

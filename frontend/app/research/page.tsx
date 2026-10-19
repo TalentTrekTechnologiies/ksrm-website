@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import LazyVideo from "@/components/ui/LazyVideo";
 import PageResources from "@/components/PageResources";
 import { getResearchPublic, ResearchRecord } from "@/lib/research-api";
@@ -112,9 +113,7 @@ function MailIcon() {
 }
 
 export default function ResearchPage() {
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  const scrollTo = scrollToSection;
 
   // Uploads land in Documents under "Research — RDC Policies" and
   // "Research — Additional Documents". The single built-in policy shows only
@@ -240,10 +239,19 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      {/* STICKY TAB BAR */}
-      <section style={{ padding: "40px 0", background: "#f4f3ef", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+      {/* STICKY TAB BAR - pinned below the site menu (it sat under it at
+          top: 0), wrapping instead of scrolling sideways, and scrolling away
+          with the page on a phone. */}
+      <style>{`
+        .rdc-tabs { padding: 16px 0; background: #f4f3ef; position: sticky; top: 48px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        @media (max-width: 900px) { .rdc-tabs { top: 56px; } }
+        @media (max-width: 768px) { .rdc-tabs { position: static; } }
+        .rdc-tabs-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 12px; }
+        @media (max-width: 768px) { .rdc-tabs-row { gap: 8px; } .rdc-tabs .rdc-hero-btn { padding: 7px 11px; font-size: 13px; white-space: normal; } }
+      `}</style>
+      <section className="rdc-tabs" data-section-tabs>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 20px" }}>
-          <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8 }}>
+          <div className="rdc-tabs-row">
             {tabs.map((t, _i) => (
               <button key={t.id} className="rdc-hero-btn" onClick={() => scrollTo(t.id)}><CmsText section="research" slot={`tabs.${_i}.label`} /></button>
             ))}

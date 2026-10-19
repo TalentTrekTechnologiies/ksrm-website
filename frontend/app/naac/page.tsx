@@ -8,6 +8,7 @@ import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
 import { getNaacCertificate, NaacCertificate } from "@/lib/naac-certificate";
 import { NAAC_FEEDBACK_FORMS, NAAC_TABS, NaacTabId } from "@/lib/naac-tabs";
+import { scrollToSection } from "@/lib/scroll-to-section";
 
 /**
  * NAAC, laid out as the college's IQAC outline gives it: thirteen sections,
@@ -229,7 +230,8 @@ const SECTION_BODY: Record<NaacTabId, ReactNode> = {
 };
 
 export default function NAACPage() {
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Measures the menu and this (now wrapping) button row at click time.
+  const scrollTo = scrollToSection;
 
   return (
     <main style={{ background: "#ffffff" }}>
@@ -253,7 +255,9 @@ export default function NAACPage() {
         /* Below the site's own sticky menu bar (48px, 56px under 900px wide),
            which otherwise covers this one completely once the page scrolls. */
         .naac-tabs { position: sticky; top: 48px; z-index: 100; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 14px 0; }
-        .naac-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+        /* Wraps onto a second line rather than scrolling sideways, so every
+           section is visible at once. */
+        .naac-tabs-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
         .naac-tab-btn {
           background: #2B3490; color: #D4A500; padding: 8px 14px; border-radius: 6px; font-weight: 600;
           font-size: 14px; border: none; cursor: pointer; white-space: nowrap;
@@ -262,6 +266,13 @@ export default function NAACPage() {
 
         .naac-section { padding: 64px 0; background: #ffffff; scroll-margin-top: 130px; }
         @media (max-width: 900px) { .naac-tabs { top: 56px; } .naac-section { scroll-margin-top: 140px; } }
+        /* On a phone the wrapped row is several lines deep; pinned, it would
+           cover a third of the screen, so it scrolls away with the page. */
+        @media (max-width: 768px) {
+          .naac-tabs { position: static; }
+          .naac-tab-btn { padding: 7px 11px; font-size: 13px; }
+          .naac-section { scroll-margin-top: 72px; }
+        }
         .naac-section-alt { background: #f7f8fa; }
         .naac-h2 {
           font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700;
@@ -342,7 +353,7 @@ export default function NAACPage() {
         </div>
       </section>
 
-      <nav className="naac-tabs" aria-label="NAAC sections">
+      <nav className="naac-tabs" aria-label="NAAC sections" data-section-tabs>
         <div className="responsive-container">
           <div className="naac-tabs-row">
             {NAAC_TABS.map((t) => (

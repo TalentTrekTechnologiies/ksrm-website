@@ -360,7 +360,9 @@ export default function Navbar() {
   const isActive = (href: string) => href !== "#" && (pathname === href || pathname.startsWith(href + "/"))
 
   return (
-    <div style={{
+    // data-site-navbar: lib/scroll-to-section measures this to stop a section
+    // jump below the menu rather than under it.
+    <div data-site-navbar style={{
       background: "#2B3490",
       position: "sticky",
       top: 0,
