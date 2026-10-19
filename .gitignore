@@ -99,3 +99,6 @@ ksrmce-specimen.zip
 
 # Tesseract language data, downloaded on demand by the figure-detection OCR pass
 *.traineddata
+
+# Change records written by one-off data scripts (kept on the machine that ran them, for --undo)
+backend/scripts/output/

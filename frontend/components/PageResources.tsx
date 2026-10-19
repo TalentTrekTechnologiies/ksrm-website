@@ -86,7 +86,19 @@ function buildDocumentFolders(docs: Download[]): DocumentFolder[] {
       children = folder.children
     }
   }
-  return [...roots.values()]
+  // Natural order, the way the old site's folders read: Criterion1 before
+  // Criterion2 (not the order documents happened to arrive), and 1.1.1 before
+  // 1.1.2 before 1.2.1 within a folder (not newest-first, which ran them
+  // backwards). Rebuilt into new Maps so the insertion order is the sort order.
+  const byName = (x: string, y: string) => x.localeCompare(y, undefined, { numeric: true, sensitivity: "base" })
+  const sortFolder = (folder: DocumentFolder): DocumentFolder => ({
+    ...folder,
+    items: [...folder.items].sort((x, y) => byName(x.title, y.title)),
+    children: new Map(
+      [...folder.children.entries()].sort(([x], [y]) => byName(x, y)).map(([k, v]) => [k, sortFolder(v)]),
+    ),
+  })
+  return [...roots.values()].sort((x, y) => byName(x.name, y.name)).map(sortFolder)
 }
 
 function folderDocumentCount(folder: DocumentFolder): number {
