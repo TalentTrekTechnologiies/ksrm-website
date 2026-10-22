@@ -3,6 +3,8 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { scrollToSection } from "@/lib/scroll-to-section";
+import { getCommitteesPublic, Committee } from "@/lib/committees-api";
+import { useLiveData } from "@/lib/use-live-data";
 import PlacedCommittees from "@/components/committees/PlacedCommittees";
 import PageResources from "@/components/PageResources";
 import CmsText from "@/components/CmsText";
@@ -34,53 +36,6 @@ const qualityPolicy = [
   "By Imparting Knowledge Through Team Work and Incessant Effort",
 ];
 
-const composition = [
-  { name: "Prof. T. Nageswara Prasad", designation: "Principal", role: "Chairperson" },
-  { name: "Mr. K. Madan Mohan Reddy", designation: "Vice-Chairman", role: "Management" },
-  { name: "Prof. T. Nageswara Prasad", designation: "Dean, Academics", role: "Member" },
-  { name: "Dr. M. Venkatanarayana", designation: "Dean, Research & Development", role: "Member" },
-  { name: "Mr. A. Ramprakash Reddy", designation: "Dean, Faculty Affairs", role: "Member" },
-  { name: "Dr. C. Ravindra Murthy", designation: "Dean, Students Affairs", role: "Member" },
-  { name: "Mr. R. Nagaraju", designation: "Dean, Training and Placements", role: "Member" },
-  { name: "Dr. N. Amaranatha Reddy", designation: "Dean, Alumni", role: "Member" },
-  { name: "Dr. M. Venugopal", designation: "Dean, Industry Relations", role: "Member" },
-  { name: "Dr. V. Giridhar", designation: "Dean, Industry Institution Interaction cell", role: "Member" },
-  { name: "Dr. T. Elia", designation: "Dean, Innovation and Entrepreneurship", role: "Member" },
-  { name: "Dr. N. Amaranatha Reddy", designation: "Controller of Examinations", role: "Member" },
-  { name: "Dr. G. Chennakesava Reddy", designation: "HoD, CE", role: "Member" },
-  { name: "Dr. A. Sudhakar", designation: "HoD, EEE", role: "Member" },
-  { name: "Dr. D. Ravikanth", designation: "HoD, ME", role: "Member" },
-  { name: "Dr. B. Bhaskar Reddy", designation: "HoD, ECE", role: "Member" },
-  { name: "Dr. V. Lokeswara Reddy", designation: "HoD, CSE", role: "Member" },
-  { name: "Dr. V. Ramachandra Reddy", designation: "HoD, H&S", role: "Member" },
-  { name: "Dr. N. Suhasini", designation: "HoD, MBA", role: "Member" },
-  { name: "Mrs. G. Sireesha", designation: "Manager, Broadcom, Bangalore", role: "Member" },
-  { name: "Mr. S. Guru Sankar", designation: "MD, Chaitanya Chemicals, Kadapa (Industry)", role: "Member" },
-  { name: "Mr. K. Subramanyam", designation: "Adolescent Health Coordinator, Mydukur, Kadapa (Dist.) (Parent)", role: "Member" },
-  { name: "Mr. M. Vara Prasad Reddy", designation: "Deputy Executive Engineer, M.I Subdivision, Kadapa. (Alumni)", role: "Member" },
-  { name: "Mr. M. Obul Das", designation: "DAS Educational & Welfare Society (NGO)", role: "Member" },
-  { name: "Ms. K. Shanmukhi Lasya", designation: "Student", role: "Member" },
-  { name: "Mr. B Bala Subramanyam", designation: "Student", role: "Member" },
-  { name: "Ms. P. Sharmila", designation: "Student", role: "Member" },
-  { name: "Dr. V. Vijaya Kishore", designation: "Prof., ECE", role: "Dean / Coordinator" },
-  { name: "Dr. I. Srinivasula Reddy", designation: "Asso. Prof., CE", role: "Dy. Dean" },
-  { name: "Mr. P. Suresh Praveen Kumar", designation: "Asst.  Prof., CE", role: "Asso. Dean" },
-  { name: "Dr. G. Srihari", designation: "Prof., ECE", role: "Asso. Dean" },
-  { name: "Mr. A. HariKrishna", designation: "Asst. Prof., ME", role: "Asso. Dean" },
-  { name: "Dr. K. Pavan Kumar", designation: "Asso. Prof., ECE", role: "Asso. Dean" },
-  { name: "Mrs. B. Swetha", designation: "Asst. Prof., CSE", role: "Asso. Dean" },
-  { name: "Dr. M. Vijaya Bhaskar Reddy", designation: "Asst. Prof., H&S", role: "Asso. Dean" },
-];
-
-const compositionGroups: Record<number, string> = {
-  0: "Chairperson: Head of the Institution",
-  1: "Management Members",
-  2: "Senior Administrative Officers",
-  12: "Senior Teachers",
-  19: "Employer / Industry / Stake holder / Members",
-  22: "Alumni / Local Society/ Student",
-  27: "IQAC Core Team",
-};
 
 /**
  * `slot` is the tab's permanent id in Page Content, not its position here.
@@ -99,7 +54,14 @@ const tabs = [
 ];
 
 export default function IQACPage() {
-  const rows = composition;
+  // The roster comes from Admin -> Committees -> IQAC. It used to be a list in
+  // this file, so edits made there were saved and never shown: the CMS held the
+  // newer composition (23 of 35 rows differed) while the page kept the old one.
+  // "Finance Committee" also carries type IQAC on production, so the roster is
+  // the committee named IQAC.
+  const committees = useLiveData<Committee[]>(() => getCommitteesPublic("IQAC"), []);
+  const iqac = (committees ?? []).find((c) => /^s*iqacs*$/i.test(c.name)) ?? (committees ?? []).find((c) => /iqac/i.test(c.name));
+  const rows = (iqac?.members ?? []).filter((m) => m.isActive !== false);
 
   const scrollTo = scrollToSection;
 
@@ -245,6 +207,13 @@ export default function IQACPage() {
       <section id="composition" style={{ padding: "80px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="iqac-composition-35-members" /></h2>
+          {committees === null ? (
+            // Holds the table's space while the roster loads, so the page
+            // below does not jump when it arrives.
+            <div aria-busy="true" style={{ minHeight: "60vh" }} />
+          ) : rows.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#666", fontStyle: "italic" }}>The IQAC composition will be published here.</p>
+          ) : (
           <div className="iqac-table-wrapper">
             <table className="iqac-table">
               <thead>
@@ -252,10 +221,12 @@ export default function IQACPage() {
               </thead>
               <tbody>
                 {rows.map((c, i) => (
-                  <Fragment key={i}>
-                    {compositionGroups[i] && (
-                      <tr className="iqac-group-row" key={`group-${i}`}>
-                        <td colSpan={4}>{compositionGroups[i]}</td>
+                  <Fragment key={c.id}>
+                    {/* A member's "Group heading" (Admin -> Committees) starts a
+                        group that runs until the next member with one. */}
+                    {c.groupLabel?.trim() && (
+                      <tr className="iqac-group-row">
+                        <td colSpan={4}>{c.groupLabel}</td>
                       </tr>
                     )}
                     <tr style={{ background: i % 2 === 0 ? "white" : "#f9f9f9" }}>
@@ -267,7 +238,7 @@ export default function IQACPage() {
                         {c.designation}
                       </td>
                       <td>
-                        {c.role === "Chairperson" || c.role === "Dean / Coordinator" ? (
+                        {/chairperson|coordinator/i.test(c.role) ? (
                           <span style={{ background: "#2B3490", color: "#D4A500", fontSize: 11, padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
                             {c.role}
                           </span>
@@ -279,6 +250,7 @@ export default function IQACPage() {
               </tbody>
             </table>
           </div>
+          )}
         </div>
           {/* Anything uploaded to "IQAC -> Composition" in Documents. */}
           <PageResources section="iqac.composition" embedded />

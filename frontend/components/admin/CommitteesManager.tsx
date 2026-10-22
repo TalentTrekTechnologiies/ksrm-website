@@ -106,9 +106,11 @@ interface MemberFormState {
   role: string
   /** Published contact number. Blank when not published. */
   contact: string
+  /** Starts a group heading at this member - "Senior Teachers". Blank = same group as above. */
+  groupLabel: string
 }
 
-const emptyMemberForm: MemberFormState = { name: "", designation: "", department: "", role: "", contact: "" }
+const emptyMemberForm: MemberFormState = { name: "", designation: "", department: "", role: "", contact: "", groupLabel: "" }
 
 interface MinutesFormState {
   title: string
@@ -212,7 +214,7 @@ function CommitteesManagerInner() {
 
   function startEditMember(m: CommitteeMember) {
     setEditingMemberId(m.id)
-    setMemberForm({ name: m.name, designation: m.designation, department: m.department ?? "", role: m.role, contact: m.contact ?? "" })
+    setMemberForm({ name: m.name, designation: m.designation, department: m.department ?? "", role: m.role, contact: m.contact ?? "", groupLabel: m.groupLabel ?? "" })
   }
 
   function cancelMemberEdit() {
@@ -594,6 +596,11 @@ function CommitteesManagerInner() {
             // unbroken token widening the row.
             renderRow={(m) => (
               <div className="min-w-0">
+                {m.groupLabel?.trim() && (
+                  <p className="mb-0.5 text-[11px] font-bold uppercase tracking-wide text-admin-primary">
+                    Group: {m.groupLabel}
+                  </p>
+                )}
                 <p className="break-words text-sm font-medium text-slate-800">{m.name}</p>
                 <p className="break-words text-xs text-slate-500">
                   {m.designation}
@@ -615,6 +622,10 @@ function CommitteesManagerInner() {
                 for a committee whose members' numbers are not published - most
                 of them; the cells that exist to be contacted are the exception. */}
             <TextField label="Contact number (optional)" value={memberForm.contact} onChange={(v) => setMemberForm({ ...memberForm, contact: v })} placeholder="9154925962" />
+            {/* A heading shown on the public roster above this member, starting
+                a group that runs until the next member with one. The IQAC
+                composition uses it; most committees leave it blank. */}
+            <TextField label="Group heading (optional)" value={memberForm.groupLabel} onChange={(v) => setMemberForm({ ...memberForm, groupLabel: v })} placeholder="Senior Teachers" />
           </div>
           <FormActions>
             {editingMemberId !== null && <SecondaryButton onClick={cancelMemberEdit}>Cancel</SecondaryButton>}

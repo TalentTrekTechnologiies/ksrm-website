@@ -976,6 +976,10 @@ model CommitteeMember {
   /// Anti-Sexual Harassment Cell is only useful if a complainant can call
   /// somebody on it. Null everywhere it is not deliberately published.
   contact     String?
+  /// A heading shown above this member, starting a group that runs until the
+  /// next member with a heading - e.g. "Senior Teachers" on the IQAC roster.
+  /// Null continues the group above. Optional: most rosters have no groups.
+  groupLabel  String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())

@@ -33,7 +33,11 @@ import { NAAC_FEEDBACK_FORMS, NAAC_TABS } from "./naac-tabs"
 
 /** IQAC slots whose sections now live on the NAAC page. */
 const IQAC_MOVED_TO_NAAC =
-  /^(minutes-of-meeting|aqar-reports|annual-reports-heading|student-satisfaction-survey|feedback-forms|feedbackForms\.\d+\.label|tabs\.(2|3|4|7)\.label)$/
+  // ...and the 70 composition.N.name/designation slots. The composition table
+  // never read them - it was a list in the page's code, and now comes from
+  // Admin -> Committees -> IQAC - so editing them changed nothing, which read
+  // as "the IQAC composition is not editable".
+  /^(minutes-of-meeting|aqar-reports|annual-reports-heading|student-satisfaction-survey|feedback-forms|feedbackForms\.\d+\.label|tabs\.(2|3|4|7)\.label|composition\.\d+\.(name|designation))$/
 
 /** NAAC slots for blocks the tabbed layout replaced. */
 const NAAC_RETIRED = /^(key-documents|explore-naac-documentation)$/

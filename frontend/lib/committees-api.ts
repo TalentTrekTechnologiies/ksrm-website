@@ -32,6 +32,9 @@ export interface CommitteeMember {
   department: string | null;
   /** Published contact number. Null when not published. */
   contact: string | null;
+  /** Heading that starts a group at this member ("Senior Teachers"); null
+   *  continues the group above. Used by the IQAC composition. */
+  groupLabel?: string | null;
   sortOrder: number;
   isActive: boolean;
   deletedAt: string | null;
@@ -75,6 +78,7 @@ export interface CommitteeMemberInput {
   name: string;
   designation: string;
   role: string;
+  groupLabel?: string;
   facultyId?: number;
   sortOrder?: number;
   isActive?: boolean;
