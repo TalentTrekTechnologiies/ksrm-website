@@ -280,6 +280,7 @@ export default function About() {
           <a href="#strategic" onClick={(e) => { e.preventDefault(); scrollToSection("strategic") }} className="nav-link">Strategic Plan</a>
           <a href="#policies" onClick={(e) => { e.preventDefault(); scrollToSection("policies") }} className="nav-link">Policies</a>
           <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection("contact") }} className="nav-link">Contact</a>
+          <a href="#committees-list" onClick={(e) => { e.preventDefault(); scrollToSection("committees-list") }} className="nav-link">List of Committees</a>
         </div>
       </nav>
 
@@ -531,7 +532,20 @@ export default function About() {
           </div>
         </div>
       </section>
-    
+
+      {/* LIST OF COMMITTEES - the last tab. Staff upload the committee lists
+          (PDF or image) under Downloads -> "About -> List of Committees";
+          a Group Label such as "2025-26" groups them by year. */}
+      <PageResources
+        section="about.committees"
+        anchorId="committees-list"
+        heading="List of Committees"
+        background="#F5EFE4"
+        galleryTitle="List of Committees"
+        docsTitle="List of Committees"
+        emptyText="The list of committees will be published here shortly."
+      />
+
       {/* Any committee the CMS points at this page - see PlacedCommittees.
           Renders nothing until one is pointed here. */}
       <PlacedCommittees placement="ABOUT" heading="Committees" />

@@ -84,6 +84,7 @@ export const PAGE_SECTIONS: { value: string; label: string }[] = [
   { value: "about.organogram", label: "About → Organogram" },
   { value: "about.newsletters", label: "About → Newsletters" },
   { value: "about.financecommittee", label: "About → Finance Committee (Annual Accounts)" },
+  { value: "about.committees", label: "About → List of Committees" },
   { value: "accreditation", label: "Accreditation" },
   { value: "mandatory-disclosure", label: "Mandatory Disclosure" },
   { value: "events", label: "Events" },
