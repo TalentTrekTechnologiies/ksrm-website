@@ -68,6 +68,7 @@ const navItems: NavItem[] = [
       // looking for it would actually go. The page itself is unchanged.
       { label: "Strategic Plan", href: "/about#strategic" },
       { label: "Policy Documents", href: "/about#policies" },
+      { label: "List of Committees", href: "/about#committees-list" },
     ],
   },
   {

@@ -804,6 +804,11 @@ export default function PageResources({
     )
   }
 
+  // A sub-title that only repeats the section heading is left out - the List
+  // of Committees and Newsletters blocks showed their name twice, stacked.
+  const repeatsHeading = (title: string) =>
+    !!heading && title.trim().toLowerCase() === heading.trim().toLowerCase()
+
   return (
     <section id={anchorId} style={{ width: "100%", background, padding: "56px 0" }}>
       <style>{PR_STYLES}</style>
@@ -861,9 +866,11 @@ export default function PageResources({
         {/* GALLERY */}
         {images.length > 0 && (
           <>
-            <div className="pr-head" style={{ marginTop: videos.length > 0 ? "48px" : 0 }}>
-              <h2 className="pr-title">{galleryTitle}</h2>
-            </div>
+            {!repeatsHeading(galleryTitle) && (
+              <div className="pr-head" style={{ marginTop: videos.length > 0 ? "48px" : 0 }}>
+                <h2 className="pr-title">{galleryTitle}</h2>
+              </div>
+            )}
             <div className="pr-gallery">
               {images.slice(0, 8).map((img) => (
                 <div key={img.id} className="pr-tile um-frame um-fixed">
@@ -880,9 +887,13 @@ export default function PageResources({
             when set; ungrouped docs render last under no heading. */}
         {docsList && (
           <>
-            <div className="pr-head" style={{ marginTop: images.length > 0 ? "48px" : 0 }}>
-              <h2 className="pr-title">{docsTitle}</h2>
-            </div>
+            {repeatsHeading(docsTitle) ? (
+              images.length > 0 && <div style={{ marginTop: "48px" }} />
+            ) : (
+              <div className="pr-head" style={{ marginTop: images.length > 0 ? "48px" : 0 }}>
+                <h2 className="pr-title">{docsTitle}</h2>
+              </div>
+            )}
             {docsList}
           </>
         )}
