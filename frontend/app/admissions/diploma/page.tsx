@@ -237,9 +237,8 @@ export default function DiplomaAdmissionsPage() {
           </div>
         </section>
 
+        <PageResources section="admissions.diploma" />
         <AdmissionsContact />
-      
-      <PageResources section="admissions.diploma" />
       </main>
     </>
   );

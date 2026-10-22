@@ -669,7 +669,9 @@ export default function LibraryPage() {
         </div>
       </section>
 
-      {/* Contact */}
+      <PageResources section="library" hideVideos />
+
+      {/* Contact - always the last block on the page. */}
       <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
         <div className="responsive-container">
           <div className="lib-contact-card">
@@ -696,8 +698,6 @@ export default function LibraryPage() {
           </div>
         </div>
       </section>
-
-      <PageResources section="library" hideVideos />
     </main>
     </CmsTextProvider>
   );

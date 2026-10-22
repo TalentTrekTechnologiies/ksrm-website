@@ -449,7 +449,9 @@ export default function CoursesIntakePage() {
           </div>
         </section>
 
-        {/* CONTACT */}
+        <PageResources section="academics.courses-intake" />
+
+        {/* CONTACT - always the last block on the page. */}
         <section style={{ padding: "72px 0", background: "#f4f3ef" }}>
           <div className="responsive-container">
             <div className="ci-contact-card">
@@ -468,8 +470,6 @@ export default function CoursesIntakePage() {
             </div>
           </div>
         </section>
-      
-      <PageResources section="academics.courses-intake" />
       </main>
     </>
   );

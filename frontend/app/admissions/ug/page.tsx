@@ -176,8 +176,8 @@ export default function UGAdmissionsPage() {
           </div>
         </section>
       
-      <AdmissionsContact />
       <PageResources section="admissions.ug" />
+      <AdmissionsContact />
       </main>
     </>
   );

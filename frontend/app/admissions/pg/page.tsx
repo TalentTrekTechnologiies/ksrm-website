@@ -196,8 +196,8 @@ export default function PGAdmissionsPage() {
           </div>
         </section>
       
-      <AdmissionsContact />
       <PageResources section="admissions.pg" />
+      <AdmissionsContact />
       </main>
     </>
   );

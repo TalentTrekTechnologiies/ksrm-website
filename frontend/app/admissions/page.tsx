@@ -178,8 +178,8 @@ export default function AdmissionsPage() {
           </div>
         </section>
 
+        <PageResources section="admissions" />
         <AdmissionsContact />
-      <PageResources section="admissions" />
       </main>
     </>
   );

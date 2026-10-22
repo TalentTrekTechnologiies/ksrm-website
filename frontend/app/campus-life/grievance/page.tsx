@@ -382,7 +382,13 @@ export default function GrievanceRedressalPage() {
         </div>
       </section>
 
-      {/* Contact */}
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="GRIEVANCE" heading="Committees" />
+
+      <PageResources section="grievance" />
+
+      {/* Contact - always the last block on the page. */}
       <section style={{ padding: "72px 0", background: "#F5EFE4" }}>
         <div style={{ maxWidth: 1760, margin: "0 auto", padding: "0 40px" }}>
           <div
@@ -466,12 +472,6 @@ export default function GrievanceRedressalPage() {
           </div>
         </div>
       </section>
-    
-      {/* Any committee the CMS points at this page - see PlacedCommittees.
-          Renders nothing until one is pointed here. */}
-      <PlacedCommittees placement="GRIEVANCE" heading="Committees" />
-
-      <PageResources section="grievance" />
       </main>
   );
 }

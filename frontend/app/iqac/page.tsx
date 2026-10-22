@@ -262,7 +262,14 @@ export default function IQACPage() {
           menu had always pointed. The "IQAC -> Apex Bodies" upload target is
           gone with the section; nothing had been filed under it. */}
 
-      {/* CONTACT */}
+      {/* Any committee the CMS points at this page - see PlacedCommittees.
+          Renders nothing until one is pointed here. */}
+      <PlacedCommittees placement="IQAC" heading="Committees" />
+
+      {/* Minutes filed here show on the NAAC page's Minutes section instead. */}
+      <PageResources section="iqac" leaveOut={{ titlePattern: "minutes|\\bmom\\b|agenda" }} />
+
+      {/* CONTACT - always the last block on the page. */}
       <section id="contact" style={{ padding: "80px 0", background: "white" }}>
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 40, textAlign: "center" }}><CmsText section="iqac" slot="contact-iqac" /></h2>
@@ -278,12 +285,6 @@ export default function IQACPage() {
           </div>
         </div>
       </section>
-      {/* Any committee the CMS points at this page - see PlacedCommittees.
-          Renders nothing until one is pointed here. */}
-      <PlacedCommittees placement="IQAC" heading="Committees" />
-
-      {/* Minutes filed here show on the NAAC page's Minutes section instead. */}
-      <PageResources section="iqac" leaveOut={{ titlePattern: "minutes|\\bmom\\b|agenda" }} />
     </main>
   );
 }
