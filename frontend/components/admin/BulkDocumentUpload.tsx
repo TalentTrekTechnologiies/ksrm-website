@@ -1,6 +1,8 @@
 "use client"
 
 import { useRef, useState } from "react"
+import UploadDestinationHint from "@/components/admin/UploadDestinationHint"
+import { describeDestination, destinationText, type UploadDraft } from "@/lib/upload-destinations"
 import { AlertTriangle, CheckCircle2, FileText, Loader2, Trash2, UploadCloud, X } from "lucide-react"
 import { SelectField, TextField } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
@@ -70,7 +72,8 @@ export default function BulkDocumentUpload({
   /** Restricts the page dropdown - the Examinations tab offers only its own sections. */
   pageSectionOptions?: { value: string; label: string }[]
   departmentId?: number
-  onDone: (count: number) => void
+  /** `where` says where the batch landed on the site, for the success message. */
+  onDone: (count: number, where?: string) => void
   onCancel: () => void
 }) {
   const [rows, setRows] = useState<Row[]>([])
@@ -86,6 +89,16 @@ export default function BulkDocumentUpload({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const sections = pageSectionOptions ?? PAGE_SECTIONS
+  const isIqac = pageSection === "iqac" || pageSection.startsWith("iqac.")
+  // One draft per file (titles can send files to different Examinations
+  // blocks); before any file is added, one blank draft so the page shows.
+  const drafts: UploadDraft[] = (rows.length ? rows.map((r) => r.title) : [""]).map((title) => ({
+    pageSection,
+    category,
+    title,
+    groupLabel,
+    folderPath: isIqac ? folderPath : null,
+  }))
 
   function addFiles(files: FileList | File[]) {
     const incoming = Array.from(files)
@@ -160,7 +173,14 @@ export default function BulkDocumentUpload({
         return
       }
 
-      onDone(items.length)
+      const where = [
+        ...new Set(
+          items.map((it) =>
+            destinationText(describeDestination({ ...drafts[0], title: it.title })),
+          ),
+        ),
+      ].join("; ")
+      onDone(items.length, where)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : err instanceof Error ? err.message : "Bulk publish failed")
       setBusy(false)
@@ -304,6 +324,8 @@ export default function BulkDocumentUpload({
           </div>
         </div>
       )}
+
+      <UploadDestinationHint drafts={drafts} />
 
       {busy && (
         <div className="space-y-1.5">

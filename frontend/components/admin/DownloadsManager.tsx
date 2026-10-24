@@ -9,6 +9,8 @@ import CmsToolbar from "@/components/admin/cms/CmsToolbar"
 import MediaField from "@/components/admin/cms/MediaField"
 import SyllabusTitleHint from "@/components/admin/SyllabusTitleHint"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
+import UploadDestinationHint from "@/components/admin/UploadDestinationHint"
+import { describeDestination, destinationText } from "@/lib/upload-destinations"
 import { getCommitteesPublic, Committee } from "@/lib/committees-api"
 import { committeeAnchor } from "@/components/committees/NamedCommittees"
 import { useLiveData } from "@/lib/use-live-data"
@@ -206,6 +208,16 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
     setCreating(false)
   }
 
+  // What the form would publish, for "Where this will appear".
+  const formDraft = {
+    pageSection: form.pageSection,
+    category: form.category,
+    title: form.title,
+    groupLabel: form.groupLabel,
+    academicYear: form.academicYear,
+    folderPath: isIqacSection(form.pageSection) ? form.folderPath : null,
+  }
+
   async function handleSave() {
     if (!(await confirm({ title: "Save changes?", message: "Save your changes? They go live on the public site straight away.", confirmLabel: "Save" }))) return
     setSaving(true)
@@ -239,7 +251,7 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
       }
       cancelForm()
       await refresh()
-      notifySaved("Your changes have been saved.")
+      notifySaved(`Saved. On the website it appears on: ${destinationText(describeDestination(formDraft))}.`)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save download")
     } finally {
@@ -391,9 +403,9 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
           defaultPageSection={lockedSection ?? ""}
           pageSectionOptions={lockedSection ? PAGE_SECTIONS.filter((s) => s.value === lockedSection) : undefined}
           onCancel={() => setBulkOpen(false)}
-          onDone={(count) => {
+          onDone={(count, where) => {
             setBulkOpen(false)
-            setNotice(`Published ${count} document${count === 1 ? "" : "s"}.`)
+            setNotice(`Published ${count} document${count === 1 ? "" : "s"}${where ? ` - on the website: ${where}` : ""}.`)
             refresh()
           }}
         />
@@ -480,6 +492,7 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
               </div>
             )}
           </div>
+          <UploadDestinationHint drafts={[formDraft]} />
           <MediaField
             label="File"
             url={form.fileUrl}

@@ -541,8 +541,8 @@ function ExamResultsTab() {
         pageSectionLabel="Which list on the Examinations page"
         pageSectionHelper="Choose Rules & Regulations for the code of conduct; it appears at /examinations#rules."
         onCancel={() => setRefreshKey((k) => k + 1)}
-        onDone={(count) => {
-          setNotice(`Published ${count} document${count === 1 ? "" : "s"} to the Examinations page.`)
+        onDone={(count, where) => {
+          setNotice(`Published ${count} document${count === 1 ? "" : "s"} - on the website: ${where || "the Examinations page"}.`)
           setRefreshKey((k) => k + 1)
         }}
       />
