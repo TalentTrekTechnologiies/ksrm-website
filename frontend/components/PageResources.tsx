@@ -3,13 +3,14 @@
 import { useMemo, useState } from "react"
 import { formatPublished } from "@/lib/format-date"
 import { resolveFileUrl, thumbProps } from "@/lib/api-base"
-import { academicYearOf, currentAcademicYearLabel } from "@/lib/academic-year";
+import { currentAcademicYearLabel } from "@/lib/academic-year";
 import PublicDocumentList, { PUBLIC_DOCUMENT_LIST_STYLES } from "@/components/PublicDocumentList"
 import { UPLOADED_MEDIA_STYLES } from "@/lib/uploaded-media-styles"
 import { getDownloadsPublic, Download, DownloadCategory } from "@/lib/downloads-api"
 import { getGalleryPublic, GalleryImage } from "@/lib/gallery-api"
 import { getPageTablesPublic, PageTable } from "@/lib/page-tables-api"
 import { useLiveData } from "@/lib/use-live-data"
+import { applyShowRules, compileRule, docHeading, matchesFallback, mergeBlockDocs } from "@/lib/page-doc-rules"
 
 // Videos published to a page are stored as Gallery records tagged with this
 // category (the Media file URL has no extension to sniff, so the tag is how
@@ -174,22 +175,8 @@ function groupDocs(docs: Download[]): DocGroup[] {
   const byLabel = new Map<string, DocGroup>()
   const ungrouped: DocGroup = { label: null, items: [] }
   for (const d of docs) {
-    // Which heading this document sits under, most deliberate first:
-    //
-    //   1. the academicYear field  - an admin picked it from a dropdown
-    //   2. groupLabel              - an admin typed it ("B.Tech", "AY 2025-26")
-    //   3. the year in its title   - for the thousands uploaded before either
-    //                                field existed
-    //
-    // Step 3 is what was missing. The Academic Calendar page read the year out
-    // of the title while this one knew only groupLabel, so a document with no
-    // label landed in an unlabelled heap here and under AY 2026-27 there -
-    // from the same record, renamed the same way.
-    const label =
-      d.academicYear?.trim() ||
-      d.groupLabel?.trim() ||
-      academicYearOf({ title: d.title }) ||
-      null
+    // academicYear, then groupLabel, then the year in the title - see docHeading.
+    const label = docHeading(d)
     if (!label) {
       ungrouped.items.push(d)
       continue
@@ -236,11 +223,7 @@ async function fetchSection(
       ? settled(
           Promise.all(fallback.sections.map((s) => getDownloadsPublic(undefined, undefined, s).catch(() => [] as Download[]))).then((groups) =>
             // Title OR group: a pattern on either is enough, both absent keeps all.
-            groups.flat().filter((d) =>
-              (!fallback.titlePattern && !fallback.groupPattern) ||
-              (fallback.titlePattern?.test(d.title) ?? false) ||
-              (fallback.groupPattern?.test(d.groupLabel ?? "") ?? false),
-            ),
+            groups.flat().filter((d) => matchesFallback(d, fallback.titlePattern, fallback.groupPattern)),
           ),
         )
       : Promise.resolve({ ok: true, v: [] as Download[] }),
@@ -251,42 +234,9 @@ async function fetchSection(
   if (!routed.ok && !byCategory.ok && !fallbackDocs.ok && !images.ok && !tables.ok) {
     throw new Error(`page resources unavailable for "${section}"`)
   }
-  // Explicit page routing wins over category inclusion: a doc the admin routed
-  // to a specific section (e.g. "examinations.results") must appear only there,
-  // not also in a broader block that happens to match its category.
-  const byCategoryUnrouted = byCategory.v.filter((d) => !d.pageSection || d.pageSection === section)
-  // Deduplicated by id, and by file ONLY when the title matches too.
-  //
-  // The file check used to stand alone, so two documents pointing at the same
-  // PDF collapsed into one - which happens whenever an admin picks an existing
-  // item from the Media Library rather than uploading a fresh copy. The result
-  // was a document silently missing from the page while sitting in the
-  // database: "every time I upload, one goes missing".
-  //
-  // Same file AND same title is still a genuine duplicate - the same document
-  // added twice, once globally and once in a department's Documents tab, which
-  // is what this check was written for. Same file under two different titles is
-  // two records an admin made on purpose, and both are shown.
-  const seenId = new Set<number>()
-  const seenFileTitle = new Set<string>()
-  const docs = [...routed.v, ...byCategoryUnrouted, ...fallbackDocs.v]
-    .filter((d) => {
-      if (seenId.has(d.id)) return false
-      const key = `${(d.fileUrl || "").trim().toLowerCase()}::${(d.title || "").trim().toLowerCase()}`
-      if (d.fileUrl && seenFileTitle.has(key)) return false
-      seenId.add(d.id)
-      if (d.fileUrl) seenFileTitle.add(key)
-      return true
-    })
-    // Admin order first, then newest. Without this the list came out in
-    // whatever order the sections happened to concatenate in, so a document
-    // uploaded minutes ago could sit below one from four years back - and
-    // behind a "Show all" toggle, which reads as the upload having failed.
-    .sort((a, b) => {
-      const order = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
-      if (order !== 0) return order
-      return String(b.publishedAt ?? "").localeCompare(String(a.publishedAt ?? ""))
-    })
+  // Routing beats category, duplicates dropped, admin order then newest -
+  // see mergeBlockDocs.
+  const docs = mergeBlockDocs(section, routed.v, byCategory.v, fallbackDocs.v)
   // Split video-tagged gallery records out so they render as <video> players.
   const videos = images.v.filter((g) => g.category === VIDEO_CATEGORY)
   const realImages = images.v.filter((g) => g.category !== VIDEO_CATEGORY)
@@ -708,24 +658,8 @@ export default function PageResources({
     [fallbackGroupPattern],
   )
 
-  const keep = useMemo(
-    () =>
-      onlyShow && {
-        category: onlyShow.category,
-        re: onlyShow.titlePattern ? new RegExp(onlyShow.titlePattern, "i") : undefined,
-        group: onlyShow.groupPattern ? new RegExp(onlyShow.groupPattern, "i") : undefined,
-      },
-    [onlyShow],
-  )
-  const leave = useMemo(
-    () =>
-      leaveOut && {
-        category: leaveOut.category,
-        re: leaveOut.titlePattern ? new RegExp(leaveOut.titlePattern, "i") : undefined,
-        group: leaveOut.groupPattern ? new RegExp(leaveOut.groupPattern, "i") : undefined,
-      },
-    [leaveOut],
-  )
+  const keep = useMemo(() => compileRule(onlyShow), [onlyShow])
+  const leave = useMemo(() => compileRule(leaveOut), [leaveOut])
 
   const data = useLiveData<SectionData>(
     () => fetchSection(section, docsCategory, { sections: fallbackSections, titlePattern, groupPattern }),
@@ -747,15 +681,7 @@ export default function PageResources({
 
   const { images, tables } = data
   const videos = hideVideos ? [] : data.videos
-  const docs = hideDocs ? [] : data.docs.filter((d) => {
-    const matches = (rule: { category?: DownloadCategory; re?: RegExp; group?: RegExp }) =>
-      (rule.category !== undefined && d.category === rule.category) ||
-      (rule.re?.test(d.title) ?? false) ||
-      (rule.group?.test(d.groupLabel ?? "") ?? false)
-    if (keep && !matches(keep)) return false
-    if (leave && matches(leave)) return false
-    return true
-  })
+  const docs = hideDocs ? [] : applyShowRules(data.docs, keep, leave)
   const isEmpty = docs.length === 0 && images.length === 0 && videos.length === 0 && tables.length === 0
   if (isEmpty && !emptyText) return null
 

@@ -11,6 +11,7 @@ import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import PageTextEditor from "@/components/admin/PageTextEditor"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
 import { getDownloadsAdmin, reorderDownloads, type Download } from "@/lib/downloads-api"
+import ExamPageDocuments from "@/components/admin/ExamPageDocuments"
 import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
@@ -549,7 +550,7 @@ function ExamResultsTab() {
       <ExamDocumentOrder key={`order-${refreshKey}`} />
 
       <p className="text-xs text-slate-500">
-        Renaming and removing documents is done under{" "}
+        To remove documents, use the <strong>Documents on the page</strong> tab above. Renaming is done under{" "}
         <a href="/admin/downloads" className="font-semibold text-admin-primary hover:underline">
           Documents
         </a>
@@ -785,7 +786,7 @@ function ExamDocumentOrderList({ section }: { section: string }) {
 }
 
 export default function ExamNotificationsManager() {
-  const [tab, setTab] = useState<"notifications" | "results" | "staff" | "text">("notifications")
+  const [tab, setTab] = useState<"notifications" | "results" | "page-docs" | "staff" | "text">("notifications")
   const tabClass = (on: boolean) =>
     `rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
       on ? "bg-admin-primary text-white" : "border border-admin-border bg-white text-slate-600 hover:bg-admin-bg"
@@ -794,12 +795,15 @@ export default function ExamNotificationsManager() {
   return (
     <PermissionGate permission="exam_notifications.view">
       <div className="space-y-5">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button type="button" className={tabClass(tab === "notifications")} onClick={() => setTab("notifications")}>
             Notifications
           </button>
           <button type="button" className={tabClass(tab === "results")} onClick={() => setTab("results")}>
             Results &amp; Documents
+          </button>
+          <button type="button" className={tabClass(tab === "page-docs")} onClick={() => setTab("page-docs")}>
+            Documents on the page
           </button>
           <button type="button" className={tabClass(tab === "staff")} onClick={() => setTab("staff")}>
             Examination Section Staff
@@ -810,6 +814,7 @@ export default function ExamNotificationsManager() {
         </div>
         {tab === "notifications" && <ExamNotificationsManagerInner />}
         {tab === "results" && <ExamResultsTab />}
+        {tab === "page-docs" && <ExamPageDocuments />}
         {tab === "staff" && <ExamStaffTab />}
         {/* The Examinations page's own wording - headings, intro paragraph,
             quick-link labels. It used to live under Page Content, which meant

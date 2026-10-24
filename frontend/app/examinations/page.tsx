@@ -1,6 +1,7 @@
 ﻿import ExamNotificationsList from "@/components/examinations/ExamNotificationsList";
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
+import { examBlockRules } from "@/lib/exam-page-blocks";
 import ExamSectionStaff from "@/components/examinations/ExamSectionStaff";
 import CoeContact from "@/components/examinations/CoeContact";
 import CmsText from "@/components/CmsText";
@@ -21,15 +22,9 @@ const quickLinks = [
   { icon: "📘", label: "Syllabus", href: "/academics/syllabus" },
 ];
 
-const EXAM_FALLBACK_SECTIONS = ["examinations"];
-// Regex SOURCES, not RegExp objects: this is a server component and
-// PageResources is a client one, so a compiled RegExp cannot cross that
-// boundary - it fails the production build rather than degrading at runtime.
-// PageResources compiles these case-insensitively.
-const CALENDAR_TITLE = "calendar";
-const TIMETABLE_TITLE = "time\\s*table|timetable";
-const RESULT_TITLE = "result";
-const QUESTION_PAPER_TITLE = "question\\s*paper|qp\\b";
+// Which documents each block lists lives in lib/exam-page-blocks.ts, shared
+// with Admin -> Examinations -> "Documents on the page", which shows staff the
+// same blocks and headings so they can find and remove what is on the site.
 
 export default function ExaminationsPage() {
   return (
@@ -82,7 +77,7 @@ export default function ExaminationsPage() {
         <div className="responsive-container">
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="latest-notifications" /></h2>
           <ExamNotificationsList />
-          <PageResources section="examinations.notifications" embedded />
+          <PageResources {...examBlockRules("notifications")} embedded />
         </div>
       </section>
 
@@ -94,11 +89,9 @@ export default function ExaminationsPage() {
               stays so anything uploaded the old way still shows. */}
           <ExamNotificationsList type="CALENDAR" hideEmpty />
           <PageResources
-            section="examinations.calendars"
+            {...examBlockRules("calendars")}
             embedded
             maxVisible={8}
-            fallbackSections={EXAM_FALLBACK_SECTIONS}
-            fallbackTitlePattern={CALENDAR_TITLE}
           />
         </div>
       </section>
@@ -108,11 +101,9 @@ export default function ExaminationsPage() {
           <h2 style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", fontWeight: 800, fontFamily: "'Rajdhani', sans-serif", color: "#2B3490", marginBottom: 48, textAlign: "center" }}><CmsText section="examinations" slot="exam-time-tables" /></h2>
           <ExamNotificationsList type="TIMETABLE" hideEmpty />
           <PageResources
-            section="examinations.timetables"
+            {...examBlockRules("timetables")}
             embedded
             maxVisible={8}
-            fallbackSections={EXAM_FALLBACK_SECTIONS}
-            fallbackTitlePattern={TIMETABLE_TITLE}
           />
         </div>
       </section>
@@ -142,7 +133,7 @@ export default function ExaminationsPage() {
               ignores it when embedded, so it would be dead config - the
               paragraph above carries the section on its own until the first
               document is published. */}
-          <PageResources section="examinations.rules" embedded maxVisible={8} />
+          <PageResources {...examBlockRules("rules")} embedded maxVisible={8} />
         </div>
       </section>
 
@@ -159,7 +150,7 @@ export default function ExaminationsPage() {
               View full branch &amp; regulation-wise syllabus →
             </a>
           </p>
-          <PageResources section="examinations.syllabus" docsCategory="SYLLABUS" embedded maxVisible={8} />
+          <PageResources {...examBlockRules("syllabus")} embedded maxVisible={8} />
         </div>
       </section>
 
@@ -174,13 +165,9 @@ export default function ExaminationsPage() {
               of it - every document appeared twice. Now they split it: papers
               here, everything else below. */}
           <PageResources
-            section="examinations"
-            docsCategory="QUESTION_PAPER"
+            {...examBlockRules("question-papers")}
             embedded
             maxVisible={8}
-            fallbackSections={EXAM_FALLBACK_SECTIONS}
-            fallbackTitlePattern={QUESTION_PAPER_TITLE}
-            onlyShow={{ category: "QUESTION_PAPER", titlePattern: QUESTION_PAPER_TITLE }}
           />
         </div>
       </section>
@@ -189,13 +176,9 @@ export default function ExaminationsPage() {
           calendar / timetable / result titles that those blocks pull in from
           this same section, so nothing is listed twice. */}
       <PageResources
-        section="examinations"
+        {...examBlockRules("more")}
         docsTitle="More Exam Documents"
         background="#ffffff"
-        leaveOut={{
-          category: "QUESTION_PAPER",
-          titlePattern: [QUESTION_PAPER_TITLE, CALENDAR_TITLE, TIMETABLE_TITLE, RESULT_TITLE].join("|"),
-        }}
       />
 
       {/* Results & fee payment (SBI) sits low - it is a utility link-out, not
@@ -228,10 +211,8 @@ export default function ExaminationsPage() {
               land here, grouped by their AY heading. */}
           <ExamNotificationsList type="RESULT" hideEmpty />
           <PageResources
-            section="examinations.results"
+            {...examBlockRules("results")}
             embedded
-            fallbackSections={EXAM_FALLBACK_SECTIONS}
-            fallbackTitlePattern={RESULT_TITLE}
           />
         </div>
       </section>
