@@ -35,6 +35,8 @@ import {
 } from "@/lib/gallery-api"
 import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/departments-api"
 import { getStoredAdmin, allowedPageRoots, pageSectionRoot } from "@/lib/auth"
+import PageDocumentsManager from "@/components/admin/PageDocumentsManager"
+import { NAAC_DOC_BLOCKS } from "@/lib/naac-page-blocks"
 
 /**
  * "Pick a place → manage everything on it." One screen listing every public
@@ -86,6 +88,18 @@ function parseTarget(v: string): Target | null {
 
 type AddKind = "doc" | "image" | "video" | null
 
+/**
+ * Sections whose documents the NAAC page shows by its own rules - most of its
+ * files are old-site migrations filed under the broad "naac" section and
+ * pulled into DVV, SSR and the rest by heading or title. Listing these by
+ * section name alone showed "No documents" under sections full of files, so
+ * they get the NAAC page's own blocks instead.
+ */
+const NAAC_BLOCK_FOR_SECTION = new Map(
+  NAAC_DOC_BLOCKS.filter((b) => b.rules.section !== "naac").map((b) => [b.rules.section, b.id]),
+)
+const isNaacSection = (s: string) => s === "naac" || NAAC_BLOCK_FOR_SECTION.has(s)
+
 function PageContentInner() {
   // Restrict the page list to what this admin actually owns. The backend's
   // PageSectionOwnershipGuard rejects a write to anything else, so offering
@@ -112,6 +126,8 @@ function PageContentInner() {
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [adding, setAdding] = useState<AddKind>(null)
+  // Bumped on every load, so the NAAC block view re-reads after an add/delete here.
+  const [reloadKey, setReloadKey] = useState(0)
 
   const [docForm, setDocForm] = useState({ title: "", category: "OTHER" as DownloadCategory, fileUrl: "", mediaId: null as number | null })
   const [mediaForm, setMediaForm] = useState({ title: "", url: "", mediaId: null as number | null })
@@ -158,6 +174,7 @@ function PageContentInner() {
       setError(err instanceof ApiError ? err.message : "Failed to load this page's content")
     } finally {
       setLoading(false)
+      setReloadKey((k) => k + 1)
     }
   }
 
@@ -375,7 +392,20 @@ function PageContentInner() {
               this screen and Academics -> Syllabus showed the same library
               through two different lenses, and an edit made in one was a
               surprise in the other. */}
-          {target.kind === "page" && DEDICATED_DOCUMENT_SCREENS[target.section] ? (
+          {target.kind === "page" && isNaacSection(target.section) ? (
+            <section>
+              <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+                <FileText className="h-4 w-4" /> Documents
+              </h3>
+              <PageDocumentsManager
+                key={reloadKey}
+                blocks={NAAC_DOC_BLOCKS}
+                pageName="NAAC page"
+                pagePath="/naac"
+                initialBlockId={NAAC_BLOCK_FOR_SECTION.get(target.section)}
+              />
+            </section>
+          ) : target.kind === "page" && DEDICATED_DOCUMENT_SCREENS[target.section] ? (
             <section>
               <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
                 <FileText className="h-4 w-4" /> Documents ({docs.length})

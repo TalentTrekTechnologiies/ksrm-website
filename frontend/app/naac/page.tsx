@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { mediaFile } from "@/lib/api-base";
 import PageResources from "@/components/PageResources";
+import { naacBlockRules } from "@/lib/naac-page-blocks";
 import CmsText, { usePageTextValue } from "@/components/CmsText";
 import { useLiveData } from "@/lib/use-live-data";
 import { resolveFileUrl } from "@/lib/api-base";
@@ -65,27 +66,9 @@ const surveys = [
   { label: "2018-2019", href: mediaFile(231) },
 ];
 
-// Title and group patterns, as regex SOURCES (PageResources compiles them,
-// case-insensitively). Each section pulls the migrated documents that match;
-// "Other NAAC Documents" leaves out all of them.
-//
-// Minutes: "minutes", not "minute" - a NAAC document titled "1 One minute
-// talk" is not a set of minutes; \bmom\b avoids "moment".
-const MINUTES_TITLE = "minutes|\\bmom\\b|agenda";
-const MINUTES_FALLBACK_SECTIONS = ["iqac", "iqac.aqar", "naac"];
-const DVV_GROUP = "^dvv\\d*$";
-const DVV_TITLE = "\\bdvv\\b";
-const SSR_GROUP = "^ssr$";
-const SSR_TITLE = "\\bssr\\b|self[\\s-]*study";
-const AAA_TITLE = "academic.{0,30}audit|\\baaa\\b";
-const CODE_TITLE = "code of (conduct|ethic)";
-const POLICY_TITLE = "\\bpolic(y|ies)\\b|hand ?book";
-const FEEDBACK_TITLE = "feedback";
-const BEST_TITLE = "best practice";
-const DISTINCT_TITLE = "distinctive";
-const CLAIMED_TITLES = [DVV_TITLE, SSR_TITLE, MINUTES_TITLE, AAA_TITLE, CODE_TITLE, POLICY_TITLE, FEEDBACK_TITLE, BEST_TITLE, DISTINCT_TITLE].join("|");
-const CLAIMED_GROUPS = "^(dvv\\d*|ssr)$";
-const NAAC_ONLY = ["naac"];
+// Which documents each section lists lives in lib/naac-page-blocks.ts, shared
+// with the admin, which shows staff the same sections so they can find and
+// manage what is on this page.
 
 function DownloadIcon() {
   return (
@@ -173,31 +156,29 @@ const SECTION_BODY: Record<NaacTabId, ReactNode> = {
     <>
       <YearCards items={aqarReports} title="AQAR" subtitle="Annual Quality Assurance Report" />
       {/* Minutes filed under AQAR during the migration show under Minutes. */}
-      <PageResources section="iqac.aqar" embedded leaveOut={{ titlePattern: MINUTES_TITLE }} />
+      <PageResources {...naacBlockRules("aqars")} embedded />
     </>
   ),
   dvv: (
-    <PageResources section="naac.dvv" embedded fallbackSections={NAAC_ONLY} fallbackGroupPattern={DVV_GROUP} fallbackTitlePattern={DVV_TITLE} emptyText={SOON} />
+    <PageResources {...naacBlockRules("dvv")} embedded emptyText={SOON} />
   ),
   ssr: (
-    <PageResources section="naac.ssr" embedded fallbackSections={NAAC_ONLY} fallbackGroupPattern={SSR_GROUP} fallbackTitlePattern={SSR_TITLE} emptyText={SOON} />
+    <PageResources {...naacBlockRules("ssr")} embedded emptyText={SOON} />
   ),
   minutes: (
     <PageResources
-      section="iqac.minutes"
+      {...naacBlockRules("minutes")}
       embedded
-      fallbackSections={MINUTES_FALLBACK_SECTIONS}
-      fallbackTitlePattern={MINUTES_TITLE}
       emptyText="Minutes of IQAC meetings will be published here."
     />
   ),
   survey: (
     <>
       <YearCards items={surveys} title="Survey" subtitle="Student Satisfaction Report" />
-      <PageResources section="iqac.survey" embedded />
+      <PageResources {...naacBlockRules("survey")} embedded />
     </>
   ),
-  aaa: <PageResources section="naac.aaa" embedded fallbackSections={NAAC_ONLY} fallbackTitlePattern={AAA_TITLE} emptyText={SOON} />,
+  aaa: <PageResources {...naacBlockRules("aaa")} embedded emptyText={SOON} />,
   "code-of-conduct": (
     <>
       <ul className="naac-doc-list">
@@ -210,10 +191,10 @@ const SECTION_BODY: Record<NaacTabId, ReactNode> = {
           </li>
         ))}
       </ul>
-      <PageResources section="naac.code-of-conduct" embedded fallbackSections={NAAC_ONLY} fallbackTitlePattern={CODE_TITLE} />
+      <PageResources {...naacBlockRules("code-of-conduct")} embedded />
     </>
   ),
-  policies: <PageResources section="naac.policies" embedded fallbackSections={NAAC_ONLY} fallbackTitlePattern={POLICY_TITLE} emptyText={SOON} />,
+  policies: <PageResources {...naacBlockRules("policies")} embedded emptyText={SOON} />,
   feedback: (
     <>
       <div className="naac-feedback-row">
@@ -221,12 +202,12 @@ const SECTION_BODY: Record<NaacTabId, ReactNode> = {
           <FeedbackFormLink key={label} index={i} />
         ))}
       </div>
-      <PageResources section="naac.feedback" embedded fallbackSections={NAAC_ONLY} fallbackTitlePattern={FEEDBACK_TITLE} emptyText={SOON} />
+      <PageResources {...naacBlockRules("feedback")} embedded emptyText={SOON} />
     </>
   ),
-  "best-practices": <PageResources section="naac.best-practices" embedded fallbackSections={NAAC_ONLY} fallbackTitlePattern={BEST_TITLE} emptyText={SOON} />,
-  distinctiveness: <PageResources section="naac.distinctiveness" embedded fallbackSections={NAAC_ONLY} fallbackTitlePattern={DISTINCT_TITLE} emptyText={SOON} />,
-  "annual-reports": <PageResources section="iqac.annualreports" embedded maxVisible={10} emptyText={SOON} />,
+  "best-practices": <PageResources {...naacBlockRules("best-practices")} embedded emptyText={SOON} />,
+  distinctiveness: <PageResources {...naacBlockRules("distinctiveness")} embedded emptyText={SOON} />,
+  "annual-reports": <PageResources {...naacBlockRules("annual-reports")} embedded maxVisible={10} emptyText={SOON} />,
 };
 
 export default function NAACPage() {
@@ -389,9 +370,9 @@ export default function NAACPage() {
       {/* Whatever no section above claims - the criteria-wise evidence the
           old site was organised by. */}
       <PageResources
-        section="naac"
+        {...naacBlockRules("other")}
+        anchorId="other-naac-documents"
         docsTitle="Other NAAC Documents"
-        leaveOut={{ groupPattern: CLAIMED_GROUPS, titlePattern: CLAIMED_TITLES }}
       />
     </main>
   );

@@ -28,6 +28,16 @@ export interface DocBlockRules {
   leaveOut?: DocRule
 }
 
+/** One document block of a public page, as the admin lists it. */
+export interface PageDocBlock {
+  id: string
+  /** The heading the block has on the public page. */
+  title: string
+  /** Anchor on the public page. */
+  anchor: string
+  rules: DocBlockRules
+}
+
 interface CompiledRule {
   category?: DownloadCategory
   re?: RegExp

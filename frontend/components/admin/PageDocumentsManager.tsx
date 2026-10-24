@@ -6,8 +6,7 @@ import { useCmsConfirm } from "@/components/admin/cms/CmsConfirmProvider"
 import { ApiError } from "@/lib/api-client"
 import { getStoredAdmin, hasPermission } from "@/lib/auth"
 import { formatPublished } from "@/lib/format-date"
-import { EXAM_DOC_BLOCKS, type ExamDocBlock } from "@/lib/exam-page-blocks"
-import { docHeading, selectBlockDocs } from "@/lib/page-doc-rules"
+import { docHeading, selectBlockDocs, type PageDocBlock } from "@/lib/page-doc-rules"
 import {
   deleteDownload,
   getDownloadsAdmin,
@@ -43,7 +42,9 @@ const norm = (s: string) => s.toLowerCase().replace(/[_\s]+/g, " ").trim()
 function headingsOf(docs: Download[]): Heading[] {
   const byLabel = new Map<string, Heading>()
   for (const d of docs) {
-    const label = docHeading(d) ?? NO_HEADING
+    // A folder path (NAAC / IQAC documents) is the heading the page files it
+    // under; otherwise the year or group heading, as on the page.
+    const label = d.folderPath?.trim() || docHeading(d) || NO_HEADING
     let h = byLabel.get(label)
     if (!h) {
       h = { label, docs: [] }
@@ -51,15 +52,26 @@ function headingsOf(docs: Download[]): Heading[] {
     }
     h.docs.push(d)
   }
-  // The un-headed list sits last, as on the page.
-  return [...byLabel.values()].sort((a, b) => Number(a.label === NO_HEADING) - Number(b.label === NO_HEADING))
+  // As on the page: folders first, in natural order (Criterion-1 before
+  // Criterion-7, 7.1.2 before 7.1.10); then the other headings as they come;
+  // the un-headed list last.
+  const folders = new Set(docs.map((d) => d.folderPath?.trim()).filter(Boolean))
+  const rank = (h: Heading) => (folders.has(h.label) ? 0 : h.label === NO_HEADING ? 2 : 1)
+  return [...byLabel.values()].sort(
+    (a, b) =>
+      rank(a) - rank(b) ||
+      (rank(a) === 0 ? a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: "base" }) : 0),
+  )
 }
 
 const placeText = (p: Place) => `${p.blockTitle} › ${p.heading}`
 
 /**
- * The Examinations page's documents, block by block and heading by heading,
- * exactly as a visitor sees them - "More Exam Documents -> Notices (427)".
+ * A public page's documents, block by block and heading by heading, exactly
+ * as a visitor sees them - "More Exam Documents -> Notices (427)", "DVV ->
+ * DVV2 (40)". Used for the Examinations and NAAC pages, whose blocks pull
+ * documents in by title and heading as well as by section, so a list by
+ * section alone showed "No documents" under blocks full of files.
  *
  * Staff could see migration leftovers on the site ("Legacy uploads (demo1)",
  * hundreds of notices titled "10", "100", ...) but not find them: the only
@@ -72,7 +84,20 @@ const placeText = (p: Place) => `${p.blockTitle} › ${p.heading}`
  * calls, so page ownership checks and the audit log apply to every one, and a
  * delete is the usual soft delete - restorable from the "Deleted" view.
  */
-export default function ExamPageDocuments() {
+export default function PageDocumentsManager({
+  blocks: pageBlocks,
+  pageName,
+  pagePath,
+  initialBlockId,
+}: {
+  blocks: PageDocBlock[]
+  /** "Examinations page", "NAAC page". */
+  pageName: string
+  /** "/examinations" - the "View on site" links add the block's anchor. */
+  pagePath: string
+  /** The block to open first, e.g. the one for the section picked elsewhere. */
+  initialBlockId?: string
+}) {
   const { confirm } = useCmsConfirm()
   const admin = getStoredAdmin()
   const canDelete = hasPermission(admin, "downloads.delete")
@@ -81,7 +106,9 @@ export default function ExamPageDocuments() {
 
   const [all, setAll] = useState<Download[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [blockId, setBlockId] = useState(EXAM_DOC_BLOCKS[0].id)
+  const [blockId, setBlockId] = useState(
+    initialBlockId && pageBlocks.some((b) => b.id === initialBlockId) ? initialBlockId : pageBlocks[0].id,
+  )
   const [view, setView] = useState<"live" | "deleted">("live")
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<Set<number>>(new Set())
@@ -120,11 +147,11 @@ export default function ExamPageDocuments() {
   const blocks = useMemo(() => {
     if (!all) return null
     const pool = all.filter((d) => (view === "deleted" ? !!d.deletedAt : !d.deletedAt))
-    return EXAM_DOC_BLOCKS.map((b) => {
+    return pageBlocks.map((b) => {
       const docs = selectBlockDocs(pool, b.rules)
       return { ...b, docs, headings: headingsOf(docs) }
     })
-  }, [all, view])
+  }, [all, view, pageBlocks])
 
   // Where each document appears. Usually one place; a title pattern can pull
   // the same document into two blocks, and the search says so.
@@ -241,7 +268,7 @@ export default function ExamPageDocuments() {
     const ok = await confirm({
       title: `Delete ${plural(docs.length)}?`,
       message:
-        "They come off the Examinations page straight away. Nothing is erased: they stay under \"Deleted\" on this screen and can be restored at any time.",
+        `They come off the ${pageName} straight away. Nothing is erased: they stay under \"Deleted\" on this screen and can be restored at any time.`,
       confirmLabel: `Delete ${docs.length}`,
       destructive: true,
     })
@@ -357,7 +384,7 @@ export default function ExamPageDocuments() {
   }
 
   /** A heading ("folder") with its documents, closed until clicked. */
-  const headingCard = (b: ExamDocBlock, h: Heading, subtitle?: string) => {
+  const headingCard = (b: PageDocBlock, h: Heading, subtitle?: string) => {
     const key = `${b.id}::${h.label}`
     const isOpen = open.has(key)
     const rows = showAll.has(key) ? h.docs : h.docs.slice(0, ROWS_SHOWN)
@@ -409,7 +436,7 @@ export default function ExamPageDocuments() {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm font-semibold text-slate-800">Documents on the Examinations page</p>
+        <p className="text-sm font-semibold text-slate-800">Documents on the {pageName}</p>
         <p className="text-sm text-slate-500">
           The same blocks and headings a visitor sees. Search for a document or a heading, or pick a block and open a
           heading; tick what should go and press Delete - or tick a heading to take all of it. Deleted documents leave
@@ -430,7 +457,7 @@ export default function ExamPageDocuments() {
             disabled={busy}
             onChange={(e) => resetFor(() => setQuery(e.target.value))}
             placeholder="Search a document or heading name, e.g. roll list, Notices, 2019"
-            aria-label="Search documents and headings on the Examinations page"
+            aria-label={`Search documents and headings on the ${pageName}`}
             className="w-full rounded-lg border border-admin-border bg-white py-2 pl-9 pr-9 text-sm text-slate-700"
           />
           {query && (
@@ -460,7 +487,7 @@ export default function ExamPageDocuments() {
       </div>
 
       {!searching && (
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Block on the Examinations page">
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label={`Block on the ${pageName}`}>
           {blocks.map((b) => (
             <button
               key={b.id}
@@ -498,7 +525,7 @@ export default function ExamPageDocuments() {
         </span>
         {!search && (
           <a
-            href={`/examinations#${block.anchor}`}
+            href={`${pagePath}#${block.anchor}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-xs font-semibold text-admin-primary hover:underline"
@@ -563,7 +590,7 @@ export default function ExamPageDocuments() {
       {search ? (
         search.headingHits.length === 0 && search.titleHits.length === 0 ? (
           <p className="rounded-xl border border-dashed border-admin-border bg-admin-bg px-4 py-10 text-center text-sm text-slate-500">
-            Nothing {view === "live" ? "on the Examinations page" : "deleted"} matches &ldquo;{query.trim()}&rdquo;.
+            Nothing {view === "live" ? `on the ${pageName}` : "deleted"} matches &ldquo;{query.trim()}&rdquo;.
           </p>
         ) : (
           <div className="space-y-5">

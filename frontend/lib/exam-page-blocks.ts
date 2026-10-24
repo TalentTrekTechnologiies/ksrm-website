@@ -1,4 +1,4 @@
-import type { DocBlockRules } from "@/lib/page-doc-rules"
+import type { DocBlockRules, PageDocBlock } from "@/lib/page-doc-rules"
 
 /**
  * The document blocks of the public Examinations page, top to bottom.
@@ -17,14 +17,7 @@ const TIMETABLE_TITLE = "time\\s*table|timetable"
 const RESULT_TITLE = "result"
 const QUESTION_PAPER_TITLE = "question\\s*paper|qp\\b"
 
-export interface ExamDocBlock {
-  id: string
-  /** The heading the block has on the public page. */
-  title: string
-  /** Anchor on /examinations. */
-  anchor: string
-  rules: DocBlockRules
-}
+export type ExamDocBlock = PageDocBlock
 
 export const EXAM_DOC_BLOCKS: ExamDocBlock[] = [
   {

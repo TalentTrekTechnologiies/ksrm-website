@@ -11,7 +11,8 @@ import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import PageTextEditor from "@/components/admin/PageTextEditor"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
 import { getDownloadsAdmin, reorderDownloads, type Download } from "@/lib/downloads-api"
-import ExamPageDocuments from "@/components/admin/ExamPageDocuments"
+import PageDocumentsManager from "@/components/admin/PageDocumentsManager"
+import { EXAM_DOC_BLOCKS } from "@/lib/exam-page-blocks"
 import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
@@ -814,7 +815,9 @@ export default function ExamNotificationsManager() {
         </div>
         {tab === "notifications" && <ExamNotificationsManagerInner />}
         {tab === "results" && <ExamResultsTab />}
-        {tab === "page-docs" && <ExamPageDocuments />}
+        {tab === "page-docs" && (
+          <PageDocumentsManager blocks={EXAM_DOC_BLOCKS} pageName="Examinations page" pagePath="/examinations" />
+        )}
         {tab === "staff" && <ExamStaffTab />}
         {/* The Examinations page's own wording - headings, intro paragraph,
             quick-link labels. It used to live under Page Content, which meant
