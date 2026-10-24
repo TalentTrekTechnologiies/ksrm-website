@@ -17,10 +17,10 @@ import { useLiveData } from "@/lib/use-live-data"
 const OFFICE = /examination/i
 
 const FALLBACK = {
-  // Kept in step with the Contact record by hand. Updated when the office
-  // changed hands in Sep 2026: the first number followed the post, the second
-  // is the new Controller's.
-  phones: ["+91 91549 25978", "+91 86861 51727"],
+  // Kept in step with the Contact record by hand. One number only since Oct
+  // 2026, at the college's request: the office's own line, which follows the
+  // post.
+  phones: ["+91 91549 25978"],
   emails: ["ce@ksrmce.ac.in"],
 }
 
