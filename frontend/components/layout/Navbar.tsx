@@ -10,6 +10,7 @@ import { getCommitteesPublic } from "@/lib/committees-api"
 import { useLiveData } from "@/lib/use-live-data"
 import { canonicalDepartmentSlug } from "@/lib/department-slugs"
 import { committeeAnchor } from "@/components/committees/NamedCommittees"
+import { departmentRank } from "@/lib/department-order"
 
 const socialLinks = [
   { Icon: "f", href: "https://facebook.com/ksrmceofficial", label: "Facebook" },
@@ -37,6 +38,13 @@ interface NavItem {
  * Verification, News & Events) collect under "More" - which is an ordinary
  * dropdown, exactly like every other sub-menu here, not a separate panel.
  */
+/**
+ * Polytechnic is last in the college's department list, but it is the Diploma
+ * programme rather than a department record, so it links to the Diploma page -
+ * until a Polytechnic department is created in the CMS, which then replaces it.
+ */
+const POLYTECHNIC_LINK = { label: "Polytechnic", href: "/admissions/diploma" }
+
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   {
@@ -79,6 +87,8 @@ const navItems: NavItem[] = [
     // The section itself (components/departments/StudentChapter.tsx) is
     // still part of each department's own page either way; this is only
     // about which menu points at it.
+    // The college's order: CE, CSE, EEE, ECE, ME, H&S, CA, MS, Polytechnic.
+    // The live menu is built from the CMS in the same order (department-order).
     children: [
       { label: "Civil Engineering", href: "/departments/civil" },
       { label: "Computer Science and Engineering", href: "/departments/cse" },
@@ -86,7 +96,9 @@ const navItems: NavItem[] = [
       { label: "Electronics and Communication Engineering ", href: "/departments/ece" },
       { label: "Mechanical Engineering", href: "/departments/mech" },
       { label: "Humanities and Sciences", href: "/departments/hs" },
+      { label: "Computer Applications", href: "/departments/bca" },
       { label: "Management Studies (MBA)", href: "/departments/mba" },
+      POLYTECHNIC_LINK,
     ],
   },
   {
@@ -279,12 +291,15 @@ export default function Navbar() {
   )
 
   const items = useMemo(() => {
-    const departmentChildren = liveDepartments?.length ? liveDepartments.map((d) => ({
-      label: d.name,
-      // The CMS slug is not always the published URL - "mechanical" is only
-      // ever built as "mech". Linking the raw slug opened the homepage.
-      href: `/departments/${canonicalDepartmentSlug(d.slug)}`,
-    })) : null
+    const departmentChildren = liveDepartments?.length ? [
+      ...liveDepartments.map((d) => ({
+        label: d.name,
+        // The CMS slug is not always the published URL - "mechanical" is only
+        // ever built as "mech". Linking the raw slug opened the homepage.
+        href: `/departments/${canonicalDepartmentSlug(d.slug)}`,
+      })),
+      ...(liveDepartments.some((d) => departmentRank(d.slug) === departmentRank("polytechnic")) ? [] : [POLYTECHNIC_LINK]),
+    ] : null
     const committeeChildren = liveCommittees?.length
       ? liveCommittees.map((c) => ({
           label: `  ↳ ${c.name}`,

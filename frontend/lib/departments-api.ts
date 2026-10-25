@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiPatch, apiDelete } from "./api-client";
+import { sortDepartments } from "./department-order";
 
 export interface Department {
   id: number;
@@ -60,8 +61,10 @@ export interface DepartmentInput {
   ogImageUrl?: string | null;
 }
 
+// Both lists come back in the college's order (CE, CSE, EEE, ECE, ME, H&S,
+// CA, MS, Polytechnic), not the API's alphabetical one - see department-order.
 export function getDepartmentsPublic(): Promise<Department[]> {
-  return apiGet<Department[]>("/departments");
+  return apiGet<Department[]>("/departments").then(sortDepartments);
 }
 
 /**
@@ -83,7 +86,7 @@ export function isAcademicDepartment(department: Department): boolean {
 
 export function getDepartmentsAdmin(includeDeleted = false): Promise<Department[]> {
   const query = includeDeleted ? "?includeDeleted=true" : "";
-  return apiGet<Department[]>(`/departments/admin${query}`);
+  return apiGet<Department[]>(`/departments/admin${query}`).then(sortDepartments);
 }
 
 // Admin single-record fetch by id, regardless of isActive/deletedAt - used

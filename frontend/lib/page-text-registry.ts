@@ -180,6 +180,35 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
   // which that domain no longer serves - the button handed the visitor the
   // homepage. The URL is the college's to set now, and the button stays
   // hidden until they set one.
+  // Computer Applications and Polytechnic joined the Departments page in
+  // 2026-10, when the cards took the college's order. The cards keep the slot
+  // numbers they were created with, so these two are 7 and 8.
+  departments: {
+    ...GENERATED_PAGE_TEXT.departments,
+    groups: [
+      ...GENERATED_PAGE_TEXT.departments.groups,
+      {
+        label: "Computer Applications and Polytechnic cards",
+        slots: [
+          { id: "DEPARTMENTS.7.name", label: "Computer Applications - name", kind: "line", default: "Computer Applications" },
+          {
+            id: "DEPARTMENTS.7.blurb",
+            label: "Computer Applications - description",
+            kind: "line",
+            default: "Bachelor of Computer Applications (BCA) - programming, databases and software development.",
+          },
+          { id: "DEPARTMENTS.8.name", label: "Polytechnic - name", kind: "line", default: "Polytechnic" },
+          {
+            id: "DEPARTMENTS.8.blurb",
+            label: "Polytechnic - description",
+            kind: "line",
+            default: "Three-year Diploma programmes in engineering.",
+          },
+        ],
+      },
+    ],
+  },
+
   alumni: {
     ...GENERATED_PAGE_TEXT.alumni,
     groups: [

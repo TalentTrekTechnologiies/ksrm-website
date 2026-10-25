@@ -3215,9 +3215,9 @@ export const GENERATED_PAGE_TEXT: Record<string, PageTextPage> = {
           },
           {
             id: "seven-departments-offering-undergraduate-postgra",
-            label: "Seven departments offering undergraduate, postgraduate and r...",
+            label: "Departments offering undergraduate, postgraduate, diploma and r...",
             kind: "line",
-            default: "Seven departments offering undergraduate, postgraduate and research programmes.",
+            default: "Departments offering undergraduate, postgraduate, diploma and research programmes.",
           },
         ],
       },

@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = pageMetadata({
   title: "Departments",
-  description: "Engineering departments at K.S.R.M. College of Engineering, Kadapa - Civil, CSE, ECE, EEE, Mechanical, Humanities & Sciences and Management Studies.",
+  description: "Departments at K.S.R.M. College of Engineering, Kadapa - Civil, CSE, EEE, ECE, Mechanical, Humanities & Sciences, Computer Applications, Management Studies and Polytechnic.",
   path: "/departments",
 });
 
@@ -18,14 +18,25 @@ export const metadata: Metadata = pageMetadata({
  * indexable URL in the sitemap, so it now lists the departments rather than
  * bouncing straight to one of them.
  */
+/**
+ * In the college's order: CE, CSE, EEE, ECE, ME, H&S, CA, MS, Polytechnic.
+ *
+ * `slot` is the card's text slot in Page Content (DEPARTMENTS.<slot>.name /
+ * .blurb). It is the position the card had when the slots were created, kept
+ * when the cards were reordered so that wording already saved for, say, Civil
+ * stays on Civil's card rather than landing on whichever card took its place.
+ */
 const DEPARTMENTS = [
-  { slug: "cse", name: "Computer Science & Engineering", short: "CSE", blurb: "Software, AI & ML, data science and computing systems." },
-  { slug: "ece", name: "Electronics & Communication Engineering", short: "ECE", blurb: "Embedded systems, VLSI, signal processing and communications." },
-  { slug: "eee", name: "Electrical & Electronics Engineering", short: "EEE", blurb: "Power systems, control, machines and renewable energy." },
-  { slug: "civil", name: "Civil Engineering", short: "CE", blurb: "Structures, geotechnical, transportation and water resources." },
-  { slug: "mech", name: "Mechanical Engineering", short: "ME", blurb: "Design, thermal, manufacturing and CAD/CAM." },
-  { slug: "mba", name: "Management Studies", short: "MBA", blurb: "Business administration, finance, marketing and HR." },
-  { slug: "hs", name: "Humanities & Sciences", short: "H&S", blurb: "Mathematics, physics, chemistry and communication skills." },
+  { slot: 3, href: "/departments/civil", name: "Civil Engineering", short: "CE", blurb: "Structures, geotechnical, transportation and water resources." },
+  { slot: 0, href: "/departments/cse", name: "Computer Science & Engineering", short: "CSE", blurb: "Software, AI & ML, data science and computing systems." },
+  { slot: 2, href: "/departments/eee", name: "Electrical & Electronics Engineering", short: "EEE", blurb: "Power systems, control, machines and renewable energy." },
+  { slot: 1, href: "/departments/ece", name: "Electronics & Communication Engineering", short: "ECE", blurb: "Embedded systems, VLSI, signal processing and communications." },
+  { slot: 4, href: "/departments/mech", name: "Mechanical Engineering", short: "ME", blurb: "Design, thermal, manufacturing and CAD/CAM." },
+  { slot: 6, href: "/departments/hs", name: "Humanities & Sciences", short: "H&S", blurb: "Mathematics, physics, chemistry and communication skills." },
+  { slot: 7, href: "/departments/bca", name: "Computer Applications", short: "CA", blurb: "Bachelor of Computer Applications (BCA) - programming, databases and software development." },
+  { slot: 5, href: "/departments/mba", name: "Management Studies", short: "MBA", blurb: "Business administration, finance, marketing and HR." },
+  // The Diploma programme, not a department record - see Navbar's POLYTECHNIC_LINK.
+  { slot: 8, href: "/admissions/diploma", name: "Polytechnic", short: "Diploma", blurb: "Three-year Diploma programmes in engineering." },
 ];
 
 /**
@@ -34,7 +45,8 @@ const DEPARTMENTS = [
  * both spellings it would be listed twice.
  */
 const KNOWN_SLUGS = [
-  ...DEPARTMENTS.map((d) => d.slug),
+  ...DEPARTMENTS.map((d) => d.href.split("/").pop()!),
+  "polytechnic",
   "mechanical",
   "humanities-sciences",
   "mca",
@@ -64,14 +76,14 @@ export default function DepartmentsIndexPage() {
       <section style={{ padding: "64px 0" }}>
         <div className="dh-container">
           <div className="dh-grid">
-            {DEPARTMENTS.map((d, _i) => (
-              <Link key={d.slug} href={`/departments/${d.slug}`} className="dh-card">
+            {DEPARTMENTS.map((d) => (
+              <Link key={d.href} href={d.href} className="dh-card">
                 <span style={{ display: "inline-block", background: "#FFE619", color: "#1a1a2e", fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: 13, padding: "3px 10px", borderRadius: 5, marginBottom: 12 }}>
                   {d.short}
                 </span>
-                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 21, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="departments" slot={`DEPARTMENTS.${_i}.name`} /></h2>
-                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="departments" slot={`DEPARTMENTS.${_i}.blurb`} /></p>
-                <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>View department →</span>
+                <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontSize: 21, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}><CmsText section="departments" slot={`DEPARTMENTS.${d.slot}.name`} /></h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.6, margin: 0 }}><CmsText section="departments" slot={`DEPARTMENTS.${d.slot}.blurb`} /></p>
+                <span style={{ color: "#2B3490", fontSize: 14, fontWeight: 700, display: "inline-block", marginTop: 14 }}>{d.href.startsWith("/departments/") ? "View department" : "View programmes"} →</span>
               </Link>
             ))}
             {/* Departments added in the CMS since this list was written. */}
