@@ -36,6 +36,19 @@ interface Place {
 
 type Undo = { kind: "delete" | "hide"; ids: number[] }
 
+/**
+ * Items a block shows that are not documents - on the Examinations page, the
+ * notices and calendars posted under Exam Notifications. Without this the
+ * block read "0" here while the page was full.
+ */
+export interface BlockExtra {
+  count: number
+  /** "posted under Exam Notifications -> Notifications" */
+  text: string
+  actionLabel?: string
+  onAction?: () => void
+}
+
 /** Lower-case, single-spaced - what a search compares on. */
 const norm = (s: string) => s.toLowerCase().replace(/[_\s]+/g, " ").trim()
 
@@ -89,6 +102,7 @@ export default function PageDocumentsManager({
   pageName,
   pagePath,
   initialBlockId,
+  extras,
 }: {
   blocks: PageDocBlock[]
   /** "Examinations page", "NAAC page". */
@@ -97,6 +111,8 @@ export default function PageDocumentsManager({
   pagePath: string
   /** The block to open first, e.g. the one for the section picked elsewhere. */
   initialBlockId?: string
+  /** Non-document items per block id, counted alongside the documents. */
+  extras?: Record<string, BlockExtra>
 }) {
   const { confirm } = useCmsConfirm()
   const admin = getStoredAdmin()
@@ -503,6 +519,9 @@ export default function PageDocumentsManager({
               }`}
             >
               {b.title} <span className="ml-1 opacity-75">{b.docs.length}</span>
+              {view === "live" && (extras?.[b.id]?.count ?? 0) > 0 && (
+                <span className="ml-1 opacity-75">+ {extras![b.id].count} notices</span>
+              )}
             </button>
           ))}
         </div>
@@ -662,12 +681,38 @@ export default function PageDocumentsManager({
             )}
           </div>
         )
-      ) : block.headings.length === 0 ? (
+      ) : (
+        <>
+          {view === "live" && extras?.[block.id] && extras[block.id].count > 0 && (
+            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+              <span>
+                This block also shows <strong>{extras[block.id].count}</strong> item
+                {extras[block.id].count === 1 ? "" : "s"} {extras[block.id].text}. They are edited and removed there,
+                not here.
+              </span>
+              {extras[block.id].onAction && (
+                <button
+                  type="button"
+                  onClick={extras[block.id].onAction}
+                  className="rounded-lg bg-admin-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-admin-primary-dark"
+                >
+                  {extras[block.id].actionLabel ?? "Open"}
+                </button>
+              )}
+            </div>
+          )}
+          {block.headings.length === 0 ? (
         <p className="rounded-xl border border-dashed border-admin-border bg-admin-bg px-4 py-10 text-center text-sm text-slate-500">
-          {view === "live" ? "Nothing in this block." : "Nothing deleted from this block."}
+          {view === "live"
+            ? (extras?.[block.id]?.count ?? 0) > 0
+              ? "No uploaded documents in this block - only the items above."
+              : "Nothing in this block."
+            : "Nothing deleted from this block."}
         </p>
       ) : (
-        <div className="space-y-2">{block.headings.map((h) => headingCard(block, h))}</div>
+            <div className="space-y-2">{block.headings.map((h) => headingCard(block, h))}</div>
+          )}
+        </>
       )}
     </div>
   )

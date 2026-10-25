@@ -37,6 +37,7 @@ import { getDepartmentsAdmin, Department, isAcademicDepartment } from "@/lib/dep
 import { getStoredAdmin, allowedPageRoots, pageSectionRoot } from "@/lib/auth"
 import PageDocumentsManager from "@/components/admin/PageDocumentsManager"
 import { NAAC_DOC_BLOCKS } from "@/lib/naac-page-blocks"
+import { docsForSection, type PageDocSource } from "@/lib/page-doc-sources"
 
 /**
  * "Pick a place → manage everything on it." One screen listing every public
@@ -120,6 +121,8 @@ function PageContentInner() {
   const [selection, setSelection] = useState("")
   const [departments, setDepartments] = useState<Department[]>([])
   const [docs, setDocs] = useState<Download[]>([])
+  // Set when the page also shows documents filed under other sections.
+  const [docsFrom, setDocsFrom] = useState<{ source: PageDocSource; pulledIn: number } | null>(null)
   const [images, setImages] = useState<GalleryImage[]>([])
   const [videos, setVideos] = useState<GalleryImage[]>([])
   const [loading, setLoading] = useState(false)
@@ -165,7 +168,12 @@ function PageContentInner() {
       ])
       // Department queries are already scoped server-side; page queries filter
       // on the routed section here.
-      const docsFor = t.kind === "page" ? allDocs.filter((d) => d.pageSection === t.section) : allDocs
+      // What the public page shows for this section - for most pages the
+      // section's own documents, but some also list files filed elsewhere
+      // (lib/page-doc-sources), which an exact match reported as missing.
+      const forPage = t.kind === "page" ? docsForSection(allDocs, t.section) : null
+      const docsFor = forPage ? forPage.docs : allDocs
+      setDocsFrom(forPage?.source && forPage.pulledIn > 0 ? { source: forPage.source, pulledIn: forPage.pulledIn } : null)
       const galFor = t.kind === "page" ? allGallery.filter((g) => g.pageSection === t.section) : allGallery
       setDocs(docsFor)
       setImages(galFor.filter((g) => g.category !== VIDEO_CATEGORY))
@@ -427,6 +435,11 @@ function PageContentInner() {
             <h3 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
               <FileText className="h-4 w-4" /> Documents ({docs.length})
             </h3>
+            {docsFrom && (
+              <p className="mb-2 rounded-lg bg-sky-50 px-3 py-2.5 text-sm text-sky-900">
+                {`Everything the ${docsFrom.source.where} shows: ${docs.length - docsFrom.pulledIn} filed under this section and ${docsFrom.pulledIn} filed under another section that the page also lists. Deleting one here removes it from every page that shows it.`}
+              </p>
+            )}
             {docs.length === 0 ? (
               <p className="rounded-xl border border-dashed border-admin-border p-5 text-center text-sm text-slate-400">No documents here yet.</p>
             ) : (
@@ -436,7 +449,11 @@ function PageContentInner() {
                     <FileText className="h-4 w-4 shrink-0 text-slate-400" />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-slate-700">{d.title}</p>
-                      <p className="truncate text-xs text-slate-500">{d.category}</p>
+                      <p className="truncate text-xs text-slate-500">
+                        {d.category}
+                        {target.kind === "page" && (d.pageSection ?? "") !== target.section &&
+                          ` · filed under ${ALL_PAGES.find((p) => p.value === d.pageSection)?.label ?? (d.pageSection || "no page")}`}
+                      </p>
                     </div>
                     <a href={d.fileUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-admin-primary hover:underline">Open</a>
                     <button type="button" onClick={() => removeDoc(d)} aria-label="Delete" className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600">

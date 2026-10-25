@@ -11,8 +11,11 @@ import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import PageTextEditor from "@/components/admin/PageTextEditor"
 import CmsDragList from "@/components/admin/cms/CmsDragList"
 import { getDownloadsAdmin, reorderDownloads, type Download } from "@/lib/downloads-api"
-import PageDocumentsManager from "@/components/admin/PageDocumentsManager"
+import PageDocumentsManager, { type BlockExtra } from "@/components/admin/PageDocumentsManager"
+import { getExamNotificationsPublic as listPublishedNotices } from "@/lib/exam-notifications-api"
+import { getAnnouncementsPublic } from "@/lib/announcements-api"
 import { EXAM_DOC_BLOCKS } from "@/lib/exam-page-blocks"
+import { docsForSection } from "@/lib/page-doc-sources"
 import { getDepartmentsAdmin } from "@/lib/departments-api"
 import {
   TextField,
@@ -733,8 +736,11 @@ function ExamDocumentOrderList({ section }: { section: string }) {
       .then((all) => {
         if (cancelled) return
         setDocs(
-          all
-            .filter((d) => d.pageSection === section && !d.deletedAt)
+          // What the page lists in this section, including files it pulls in
+          // from the general Examinations section by title - those are
+          // ordered here too, since their order on the page is theirs.
+          docsForSection(all, section)
+            .docs.filter((d) => !d.deletedAt)
             .sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title)),
         )
       })
@@ -786,6 +792,57 @@ function ExamDocumentOrderList({ section }: { section: string }) {
   )
 }
 
+/**
+ * "Documents on the page" for Examinations.
+ *
+ * Several blocks on the page also list items posted under Exam Notifications
+ * (and, for Latest Notifications, the exam announcements) - 50 calendars, 10
+ * time tables and 9 notices on the live site in Oct 2026. Those are not
+ * documents, so the block read "0" here while the page was full; they are
+ * now counted per block, with a way to the tab that edits them.
+ */
+function ExamPageDocumentsTab({ onOpenNotifications }: { onOpenNotifications: () => void }) {
+  const [extras, setExtras] = useState<Record<string, BlockExtra>>({})
+  // Held in a ref: the parent passes a new function each render, and the
+  // counts should load once, not on every render.
+  const openRef = useRef(onOpenNotifications)
+  useEffect(() => {
+    openRef.current = onOpenNotifications
+  }, [onOpenNotifications])
+
+  useEffect(() => {
+    let cancelled = false
+    // The public lists: what a visitor actually sees in each block.
+    Promise.all([
+      listPublishedNotices().catch(() => []),
+      getAnnouncementsPublic("EXAM_NOTIFICATIONS_PAGE").catch(() => []),
+    ]).then(([notices, announcements]) => {
+      if (cancelled) return
+      const ofType = (t: string) => notices.filter((n) => n.type === t).length
+      const extra = (count: number, list: string): BlockExtra => ({
+        count,
+        text: `posted under Exam Notifications (${list})`,
+        actionLabel: "Open Exam Notifications",
+        onAction: () => openRef.current(),
+      })
+      setExtras({
+        // The notifications block lists every notice, of every type, and the
+        // exam announcements (ExamNotificationsList with no type).
+        notifications: extra(notices.length + announcements.length, "every type, plus the exam announcements"),
+        calendars: extra(ofType("CALENDAR"), "Academic Calendars"),
+        timetables: extra(ofType("TIMETABLE"), "Time Tables"),
+        "question-papers": extra(ofType("QUESTION_PAPER"), "Question Papers"),
+        results: extra(ofType("RESULT"), "Results"),
+      })
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return <PageDocumentsManager blocks={EXAM_DOC_BLOCKS} pageName="Examinations page" pagePath="/examinations" extras={extras} />
+}
+
 export default function ExamNotificationsManager() {
   const [tab, setTab] = useState<"notifications" | "results" | "page-docs" | "staff" | "text">("notifications")
   const tabClass = (on: boolean) =>
@@ -815,9 +872,7 @@ export default function ExamNotificationsManager() {
         </div>
         {tab === "notifications" && <ExamNotificationsManagerInner />}
         {tab === "results" && <ExamResultsTab />}
-        {tab === "page-docs" && (
-          <PageDocumentsManager blocks={EXAM_DOC_BLOCKS} pageName="Examinations page" pagePath="/examinations" />
-        )}
+        {tab === "page-docs" && <ExamPageDocumentsTab onOpenNotifications={() => setTab("notifications")} />}
         {tab === "staff" && <ExamStaffTab />}
         {/* The Examinations page's own wording - headings, intro paragraph,
             quick-link labels. It used to live under Page Content, which meant

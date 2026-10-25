@@ -11,9 +11,7 @@ import SyllabusTitleHint from "@/components/admin/SyllabusTitleHint"
 import BulkDocumentUpload from "@/components/admin/BulkDocumentUpload"
 import UploadDestinationHint from "@/components/admin/UploadDestinationHint"
 import { describeDestination, destinationText } from "@/lib/upload-destinations"
-import { NAAC_DOC_BLOCKS } from "@/lib/naac-page-blocks"
-import { EXAM_DOC_BLOCKS } from "@/lib/exam-page-blocks"
-import { selectBlockDocs, type PageDocBlock } from "@/lib/page-doc-rules"
+import { docsForSection } from "@/lib/page-doc-sources"
 import { getCommitteesPublic, Committee } from "@/lib/committees-api"
 import { committeeAnchor } from "@/components/committees/NamedCommittees"
 import { useLiveData } from "@/lib/use-live-data"
@@ -91,27 +89,6 @@ function useCommitteeSections() {
     [committees],
   )
 }
-/**
- * Sections whose block on the public page also lists documents filed under
- * another section - NAAC's DVV, SSR, Minutes... take old-site files left under
- * plain "NAAC" by folder or title, and Examinations' calendars, time tables
- * and results do the same from the general Examinations section.
- *
- * Filtering this screen to "NAAC -> DVV" by section name alone said "No
- * downloads yet" while the NAAC page listed 805 files under DVV. For these the
- * filter shows what the page shows instead. Broad sections ("naac",
- * "examinations") keep the plain match: every file filed there is listed.
- */
-const BLOCK_FOR_SECTION = new Map<string, { page: string; block: PageDocBlock }>(
-  [
-    ...NAAC_DOC_BLOCKS.map((block) => ({ page: "NAAC page", block })),
-    ...EXAM_DOC_BLOCKS.map((block) => ({ page: "Examinations page", block })),
-  ]
-    .filter(({ block }) => block.rules.fallbackSections?.length || block.rules.docsCategory)
-    .filter(({ block }) => block.rules.section.includes("."))
-    .map((v) => [v.block.rules.section, v] as const),
-)
-
 // value -> readable label, for the "Page" column and the page filter, so an
 // admin can see which page a document is on and narrow to just that page's docs.
 const SECTION_LABEL = new Map(PAGE_SECTIONS.map((s) => [s.value, s.label]))
@@ -303,21 +280,18 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
     }
   }
 
-  const blockView = pageFilter ? BLOCK_FOR_SECTION.get(pageFilter) : undefined
-
-  // The documents for the chosen page - by the page's own rules where its
-  // block pulls files in from elsewhere (see BLOCK_FOR_SECTION). Live and
-  // deleted rows are selected separately so a deleted copy cannot hide a
-  // live one in the duplicate check.
-  const pageDocs = useMemo(() => {
-    if (!pageFilter) return items
-    if (!blockView) return items.filter((i) => (i.pageSection ?? "") === pageFilter)
-    return [
-      ...selectBlockDocs(items.filter((i) => !i.deletedAt), blockView.block.rules),
-      ...selectBlockDocs(items.filter((i) => i.deletedAt), blockView.block.rules),
-    ]
-  }, [items, pageFilter, blockView])
-  const pulledIn = blockView ? pageDocs.filter((d) => (d.pageSection ?? "") !== pageFilter).length : 0
+  // The documents the chosen page shows. Some pages list files filed under
+  // other sections too (NAAC's DVV/SSR, the exam calendars, Regulations...);
+  // matching on the section name alone said "No downloads yet" for those -
+  // see lib/page-doc-sources.
+  const { docs: pageDocs, source: pageSource } = useMemo(
+    () => (pageFilter ? docsForSection(items, pageFilter) : { docs: items, pulledIn: 0, source: undefined }),
+    [items, pageFilter],
+  )
+  // The note counts what is live on the site; deleted rows are listed too
+  // (marked, with Restore) but are not on the page.
+  const liveOnPage = pageDocs.filter((d) => !d.deletedAt)
+  const pulledIn = liveOnPage.filter((d) => (d.pageSection ?? "") !== pageFilter).length
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -611,10 +585,10 @@ function DownloadsManagerInner({ lockedSection }: { lockedSection?: string }) {
         }
       />
 
-      {blockView && pulledIn > 0 && (
+      {pageSource && pulledIn > 0 && (
         <p className="rounded-lg bg-sky-50 px-3 py-2.5 text-sm text-sky-900">
-          Showing everything the {blockView.page} lists under <strong>{blockView.block.title}</strong>:{" "}
-          {`${pageDocs.length - pulledIn} filed under this section, and ${pulledIn} filed under another section (mostly old-site uploads) that the page places here by their folder or title. Each row's Page column says where it is filed.`}
+          Showing everything the <strong>{pageSource.where}</strong> lists:{" "}
+          {`${liveOnPage.length - pulledIn} filed under this section, and ${pulledIn} filed under another section that the page also shows here. Each row's Page column says where it is filed.`}
         </p>
       )}
 

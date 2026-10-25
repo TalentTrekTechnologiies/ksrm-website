@@ -26,6 +26,14 @@ export interface DocBlockRules {
   fallbackGroupPattern?: string
   onlyShow?: DocRule
   leaveOut?: DocRule
+  /**
+   * Every document of this category, wherever it is filed - unlike
+   * docsCategory, which skips ones routed to another page. The Regulations
+   * and Syllabus pages read all SYLLABUS documents this way. Not a
+   * PageResources option: those pages fetch it themselves; it is here so the
+   * admin can work out the same list (see page-doc-sources).
+   */
+  categoryFromAnySection?: DownloadCategory
 }
 
 /** One document block of a public page, as the admin lists it. */
@@ -140,9 +148,13 @@ export function selectBlockDocs(all: Download[], rules: DocBlockRules): Download
   const titlePattern = rules.fallbackTitlePattern ? new RegExp(rules.fallbackTitlePattern, "i") : undefined
   const groupPattern = rules.fallbackGroupPattern ? new RegExp(rules.fallbackGroupPattern, "i") : undefined
   const fallbackSections = new Set(rules.fallbackSections ?? [])
+  const anySection = rules.categoryFromAnySection
   const merged = mergeBlockDocs(
     rules.section,
-    all.filter((d) => d.pageSection === rules.section),
+    [
+      ...all.filter((d) => d.pageSection === rules.section),
+      ...(anySection ? all.filter((d) => d.category === anySection && d.pageSection !== rules.section) : []),
+    ],
     rules.docsCategory ? all.filter((d) => d.category === rules.docsCategory) : [],
     fallbackSections.size
       ? all.filter((d) => fallbackSections.has(d.pageSection ?? "") && matchesFallback(d, titlePattern, groupPattern))
