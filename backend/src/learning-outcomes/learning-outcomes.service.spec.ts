@@ -27,7 +27,8 @@ describe('LearningOutcomesService', () => {
   beforeEach(async () => {
     prisma = {
       learningOutcome: {
-        findMany: jest.fn(),
+        // No deleted record holds the code unless a test says otherwise.
+        findMany: jest.fn().mockResolvedValue([]),
         findFirst: jest.fn(),
         count: jest.fn(),
         create: jest.fn(),
@@ -89,6 +90,33 @@ describe('LearningOutcomesService', () => {
       });
     });
 
+    it('frees a code held only by a deleted record, keeping that record', async () => {
+      prisma.learningOutcome.findMany.mockResolvedValue([{ id: 12 }]);
+      prisma.learningOutcome.count.mockResolvedValue(0);
+      prisma.learningOutcome.create.mockResolvedValue({ id: 20 });
+
+      await service.create(
+        { departmentId: 8, type: 'PSO', code: 'PSO1', text: 'text' } as any,
+        admin,
+        undefined,
+      );
+
+      expect(prisma.learningOutcome.findMany).toHaveBeenCalledWith({
+        where: {
+          departmentId: 8,
+          type: 'PSO',
+          code: 'PSO1',
+          NOT: { deletedAt: null },
+        },
+        select: { id: true },
+      });
+      expect(prisma.learningOutcome.update).toHaveBeenCalledWith({
+        where: { id: 12 },
+        data: { code: 'PSO1 (deleted #12)', version: { increment: 1 } },
+      });
+      expect(prisma.learningOutcome.create).toHaveBeenCalled();
+    });
+
     it('409s on duplicate (departmentId, type, code)', async () => {
       const { Prisma } = require('@prisma/client');
       prisma.learningOutcome.create.mockRejectedValue(
@@ -115,6 +143,35 @@ describe('LearningOutcomesService', () => {
       await expect(
         service.update(1, { text: 'x', version: 1 } as any, admin, undefined),
       ).rejects.toBeInstanceOf(ConflictException);
+    });
+
+    it('frees the code from a deleted record when renaming to it, not the record itself', async () => {
+      prisma.learningOutcome.findFirst.mockResolvedValue({
+        id: 1,
+        version: 1,
+        departmentId: 8,
+        type: 'PSO',
+        code: 'PSO 1- long sentence',
+      });
+      prisma.learningOutcome.findMany.mockResolvedValue([{ id: 12 }]);
+      prisma.learningOutcome.update.mockResolvedValue({ id: 1 });
+
+      await service.update(
+        1,
+        { code: 'PSO1', version: 1 } as any,
+        admin,
+        undefined,
+      );
+
+      expect(prisma.learningOutcome.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ code: 'PSO1', id: { not: 1 } }),
+        }),
+      );
+      expect(prisma.learningOutcome.update).toHaveBeenCalledWith({
+        where: { id: 12 },
+        data: { code: 'PSO1 (deleted #12)', version: { increment: 1 } },
+      });
     });
 
     it('404s when the row does not exist or is already soft-deleted', async () => {

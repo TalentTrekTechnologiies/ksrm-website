@@ -60,7 +60,15 @@ function OutcomeTypeManager({ departmentId, type }: { departmentId: number; type
       )}
       renderFields={(form, setForm) => (
         <>
-          <TextField label="Code" value={form.code} onChange={(v) => setForm({ ...form, code: v })} required placeholder={`${type}1`} />
+          <TextField
+            label="Code"
+            value={form.code}
+            onChange={(v) => setForm({ ...form, code: v })}
+            required
+            maxLength={12}
+            placeholder={`${type}1`}
+            helperText={`Just the label, e.g. ${type}1. The sentence goes in Text below.`}
+          />
           <TextField label="Title (optional)" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
           <TextAreaField label="Text" value={form.text} onChange={(v) => setForm({ ...form, text: v })} required rows={3} />
         </>

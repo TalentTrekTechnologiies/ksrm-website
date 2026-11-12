@@ -49,11 +49,47 @@ export class LearningOutcomesService {
     return record;
   }
 
+  /**
+   * Frees a code held only by deleted records.
+   *
+   * The unique key (department, type, code) covers deleted rows too, so once
+   * "PSO1" was deleted no new "PSO1" could be saved - the admin got "already
+   * exists" for a record they could not see, and on Mechanical's page that
+   * ended with whole sentences typed into Code to get past it. The deleted
+   * record keeps everything; only its code moves aside, to
+   * "PSO1 (deleted #12)", which also says what it was if it is restored.
+   */
+  private async releaseCodeFromDeleted(
+    departmentId: number,
+    type: OutcomeType,
+    code: string,
+    exceptId?: number,
+  ) {
+    const holders = await this.prisma.learningOutcome.findMany({
+      where: {
+        departmentId,
+        type,
+        code,
+        NOT: { deletedAt: null },
+        ...(exceptId !== undefined && { id: { not: exceptId } }),
+      },
+      select: { id: true },
+    });
+    for (const h of holders) {
+      await this.prisma.learningOutcome.update({
+        where: { id: h.id },
+        data: { code: `${code} (deleted #${h.id})`, version: { increment: 1 } },
+      });
+    }
+  }
+
   async create(
     dto: CreateLearningOutcomeDto,
     admin: RequestAdmin,
     requestId?: string,
   ) {
+    await this.releaseCodeFromDeleted(dto.departmentId, dto.type, dto.code);
+
     const sortOrder =
       dto.sortOrder ??
       (await this.prisma.learningOutcome.count({
@@ -75,7 +111,7 @@ export class LearningOutcomesService {
         err.code === 'P2002'
       ) {
         throw new ConflictException(
-          `Code '${dto.code}' already exists for ${dto.type} in this department`,
+          `${dto.code} already exists for this department - edit that one instead of adding another.`,
         );
       }
       throw err;
@@ -104,6 +140,14 @@ export class LearningOutcomesService {
     const existing = await this.findActiveOrThrow(id);
     const { version, ...rest } = dto;
     assertVersionMatch(existing, version, `Learning outcome ${id}`);
+    if (rest.code !== undefined && rest.code !== existing.code) {
+      await this.releaseCodeFromDeleted(
+        existing.departmentId,
+        existing.type,
+        rest.code,
+        id,
+      );
+    }
 
     let updated;
     try {
@@ -117,7 +161,7 @@ export class LearningOutcomesService {
         err.code === 'P2002'
       ) {
         throw new ConflictException(
-          `Code '${rest.code}' already exists for this type in this department`,
+          `${rest.code} already exists for this department - another ${existing.type} uses that code.`,
         );
       }
       throw err;

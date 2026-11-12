@@ -260,19 +260,18 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         }))
       }
 
+      // Once a department has outcomes in the CMS, the CMS is the whole
+      // answer for all three lists. Each list used to fall back to the
+      // built-in one on its own, so a department whose PEOs were deleted in
+      // the CMS (Mechanical) went on showing the old built-in PEOs, which no
+      // one could then edit or remove. An empty list now hides its section.
       if (outcomesRes.status === "fulfilled" && outcomesRes.value.length > 0) {
         const outcomes = outcomesRes.value
         setDepartment((prev) => ({
           ...prev,
-          peos: outcomes.filter((o) => o.type === "PEO").length > 0
-            ? outcomes.filter((o) => o.type === "PEO").map((o) => ({ code: o.code, text: o.text }))
-            : prev.peos,
-          pos: outcomes.filter((o) => o.type === "PO").length > 0
-            ? outcomes.filter((o) => o.type === "PO").map((o) => ({ code: o.code, title: o.title ?? "", text: o.text }))
-            : prev.pos,
-          psos: outcomes.filter((o) => o.type === "PSO").length > 0
-            ? outcomes.filter((o) => o.type === "PSO").map((o) => ({ code: o.code, text: o.text }))
-            : prev.psos,
+          peos: outcomes.filter((o) => o.type === "PEO").map((o) => ({ code: o.code, text: o.text })),
+          pos: outcomes.filter((o) => o.type === "PO").map((o) => ({ code: o.code, title: o.title ?? "", text: o.text })),
+          psos: outcomes.filter((o) => o.type === "PSO").map((o) => ({ code: o.code, text: o.text })),
         }))
       }
 
@@ -1208,7 +1207,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
         {/* OUTCOMES: PEOs / PSOs / POs */}
         <section id="outcomes" style={{ padding: "72px 0", background: "#f7f8fa" }}>
           <div className="responsive-container">
-            {isVisible("peo.showSection") && (
+            {isVisible("peo.showSection") && department.peos.length > 0 && (
             <div style={{ marginBottom: 56 }}>
               <h2 className="dept-section-title-sm">Programme Educational Objectives (PEOs)</h2>
               <div className="dept-outcomes-grid">
@@ -1224,7 +1223,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
             </div>
             )}
 
-            {isVisible("pso.showSection") && (
+            {isVisible("pso.showSection") && department.psos.length > 0 && (
             <div style={{ marginBottom: 56 }}>
               <h2 className="dept-section-title-sm">Programme Specific Outcomes (PSOs)</h2>
               <div className="dept-outcomes-grid">
@@ -1240,7 +1239,7 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
             </div>
             )}
 
-            {isVisible("po.showSection") && (
+            {isVisible("po.showSection") && department.pos.length > 0 && (
             <div>
               <h2 className="dept-section-title-sm">Programme Outcomes (POs) - NBA Standards</h2>
               <div className="dept-pos-grid">
