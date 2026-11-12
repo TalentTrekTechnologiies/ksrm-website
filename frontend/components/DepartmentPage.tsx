@@ -22,6 +22,7 @@ import { getPublicSiteSettings } from "@/lib/site-settings-api";
 import { useLiveData, DEFAULT_POLL_INTERVAL_MS } from "@/lib/use-live-data";
 import BoardOfStudies from "@/components/departments/BoardOfStudies";
 import StudentChapter from "@/components/departments/StudentChapter";
+import { onContentChange } from "@/lib/content-version-store";
 
 const NAV_ITEMS = [
   { id: "about", label: "About" },
@@ -311,9 +312,15 @@ export default function DepartmentPage({ department: fallbackDepartment }: { dep
     // then shows up on an already-open page without a refresh. Same env-aware
     // cadence as the homepage's live sections - 2s dev / 30s prod.
     load()
+    // And at once when anything is saved in the CMS - the signal the rest of
+    // the site already listens to. Without it this page only re-checked on
+    // its own timer (2 minutes in production), so an edited PEO looked unsaved
+    // until the page was reloaded.
+    const unsubscribe = onContentChange(load)
     const interval = setInterval(load, DEFAULT_POLL_INTERVAL_MS)
     return () => {
       cancelled = true
+      unsubscribe()
       clearInterval(interval)
     }
   }, [fallbackDepartment])

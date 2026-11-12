@@ -118,7 +118,9 @@ export default function HighlightsTab({ departmentId }: { departmentId: number }
           </button>
         ))}
       </div>
-      <KindManager departmentId={departmentId} kind={active} />
+      {/* Keyed by kind, so switching tabs loads that tab's own list - see
+          LearningOutcomesTab, where the same list showed under every tab. */}
+      <KindManager key={active} departmentId={departmentId} kind={active} />
     </div>
   )
 }

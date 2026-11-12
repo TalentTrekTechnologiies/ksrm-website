@@ -102,7 +102,10 @@ export default function LearningOutcomesTab({ departmentId }: { departmentId: nu
           </button>
         ))}
       </div>
-      <OutcomeTypeManager departmentId={departmentId} type={active} />
+      {/* Keyed by type: the list manager loads once per mount, so without a
+          fresh mount the PO and PSO tabs kept showing the PEO list (whichever
+          tab opened first) until a save happened to reload it. */}
+      <OutcomeTypeManager key={active} departmentId={departmentId} type={active} />
     </div>
   )
 }
