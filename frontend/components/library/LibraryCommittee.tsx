@@ -39,8 +39,10 @@ export default function LibraryCommittee({ fallback }: { fallback: CommitteeRow[
   // "Assistant Professor, CE" - and left blank rather than guessed otherwise.
   const rows: CommitteeRow[] = members.length
     ? members.map((m) => {
+        // The member's Department field when filled in; otherwise the part
+        // after a comma in the designation, the older way of writing it.
         const [desig, dept] = m.designation.split(",").map((x) => x.trim());
-        return { name: m.name, dept: dept ?? "", desig: desig ?? m.designation, role: m.role };
+        return { name: m.name, dept: m.department?.trim() || dept || "", desig: desig ?? m.designation, role: m.role };
       })
     : fallback;
 

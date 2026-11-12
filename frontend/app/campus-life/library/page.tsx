@@ -12,6 +12,7 @@ import CmsVideos from "@/components/CmsVideos";
 import LibraryStaff from "@/components/library/LibraryStaff";
 import LibraryCommittee from "@/components/library/LibraryCommittee";
 import LibrarianProfile, { LibrarianName } from "@/components/library/LibrarianProfile";
+import CmsContactLink from "@/components/CmsContactLink";
 import CmsText, { CmsTextProvider } from "@/components/CmsText";
 
 /**
@@ -683,12 +684,12 @@ export default function LibraryPage() {
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">📞</div>
               <h4>Phone</h4>
-              <p><a href="tel:+919441373732"><CmsText section="library" slot="contact.phone" /></a></p>
+              <p><CmsContactLink section="library" slot="contact.phone" kind="tel" /></p>
             </div>
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">✉️</div>
               <h4>Email</h4>
-              <p><a href="mailto:library@ksrmce.ac.in"><CmsText section="library" slot="contact.email" /></a></p>
+              <p><CmsContactLink section="library" slot="contact.email" kind="mailto" /></p>
             </div>
             <div className="lib-contact-item">
               <div className="lib-contact-item-icon">🕐</div>

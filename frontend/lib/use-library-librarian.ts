@@ -10,11 +10,17 @@ const SECTION = "Central Library"
  * Central Library department. Shared by LibrarianProfile and the page's own
  * "Contact" card so both name mentions come from the one record instead of
  * drifting into two different answers for who the Librarian is.
+ *
+ * `undefined` while the staff list is loading, `null` once it has loaded and
+ * no one is flagged. The two used to be the same, so the page showed the
+ * previous Librarian's built-in details for a moment before every visit -
+ * a different person from the one in the CMS.
  */
-export function useLibrarian(): Faculty | undefined {
+export function useLibrarian(): Faculty | null | undefined {
   const staff = useLiveData<Faculty[]>(
     () => getFacultyPublic(SECTION).catch(() => [] as Faculty[]),
     [],
   )
-  return staff?.find((s) => s.isHod)
+  if (staff === null) return undefined
+  return staff.find((s) => s.isHod) ?? null
 }
