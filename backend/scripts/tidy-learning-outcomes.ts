@@ -5,6 +5,8 @@
  *    their knowledge ..." as its code, its title AND its text, so the card
  *    printed the sentence twice. The code becomes "PSO1", a title that only
  *    repeats it is cleared, and the "PSO 1- " prefix comes off the text.
+ *    Where Code held a DIFFERENT sentence from Text (Mechanical's PEOs: new
+ *    wording in Code, old in Text), the Code sentence becomes the text.
  *
  * 2. A department whose PEOs are not in the CMS at all. The page then showed
  *    its built-in PEOs, which the CMS could neither edit nor remove. If the
@@ -131,9 +133,28 @@ async function apply() {
       (stripPrefix(o.title) === '' || sentence.startsWith(stripPrefix(o.title)))
         ? null
         : o.title;
-    const text = stripPrefix(o.text) || o.text;
+    // When Code holds a different sentence from Text, Code is the newer
+    // wording: Mechanical's PEOs were "edited" by typing the new objective
+    // into Code, leaving the old one in Text, and the card showed both. The
+    // Code sentence becomes the text; the old text is kept in the log.
+    const norm = (x: string) =>
+      x
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    const oldText = stripPrefix(o.text) || o.text;
+    const replaced = sentence !== '' && norm(sentence) !== norm(oldText);
+    const text = replaced ? sentence : oldText;
     console.log(
-      `  #${o.id} ${o.type}: code "${o.code.slice(0, 40)}..." -> "${code}"${title !== o.title ? ', title cleared' : ''}${text !== o.text ? ', "' + o.text.slice(0, 8) + '" prefix removed from text' : ''}`,
+      `  #${o.id} ${o.type}: code "${o.code.slice(0, 40)}..." -> "${code}"${title !== o.title ? ', title cleared' : ''}${
+        replaced
+          ? `
+      text now the wording typed into Code: "${sentence.slice(0, 60)}..."
+      (old text kept in the log: "${o.text.slice(0, 60)}...")`
+          : text !== o.text
+            ? ', "' + o.text.slice(0, 8) + '" prefix removed from text'
+            : ''
+      }`,
     );
     changes.push({
       kind: 'tidy',
