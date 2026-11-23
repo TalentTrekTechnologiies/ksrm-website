@@ -3,10 +3,12 @@
 import { useState } from "react"
 import { AlertTriangle, CheckCircle2 } from "lucide-react"
 import MediaField from "@/components/admin/cms/MediaField"
-import CmsChipList from "@/components/admin/cms/CmsChipList"
+import CmsDynamicList from "@/components/admin/cms/CmsDynamicList"
 import { TextField, TextAreaField, NumberField, ToggleField, FormActions, PrimaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
 import { updateDepartment, Department } from "@/lib/departments-api"
+
+const MIN_MISSION_POINTS = 3
 
 export default function ProfileTab({
   department,
@@ -24,7 +26,13 @@ export default function ProfileTab({
     heroImageUrl: department.heroImageUrl ?? "",
     heroMediaId: department.heroMediaId,
     vision: department.vision ?? "",
-    mission: department.mission,
+    mission: [
+      ...department.mission,
+      ...Array.from(
+        { length: Math.max(0, MIN_MISSION_POINTS - department.mission.length) },
+        () => "",
+      ),
+    ],
     establishedYear: department.establishedYear ?? NaN,
     isActive: department.isActive,
   })
@@ -33,6 +41,12 @@ export default function ProfileTab({
   const [saved, setSaved] = useState(false)
 
   async function handleSave() {
+    const mission = form.mission.map((point) => point.trim()).filter(Boolean)
+    if (mission.length < MIN_MISSION_POINTS) {
+      setError("Enter all three mission points before saving.")
+      return
+    }
+
     setSaving(true)
     setError(null)
     setSaved(false)
@@ -46,7 +60,7 @@ export default function ProfileTab({
         heroImageUrl: form.heroImageUrl || null,
         heroMediaId: form.heroMediaId,
         vision: form.vision || null,
-        mission: form.mission,
+        mission,
         establishedYear: Number.isNaN(form.establishedYear) ? undefined : form.establishedYear,
         isActive: form.isActive,
         version: department.version,
@@ -64,7 +78,7 @@ export default function ProfileTab({
     <div className="space-y-4">
       <div>
         <h2 className="text-lg font-bold text-slate-900">About / Vision / Mission</h2>
-        <p className="text-sm text-slate-500">General Information for this department's public page.</p>
+        <p className="text-sm text-slate-500">General Information for this department&rsquo;s public page.</p>
       </div>
 
       {error && (
@@ -103,15 +117,28 @@ export default function ProfileTab({
           accept={["IMAGE"]}
         />
         <TextAreaField label="Vision" value={form.vision} onChange={(v) => { setForm({ ...form, vision: v }); setSaved(false) }} rows={2} />
-        <CmsChipList
-          label="Mission points"
-          items={form.mission}
-          onChange={(mission) => { setForm({ ...form, mission }); setSaved(false) }}
-          placeholder="Add a mission point..."
-        />
+        <div>
+          <p className="mb-1.5 text-sm font-semibold text-slate-700">Mission points</p>
+          <CmsDynamicList<string>
+            items={form.mission}
+            onChange={(mission) => { setForm((current) => ({ ...current, mission })); setSaved(false) }}
+            newItem={() => ""}
+            itemLabel="mission point"
+            emptyTitle="No mission points yet"
+            emptyDescription="Add the first mission point."
+            minItems={MIN_MISSION_POINTS}
+            renderItem={(item, i, update) => (
+              <TextAreaField label={`Mission point ${i + 1}`} value={item} onChange={update} rows={2} />
+            )}
+          />
+          <p className="mt-2 text-xs text-slate-500">Enter at least three mission points. All three are required to save.</p>
+        </div>
         <ToggleField label="Active" checked={form.isActive} onChange={(v) => { setForm({ ...form, isActive: v }); setSaved(false) }} />
         <FormActions>
-          <PrimaryButton onClick={handleSave} disabled={saving || !form.name || !form.about}>
+          <PrimaryButton
+            onClick={handleSave}
+            disabled={saving || !form.name || !form.about || form.mission.filter((point) => point.trim()).length < MIN_MISSION_POINTS}
+          >
             {saving ? "Saving..." : "Save"}
           </PrimaryButton>
         </FormActions>

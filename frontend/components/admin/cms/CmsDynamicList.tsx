@@ -22,6 +22,7 @@ export default function CmsDynamicList<T>({
   emptyTitle,
   emptyDescription,
   maxItems,
+  minItems = 0,
 }: {
   items: T[]
   onChange: (items: T[]) => void
@@ -31,11 +32,13 @@ export default function CmsDynamicList<T>({
   emptyTitle: string
   emptyDescription: string
   maxItems?: number
+  minItems?: number
 }) {
   function add() {
     onChange([...items, newItem()])
   }
   function remove(index: number) {
+    if (items.length <= minItems) return
     onChange(items.filter((_, i) => i !== index))
   }
   function update(index: number, item: T) {
@@ -93,14 +96,16 @@ export default function CmsDynamicList<T>({
                   >
                     <ChevronDown className="h-3.5 w-3.5" />
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => remove(index)}
-                    aria-label="Delete"
-                    className="rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  {items.length > minItems && (
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      aria-label="Delete"
+                      className="rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
               {renderItem(item, index, (updated) => update(index, updated))}
