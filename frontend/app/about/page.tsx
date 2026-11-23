@@ -11,6 +11,7 @@ import { LEADERSHIP } from "@/data/leadership"
 
 import CmsText from "@/components/CmsText";
 import PageResources from "@/components/PageResources";
+import { AboutVisionText, AboutMissionItems } from "@/components/about/AboutVisionMission";
 import GoverningBody from "@/components/about/GoverningBody";
 
 /**
@@ -306,25 +307,14 @@ export default function About() {
             <div>
               <h3 style={{ marginBottom: "16px" }}><CmsText section="about" slot="our-vision" /></h3>
               <div className="k-vision-box">
-                <p style={{ color: "#555", fontSize: "15px", lineHeight: "1.7" }}><CmsText section="about" slot="to-evolve-as-center-of" multiline /></p>
+                {/* Same record as the homepage: Admin -> Homepage -> Vision / Mission. */}
+                <AboutVisionText />
               </div>
             </div>
             <div>
               <h3 style={{ marginBottom: "16px" }}><CmsText section="about" slot="our-mission" /></h3>
-              <div className="k-mission-items">
-                <div className="k-mission-item">
-                  <div className="k-mission-badge">M1</div>
-                  <div className="k-mission-text">To provide high quality education with enriched curriculum blended with impactful teaching-learning practices.</div>
-                </div>
-                <div className="k-mission-item">
-                  <div className="k-mission-badge">M2</div>
-                  <div className="k-mission-text">To promote research, entrepreneurship and innovation through industry collaborations.</div>
-                </div>
-                <div className="k-mission-item">
-                  <div className="k-mission-badge">M3</div>
-                  <div className="k-mission-text">To produce highly competent professional leaders for contributing to Socio-economic development of region and the nation.</div>
-                </div>
-              </div>
+              {/* Same record as the homepage: Admin -> Homepage -> Vision / Mission. */}
+              <AboutMissionItems />
             </div>
           </div>
         </div>

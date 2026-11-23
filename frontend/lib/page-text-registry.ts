@@ -292,7 +292,12 @@ export const PAGE_TEXT: Record<string, PageTextPage> = {
   about: {
     ...GENERATED_PAGE_TEXT.about,
     groups: [
-      ...GENERATED_PAGE_TEXT.about.groups.filter((group) => group.label !== "Board of Studies"),
+      // The vision statement ("to-evolve-as-center-of") is no longer page
+      // text: the About page shows the homepage's Vision & Mission record, so
+      // the two pages always match (edit it in Homepage -> Vision / Mission).
+      ...GENERATED_PAGE_TEXT.about.groups
+        .filter((group) => group.label !== "Board of Studies")
+        .map((group) => ({ ...group, slots: group.slots.filter((slot) => slot.id !== "to-evolve-as-center-of") })),
       {
         label: "Ombudsperson",
         slots: [
