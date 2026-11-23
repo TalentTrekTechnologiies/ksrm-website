@@ -6,9 +6,15 @@ import MediaField from "@/components/admin/cms/MediaField"
 import CmsDynamicList from "@/components/admin/cms/CmsDynamicList"
 import { TextField, TextAreaField, NumberField, ToggleField, FormActions, PrimaryButton } from "@/components/admin/cms/CmsForm"
 import { ApiError } from "@/lib/api-client"
-import { updateDepartment, Department } from "@/lib/departments-api"
+import { updateDepartment, Department, isAcademicDepartment } from "@/lib/departments-api"
 
-const MIN_MISSION_POINTS = 3
+/**
+ * Academic departments publish three mission points (M1-M3). Offices such as
+ * the Central Library and the Examination Section have none - requiring three
+ * there blocked every save of their Overview tab, About text and photo
+ * included.
+ */
+const ACADEMIC_MISSION_POINTS = 3
 
 export default function ProfileTab({
   department,
@@ -17,6 +23,7 @@ export default function ProfileTab({
   department: Department
   onSaved: (updated: Department) => void
 }) {
+  const MIN_MISSION_POINTS = isAcademicDepartment(department) ? ACADEMIC_MISSION_POINTS : 0
   const [form, setForm] = useState({
     name: department.name,
     shortName: department.shortName ?? "",
@@ -49,7 +56,7 @@ export default function ProfileTab({
   async function handleSave() {
     const mission = form.mission.map((point) => point.trim()).filter(Boolean)
     if (mission.length < MIN_MISSION_POINTS) {
-      setError("Enter all three mission points before saving.")
+      setError(`Enter all ${MIN_MISSION_POINTS} mission points before saving.`)
       return
     }
 
@@ -143,7 +150,9 @@ export default function ProfileTab({
               <TextAreaField label={`Mission point ${i + 1}`} value={item} onChange={update} rows={2} />
             )}
           />
-          <p className="mt-2 text-xs text-slate-500">Enter at least three mission points. All three are required to save.</p>
+          {MIN_MISSION_POINTS > 0 && (
+            <p className="mt-2 text-xs text-slate-500">Enter at least three mission points. All three are required to save.</p>
+          )}
         </div>
         {/* Search-result appearance. Optional: left blank, the page falls back
             to the department name and its About text, which is what it has
